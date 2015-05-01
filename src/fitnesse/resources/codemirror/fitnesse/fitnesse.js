@@ -5,6 +5,9 @@ CodeMirror.registerHelper("fold", "fitnesse", function(cm, start) {
   var blockPos = findBlock(cm, start);
   if (blockPos)
     return blockPos;
+  var headerPos = findHeader(cm, start);
+  if (headerPos)
+    return headerPos;
   return undefined;
 });
 
@@ -49,6 +52,28 @@ function findTable(cm, start) {
   var end = start.line, nextLine = cm.getLine(end + 1);
   while (end < lastLineNo) {
     if (!nextLine.match(tableRowRegexp))
+      break;
+    ++end;
+    nextLine = cm.getLine(end + 1);
+  }
+
+  return {
+    from: CodeMirror.Pos(start.line, firstLine.length),
+    to: CodeMirror.Pos(end, cm.getLine(end).length - 1)
+  }
+}
+
+function findHeader(cm, start) {
+  var maxDepth = 100;
+  var firstLine = cm.getLine(start.line);
+  if (!cm.getLine(start.line).match(/!\d.*/))
+    return undefined;
+  var header = cm.getLine(start.line).substring(0, 2);
+  console.log("header" + header);
+  var lastLineNo = cm.lastLine();
+  var end = start.line, nextLine = cm.getLine(end + 1);
+  while (end < lastLineNo ) {
+    if (nextLine.substring(0, 2) == header)
       break;
     ++end;
     nextLine = cm.getLine(end + 1);
@@ -106,17 +131,8 @@ CodeMirror.defineSimpleMode("fitnesse", {
     {regex: /!lastmodified/, token: "keyword"},
     //Today
     {regex: /!today/, token: "keyword"},
-    // The regex matches the token, the token property contains the type
-    {regex: /"(?:[^\\]|\\.)*?"/, token: "string"},
-    // You can match multiple tokens at once. Note that the captured
-    // groups must span the whole string in this case
-    {regex: /(function)(\s+)([a-z$][\w$]*)/,
-     token: ["keyword", null, "variable-2"]},
-    // Rules are matched in the order in which they appear, so there is
-    // no ambiguity between this one and the one above
     {regex: /0x[a-f\d]+|[-+]?(?:\.\d+|\d+\.?\d*)(?:e[-+]?\d+)?/i,
      token: "number"},
     {regex: /#.*/, token: "comment"},
-    {regex: /[-+*\/=<>!]+/, token: "operator"},
   ]
 });

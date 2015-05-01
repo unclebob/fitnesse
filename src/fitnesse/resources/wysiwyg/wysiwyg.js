@@ -41,7 +41,7 @@ var Wysiwyg = function (textarea, options) {
     this.setupToggleEditorButtons();
 
     // Hide both editors, so the current one gets properly shown:
-    textarea.style.display = this.frame.style.display = "none";
+    this.codeMirrorEditor.getWrapperElement().style.display = this.frame.style.display = "none";
 
     textarea.parentNode.insertBefore(this.toggleEditorButtons, textarea);
     textarea.parentNode.insertBefore(this.textareaToolbar, textarea);
@@ -434,12 +434,12 @@ Wysiwyg.prototype.setupTextareaMenuEvents = function () {
     
     $('#tt-spreadsheet-to-wiki', container).click(function () {
         var translator = new SpreadsheetTranslator();
-        translator.parseExcelTable(textarea.value);
+        translator.parseExcelTable(codeMirror.getValue());
         codeMirror.setValue(translator.getFitNesseTables());
         codeMirror.focus();
     });
     $('#tt-wiki-to-spreadsheet', container).click(function () {
-        var selection = textarea.value;
+        var selection = codeMirror.getValue();
         selection = selection.replace(/\r\n/g, '\n');
         selection = selection.replace(/\r/g, '\n');
          // remove the last | at the end of the line
@@ -452,7 +452,7 @@ Wysiwyg.prototype.setupTextareaMenuEvents = function () {
 
     $('#tt-format-wiki', container).click(function () {    
         var formatter = new WikiFormatter();
-        codeMirror.setValue(formatter.format(codeMirrorDoc.getValue()));
+        codeMirror.setValue(formatter.format(codeMirror.getValue()));
         codeMirror.focus();
     });
     
@@ -463,20 +463,15 @@ Wysiwyg.prototype.setupTextareaMenuEvents = function () {
         codeMirror.focus();
     });
     
-//    function setWrap(wrap) {
-//        if (textarea.wrap) {
-//            textarea.wrap = wrap ? 'soft' : 'off';
-//        } else { // wrap attribute not supported - try Mozilla workaround
-//            textarea.setAttribute('wrap', wrap ? 'soft' : 'off');
-//        }
-//        if (wrap) {
-//            $(textarea).removeClass('no_wrap');
-//            Wysiwyg.setCookie("textwrapon", "true");
-//        } else {
-//            $(textarea).addClass('no_wrap');
-//            Wysiwyg.setCookie("textwrapon", "false");
-//        }
-//    }
+    function setWrap(wrap) {
+        if (wrap) {
+            codeMirror.setOption("lineWrapping", true);
+            Wysiwyg.setCookie("textwrapon", "true");
+        } else {
+            codeMirror.setOption("lineWrapping", false);
+            Wysiwyg.setCookie("textwrapon", "false");
+        }
+    }
 
     function setAutoformat(autoformat) {
         if (autoformat) {
@@ -486,18 +481,18 @@ Wysiwyg.prototype.setupTextareaMenuEvents = function () {
         }
     }
 
-//    $('#tt-wrap-text', container)
-//        .change(function () {
-//            setWrap($(this).is(':checked'));
-//        })
-//        .prop('checked', Wysiwyg.getWrapOn())
-//        .change();
-//    $('#tt-autoformat', container)
-//        .change(function () {
-//            setAutoformat($(this).is(':checked'));
-//        })
-//        .prop('checked', Wysiwyg.getAutoformat())
-//        .change();
+    $('#tt-wrap-text', container)
+        .change(function () {
+            setWrap($(this).is(':checked'));
+        })
+        .prop('checked', Wysiwyg.getWrapOn())
+        .change();
+    $('#tt-autoformat', container)
+        .change(function () {
+            setAutoformat($(this).is(':checked'));
+        })
+        .prop('checked', Wysiwyg.getAutoformat())
+        .change();
 };
 
 Wysiwyg.prototype.toggleMenu = function (menu) {
