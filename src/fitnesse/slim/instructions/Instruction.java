@@ -41,7 +41,7 @@ public abstract class Instruction {
 
   @Override
   public String toString() {
-    final StringBuffer sb = new StringBuffer();
+    final StringBuilder sb = new StringBuilder();
     sb.append("Instruction");
     sb.append("{id='").append(id).append('\'');
     sb.append('}');
@@ -56,7 +56,6 @@ public abstract class Instruction {
     Instruction that = (Instruction) o;
 
     return id.equals(that.id);
-
   }
 
   @Override
