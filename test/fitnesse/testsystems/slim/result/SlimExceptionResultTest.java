@@ -26,18 +26,4 @@ public class SlimExceptionResultTest {
     assertTrue(result.hasMessage());
     assertEquals("Bad things\nhappened", result.getMessage());
   }
-
-  @Test
-  public void otherMessageWithExtraText() {
-    SlimExceptionResult result = new SlimExceptionResult("key", "message:<<Bad things>>1");
-    assertFalse(result.hasMessage());
-    assertNull(result.getMessage());
-  }
-
-  @Test
-  public void otherMessageWithPrefix() {
-    SlimExceptionResult result = new SlimExceptionResult("key", "2message:<<Bad things>>");
-    assertFalse(result.hasMessage());
-    assertNull(result.getMessage());
-  }
 }
