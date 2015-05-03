@@ -69,11 +69,11 @@ function findHeader(cm, start) {
   if (!cm.getLine(start.line).match(/!\d .+/))
     return undefined;
   var header = cm.getLine(start.line).substring(0, 2);
-  console.log("header" + header);
+  var headerNumber = parseInt(header.substring(1, 2));
   var lastLineNo = cm.lastLine();
   var end = start.line, nextLine = cm.getLine(end + 1);
   while (end < lastLineNo ) {
-    if (nextLine.substring(0, 2) == header)
+    if (nextLine.match(/!\d .+/) && (parseInt(nextLine.substring(1, 2)) <= headerNumber))
       break;
     ++end;
     nextLine = cm.getLine(end + 1);

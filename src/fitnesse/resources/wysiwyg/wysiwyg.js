@@ -13,6 +13,7 @@ var Wysiwyg = function (textarea, options) {
         mode: "fitnesse",
         lineNumbers: true,
         foldGutter: true,
+        showCursorWhenSelecting: true,
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
 
