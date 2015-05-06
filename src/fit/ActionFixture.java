@@ -71,7 +71,7 @@ public class ActionFixture extends Fixture {
     try {
       adapter = TypeAdapter.on(actor, theMethod);
     }
-    catch (Throwable e) {
+    catch (Throwable e) { // NOSONAR
       throw new FitFailureException("Can not parse return type: " + type.getName());
     }
     Parse checkValueCell = cells.more.more;
