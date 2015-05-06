@@ -9,7 +9,7 @@ import fitnesse.testsystems.ExecutionResult;
 import static fitnesse.slim.SlimServer.*;
 
 public class SlimExceptionResult implements ExceptionResult {
-  public static final Pattern EXCEPTION_MESSAGE_PATTERN = Pattern.compile("message:<<(.*)>>");
+  public static final Pattern EXCEPTION_MESSAGE_PATTERN = Pattern.compile("message:<<(.*)>>", Pattern.DOTALL);
 
   private final String resultKey;
   private final String exceptionValue;
