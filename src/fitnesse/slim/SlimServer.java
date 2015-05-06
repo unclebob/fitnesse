@@ -40,7 +40,8 @@ public class SlimServer implements SocketServer {
   public void serve(Socket s) {
     try {
       tryProcessInstructions(s);
-    } catch (Throwable e) {
+    } catch (Throwable e) { // NOSONAR
+      // Intentional catch-all, since this is the last point we can communicate failures back to FitNesse
       System.err.println("Error while executing SLIM instructions: " + e.getMessage());
       e.printStackTrace(System.err);
     } finally {

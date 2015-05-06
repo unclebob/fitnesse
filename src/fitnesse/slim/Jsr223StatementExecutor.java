@@ -49,7 +49,7 @@ public abstract class Jsr223StatementExecutor implements StatementExecutorInterf
   protected Object callMethod(String method, Object... args) {
     try {
       return bridge.invokeMethod(getStatementExecutorProxy(), method, args);
-    } catch (Throwable e) {
+    } catch (Throwable e) { // NOSONAR
       return exceptionToString(e);
     }
   }
