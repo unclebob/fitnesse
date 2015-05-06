@@ -17,7 +17,7 @@ public class VariableStore {
   }
 
   public MethodExecutionResult getSymbol(String name) {
-	return variables.get(name);
+    return variables.get(name);
   }
   
   public Object getStored(String nameWithDollar) {
