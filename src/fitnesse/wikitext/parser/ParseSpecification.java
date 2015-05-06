@@ -82,6 +82,8 @@ public class ParseSpecification {
 
     public Symbol parse(Parser parser, Scanner scanner) {
         Symbol result = new Symbol(SymbolType.SymbolList);
+        // set start pos:
+//        result.setStartOffset(scanner.getOffset());
         while (true) {
             Scanner backup = new Scanner(scanner);
             scanner.moveNextIgnoreFirst(this);
@@ -103,6 +105,7 @@ public class ParseSpecification {
                 clearIgnoresFirst();
             }
         }
+//        result.getEndOffset(scanner.getOffset());
         return result;
     }
 

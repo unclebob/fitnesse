@@ -106,7 +106,7 @@ public class Scanner {
             input.moveNext();
         }
         if (input.getOffset() > startPosition) {
-            SymbolMatch match = textMaker.make(specification, input.substringFrom(startPosition));
+            SymbolMatch match = textMaker.make(specification, startPosition, input.substringFrom(startPosition));
             return new Step(match.getSymbol(), startPosition + match.getMatchLength());
         }
         if (input.isEnd()) {
