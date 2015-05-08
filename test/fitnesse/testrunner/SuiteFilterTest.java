@@ -189,4 +189,34 @@ public class SuiteFilterTest {
     SuiteFilter filter = new SuiteFilter(null, "bad", "good, better", "FirstTest");
     assertEquals("matches all of 'good, better' & doesn't match 'bad' & starts with test 'FirstTest'", filter.toString());
   }
+
+  @Test
+  public void testChecksNotMatchFilterWithInvalidTagSuiteIsCaseInsensitive() throws Exception {
+    SuiteFilter filter = new SuiteFilter(null, "BaD, notsobad", "",  null);
+
+    WikiPage failSuite = addTestPage(root, "FailSuite", "Bad Test");
+    PageData data = failSuite.getData();
+    data.setAttribute(PageData.PropertySUITES, "bad");
+    data.setAttribute("Suite");
+    failSuite.commit(data);
+
+    assertFalse(filter.getFilterForTestsInSuite(failSuite).hasMatchingTests());
+  }
+
+  @Test
+  public void testTestRequiresAllTagsWithIntersectIsCaseInsensitive() throws Exception {
+    SuiteFilter filter = new SuiteFilter(null, null, "Good, beTTer",  "");
+
+    WikiPage goodTest = addTestPage(root, "GoodTest", "Good Test");
+    PageData data = goodTest.getData();
+    data.setAttribute(PageData.PropertySUITES, "good, better, best");
+    goodTest.commit(data);
+    assertTrue(filter.isMatchingTest(goodTest));
+
+    WikiPage notGoodTest = addTestPage(root, "NotGoodTest", "Not Good Test");
+    PageData data2 = notGoodTest.getData();
+    data2.setAttribute(PageData.PropertySUITES, "good, bad");
+    notGoodTest.commit(data2);
+    assertFalse(filter.isMatchingTest(notGoodTest));
+  }
 }
