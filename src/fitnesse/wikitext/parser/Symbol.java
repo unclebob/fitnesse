@@ -12,7 +12,7 @@ public class Symbol {
     public static final Maybe<Symbol> nothing = new Maybe<Symbol>();
     public static final Symbol emptySymbol = new Symbol(SymbolType.Empty);
 
-    private SymbolType type;
+    private final SymbolType type;
     private String content;
     private List<Symbol> children;
     private Map<String,String> variables;

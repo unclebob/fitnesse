@@ -115,7 +115,7 @@ public class Scanner {
         return new Step(matchSymbol, newNext);
     }
 
-    private class Step {
+    private static class Step {
         public Symbol token;
         public int nextPosition;
         public Step(Symbol token, int nextPosition) {
