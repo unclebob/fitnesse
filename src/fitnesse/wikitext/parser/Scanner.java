@@ -10,7 +10,7 @@ public class Scanner {
     private TextMaker textMaker;
     private SymbolStream symbols;
 
-    public Scanner(SourcePage sourcePage, String input) {
+    public Scanner(SourcePage sourcePage, CharSequence input) {
         this(
             new TextMaker(
                 new VariableSource() {
@@ -22,7 +22,7 @@ public class Scanner {
             input);
     }
 
-    public Scanner(TextMaker textMaker, String input) {
+    public Scanner(TextMaker textMaker, CharSequence input) {
         this.input = new ScanString(input, 0);
         next = 0;
         this.textMaker = textMaker;

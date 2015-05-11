@@ -1,11 +1,11 @@
 package fitnesse.wikitext.parser;
 
 public class ScanString {
-    private final String input;
+    private final CharSequence input;
     private int offset;
     private int markStartOffset;
 
-    public ScanString(String input, int offset) {
+    public ScanString(CharSequence input, int offset) {
         this.input = input != null ? input : "";
         this.offset = offset;
     }
@@ -26,7 +26,7 @@ public class ScanString {
     public boolean matches(String match, int startsAt) {
         if (match.isEmpty()) return false;
         if (offset + startsAt + match.length() > input.length()) return false;
-        return input.regionMatches(offset + startsAt, match, 0, match.length());
+        return match.equals(input.subSequence(offset + startsAt, offset + startsAt + match.length()).toString());
     }
 
     public boolean startsWith(String match) {
@@ -49,15 +49,15 @@ public class ScanString {
     }
 
     public String substring(int startAt, int endBefore) {
-        return input.substring(offset + startAt, offset + endBefore);
+        return input.subSequence(offset + startAt, offset + endBefore).toString();
     }
 
     public String rawSubstring(int startAt, int endBefore) {
-        return input.substring(startAt, endBefore);
+        return input.subSequence(startAt, endBefore).toString();
     }
 
     public String substringFrom(int startAt) {
-        return input.substring(startAt, offset);
+        return input.subSequence(startAt, offset).toString();
     }
 
     public char charAt(int startAt) {
