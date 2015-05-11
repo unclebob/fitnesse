@@ -17,7 +17,7 @@ public class TextMaker {
     if (specification.matchesFor(WikiWord.symbolType)) {
       int length = findWikiWordLength(text);
       if (length > 0) {
-        Symbol wikiWord = new Symbol(new WikiWord(sourcePage), text.substring(0, length));
+        Symbol wikiWord = new Symbol(new WikiWord(sourcePage), text.substring(0, length), offset);
         wikiWord.evaluateVariables(new String[]{WikiWord.REGRACE_LINK}, variableSource);
         return new SymbolMatch(wikiWord, offset, length);
       }

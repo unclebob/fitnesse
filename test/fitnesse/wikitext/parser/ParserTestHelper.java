@@ -116,6 +116,12 @@ public class ParserTestHelper {
     assertEquals(expected, serialize(result));
   }
 
+  public static void assertParsesWithOffset(String input, String expected) {
+    WikiPage page = new TestRoot().makePage("TestPage", input);
+    Symbol result = parse(page, input);
+    assertEquals(expected, serializeWithOffset(result));
+  }
+
   public static Symbol parse(WikiPage page) {
     return Parser.make(new ParsingPage(new WikiSourcePage(page)), page.getData().getContent()).parse();
   }
@@ -131,6 +137,20 @@ public class ParserTestHelper {
     for (Symbol child : symbol.getChildren()) {
       result.append(i == 0 ? "[" : ", ");
       result.append(serialize(child));
+      i++;
+    }
+    if (i > 0) result.append("]");
+    return result.toString();
+  }
+
+  public static String serializeWithOffset(Symbol symbol) {
+    StringBuilder result = new StringBuilder();
+    result.append(symbol.getType() != null ? symbol.getType().toString() : "?no type?")
+            .append("<").append(symbol.getStartOffset()).append("..").append(symbol.getEndOffset()).append(">");
+    int i = 0;
+    for (Symbol child : symbol.getChildren()) {
+      result.append(i == 0 ? "[" : ", ");
+      result.append(serializeWithOffset(child));
       i++;
     }
     if (i > 0) result.append("]");

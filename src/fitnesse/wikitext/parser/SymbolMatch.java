@@ -13,13 +13,13 @@ public class SymbolMatch {
     }
 
     public SymbolMatch(SymbolType symbolType, ScanString input, int matchLength) {
-        this.symbol = new Symbol(symbolType, input.substring(0, matchLength));
-        this.offset = input.getOffset();
-        this.matchLength = matchLength;
+      this.offset = input.getOffset();
+      this.matchLength = matchLength;
+      this.symbol = new Symbol(symbolType, input.substring(0, matchLength), offset);
     }
 
     public SymbolMatch(SymbolType symbolType, String text, int offset) {
-        this.symbol = new Symbol(symbolType, text);
+        this.symbol = new Symbol(symbolType, text, offset);
         this.offset = offset;
         this.matchLength = text.length();
     }

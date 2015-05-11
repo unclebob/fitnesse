@@ -83,7 +83,7 @@ public class ParseSpecification {
     public Symbol parse(Parser parser, Scanner scanner) {
         Symbol result = new Symbol(SymbolType.SymbolList);
         // set start pos:
-//        result.setStartOffset(scanner.getOffset());
+        result.setStartOffset(scanner.getOffset());
         while (true) {
             Scanner backup = new Scanner(scanner);
             scanner.moveNextIgnoreFirst(this);
@@ -96,6 +96,7 @@ public class ParseSpecification {
             if (terminatesOn(currentToken.getType())) break;
             Rule currentRule = currentToken.getType().getWikiRule();
             Maybe<Symbol> parsedSymbol = currentRule.parse(currentToken, parser);
+            currentToken.setEndOffset(scanner.getOffset());
             if (parsedSymbol.isNothing()) {
                 ignoreFirst(currentToken.getType());
                 scanner.copy(backup);
@@ -105,7 +106,7 @@ public class ParseSpecification {
                 clearIgnoresFirst();
             }
         }
-//        result.getEndOffset(scanner.getOffset());
+        result.setEndOffset(scanner.getOffset());
         return result;
     }
 

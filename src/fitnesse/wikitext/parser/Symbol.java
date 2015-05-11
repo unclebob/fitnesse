@@ -17,6 +17,8 @@ public class Symbol {
     private List<Symbol> children;
     private Map<String,String> variables;
     private Map<String,String> properties;
+    private int startOffset = -1;
+    private int endOffset = -1;
 
     public Symbol(SymbolType type) { this(type, ""); }
 
@@ -24,6 +26,11 @@ public class Symbol {
         this.type = type;
         this.content = content;
         this.children = NO_CHILDREN;
+    }
+
+    public Symbol(SymbolType type, String content, int offset) {
+        this(type, content);
+        this.startOffset = offset;
     }
 
     public SymbolType getType() { return type; }
@@ -128,5 +135,23 @@ public class Symbol {
                 : SymbolType.Empty;
     }
 
+    public boolean hasOffset() {
+      return startOffset != -1 && endOffset != -1;
+    }
 
+    void setStartOffset(int startOffset) {
+      this.startOffset = startOffset;
+    }
+
+    public int getStartOffset() {
+      return startOffset;
+    }
+
+    void setEndOffset(int endOffset) {
+      this.endOffset = endOffset;
+    }
+
+    public int getEndOffset() {
+      return endOffset;
+    }
 }
