@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.junit.Test;
 
@@ -80,15 +81,6 @@ public class CustomLexerTest {
     return lexedTokens;
   }
 
-
-  // next():
-  //  if not childIterator:
-  //    return self
-  //    store child iterator
-  //  else
-  //    childIterator.next();
-  // hasNext():
-  //  childIterator == null || childIterator.hasNext();
   public static class Lexer {
 
     private final CharSequence buffer;
@@ -98,7 +90,7 @@ public class CustomLexerTest {
     private final Scanner scanner;
     private final Parser parser;
 
-    private Iterator<Symbol> symbolIterator = Collections.emptyIterator();
+    private Iterator<Symbol> symbolIterator = emptyIterator();
     private Symbol currentSymbol;
     private int state;
 
@@ -181,7 +173,7 @@ public class CustomLexerTest {
           if (shouldTraverse(currentSymbol)) {
             symbolIterator = new SymbolChildIterator(currentSymbol.getChildren());
           } else {
-            symbolIterator = Collections.emptyIterator();
+            symbolIterator = emptyIterator();
           }
         }
       }
@@ -207,7 +199,7 @@ public class CustomLexerTest {
 
   public static class SymbolChildIterator implements Iterator<Symbol> {
     private final Iterator<Symbol> symbols;
-    private Iterator<Symbol> childIterator = Collections.emptyIterator();
+    private Iterator<Symbol> childIterator = emptyIterator();
 
     SymbolChildIterator(Collection<Symbol> symbols) {
       this.symbols = symbols.iterator();
@@ -338,4 +330,19 @@ public class CustomLexerTest {
       throw new IllegalStateException("Should not have been called in this context");
     }
   }
+
+  @SuppressWarnings("unchecked")
+  public static <T> Iterator<T> emptyIterator() {
+    return (Iterator<T>) EmptyIterator.EMPTY_ITERATOR;
+  }
+
+  private static class EmptyIterator<E> implements Iterator<E> {
+    static final EmptyIterator<Object> EMPTY_ITERATOR
+            = new EmptyIterator<Object>();
+
+    public boolean hasNext() { return false; }
+    public E next() { throw new NoSuchElementException(); }
+    public void remove() { throw new IllegalStateException(); }
+  }
+
 }
