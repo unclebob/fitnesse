@@ -50,6 +50,29 @@ public class SymbolOffsetTest {
   }
 
   @Test
+  public void escapedLineTable() {
+    assertParsesWithOffset(
+            "-!| table |",
+            "SymbolList<0..11>[" +
+                    "Table<0..11>[TableRow<3..11>[" +
+                    "TableCell<3..11>[Text<3..10>]]]]");
+  }
+
+  @Test
+  public void literalText() {
+    assertParsesWithOffset(
+            "Some !-literal text-!",
+            "SymbolList<0..21>[Text<0..4>, Whitespace<4..5>, Literal<7..19>]");
+  }
+
+  @Test
+  public void comment() {
+    assertParsesWithOffset(
+            "# a comment",
+            "SymbolList<0..11>[Comment<0..11>[Text<-1..-1>]]");
+  }
+
+  @Test
   public void onlyHasOffsetIfStartAndEndOffsetIsSet() {
     Symbol noOffsets = new Symbol(SymbolType.Text, "text");
     Symbol onlyStartOffset = new Symbol(SymbolType.Text, "text", 0);
@@ -57,7 +80,7 @@ public class SymbolOffsetTest {
     startAndEndOffset.setEndOffset(4);
 
     assertFalse(noOffsets.hasOffset());
-    assertFalse(onlyStartOffset.hasOffset());
+    assertTrue(onlyStartOffset.hasOffset());
     assertTrue(startAndEndOffset.hasOffset());
   }
 }

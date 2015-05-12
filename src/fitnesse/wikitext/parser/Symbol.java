@@ -28,9 +28,10 @@ public class Symbol {
         this.children = NO_CHILDREN;
     }
 
-    public Symbol(SymbolType type, String content, int offset) {
+    public Symbol(SymbolType type, String content, int startOffset) {
         this(type, content);
-        this.startOffset = offset;
+        this.startOffset = startOffset;
+        this.endOffset = startOffset + content.length();
     }
 
     public SymbolType getType() { return type; }
@@ -126,6 +127,7 @@ public class Symbol {
         return getProperty(key, "");
     }
 
+    @Deprecated
     public SymbolType closeType() {
         return type == SymbolType.OpenBrace ? SymbolType.CloseBrace
                 : type == SymbolType.OpenBracket ? SymbolType.CloseBracket

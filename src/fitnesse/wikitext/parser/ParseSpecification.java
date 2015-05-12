@@ -82,7 +82,6 @@ public class ParseSpecification {
 
     public Symbol parse(Parser parser, Scanner scanner) {
         Symbol result = new Symbol(SymbolType.SymbolList);
-        // set start pos:
         result.setStartOffset(scanner.getOffset());
         while (true) {
             Maybe<Symbol> parsedSymbol = parseSymbol(parser, scanner);

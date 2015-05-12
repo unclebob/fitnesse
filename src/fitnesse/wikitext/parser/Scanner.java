@@ -58,13 +58,13 @@ public class Scanner {
             SymbolMatch match = terminator.makeMatch(input, symbols);
             if (match.isMatch()) {
                 symbols.add(new Symbol(terminator));
-                Symbol result = new Symbol(SymbolType.Text, input.substringFrom(next));
+                Symbol result = new Symbol(SymbolType.Text, input.substringFrom(next), next);
                 next = input.getOffset() + match.getMatchLength();
                 return result;
             }
             input.moveNext();
         }
-        Symbol result = new Symbol(SymbolType.Text, input.substringFrom(next));
+        Symbol result = new Symbol(SymbolType.Text, input.substringFrom(next), next);
         next = input.getOffset();
         symbols.add(Symbol.emptySymbol);
         return result;

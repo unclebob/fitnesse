@@ -15,6 +15,7 @@ public class Comment extends SymbolType implements Rule, Translation {
         if (!parser.atEnd()) literal += "\n";
         return new Maybe<Symbol>(current.add(literal));
     }
+
     public String toTarget(Translator translator, Symbol symbol) {
         return "";
     }
