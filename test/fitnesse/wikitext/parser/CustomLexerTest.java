@@ -49,8 +49,10 @@ public class CustomLexerTest {
             "*!";
 
     assertEquals(asList("Collapsible:!** what about\n" +
-                    "me\n" +
-                    "*!", "SymbolList:what about\n", "Text:what", "Whitespace: ", "Text:about", "SymbolList:me\n*!", "Text:me", "Newline:\n"),
+                            "me\n" +
+                            "*!",
+                    "SymbolList:what about\n", "Text:what", "Whitespace: ", "Text:about",
+                    "SymbolList:me\n*!", "Text:me", "Newline:\n"),
             lex(buffer));
   }
 
@@ -60,11 +62,9 @@ public class CustomLexerTest {
 
     assertEquals(asList("Table:|script: table|\n" +
                             "|ensure|I'm there|\n",
-                    "SymbolList:script: table|\n" +
-                            "|",
-                    "Text:script", "Colon::", "Whitespace: ", "Text:table", "SymbolList:ensure|",
-                    "Text:ensure", "SymbolList:I'm there|\n", "Text:I'm", "Whitespace: ", "Text:there"),
-    lex(buffer));
+                    "TableRow:script: table|\n|", "TableCell:script: table|\n|", "Text:script", "Colon::", "Whitespace: ", "Text:table",
+                    "TableRow:ensure|I'm there|\n", "TableCell:ensure|", "Text:ensure", "TableCell:I'm there|\n", "Text:I'm", "Whitespace: ", "Text:there"),
+            lex(buffer));
   }
 
   public List<String> lex(CharSequence buffer) {

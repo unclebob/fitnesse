@@ -32,8 +32,8 @@ public class SymbolOffsetTest {
     //       012345678
             "| table |",
             "SymbolList<0..9>[" +
-                    "Table<0..9>[SymbolList<-1..-1>[" +
-                        "SymbolList<1..9>[Whitespace<1..2>, Text<2..7>, Whitespace<7..8>]]]]");
+                    "Table<0..9>[TableRow<1..9>[" +
+                        "TableCell<1..9>[Whitespace<1..2>, Text<2..7>, Whitespace<7..8>]]]]");
   }
 
   @Test
@@ -44,9 +44,9 @@ public class SymbolOffsetTest {
             "| script:fooBar |\n| ensure | do something |\n",
             "SymbolList<0..44>[" +
                     "Table<0..44>[" +
-                    "SymbolList<-1..-1>[SymbolList<1..19>[Whitespace<1..2>, Text<2..8>, Colon<8..9>, Text<9..15>, Whitespace<15..16>]], " +
-                    "SymbolList<-1..-1>[SymbolList<19..28>[Whitespace<19..20>, Text<20..26>, Whitespace<26..27>], " +
-                        "SymbolList<28..44>[Whitespace<28..29>, Text<29..31>, Whitespace<31..32>, Text<32..41>, Whitespace<41..42>]]]]");
+                    "TableRow<1..19>[TableCell<1..19>[Whitespace<1..2>, Text<2..8>, Colon<8..9>, Text<9..15>, Whitespace<15..16>]], " +
+                    "TableRow<19..44>[TableCell<19..28>[Whitespace<19..20>, Text<20..26>, Whitespace<26..27>], " +
+                        "TableCell<28..44>[Whitespace<28..29>, Text<29..31>, Whitespace<31..32>, Text<32..41>, Whitespace<41..42>]]]]");
   }
 
   @Test

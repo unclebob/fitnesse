@@ -12,7 +12,7 @@ public class Symbol {
     public static final Maybe<Symbol> nothing = new Maybe<Symbol>();
     public static final Symbol emptySymbol = new Symbol(SymbolType.Empty);
 
-    private final SymbolType type;
+    private SymbolType type;
     private String content;
     private List<Symbol> children;
     private Map<String,String> variables;
@@ -154,4 +154,8 @@ public class Symbol {
     public int getEndOffset() {
       return endOffset;
     }
+
+  public void setType(SymbolType type) {
+    this.type = type;
+  }
 }
