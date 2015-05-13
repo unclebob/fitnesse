@@ -127,16 +127,6 @@ public class Symbol {
         return getProperty(key, "");
     }
 
-    @Deprecated
-    public SymbolType closeType() {
-        return type == SymbolType.OpenBrace ? SymbolType.CloseBrace
-                : type == SymbolType.OpenBracket ? SymbolType.CloseBracket
-                : type == SymbolType.OpenParenthesis ? SymbolType.CloseParenthesis
-                : type == Literal.symbolType ? SymbolType.CloseLiteral
-                : type == Comment.symbolType ? SymbolType.Newline
-                : SymbolType.Empty;
-    }
-
     public boolean hasOffset() {
       return startOffset != -1 && endOffset != -1;
     }

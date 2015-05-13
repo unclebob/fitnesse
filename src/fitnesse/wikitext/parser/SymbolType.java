@@ -69,11 +69,12 @@ public class SymbolType implements Matchable {
             .wikiMatcher(new Matcher().startLineOrCell().string("!note"))
             .wikiRule(new LineRule())
             .htmlTranslation(new HtmlBuilder("p").body(0).attribute("class", "note").inline());
-    public static final SymbolType OpenBrace = new SymbolType("OpenBrace")
+    public static final SymbolType OpenBrace = new SymbolType("OpenBrace", CloseBrace)
             .wikiMatcher(new Matcher().string("{"));
-    public static final SymbolType OpenBracket = new SymbolType("OpenBracket")
+
+    public static final SymbolType OpenBracket = new SymbolType("OpenBracket", CloseBracket)
             .wikiMatcher(new Matcher().string("["));
-    public static final SymbolType OpenParenthesis = new SymbolType("OpenParenthesis")
+    public static final SymbolType OpenParenthesis = new SymbolType("OpenParenthesis", CloseParenthesis)
             .wikiMatcher(new Matcher().string("("));
     public static final SymbolType OrderedList = new SymbolType("OrderedList")
             .wikiMatcher(new Matcher().startLine().whitespace().listDigit().string(" "))
@@ -101,10 +102,16 @@ public class SymbolType implements Matchable {
     private List<Matcher> wikiMatchers =  new ArrayList<Matcher>(1);
     private Rule wikiRule = defaultRule;
     private Translation htmlTranslation = null;
+    private final SymbolType closeType;
 
-    public SymbolType(String name) { this.name = name; }
+    public SymbolType(String name) { this(name, Empty); }
 
-    public List<Matcher> getWikiMatchers() { return wikiMatchers; }
+    public SymbolType(String name, SymbolType closeType) {
+      this.name = name;
+      this.closeType = closeType;
+    }
+
+  public List<Matcher> getWikiMatchers() { return wikiMatchers; }
     public Rule getWikiRule() { return wikiRule; }
     public Translation getHtmlTranslation() { return htmlTranslation; }
 
@@ -135,6 +142,10 @@ public class SymbolType implements Matchable {
             if (!matchLength.isNothing()) return new SymbolMatch(this, input, matchLength.getValue());
         }
         return SymbolMatch.noMatch;
+    }
+
+    public SymbolType closeType() {
+      return closeType;
     }
 }
 
