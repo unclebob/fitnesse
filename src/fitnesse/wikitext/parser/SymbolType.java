@@ -64,6 +64,7 @@ public class SymbolType implements Matchable {
             .htmlTranslation(new HtmlBuilder("span").body(0).attribute("class", "meta").inline());
     public static final SymbolType Newline = new SymbolType("Newline")
             .wikiMatcher(new Matcher().string("\n"))
+            .wikiMatcher(new Matcher().string("\r\n"))
             .htmlTranslation(new HtmlBuilder("br").inline());
     public static final SymbolType NoteLine = new SymbolType("NoteLine")
             .wikiMatcher(new Matcher().startLineOrCell().string("!note"))
