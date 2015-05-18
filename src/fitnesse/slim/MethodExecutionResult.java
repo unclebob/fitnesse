@@ -77,7 +77,7 @@ public class MethodExecutionResult {
   }
 
   public Object returnValue() {
-    if (type == List.class && value instanceof List) {
+    if (List.class.isAssignableFrom(type) && value instanceof List) {
       return value;
     } else {
       return toString();

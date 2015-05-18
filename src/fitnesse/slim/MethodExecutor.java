@@ -37,6 +37,10 @@ public abstract class MethodExecutor {
     Object[] convertedArgs = convertArgs(method, args);
     Object retval = callMethod(instance, method, convertedArgs);
     Class<?> retType = method.getReturnType();
+    if (retval != null && !retType.isPrimitive()) {
+      Class<?> actualClass = retval.getClass();
+      retType = actualClass;
+    }
     return new MethodExecutionResult(retval, retType);
   }
 
