@@ -1,4 +1,4 @@
-Hash Tables are collections of name-value pairs that can be passed as arguments into test fixtures.  They render as tables.  !-DoFixture-! will decode a name-value pair table into a true hashtable.
+Hash Tables are collections of name-value pairs that can be passed as arguments into test fixtures.  They render as tables.  !-DoFixture-! will decode a name-value pair table into a true hashtable. Java_Slim and Ruby_Slim will both convert this HTML string into a Map<String,String> (or a hash in the case of Ruby)
 
 Any text enclosed in '''!-!{-!''' and '''}''' will be treated as a Hash Table.
 
@@ -8,7 +8,7 @@ Any text enclosed in '''!-!{-!''' and '''}''' will be treated as a Hash Table.
 The key name must be plain text, but the value can be any reasonable wiki construct.
 
 |!c '''Markup Text'''|!c '''Displays as'''|
-|!-!{fname:''Bob'', lname:''Martin'', today:!today}-!|!{fname:''Bob'', lname:''Martin'', today:!today}|
+|!-!{fname:''Bob'', lname:''Martin'', today:!today, hash:!{fname:Bob, lname:Martin, dob:5-Dec-1952}}-!|!{fname:''Bob'', lname:''Martin'', today:!today, hash:!{fname:Bob, lname:Martin, dob:5-Dec-1952}}|
 
 
 !3 Syntax issues.
