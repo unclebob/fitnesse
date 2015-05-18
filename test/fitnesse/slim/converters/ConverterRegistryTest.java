@@ -99,6 +99,16 @@ public class ConverterRegistryTest {
   }
 
   @Test
+  public void getConverterForClass_should_return_a_MapConverter_when_type_implements_map_indirectly() throws SecurityException, NoSuchMethodException {
+    Class<?> typedClass = MyFixture.class.getMethod("getTreeMap").getReturnType();
+
+    Converter<?> converter = ConverterRegistry.getConverterForClass(typedClass);
+
+    assertNotNull("no converter retunred", converter);
+    assertEquals(MapConverter.class, converter.getClass());
+  }
+
+  @Test
   public void getConverterForClass_should_return_Converter_when_type_superclass_registered() throws SecurityException, NoSuchMethodException {
     ConverterRegistry.addConverter(MyFixture.class, new MyFixtureConverter());
 
@@ -129,6 +139,9 @@ public class ConverterRegistryTest {
       return null;
     }
     public LinkedHashMap<String, Object> getLinkedMap() {
+      return null;
+    }
+    public TreeMap<String, Object> getTreeMap() {
       return null;
     }
   }
