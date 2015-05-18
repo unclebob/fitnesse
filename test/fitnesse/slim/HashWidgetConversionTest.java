@@ -60,30 +60,32 @@ public class HashWidgetConversionTest extends HashWidgetConversionTestBase {
     statementExecutor.create(instance1Id, NestedMapSender.class.getName());
 
     String expected =
-            "<table class=\"hash_table\">\n" +
-                    "\t<tr class=\"hash_row\">\n" +
-                    "\t\t<td class=\"hash_key\">address</td>\n" +
-                    "\t\t<td class=\"hash_value\">1</td>\n" +
-                    "\t</tr>\n" +
-                    "\t<tr class=\"hash_row\">\n" +
-                    "\t\t<td class=\"hash_key\">nestedMap</td>\n" +
-                    "\t\t<td class=\"hash_value\">\n" +
-                    "\t\t\t<table class=\"hash_table\">\n" +
-                    "\t\t\t\t<tr class=\"hash_row\">\n" +
-                    "\t\t\t\t\t<td class=\"hash_key\">name2</td>\n" +
-                    "\t\t\t\t\t<td class=\"hash_value\">Bob2</td>\n" +
-                    "\t\t\t\t</tr>\n" +
-                    "\t\t\t\t<tr class=\"hash_row\">\n" +
-                    "\t\t\t\t\t<td class=\"hash_key\">address2</td>\n" +
-                    "\t\t\t\t\t<td class=\"hash_value\">2</td>\n" +
-                    "\t\t\t\t</tr>\n" +
-                    "\t\t\t</table>\n" +
-                    "\t\t</td>\n" +
-                    "\t</tr>\n" +
-                    "\t<tr class=\"hash_row\">\n" +
-                    "\t\t<td class=\"hash_key\">name</td>\n" +
-                    "\t\t<td class=\"hash_value\">Bob</td>\n" +
-                    "\t</tr>\n" +
+            "<table class=\"hash_table\">" +
+                    "<tr class=\"hash_row\">" +
+                    "<td class=\"hash_key\">address</td>" +
+                    "<td class=\"hash_value\">1</td>" +
+                    "</tr>" +
+                    "<tr class=\"hash_row\">" +
+                    "<td class=\"hash_key\">nestedMap</td>" +
+                    "<td class=\"hash_value\">" +
+                    "<table class=\"hash_table\">" +
+                    "<tr class=\"hash_row\">" +
+                    "<td class=\"hash_key\">name2</td>" +
+                    "<td class=\"hash_value\">Bob2</td>" +
+                    "</tr>" +
+                    "<tr class=\"hash_row\">" +
+                    "<td class=\"hash_key\">address2</td>" +
+                    "<td class=\"hash_value\">2</td>" +
+                    "</tr>" +
+                    "</table>" +
+                    "</td>" +
+                    "</tr>" +
+                    "<tr class=\"hash_row\">" +
+                    "<td class=\"hash_key\">name</td>" +
+                    "<td class=\"hash_value\">Bob</td>" +
+                    "</tr>" +
+                    "<tr class=\"hash_row\"><td class=\"hash_key\">list</td><td class=\"hash_value\">[a, b]</td></tr>" +
+                    "<tr class=\"hash_row\"><td class=\"hash_key\">nullKey</td><td class=\"hash_value\">null</td></tr>" +
                     "</table>";
 
     Object respMap = statementExecutor.call(instance1Id, "getMap");
@@ -103,7 +105,7 @@ public class HashWidgetConversionTest extends HashWidgetConversionTestBase {
   private String checkStringResponse(String method, Object resp) {
     assertTrue("Other object than String result from " + method
                 + ": " + resp.getClass().getName(), resp instanceof String);
-    return ((String) resp).replace("\r\n", "\n");
+    return ((String) resp).replace("\r", "").replace("\n", "").replace("\t", "");
   }
 
   public static class NestedMapSender {
@@ -116,6 +118,8 @@ public class HashWidgetConversionTest extends HashWidgetConversionTestBase {
       nestedMap.put("address2", 2);
       theMap.put("nestedMap", nestedMap);
       theMap.put("name", "Bob");
+      theMap.put("list", Arrays.asList("a", "b"));
+      theMap.put("nullKey", null);
     }
 
     public Map<String, Object> getMap() {

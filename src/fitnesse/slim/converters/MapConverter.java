@@ -43,10 +43,13 @@ public class MapConverter implements Converter<Map> {
 
       Object entryValue = entry.getValue();
       HtmlTag valueCell = new HtmlTag("td");
-      if (entryValue instanceof Map) {
-        valueCell.add(createTag((Map<?, ?>) entryValue, depth + 1));
+      Converter converter;
+      if (entryValue != null) {
+        converter = ConverterRegistry.getConverterForClassOrStringConverter(entryValue.getClass());
+        String convertedValue = converter.toString(entryValue);
+        valueCell.add(convertedValue.trim());
       } else {
-        valueCell.add(entryValue.toString().trim());
+        valueCell.add("null");
       }
       valueCell.addAttribute("class", "hash_value");
       row.add(valueCell);
