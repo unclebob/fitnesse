@@ -1,10 +1,7 @@
 package fitnesse.slim.converters;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.junit.Test;
 
@@ -79,6 +76,59 @@ public class ConverterRegistryTest {
 
     assertTrue(current instanceof GenericArrayConverter);
     assertEquals(Integer.valueOf(1), value2[0]);
+  }
+
+  @Test
+  public void getConverterForClass_should_return_a_MapConverter_when_type_is_typed_map() throws SecurityException, NoSuchMethodException {
+    Class<?> typedClass = MyFixture.class.getMethod("getMap").getReturnType();
+
+    Converter<?> converter = ConverterRegistry.getConverterForClass(typedClass);
+
+    assertNotNull("no converter retunred", converter);
+    assertEquals(MapConverter.class, converter.getClass());
+  }
+
+  @Test
+  public void getConverterForClass_should_return_a_MapConverter_when_type_implements_map() throws SecurityException, NoSuchMethodException {
+    Class<?> typedClass = MyFixture.class.getMethod("getLinkedMap").getReturnType();
+
+    Converter<?> converter = ConverterRegistry.getConverterForClass(typedClass);
+
+    assertNotNull("no converter retunred", converter);
+    assertEquals(MapConverter.class, converter.getClass());
+  }
+
+  @Test
+  public void getConverterForClass_should_return_Converter_when_type_superclass_registered() throws SecurityException, NoSuchMethodException {
+    ConverterRegistry.addConverter(MyFixture.class, new MyFixtureConverter());
+
+    Converter<?> converter = ConverterRegistry.getConverterForClass(MySubFixture.class);
+
+    assertNotNull("no converter retunred", converter);
+    assertEquals(MyFixtureConverter.class, converter.getClass());
+  }
+
+  private static class MyFixture {
+    public Map<String, Object> getMap() {
+      return null;
+    }
+    public LinkedHashMap<String, Object> getLinkedMap() {
+      return null;
+    }
+  }
+
+  private static class MyFixtureConverter implements Converter<MyFixture> {
+    @Override
+    public String toString(MyFixture o) {
+      return null;
+    }
+    @Override
+    public MyFixture fromString(String arg) {
+      return null;
+    }
+  }
+
+  private static class MySubFixture extends MyFixture {
   }
 
   @Test

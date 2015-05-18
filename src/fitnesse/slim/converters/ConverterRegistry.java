@@ -56,6 +56,21 @@ public class ConverterRegistry {
     if (converters.containsKey(clazz)) {
       return (Converter<T>) converters.get(clazz);
     }
+    // use converter for superclass set in registry
+    Class<?> superclass = clazz.getSuperclass();
+    while (superclass != null && !Object.class.equals(superclass)) {
+      if (converters.containsKey(superclass)) {
+        return (Converter<T>) converters.get(superclass);
+      }
+      superclass = superclass.getSuperclass();
+    }
+    // use converter for implemented interface set in registry
+    Class<?>[] interfaces = clazz.getInterfaces();
+    for (Class<?> interf : interfaces) {
+      if (converters.containsKey(interf)) {
+        return (Converter<T>) converters.get(interf);
+      }
+    }
 
     //use property editor
     PropertyEditor pe = PropertyEditorManager.findEditor(clazz);
