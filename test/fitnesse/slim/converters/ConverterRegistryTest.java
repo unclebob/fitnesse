@@ -108,6 +108,22 @@ public class ConverterRegistryTest {
     assertEquals(MyFixtureConverter.class, converter.getClass());
   }
 
+  @Test
+  public void getConverterForClass_should_return_Object_Converter_as_last_resort() throws SecurityException, NoSuchMethodException {
+    try {
+      ConverterRegistry.addConverter(Object.class, new MyObjectConverter());
+
+      Converter<?> converter = ConverterRegistry.getConverterForClass(ConverterRegistryTest.class);
+
+      assertNotNull("no converter retunred", converter);
+      assertEquals(MyObjectConverter.class, converter.getClass());
+    } finally {
+      // cleanup
+      ConverterRegistry.addConverter(Object.class, null);
+      assertNull(ConverterRegistry.getConverterForClass(Object.class));
+    }
+  }
+
   private static class MyFixture {
     public Map<String, Object> getMap() {
       return null;
@@ -124,6 +140,17 @@ public class ConverterRegistryTest {
     }
     @Override
     public MyFixture fromString(String arg) {
+      return null;
+    }
+  }
+
+  private static class MyObjectConverter implements Converter<Object> {
+    @Override
+    public String toString(Object o) {
+      return null;
+    }
+    @Override
+    public Object fromString(String arg) {
       return null;
     }
   }

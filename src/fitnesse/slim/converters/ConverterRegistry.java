@@ -98,7 +98,8 @@ public class ConverterRegistry {
       return new GenericCollectionConverter(clazz, converterForClass);
     }
 
-    return null;
+    // last resort, see if there is a converter for Object
+    return (Converter<T>) converters.get(Object.class);
   }
 
   public static <T> void addConverter(Class<? extends T> clazz, Converter<T> converter) {
