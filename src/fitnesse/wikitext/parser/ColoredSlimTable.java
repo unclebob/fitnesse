@@ -150,10 +150,8 @@ public class ColoredSlimTable extends SymbolTypeDecorator {
     }
   }
 
-
   private TableDescription getTableDescription(Class<?> tableClass) {
     TableDescription tableDescription = new TableDescription();
-    // If is slim table class declaration then get fixture info for table coloring scheme.
     if (SlimTable.class.isAssignableFrom(tableClass)) {
       if (secondRowTitleClasses.contains(tableClass.getName())) {
         tableDescription.isSecondRowTitle = true;
@@ -161,7 +159,6 @@ public class ColoredSlimTable extends SymbolTypeDecorator {
         tableDescription.isImportFixture = true;
       }
     }
-    // Unmarked decision tables aren't found by getTableType().  Color table if first row is valid class.
     else {
       tableDescription.isSecondRowTitle = true;
     }
@@ -183,24 +180,6 @@ public class ColoredSlimTable extends SymbolTypeDecorator {
   private static class TableDescription {
     boolean isImportFixture = false;
     boolean isSecondRowTitle = false;
-  }
-
-  abstract static class TableDecorator {
-    abstract void decorateRow(HtmlWriter writer, String body);
-
-    void onHeaderStarts(HtmlWriter writer) {
-    }
-
-    void onHeaderEnds(HtmlWriter writer) {
-    }
-
-    void decorateHeaderRow(HtmlWriter writer) {
-      writer.putAttribute("class", "slimRowTitle");
-    }
-
-    public String getClassForTable() {
-      return null;
-    }
   }
 
   static class EmptyDecorator extends TableDecorator {

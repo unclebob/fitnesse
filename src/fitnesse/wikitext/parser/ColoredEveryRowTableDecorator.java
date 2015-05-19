@@ -3,7 +3,7 @@ package fitnesse.wikitext.parser;
 /**
 * @author Dmitrii Kartashov
 */
-class ColoredEveryRowTableDecorator extends ColoredSlimTable.TableDecorator {
+class ColoredEveryRowTableDecorator extends TableDecorator {
 
   @Override
   void decorateRow(HtmlWriter writer, String body) {

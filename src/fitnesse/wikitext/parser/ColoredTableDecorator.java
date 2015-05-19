@@ -3,7 +3,7 @@ package fitnesse.wikitext.parser;
 /**
 * @author Dmitrii Kartashov
 */
-class ColoredTableDecorator extends ColoredSlimTable.TableDecorator
+class ColoredTableDecorator extends TableDecorator
 {
   int rowCount;
 
