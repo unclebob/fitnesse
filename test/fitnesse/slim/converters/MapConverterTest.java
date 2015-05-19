@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import fitnesse.html.HtmlTag;
+import fitnesse.slim.Converter;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +20,11 @@ public class MapConverterTest {
   public void setup() {
 
     converter = new MapConverter();
+  }
+
+  @Test
+  public void fromNull_shouldCreateNullString() {
+    assertEquals(Converter.NULL_VALUE, converter.toString(null));
   }
 
   @Test

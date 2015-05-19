@@ -1,5 +1,6 @@
 package fitnesse.slim.converters;
 
+import fitnesse.slim.Converter;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -14,6 +15,11 @@ public class GenericArrayConverterTest extends AbstractConverterTest<Object, Gen
    * TO STRING
    */
   @Test
+  public void fromNull_shouldCreateNullString() {
+    assertEquals(Converter.NULL_VALUE, converter.toString(null));
+  }
+
+  @Test
   public void toString_should_return_a_formated_string_when_value_is_a_empty_array() {
     Integer[] value = {};
 
@@ -24,11 +30,11 @@ public class GenericArrayConverterTest extends AbstractConverterTest<Object, Gen
 
   @Test
   public void toString_should_return_a_formated_string_when_value_is_a_valid_array() {
-    Integer[] value = { 1, 2, 3 };
+    Integer[] value = { 1, 2, 3, null };
 
     String current = converter.toString(value);
 
-    assertEquals("[1, 2, 3]", current);
+    assertEquals("[1, 2, 3, null]", current);
   }
 
   /*

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import fitnesse.slim.Converter;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -19,6 +20,11 @@ public class GenericCollectionConverterTest extends AbstractConverterTest<List<I
    * TO STRING
    */
   @Test
+  public void fromNull_shouldCreateNullString() {
+    assertEquals(Converter.NULL_VALUE, converter.toString(null));
+  }
+
+  @Test
   public void toString_should_return_a_formated_string_when_value_is_a_empty_list() {
     List<Integer> value = new ArrayList<Integer>();
 
@@ -32,10 +38,11 @@ public class GenericCollectionConverterTest extends AbstractConverterTest<List<I
     value.add(1);
     value.add(2);
     value.add(3);
+    value.add(null);
 
     String current = converter.toString(value);
 
-    assertEquals("[1, 2, 3]", current);
+    assertEquals("[1, 2, 3, null]", current);
   }
 
   /*

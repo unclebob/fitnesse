@@ -1,5 +1,6 @@
 package fitnesse.slim.converters;
 
+import fitnesse.slim.Converter;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -17,6 +18,11 @@ public class BooleanConverterTest extends AbstractConverterTest<Boolean, Boolean
   /*
    * TO STRING
    */
+  @Test
+  public void fromNull_shouldCreateNullString() {
+    assertEquals(Converter.NULL_VALUE, converter.toString(null));
+  }
+
   @Test
   public void toString_should_return_true_string_when_value_is_true() {
     Boolean value = Boolean.TRUE;

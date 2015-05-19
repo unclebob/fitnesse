@@ -23,6 +23,10 @@ public class MapConverter implements Converter<Map> {
 
   @Override
   public String toString(Map hash) {
+    if (hash == null) {
+      return NULL_VALUE;
+    }
+
     HtmlTag table = createTag(hash, 0);
 
     return table.html().trim();
