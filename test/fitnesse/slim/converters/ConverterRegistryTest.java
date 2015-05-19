@@ -217,8 +217,9 @@ public class ConverterRegistryTest {
     List<Object> listToConvert = new ArrayList<Object>();
     listToConvert.add(this);
     listToConvert.add(new StringBuilderConverter());
+    listToConvert.add(null);
     String converted = converter.toString(listToConvert);
-    Pattern p = Pattern.compile("\\[(.*?),\\s*(.*?)\\]");
+    Pattern p = Pattern.compile("\\[(.*?),\\s*(.*?),\\s*null\\]");
     assertTrue(p.matcher(converted).matches());
   }
 
