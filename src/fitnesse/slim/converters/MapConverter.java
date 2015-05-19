@@ -41,20 +41,22 @@ public class MapConverter implements Converter<Map> {
       keyCell.addAttribute("class", "hash_key");
       row.add(keyCell);
 
-      Object entryValue = entry.getValue();
       HtmlTag valueCell = new HtmlTag("td");
-      Converter converter;
-      if (entryValue != null) {
-        converter = ConverterRegistry.getConverterForClassOrStringConverter(entryValue.getClass());
-        String convertedValue = converter.toString(entryValue);
-        valueCell.add(convertedValue.trim());
-      } else {
-        valueCell.add("null");
-      }
+      addValueContent(valueCell, entry.getValue());
       valueCell.addAttribute("class", "hash_value");
       row.add(valueCell);
     }
     return table;
+  }
+
+  protected void addValueContent(HtmlTag valueCell, Object entryValue) {
+    if (entryValue != null) {
+      Converter converter = ConverterRegistry.getConverterForClassOrStringConverter(entryValue.getClass());
+      String convertedValue = converter.toString(entryValue);
+      valueCell.add(convertedValue.trim());
+    } else {
+      valueCell.add("null");
+    }
   }
 
   @Override
