@@ -54,20 +54,8 @@ public class MapConverter implements Converter<Map> {
   }
 
   protected void addCellContent(HtmlTag valueCell, Object cellValue) {
-    String valueToAdd = "null";
-    if (cellValue != null) {
-      Converter converter = ConverterRegistry.getConverterForClass(cellValue.getClass());
-      String convertedValue;
-      if (converter == null) {
-        convertedValue = cellValue.toString();
-      } else {
-        convertedValue = converter.toString(cellValue);
-      }
-      if (convertedValue != null) {
-        valueToAdd = convertedValue.trim();
-      }
-    }
-    valueCell.add(valueToAdd);
+    String valueToAdd = ElementConverterHelper.elementToString(cellValue);
+    valueCell.add(valueToAdd.trim());
   }
 
   @Override
