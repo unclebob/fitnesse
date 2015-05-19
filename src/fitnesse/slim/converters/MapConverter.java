@@ -40,8 +40,8 @@ public class MapConverter implements Converter<Map> {
       HtmlTag row = new HtmlTag("tr");
       row.addAttribute("class", "hash_row");
       table.add(row);
-      String key = entry.getKey().toString();
-      HtmlTag keyCell = new HtmlTag("td", key.trim());
+      HtmlTag keyCell = new HtmlTag("td");
+      addCellContent(keyCell, entry.getKey());
       keyCell.addAttribute("class", "hash_key");
       row.add(keyCell);
 
