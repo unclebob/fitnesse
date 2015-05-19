@@ -10,9 +10,8 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 
-import fitnesse.util.StringUtils;
-
 import fitnesse.slim.Converter;
+import fitnesse.util.StringUtils;
 
 public class GenericCollectionConverter<T, C extends Collection<T>> implements Converter<C> {
 
@@ -42,9 +41,19 @@ public class GenericCollectionConverter<T, C extends Collection<T>> implements C
     int size = collection.size();
     List<String> ret = new ArrayList<String>(size);
     for (T item : collection) {
-      ret.add(componentConverter.toString(item));
+      ret.add(getElementString(item));
     }
     return ListConverterHelper.toString(ret);
+  }
+
+  private String getElementString(T item) {
+    String result;
+    if (item == null) {
+      result = componentConverter.toString(item);
+    } else {
+      result = ElementConverterHelper.elementToString(item);
+    }
+    return result;
   }
 
   public C fromString(String arg) {

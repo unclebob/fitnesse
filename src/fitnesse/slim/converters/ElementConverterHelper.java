@@ -3,15 +3,15 @@ package fitnesse.slim.converters;
 import fitnesse.slim.Converter;
 
 public class ElementConverterHelper {
-  public static String elementToString(Object cellValue) {
+  public static String elementToString(Object elementValue) {
     String valueToAdd = "null";
-    if (cellValue != null) {
-      Converter converter = ConverterRegistry.getConverterForClass(cellValue.getClass());
+    if (elementValue != null) {
+      Converter converter = ConverterRegistry.getConverterForClass(elementValue.getClass());
       String convertedValue;
       if (converter == null) {
-        convertedValue = cellValue.toString();
+        convertedValue = elementValue.toString();
       } else {
-        convertedValue = converter.toString(cellValue);
+        convertedValue = converter.toString(elementValue);
       }
       if (convertedValue != null) {
         valueToAdd = convertedValue;

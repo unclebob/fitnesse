@@ -2,6 +2,7 @@ package fitnesse.slim.converters;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import fitnesse.slim.Converter;
@@ -43,6 +44,17 @@ public class GenericCollectionConverterTest extends AbstractConverterTest<List<I
     String current = converter.toString(value);
 
     assertEquals("[1, 2, 3, null]", current);
+  }
+
+  @Test
+  public void toString_should_use_converters_for_element_values() {
+    List<Object> value = Arrays.asList(1, Collections.singletonMap("a", "b"), 3, null);
+
+    Converter c = new GenericCollectionConverter<Object, List<Object>>(ArrayList.class, new DefaultConverter());
+    String current = c.toString(value);
+
+    assertEquals("[1, <table class=\"hash_table\"> <tr class=\"hash_row\"> <td class=\"hash_key\">a</td> <td class=\"hash_value\">b</td> </tr> </table>, 3, null]",
+            current.replaceAll("\\s+", " "));
   }
 
   /*
