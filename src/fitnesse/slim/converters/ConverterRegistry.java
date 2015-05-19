@@ -10,6 +10,7 @@ import fitnesse.slim.Converter;
 public class ConverterRegistry {
 
   private static final Map<Class<?>, Converter<?>> converters = new HashMap<Class<?>, Converter<?>>();
+  private static Converter<Object> defaultConverter = new DefaultConverter();
 
   static {
     addStandardConverters();
@@ -81,14 +82,14 @@ public class ConverterRegistry {
     //for array, use generic array converter
     if (clazz.isArray()) {
       Class<?> componentType = clazz.getComponentType();
-      Converter<?> converterForClass = getConverterForClassOrStringConverter(componentType);
+      Converter<?> converterForClass = getConverterForClassOrDefaultConverter(componentType);
       return new GenericArrayConverter(componentType, converterForClass);
     }
 
     //for collection, use generic collection converter
     if (Collection.class.isAssignableFrom(clazz)) {
       Class<?> componentType = typedClazz != null ? (Class<?>) typedClazz.getActualTypeArguments()[0] : String.class;
-      Converter<?> converterForClass = getConverterForClassOrStringConverter(componentType);
+      Converter<?> converterForClass = getConverterForClassOrDefaultConverter(componentType);
       return new GenericCollectionConverter(clazz, converterForClass);
     }
 
@@ -130,10 +131,10 @@ public class ConverterRegistry {
   /*
    * PRIVATE
    */
-  public static Converter<?> getConverterForClassOrStringConverter(Class<?> clazz) {
+  public static Converter<?> getConverterForClassOrDefaultConverter(Class<?> clazz) {
     Converter<?> converter = getConverterForClass(clazz);
     if (converter == null) {
-      converter = getConverterForClass(String.class);
+      converter = defaultConverter;
     }
     return converter;
   }

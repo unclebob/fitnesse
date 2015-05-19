@@ -2,6 +2,7 @@ package fitnesse.slim.converters;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import org.junit.Test;
 
@@ -212,6 +213,13 @@ public class ConverterRegistryTest {
     assertTrue(converter instanceof GenericCollectionConverter);
     assertTrue(current instanceof String);
     assertEquals("1", current);
+
+    List<Object> listToConvert = new ArrayList<Object>();
+    listToConvert.add(this);
+    listToConvert.add(new StringBuilderConverter());
+    String converted = converter.toString(listToConvert);
+    Pattern p = Pattern.compile("\\[(.*?),\\s*(.*?)\\]");
+    assertTrue(p.matcher(converted).matches());
   }
 
   /*
