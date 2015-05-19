@@ -216,6 +216,74 @@ function initErrorMetadata() {
     }
 }
 
+function makeTablesBeautiful()
+{
+   $( ".display" ).each(function(index) {
+      var table = $(this)[0];
+//      try {
+         var rowsCount = table.rows.length;
+         //install the data tables
+         //for the small tables no search. Only sorting.
+         if (rowsCount < 8) {
+            $(this).DataTable({
+               "searching": false,
+               "info": false,
+               "paging":  false,
+               "order": [],
+               "searching": false
+            });
+            return;
+         }
+
+         //please, see http://www.datatables.net/examples/api/multi_filter.html
+         var tFoot = table.createTFoot();
+         tFoot.style.display = "table-header-group";
+         var footerRow = tFoot.insertRow(0);
+         var headerRows = table.tHead.rows;
+         var headerCells = headerRows[headerRows.length - 1].cells;
+         for (var i = 0; i < headerCells.length; i++)
+         {
+            var cell = footerRow.insertCell(i);
+            var title = "";
+            if (headerCells.length > i)
+            {
+               var title = headerCells[i].innerText;
+            }
+            cell.innerHTML = '<input type="text" placeholder="Search '+title+'" />';
+         }
+         var dataTable;
+
+         if (rowsCount < 21) {
+            dataTable= $(this).DataTable({
+               "paging":  false,
+               "order": [],
+               "searching": false
+            });
+         } else {
+            dataTable= $(this).DataTable({
+               "order": [],
+               "searching": false
+            });
+         }
+
+         //install every column search.
+         dataTable.columns().eq( 0 ).each( function ( colIdx ) {
+            $( 'input', dataTable.column( colIdx ).footer() ).on( 'keyup change', function () {
+            console.log(this.value);
+            console.log(colIdx);
+               dataTable
+                  .column( colIdx )
+                  .search( this.value )
+                  .draw();
+            } );
+         } );
+//      } catch (err) {
+//         console.log(table);
+//         console.log(err);
+//      }
+   });
+}
+
 /** Backwards compatibility */
 function toggleCollapsable(id) { $('#' + id).toggle().parent('.collapse_rim').toggleClass('open'); }
 function expandAll() { $('.collapse_rim').each(function(i, e) { if (!$(e).hasClass('open')) { toggleCollapsable($(e).children().last().attr('id')) } }); }

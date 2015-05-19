@@ -4,10 +4,29 @@ fieldset {
     margin: 0 0 0.5em 0;
 }
 label {
-    display: inline-block;
+    display: inline;
     text-align: right;
     width: 140px;
 }
+
+tfoot input {
+   width: 100%;
+   padding: 3px;
+   box-sizing: border-box;
+}
+
+tfoot {
+    display: table-header-group;
+}
+
+.dataTables_length label,.dataTables_filter label {
+display: inline;
+}
+
+table.display {
+  margin: 0;
+}
+
 .validationerror {
     color: maroon;
     margin: -6px 0 8px 140px;
