@@ -2,10 +2,10 @@ package fitnesse.wikitext.parser;
 
 import fit.FixtureLoader;
 import fit.FixtureName;
+import fitnesse.testsystems.slim.tables.DecisionTable;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +22,7 @@ public class ColoredSlimTable extends SymbolTypeDecorator {
     secondRowTitleClasses.add("fitnesse.testsystems.slim.tables.OrderedQueryTable");
   }
 
-  private Set<String> secondRowTitleClasses = new HashSet<>();
+  private Set<String> secondRowTitleClasses = new HashSet<String>();
 
   public String toTarget(Translator translator, Symbol symbol) {
     HtmlWriter writer = new HtmlWriter();
@@ -39,7 +39,7 @@ public class ColoredSlimTable extends SymbolTypeDecorator {
       tableDescription = new TableDescription();
     }
     setClass(symbol, writer, tableDecorator.getClassForTable());
-    tableDecorator.onHeaderStarts(writer);
+    writer.startTag("thead");
     Table table = (Table) baseSymbolType;
     int longestRow = table.longestRow(symbol);
 
@@ -69,7 +69,7 @@ public class ColoredSlimTable extends SymbolTypeDecorator {
       writer.endTag();
       if ((row == 0 && !tableDescription.isSecondRowTitle) ||
         (row == 1 && tableDescription.isSecondRowTitle)) {
-        tableDecorator.onHeaderEnds(writer);
+        writer.endTag();//end thead
       }
     }
     writer.endTag();
@@ -103,7 +103,7 @@ public class ColoredSlimTable extends SymbolTypeDecorator {
   }
 
   private Set<String> getTableNamesForDataTables() {
-    return new HashSet<>(Arrays.asList("fitnesse.testsystems.slim.tables.DecisionTable"));
+    return (Set<String>)System.getProperties().get("DataTablesClasses");
   }
 
   private Class<?> getClassForTable(String tableName) {
@@ -122,7 +122,8 @@ public class ColoredSlimTable extends SymbolTypeDecorator {
           if (fixtureClazz != null) {
             return fixtureClazz;
           }
-        } catch (ClassNotFoundException | NoClassDefFoundError ignored) {
+        } catch (ClassNotFoundException ignored) {
+        } catch (NoClassDefFoundError ignored) {
         }
       }
     }
@@ -141,9 +142,16 @@ public class ColoredSlimTable extends SymbolTypeDecorator {
         return new ColoredTableDecorator();
       }
     }
+    //reaching this line means that we are creating table for DecisionTable but without explicit table type declaration
+    //Like in "Should I buy milk" example
+    if (!getTableNamesForDataTables().contains(DecisionTable.class.getName()))
+    {
+      return new ColoredTableDecorator();
+    }
     Table table = (Table) baseSymbolType;
     int longestRow = table.longestRow(symbol);
-    if (longestRow == table.rowLength(tableDescription.isSecondRowTitle ? symbol.getChildren().get(1) : symbol.getChildren().get(0))) {
+    List<Symbol> rows = symbol.getChildren();
+    if (longestRow == table.rowLength(tableDescription.isSecondRowTitle && rows.size() > 1 ? rows.get(1) : rows.get(0))) {
       return new DataTableDecorator();
     } else {
       return new ColoredTableDecorator();
