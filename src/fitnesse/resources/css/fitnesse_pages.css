@@ -290,3 +290,6 @@ div.contents li > a.suite {
 div.contents li > a.static {
   font-style:italic;
 }
+.CodeMirror {
+  border: 1px solid #d7d7d7;
+}
