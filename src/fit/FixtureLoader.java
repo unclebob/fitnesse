@@ -7,7 +7,6 @@
 package fit;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import fit.exception.CouldNotLoadComponentFitFailureException;
@@ -77,13 +76,11 @@ public class FixtureLoader {
 
   private Fixture instantiateFirstValidFixtureClass(FixtureName fixtureName)
     throws Throwable {
-    for (Iterator<String> i = fixtureName.getPotentialFixtureClassNames(
-      fixturePathElements).iterator(); i.hasNext();) {
-      String each = (String) i.next();
+    for (String each : fixtureName.getPotentialFixtureClassNames(
+            fixturePathElements)) {
       try {
         return instantiateFixture(each);
-      }
-      catch (NoSuchFixtureException ignoreAndTryTheNextCandidate) {
+      } catch (NoSuchFixtureException ignoreAndTryTheNextCandidate) {
       }
     }
 

@@ -31,7 +31,7 @@ import static fitnesse.ConfigurationParameter.*;
  * Please call this only once: some features are registered on (static) factories.
  */
 public class ContextConfigurator {
-  private final static java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(ContextConfigurator.class.getName());
+  private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(ContextConfigurator.class.getName());
 
   private static final String DEFAULT_PATH = ".";
   public static final String DEFAULT_ROOT = "FitNesseRoot";
@@ -77,7 +77,6 @@ public class ContextConfigurator {
     }
     return this;
   }
-
 
   public ContextConfigurator withTestSystemListener(TestSystemListener testSystemListener) {
     this.testSystemListener = testSystemListener;

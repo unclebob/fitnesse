@@ -28,8 +28,6 @@ import fitnesse.testsystems.slim.results.SlimTestResult;
 import static fitnesse.slim.VariableStore.SYMBOL_PATTERN;
 
 import static fitnesse.testsystems.slim.tables.ComparatorUtil.approximatelyEqual;
-import static java.lang.Character.isLetterOrDigit;
-import static java.lang.Character.toUpperCase;
 
 public abstract class SlimTable {
   private static final Pattern SYMBOL_ASSIGNMENT_PATTERN = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
