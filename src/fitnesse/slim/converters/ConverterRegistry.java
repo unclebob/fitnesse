@@ -116,17 +116,18 @@ public class ConverterRegistry {
           break;
         }
       }
-    }
-    if (converterForInterface == null) {
-      Class<?> superclass = clazz.getSuperclass();
-      while (superclass != null && !Object.class.equals(superclass)) {
-        converterForInterface = getConverterForInterface(superclass);
-        if (converterForInterface != null) {
-          break;
-        }
-        superclass = superclass.getSuperclass();
-      }
 
+      if (converterForInterface == null) {
+        Class<?> superclass = clazz.getSuperclass();
+        while (superclass != null && !Object.class.equals(superclass)) {
+          converterForInterface = getConverterForInterface(superclass);
+          if (converterForInterface != null) {
+            break;
+          }
+          superclass = superclass.getSuperclass();
+        }
+
+      }
     }
     return converterForInterface;
   }
