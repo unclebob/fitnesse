@@ -41,7 +41,7 @@ public class CallAndAssignInstruction extends Instruction {
 
   @Override
   public String toString() {
-    final StringBuffer sb = new StringBuffer();
+    final StringBuilder sb = new StringBuilder();
     sb.append("{id='").append(getId()).append('\'');
     sb.append(", instruction='").append(INSTRUCTION).append('\'');
     sb.append(", symbolName='").append(symbolName).append('\'');

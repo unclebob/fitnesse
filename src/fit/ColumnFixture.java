@@ -39,7 +39,7 @@ public class ColumnFixture extends Fixture {
     try {
       columnBindings[column].doCell(this, cell);
     }
-    catch (Throwable e) {
+    catch (Throwable e) { // NOSONAR
       exception(cell, e);
     }
   }
@@ -78,7 +78,7 @@ public class ColumnFixture extends Fixture {
         columnBindings[i] = createBinding(i, heads);
       }
     }
-    catch (Throwable throwable) {
+    catch (Throwable throwable) { // NOSONAR
       exception(heads, throwable);
     }
   }

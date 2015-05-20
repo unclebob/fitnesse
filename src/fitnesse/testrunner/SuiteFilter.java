@@ -16,6 +16,9 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import org.apache.commons.lang.StringUtils;
 
+import static org.apache.commons.lang.StringUtils.equalsIgnoreCase;
+import static org.apache.commons.lang.StringUtils.trim;
+
 public class SuiteFilter {
   private static final Logger LOG = Logger.getLogger(SuiteFilter.class.getName());
 
@@ -158,9 +161,8 @@ public class SuiteFilter {
     }
 
     private boolean checkIfAllQueryTagsExist(String[] testTags) {
-      List<String> testTagList = Arrays.asList(testTags);
       for (String queryTag : tags) {
-        if (!testTagList.contains(queryTag)) {
+        if (!containsTag(testTags, queryTag)) {
           return false;
         }
       }
@@ -168,14 +170,25 @@ public class SuiteFilter {
     }
 
     private boolean checkIfAnyTestTagMatchesAnyQueryTag(String[] testTags) {
-      for (String testTag : testTags) {
-        for (String queryTag : tags) {
-          if (testTag.equalsIgnoreCase(queryTag)) {
-            return true;
-          }
+      for (String queryTag : tags) {
+        if (containsTag(testTags, queryTag)) {
+          return true;
         }
       }
       return false;
+    }
+
+    private boolean containsTag(String[] testTags, String queryTag) {
+      for (String testTag: testTags) {
+        if (tagsMatch(queryTag, testTag)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    private boolean tagsMatch(String queryTag, String testTag) {
+      return equalsIgnoreCase(trim(testTag), trim(queryTag));
     }
   }
 }

@@ -59,4 +59,5 @@ Those properties can be either provided by a wiki page, on the command line (e.g
 |[[''Graceful names''][>GracefulNames]]              |
 
 !4 Java goodies
-|[[''System Under Test''][>SystemUnderTest]]|
+|[[''System Under Test''][>SystemUnderTest]]                |
+|[[''Interaction Aware Fixture''][>InteractionAwareFixture]]|

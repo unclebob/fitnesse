@@ -29,7 +29,7 @@ public class MakeInstruction extends Instruction {
 
   @Override
   public String toString() {
-    final StringBuffer sb = new StringBuffer();
+    final StringBuilder sb = new StringBuilder();
     sb.append("{id='").append(getId()).append('\'');
     sb.append(", instruction='").append(INSTRUCTION).append('\'');
     sb.append(", instanceName='").append(instanceName).append('\'');
@@ -51,7 +51,6 @@ public class MakeInstruction extends Instruction {
     if (!Arrays.equals(args, that.args)) return false;
     if (!className.equals(that.className)) return false;
     return instanceName.equals(that.instanceName);
-
   }
 
   @Override
