@@ -5,8 +5,7 @@ import org.junit.Test;
 
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class HashWidgetConversionTest extends HashWidgetConversionTestBase {
 
@@ -27,15 +26,23 @@ public class HashWidgetConversionTest extends HashWidgetConversionTestBase {
       theMap = map;
       return true;
     }
-    
+
     public List<Object> query() {
-      List<Object> list = new ArrayList<Object>();
+      return queryAsArrayList();
+    }
+
+    public ArrayList<Object> queryAsArrayList() {
+      ArrayList<Object> list = new ArrayList<Object>();
       // Make the test stable by ordering the keys
       TreeSet<String> orderedKeySet = new TreeSet<String>(theMap.keySet());
       for (String key : orderedKeySet) {
         list.add(Arrays.asList(key, theMap.get(key)));
       }
       return list;
+    }
+
+    public Object queryAsObject() {
+      return queryAsArrayList();
     }
   }
 
@@ -52,6 +59,32 @@ public class HashWidgetConversionTest extends HashWidgetConversionTestBase {
   @Override
   protected String mapConstructorClassName() {
     return MapConstructor.class.getName();
+  }
+
+  @Test
+  public void methodsReturningExactlyListShouldNotBeConverteredToStrings() throws Exception {
+    String instance1Id = "a";
+    statementExecutor.create(instance1Id, MapReceptor.class.getName());
+
+    assertEquals("true", statementExecutor.call(instance1Id, "setMap",
+                    "<table>" +
+                    "<tr>" +
+                    "  <td>name</td>" +
+                    "  <td>Bob</td>" +
+                    "</tr>" +
+                    "</table>"));
+
+    Object respQuery = statementExecutor.call(instance1Id, "query");
+    assertNotNull(respQuery);
+    assertTrue(respQuery instanceof List);
+
+    Object respObject = statementExecutor.call(instance1Id, "queryAsObject");
+    String actualQueryObj = checkStringResponse("queryAsObject()", respObject);
+    assertEquals(respQuery.toString(), actualQueryObj);
+
+    Object respArrayList = statementExecutor.call(instance1Id, "queryAsArrayList");
+    String actualArrayList = checkStringResponse("queryAsArrayList()", respArrayList);
+    assertEquals(respQuery.toString(), actualArrayList);
   }
 
   @Test

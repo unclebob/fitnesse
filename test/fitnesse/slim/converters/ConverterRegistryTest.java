@@ -121,6 +121,7 @@ public class ConverterRegistryTest {
 
   @Test
   public void getConverterForClass_should_return_Object_Converter_as_last_resort() throws SecurityException, NoSuchMethodException {
+    Converter<Object> oldObjectConverter = ConverterRegistry.getConverterForClass(Object.class);
     try {
       ConverterRegistry.addConverter(Object.class, new MyObjectConverter());
 
@@ -130,8 +131,7 @@ public class ConverterRegistryTest {
       assertEquals(MyObjectConverter.class, converter.getClass());
     } finally {
       // cleanup
-      ConverterRegistry.addConverter(Object.class, null);
-      assertNull(ConverterRegistry.getConverterForClass(Object.class));
+      ConverterRegistry.addConverter(Object.class, oldObjectConverter);
     }
   }
 

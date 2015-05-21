@@ -136,6 +136,10 @@ public class ConverterRegistry {
     converters.put(clazz, converter);
   }
 
+  public static void removeConverter(Class<?> clazz) {
+    converters.remove(clazz);
+  }
+
   public static Map<Class<?>, Converter<?>> getConverters() {
     return Collections.unmodifiableMap(converters);
   }
