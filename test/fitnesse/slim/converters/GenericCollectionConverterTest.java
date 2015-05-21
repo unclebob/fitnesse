@@ -2,6 +2,7 @@ package fitnesse.slim.converters;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -70,10 +71,32 @@ public class GenericCollectionConverterTest extends AbstractConverterTest<List<I
   }
 
   @Test
+  public void fromString_should_return_an_empty_list_when_value_represent_an_empty_collection() {
+    String value = "[]";
+    GenericCollectionConverter<Integer, Collection<Integer>> collConverter
+            = new GenericCollectionConverter<Integer, Collection<Integer>>(Collection.class, new IntConverter());
+
+    Collection<Integer> current = collConverter.fromString(value);
+
+    assertEquals(0, current.size());
+  }
+
+  @Test
   public void fromString_should_return_an_typed_list_when_value_is_an_valid_list() {
     String value = "[1,2,3]";
 
     List<Integer> current = converter.fromString(value);
+
+    assertEquals(Arrays.asList(new Integer[] { 1, 2, 3 }), current);
+  }
+
+  @Test
+  public void fromString_should_return_an_typed_list_when_value_is_an_valid_collection() {
+    String value = "[1,2,3]";
+    GenericCollectionConverter<Integer, Collection<Integer>> collConverter
+            = new GenericCollectionConverter<Integer, Collection<Integer>>(Collection.class, new IntConverter());
+
+    Collection<Integer> current = collConverter.fromString(value);
 
     assertEquals(Arrays.asList(new Integer[] { 1, 2, 3 }), current);
   }

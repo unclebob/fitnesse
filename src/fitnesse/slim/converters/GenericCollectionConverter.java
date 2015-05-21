@@ -20,6 +20,7 @@ public class GenericCollectionConverter<T, C extends Collection<T>> implements C
     DEFAULT_COLLECTION_IMPL.put(List.class, ArrayList.class);
     DEFAULT_COLLECTION_IMPL.put(Set.class, HashSet.class);
     DEFAULT_COLLECTION_IMPL.put(Queue.class, PriorityQueue.class);
+    DEFAULT_COLLECTION_IMPL.put(Collection.class, ArrayList.class);
   }
 
   private final Class<C> collectionClass;
