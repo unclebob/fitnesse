@@ -9,6 +9,6 @@ import org.junit.runner.RunWith;
 @RunWith(FitNesseSuite.class)
 @FitNesseSuite.Name("FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestScriptTable")
 @FitNesseSuite.FitnesseDir(".")
-@FitNesseSuite.OutputDir("../target/fitnesse-results")
+@FitNesseSuite.OutputDir("./target/fitnesse-results")
 public class FitNesseSuiteTest {
 }
