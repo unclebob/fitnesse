@@ -52,7 +52,9 @@ public class SymbolType implements Matchable {
     public static final SymbolType Empty = new SymbolType("Empty");
     public static final SymbolType EndCell = new SymbolType("EndCell")
             .wikiMatcher(new Matcher().string("|").ignoreWhitespace().string("\n|"))
+            .wikiMatcher(new Matcher().string("|").ignoreWhitespace().string("\r\n|"))
             .wikiMatcher(new Matcher().string("|").ignoreWhitespace().string("\n"))
+            .wikiMatcher(new Matcher().string("|").ignoreWhitespace().string("\r\n"))
             .wikiMatcher(new Matcher().string("|"));
     public static final SymbolType Italic = new SymbolType("Italic")
             .wikiMatcher(new Matcher().string("''"))

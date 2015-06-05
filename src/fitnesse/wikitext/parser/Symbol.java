@@ -34,6 +34,12 @@ public class Symbol {
         this.endOffset = startOffset + content.length();
     }
 
+    public Symbol(SymbolType type, String content, int startOffset, int endOffset) {
+        this(type, content);
+        this.startOffset = startOffset;
+        this.endOffset = endOffset;
+    }
+
     public SymbolType getType() { return type; }
     public boolean isType(SymbolType type) { return this.type.matchesFor(type); }
     public boolean isStartCell() { return isType(Table.symbolType) || isType(SymbolType.EndCell); }
