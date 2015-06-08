@@ -1,6 +1,6 @@
 function TemplateInserter()
 {
-  this.insertInto = function(templateValue, textArea) {
+  this.insertInto = function(templateValue, codeMirrorDoc) {
     
     if(templateValue !== "")
     {
@@ -9,7 +9,7 @@ function TemplateInserter()
       $.ajax({
         url: pageDataUrl,
         success: function(result) {
-          $('#pageContent').replaceSelectedText(result);
+          codeMirrorDoc.replaceSelection(result);
         },
         error: function() {
           alert("Error Accessing Template");
