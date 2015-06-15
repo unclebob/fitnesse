@@ -62,6 +62,6 @@ public class TextMakerTest {
     }
 
     private SymbolMatch makeMatch(String text) {
-        return new TextMaker(source, sourcePage).make(new ParseSpecification(), text);
+        return new TextMaker(source, sourcePage).make(new ParseSpecification(), 0, text);
     }
 }

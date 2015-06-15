@@ -36,5 +36,5 @@ public class SymbolProviderTest {
     assertSame(expected, result);
   }
 
-  private final SymbolMatch testMatch = new SymbolMatch(SymbolType.OpenBrace, "hi");
+  private final SymbolMatch testMatch = new SymbolMatch(SymbolType.OpenBrace, "hi", 0);
 }

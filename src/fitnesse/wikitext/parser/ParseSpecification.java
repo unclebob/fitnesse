@@ -82,28 +82,47 @@ public class ParseSpecification {
 
     public Symbol parse(Parser parser, Scanner scanner) {
         Symbol result = new Symbol(SymbolType.SymbolList);
+        result.setStartOffset(scanner.getOffset());
+        while (true) {
+            Maybe<Symbol> parsedSymbol = parseSymbol(parser, scanner);
+            if (parsedSymbol.isNothing()) {
+                break;
+            } else {
+                result.add(parsedSymbol.getValue());
+            }
+        }
+        result.setEndOffset(scanner.getOffset());
+        return result;
+    }
+
+    /**
+     *
+     * @param parser
+     * @param scanner
+     * @return a possible value if parser should stop.
+     */
+    public Maybe<Symbol> parseSymbol(Parser parser, Scanner scanner) {
         while (true) {
             Scanner backup = new Scanner(scanner);
             scanner.moveNextIgnoreFirst(this);
-            if (scanner.isEnd()) break;
+            if (scanner.isEnd()) return Maybe.nothingBecause("scanner is at end of buffer");
             Symbol currentToken = scanner.getCurrent();
             if (endsOn(currentToken.getType()) || parser.parentOwns(currentToken.getType(), this)) {
                 scanner.copy(backup);
-                break;
+                return Maybe.nothingBecause("At termination symbol or parent owns symbol");
             }
-            if (terminatesOn(currentToken.getType())) break;
+            if (terminatesOn(currentToken.getType())) return Maybe.nothingBecause("At termination symbol");
             Rule currentRule = currentToken.getType().getWikiRule();
             Maybe<Symbol> parsedSymbol = currentRule.parse(currentToken, parser);
+            currentToken.setEndOffset(scanner.getOffset());
             if (parsedSymbol.isNothing()) {
                 ignoreFirst(currentToken.getType());
                 scanner.copy(backup);
-            }
-            else {
-                result.add(parsedSymbol.getValue());
+            } else {
                 clearIgnoresFirst();
+                return parsedSymbol;
             }
         }
-        return result;
     }
 
     private boolean terminatesOn(SymbolType symbolType) {
