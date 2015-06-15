@@ -101,8 +101,10 @@ public abstract class SlimTestSystem implements TestSystem {
     testStarted(pageToTest);
     try {
       processAllTablesOnPage(pageToTest);
-    } finally {
       testComplete(pageToTest, testContext.getTestSummary());
+    } catch (IOException e) {
+      exceptionOccurred(e);
+      throw e;
     }
   }
 
