@@ -3,19 +3,21 @@ package fitnesse.slim.converters;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.lang.reflect.ParameterizedType;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import fitnesse.slim.Converter;
 
 public class ConverterRegistry {
 
   private static final Map<Class<?>, Converter<?>> converters = new HashMap<Class<?>, Converter<?>>();
+  private static Converter<Object> defaultConverter = new DefaultConverter();
 
   static {
+    addStandardConverters();
+  }
+
+  public static void resetToStandardConverters() {
+    converters.clear();
     addStandardConverters();
   }
 
@@ -56,6 +58,19 @@ public class ConverterRegistry {
     if (converters.containsKey(clazz)) {
       return (Converter<T>) converters.get(clazz);
     }
+    // use converter for superclass set in registry
+    Class<?> superclass = clazz.getSuperclass();
+    while (superclass != null && !Object.class.equals(superclass)) {
+      if (converters.containsKey(superclass)) {
+        return (Converter<T>) converters.get(superclass);
+      }
+      superclass = superclass.getSuperclass();
+    }
+    // use converter for implemented interface set in registry
+    Converter<T> converterForInterface = getConverterForInterface(clazz);
+    if (converterForInterface != null) {
+      return converterForInterface;
+    }
 
     //use property editor
     PropertyEditor pe = PropertyEditorManager.findEditor(clazz);
@@ -72,22 +87,62 @@ public class ConverterRegistry {
     //for array, use generic array converter
     if (clazz.isArray()) {
       Class<?> componentType = clazz.getComponentType();
-      Converter<?> converterForClass = getConverterForClassOrStringConverter(componentType);
+      Converter<?> converterForClass = getConverterForClassOrDefaultConverter(componentType);
       return new GenericArrayConverter(componentType, converterForClass);
     }
 
     //for collection, use generic collection converter
     if (Collection.class.isAssignableFrom(clazz)) {
       Class<?> componentType = typedClazz != null ? (Class<?>) typedClazz.getActualTypeArguments()[0] : String.class;
-      Converter<?> converterForClass = getConverterForClassOrStringConverter(componentType);
+      Converter<?> converterForClass = getConverterForClassOrDefaultConverter(componentType);
       return new GenericCollectionConverter(clazz, converterForClass);
     }
 
-    return null;
+    // last resort, see if there is a converter for Object
+    return (Converter<T>) converters.get(Object.class);
+  }
+
+  protected static <T> Converter<T> getConverterForInterface(Class<?> clazz) {
+    List<Class<?>> superInterfaces = new ArrayList<Class<?>>();
+    Converter<T> converterForInterface = null;
+    Class<?>[] interfaces = clazz.getInterfaces();
+    for (Class<?> interf : interfaces) {
+      Class<?>[] s = interf.getInterfaces();
+      superInterfaces.addAll(Arrays.asList(s));
+      if (converters.containsKey(interf)) {
+        converterForInterface = (Converter<T>) converters.get(interf);
+        break;
+      }
+    }
+    if (converterForInterface == null) {
+      for (Class<?> supInterf : superInterfaces) {
+        converterForInterface = getConverterForInterface(supInterf);
+        if (converterForInterface != null) {
+          break;
+        }
+      }
+
+      if (converterForInterface == null) {
+        Class<?> superclass = clazz.getSuperclass();
+        while (superclass != null && !Object.class.equals(superclass)) {
+          converterForInterface = getConverterForInterface(superclass);
+          if (converterForInterface != null) {
+            break;
+          }
+          superclass = superclass.getSuperclass();
+        }
+
+      }
+    }
+    return converterForInterface;
   }
 
   public static <T> void addConverter(Class<? extends T> clazz, Converter<T> converter) {
     converters.put(clazz, converter);
+  }
+
+  public static void removeConverter(Class<?> clazz) {
+    converters.remove(clazz);
   }
 
   public static Map<Class<?>, Converter<?>> getConverters() {
@@ -97,10 +152,10 @@ public class ConverterRegistry {
   /*
    * PRIVATE
    */
-  public static Converter<?> getConverterForClassOrStringConverter(Class<?> clazz) {
+  public static Converter<?> getConverterForClassOrDefaultConverter(Class<?> clazz) {
     Converter<?> converter = getConverterForClass(clazz);
     if (converter == null) {
-      converter = getConverterForClass(String.class);
+      converter = defaultConverter;
     }
     return converter;
   }

@@ -4,9 +4,8 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-import fitnesse.util.StringUtils;
-
 import fitnesse.slim.Converter;
+import fitnesse.util.StringUtils;
 
 public class GenericArrayConverter<T> implements Converter<Object> {
   private final Class<T> componentClass;
@@ -25,10 +24,21 @@ public class GenericArrayConverter<T> implements Converter<Object> {
     int size = Array.getLength(array);
     List<String> ret = new ArrayList<String>(size);
     for (int i = 0; i < size; i++) {
-      ret.add(componentConverter.toString((T) Array.get(array, i)));
+      ret.add(getElementString(array, i));
     }
 
     return ret.toString();
+  }
+
+  private String getElementString(Object array, int i) {
+    T element = (T) Array.get(array, i);
+    String result;
+    if (element == null) {
+      result = componentConverter.toString(element);
+    } else {
+      result = ElementConverterHelper.elementToString(element);
+    }
+    return result;
   }
 
   public Object fromString(String arg) {

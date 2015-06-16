@@ -1,10 +1,12 @@
 package fitnesse.slim.converters;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
 import fitnesse.html.HtmlTag;
+import fitnesse.slim.Converter;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +21,24 @@ public class MapConverterTest {
   public void setup() {
 
     converter = new MapConverter();
+  }
+
+  @Test
+  public void fromNull_shouldCreateNullString() {
+    assertEquals(Converter.NULL_VALUE, converter.toString(null));
+  }
+
+  @Test
+  public void fromNestedMap_shouldCreateString() {
+    Map nestedMap = new LinkedHashMap();
+    nestedMap.put("a", null);
+    nestedMap.put(Arrays.asList("b", "c", "d"), "listValue");
+    nestedMap.put("listKey", Arrays.asList("e", "f"));
+    nestedMap.put(null, true);
+    String actual = converter.toString(nestedMap);
+    // check without considering whitespace
+    assertEquals("<table class=\"hash_table\"> <tr class=\"hash_row\"> <td class=\"hash_key\">a</td> <td class=\"hash_value\">null</td> </tr> <tr class=\"hash_row\"> <td class=\"hash_key\">[b, c, d]</td> <td class=\"hash_value\">listValue</td> </tr> <tr class=\"hash_row\"> <td class=\"hash_key\">listKey</td> <td class=\"hash_value\">[e, f]</td> </tr> <tr class=\"hash_row\"> <td class=\"hash_key\">null</td> <td class=\"hash_value\">true</td> </tr> </table>",
+                  actual.replaceAll("\\s+", " "));
   }
 
   @Test
