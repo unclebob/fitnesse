@@ -52,7 +52,13 @@ public class JUnitRunNotifierResultsListener implements TestSystemListener<WikiT
     if (firstFailure != null) {
       notifier.fireTestFailure(new Failure(descriptionFor(test), firstFailure));
     } else if (test.isTestPage()) {
-      notifier.fireTestFinished(descriptionFor(test));
+      if (testSummary.getExceptions() > 0) {
+        notifier.fireTestFailure(new Failure(descriptionFor(test), new Exception("Exception occurred on page " + test.getFullPath())));
+      } else if (testSummary.getWrong() > 0) {
+        notifier.fireTestFailure(new Failure(descriptionFor(test), new AssertionError("Test failures occurred on page " + test.getFullPath())));
+      } else {
+        notifier.fireTestFinished(descriptionFor(test));
+      }
     }
   }
 

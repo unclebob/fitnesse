@@ -471,7 +471,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     testRunner.executeTestPages();
     TestSummary summary = testFormatter.getTotalSummary();
 
-    assertTrue(msgAtLeastOneTest(suiteName, summary), summary.getRight() > 0);
+    assertTrue(msgAtLeastOneTest(suiteName, summary), summary.getRight() > 0 || summary.getWrong() > 0 || summary.getExceptions() > 0);
   }
 
   private String msgAtLeastOneTest(String pageName, TestSummary summary) {
