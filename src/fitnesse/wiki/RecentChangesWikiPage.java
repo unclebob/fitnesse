@@ -44,6 +44,12 @@ public class RecentChangesWikiPage implements RecentChanges {
     } catch (IOException e) {
       // TODO: -AJM- It's only the recent changes file. Should we throw an error or just log to the console?
       throw new RuntimeException("Unable to read recent changes", e);
+    } finally {
+      try {
+        reader.close();
+      } catch (IOException e) {
+        // Ignore
+      }
     }
     return lines;
   }
