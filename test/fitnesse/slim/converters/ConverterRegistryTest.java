@@ -4,6 +4,8 @@ import java.lang.reflect.ParameterizedType;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.slim.Converter;
@@ -12,6 +14,16 @@ import fitnesse.slim.test.AnotherEnum;
 import static org.junit.Assert.*;
 
 public class ConverterRegistryTest {
+
+  @Before
+  public void setUp() {
+    ConverterRegistry.resetToStandardConverters();
+  }
+
+  @AfterClass
+  public static void finalCleanUp() {
+    ConverterRegistry.resetToStandardConverters();
+  }
 
   @Test
   public void getConverters_should_return_several_default_converter() {

@@ -16,6 +16,11 @@ public class ConverterRegistry {
     addStandardConverters();
   }
 
+  public static void resetToStandardConverters() {
+    converters.clear();
+    addStandardConverters();
+  }
+
   protected static void addStandardConverters() {
     addConverter(void.class, new VoidConverter());
 
