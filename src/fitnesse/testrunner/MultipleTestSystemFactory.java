@@ -90,7 +90,7 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
       InProcessSlimClientBuilder clientBuilder = new InProcessSlimClientBuilder(descriptor);
       SlimCommandRunningClient slimClient = clientBuilder.build();
       HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(clientBuilder.getTestSystemName(), slimClient,
-              slimTableFactory.copy(), customComparatorRegistry);
+              slimTableFactory.copy(), customComparatorRegistry, true);
 
       return testSystem;
     }

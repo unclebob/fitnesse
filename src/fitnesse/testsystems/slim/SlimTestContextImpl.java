@@ -14,6 +14,15 @@ public class SlimTestContextImpl implements SlimTestContext {
   private final Map<String, String> symbols = new HashMap<String, String>();
   private final Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
   private final TestSummary testSummary = new TestSummary();
+  private final SlimScenarioUsagePer usage;
+
+  public SlimTestContextImpl() {
+    this(null);
+  }
+
+  public SlimTestContextImpl(SlimScenarioUsagePer usageByPage) {
+    usage = usageByPage;
+  }
 
   public String getSymbol(String symbolName) {
     return symbols.get(symbolName);
@@ -24,11 +33,18 @@ public class SlimTestContextImpl implements SlimTestContext {
   }
 
   public void addScenario(String scenarioName, ScenarioTable scenarioTable) {
+    if (usage != null) {
+      usage.addDefinition(scenarioName);
+    }
     scenarios.put(scenarioName, scenarioTable);
   }
 
   public ScenarioTable getScenario(String scenarioName) {
-    return scenarios.get(scenarioName);
+    ScenarioTable scenarioTable = scenarios.get(scenarioName);
+    if (usage != null && scenarioTable != null) {
+      usage.addUsage(scenarioName);
+    }
+    return scenarioTable;
   }
 
   public Collection<ScenarioTable> getScenarios() {

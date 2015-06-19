@@ -26,7 +26,14 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
   public HtmlSlimTestSystem(String testSystemName, SlimClient slimClient,
                             SlimTableFactory slimTableFactory,
                             CustomComparatorRegistry customComparatorRegistry) {
-    super(testSystemName, slimClient);
+    this(testSystemName, slimClient, slimTableFactory, customComparatorRegistry, false);
+  }
+
+  public HtmlSlimTestSystem(String testSystemName, SlimClient slimClient,
+                            SlimTableFactory slimTableFactory,
+                            CustomComparatorRegistry customComparatorRegistry,
+                            boolean trackUsage) {
+    super(testSystemName, slimClient, trackUsage);
     this.slimTableFactory = slimTableFactory;
     this.customComparatorRegistry = customComparatorRegistry;
   }

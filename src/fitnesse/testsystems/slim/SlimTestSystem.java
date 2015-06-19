@@ -3,10 +3,7 @@
 package fitnesse.testsystems.slim;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,6 +34,7 @@ public abstract class SlimTestSystem implements TestSystem {
   private final SlimClient slimClient;
   private final CompositeTestSystemListener testSystemListener;
   private final String testSystemName;
+  private final SlimScenarioUsage usage;
 
   private SlimTestContextImpl testContext;
   private boolean stopTestCalled;
@@ -45,9 +43,22 @@ public abstract class SlimTestSystem implements TestSystem {
 
 
   public SlimTestSystem(String testSystemName, SlimClient slimClient) {
+    this(testSystemName, slimClient, false);
+  }
+
+  public SlimTestSystem(String testSystemName, SlimClient slimClient, boolean trackScenarioUsage) {
     this.testSystemName = testSystemName;
     this.slimClient = slimClient;
     this.testSystemListener = new CompositeTestSystemListener();
+    if (trackScenarioUsage) {
+      this.usage = new SlimScenarioUsage();
+    } else {
+      this.usage = null;
+    }
+  }
+
+  public SlimScenarioUsage getUsage() {
+    return usage;
   }
 
   public SlimTestContext getTestContext() {
@@ -96,7 +107,7 @@ public abstract class SlimTestSystem implements TestSystem {
 
   @Override
   public void runTests(TestPage pageToTest) throws IOException {
-    initializeTest();
+    initializeTest(pageToTest);
 
     testStarted(pageToTest);
     try {
@@ -113,8 +124,13 @@ public abstract class SlimTestSystem implements TestSystem {
     testSystemListener.addTestSystemListener(listener);
   }
 
-  private void initializeTest() {
-    testContext = new SlimTestContextImpl();
+  protected void initializeTest(TestPage testPage) {
+    SlimScenarioUsagePer usageByPage = null;
+    if (usage != null) {
+      String fullPath = testPage.getFullPath();
+      usageByPage = usage.getUsageByPage(fullPath);
+    }
+    testContext = new SlimTestContextImpl(usageByPage);
     stopTestCalled = false;
   }
 
