@@ -55,6 +55,10 @@ public class CommandRunner {
     this(command, input, environmentVariables, executionLogListener, 2);
   }
 
+  public ExecutionLogListener getExecutionLogListener() {
+    return executionLogListener;
+  }
+
   public void asynchronousStart() throws IOException {
     ProcessBuilder processBuilder = new ProcessBuilder(command);
     processBuilder.environment().putAll(determineEnvironment());

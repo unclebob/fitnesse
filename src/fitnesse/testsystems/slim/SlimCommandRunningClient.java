@@ -12,6 +12,7 @@ import fitnesse.slim.protocol.SlimSerializer;
 import fitnesse.socketservice.SocketFactory;
 import fitnesse.testsystems.CommandRunner;
 
+import fitnesse.testsystems.ExecutionLogListener;
 import org.apache.commons.lang.ArrayUtils;
 
 import java.io.IOException;
@@ -234,5 +235,9 @@ public class SlimCommandRunningClient implements SlimClient {
       map.put((String) resultList.get(0), resultList.get(1));
     }
     return map;
+  }
+
+  public ExecutionLogListener getExecutionLogListener() {
+    return slimRunner.getExecutionLogListener();
   }
 }

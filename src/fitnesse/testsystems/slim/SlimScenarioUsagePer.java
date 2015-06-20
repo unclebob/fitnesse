@@ -42,4 +42,8 @@ public class SlimScenarioUsagePer {
     public String toString() {
         return groupName + ": " + usage;
     }
+
+    public String getGroupName() {
+        return groupName;
+    }
 }

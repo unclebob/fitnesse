@@ -3,6 +3,7 @@
 package fitnesse.testsystems.slim;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -14,6 +15,7 @@ import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.CompositeTestSystemListener;
 import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
@@ -102,6 +104,49 @@ public abstract class SlimTestSystem implements TestSystem {
       exceptionOccurred(e);
     } finally {
       testSystemStopped(null);
+      if (usage != null) {
+        reportScenarioUsage();
+      }
+    }
+  }
+
+  protected void reportScenarioUsage() {
+    ExecutionLogListener listener = slimClient.getExecutionLogListener();
+    listener.stdOut("Scenario Usage Report -------------------------------");
+    listener.stdOut("");
+
+    Map<String, Integer> totalUsage = usage.getScenarioUsage().getUsage();
+    if (totalUsage.isEmpty()) {
+      listener.stdOut("No scenarios in run");
+    } else {
+      Collection<String> unused = usage.getUnusedScenarios();
+      if (!unused.isEmpty()) {
+        listener.stdOut("Unused scenarios:");
+        for (String scenarioName : unused) {
+          listener.stdOut(scenarioName);
+        }
+        listener.stdOut("\n");
+      }
+
+      listener.stdOut("Total usage count per scenario:");
+      for (Entry<String, Integer> totalUsageEntry : totalUsage.entrySet()) {
+        listener.stdOut(totalUsageEntry.getKey()
+                + "\t"
+                + totalUsageEntry.getValue());
+      }
+      listener.stdOut("\n");
+
+      listener.stdOut("Usage count per scenario per page:");
+      for (SlimScenarioUsagePer usagePerPage : usage.getUsage()) {
+        String pageName = usagePerPage.getGroupName();
+        for (Entry<String, Integer> usagePerScenario : usagePerPage.getUsage().entrySet()) {
+          listener.stdOut(pageName
+                  + "\t"
+                  + usagePerScenario.getKey()
+                  + "\t"
+                  + usagePerScenario.getValue());
+        }
+      }
     }
   }
 

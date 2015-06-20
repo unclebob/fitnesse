@@ -1,6 +1,7 @@
 package fitnesse.testsystems.slim;
 
 import fitnesse.slim.instructions.Instruction;
+import fitnesse.testsystems.ExecutionLogListener;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,4 +17,6 @@ public interface SlimClient {
   void bye() throws IOException;
 
   void kill() throws IOException;
+
+  ExecutionLogListener getExecutionLogListener();
 }
