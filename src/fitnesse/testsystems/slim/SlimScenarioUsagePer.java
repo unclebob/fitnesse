@@ -1,10 +1,11 @@
 package fitnesse.testsystems.slim;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SlimScenarioUsagePer {
     private final String groupName;
-    private final Map<String, Integer> usage = new HashMap<String, Integer>();
+    private final Map<String, AtomicInteger> usage = new LinkedHashMap<String, AtomicInteger>();
     private final List<String> overriddenScenarios = new ArrayList<String>();
 
     public SlimScenarioUsagePer(String groupName) {
@@ -24,15 +25,20 @@ public class SlimScenarioUsagePer {
     }
 
     public void addUsage(String scenarioName, Integer valueToAdd) {
-        Integer currentValue = usage.get(scenarioName);
+        AtomicInteger currentValue = usage.get(scenarioName);
         if (currentValue == null) {
-            currentValue = 0;
+            currentValue = new AtomicInteger(0);
+            usage.put(scenarioName, currentValue);
         }
-        usage.put(scenarioName, currentValue + valueToAdd);
+        currentValue.getAndAdd(valueToAdd);
     }
 
     public Map<String, Integer> getUsage() {
-        return Collections.unmodifiableMap(usage);
+        Map<String, Integer> result = new LinkedHashMap<String, Integer>();
+        for (Map.Entry<String, AtomicInteger> entry : usage.entrySet()) {
+            result.put(entry.getKey(), entry.getValue().intValue());
+        }
+        return result;
     }
 
     public List<String> getOverriddenScenarios() {
