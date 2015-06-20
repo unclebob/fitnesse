@@ -96,7 +96,7 @@ public abstract class SlimTestSystem implements TestSystem {
 
   @Override
   public void runTests(TestPage pageToTest) throws IOException {
-    initializeTest();
+    initializeTest(pageToTest);
 
     testStarted(pageToTest);
     try {
@@ -113,8 +113,8 @@ public abstract class SlimTestSystem implements TestSystem {
     testSystemListener.addTestSystemListener(listener);
   }
 
-  private void initializeTest() {
-    testContext = new SlimTestContextImpl();
+  private void initializeTest(TestPage pageToTest) {
+    testContext = new SlimTestContextImpl(pageToTest);
     stopTestCalled = false;
   }
 
