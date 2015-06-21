@@ -136,6 +136,17 @@ public abstract class SlimTestSystem implements TestSystem {
       }
       listener.stdOut("\n");
 
+      listener.stdOut("Scenarios grouped by usage scope:");
+      for (Entry<String, Collection<String>> sByScopeEntry : usage.getScenariosBySmallestScope().entrySet()) {
+        String scope = sByScopeEntry.getKey();
+        listener.stdOut(scope);
+        for (String scenario : sByScopeEntry.getValue()) {
+          listener.stdOut("\t"
+                  + scenario);
+        }
+      }
+      listener.stdOut("\n");
+
       listener.stdOut("Usage count per scenario per page:");
       for (SlimScenarioUsagePer usagePerPage : usage.getUsage()) {
         String pageName = usagePerPage.getGroupName();
