@@ -147,6 +147,20 @@ public abstract class SlimTestSystem implements TestSystem {
                   + usagePerScenario.getValue());
         }
       }
+
+      Map<String, Collection<String>> overriddenPerPage = usage.getOverriddenScenariosPerPage();
+      if (!overriddenPerPage.isEmpty()) {
+        listener.stdOut("\n");
+        listener.stdOut("Overridden scenario(s) per page:");
+        for (Entry<String, Collection<String>> overriddenForPage : overriddenPerPage.entrySet()) {
+          String pageName = overriddenForPage.getKey();
+          for (String scenario : overriddenForPage.getValue()) {
+            listener.stdOut(pageName
+                    + "\t"
+                    + scenario);
+          }
+        }
+      }
     }
   }
 
