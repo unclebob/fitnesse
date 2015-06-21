@@ -2,6 +2,8 @@ package fitnesse.testsystems.slim;
 
 import java.util.*;
 
+import org.apache.commons.lang.StringUtils;
+
 public class SlimScenarioUsage {
     private final Map<String, SlimScenarioUsagePer> usagePerPage = new LinkedHashMap<String, SlimScenarioUsagePer>();
 
@@ -69,21 +71,57 @@ public class SlimScenarioUsage {
         for (Map.Entry<String, SlimScenarioUsagePer> value : usagePerPage.entrySet()) {
             String page = value.getKey();
             for (Map.Entry<String, Integer> entry : value.getValue().getUsage().entrySet()) {
-                String scenario = entry.getKey();
-                Collection<String> pagesUsingScenario = getPagesForScenario(result, scenario);
-                pagesUsingScenario.add(page);
+                if (entry.getValue() > 0) {
+                    String scenario = entry.getKey();
+                    Collection<String> pagesUsingScenario = getOrCreateCollection(result, scenario);
+                    pagesUsingScenario.add(page);
+                }
             }
         }
         return result;
     }
 
-    protected Collection<String> getPagesForScenario(Map<String, Collection<String>> result, String page) {
-        Collection<String> pagesUsingScenario = result.get(page);
-        if (pagesUsingScenario == null) {
-            pagesUsingScenario = new ArrayList<String>();
-            result.put(page, pagesUsingScenario);
+    public Map<String, Collection<String>> getScenariosBySmallestScope() {
+        Map<String, Collection<String>> result = new LinkedHashMap<String, Collection<String>>();
+        Map<String, Collection<String>> pagesPerScenario = getPagesUsingScenario();
+        for (Map.Entry<String, Collection<String>> ppsEntry : pagesPerScenario.entrySet()) {
+            String scenario = ppsEntry.getKey();
+            Collection<String> pages = ppsEntry.getValue();
+            String scope = getLongestSharedPath(pages);
+            Collection<String> scenariosForScope = getOrCreateCollection(result, scope);
+            scenariosForScope.add(scenario);
         }
-        return pagesUsingScenario;
+        return result;
+    }
+
+    private String getLongestSharedPath(Collection<String> pages) {
+        String result;
+        if (pages.size() == 1) {
+            result = pages.iterator().next();
+        } else {
+            List<String> pageNames = new ArrayList<String>(pages);
+            String longestPrefix = StringUtils.getCommonPrefix(pageNames.toArray(new String[pageNames.size()]));
+            if (longestPrefix.endsWith(".")) {
+                result = longestPrefix.substring(0, longestPrefix.lastIndexOf("."));
+            } else {
+                if (pageNames.contains(longestPrefix)) {
+                    result = longestPrefix;
+                } else {
+                    int lastDot = longestPrefix.lastIndexOf(".");
+                    result = longestPrefix.substring(0, lastDot);
+                }
+            }
+        }
+        return result;
+    }
+
+    protected Collection<String> getOrCreateCollection(Map<String, Collection<String>> map, String scope) {
+        Collection<String> value = map.get(scope);
+        if (value == null) {
+            value = new ArrayList<String>();
+            map.put(scope, value);
+        }
+        return value;
     }
 
     public String toString() {
