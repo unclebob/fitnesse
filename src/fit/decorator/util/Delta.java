@@ -23,7 +23,7 @@ public class Delta {
     if (null == other) {
       return false;
     }
-    if (!this.getClass().getName().equals(other.getClass().getName())) {
+    if (getClass() != other.getClass()) {
       return false;
     }
     return this.dataType.equals(((Delta) other).dataType) && this.value.equals(((Delta) other).value);

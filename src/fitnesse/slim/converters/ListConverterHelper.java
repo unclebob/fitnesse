@@ -2,11 +2,14 @@ package fitnesse.slim.converters;
 
 import java.util.List;
 
+import fitnesse.slim.Converter;
 import fitnesse.util.StringUtils;
 
 final class ListConverterHelper {
 
   static String toString(List<?> list) {
+    if (list == null)
+      return Converter.NULL_VALUE;
     return list.toString();
   }
 

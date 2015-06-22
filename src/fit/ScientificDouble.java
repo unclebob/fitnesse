@@ -48,8 +48,7 @@ public class ScientificDouble extends Number implements Comparable<Number> {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj == null) return false;
-    return compareTo((Number) obj) == 0;
+    return obj != null && obj instanceof Number && compareTo((Number) obj) == 0;
   }
 
   @Override

@@ -35,15 +35,22 @@ public class RecentChangesWikiPage implements RecentChanges {
 
   public List<String> getRecentChangesLines(PageData recentChangesdata) {
     String content = recentChangesdata.getContent();
-    BufferedReader reader = new BufferedReader(new StringReader(content));
+    BufferedReader reader = null;
     List<String> lines = new ArrayList<String>();
-    String line = null;
     try {
+      reader = new BufferedReader(new StringReader(content));
+      String line = null;
       while ((line = reader.readLine()) != null)
         lines.add(line);
     } catch (IOException e) {
       // TODO: -AJM- It's only the recent changes file. Should we throw an error or just log to the console?
       throw new RuntimeException("Unable to read recent changes", e);
+    } finally {
+      try {
+        reader.close();
+      } catch (IOException e) {
+        // Ignore
+      }
     }
     return lines;
   }

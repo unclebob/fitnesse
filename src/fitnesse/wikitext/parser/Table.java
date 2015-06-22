@@ -3,6 +3,9 @@ package fitnesse.wikitext.parser;
 public class Table extends SymbolType implements Rule, Translation {
   public static final Table symbolType = new Table();
 
+  public static final SymbolType tableRow = new SymbolType("TableRow");
+  public static final SymbolType tableCell = new SymbolType("TableCell");
+
   public Table() {
     super("Table");
     wikiMatcher(new Matcher().startLine().string("|"));
@@ -18,7 +21,8 @@ public class Table extends SymbolType implements Rule, Translation {
     if (content.charAt(0) == '-') current.putProperty("hideFirst", "");
     boolean endOfTable = false;
     while (!endOfTable) {
-      Symbol row = new Symbol(SymbolType.SymbolList);
+      Symbol row = new Symbol(tableRow);
+      row.setStartOffset(parser.getOffset());
       current.add(row);
       while (true) {
         int offset = parser.getOffset();
@@ -32,15 +36,18 @@ public class Table extends SymbolType implements Rule, Translation {
         row.add(cell);
         if (endsRow(parser.getCurrent())) break;
       }
+      row.setEndOffset(parser.getOffset());
       if (!startsRow(parser.getCurrent())) break;
     }
     return new Maybe<Symbol>(current);
   }
 
   private Symbol parseCell(Parser parser, String content) {
-    return (content.contains("!"))
-      ? parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider, ParseSpecification.tablePriority)
-      : parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.tableParsingProvider, ParseSpecification.tablePriority);
+    Symbol cell = (content.contains("!"))
+            ? parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider, ParseSpecification.tablePriority)
+            : parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.tableParsingProvider, ParseSpecification.tablePriority);
+    cell.setType(tableCell);
+    return cell;
   }
 
   private boolean containsNewLine(Symbol cell) {
