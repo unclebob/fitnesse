@@ -11,7 +11,7 @@ public class SlimAssertion implements Assertion {
   private final Instruction instruction;
   private final SlimExpectation expectation;
 
-  SlimAssertion(Instruction instruction, SlimExpectation expectation) {
+  public SlimAssertion(Instruction instruction, SlimExpectation expectation) {
     this.instruction = instruction;
     this.expectation = expectation;
   }

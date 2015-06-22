@@ -11,11 +11,7 @@ import fitnesse.testsystems.fit.CommandRunningFitClient;
 import fitnesse.testsystems.fit.FitClientBuilder;
 import fitnesse.testsystems.fit.FitTestSystem;
 import fitnesse.testsystems.fit.InProcessFitClientBuilder;
-import fitnesse.testsystems.slim.CustomComparatorRegistry;
-import fitnesse.testsystems.slim.HtmlSlimTestSystem;
-import fitnesse.testsystems.slim.InProcessSlimClientBuilder;
-import fitnesse.testsystems.slim.SlimClientBuilder;
-import fitnesse.testsystems.slim.SlimCommandRunningClient;
+import fitnesse.testsystems.slim.*;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 
 public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemFactoryRegistry {
@@ -23,6 +19,8 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
   private final Map<String, TestSystemFactory> inProcessTestSystemFactories = new HashMap<String, TestSystemFactory>(4);
 
   public MultipleTestSystemFactory(SlimTableFactory slimTableFactory, CustomComparatorRegistry customComparatorRegistry) {
+    registerTestSystemFactory("slimcoverage", new CoverageSlimTestSystemFactory(slimTableFactory, customComparatorRegistry));
+
     registerTestSystemFactory("slim", new HtmlSlimTestSystemFactory(slimTableFactory, customComparatorRegistry));
     registerTestSystemFactory("fit", new FitTestSystemFactory());
 
@@ -54,6 +52,26 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
     return factory.create(descriptor);
   }
 
+  static class CoverageSlimTestSystemFactory implements TestSystemFactory {
+    private final SlimTableFactory slimTableFactory;
+    private final CustomComparatorRegistry customComparatorRegistry;
+
+    public CoverageSlimTestSystemFactory(SlimTableFactory slimTableFactory,
+                                     CustomComparatorRegistry customComparatorRegistry) {
+      this.slimTableFactory = slimTableFactory;
+      this.customComparatorRegistry = customComparatorRegistry;
+    }
+
+    @Override
+    public final TestSystem create(Descriptor descriptor) throws IOException {
+      InProcessSlimClientBuilder clientBuilder = new InProcessSlimClientBuilder(descriptor);
+      CoverageSlimTestSystem testSystem = new CoverageSlimTestSystem("slimCoverage",
+              clientBuilder.getExecutionLogListener(), slimTableFactory.copy(), customComparatorRegistry);
+
+      return testSystem;
+    }
+  }
+
   static class HtmlSlimTestSystemFactory implements TestSystemFactory {
     private final SlimTableFactory slimTableFactory;
     private final CustomComparatorRegistry customComparatorRegistry;
@@ -69,7 +87,7 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
       SlimClientBuilder clientBuilder = new SlimClientBuilder(descriptor);
       SlimCommandRunningClient slimClient = clientBuilder.build();
       HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(clientBuilder.getTestSystemName(), slimClient,
-              slimTableFactory.copy(), customComparatorRegistry, true);
+              slimTableFactory.copy(), customComparatorRegistry);
 
       return testSystem;
     }
@@ -90,7 +108,7 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
       InProcessSlimClientBuilder clientBuilder = new InProcessSlimClientBuilder(descriptor);
       SlimCommandRunningClient slimClient = clientBuilder.build();
       HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(clientBuilder.getTestSystemName(), slimClient,
-              slimTableFactory.copy(), customComparatorRegistry, true);
+              slimTableFactory.copy(), customComparatorRegistry);
 
       return testSystem;
     }
