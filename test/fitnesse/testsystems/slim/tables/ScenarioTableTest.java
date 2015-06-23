@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
@@ -13,6 +14,7 @@ import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.InMemoryPage;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,7 +38,7 @@ public class ScenarioTableTest {
 
         TableScanner ts = new HtmlTableScanner(root.getHtml());
         Table t = ts.getTable(0);
-      SlimTestContextImpl testContext = new SlimTestContextImpl();
+      SlimTestContextImpl testContext = new SlimTestContextImpl(new WikiTestPage(root));
         st = new ScenarioTable(t, "id", testContext);
         instructions.addAll(st.getAssertions());
 

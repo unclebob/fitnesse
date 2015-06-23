@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
@@ -16,6 +17,7 @@ import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.InMemoryPage;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,7 +37,7 @@ public class ScenarioAndScriptTableTest {
   }
 
   private SlimTestContextImpl makeTables(String tableText) throws Exception {
-    SlimTestContextImpl testContext = new SlimTestContextImpl();
+    SlimTestContextImpl testContext = new SlimTestContextImpl(new WikiTestPage(root));
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
@@ -286,7 +288,7 @@ public class ScenarioAndScriptTableTest {
 
   @Test
   public void matchesScenarioWithMostArguments() throws Exception {
-    SlimTestContextImpl testContext = new SlimTestContextImpl();
+    SlimTestContextImpl testContext = new SlimTestContextImpl(new WikiTestPage(root));
     WikiPageUtil.setPageContents(root, "" +
         "!|scenario|Login user|name|\n" +
         "|should not get here|\n" +
@@ -310,7 +312,7 @@ public class ScenarioAndScriptTableTest {
 
   @Test
   public void doesntMatchScenarioWithNoArgumentsThatSharesFirstWord() throws Exception {
-    SlimTestContextImpl testContext = new SlimTestContextImpl();
+    SlimTestContextImpl testContext = new SlimTestContextImpl(new WikiTestPage(root));
     WikiPageUtil.setPageContents(root, "" +
         "!|scenario|login |\n" +
         "|should not get here|\n" +
@@ -335,7 +337,7 @@ public class ScenarioAndScriptTableTest {
 
   @Test
   public void dontTryParameterizedForRowWithMultipleCells() throws Exception {
-    SlimTestContextImpl testContext = new SlimTestContextImpl();
+    SlimTestContextImpl testContext = new SlimTestContextImpl(new WikiTestPage(root));
     WikiPageUtil.setPageContents(root, "" +
         "!|scenario|login with |name|\n" +
         "|should not get here|\n" +

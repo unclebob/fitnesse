@@ -15,14 +15,10 @@ public class SlimTestContextImpl implements SlimTestContext {
   private final Map<String, String> symbols = new HashMap<String, String>();
   private final Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
   private final TestSummary testSummary = new TestSummary();
-  private TestPage pageToTest;
+  private final TestPage pageToTest;
 
   public SlimTestContextImpl(TestPage pageToTest) {
     this.pageToTest = pageToTest;
-  }
-  
-  public SlimTestContextImpl() {
-    super();
   }
 
   public String getSymbol(String symbolName) {

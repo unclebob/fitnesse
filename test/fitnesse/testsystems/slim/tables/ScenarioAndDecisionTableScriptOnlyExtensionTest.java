@@ -8,6 +8,7 @@ import java.util.Map;
 
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.slim.SlimTestContext;
@@ -17,6 +18,7 @@ import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.InMemoryPage;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,7 +46,7 @@ public class ScenarioAndDecisionTableScriptOnlyExtensionTest {
   }
 
   private SlimTestContextImpl makeTables(String scenarioText, String scriptText) throws Exception {
-    SlimTestContextImpl testContext = new SlimTestContextImpl();
+    SlimTestContextImpl testContext = new SlimTestContextImpl(new WikiTestPage(root));
     String tableText = "!|scenario|" + scenarioText + "|\n"
             + "\n"
             + "!|" + SCRIPT_EXTENSION_NAME + "|\n"
@@ -108,7 +110,7 @@ public class ScenarioAndDecisionTableScriptOnlyExtensionTest {
 
   @Test
   public void twoDecisionTablesDifferentScripts() throws Exception {
-    SlimTestContextImpl testContext = new SlimTestContextImpl();
+    SlimTestContextImpl testContext = new SlimTestContextImpl(new WikiTestPage(root));
     String tableText = "!|scenario|myScenario|input|\n"
             + "|function|@input|\n"
             + "\n"

@@ -2,11 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.testsystems.slim.results.SlimTestResult;
+import fitnesse.wiki.WikiPageDummy;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,7 +20,7 @@ public class ReturnedValueExpectationTest {
 
   @Before
   public void setup() {
-    testContext = new SlimTestContextImpl();
+    testContext = new SlimTestContextImpl(new WikiTestPage(new WikiPageDummy()));
   }
 
   private void assertExpectationMessage(String expected, String value, String message) throws Exception {
