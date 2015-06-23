@@ -60,7 +60,7 @@ public abstract class QueryTableTestBase {
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
-    testContext = new SlimTestContextImpl();
+    testContext = new SlimTestContextImpl(null);
     return constructQueryTable(t);
   }
 

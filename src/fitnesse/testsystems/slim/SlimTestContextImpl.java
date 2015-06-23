@@ -16,10 +16,6 @@ public class SlimTestContextImpl implements SlimTestContext {
   private final TestSummary testSummary = new TestSummary();
   private final SlimScenarioUsagePer usage;
 
-  public SlimTestContextImpl() {
-    this(null);
-  }
-
   public SlimTestContextImpl(SlimScenarioUsagePer usageByPage) {
     usage = usageByPage;
   }

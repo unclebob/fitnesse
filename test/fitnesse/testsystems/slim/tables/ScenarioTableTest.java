@@ -36,7 +36,7 @@ public class ScenarioTableTest {
 
         TableScanner ts = new HtmlTableScanner(root.getHtml());
         Table t = ts.getTable(0);
-      SlimTestContextImpl testContext = new SlimTestContextImpl();
+      SlimTestContextImpl testContext = new SlimTestContextImpl(null);
         st = new ScenarioTable(t, "id", testContext);
         instructions.addAll(st.getAssertions());
 

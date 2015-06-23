@@ -88,7 +88,7 @@ public class ScriptTableExtensionTest {
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
-    SlimTestContextImpl testContext = new SlimTestContextImpl();
+    SlimTestContextImpl testContext = new SlimTestContextImpl(null);
     return new HtmlScriptTable(t, "id", testContext);
   }
 

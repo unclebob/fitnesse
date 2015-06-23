@@ -35,7 +35,7 @@ public class ScenarioAndScriptTableTest {
   }
 
   private SlimTestContextImpl makeTables(String tableText) throws Exception {
-    SlimTestContextImpl testContext = new SlimTestContextImpl();
+    SlimTestContextImpl testContext = new SlimTestContextImpl(null);
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
@@ -286,7 +286,7 @@ public class ScenarioAndScriptTableTest {
 
   @Test
   public void matchesScenarioWithMostArguments() throws Exception {
-    SlimTestContextImpl testContext = new SlimTestContextImpl();
+    SlimTestContextImpl testContext = new SlimTestContextImpl(null);
     WikiPageUtil.setPageContents(root, "" +
         "!|scenario|Login user|name|\n" +
         "|should not get here|\n" +
@@ -310,7 +310,7 @@ public class ScenarioAndScriptTableTest {
 
   @Test
   public void doesntMatchScenarioWithNoArgumentsThatSharesFirstWord() throws Exception {
-    SlimTestContextImpl testContext = new SlimTestContextImpl();
+    SlimTestContextImpl testContext = new SlimTestContextImpl(null);
     WikiPageUtil.setPageContents(root, "" +
         "!|scenario|login |\n" +
         "|should not get here|\n" +
@@ -335,7 +335,7 @@ public class ScenarioAndScriptTableTest {
 
   @Test
   public void dontTryParameterizedForRowWithMultipleCells() throws Exception {
-    SlimTestContextImpl testContext = new SlimTestContextImpl();
+    SlimTestContextImpl testContext = new SlimTestContextImpl(null);
     WikiPageUtil.setPageContents(root, "" +
         "!|scenario|login with |name|\n" +
         "|should not get here|\n" +

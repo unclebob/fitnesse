@@ -46,7 +46,7 @@ public class ScenarioAndDecisionTableExtensionTest {
   }
 
   private SlimTestContextImpl makeTables(String scenarioText, String scriptText) throws Exception {
-    SlimTestContextImpl testContext = new SlimTestContextImpl();
+    SlimTestContextImpl testContext = new SlimTestContextImpl(null);
     String tableText = "!|" + SCEN_EXTENSION_NAME + "|" + scenarioText + "|\n"
             + "\n"
             + "!|DT:" + scriptText + "|\n";

@@ -45,14 +45,14 @@ public class SlimTableFactoryTest {
   @Test
   public void commentTableShouldReturnNull() {
     when(table.getCellContents(0, 0)).thenReturn("comment");
-    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "0", new SlimTestContextImpl());
+    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "0", new SlimTestContextImpl(null));
     assertThat(slimTable, nullValue());
   }
 
   @Test
   public void tableTypeStartingWithcommentColonShouldReturnNull() {
     when(table.getCellContents(0, 0)).thenReturn("comment: a comment table");
-    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "0", new SlimTestContextImpl());
+    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "0", new SlimTestContextImpl(null));
     assertThat(slimTable, nullValue());
   }
 
@@ -65,7 +65,7 @@ public class SlimTableFactoryTest {
 
   private void assertThatTableTypeCreateSlimTableType(String tableType, Class<? extends SlimTable> expectedClass) {
     when(table.getCellContents(0, 0)).thenReturn(tableType);
-    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "0", new SlimTestContextImpl());
+    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "0", new SlimTestContextImpl(null));
     String message = "should have created a " + expectedClass + " for tabletype: " + tableType
         + " but was " + slimTable.getClass();
     assertThat(message, slimTable, instanceOf(expectedClass));
@@ -109,6 +109,6 @@ public class SlimTableFactoryTest {
     when(table.getRowCount()).thenReturn(2);
     when(table.getColumnCountInRow(0)).thenReturn(1);
     when(table.getColumnCountInRow(1)).thenReturn(2);
-    slimTableFactory.makeSlimTable(table, "0", new SlimTestContextImpl());
+    slimTableFactory.makeSlimTable(table, "0", new SlimTestContextImpl(null));
   }
 }

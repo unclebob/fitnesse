@@ -42,7 +42,7 @@ public class ScenarioTableExtensionTest {
 
     TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
-    SlimTestContextImpl testContext = new SlimTestContextImpl();
+    SlimTestContextImpl testContext = new SlimTestContextImpl(null);
     st = new AutoArgScenarioTable(t, "id", testContext);
     instructions.addAll(st.getAssertions());
 
