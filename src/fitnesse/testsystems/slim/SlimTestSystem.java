@@ -3,8 +3,10 @@
 package fitnesse.testsystems.slim;
 
 import java.io.IOException;
-import java.io.PrintStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +17,6 @@ import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.CompositeTestSystemListener;
 import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
@@ -25,7 +26,8 @@ import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.tables.SlimAssertion;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SyntaxError;
-import static fitnesse.slim.SlimServer.*;
+
+import static fitnesse.slim.SlimServer.EXCEPTION_TAG;
 
 public abstract class SlimTestSystem implements TestSystem {
   private static final Logger LOG = Logger.getLogger(SlimTestSystem.class.getName());
@@ -36,7 +38,6 @@ public abstract class SlimTestSystem implements TestSystem {
   private final SlimClient slimClient;
   private final CompositeTestSystemListener testSystemListener;
   private final String testSystemName;
-  private final SlimScenarioUsage usage;
 
   private SlimTestContextImpl testContext;
   private boolean stopTestCalled;
@@ -45,22 +46,9 @@ public abstract class SlimTestSystem implements TestSystem {
 
 
   public SlimTestSystem(String testSystemName, SlimClient slimClient) {
-    this(testSystemName, slimClient, false);
-  }
-
-  public SlimTestSystem(String testSystemName, SlimClient slimClient, boolean trackScenarioUsage) {
     this.testSystemName = testSystemName;
     this.slimClient = slimClient;
     this.testSystemListener = new CompositeTestSystemListener();
-    if (trackScenarioUsage) {
-      this.usage = new SlimScenarioUsage();
-    } else {
-      this.usage = null;
-    }
-  }
-
-  public SlimScenarioUsage getUsage() {
-    return usage;
   }
 
   public SlimTestContext getTestContext() {
@@ -104,74 +92,6 @@ public abstract class SlimTestSystem implements TestSystem {
       exceptionOccurred(e);
     } finally {
       testSystemStopped(null);
-      if (usage != null) {
-        reportScenarioUsage();
-      }
-    }
-  }
-
-  protected void reportScenarioUsage() {
-    ExecutionLogListener listener = slimClient.getExecutionLogListener();
-    listener.stdOut("Scenario Usage Report -------------------------------");
-    listener.stdOut("");
-
-    Map<String, Integer> totalUsage = usage.getScenarioUsage().getUsage();
-    if (totalUsage.isEmpty()) {
-      listener.stdOut("No scenarios in run");
-    } else {
-      Collection<String> unused = usage.getUnusedScenarios();
-      if (!unused.isEmpty()) {
-        listener.stdOut("Unused scenarios:");
-        for (String scenarioName : unused) {
-          listener.stdOut(scenarioName);
-        }
-        listener.stdOut("\n");
-      }
-
-      listener.stdOut("Total usage count per scenario:");
-      for (Entry<String, Integer> totalUsageEntry : totalUsage.entrySet()) {
-        listener.stdOut(totalUsageEntry.getKey()
-                + "\t"
-                + totalUsageEntry.getValue());
-      }
-      listener.stdOut("\n");
-
-      listener.stdOut("Scenarios grouped by usage scope:");
-      for (Entry<String, Collection<String>> sByScopeEntry : usage.getScenariosBySmallestScope().entrySet()) {
-        String scope = sByScopeEntry.getKey();
-        listener.stdOut(scope);
-        for (String scenario : sByScopeEntry.getValue()) {
-          listener.stdOut("\t"
-                  + scenario);
-        }
-      }
-      listener.stdOut("\n");
-
-      listener.stdOut("Usage count per scenario per page:");
-      for (SlimScenarioUsagePer usagePerPage : usage.getUsage()) {
-        String pageName = usagePerPage.getGroupName();
-        for (Entry<String, Integer> usagePerScenario : usagePerPage.getUsage().entrySet()) {
-          listener.stdOut(pageName
-                  + "\t"
-                  + usagePerScenario.getKey()
-                  + "\t"
-                  + usagePerScenario.getValue());
-        }
-      }
-
-      Map<String, Collection<String>> overriddenPerPage = usage.getOverriddenScenariosPerPage();
-      if (!overriddenPerPage.isEmpty()) {
-        listener.stdOut("\n");
-        listener.stdOut("Overridden scenario(s) per page:");
-        for (Entry<String, Collection<String>> overriddenForPage : overriddenPerPage.entrySet()) {
-          String pageName = overriddenForPage.getKey();
-          for (String scenario : overriddenForPage.getValue()) {
-            listener.stdOut(pageName
-                    + "\t"
-                    + scenario);
-          }
-        }
-      }
     }
   }
 
@@ -194,14 +114,13 @@ public abstract class SlimTestSystem implements TestSystem {
     testSystemListener.addTestSystemListener(listener);
   }
 
-  protected void initializeTest(TestPage testPage) {
-    SlimScenarioUsagePer usageByPage = null;
-    if (usage != null) {
-      String fullPath = testPage.getFullPath();
-      usageByPage = usage.getUsageByPage(fullPath);
-    }
-    testContext = new SlimTestContextImpl(usageByPage);
+  private void initializeTest(TestPage testPage) {
+    testContext = createTestContext(testPage);
     stopTestCalled = false;
+  }
+
+  protected SlimTestContextImpl createTestContext(TestPage testPage) {
+    return new SlimTestContextImpl(null);
   }
 
   protected abstract void processAllTablesOnPage(TestPage testPage) throws IOException;

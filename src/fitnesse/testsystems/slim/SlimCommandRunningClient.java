@@ -2,19 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import fitnesse.slim.SlimError;
-import fitnesse.slim.SlimException;
-import fitnesse.slim.SlimStreamReader;
-import fitnesse.slim.SlimVersion;
-import fitnesse.slim.instructions.*;
-import fitnesse.slim.protocol.SlimDeserializer;
-import fitnesse.slim.protocol.SlimSerializer;
-import fitnesse.socketservice.SocketFactory;
-import fitnesse.testsystems.CommandRunner;
-
-import fitnesse.testsystems.ExecutionLogListener;
-import org.apache.commons.lang.ArrayUtils;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -24,6 +11,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import fitnesse.slim.SlimError;
+import fitnesse.slim.SlimException;
+import fitnesse.slim.SlimStreamReader;
+import fitnesse.slim.SlimVersion;
+import fitnesse.slim.instructions.AssignInstruction;
+import fitnesse.slim.instructions.CallAndAssignInstruction;
+import fitnesse.slim.instructions.CallInstruction;
+import fitnesse.slim.instructions.ImportInstruction;
+import fitnesse.slim.instructions.Instruction;
+import fitnesse.slim.instructions.InstructionExecutor;
+import fitnesse.slim.instructions.MakeInstruction;
+import fitnesse.slim.protocol.SlimDeserializer;
+import fitnesse.slim.protocol.SlimSerializer;
+import fitnesse.socketservice.SocketFactory;
+import fitnesse.testsystems.CommandRunner;
+import org.apache.commons.lang.ArrayUtils;
 
 import static java.util.Arrays.asList;
 
@@ -235,9 +239,5 @@ public class SlimCommandRunningClient implements SlimClient {
       map.put((String) resultList.get(0), resultList.get(1));
     }
     return map;
-  }
-
-  public ExecutionLogListener getExecutionLogListener() {
-    return slimRunner.getExecutionLogListener();
   }
 }
