@@ -1,22 +1,24 @@
 CodeMirror.registerHelper("fold", "fitnesse", function(cm, start) {
   var tablePos = findTable(cm, start);
-  if (tablePos)
+  if (tablePos) {
     return tablePos;
+  }
   var blockPos = findBlock(cm, start);
-  if (blockPos)
+  if (blockPos) {
     return blockPos;
+  }
   var headerPos = findHeader(cm, start);
-  if (headerPos)
+  if (headerPos) {
     return headerPos;
-  return undefined;
+  }
 });
 
 function findBlock(cm, start) {
   var maxDepth = 100;
   var firstLine = cm.getLine(start.line);
-  if (!cm.getLine(start.line).match(/!\*.*/))
-    return undefined;
-
+  if (!cm.getLine(start.line).match(/!\*.*/)) {
+    return;
+  }
   var counter = 1;
 
   var lastLineNo = cm.lastLine();
@@ -31,13 +33,14 @@ function findBlock(cm, start) {
     nextNextLine = cm.getLine(end + 2);
   }
 
-  if (counter > 0)
-    return undefined;
+  if (counter > 0) {
+    return;
+  }
 
   return {
     from: CodeMirror.Pos(start.line, firstLine.length),
     to: CodeMirror.Pos(end, cm.getLine(end).length - 1)
-  }
+  };
 }
 
 function findTable(cm, start) {
@@ -45,9 +48,9 @@ function findTable(cm, start) {
   var previousLineIndex = start.line - 1;
   var tableRowRegexp = /\|.*/;
   if (!cm.getLine(start.line).match(tableRowRegexp) ||
-      (cm.getLine(previousLineIndex) && cm.getLine(previousLineIndex).match(tableRowRegexp)))
-    return undefined;
-
+      (cm.getLine(previousLineIndex) && cm.getLine(previousLineIndex).match(tableRowRegexp))) {
+    return;
+  }
   var lastLineNo = cm.lastLine();
   var end = start.line, nextLine = cm.getLine(end + 1);
   while (end < lastLineNo) {
@@ -60,21 +63,22 @@ function findTable(cm, start) {
   return {
     from: CodeMirror.Pos(start.line, firstLine.length),
     to: CodeMirror.Pos(end, cm.getLine(end).length - 1)
-  }
+  };
 }
 
 function findHeader(cm, start) {
-  var maxDepth = 100;
   var firstLine = cm.getLine(start.line);
-  if (!cm.getLine(start.line).match(/!\d .+/))
-    return undefined;
+  if (!cm.getLine(start.line).match(/!\d .+/)) {
+    return;
+  }
   var header = cm.getLine(start.line).substring(0, 2);
   var headerNumber = parseInt(header.substring(1, 2));
   var lastLineNo = cm.lastLine();
   var end = start.line, nextLine = cm.getLine(end + 1);
   while (end < lastLineNo ) {
-    if (nextLine.match(/!\d .+/) && (parseInt(nextLine.substring(1, 2)) <= headerNumber))
+    if (nextLine.match(/!\d .+/) && (parseInt(nextLine.substring(1, 2)) <= headerNumber)) {
       break;
+    }
     ++end;
     nextLine = cm.getLine(end + 1);
   }
@@ -82,7 +86,7 @@ function findHeader(cm, start) {
   return {
     from: CodeMirror.Pos(start.line, firstLine.length),
     to: CodeMirror.Pos(end, cm.getLine(end).length)
-  }
+  };
 }
 
 CodeMirror.defineSimpleMode("fitnesse", {
@@ -134,6 +138,6 @@ CodeMirror.defineSimpleMode("fitnesse", {
     {regex: /0x[a-f\d]+|[-+]?(?:\.\d+|\d+\.?\d*)(?:e[-+]?\d+)?/i,
      token: "number"},
      //comment
-    {regex: /#.*/, token: "comment"},
+    {regex: /#.*/, token: "comment"}
   ]
 });

@@ -35,10 +35,11 @@ public class RecentChangesWikiPage implements RecentChanges {
 
   public List<String> getRecentChangesLines(PageData recentChangesdata) {
     String content = recentChangesdata.getContent();
-    BufferedReader reader = new BufferedReader(new StringReader(content));
+    BufferedReader reader = null;
     List<String> lines = new ArrayList<String>();
-    String line = null;
     try {
+      reader = new BufferedReader(new StringReader(content));
+      String line = null;
       while ((line = reader.readLine()) != null)
         lines.add(line);
     } catch (IOException e) {

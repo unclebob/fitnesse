@@ -10,7 +10,9 @@ import fitnesse.testsystems.slim.tables.SlimTableFactory;
 
 public class ColoredSlimTable extends SymbolTypeDecorator{
 
-    public ColoredSlimTable(Table baseSymbolType) {
+  public static final String CLASS_PROPERTY = "class";
+
+  public ColoredSlimTable(Table baseSymbolType) {
         super("Table", baseSymbolType);
 
         secondRowTitleClasses.add("fitnesse.testsystems.slim.tables.DecisionTable");
@@ -25,8 +27,8 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
     public String toTarget(Translator translator, Symbol symbol) {
         HtmlWriter writer = new HtmlWriter();
         writer.startTag("table");
-        if (symbol.hasProperty("class")) {
-          writer.putAttribute("class", symbol.getProperty("class"));
+        if (symbol.hasProperty(CLASS_PROPERTY)) {
+          writer.putAttribute(CLASS_PROPERTY, symbol.getProperty(CLASS_PROPERTY));
         }
         int longestRow = ((Table)baseSymbolType).longestRow(symbol);
         int rowCount = 0;
@@ -40,7 +42,7 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
           rowCount++;
           writer.startTag("tr");
           if (rowCount == 1 && symbol.hasProperty("hideFirst")) {
-            writer.putAttribute("class", "hidden");
+            writer.putAttribute(CLASS_PROPERTY, "hidden");
           }
           int extraColumnSpan = longestRow - ((Table)baseSymbolType).rowLength(child);
           int column = 1;
@@ -57,10 +59,10 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
                     colorTable = true;
                     if(secondRowTitleClasses.contains(slimTableClazz.getName())){
                         isSecondRowTitle = true;
-                    }else if(slimTableClazz.getName().equals("fitnesse.testsystems.slim.tables.ImportTable")){
+                    }else if("fitnesse.testsystems.slim.tables.ImportTable".equals(slimTableClazz.getName())){
                         isImportFixture = true;
-                    }else if(slimTableClazz.getName().equals("fitnesse.testsystems.slim.tables.ScriptTable") ||
-                            slimTableClazz.getName().equals("fitnesse.testsystems.slim.tables.ScenarioTable")){
+                    }else if("fitnesse.testsystems.slim.tables.ScriptTable".equals(slimTableClazz.getName()) ||
+                            "fitnesse.testsystems.slim.tables.ScenarioTable".equals(slimTableClazz.getName())) {
                         isFirstColumnTitle = true;
                     }
                 }
@@ -87,18 +89,18 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
                 if(isImportFixture){ FixtureLoader.instance().addPackageToPath(body); }
 
                 if(rowCount == 1){
-                    writer.putAttribute("class", "slimRowTitle");
+                    writer.putAttribute(CLASS_PROPERTY, "slimRowTitle");
                 }else if(isSecondRowTitle && rowCount == 2){
-                    writer.putAttribute("class", "slimRowTitle");
+                    writer.putAttribute(CLASS_PROPERTY, "slimRowTitle");
                 }else if(isFirstColumnTitle){
                     byte[] bodyBytes = body.getBytes();
                     int sum = 0;
                     for(byte b: bodyBytes){
                         sum = sum + (int) b;
                     }
-                    writer.putAttribute("class", "slimRowColor" + (sum % 10));
+                    writer.putAttribute(CLASS_PROPERTY, "slimRowColor" + (sum % 10));
                 }else if(!isCommentFixture){
-                    writer.putAttribute("class", "slimRowColor" + (rowCount % 2));
+                    writer.putAttribute(CLASS_PROPERTY, "slimRowColor" + (rowCount % 2));
                 }
             }
             writer.startTag("td");
@@ -119,7 +121,7 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
         if(translator instanceof HtmlTranslator){
             testSystem = ((HtmlTranslator) translator).getParsingPage().findVariable("TEST_SYSTEM");
         }
-        if(testSystem.isNothing() || !testSystem.getValue().equals("slim")){
+        if(testSystem.isNothing() || !"slim".equals(testSystem.getValue())) {
             return baseSymbolType;
         }
         return this;
