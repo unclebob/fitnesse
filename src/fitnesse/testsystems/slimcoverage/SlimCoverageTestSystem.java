@@ -16,11 +16,11 @@ import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.testsystems.slim.tables.SyntaxError;
 
-public class CoverageSlimTestSystem extends HtmlSlimTestSystem {
+public class SlimCoverageTestSystem extends HtmlSlimTestSystem {
     private final ExecutionLogListener executionLogListener;
     private final SlimScenarioUsage usage;
 
-    public CoverageSlimTestSystem(String testSystemName, ExecutionLogListener executionLogListener, SlimTableFactory slimTableFactory, CustomComparatorRegistry customComparatorRegistry) {
+    public SlimCoverageTestSystem(String testSystemName, ExecutionLogListener executionLogListener, SlimTableFactory slimTableFactory, CustomComparatorRegistry customComparatorRegistry) {
         super(testSystemName, dummySlimClient(), slimTableFactory, customComparatorRegistry);
         this.usage = new SlimScenarioUsage();
         this.executionLogListener = executionLogListener;

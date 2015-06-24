@@ -13,7 +13,7 @@ import fitnesse.testsystems.fit.FitTestSystem;
 import fitnesse.testsystems.fit.InProcessFitClientBuilder;
 import fitnesse.testsystems.slim.*;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
-import fitnesse.testsystems.slimcoverage.CoverageSlimTestSystem;
+import fitnesse.testsystems.slimcoverage.SlimCoverageTestSystem;
 
 public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemFactoryRegistry {
   private final Map<String, TestSystemFactory> testSystemFactories = new HashMap<String, TestSystemFactory>(4);
@@ -66,7 +66,7 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
     @Override
     public final TestSystem create(Descriptor descriptor) throws IOException {
       InProcessSlimClientBuilder clientBuilder = new InProcessSlimClientBuilder(descriptor);
-      CoverageSlimTestSystem testSystem = new CoverageSlimTestSystem("slimCoverage",
+      SlimCoverageTestSystem testSystem = new SlimCoverageTestSystem("slimCoverage",
               clientBuilder.getExecutionLogListener(), slimTableFactory.copy(), customComparatorRegistry);
 
       return testSystem;
