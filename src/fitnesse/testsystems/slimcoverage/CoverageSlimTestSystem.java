@@ -1,4 +1,4 @@
-package fitnesse.testsystems.slim;
+package fitnesse.testsystems.slimcoverage;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -8,6 +8,10 @@ import java.util.Map;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.slim.CustomComparatorRegistry;
+import fitnesse.testsystems.slim.HtmlSlimTestSystem;
+import fitnesse.testsystems.slim.SlimClient;
+import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.testsystems.slim.tables.SyntaxError;
@@ -55,7 +59,7 @@ public class CoverageSlimTestSystem extends HtmlSlimTestSystem {
     protected SlimTestContextImpl createTestContext(TestPage testPage) {
         String fullPath = testPage.getFullPath();
         SlimScenarioUsagePer usageByPage = usage.getUsageByPage(fullPath);
-        return new SlimTestContextImpl(usageByPage);
+        return new SlimCoverageTestContextImpl(usageByPage);
     }
 
     @Override

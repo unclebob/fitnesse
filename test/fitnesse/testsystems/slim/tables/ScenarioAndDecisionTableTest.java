@@ -39,7 +39,7 @@ public class ScenarioAndDecisionTableTest {
   }
 
   private SlimTestContextImpl makeTables(String tableText) throws Exception {
-    SlimTestContextImpl testContext = new SlimTestContextImpl(null);
+    SlimTestContextImpl testContext = new SlimTestContextImpl();
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);

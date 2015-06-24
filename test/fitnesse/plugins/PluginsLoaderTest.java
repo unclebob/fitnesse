@@ -223,7 +223,7 @@ public class PluginsLoaderTest {
     loader.loadSlimTables(slimTableFactory);
 
     HtmlTable table = makeMockTable("test");
-    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "foo", new SlimTestContextImpl(null));
+    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "foo", new SlimTestContextImpl());
     assertSame(TestSlimTable.class, slimTable.getClass());
   }
 
@@ -234,7 +234,7 @@ public class PluginsLoaderTest {
     loader.loadSlimTables(slimTableFactory);
 
     HtmlTable table = makeMockTable("test:");
-    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "foo", new SlimTestContextImpl(null));
+    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "foo", new SlimTestContextImpl());
     assertSame(TestSlimTable.class, slimTable.getClass());
   }
 
@@ -244,7 +244,7 @@ public class PluginsLoaderTest {
     loader.loadSlimTables(slimTableFactory);
 
     HtmlTable table = makeMockTable(DummyPluginFeatureFactory.SLIM_TABLE);
-    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "foo", new SlimTestContextImpl(null));
+    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "foo", new SlimTestContextImpl());
     assertSame(TestSlimTable.class, slimTable.getClass());
   }
 

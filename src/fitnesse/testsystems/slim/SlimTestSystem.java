@@ -120,7 +120,7 @@ public abstract class SlimTestSystem implements TestSystem {
   }
 
   protected SlimTestContextImpl createTestContext(TestPage testPage) {
-    return new SlimTestContextImpl(null);
+    return new SlimTestContextImpl();
   }
 
   protected abstract void processAllTablesOnPage(TestPage testPage) throws IOException;

@@ -48,7 +48,7 @@ public class TableTableTest {
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
-    SlimTestContextImpl testContext = new SlimTestContextImpl(null);
+    SlimTestContextImpl testContext = new SlimTestContextImpl();
     return new TableTable(t, "id", testContext);
   }
 

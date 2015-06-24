@@ -17,7 +17,7 @@ public class ReturnedValueExpectationTest {
 
   @Before
   public void setup() {
-    testContext = new SlimTestContextImpl(null);
+    testContext = new SlimTestContextImpl();
   }
 
   private void assertExpectationMessage(String expected, String value, String message) throws Exception {

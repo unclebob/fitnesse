@@ -44,7 +44,7 @@ public class ScenarioAndDecisionTableScriptOnlyExtensionTest {
   }
 
   private SlimTestContextImpl makeTables(String scenarioText, String scriptText) throws Exception {
-    SlimTestContextImpl testContext = new SlimTestContextImpl(null);
+    SlimTestContextImpl testContext = new SlimTestContextImpl();
     String tableText = "!|scenario|" + scenarioText + "|\n"
             + "\n"
             + "!|" + SCRIPT_EXTENSION_NAME + "|\n"
@@ -108,7 +108,7 @@ public class ScenarioAndDecisionTableScriptOnlyExtensionTest {
 
   @Test
   public void twoDecisionTablesDifferentScripts() throws Exception {
-    SlimTestContextImpl testContext = new SlimTestContextImpl(null);
+    SlimTestContextImpl testContext = new SlimTestContextImpl();
     String tableText = "!|scenario|myScenario|input|\n"
             + "|function|@input|\n"
             + "\n"

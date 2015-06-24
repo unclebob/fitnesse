@@ -121,7 +121,7 @@ public class SlimTableTest {
 
   private static class MockTable extends SlimTable {
     public MockTable() {
-      super(null, null, new SlimTestContextImpl(null));
+      super(null, null, new SlimTestContextImpl());
     }
 
     protected String getTableType() {

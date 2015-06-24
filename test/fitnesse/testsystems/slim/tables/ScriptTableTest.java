@@ -88,7 +88,7 @@ public class ScriptTableTest {
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
-    SlimTestContextImpl testContext = new SlimTestContextImpl(null);
+    SlimTestContextImpl testContext = new SlimTestContextImpl();
     if (localized) return new LocalizedScriptTable(t, "id", testContext);
     else return new ScriptTable(t, "id", testContext);
   }

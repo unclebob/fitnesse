@@ -1,4 +1,4 @@
-package fitnesse.testsystems.slim;
+package fitnesse.testsystems.slimcoverage;
 
 import java.util.*;
 

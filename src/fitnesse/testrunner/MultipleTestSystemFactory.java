@@ -13,6 +13,7 @@ import fitnesse.testsystems.fit.FitTestSystem;
 import fitnesse.testsystems.fit.InProcessFitClientBuilder;
 import fitnesse.testsystems.slim.*;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
+import fitnesse.testsystems.slimcoverage.CoverageSlimTestSystem;
 
 public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemFactoryRegistry {
   private final Map<String, TestSystemFactory> testSystemFactories = new HashMap<String, TestSystemFactory>(4);
