@@ -1540,6 +1540,30 @@ describe("parser and formatter", function () {
             ""].join("\n"));
     });
 
+    it("table with code block", function() {
+        var dom = fragment(
+            element("table",
+                element("tbody",
+                    element("tr",
+                        element("td", " table "),
+                        element("td", " ",
+                            element("pre", "<root>", br(),
+                                "<a />", br(),
+                                "<b>test</b>", br(),
+                                "</root>"), " "
+                        )
+                    )
+                )
+            ));
+        generateFragment(dom, [
+            "| table | {{{<root>",
+            "<a />",
+            "<b>test</b>",
+            "</root>}}} |",
+            ""].join("\n"));
+    });
+
+
     it("renders images", function () {
         var dom = fragment(
             element("p", "blah ",

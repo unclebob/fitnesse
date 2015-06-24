@@ -2436,7 +2436,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
         if (currentHeader) {
             closeHeader();
         }
-        if (inTable() && !inEscapedText() && !inHashTable()) {
+        if (inTable() && !inEscapedText() && !inHashTable() && !inCodeBlock()) {
             handleTableCell(-1);
         }
         
