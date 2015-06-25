@@ -12,7 +12,9 @@ import java.util.Set;
 
 public class ColoredSlimTable extends SymbolTypeDecorator {
 
-  public ColoredSlimTable(Table baseSymbolType) {
+    public static final String CLASS_PROPERTY = "class";
+
+    public ColoredSlimTable(Table baseSymbolType) {
     super("Table", baseSymbolType);
 
     secondRowTitleClasses.add("fitnesse.testsystems.slim.tables.DecisionTable");
@@ -48,7 +50,7 @@ public class ColoredSlimTable extends SymbolTypeDecorator {
       Symbol child = children.get(row);
       writer.startTag("tr");
       if (row == 0 && symbol.hasProperty("hideFirst")) {
-        writer.putAttribute("class", "hidden");
+        writer.putAttribute(CLASS_PROPERTY, "hidden");
       }
       int extraColumnSpan = longestRow - table.rowLength(child);
       List<Symbol> children1 = child.getChildren();
@@ -90,10 +92,10 @@ public class ColoredSlimTable extends SymbolTypeDecorator {
   }
 
   private void setClass(Symbol symbol, HtmlWriter writer, String className) {
-    if (symbol.hasProperty("class")) {
-      writer.putAttribute("class", symbol.getProperty("class"));
+    if (symbol.hasProperty(CLASS_PROPERTY)) {
+      writer.putAttribute(CLASS_PROPERTY, symbol.getProperty(CLASS_PROPERTY));
     } else if (className != null) {
-      writer.putAttribute("class", className);
+      writer.putAttribute(CLASS_PROPERTY, className);
     }
   }
 
@@ -135,8 +137,8 @@ public class ColoredSlimTable extends SymbolTypeDecorator {
       String tableClassName = tableClass.getName();
       if (getTableNamesForDataTables().contains(tableClassName)) {
         return new DataTableDecorator();
-      } else if (tableClassName.equals("fitnesse.testsystems.slim.tables.ScriptTable") ||
-        tableClassName.equals("fitnesse.testsystems.slim.tables.ScenarioTable")) {
+      } else if ("fitnesse.testsystems.slim.tables.ScriptTable".equals(tableClassName) ||
+          "fitnesse.testsystems.slim.tables.ScenarioTable".equals(tableClassName)) {
         return new ColoredEveryRowTableDecorator();
       } else {
         return new ColoredTableDecorator();
@@ -163,7 +165,7 @@ public class ColoredSlimTable extends SymbolTypeDecorator {
     if (SlimTable.class.isAssignableFrom(tableClass)) {
       if (secondRowTitleClasses.contains(tableClass.getName())) {
         tableDescription.isSecondRowTitle = true;
-      } else if (tableClass.getName().equals("fitnesse.testsystems.slim.tables.ImportTable")) {
+      } else if ("fitnesse.testsystems.slim.tables.ImportTable".equals(tableClass.getName())) {
         tableDescription.isImportFixture = true;
       }
     }
@@ -179,7 +181,7 @@ public class ColoredSlimTable extends SymbolTypeDecorator {
     if (translator instanceof HtmlTranslator) {
       testSystem = ((HtmlTranslator) translator).getParsingPage().findVariable("TEST_SYSTEM");
     }
-    if (testSystem.isNothing() || !testSystem.getValue().equals("slim")) {
+    if (testSystem.isNothing() || !"slim".equals(testSystem.getValue())) {
       return baseSymbolType;
     }
     return this;
