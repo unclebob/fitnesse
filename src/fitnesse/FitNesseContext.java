@@ -9,6 +9,7 @@ import java.util.Properties;
 import fitnesse.authentication.Authenticator;
 import fitnesse.components.Logger;
 import fitnesse.html.template.PageFactory;
+import fitnesse.reporting.FormatterFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.TestSystemListener;
@@ -34,6 +35,8 @@ public class FitNesseContext {
   public final TestSystemFactory testSystemFactory;
   public final TestSystemListener testSystemListener;
 
+  public final FormatterFactory formatterFactory;
+
   public final int port;
   private final WikiPageFactory wikiPageFactory;
   public final String rootPath;
@@ -57,6 +60,7 @@ public class FitNesseContext {
                             RecentChanges recentChanges, int port,
                             Authenticator authenticator, Logger logger,
                             TestSystemFactory testSystemFactory, TestSystemListener testSystemListener,
+                            FormatterFactory formatterFactory,
                             Properties properties) {
     super();
     this.version = version;
@@ -71,6 +75,7 @@ public class FitNesseContext {
     this.logger = logger;
     this.testSystemFactory = testSystemFactory;
     this.testSystemListener = testSystemListener;
+    this.formatterFactory = formatterFactory;
     this.properties = properties;
     responderFactory = new ResponderFactory(getRootPagePath());
     variableSource = new SystemVariableSource(properties);

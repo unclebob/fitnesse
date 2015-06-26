@@ -9,6 +9,9 @@ import fitnesse.ConfigurationParameter;
 import fitnesse.authentication.Authenticator;
 import fitnesse.components.ComponentFactory;
 import fitnesse.components.ComponentInstantiationException;
+import fitnesse.reporting.Formatter;
+import fitnesse.reporting.FormatterFactory;
+import fitnesse.reporting.FormatterRegistry;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.testrunner.TestSystemFactoryRegistry;
@@ -85,7 +88,18 @@ public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase 
         registrar.registerWikiPageFactory(instance);
         LOG.info("Loaded WikiPageFactory " + instance.getClass().getName());
       }
-    }
+    });
+  }
+
+  @Override
+  public void registerFormatters(final FormatterRegistry registrar) throws PluginException {
+    forEachClass(ConfigurationParameter.FORMATTERS, new ClassRegistrar<Formatter>() {
+      @Override
+      public void register(Class<Formatter> clazz) {
+        registrar.registerFormatter(clazz);
+        LOG.info("Loaded formatter " + clazz.getName());
+      }
+    });
   }
 
   @Override

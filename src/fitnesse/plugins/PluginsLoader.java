@@ -13,6 +13,8 @@ import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.ComponentFactory;
 import fitnesse.components.Logger;
+import fitnesse.reporting.FormatterFactory;
+import fitnesse.reporting.FormatterRegistry;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.testrunner.TestSystemFactoryRegistry;
@@ -86,6 +88,12 @@ public class PluginsLoader {
   public void loadWikiPageFactories(WikiPageFactoryRegistry registrar) throws PluginException {
     for (PluginFeatureFactory pff : pluginFeatureFactories) {
       pff.registerWikiPageFactories(registrar);
+    }
+  }
+
+  public void loadFormatters(FormatterRegistry registrar) throws PluginException {
+    for (PluginFeatureFactory pff : pluginFeatureFactories) {
+      pff.registerFormatters(registrar);
     }
   }
 

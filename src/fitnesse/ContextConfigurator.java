@@ -8,6 +8,7 @@ import fitnesse.components.ComponentFactory;
 import fitnesse.components.Logger;
 import fitnesse.plugins.PluginException;
 import fitnesse.plugins.PluginsLoader;
+import fitnesse.reporting.FormatterFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.ContentFilterResponder;
 import fitnesse.testrunner.MultipleTestSystemFactory;
@@ -119,6 +120,8 @@ public class ContextConfigurator {
 
     MultipleTestSystemFactory testSystemFactory = new MultipleTestSystemFactory(slimTableFactory, customComparatorRegistry);
 
+    FormatterFactory formatterFactory = new FormatterFactory(componentFactory);
+
     FitNesseContext context = new FitNesseContext(version,
           wikiPageFactory,
           rootPath,
@@ -131,6 +134,7 @@ public class ContextConfigurator {
           logger,
           testSystemFactory,
           testSystemListener,
+          formatterFactory,
           properties);
 
     SymbolProvider symbolProvider = SymbolProvider.wikiParsingProvider;
@@ -143,6 +147,7 @@ public class ContextConfigurator {
       LOG.warning("Wiki page factory does not implement interface WikiPageFactoryRegistrar, configured factories can not be loaded.");
     }
     pluginsLoader.loadTestSystems(testSystemFactory);
+    pluginsLoader.loadFormatters(formatterFactory);
     pluginsLoader.loadSymbolTypes(symbolProvider);
     pluginsLoader.loadSlimTables(slimTableFactory);
     pluginsLoader.loadCustomComparators(customComparatorRegistry);

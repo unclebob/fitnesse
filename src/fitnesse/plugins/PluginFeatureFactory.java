@@ -1,6 +1,7 @@
 package fitnesse.plugins;
 
 import fitnesse.authentication.Authenticator;
+import fitnesse.reporting.FormatterRegistry;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.testrunner.TestSystemFactoryRegistry;
@@ -20,6 +21,8 @@ public interface PluginFeatureFactory {
   void registerSymbolTypes(SymbolProvider symbolProvider) throws PluginException;
 
   void registerWikiPageFactories(WikiPageFactoryRegistry wikiPageFactoryRegistry) throws PluginException;
+
+  void registerFormatters(FormatterRegistry registrar) throws PluginException;
 
   void registerTestSystemFactories(TestSystemFactoryRegistry testSystemFactoryRegistry) throws PluginException;
 
