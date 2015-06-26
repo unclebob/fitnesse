@@ -22,6 +22,7 @@ import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.reporting.BaseFormatter;
+import fitnesse.reporting.Formatter;
 import fitnesse.reporting.InteractiveFormatter;
 import fitnesse.reporting.PageInProgressFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
@@ -238,6 +239,9 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
       runner.addExecutionLogListener(new ConsoleExecutionLogListener());
     }
     runner.addTestSystemListener(newTestInProgressFormatter());
+    for (Formatter formatter : context.formatterFactory.createFormatters()) {
+      runner.addTestSystemListener(formatter);
+    }
     if (context.testSystemListener != null) {
       runner.addTestSystemListener(context.testSystemListener);
     }
