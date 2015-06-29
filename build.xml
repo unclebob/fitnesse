@@ -17,6 +17,8 @@
 	<property name="lib.dir" location="lib"/>
 	<property name="antlib.dir" location="antlib"/>
 	<property name="port" value="8001"/>
+
+	<property file="${user.home}/.sonatype.properties" />
   
 	<target name="all" depends="unit_tests, acceptance_tests" description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fitnesse acceptance tests."/>
   
