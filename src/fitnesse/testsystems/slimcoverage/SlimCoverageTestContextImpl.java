@@ -15,7 +15,8 @@ public class SlimCoverageTestContextImpl extends SlimTestContextImpl {
   @Override
   public void addScenario(String scenarioName, ScenarioTable scenarioTable) {
     if (usage != null) {
-      usage.addDefinition(scenarioName);
+      String key = getGroupName(scenarioTable);
+      usage.addDefinition(key);
     }
     super.addScenario(scenarioName, scenarioTable);
   }
@@ -23,8 +24,24 @@ public class SlimCoverageTestContextImpl extends SlimTestContextImpl {
   public ScenarioTable getScenario(String scenarioName) {
     ScenarioTable scenarioTable = super.getScenario(scenarioName);
     if (usage != null && scenarioTable != null) {
-      usage.addUsage(scenarioName);
+      String key = getGroupName(scenarioTable);
+      usage.addUsage(key);
     }
     return scenarioTable;
+  }
+
+  protected String getGroupName(ScenarioTable scenarioTable) {
+    String name = scenarioTable.getName();
+    int inputCount = scenarioTable.getInputs().size();
+    int outputCount = scenarioTable.getOutputs().size();
+    String keyPattern;
+    if (inputCount == 0 && outputCount == 0) {
+      keyPattern = "%s";
+    } else if (outputCount == 0) {
+      keyPattern = "%s[%s]";
+    } else {
+      keyPattern = "%s[%s,%s]";
+    }
+    return String.format(keyPattern, name, inputCount, outputCount);
   }
 }
