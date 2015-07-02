@@ -50,7 +50,7 @@ public class JUnitRunNotifierResultsListener
 
   @Override
   public void testComplete(WikiTestPage test, TestSummary testSummary) {
-    completedTests++;
+    increaseCompletedTests();
     if (firstFailure != null) {
       notifier.fireTestFailure(new Failure(descriptionFor(test), firstFailure));
     } else if (test.isTestPage()) {
@@ -136,5 +136,33 @@ public class JUnitRunNotifierResultsListener
     } else {
       firstFailure = new AssertionError(message);
     }
+  }
+
+  public Class<?> getMainClass() {
+    return mainClass;
+  }
+
+  public RunNotifier getNotifier() {
+    return notifier;
+  }
+
+  public int getTotalNumberOfTests() {
+    return totalNumberOfTests;
+  }
+
+  protected void increaseCompletedTests() {
+    completedTests++;
+  }
+
+  public int getCompletedTests() {
+    return completedTests;
+  }
+
+  public Throwable getFirstFailure() {
+    return firstFailure;
+  }
+
+  protected void setFirstFailure(Throwable firstFailure) {
+    this.firstFailure = firstFailure;
   }
 }
