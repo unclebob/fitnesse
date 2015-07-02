@@ -1,21 +1,23 @@
 package fitnesse.junit;
 
+import java.io.Closeable;
+import java.io.IOException;
+
 import fitnesse.testrunner.TestsRunnerListener;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
-import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestSystemListener;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
-import java.io.IOException;
-
-public class JUnitRunNotifierResultsListener implements TestSystemListener<WikiTestPage>, TestsRunnerListener {
+public class JUnitRunNotifierResultsListener
+        implements TestSystemListener<WikiTestPage>, TestsRunnerListener, Closeable {
 
   private final Class<?> mainClass;
   private final RunNotifier notifier;
@@ -90,17 +92,21 @@ public class JUnitRunNotifierResultsListener implements TestSystemListener<WikiT
     notifyOfTestSystemException(testSystem.getName(), cause);
   }
 
-  protected void notifyOfTestSystemException(String testSystemName, Throwable cause) {
-    Throwable t = cause;
+  @Override
+  public void close() {
     if (completedTests != totalNumberOfTests) {
       String msg = String.format(
-                            "Unable to complete suite. Error in test system %s. Completed %s of %s tests.",
-                            testSystemName, completedTests, totalNumberOfTests);
-      t = new Exception(msg, cause);
+              "Not all tests executed. Completed %s of %s tests.",
+              completedTests, totalNumberOfTests);
+      Exception e = new Exception(msg);
+      notifier.fireTestFailure(new Failure(Description.createSuiteDescription(mainClass), e));
     }
+  }
 
-    if (t != null) {
-      notifier.fireTestFailure(new Failure(Description.createSuiteDescription(mainClass), t));
+  protected void notifyOfTestSystemException(String testSystemName, Throwable cause) {
+    if (cause != null) {
+      Exception e = new Exception("Exception while executing tests using: " + testSystemName, cause);
+      notifier.fireTestFailure(new Failure(Description.createSuiteDescription(mainClass), e));
     }
   }
 
