@@ -179,11 +179,13 @@ Wysiwyg.prototype.setupFormEvent = function () {
                 var body = self.frame;
                 if (self.isModified()) {
                     self.codeMirrorEditor.setValue(self.domToWikitext(body, self.options));
+                    self.codeMirrorEditor.save();
                 }
             }
             if (Wysiwyg.getAutoformat()) {
                 var formatter = new WikiFormatter();
                 self.codeMirrorEditor.setValue(formatter.format(self.codeMirrorEditor.getValue()));
+                self.codeMirrorEditor.save();
             }
         } catch (e) {
             Wysiwyg.stopEvent(event);
