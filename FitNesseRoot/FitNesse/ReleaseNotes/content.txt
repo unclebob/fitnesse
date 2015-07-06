@@ -1,6 +1,19 @@
 !2 ${FITNESSE_VERSION}
 
- * !-!contents-! has a new [[-H option][UserGuide.FitNesseWiki.MarkupLanguageReference.MarkupContents]] ([[718][https://github.com/unclebob/fitnesse/pull/718]])
+ * Syntax highlighting in plain text editor ([[631][https://github.com/unclebob/fitnesse/pull/631]])
+ * Support generic behavior in Slim (Java) fixture via when fixtures implement [[!-InteractionAwareFixture-!][UserGuide.WritingAcceptanceTests.SliM.InteractionAwareFixture]] ([[724][https://github.com/unclebob/fitnesse/pull/724]])
+ * Tag filtering is now all case insensitive ([[728][https://github.com/unclebob/fitnesse/pull/728]])
+ * Improved slim hash table handling ([[739][https://github.com/unclebob/fitnesse/pull/739]])
+ * Support custom formatters ([[764][https://github.com/unclebob/fitnesse/pull/764]])
+ * Issues fixed:
+   * NPE in !-SuiteHistoryFormatter-! ([[736][https://github.com/unclebob/fitnesse/pull/736]])
+   * WYSIWYG (rich text) breaks inlinecode in table ([[756][https://github.com/unclebob/fitnesse/pull/756]])
+   * and more...
+   
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=12&state=closed.
+
+!2 20150428
+ * !-!contents-! has a new [[-H option][UserGuide.FitNesseWiki.MarkupLanguageReference.MarkupContents]] ([[718][https://github.com/unclebob/fitnesse/pull/718]])
  * The JUnit runner is notified of system exceptions ([[716][https://github.com/unclebob/fitnesse/pull/716]])
  * New Slim table type: [[Alias table][UserGuide.WritingAcceptanceTests.SliM.DefineAlias]] ([[711][https://github.com/unclebob/fitnesse/pull/711]])
  * Prevention of System.exit() calls is configurable ([[707][https://github.com/unclebob/fitnesse/pull/707]])
