@@ -1,6 +1,8 @@
 package fitnesse.plugins;
 
 import fitnesse.authentication.Authenticator;
+import fitnesse.reporting.FormatterFactory;
+import fitnesse.reporting.FormatterRegistry;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.testrunner.TestSystemFactoryRegistry;
@@ -24,31 +26,29 @@ public class PluginFeatureFactoryBase implements PluginFeatureFactory {
 
   @Override
   public void registerResponders(ResponderFactory responderFactory) throws PluginException {
-
   }
 
   @Override
   public void registerSymbolTypes(SymbolProvider symbolProvider) throws PluginException {
-
   }
 
   @Override
   public void registerWikiPageFactories(WikiPageFactoryRegistry wikiPageFactoryRegistry) throws PluginException {
+  }
 
+  @Override
+  public void registerFormatters(FormatterRegistry registrar) throws PluginException {
   }
 
   @Override
   public void registerTestSystemFactories(TestSystemFactoryRegistry testSystemFactoryRegistry) throws PluginException {
-
   }
 
   @Override
   public void registerSlimTables(SlimTableFactory slimTableFactory) throws PluginException {
-
   }
 
   @Override
   public void registerCustomComparators(CustomComparatorRegistry customComparatorRegistry) throws PluginException {
-
   }
 }

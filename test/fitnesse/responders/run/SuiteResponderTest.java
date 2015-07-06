@@ -4,11 +4,13 @@ package fitnesse.responders.run;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
+import fitnesse.reporting.BaseFormatter;
 import fitnesse.responders.run.TestResponderTest.JunitTestUtilities;
 import fitnesse.responders.run.TestResponderTest.XmlTestUtilities;
 import fitnesse.testsystems.TestSummary;
@@ -71,11 +73,11 @@ public class SuiteResponderTest {
     Clock.restoreDefaultClock();
   }
 
-  private WikiPage addTestToSuite(String name, String content) throws Exception {
+  private WikiPage addTestToSuite(String name, String content) {
     return addTestPage(suite, name, content);
   }
 
-  private WikiPage addTestPage(WikiPage page, String name, String content) throws Exception {
+  private WikiPage addTestPage(WikiPage page, String name, String content) {
     WikiPage testPage = WikiPageUtil.addPage(page, PathParser.parse(name), content);
     PageData data = testPage.getData();
     data.setAttribute("Test");
@@ -88,7 +90,7 @@ public class SuiteResponderTest {
     FitNesseUtil.destroyTestContext();
   }
 
-  private String runSuite() throws Exception {
+  private String runSuite() throws IOException {
     Response response = responder.makeResponse(context, request);
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
@@ -462,10 +464,32 @@ public class SuiteResponderTest {
   }
 
   @Test
-  public void exitCodeHeaderIsErrorCountForXml() throws Exception {
+  public void exitCodeHeaderIsErrorCountForXml() throws IOException {
     request.addInput("format", "xml");
     addTestToSuite("TestFailingTest", fitFailFixture);
     String results = runSuite();
     assertSubString("Exit-Code: 1", results);
   }
+
+  @Test
+  public void loadsCustomFormatters() throws IOException {
+
+    context.formatterFactory.registerFormatter(FooFormatter.class);
+    FooFormatter.initialized = false;
+
+    addTestToSuite("SlimTestOne", simpleSlimDecisionTable);
+    runSuite();
+
+    assertTrue(FooFormatter.initialized);
+  }
+
+  public static class FooFormatter extends BaseFormatter {
+
+    private static boolean initialized;
+
+    public FooFormatter() {
+      initialized = true;
+    }
+  }
+
 }

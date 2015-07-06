@@ -15,6 +15,8 @@ import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.ComponentFactory;
 import fitnesse.components.PluginsClassLoader;
+import fitnesse.reporting.BaseFormatter;
+import fitnesse.reporting.FormatterFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.editing.ContentFilter;
@@ -221,6 +223,15 @@ public class PluginsLoaderTest {
   }
 
   @Test
+  public void tesFormatterFactoryCreation() throws Exception {
+    testProperties.setProperty(ConfigurationParameter.FORMATTERS.getKey(), FooFormatter.class.getName());
+
+    FormatterFactory formatterFactory = mock(FormatterFactory.class);
+    loader.loadFormatters(formatterFactory);
+    verify(formatterFactory).registerFormatter(eq(FooFormatter.class));
+  }
+
+  @Test
   public void testSlimTablesCreation() throws PluginException {
     SlimTableFactory slimTableFactory = new SlimTableFactory();
     testProperties.setProperty(ConfigurationParameter.SLIM_TABLES.getKey(), "test:" + TestSlimTable.class.getName());
@@ -361,5 +372,9 @@ public class PluginsLoaderTest {
     public boolean supports(File path) {
       return false;
     }
+  }
+
+  public static class FooFormatter extends BaseFormatter {
+
   }
 }
