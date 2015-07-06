@@ -134,6 +134,7 @@ Wysiwyg.prototype.listenerToggleEditor = function (type) {
                 self.frame.style.display = self.wysiwygToolbar.style.display = "none";
                 self.frame.setAttribute("tabIndex", "-1");
                 self.textareaToolbar.style.display = "";
+                self.codeMirrorEditor.refresh();
                 setEditorMode(type);
             }
             self.focusTextarea();
