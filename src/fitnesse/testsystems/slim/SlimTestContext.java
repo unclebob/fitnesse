@@ -5,6 +5,7 @@ package fitnesse.testsystems.slim;
 import java.util.Collection;
 
 import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.tables.ScenarioTable;
 
@@ -30,4 +31,6 @@ public interface SlimTestContext {
   void increment(ExecutionResult testSummary);
 
   void increment(TestSummary testSummary);
+  
+  TestPage getPageToTest();
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.slim.instructions.CallInstruction;
@@ -16,8 +17,10 @@ import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.InMemoryPage;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,7 +51,7 @@ public class TableTableTest {
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
-    SlimTestContextImpl testContext = new SlimTestContextImpl();
+    SlimTestContextImpl testContext = new SlimTestContextImpl(new WikiTestPage(new WikiPageDummy()));
     return new TableTable(t, "id", testContext);
   }
 

@@ -21,6 +21,8 @@ import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.testrunner.MultipleTestSystemFactory;
 import fitnesse.testrunner.TestSystemFactoryRegistry;
+import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testrunner.WikiTestPageUtil;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemFactory;
@@ -35,6 +37,7 @@ import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.testutil.SimpleAuthenticator;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.WikiPageFactoryRegistry;
 import fitnesse.wiki.fs.FileSystemPageFactory;
@@ -46,6 +49,7 @@ import fitnesse.wikitext.parser.SymbolStream;
 import fitnesse.wikitext.parser.SymbolType;
 import fitnesse.wikitext.parser.Today;
 import fitnesse.wikitext.parser.VariableSource;
+
 import org.htmlparser.nodes.TextNode;
 import org.htmlparser.tags.TableColumn;
 import org.htmlparser.tags.TableRow;
@@ -223,7 +227,7 @@ public class PluginsLoaderTest {
     loader.loadSlimTables(slimTableFactory);
 
     HtmlTable table = makeMockTable("test");
-    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "foo", new SlimTestContextImpl());
+    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "foo", new SlimTestContextImpl(new WikiTestPage(new WikiPageDummy())));
     assertSame(TestSlimTable.class, slimTable.getClass());
   }
 
@@ -234,7 +238,7 @@ public class PluginsLoaderTest {
     loader.loadSlimTables(slimTableFactory);
 
     HtmlTable table = makeMockTable("test:");
-    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "foo", new SlimTestContextImpl());
+    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "foo", new SlimTestContextImpl(new WikiTestPage(new WikiPageDummy())));
     assertSame(TestSlimTable.class, slimTable.getClass());
   }
 
@@ -244,7 +248,7 @@ public class PluginsLoaderTest {
     loader.loadSlimTables(slimTableFactory);
 
     HtmlTable table = makeMockTable(DummyPluginFeatureFactory.SLIM_TABLE);
-    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "foo", new SlimTestContextImpl());
+    SlimTable slimTable = slimTableFactory.makeSlimTable(table, "foo", new SlimTestContextImpl(new WikiTestPage(new WikiPageDummy())));
     assertSame(TestSlimTable.class, slimTable.getClass());
   }
 
