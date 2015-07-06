@@ -42,6 +42,6 @@
 		<dependency org="org.mockito" name="mockito-core" rev="1.10.19" conf="test->default" />
 		<dependency org="org.hamcrest" name="hamcrest-all" rev="1.3" conf="test->default" />
 		<dependency org="net.javacrumbs.json-unit" name="json-unit" rev="1.1.6" conf="test->default" />
-		<dependency org="org.mozilla" name="rhino" rev="1.7R4" conf="lesscss->default" />
+		<dependency org="org.mozilla" name="rhino" rev="1.7.7" conf="lesscss->default" />
 	</dependencies>
 </ivy-module>
