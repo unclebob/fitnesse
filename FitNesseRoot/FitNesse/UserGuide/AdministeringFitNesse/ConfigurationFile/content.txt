@@ -139,6 +139,13 @@ Example !-ScriptTable-! usage:
 
 In case there are situations where you can not get your tests working with the default test systems (Fit and Slim), you have the ability to define custom test systems. Classes should implement the !-fitnesse.testsystems.TestSystemFactory-! interface.
 
+!3 !-Formatters-!
+''required property:'' '''!-Formatters-! = <class name>[,<class name>]'''
+
+''motivation:'' Allow for extra reporting facilities during test execution.
+
+Classes should implement the !-fitnesse.reporting.Formatter-! interface.
+
 !3 !-Plug-ins-!
 ''required property:'' '''!-Plugins-! = <class name>[,<class name>]'''
 
@@ -154,6 +161,7 @@ Plugins classes can provide one or more of the following methods to register com
  * '''registerTestSystemFactories(!-TestSystemFactoryRegistry-! testSystemFactoryRegistry)''' - register test system factories using ''!-testSystemFactoryRegistry.registerTestSystemFactory(String name, TestSystemFactory testSystemFactory)-!''
  * '''registerSlimTableFactories(!-SlimTableFactory-! slimTableFactory)''' - register Slim table factories using ''!-slimTableFactory.addTableType(String nameOrPrefix, Class<? extends SlimTable> tableClass)-!''
  * '''registerCustomComparatorRegistries(!-CustomComparatorRegistry-! customComparatorRegistry)''' - register custom comparators for checks done by the Slim test system using ''!-customComparatorRegistry.addCustomComparator(String prefix, CustomComparator customComparator)-!''
+ * '''registerFormatters(!-FormatterRegistry-! formatterRegistry)''' - register custom formatters using ''!-formatterRegistry.registerFormatter(Class formatterClass)-!''
 
 Plugins are instantiated by FitNesse's !-ComponentFactory-!. By doing so they can support either one of those constructors:
 
