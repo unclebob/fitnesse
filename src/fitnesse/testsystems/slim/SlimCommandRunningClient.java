@@ -91,7 +91,7 @@ public class SlimCommandRunningClient implements SlimClient {
     while (client == null) {
       if (slimRunner != null && slimRunner.isDead()) {
       	final String slimErrorMessage = "Error SLiM server died before a connection could be established. "+slimRunner.getCommandErrorMessage();
-      	throw new SlimError("Error SLiM server died before a connection could be established.");
+      	throw new SlimError(slimErrorMessage);
       }
       try {
         client = SocketFactory.tryCreateClientSocket(hostName, port, useSSL, sslParameterClassName);
