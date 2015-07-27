@@ -830,6 +830,7 @@ Wysiwyg.prototype.focusWysiwyg = function () {
 
 Wysiwyg.prototype.loadWikiText = function () {
     this.codeMirrorEditor.setValue(this.domToWikitext(this.frame, this.options));
+    this.codeMirrorEditor.save();
     this.savedWysiwygHTML = null;
 };
 
