@@ -6,7 +6,6 @@ import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;

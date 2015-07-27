@@ -1,7 +1,6 @@
 package fitnesse.plugins;
 
 import fitnesse.authentication.Authenticator;
-import fitnesse.reporting.FormatterFactory;
 import fitnesse.reporting.FormatterRegistry;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
