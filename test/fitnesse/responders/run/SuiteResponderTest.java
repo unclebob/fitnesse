@@ -435,6 +435,15 @@ public class SuiteResponderTest {
     assertSubString("<content>", results);
   }
 
+  @Test
+  public void Default_producesNoHTMLResultsInXMLSuite() throws Exception {
+    request.addInput("format", "xml");
+    addTestToSuite("SlimTestOne", simpleSlimDecisionTable);
+    addTestToSuite("SlimTestTwo", simpleSlimDecisionTable);
+    String results = runSuite();
+    assertNotSubString("<content>", results);
+  }
+
   private File expectedXmlResultsFile() {
     TestSummary counts = new TestSummary(3, 0, 0, 0);
     String resultsFileName = String.format("%s/SuitePage/20081205011900_%d_%d_%d_%d.xml",

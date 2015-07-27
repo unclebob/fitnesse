@@ -81,7 +81,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   private boolean debug = false;
   private boolean remoteDebug = false;
-  protected boolean includeHtml = true;
+  protected boolean includeHtml = false;
   int exitCode;
 
   public SuiteResponder() {
