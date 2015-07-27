@@ -59,18 +59,22 @@ public class HtmlTable implements Table {
     return tableNode;
   }
 
+  @Override
   public String getCellContents(int columnIndex, int rowIndex) {
     return rows.get(rowIndex).getColumn(columnIndex).getContent();
   }
 
+  @Override
   public int getRowCount() {
     return rows.size();
   }
 
+  @Override
   public int getColumnCountInRow(int rowIndex) {
     return rows.get(rowIndex).getColumnCount();
   }
 
+  @Override
   public void substitute(int col, int row, String contents) {
     Cell cell = rows.get(row).getColumn(col);
     cell.setContent(contents);
@@ -83,6 +87,7 @@ public class HtmlTable implements Table {
     return list;
   }
 
+  @Override
   public String toString() {
     return asList().toString();
   }
@@ -91,6 +96,7 @@ public class HtmlTable implements Table {
     return tableNode.toHtml();
   }
 
+  @Override
   public int addRow(List<String> list) {
     Row row = new Row();
     rows.add(row);
@@ -100,6 +106,7 @@ public class HtmlTable implements Table {
     return rows.size() - 1;
   }
 
+  @Override
   public void addColumnToRow(int rowIndex, String contents) {
     Row row = rows.get(rowIndex);
     row.appendCell(asHtml(contents));
@@ -111,6 +118,7 @@ public class HtmlTable implements Table {
    *
    * @see fitnesse.testsystems.slim.Table#appendChildTable(int, fitnesse.testsystems.slim.Table)
    */
+  @Override
   public void appendChildTable(int rowIndex, Table childTable) {
     Row row = rows.get(rowIndex);
     Row childRow = makeChildRow(row, ((HtmlTable) childTable).getTableNode(), "scenario");
