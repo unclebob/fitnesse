@@ -103,7 +103,7 @@ public class NegotiateAuthenticator extends Authenticator {
   }
 
   // Responder used when negotiation has not started or completed
-  static protected class UnauthenticatedNegotiateResponder implements Responder {
+  protected static class UnauthenticatedNegotiateResponder implements Responder {
     private String token;
 
     public UnauthenticatedNegotiateResponder(final String token) {

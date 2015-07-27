@@ -33,7 +33,7 @@ public class HtmlTable implements Table {
   private static final String SYMBOL_ASSIGNMENT_SUFFIX = "\\]";
 
   // Source: http://dev.w3.org/html5/markup/common-models.html
-  private final static Pattern HTML_PATTERN = Pattern.compile("^(?:" + SYMBOL_ASSIGNMENT + ")?<(p|hr|pre|ul|ol|dl|div|h[1-6]|hgroup|address|" +
+  private static final Pattern HTML_PATTERN = Pattern.compile("^(?:" + SYMBOL_ASSIGNMENT + ")?<(p|hr|pre|ul|ol|dl|div|h[1-6]|hgroup|address|" +
           "blockquote|ins|del|object|map|video|audio|figure|table|fieldset|canvas|a|em|strong|small|mark|" +
           "abbr|dfn|i|b|s|u|code|var|samp|kbd|sup|sub|q|cite|span|br|ins|del|img|embed|object|video|audio|label|" +
           "output|datalist|progress|command|canvas|time|meter)([ >].*</\\1>|[^>]*/>)" + SYMBOL_ASSIGNMENT_SUFFIX + "?$",
