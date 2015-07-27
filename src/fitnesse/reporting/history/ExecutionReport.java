@@ -181,7 +181,7 @@ public abstract class ExecutionReport {
   }
 
   public List<ExecutionLogReport> getExecutionLogs() {
-    return executionLogs;
+    return new ArrayList<ExecutionLogReport>(executionLogs);
   }
 
   public void addExecutionContext(String command, String testSystemName) {
@@ -274,7 +274,7 @@ public abstract class ExecutionReport {
     }
 
     public List<Throwable> getExceptions() {
-      return exceptions;
+      return new ArrayList<Throwable>(exceptions);
     }
   }
 }
