@@ -20,7 +20,7 @@ public class PageCreator extends ColumnFixture {
     WikiPage root = FitnesseFixtureContext.context.getRootPage();
     WikiPagePath pagePath = PathParser.parse(pageName);
     WikiPage thePage = WikiPageUtil.addPage(root, pagePath, pageContents);
-    if (pageAttributes != null && pageAttributes.length() > 0) {
+    if (pageAttributes != null && !pageAttributes.isEmpty()) {
       PageData data = thePage.getData();
       setAttributes(data);
       thePage.commit(data);

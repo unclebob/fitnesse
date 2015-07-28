@@ -190,7 +190,7 @@ public abstract class ExecutionReport {
 
   private ExecutionLogReport executionLogReport() {
     ExecutionLogReport log;
-    if (executionLogs.size() > 0) {
+    if (!executionLogs.isEmpty()) {
       log = executionLogs.get(executionLogs.size() - 1);
     } else {
       log = new ExecutionLogReport("", "");
