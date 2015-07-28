@@ -10,7 +10,6 @@ import fitnesse.authentication.Authenticator;
 import fitnesse.components.ComponentFactory;
 import fitnesse.components.ComponentInstantiationException;
 import fitnesse.reporting.Formatter;
-import fitnesse.reporting.FormatterFactory;
 import fitnesse.reporting.FormatterRegistry;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;

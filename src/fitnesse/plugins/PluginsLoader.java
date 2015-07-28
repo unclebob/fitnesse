@@ -13,7 +13,6 @@ import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.ComponentFactory;
 import fitnesse.components.Logger;
-import fitnesse.reporting.FormatterFactory;
 import fitnesse.reporting.FormatterRegistry;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
