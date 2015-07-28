@@ -13,7 +13,7 @@ public class PageCreator extends ColumnFixture {
   public String pageAttributes;
 
   public boolean valid() throws Exception {
-    if (pageContents != null)  {
+    if (pageContents != null) {
       pageContents = pageContents.replaceAll("<br>", "\n");
       pageContents = pageContents.replaceAll("<br/>", "\n");
     }

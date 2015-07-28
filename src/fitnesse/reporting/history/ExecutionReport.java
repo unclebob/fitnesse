@@ -175,7 +175,7 @@ public abstract class ExecutionReport {
   public void setDate(Date date) {
     this.date = new Date(date.getTime());
   }
-	  
+
   public boolean hasRunTimes() {
     return new FitNesseVersion(getVersion()).isAtLeast("v20100607");
   }
@@ -198,7 +198,6 @@ public abstract class ExecutionReport {
     }
     return log;
   }
-
 
   public void addStdOut(String output) {
     executionLogReport().addStdOut(output);
