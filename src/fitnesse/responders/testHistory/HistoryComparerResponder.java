@@ -45,6 +45,7 @@ public class HistoryComparerResponder implements Responder {
     comparer = new HistoryComparer();
   }
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     this.context = context;
     initializeReponseComponents();
@@ -67,8 +68,8 @@ public class HistoryComparerResponder implements Responder {
     if (comparer.compare(firstFilePath, secondFilePath))
       return makeValidResponse(request);
     else {
-      String message = String.format("These files could not be compared."
-          + "  They might be suites, or something else might be wrong.");
+      String message = "These files could not be compared."
+          + "  They might be suites, or something else might be wrong.";
       return makeErrorResponse(context, request, message);
     }
   }

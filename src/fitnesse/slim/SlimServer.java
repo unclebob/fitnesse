@@ -37,6 +37,7 @@ public class SlimServer implements SocketServer {
     this.slimFactory = slimFactory;
   }
 
+  @Override
   public void serve(Socket s) {
     try {
       tryProcessInstructions(s);
@@ -62,7 +63,8 @@ public class SlimServer implements SocketServer {
     reader = SlimStreamReader.getReader(s);
     writer = SlimStreamReader.getByteWriter(s);
     executor = slimFactory.getListExecutor(verbose);
-    SlimStreamReader.sendSlimHeader(writer, String.format(SlimVersion.SLIM_HEADER + SlimVersion.VERSION + "\n"));
+    String header = SlimVersion.SLIM_HEADER + SlimVersion.VERSION + "\n";
+    SlimStreamReader.sendSlimHeader(writer, header);
   }
 
   private boolean processOneSetOfInstructions() throws IOException {
