@@ -243,40 +243,47 @@ public class TypeAdapter {
   }
 
   static class DoubleAdapter extends ClassDoubleAdapter {
+    @Override
     public void set(Object i) throws IllegalAccessException {
       field.setDouble(target, ((Number) i).doubleValue());
     }
 
+    @Override
     public Object parse(String s) {
       return new Double(Double.parseDouble(s));
     }
   }
 
   static class ClassDoubleAdapter extends TypeAdapter {
+    @Override
     public Object parse(String s) {
       return ("null".equals(s)) ? null : new Double(Double.parseDouble(s));
     }
   }
 
   static class CharAdapter extends ClassCharacterAdapter {
+    @Override
     public void set(Object i) throws IllegalAccessException {
       field.setChar(target, ((Character) i).charValue());
     }
   }
 
   static class ClassCharacterAdapter extends TypeAdapter {
+    @Override
     public Object parse(String s) {
       return ("null".equals(s)) ? null : new Character(s.charAt(0));
     }
   }
 
   static class BooleanAdapter extends ClassBooleanAdapter {
+    @Override
     public void set(Object i) throws IllegalAccessException {
       field.setBoolean(target, ((Boolean) i).booleanValue());
     }
   }
 
   static class ClassBooleanAdapter extends TypeAdapter {
+    @Override
     public Object parse(String s) {
       if ("null".equals(s)) return null;
       String ls = s.toLowerCase();
@@ -298,12 +305,14 @@ public class TypeAdapter {
     Class<?> componentType;
     TypeAdapter componentAdapter;
 
+    @Override
     public void init(Fixture target, Class<?> type) {
       super.init(target, type);
       componentType = type.getComponentType();
       componentAdapter = on(target, componentType);
     }
 
+    @Override
     public Object parse(String s) throws Exception {
       StringTokenizer t = new StringTokenizer(s, ",");
       Object array = Array.newInstance(componentType, t.countTokens());
@@ -313,6 +322,7 @@ public class TypeAdapter {
       return array;
     }
 
+    @Override
     public String toString(Object o) {
       if (o == null)
         return "";
@@ -327,6 +337,7 @@ public class TypeAdapter {
       return b.toString();
     }
 
+    @Override
     public boolean equals(Object a, Object b) {
       int length = Array.getLength(a);
       if (length != Array.getLength(b))
@@ -350,11 +361,13 @@ public class TypeAdapter {
         throw new NoSuchMethodException();
     }
 
+    @Override
     public Object parse(String s) throws Exception {
       return parseMethod.invoke(null, new Object[]
         {s});
     }
 
+    @Override
     protected Object clone() {
       try {
         return super.clone();
@@ -374,11 +387,13 @@ public class TypeAdapter {
         {String.class});
     }
 
+    @Override
     public Object parse(String s) throws Exception {
       return parseMethod.invoke(delegate, new Object[]
         {s});
     }
 
+    @Override
     protected Object clone() {
       try {
         return super.clone();
