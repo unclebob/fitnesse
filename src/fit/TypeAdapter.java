@@ -281,16 +281,16 @@ public class TypeAdapter {
       if ("null".equals(s)) return null;
       String ls = s.toLowerCase();
       if (ls.equals("true"))
-        return new Boolean(true);
+        return Boolean.TRUE;
       if (ls.equals("yes"))
-        return new Boolean(true);
+        return Boolean.TRUE;
       if (ls.equals("1"))
-        return new Boolean(true);
+        return Boolean.TRUE;
       if (ls.equals("y"))
-        return new Boolean(true);
+        return Boolean.TRUE;
       if (ls.equals("+"))
-        return new Boolean(true);
-      return new Boolean(false);
+        return Boolean.TRUE;
+      return Boolean.FALSE;
     }
   }
 
