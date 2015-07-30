@@ -2719,7 +2719,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
             if (name === "table") {
                 if ($(node).hasClass("hashtable")) {
                     tableType = "hashtable";
-                    _texts.push("!{")
+                    _texts.push("!{");
                     firstHashTableEntry = true;
                 } else {
                     tableType = "table";
