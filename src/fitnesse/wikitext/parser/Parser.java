@@ -71,7 +71,7 @@ public class Parser {
         int start = scanner.getOffset();
         scanner.markStart();
         parseTo(terminator);
-        if (atEnd() || !getCurrent().isType(terminator)) return Maybe.noString;
+        if (!atEnd() && !getCurrent().isType(terminator)) return Maybe.noString;
         return scanner.stringFromStart(start);
     }
 

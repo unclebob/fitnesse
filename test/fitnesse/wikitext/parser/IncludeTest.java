@@ -20,10 +20,24 @@ public class IncludeTest {
     assertParses("!include PageTwo", "SymbolList[Include[Text, WikiWord, Text, Style[Text]]]");
     assertParses("!include -c PageTwo", "SymbolList[Include[Text, WikiWord, Text, Style[Text]]]");
     assertParses("!include <PageTwo", "SymbolList[Include[Text, WikiWord, Text, Style[Text]]]");
-    assertParses("!include <PageTwo>", "SymbolList[Include[Text, WikiWord, Text, Style[Text]], Text]");
     assertParses("!include -setup PageTwo", "SymbolList[Include[Text, WikiWord, Text, Style[Text]]]");
     assertParses("!include -teardown PageTwo", "SymbolList[Include[Text, WikiWord, Text, Style[Text]]]");
     assertParses("!include -h PageTwo", "SymbolList[Include[Text, WikiWord, Text, Style[Text]]]");
+    assertParses("!include -h .SuitePage.PageTwo", "SymbolList[Include[Text, WikiWord, Text, Style[Text]]]");
+    assertParses("!include <PageTwo>", "SymbolList[Include[Text, Text, Text, Style[Text]]]");
+  }
+
+  @Test
+  public void parsesIncludeNonWikiWordPages() throws Exception {
+    assertParses("!include -h SuitePage.nonwikipage.PageTwo", "SymbolList[Include[Text, WikiWord, Text, Style[Text]]]");
+    assertParses("!include -h nonwikipage.SuitePage.PageTwo", "SymbolList[Include[Text, WikiWord, Text, Style[Text]]]");
+    assertParses("!include -h .nonwikipage.SuitePage.PageTwo", "SymbolList[Include[Text, WikiWord, Text, Style[Text]]]");
+    assertParses("!include -h SuitePage.PageTwo.nonwikipage", "SymbolList[Include[Text, WikiWord, Text, Style[Text]]]");
+  }
+
+  @Test
+  public void parsesIncludeSingleNonWikiWordPage() throws Exception {
+    assertParses("!include -h nonwikipage", "SymbolList[Include[Text, WikiWord, Text, Style[Text]]]");
   }
 
   @Test
@@ -69,6 +83,20 @@ public class IncludeTest {
   }
 
   @Test
+  public void translatesWithNonWikiWord() throws Exception {
+    TestRoot root = new TestRoot();
+    WikiPage currentPage = root.makePage("PageOne", "!include PageTwo.non_wiki");
+    WikiPage pageTwo = root.makePage("PageTwo");
+    root.makePage(pageTwo, "non_wiki", "page ''two''");
+
+    String result = ParserTestHelper.translateTo(currentPage);
+
+    assertContains(result, "class=\"collapsible\"");
+    assertContains(result, "Included page: <a href=\"PageTwo.non_wiki\">PageTwo.non_wiki</a> <a href=\"PageTwo.non_wiki?edit&amp;redirectToReferer=true&amp;redirectAction=\" class=\"edit\">(edit)</a>");
+    assertContains(result, "page <i>two</i>");
+  }
+
+  @Test
   public void setupsAreHidden() throws Exception {
     String result = ParserTestHelper.translateTo(makePageThatIncludesSetup());
 
@@ -91,7 +119,7 @@ public class IncludeTest {
       .withIncludedPage(new TestSourcePage().withContent("setup"));
   }
 
-    private TestSourcePage makePageThatIncludesTeardown() {
+  private TestSourcePage makePageThatIncludesTeardown() {
     return new TestSourcePage()
       .withContent("!include -teardown >TearDown")
       .withTarget("PageTwo.TearDown")
@@ -159,10 +187,10 @@ public class IncludeTest {
   public void doesNotIncludeInvalidPageName() throws Exception {
     TestRoot root = new TestRoot();
     WikiPage parent = root.makePage("ParentPage", "stuff");
-    WikiPage currentPage = root.makePage(parent, "PageOne", "!include not.a.+wiki.page");
+    WikiPage currentPage = root.makePage(parent, "PageOne", "!include +not.a.+wiki.page");
     ParserTestHelper.assertTranslatesTo(currentPage, String.format(HTML_ERR,
-        "not.a.+wiki.page",
-        "Page include failed because the page not.a.+wiki.page does not have a valid WikiPage name."));
+        "+not.a.+wiki.page",
+        "Page include failed because the page +not.a.+wiki.page does not have a valid WikiPage name."));
   }
 
   @Test
