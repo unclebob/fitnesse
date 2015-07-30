@@ -2267,7 +2267,9 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
 
             if (text || (match && matchNumber > 0)) {
                 if (inParagraph() && (prevIndex === 0)) {
-                    text = text ? ((holder.hasChildNodes() && holder.lastChild.tagName !== 'BR' ? " " : "") + text) : "";
+                    if (text && holder.hasChildNodes() && holder.lastChild.tagName !== 'BR') {
+                        holder.appendChild(contentDocument.createElement("br"));
+                    }
                 }
                 if ((listDepth.length === 0 && !inTable() && !currentHeader) || holder === fragment) {
                     openParagraph();
@@ -2788,7 +2790,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                 } else if (escapeNewLines && node.nextSibling) {
                     _texts.push("!-\n-!");
                 } else if (!self.isBogusLineBreak(node)) {
-                    _texts.push(" ");
+                    _texts.push("\n");
                 }
                 break;
             case "pre":
