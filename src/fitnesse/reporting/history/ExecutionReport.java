@@ -175,7 +175,7 @@ public abstract class ExecutionReport {
   public void setDate(Date date) {
     this.date = new Date(date.getTime());
   }
-	  
+
   public boolean hasRunTimes() {
     return new FitNesseVersion(getVersion()).isAtLeast("v20100607");
   }
@@ -190,7 +190,7 @@ public abstract class ExecutionReport {
 
   private ExecutionLogReport executionLogReport() {
     ExecutionLogReport log;
-    if (executionLogs.size() > 0) {
+    if (!executionLogs.isEmpty()) {
       log = executionLogs.get(executionLogs.size() - 1);
     } else {
       log = new ExecutionLogReport("", "");
@@ -198,7 +198,6 @@ public abstract class ExecutionReport {
     }
     return log;
   }
-
 
   public void addStdOut(String output) {
     executionLogReport().addStdOut(output);
