@@ -5,10 +5,13 @@
  * Tag filtering is now all case insensitive ([[728][https://github.com/unclebob/fitnesse/pull/728]])
  * Improved slim hash table handling ([[739][https://github.com/unclebob/fitnesse/pull/739]])
  * Support custom formatters ([[764][https://github.com/unclebob/fitnesse/pull/764]])
+ * Non wiki word page names are properly resolved when using !-!include-! statements
+ * Page-in-progress formatter has been removed ([[767][https://github.com/unclebob/fitnesse/pull/767]])
  * Issues fixed:
    * NPE in !-SuiteHistoryFormatter-! ([[736][https://github.com/unclebob/fitnesse/pull/736]])
    * WYSIWYG (rich text) breaks inlinecode in table ([[756][https://github.com/unclebob/fitnesse/pull/756]])
-   * and more...
+   * Rich text editor retains line breaks ([[756][https://github.com/unclebob/fitnesse/pull/756]], [[777][https://github.com/unclebob/fitnesse/pull/77]])
+   * XML result files do no longer contain HTML output by default (as it was a few releases ago) ([[771][https://github.com/unclebob/fitnesse/pull/771]])
    
 For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=12&state=closed.
 
