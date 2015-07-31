@@ -190,7 +190,7 @@ public class IncludeTest {
     WikiPage currentPage = root.makePage(parent, "PageOne", "!include +not.a.+wiki.page");
     ParserTestHelper.assertTranslatesTo(currentPage, String.format(HTML_ERR,
         "+not.a.+wiki.page",
-        "Page include failed because the page +not.a.+wiki.page does not have a valid WikiPage name."));
+        "Page include failed because the page +not.a.+wiki.page does not have a valid wiki page name."));
   }
 
   @Test
