@@ -10,7 +10,7 @@ import static fitnesse.ContextConfigurator.*;
 
 public class Arguments {
 
-  private final CommandLine commandLine = new CommandLine(
+  private static final CommandLine COMMAND_LINE = new CommandLine(
           "[-v][-p port][-d dir][-r root][-l logDir][-f config][-e days][-o][-i][-a credentials][-c command][-b output]");
 
   private final String rootPath;
@@ -27,23 +27,23 @@ public class Arguments {
   private final boolean verboseLogging;
 
   public Arguments(String... args) {
-    if (!commandLine.parse(args)) {
+    if (!COMMAND_LINE.parse(args)) {
       throw new IllegalArgumentException("Can not parse command line");
     }
-    String port = commandLine.getOptionArgument("p", "port");
+    String port = COMMAND_LINE.getOptionArgument("p", "port");
     this.port = port != null ? Integer.valueOf(port) : null;
-    this.rootPath = commandLine.getOptionArgument("d", "dir");
-    this.rootDirectory = commandLine.getOptionArgument("r", "root");
-    this.logDirectory = commandLine.getOptionArgument("l", "logDir");
-    final String days = commandLine.getOptionArgument("e", "days");
+    this.rootPath = COMMAND_LINE.getOptionArgument("d", "dir");
+    this.rootDirectory = COMMAND_LINE.getOptionArgument("r", "root");
+    this.logDirectory = COMMAND_LINE.getOptionArgument("l", "logDir");
+    final String days = COMMAND_LINE.getOptionArgument("e", "days");
     this.daysTillVersionsExpire = days != null ? Integer.valueOf(days) : null;
-    this.credentials = commandLine.getOptionArgument("a", "credentials");
-    this.command = commandLine.getOptionArgument("c", "command");
-    this.output = commandLine.getOptionArgument("b", "output");
-    this.configFile = commandLine.getOptionArgument("f", "config");
-    this.verboseLogging = commandLine.hasOption("v");
-    this.omitUpdate = commandLine.hasOption("o");
-    this.installOnly = commandLine.hasOption("i");
+    this.credentials = COMMAND_LINE.getOptionArgument("a", "credentials");
+    this.command = COMMAND_LINE.getOptionArgument("c", "command");
+    this.output = COMMAND_LINE.getOptionArgument("b", "output");
+    this.configFile = COMMAND_LINE.getOptionArgument("f", "config");
+    this.verboseLogging = COMMAND_LINE.hasOption("v");
+    this.omitUpdate = COMMAND_LINE.hasOption("o");
+    this.installOnly = COMMAND_LINE.hasOption("i");
   }
 
   static void printUsage() {
