@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
 
 public class Include extends SymbolType implements Rule, Translation {
     private static final String[] setUpSymbols = new String[] {"COLLAPSE_SETUP"};
@@ -16,7 +17,7 @@ public class Include extends SymbolType implements Rule, Translation {
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol next = parser.moveNext(1);
         if (!next.isType(SymbolType.Whitespace)) return Symbol.nothing;
-        
+
         next = parser.moveNext(1);
         String option = "";
         if ((next.isType(SymbolType.Text) && next.getContent().startsWith("-")) || next.isType(SymbolType.DateFormatOption)) {
@@ -25,11 +26,26 @@ public class Include extends SymbolType implements Rule, Translation {
             if (!next.isType(SymbolType.Whitespace)) return Symbol.nothing;
             next = parser.moveNext(1);
         }
+        current.add(option);
         if (!next.isType(SymbolType.Text) && !next.isType(WikiWord.symbolType)) return Symbol.nothing;
 
-        current.add(option).add(next);
+        String includedPageName = next.getContent();
+        if (parser.peek().isType(SymbolType.Text)) {
+          Maybe<String> remainderOfPageName = parser.parseToAsString(SymbolType.Whitespace);
+          if (!remainderOfPageName.isNothing()) {
+            includedPageName += remainderOfPageName.getValue();
+          }
+        }
+        SourcePage sourcePage = parser.getPage().getNamedPage();
 
-        Maybe<SourcePage> includedPage = parser.getPage().getNamedPage().findIncludedPage(next.getContent());
+        // Record the page name anyway, since we might want to show an error if it's invalid
+        if (PathParser.isWikiPath(includedPageName)) {
+          current.add(new Symbol(new WikiWord(sourcePage), includedPageName));
+        } else {
+          current.add(includedPageName);
+        }
+
+        Maybe<SourcePage> includedPage = sourcePage.findIncludedPage(includedPageName);
         if (includedPage.isNothing()) {
           current.add("").add(new Symbol(SymbolType.Style, "error").add(includedPage.because()));
         }

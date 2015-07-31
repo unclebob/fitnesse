@@ -4,6 +4,7 @@ import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
 
+import static fitnesse.wikitext.parser.ParserTestHelper.assertParses;
 import static org.junit.Assert.assertEquals;
 
 public class DefineTest {
@@ -12,6 +13,13 @@ public class DefineTest {
         ParserTestHelper.assertScansTokenType("|!define x {y}|/n", "Define", true);
     }
 
+  @Test
+  public void parsesDefine() {
+    assertParses("!define x {y}", "SymbolList[Define[Text, Text]]");
+    assertParses("!define x {y" /* eof */, "SymbolList[Define[Text, Text]]");
+    assertParses("!define x" /* eof */, "SymbolList[Define[Text, Text]]");
+
+  }
     @Test public void translatesDefines()  {
         assertTranslatesDefine("!define x {y}", "x=y");
         assertTranslatesDefine("!define BoBo {y}", "BoBo=y");
@@ -22,6 +30,7 @@ public class DefineTest {
         assertTranslatesDefine("!define x (y)", "x=y");
         assertTranslatesDefine("!define x [y]", "x=y");
         assertTranslatesDefine("!define x {''y''}", "x=''y''");
+        assertTranslatesDefine("!define x", "x=");
         ParserTestHelper.assertTranslatesTo("|!define x {y}", "|!define x {y}");
     }
 
