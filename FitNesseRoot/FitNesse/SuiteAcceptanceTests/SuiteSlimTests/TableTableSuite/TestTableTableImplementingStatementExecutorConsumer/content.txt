@@ -1,34 +1,61 @@
-|import|
+|import            |
 |fitnesse.slim.test|
 
-!1 Make a table table define a new symbol and use this symbol in subsequent rows
+!1 Symbol Handling by Fixtures
 
-|script|test slim|
-|$X=|echo int|99|
+If you need advanced symbol handling in your fixtures than your fixture code must handle this.
+Advanced means that you assign to a symbol a value and need to reference this new value again in the same table.
+Think if you really need this as it makes your code more complicated.
 
-|table: Table Table Inc First Col Statement Executor Consumer |
-|$X|$Y=|
-|$Y|$Z=|
 
-|script|test slim|$Y|
-|check|return Constructor Arg|100|
+!3 Load the symbol aware fixture
+|import                                      |
+|fitnesse.slim.test.statementexecutorconsumer|
+ 
+!3 Tell the slim agent that the fixture will handle symbols
+|script                                        |
+|$SLIM_AGENT_FIXTURE_HANDLES_SYMBOLS=|echo|true|
 
-|script|test slim|$Z|
-|check|return Constructor Arg|101|
+ 
+ 
+!include SymbolAssignmentAndReferenceOfTheSameInOneTable
 
-!1 Make a table table use a symbol, assign into another one and use this symbol in subsequent rows
 
-|script|test slim|
-|$X=|echo int|99|
-|$Y=|echo int|44|
+!|script                                        |
+|# Disable the fixture symbol handling again    |
+|$SLIM_AGENT_FIXTURE_HANDLES_SYMBOLS=|echo|false|
 
-|table: Table Table Inc First Col Statement Executor Consumer |
-|$X|$Y=|
-|$Y|$Z=|
+!3 Check the results Z is now 201 :)
+!|script                                 |
+|check|echo int|$Z                   |201|
+|check|echo int|$${RUNNING_PAGE_NAME}|13 |
 
-|script|test slim|$Z|
-|check|return Constructor Arg|101|
 
-!1 Known Limitations
 
-See sub-page about [[known limitations][TestTableTableImplementingStatementExecutorConsumer.TestKnownLimitations]].
+!3 The fixture handles a chain of assignments 
+
+|script                                        |
+|$X=                                 |echo|99  |
+|$SLIM_AGENT_FIXTURE_HANDLES_SYMBOLS=|echo|true|
+
+|table: Table Table Inc First Col|
+|$X             |$X=             |
+|$X             |$X=             |
+|$X             |$X=             |
+|$X             |$X=             |
+|$X             |$X=             |
+|$X             |$Y=             |
+
+!4 Warning, also in scripts or other tables symbols are not managed anymore
+the below echos not the value but the symbol name 
+|script        |
+|check|echo|$X||
+
+!|script                                        |
+|# Disable the fixture symbol handling again    |
+|$SLIM_AGENT_FIXTURE_HANDLES_SYMBOLS=|echo|false|
+
+|script           |
+|check|echo|$X|104|
+|check|echo|$Y|105|
+

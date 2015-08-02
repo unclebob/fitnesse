@@ -1,4 +1,4 @@
-package fitnesse.slim.test;
+package fitnesse.slim.test.statementexecutorconsumer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import fitnesse.slim.StatementExecutorConsumer;
 import fitnesse.slim.StatementExecutorInterface;
 
-public class TableTableIncFirstColStatementExecutorConsumer implements StatementExecutorConsumer {
+public class TableTableIncFirstCol implements StatementExecutorConsumer {
 
   private static final Pattern SYMBOL_ASSIGNMENT_PATTERN = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
   private static final Pattern SYMBOL_PATTERN = Pattern.compile("\\$([A-Za-z]\\w*)");

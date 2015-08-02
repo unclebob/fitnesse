@@ -16,6 +16,7 @@ import static java.lang.String.format;
 
 public class StatementExecutor implements StatementExecutorInterface {
   private static final String SLIM_HELPER_LIBRARY_INSTANCE_NAME = "SlimHelperLibrary";
+  private static final String SLIM_AGENT_FIXTURE_HANDLES_SYMBOLS = "SLIM_AGENT_FIXTURE_HANDLES_SYMBOLS";
 
   private boolean stopRequested = false;
   private SlimExecutionContext context;
@@ -122,14 +123,36 @@ public class StatementExecutor implements StatementExecutorInterface {
 
   private MethodExecutionResult getMethodExecutionResult(String instanceName, String methodName, Object... args) throws Throwable {
     MethodExecutionResults results = new MethodExecutionResults();
+    Boolean ignoreSymbols = ignoreSymbols();
+	if (!ignoreSymbols){
+		args = context.replaceSymbols(args);
+	}
     for (int i = 0; i < executorChain.size(); i++) {
-      MethodExecutionResult result = executorChain.get(i).execute(instanceName, methodName, context.replaceSymbols(args));
+    	MethodExecutionResult result = executorChain.get(i).execute(instanceName, methodName, args);   		
       if (result.hasResult()) {
         return result;
       }
       results.add(result);
     }
     return results.getFirstResult();
+  }
+ 
+  /**
+   *  
+   * @return true is the fixture will handles symbols assignments and lookups itself.
+   *         This should be a rare exception and is not recommended
+   */
+  
+  private Boolean ignoreSymbols(){
+	  try{
+		  MethodExecutionResult mer = context.getVariable(SLIM_AGENT_FIXTURE_HANDLES_SYMBOLS);
+		  if (mer == null) return false;
+		  
+		  if("true".equalsIgnoreCase(mer.returnValue().toString())) return true;
+		  else return false;
+	  }catch (Exception e){
+		  return false;
+	  }
   }
 
   private void checkExceptionForStop(Throwable exception) {
