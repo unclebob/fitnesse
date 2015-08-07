@@ -3,7 +3,7 @@
 
 !1 Symbol Handling by Fixtures
 
-If you need advanced symbol handling in your fixtures than your fixture code must handle this.
+If you need advanced symbol handling in your TableTable fixtures than your fixture code must handle this.
 Advanced means that you assign to a symbol a value and need to reference this new value again in the same table.
 Think if you really need this as it makes your code more complicated.
 
@@ -12,18 +12,10 @@ Think if you really need this as it makes your code more complicated.
 |import                                      |
 |fitnesse.slim.test.statementexecutorconsumer|
  
-!3 Tell the slim agent that the fixture will handle symbols
-|script                                        |
-|$SLIM_AGENT_FIXTURE_HANDLES_SYMBOLS=|echo|true|
-
- 
  
 !include SymbolAssignmentAndReferenceOfTheSameInOneTable
 
 
-!|script                                        |
-|# Disable the fixture symbol handling again    |
-|$SLIM_AGENT_FIXTURE_HANDLES_SYMBOLS=|echo|false|
 
 !3 Check the results Z is now 201 :)
 !|script                                 |
@@ -34,9 +26,8 @@ Think if you really need this as it makes your code more complicated.
 
 !3 The fixture handles a chain of assignments 
 
-|script                                        |
-|$X=                                 |echo|99  |
-|$SLIM_AGENT_FIXTURE_HANDLES_SYMBOLS=|echo|true|
+|script     |
+|$X=|echo|99|
 
 |table: Table Table Inc First Col|
 |$X             |$X=             |
@@ -46,14 +37,7 @@ Think if you really need this as it makes your code more complicated.
 |$X             |$X=             |
 |$X             |$Y=             |
 
-!4 Warning, also in scripts or other tables symbols are not managed anymore
-the below echos not the value but the symbol name 
-|script        |
-|check|echo|$X||
 
-!|script                                        |
-|# Disable the fixture symbol handling again    |
-|$SLIM_AGENT_FIXTURE_HANDLES_SYMBOLS=|echo|false|
 
 |script           |
 |check|echo|$X|104|
