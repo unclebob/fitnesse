@@ -76,7 +76,15 @@ public class DefaultInteraction implements FixtureInteraction {
   }
 
   @Override
-  public Object methodInvoke(Method method, Object instance, Object... convertedArgs) throws InvocationTargetException, IllegalAccessException {
-      return method.invoke(instance, convertedArgs);
+  public Object methodInvoke(Method method, Object instance, Object... convertedArgs) throws Throwable {
+      try {
+        return method.invoke(instance, convertedArgs);
+      } catch (InvocationTargetException e) {
+        if(e.getCause() != null){
+          throw e.getCause();
+        }else{
+          throw e.getTargetException();
+        }
+      }
   }
 }

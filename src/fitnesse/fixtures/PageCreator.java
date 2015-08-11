@@ -13,14 +13,14 @@ public class PageCreator extends ColumnFixture {
   public String pageAttributes;
 
   public boolean valid() throws Exception {
-    if (pageContents != null)  {
+    if (pageContents != null) {
       pageContents = pageContents.replaceAll("<br>", "\n");
       pageContents = pageContents.replaceAll("<br/>", "\n");
     }
     WikiPage root = FitnesseFixtureContext.context.getRootPage();
     WikiPagePath pagePath = PathParser.parse(pageName);
     WikiPage thePage = WikiPageUtil.addPage(root, pagePath, pageContents);
-    if (pageAttributes != null && pageAttributes.length() > 0) {
+    if (pageAttributes != null && !pageAttributes.isEmpty()) {
       PageData data = thePage.getData();
       setAttributes(data);
       thePage.commit(data);

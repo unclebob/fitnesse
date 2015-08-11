@@ -3,6 +3,13 @@
 <script src="${contextRoot}files/fitnesse/javascript/WikiFormatter.js" type="text/javascript"></script>
 <script src="${contextRoot}files/fitnesse/javascript/TemplateInserter.js" type="text/javascript"></script>
 <script src="${contextRoot}files/fitnesse/javascript/mousetrap.min.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/codemirror/codemirror.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/codemirror/addon/foldcode.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/codemirror/addon/simple.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/codemirror/addon/foldgutter.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/codemirror/fitnesse/fitnesse.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/codemirror/addon/foldgutter.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/codemirror/codemirror.css" media="screen" />
 
 <form method="post" action="$resource" name="f" class="mousetrap">
 #if($!editTime)
@@ -93,21 +100,23 @@ $(function () {
 
       if (editor.activeEditor() === "wysiwyg") {
         editor.loadWikiText();
+      } else {
+        editor.codeMirrorEditor.save();
       }
 
       if (fieldValues().join('$$') !== originalFieldValues.join('$$')) {
         return "The page content has been changed.\nDo you really want to leave this page?";
       }
     };
-  }
 
-  var rte = $('#editor .wysiwyg');
-  var textarea = $('#editor textarea');
-  $(window).resize(function () {
-    var h = $('#save_buttons').position().top;
-    rte.height(h - rte.position().top - 6);
-    textarea.height(h - textarea.position().top - 6);
-  }).resize();
+    var rte = $('#editor .wysiwyg');
+    var wrappedElement = $(editor.codeMirrorEditor.getWrapperElement());
+      $(window).resize(function () {
+        var h = $('#save_buttons').position().top;
+        rte.height(h - rte.position().top - 6);
+        wrappedElement.height(h - wrappedElement.position().top - 6);
+      }).resize();
+  }
 
   /* Tags */
   $('#suites').tagsInput();

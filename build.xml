@@ -17,6 +17,8 @@
 	<property name="lib.dir" location="lib"/>
 	<property name="antlib.dir" location="antlib"/>
 	<property name="port" value="8001"/>
+
+	<property file="${user.home}/.sonatype.properties" />
   
 	<target name="all" depends="unit_tests, acceptance_tests" description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fitnesse acceptance tests."/>
   
@@ -311,7 +313,15 @@
 		</ivy:makepom>
 	</target>
 
-	<target name="snapshot" depends="pom,jar,standalone-jar,sources-jar,javadoc-jar" description="Publish a snapshot to oss.sonatype.org">
+	<target name="snapshot-pom" depends="resolve,set-version-if-not-manualy-set">
+		<ivy:deliver deliverpattern="${dist.dir}/ivy.xml" pubrevision="${version}-SNAPSHOT" status="release" />
+		<ivy:makepom ivyfile="${dist.dir}/ivy.xml" templatefile="extra/maven/pom.xml.template" pomfile="${dist.dir}/fitnesse.pom" conf="maven,default,test">
+			   <ivy:mapping conf="maven" scope="compile" />
+			   <ivy:mapping conf="test" scope="test" />
+		</ivy:makepom>
+	</target>
+
+	<target name="snapshot" depends="snapshot-pom,jar,standalone-jar,sources-jar,javadoc-jar" description="Publish a snapshot to oss.sonatype.org">
 		<fail unless="upload.user" message="supply upload.user on the command line"/>
 		<fail unless="upload.password" message="supply upload.password on the command line"/>
 		<fail unless="pgp.password" message="supply pgp.password on the command line"/>

@@ -1,5 +1,27 @@
 !2 ${FITNESSE_VERSION}
 
+ * Syntax highlighting in plain text editor ([[631][https://github.com/unclebob/fitnesse/pull/631]])
+ * Support generic behavior in Slim (Java) fixture via when fixtures implement [[!-InteractionAwareFixture-!][UserGuide.WritingAcceptanceTests.SliM.InteractionAwareFixture]] ([[724][https://github.com/unclebob/fitnesse/pull/724]])
+ * Tag filtering is now all case insensitive ([[728][https://github.com/unclebob/fitnesse/pull/728]])
+ * Improved slim hash table handling ([[739][https://github.com/unclebob/fitnesse/pull/739]])
+ * Support custom formatters ([[764][https://github.com/unclebob/fitnesse/pull/764]])
+ * Non wiki word page names are properly resolved when using !-!include-! statements
+ * Page-in-progress formatter has been removed ([[767][https://github.com/unclebob/fitnesse/pull/767]])
+ * Issues fixed:
+   * NPE in !-SuiteHistoryFormatter-! ([[736][https://github.com/unclebob/fitnesse/pull/736]])
+   * WYSIWYG (rich text) breaks inlinecode in table ([[756][https://github.com/unclebob/fitnesse/pull/756]])
+   * Rich text editor retains line breaks ([[756][https://github.com/unclebob/fitnesse/pull/756]], [[777][https://github.com/unclebob/fitnesse/pull/77]])
+   * XML result files do no longer contain HTML output by default (as it was a few releases ago) ([[771][https://github.com/unclebob/fitnesse/pull/771]])
+   
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=12&state=closed.
+
+!2 20150428
+ * !-!contents-! has a new [[-H option][UserGuide.FitNesseWiki.MarkupLanguageReference.MarkupContents]] ([[718][https://github.com/unclebob/fitnesse/pull/718]])
+ * The JUnit runner is notified of system exceptions ([[716][https://github.com/unclebob/fitnesse/pull/716]])
+ * New Slim table type: [[Alias table][UserGuide.WritingAcceptanceTests.SliM.DefineAlias]] ([[711][https://github.com/unclebob/fitnesse/pull/711]])
+ * Prevention of System.exit() calls is configurable ([[707][https://github.com/unclebob/fitnesse/pull/707]])
+ * Improved error reporting when running test suites from the command line ([[706][https://github.com/unclebob/fitnesse/pull/706]])
+ * Relaxed Test & Page History to only secure-read permissions ([[696][https://github.com/unclebob/fitnesse/pull/696]])
  * Remove global slim timeout during testing; this issue was introduced in v20150226 ([[660][https://github.com/unclebob/fitnesse/pull/660]])
  * Expose table of symbols to [[!-TableTable-!][UserGuide.WritingAcceptanceTests.SliM.TableTable]] fixtures ([[644][https://github.com/unclebob/fitnesse/pull/644]])
  * Improve messages when Slim server crashes ([[662][https://github.com/unclebob/fitnesse/pull/662]])
@@ -11,6 +33,8 @@
    * Fixes in file paths ([[667][https://github.com/unclebob/fitnesse/pull/667]], [[692][https://github.com/unclebob/fitnesse/pull/692]])
    * Fix issue with ''!'' in spreadsheet translation ([[678][https://github.com/unclebob/fitnesse/pull/678]])
    * Revert old behavior for Slim String converter: pass empty string for empty cells instead of ''null'' ([[687][https://github.com/unclebob/fitnesse/pull/687]])
+
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=11&state=closed.
 
 !2 v20150226
  * Fixed lot's of code style issues ([[588][https://github.com/unclebob/fitnesse/pull/588]], [[618][https://github.com/unclebob/fitnesse/pull/618]], [[619][https://github.com/unclebob/fitnesse/pull/619]][[628][https://github.com/unclebob/fitnesse/pull/628]], [[632][https://github.com/unclebob/fitnesse/pull/632]], [[634][https://github.com/unclebob/fitnesse/pull/634]], [[645][https://github.com/unclebob/fitnesse/pull/645]])

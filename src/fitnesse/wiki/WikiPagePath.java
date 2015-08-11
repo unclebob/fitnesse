@@ -136,8 +136,8 @@ public class WikiPagePath implements Comparable<Object> {
   public int compareTo(Object o) {
     if (o instanceof WikiPagePath) {
       WikiPagePath p = (WikiPagePath) o;
-      String compressedName = StringUtils.join(names, ".");
-      String compressedArgumentName = StringUtils.join(p.names, ".");
+      String compressedName = StringUtils.join(names, "");
+      String compressedArgumentName = StringUtils.join(p.names, "");
       return compressedName.compareTo(compressedArgumentName);
     }
     return 1; // we are greater because we are the right type.

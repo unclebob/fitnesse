@@ -3,6 +3,7 @@ package fitnesse.slim.converters;
 import java.util.ArrayList;
 import java.util.List;
 
+import fitnesse.slim.Converter;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -12,6 +13,11 @@ public class ListConverterHelperTest {
   /*
    * TO STRING
    */
+  @Test
+  public void fromNull_shouldCreateNullString() {
+    assertEquals(Converter.NULL_VALUE, ListConverterHelper.toString(null));
+  }
+
   @Test
   public void toString_should_return_string_represents_empy_list_when_list_is_empty() throws Exception {
     List<String> value = new ArrayList<String>();

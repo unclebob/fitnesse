@@ -31,6 +31,7 @@ public abstract class SlimTable {
 
   private String tableName;
   private int instructionNumber = 0;
+  private String fixtureName;
 
   private List<SlimTable> children = new LinkedList<SlimTable>();
   private SlimTable parent = null;
@@ -118,9 +119,15 @@ public abstract class SlimTable {
     return constructInstance(getTableName(), fixtureName, 0, 0);
   }
 
+  public void setFixtureName(String name){
+	  fixtureName = name;
+  }
+  
   protected String getFixtureName() {
-    String tableHeader = table.getCellContents(0, 0);
-    String fixtureName = getFixtureName(tableHeader);
+	if (fixtureName == null){  
+      String tableHeader = table.getCellContents(0, 0);
+      fixtureName = getFixtureName(tableHeader);
+	}
     return Disgracer.disgraceClassName(fixtureName);
   }
 

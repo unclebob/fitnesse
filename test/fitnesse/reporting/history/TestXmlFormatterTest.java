@@ -38,10 +38,12 @@ import org.xml.sax.SAXException;
 public class TestXmlFormatterTest {
   private static final String TEST_TIME = "4/13/2009 15:21:43";
   private DateAlteringClock clock;
-  
+  private FitNesseContext context;
+
   @Before
   public void setUp() throws ParseException {
     clock = new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).freeze();
+    context = FitNesseUtil.makeTestContext();
   }
 
   @After
@@ -53,8 +55,8 @@ public class TestXmlFormatterTest {
   public void makeFileName() throws Exception {
     TestSummary summary = new TestSummary(1, 2, 3, 4);
     assertEquals(
-      "20090413152143_1_2_3_4.xml", 
-      SuiteResponder.makeResultFileName(summary, clock.currentClockTimeInMillis()));
+            "20090413152143_1_2_3_4.xml",
+            SuiteResponder.makeResultFileName(summary, clock.currentClockTimeInMillis()));
   }
   
   @Test
@@ -121,7 +123,6 @@ public class TestXmlFormatterTest {
   public void allExecutionOutputShouldBeAddedToHistory() throws IOException, SAXException {
     FitNesseContext context = FitNesseUtil.makeTestContext();
     WikiPage page = new WikiPageDummy("name", "content", null);
-    WikiTestPage testPage = new WikiTestPage(page);
     final LinkedList<StringWriter> writers = new LinkedList<StringWriter>();
     TestXmlFormatter formatter = new TestXmlFormatter(context, page, new WriterFactory() {
       @Override
@@ -131,6 +132,8 @@ public class TestXmlFormatterTest {
         return w;
       }
     });
+
+    WikiTestPage testPage = new WikiTestPage(page);
 
     formatter.commandStarted(new ExecutionLogListener.ExecutionContext() {
       @Override
@@ -164,4 +167,58 @@ public class TestXmlFormatterTest {
     assertEquals(output, "Command started\nAfter started\n", stdOut.getTextContent());
     assertEquals(output, "0", exitCode.getTextContent());
   }
+
+  @Test
+  public void executionReportExceptionsAreThreadSafe() throws IOException {
+    final TestXmlFormatter formatter = getTestXmlFormatterWithDummyWriter();
+    testThreadSaveOperation(formatter, new Runnable() {
+      @Override
+      public void run() {
+        formatter.exceptionOccurred(new Exception("foo"));
+      }
+    });
+  }
+
+  @Test
+  public void executionReportResultsAreThreadSafe() throws IOException {
+    final TestXmlFormatter formatter = getTestXmlFormatterWithDummyWriter();
+    testThreadSaveOperation(formatter, new Runnable() {
+      @Override
+      public void run() {
+        formatter.testStarted(new WikiTestPage(new WikiPageDummy("name", "content", null)));
+      }
+    });
+  }
+
+  private void testThreadSaveOperation(TestXmlFormatter formatter, final Runnable target) throws IOException {
+    final boolean[] sentinel = { true };
+    Thread dataInjector = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        while (sentinel[0]) {
+          target.run();
+          Thread.yield();
+        }
+      }
+    });
+
+    dataInjector.setDaemon(true);
+    dataInjector.start();
+    try {
+      Thread.yield();
+      formatter.close();
+    } finally {
+      sentinel[0] = false;
+    }
+  }
+
+  private TestXmlFormatter getTestXmlFormatterWithDummyWriter() {
+    return new TestXmlFormatter(context, new WikiPageDummy("name", "content", null), new WriterFactory() {
+      @Override
+      public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
+        return new StringWriter();
+      }
+    });
+  }
+
 }

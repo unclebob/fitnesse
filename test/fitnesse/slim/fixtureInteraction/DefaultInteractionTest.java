@@ -1,9 +1,9 @@
 package fitnesse.slim.fixtureInteraction;
 
-import org.junit.Test;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,7 +19,7 @@ public class DefaultInteractionTest {
   }
 
   @Test
-  public void canCreateAndUseATestObject() throws Exception {
+  public void canCreateAndUseATestObject() throws Throwable {
     Integer expectedInt = new Integer(7);
     DefaultInteraction interaction = new DefaultInteraction();
 

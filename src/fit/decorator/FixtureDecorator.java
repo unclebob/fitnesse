@@ -47,7 +47,7 @@ public abstract class FixtureDecorator extends Fixture {
     Fixture fixture = null;
     try {
       fixture = loadFixture(encapsulatedFixtureName);
-    } catch (Throwable e) {
+    } catch (Throwable e) { // NOSONAR
       exception(actualHeader, e);
     }
     return fixture;

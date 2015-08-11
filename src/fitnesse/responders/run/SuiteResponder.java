@@ -22,12 +22,12 @@ import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.reporting.BaseFormatter;
+import fitnesse.reporting.Formatter;
 import fitnesse.reporting.InteractiveFormatter;
-import fitnesse.reporting.PageInProgressFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
 import fitnesse.reporting.TestTextFormatter;
-import fitnesse.reporting.history.JunitReFormatter;
 import fitnesse.reporting.history.HistoryPurger;
+import fitnesse.reporting.history.JunitReFormatter;
 import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.history.SuiteHistoryFormatter;
 import fitnesse.reporting.history.SuiteXmlReformatter;
@@ -36,22 +36,20 @@ import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.WikiImporter;
 import fitnesse.responders.WikiImportingResponder;
 import fitnesse.responders.WikiImportingTraverser;
+import fitnesse.responders.WikiPageActions;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.RunningTestingTracker;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testrunner.SuiteFilter;
-import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
-import fitnesse.responders.WikiPageActions;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
 import org.apache.commons.lang.StringUtils;
@@ -80,7 +78,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   private boolean debug = false;
   private boolean remoteDebug = false;
-  protected boolean includeHtml = true;
+  protected boolean includeHtml = false;
   int exitCode;
 
   public SuiteResponder() {
@@ -237,7 +235,9 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     } else {
       runner.addExecutionLogListener(new ConsoleExecutionLogListener());
     }
-    runner.addTestSystemListener(newTestInProgressFormatter());
+    for (Formatter formatter : context.formatterFactory.createFormatters()) {
+      runner.addTestSystemListener(formatter);
+    }
     if (context.testSystemListener != null) {
       runner.addTestSystemListener(context.testSystemListener);
     }
@@ -293,10 +293,6 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   protected BaseFormatter newHtmlFormatter() {
     return new SuiteHtmlFormatter(page, response.getWriter());
-  }
-
-  protected TestSystemListener<WikiTestPage> newTestInProgressFormatter() {
-    return new PageInProgressFormatter(context);
   }
 
   protected void performExecution() throws IOException, InterruptedException {

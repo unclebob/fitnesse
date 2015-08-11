@@ -54,7 +54,8 @@ public class FitNesseExpediter implements ResponseSender {
     catch (SocketException se) {
       // can be thrown by makeResponse or sendResponse.
     }
-    catch (Throwable e) {
+    catch (Throwable e) { // NOSONAR
+      // This catch is intentional, since it's the last point where we can catch exceptions that occur in this thread.
       LOG.log(Level.WARNING, "Unexpected exception", e);
     }
   }

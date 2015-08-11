@@ -24,8 +24,7 @@ public class TestTextFormatter extends BaseFormatter implements Closeable {
 
   @Override
   public void testSystemStarted(TestSystem testSystem) {
-	String timeString = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss").format(totalTimeMeasurement.startedAtDate());
-    response.add(String.format("\nStarting Test System at %s: %s.\n", timeString, testSystem.getName()));
+    response.add(String.format("\nStarting Test System: %s.\n", testSystem.getName()));
   }
 
   @Override
@@ -41,8 +40,9 @@ public class TestTextFormatter extends BaseFormatter implements Closeable {
   public void testComplete(WikiTestPage page, TestSummary summary) throws IOException {
     timeMeasurement.stop();
     updateCounters(summary);
-    response.add(String.format("%s %.03f sec R:%-4d W:%-4d I:%-4d E:%-4d %s\t(%s)\n",
-      passFail(summary),  timeMeasurement.elapsedSeconds(), summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions(), page.getName(), page.getFullPath() ));
+    String timeString = new SimpleDateFormat("HH:mm:ss").format(timeMeasurement.startedAtDate());
+    response.add(String.format("%s %s R:%-4d W:%-4d I:%-4d E:%-4d %s\t(%s)\t%.03f seconds\n",
+      passFail(summary), timeString, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions(), page.getName(), page.getFullPath(), timeMeasurement.elapsedSeconds()));
   }
 
   private void updateCounters(TestSummary summary) {

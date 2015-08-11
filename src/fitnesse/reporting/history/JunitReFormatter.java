@@ -23,7 +23,6 @@ public class JunitReFormatter extends BaseFormatter implements Closeable {
   private final FitNesseContext context;
   private final Writer writer;
   private final SuiteHistoryFormatter historyFormatter;
-  private TestHistory testHistory;
 
   public JunitReFormatter(FitNesseContext context, WikiPage page, Writer writer, SuiteHistoryFormatter historyFormatter) {
     super(page);
@@ -35,7 +34,7 @@ public class JunitReFormatter extends BaseFormatter implements Closeable {
 @Override
   public void close() throws IOException {
     historyFormatter.close();
-    testHistory = new TestHistory();
+    TestHistory testHistory = new TestHistory();
     testHistory.readHistoryDirectory(context.getTestHistoryDirectory());
 
     // read file based on historyFormatter time-stamp

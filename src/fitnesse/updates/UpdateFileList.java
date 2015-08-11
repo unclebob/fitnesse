@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 public class UpdateFileList {
   private static final Logger LOG = Logger.getLogger(UpdateFileList.class.getName());
 
-  private final static List<String> VALID_FILE_NAMES = Arrays.asList("content.txt", "properties.xml", ".gitignore");
+  private static final List<String> VALID_FILE_NAMES = Arrays.asList("content.txt", "properties.xml", ".gitignore");
 
   private List<String> mainDirectories;
   private String updateListContent;

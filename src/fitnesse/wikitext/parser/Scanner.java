@@ -10,7 +10,7 @@ public class Scanner {
     private TextMaker textMaker;
     private SymbolStream symbols;
 
-    public Scanner(SourcePage sourcePage, String input) {
+    public Scanner(SourcePage sourcePage, CharSequence input) {
         this(
             new TextMaker(
                 new VariableSource() {
@@ -22,7 +22,7 @@ public class Scanner {
             input);
     }
 
-    public Scanner(TextMaker textMaker, String input) {
+    public Scanner(TextMaker textMaker, CharSequence input) {
         this.input = new ScanString(input, 0);
         next = 0;
         this.textMaker = textMaker;
@@ -58,13 +58,13 @@ public class Scanner {
             SymbolMatch match = terminator.makeMatch(input, symbols);
             if (match.isMatch()) {
                 symbols.add(new Symbol(terminator));
-                Symbol result = new Symbol(SymbolType.Text, input.substringFrom(next));
+                Symbol result = new Symbol(SymbolType.Text, input.substringFrom(next), next);
                 next = input.getOffset() + match.getMatchLength();
                 return result;
             }
             input.moveNext();
         }
-        Symbol result = new Symbol(SymbolType.Text, input.substringFrom(next));
+        Symbol result = new Symbol(SymbolType.Text, input.substringFrom(next), next);
         next = input.getOffset();
         symbols.add(Symbol.emptySymbol);
         return result;
@@ -106,7 +106,7 @@ public class Scanner {
             input.moveNext();
         }
         if (input.getOffset() > startPosition) {
-            SymbolMatch match = textMaker.make(specification, input.substringFrom(startPosition));
+            SymbolMatch match = textMaker.make(specification, startPosition, input.substringFrom(startPosition));
             return new Step(match.getSymbol(), startPosition + match.getMatchLength());
         }
         if (input.isEnd()) {
@@ -115,7 +115,7 @@ public class Scanner {
         return new Step(matchSymbol, newNext);
     }
 
-    private class Step {
+    private static class Step {
         public Symbol token;
         public int nextPosition;
         public Step(Symbol token, int nextPosition) {

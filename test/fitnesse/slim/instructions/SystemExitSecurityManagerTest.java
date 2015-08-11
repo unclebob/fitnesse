@@ -4,7 +4,6 @@ import static org.junit.Assert.fail;
 import static util.RegexTestCase.assertMatches;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.slim.instructions.SystemExitSecurityManager.SystemExitException;
@@ -15,34 +14,33 @@ public class SystemExitSecurityManagerTest {
 
   SecurityManager securityManager;
 
-  @Before
-  public void setup() {
-    oldSecurityManager = System.getSecurityManager();
-    securityManager = new SystemExitSecurityManager(oldSecurityManager);
-    System.setSecurityManager(securityManager);
-  }
-
   @After
   public void teardown() {
-    System.setSecurityManager(oldSecurityManager);
+    SystemExitSecurityManager.restoreOriginalSecurityManager();
   }
 
-  @Test
+  @Test(expected = SystemExitException.class)
   public void shouldThrowExceptionWhenSystemExitIsCalled() {
-    try {
-      System.exit(0);
-      fail("should have thrown exception");
-    } catch (SystemExitException e) {
-    }
+    acticateSystemExitSecurityManager();
+    System.exit(0);
+    fail("should have thrown exception");
+
   }
 
   @Test
   public void shouldIncludeExitCode() {
     try {
+      acticateSystemExitSecurityManager();
       System.exit(42);
       fail("should have thrown exception");
     } catch (SystemExitException e) {
       assertMatches("system exit with exit code 42", e.getMessage());
     }
+  }
+  
+  private void acticateSystemExitSecurityManager() {
+    System.setSecurityManager(null);
+    System.setProperty(SystemExitSecurityManager.PREVENT_SYSTEM_EXIT, "true");
+    SystemExitSecurityManager.activateIfWanted();
   }
 }

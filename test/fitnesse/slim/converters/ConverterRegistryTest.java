@@ -1,11 +1,11 @@
 package fitnesse.slim.converters;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Pattern;
 
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.slim.Converter;
@@ -14,6 +14,16 @@ import fitnesse.slim.test.AnotherEnum;
 import static org.junit.Assert.*;
 
 public class ConverterRegistryTest {
+
+  @Before
+  public void setUp() {
+    ConverterRegistry.resetToStandardConverters();
+  }
+
+  @AfterClass
+  public static void finalCleanUp() {
+    ConverterRegistry.resetToStandardConverters();
+  }
 
   @Test
   public void getConverters_should_return_several_default_converter() {
@@ -82,6 +92,99 @@ public class ConverterRegistryTest {
   }
 
   @Test
+  public void getConverterForClass_should_return_a_MapConverter_when_type_is_typed_map() throws SecurityException, NoSuchMethodException {
+    Class<?> typedClass = MyFixture.class.getMethod("getMap").getReturnType();
+
+    Converter<?> converter = ConverterRegistry.getConverterForClass(typedClass);
+
+    assertNotNull("no converter retunred", converter);
+    assertEquals(MapConverter.class, converter.getClass());
+  }
+
+  @Test
+  public void getConverterForClass_should_return_a_MapConverter_when_type_implements_map() throws SecurityException, NoSuchMethodException {
+    Class<?> typedClass = MyFixture.class.getMethod("getLinkedMap").getReturnType();
+
+    Converter<?> converter = ConverterRegistry.getConverterForClass(typedClass);
+
+    assertNotNull("no converter retunred", converter);
+    assertEquals(MapConverter.class, converter.getClass());
+  }
+
+  @Test
+  public void getConverterForClass_should_return_a_MapConverter_when_type_implements_map_indirectly() throws SecurityException, NoSuchMethodException {
+    Class<?> typedClass = MyFixture.class.getMethod("getTreeMap").getReturnType();
+
+    Converter<?> converter = ConverterRegistry.getConverterForClass(typedClass);
+
+    assertNotNull("no converter retunred", converter);
+    assertEquals(MapConverter.class, converter.getClass());
+  }
+
+  @Test
+  public void getConverterForClass_should_return_Converter_when_type_superclass_registered() throws SecurityException, NoSuchMethodException {
+    ConverterRegistry.addConverter(MyFixture.class, new MyFixtureConverter());
+
+    Converter<?> converter = ConverterRegistry.getConverterForClass(MySubFixture.class);
+
+    assertNotNull("no converter retunred", converter);
+    assertEquals(MyFixtureConverter.class, converter.getClass());
+  }
+
+  @Test
+  public void getConverterForClass_should_return_Object_Converter_as_last_resort() throws SecurityException, NoSuchMethodException {
+    Converter<Object> oldObjectConverter = ConverterRegistry.getConverterForClass(Object.class);
+    try {
+      ConverterRegistry.addConverter(Object.class, new MyObjectConverter());
+
+      Converter<?> converter = ConverterRegistry.getConverterForClass(ConverterRegistryTest.class);
+
+      assertNotNull("no converter retunred", converter);
+      assertEquals(MyObjectConverter.class, converter.getClass());
+    } finally {
+      // cleanup
+      ConverterRegistry.addConverter(Object.class, oldObjectConverter);
+    }
+  }
+
+  private static class MyFixture {
+    public Map<String, Object> getMap() {
+      return null;
+    }
+    public LinkedHashMap<String, Object> getLinkedMap() {
+      return null;
+    }
+    public TreeMap<String, Object> getTreeMap() {
+      return null;
+    }
+  }
+
+  private static class MyFixtureConverter implements Converter<MyFixture> {
+    @Override
+    public String toString(MyFixture o) {
+      return null;
+    }
+    @Override
+    public MyFixture fromString(String arg) {
+      return null;
+    }
+  }
+
+  private static class MyObjectConverter implements Converter<Object> {
+    @Override
+    public String toString(Object o) {
+      return null;
+    }
+    @Override
+    public Object fromString(String arg) {
+      return null;
+    }
+  }
+
+  private static class MySubFixture extends MyFixture {
+  }
+
+  @Test
   @SuppressWarnings("rawtypes")
   public void getConverterForClass_should_return_a_collection_of_string_when_value_is_a_list() {
     Class<List> clazz = List.class;
@@ -122,6 +225,14 @@ public class ConverterRegistryTest {
     assertTrue(converter instanceof GenericCollectionConverter);
     assertTrue(current instanceof String);
     assertEquals("1", current);
+
+    List<Object> listToConvert = new ArrayList<Object>();
+    listToConvert.add(this);
+    listToConvert.add(new StringBuilderConverter());
+    listToConvert.add(null);
+    String converted = converter.toString(listToConvert);
+    Pattern p = Pattern.compile("\\[(.*?),\\s*(.*?),\\s*null\\]");
+    assertTrue(p.matcher(converted).matches());
   }
 
   /*

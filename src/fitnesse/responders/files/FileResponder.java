@@ -28,9 +28,9 @@ import fitnesse.responders.NotFoundResponder;
 
 public class FileResponder implements SecureResponder {
   // 1000-trick: remove milliseconds.
-  private final static Date LAST_MODIFIED_FOR_RESOURCES = new Date((System.currentTimeMillis() / 1000) * 1000 );
+  private static final Date LAST_MODIFIED_FOR_RESOURCES = new Date((System.currentTimeMillis() / 1000) * 1000 );
 
-  private static final int RESOURCE_SIZE_LIMIT = 262144;
+  private static final int RESOURCE_SIZE_LIMIT = 262144*2;
   private static final FileNameMap fileNameMap = URLConnection.getFileNameMap();
   String resource;
   File requestedFile;
@@ -180,8 +180,6 @@ public class FileResponder implements SecureResponder {
         } catch (UnsupportedEncodingException e) {
           throw new RuntimeException("Invalid URL encoding", e);
         }
-
-
       }
     };
   }

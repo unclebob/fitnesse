@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.StringWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -152,29 +154,33 @@ public class StackTraceEnricherTest {
   }
 
   @Test
-  public void shouldParseDirectories() {
+  public void shouldParseDirectories() throws Exception {
     String classPath = System.getProperty("java.class.path");
-    classPath = classPath.replace('\\', '/');
     String testLocation = enricher.getLocation(this.getClass());
     if (!testLocation.contains(".jar")) {
-      testLocation = testLocation.replace('\\', '/');
-      if (testLocation.startsWith("file:/")) {
-        testLocation = testLocation.substring("file:/".length());
-      }
-      if (testLocation.endsWith("/")) {
-        testLocation = testLocation.substring(0, testLocation.length() - 1);
-      }
-      // Under Windows a path with a SPACE has "%20" in the testLocation and " " in the classpath
-      // Fix this before the test
-      testLocation = testLocation.replace("%20", " ");
-      
-      assertTrue("Location of unit test (" + testLocation + ") not found on the classpath (" + classPath + ").",
-          classPath.contains(testLocation));
+      assertContainsPath("Location of unit test (" + testLocation + ") not found on the classpath (" + classPath + ").",
+              testLocation, classPath);
     } else {
       // TODO Find a way to test this if the unit test is executed from a jar.
       System.err.println("Unit test executed from jar file, no stable method available for testing the parsing of " +
           "directory locations.");
     }
+  }
+
+  public void assertContainsPath(String message, String path, String paths) throws URISyntaxException {
+    File testFile;
+    if (path.startsWith("file:/")) {
+      testFile = new File(new URI(path));
+    } else {
+      testFile = new File(path);
+    }
+    String[] parts = paths.split(System.getProperty("path.separator"));
+    for (String part : parts) {
+      if (testFile.equals(new File(part))) {
+        return;
+      }
+    }
+    fail(message);
   }
 
   @Test

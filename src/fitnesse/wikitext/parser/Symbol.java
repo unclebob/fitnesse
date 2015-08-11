@@ -17,6 +17,8 @@ public class Symbol {
     private List<Symbol> children;
     private Map<String,String> variables;
     private Map<String,String> properties;
+    private int startOffset = -1;
+    private int endOffset = -1;
 
     public Symbol(SymbolType type) { this(type, ""); }
 
@@ -24,6 +26,18 @@ public class Symbol {
         this.type = type;
         this.content = content;
         this.children = NO_CHILDREN;
+    }
+
+    public Symbol(SymbolType type, String content, int startOffset) {
+        this(type, content);
+        this.startOffset = startOffset;
+        this.endOffset = startOffset + content.length();
+    }
+
+    public Symbol(SymbolType type, String content, int startOffset, int endOffset) {
+        this(type, content);
+        this.startOffset = startOffset;
+        this.endOffset = endOffset;
     }
 
     public SymbolType getType() { return type; }
@@ -119,14 +133,27 @@ public class Symbol {
         return getProperty(key, "");
     }
 
-    public SymbolType closeType() {
-        return type == SymbolType.OpenBrace ? SymbolType.CloseBrace
-                : type == SymbolType.OpenBracket ? SymbolType.CloseBracket
-                : type == SymbolType.OpenParenthesis ? SymbolType.CloseParenthesis
-                : type == Literal.symbolType ? SymbolType.CloseLiteral
-                : type == Comment.symbolType ? SymbolType.Newline
-                : SymbolType.Empty;
+    public boolean hasOffset() {
+      return startOffset != -1 && endOffset != -1;
     }
 
+    void setStartOffset(int startOffset) {
+      this.startOffset = startOffset;
+    }
 
+    public int getStartOffset() {
+      return startOffset;
+    }
+
+    void setEndOffset(int endOffset) {
+      this.endOffset = endOffset;
+    }
+
+    public int getEndOffset() {
+      return endOffset;
+    }
+
+  public void setType(SymbolType type) {
+    this.type = type;
+  }
 }

@@ -24,8 +24,6 @@ public class StreamReader {
 
   private boolean eof = false;
   private boolean isTimeout = false;
-  private int retryCounter = 0;
-  private int sleepStep = 10;
 
   private byte[] boundary;
   private int boundaryLength;
@@ -37,7 +35,6 @@ public class StreamReader {
   public StreamReader(InputStream input) {
     this.input = input;
   }
-
 
   public void close() throws IOException {
     input.close();
@@ -124,6 +121,8 @@ public class StreamReader {
   }
 
   private void readUntilFinished() throws IOException {
+    int retryCounter = 0;
+    int sleepStep = 10;
     isTimeout = false;
 
     if (timeoutLimit > 0) {
@@ -194,6 +193,7 @@ public class StreamReader {
   }
 
   private final State READLINE_STATE = new State() {
+    @Override
     public void read(InputStream input) throws IOException {
       int b = input.read();
       if (b == -1) {
@@ -259,6 +259,7 @@ public class StreamReader {
   };
 
   private final State FINAL_STATE = new State() {
+    @Override
     public boolean finished() {
       return true;
     }

@@ -30,7 +30,7 @@ public class TodayExtensionTest {
         ParserTestHelper.assertTranslatesTo("!monthsFromToday -xml", "2003-03-04T15:06:07");
         ParserTestHelper.assertTranslatesTo("!monthsFromToday (MMM)", "Mar");
         ParserTestHelper.assertTranslatesTo("!monthsFromToday (dd MMM)", "04 Mar");
-        ParserTestHelper.assertTranslatesTo("!monthsFromToday (dd MMM", "!monthsFromToday (dd MMM");
+        ParserTestHelper.assertTranslatesTo("!monthsFromToday (dd MMM" /* eof */, "04 Mar");
         ParserTestHelper.assertTranslatesTo("!monthsFromToday -t.", "04 Mar, 2003 15:06.");
         ParserTestHelper.assertTranslatesTo("!monthsFromToday -xml.", "2003-03-04T15:06:07.");
     }

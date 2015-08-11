@@ -26,7 +26,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.wiki.WikiPage;
 
 public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLogListener, Closeable {
-  private final static Logger LOG = Logger.getLogger(SuiteHistoryFormatter.class.getName());
+  private static final Logger LOG = Logger.getLogger(SuiteHistoryFormatter.class.getName());
 
   private final SuiteExecutionReport suiteExecutionReport;
   private final TimeMeasurement totalTimeMeasurement;

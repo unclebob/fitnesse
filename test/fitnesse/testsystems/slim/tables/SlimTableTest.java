@@ -5,7 +5,10 @@ package fitnesse.testsystems.slim.tables;
 import java.util.Collections;
 import java.util.List;
 
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
+import fitnesse.wiki.WikiPageDummy;
+
 import org.junit.Test;
 
 import static fitnesse.testsystems.slim.tables.Disgracer.disgraceClassName;
@@ -121,7 +124,7 @@ public class SlimTableTest {
 
   private static class MockTable extends SlimTable {
     public MockTable() {
-      super(null, null, new SlimTestContextImpl());
+      super(null, null, new SlimTestContextImpl(new WikiTestPage(new WikiPageDummy())));
     }
 
     protected String getTableType() {

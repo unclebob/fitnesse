@@ -22,18 +22,17 @@ public abstract class Instruction {
   }
 
   public final InstructionResult execute(InstructionExecutor executor) {
-    SecurityManager oldSecurityManager = System.getSecurityManager();
-    System.setSecurityManager(new SystemExitSecurityManager(oldSecurityManager));
     
     InstructionResult result;
     try {
+      SystemExitSecurityManager.activateIfWanted();
       result = executeInternal(executor);
     } catch (SlimException e) {
       result = new InstructionResult.Error(getId(), e);
     } catch (SystemExitException e) {
       result = new InstructionResult.Error(getId(), e);
     } finally {
-      System.setSecurityManager(oldSecurityManager);
+      SystemExitSecurityManager.restoreOriginalSecurityManager();
     }
     return result;
   }
@@ -42,7 +41,7 @@ public abstract class Instruction {
 
   @Override
   public String toString() {
-    final StringBuffer sb = new StringBuffer();
+    final StringBuilder sb = new StringBuilder();
     sb.append("Instruction");
     sb.append("{id='").append(id).append('\'');
     sb.append('}');
@@ -57,7 +56,6 @@ public abstract class Instruction {
     Instruction that = (Instruction) o;
 
     return id.equals(that.id);
-
   }
 
   @Override

@@ -29,6 +29,7 @@ public enum ConfigurationParameter {
   PLUGINS("Plugins"),
   RESPONDERS("Responders"),
   TEST_SYSTEMS("TestSystems"),
+  FORMATTERS("Formatters"),
   SYMBOL_TYPES("SymbolTypes"),
   SLIM_TABLES("SlimTables"),
   AUTHENTICATOR("Authenticator"),
@@ -70,29 +71,30 @@ public enum ConfigurationParameter {
     Properties properties = new Properties();
     try {
       propertiesStream = new FileInputStream(propertiesFile);
+      properties.load(propertiesStream);
     } catch (FileNotFoundException e) {
+      LOG.info(String.format("No configuration file found (%s)", getCanonicalPath(propertiesFile)));
+    } catch (IOException e) {
+      LOG.log(Level.WARNING, String.format("Error reading configuration: %s", e.getMessage()));
+    } finally {
       try {
-        LOG.info(String.format("No configuration file found (%s)", propertiesFile.getCanonicalPath()));
-      } catch (IOException ioe) {
-        LOG.info(String.format("No configuration file found (%s)", propertiesFile));
-      }
-    }
-
-    if (propertiesStream != null) {
-      try {
-        properties.load(propertiesStream);
-      } catch (IOException e) {
-        LOG.log(Level.WARNING, String.format("Error reading configuration: %s", e.getMessage()));
-      } finally {
-        try {
+        if (propertiesStream != null) {
           propertiesStream.close();
-        } catch (IOException e) {
-          LOG.severe("Unable to close properties file.");
         }
+      } catch (IOException e) {
+        LOG.severe("Unable to close properties file.");
       }
     }
 
     return properties;
+  }
+
+  private static String getCanonicalPath(File propertiesFile) {
+    try {
+      return propertiesFile.getCanonicalPath();
+    } catch (IOException e) {
+      return propertiesFile.toString();
+    }
   }
 
   public static ConfigurationParameter byKey(String key) {

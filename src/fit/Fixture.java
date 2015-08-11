@@ -79,7 +79,7 @@ public class Fixture {
           Fixture fixture = getLinkedFixtureWithArgs(tables);
           fixture.listener = listener;
           fixture.interpretTables(tables);
-        } catch (Throwable e) {
+        } catch (Throwable e) { // NOSONAR
           exception(heading, e);
           interpretFollowingTables(tables);
         }
@@ -119,7 +119,7 @@ public class Fixture {
         try {
           Fixture fixture = getLinkedFixtureWithArgs(tables);
           fixture.doTable(tables);
-        } catch (Throwable e) {
+        } catch (Throwable e) { // NOSONAR
           exception(heading, e);
         }
       }

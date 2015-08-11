@@ -16,7 +16,7 @@ public class SystemExitTable  extends ColumnFixture {
   public void execute() {
     try {
       System.exit(exitCode);
-    } catch (Throwable e) {
+    } catch (Throwable e) { // NOSONAR
       exception = e;
     }
   }

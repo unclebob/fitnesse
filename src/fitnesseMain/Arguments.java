@@ -49,7 +49,7 @@ public class Arguments {
   static void printUsage() {
     ContextConfigurator defaults = ContextConfigurator.systemDefaults();
 
-    System.err.println("Usage: java -jar fitnesse.jar [-vpdrleoab]");
+    System.err.println("Usage: java -jar fitnesse.jar [-vpdrlfeoaicb]");
     System.err.println("\t-p <port number> {" + DEFAULT_PORT + "}");
     System.err.println("\t-d <working directory> {" +
       defaults.get(ROOT_PATH) + "}");

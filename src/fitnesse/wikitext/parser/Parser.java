@@ -6,11 +6,11 @@ import java.util.List;
 public class Parser {
     private static final ArrayList<Symbol> emptySymbols = new ArrayList<Symbol>();
 
-    public static Parser make(ParsingPage currentPage, String input) {
+    public static Parser make(ParsingPage currentPage, CharSequence input) {
         return make(currentPage, input, SymbolProvider.wikiParsingProvider);
     }
 
-    public static Parser make(ParsingPage currentPage, String input, SymbolProvider provider) {
+    public static Parser make(ParsingPage currentPage, CharSequence input, SymbolProvider provider) {
         ParseSpecification specification = new ParseSpecification().provider(provider);
         return new Parser(null, currentPage, new Scanner(new TextMaker(currentPage, currentPage.getNamedPage()), input), specification);
     }
@@ -71,7 +71,7 @@ public class Parser {
         int start = scanner.getOffset();
         scanner.markStart();
         parseTo(terminator);
-        if (atEnd() || !getCurrent().isType(terminator)) return Maybe.noString;
+        if (!atEnd() && !getCurrent().isType(terminator)) return Maybe.noString;
         return scanner.stringFromStart(start);
     }
 

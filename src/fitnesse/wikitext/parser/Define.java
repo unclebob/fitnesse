@@ -36,7 +36,7 @@ public class Define extends SymbolType implements Rule, Translation {
     }
 
     private Maybe<String> parseVariableValue(Parser parser, Symbol next) {
-      SymbolType close = next.closeType();
+      SymbolType close = next.getType().closeType();
       if (close == SymbolType.Empty) return Maybe.noString;
       return parser.parseToAsString(close);
     }
@@ -49,4 +49,5 @@ public class Define extends SymbolType implements Rule, Translation {
         result.addAttribute("class", "meta");
         return result.html();
     }
+
 }

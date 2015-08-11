@@ -31,7 +31,7 @@ public class SlimService {
     final boolean daemon;
     final Integer statementTimeout;
     final boolean useSSL;
-	final String sslParameterClassName;
+    final String sslParameterClassName;
 
     public Options(boolean verbose, int port, FixtureInteraction interaction, boolean daemon, Integer statementTimeout, boolean useSSL, String sslParameterClassName) {
       this.verbose = verbose;
@@ -53,13 +53,14 @@ public class SlimService {
   public static void main(String[] args) throws IOException {
     Options options = parseCommandLine(args);
     if (options != null) {
-    	try{
-    		startWithFactory(createJavaSlimFactory(options), options);
-    	}catch (Exception e){
-    		e.printStackTrace();
-    		System.out.println("Exiting as exception occured: " + e.getMessage());
-    		System.exit(98);
-    	}
+      try {
+        startWithFactory(createJavaSlimFactory(options), options);
+        System.exit(0);
+      } catch (Exception e) {
+        e.printStackTrace();
+        System.out.println("Exiting as exception occured: " + e.getMessage());
+        System.exit(98);
+      }
     } else {
       parseCommandLineFailed(args);
     }

@@ -15,6 +15,7 @@ import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
 import fitnesse.plugins.PluginException;
+import fitnesse.slim.instructions.SystemExitSecurityManager;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
@@ -24,6 +25,7 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
@@ -54,6 +56,17 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
 
     public boolean value();
   }
+  
+  /**
+   * The <code>PreventSystemExit</code> annotation specifies whether the {@link SystemExitSecurityManager} must be to prevent {@link System#exit(int)} calls. Default is false
+   */
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.TYPE)
+  public @interface PreventSystemExit {
+
+    public boolean value() default true;
+  }
+  
   /**
    * The <code>SuiteFilter</code> annotation specifies the suite filter of the Fitnesse suite
    * to be run, e.g.: fasttests
@@ -146,7 +159,8 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   private boolean suiteFilterAndStrategy;
   private String excludeSuiteFilter;
   private boolean debugMode;
-  private FitNesseContext context;
+  private boolean preventSystemExit;
+   private FitNesseContext context;
   private List<WikiPage> children;
 
   public FitNesseRunner(Class<?> suiteClass) throws InitializationError {
@@ -196,6 +210,11 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
       errors.add(e);
     }
 
+    try {
+      this.preventSystemExit = shouldPreventSystemExit(suiteClass);
+    } catch (Exception e) {
+      errors.add(e);
+    }
     try {
       this.context = createContext(suiteClass);
     } catch (Exception e) {
@@ -285,6 +304,14 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     }
     return debugModeAnnotation.value();
   }
+  
+  protected boolean shouldPreventSystemExit(Class<?> klass) throws Exception {
+    PreventSystemExit preventSystemExitAnnotation = klass.getAnnotation(PreventSystemExit.class);
+    if (null == preventSystemExitAnnotation) {
+      return true;
+    }
+    return preventSystemExitAnnotation.value();
+  }
 
   protected String getFitNesseDir(Class<?> klass)
           throws InitializationError {
@@ -362,8 +389,9 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
 
   protected void runPages(List<WikiPage>pages, final RunNotifier notifier) {
     MultipleTestsRunner testRunner = createTestRunner(pages);
-    testRunner.addTestSystemListener(new JUnitRunNotifierResultsListener(notifier, suiteClass));
-    testRunner.addExecutionLogListener(new ConsoleExecutionLogListener());
+    addTestSystemListeners(notifier, testRunner, suiteClass);
+    addExecutionLogListener(notifier, testRunner, suiteClass);
+    System.setProperty(SystemExitSecurityManager.PREVENT_SYSTEM_EXIT, String.valueOf(preventSystemExit));
     try {
       executeTests(testRunner);
     } catch (AssertionError e) {
@@ -371,6 +399,14 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     } catch (Exception e) {
       notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass), e));
     }
+  }
+
+  protected void addTestSystemListeners(RunNotifier notifier, MultipleTestsRunner testRunner, Class<?> suiteClass) {
+    testRunner.addTestSystemListener(new JUnitRunNotifierResultsListener(notifier, suiteClass));
+  }
+
+  protected void addExecutionLogListener(RunNotifier notifier, MultipleTestsRunner testRunner, Class<?> suiteClass) {
+    testRunner.addExecutionLogListener(new ConsoleExecutionLogListener());
   }
 
   protected List<WikiPage> initChildren() {
@@ -435,9 +471,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     testRunner.executeTestPages();
     TestSummary summary = testFormatter.getTotalSummary();
 
-    assertEquals("wrong", 0, summary.getWrong());
-    assertEquals("exceptions", 0, summary.getExceptions());
-    assertTrue(msgAtLeastOneTest(suiteName, summary), summary.getRight() > 0);
+    assertTrue(msgAtLeastOneTest(suiteName, summary), summary.getRight() > 0 || summary.getWrong() > 0 || summary.getExceptions() > 0);
   }
 
   private String msgAtLeastOneTest(String pageName, TestSummary summary) {

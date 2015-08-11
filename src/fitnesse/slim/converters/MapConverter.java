@@ -23,24 +23,39 @@ public class MapConverter implements Converter<Map> {
 
   @Override
   public String toString(Map hash) {
+    if (hash == null) {
+      return NULL_VALUE;
+    }
+
+    HtmlTag table = createTag(hash, 0);
+
+    return table.html().trim();
+  }
+
+  protected HtmlTag createTag(Map<?, ?> hash, int depth) {
     // Use HtmlTag, same as we do for fitnesse.wikitext.parser.HashTable.
     HtmlTag table = new HtmlTag("table");
     table.addAttribute("class", "hash_table");
-    for (Map.Entry<?, ?> entry : ((Map<?, ?>) hash).entrySet()) {
+    for (Map.Entry<?, ?> entry : hash.entrySet()) {
       HtmlTag row = new HtmlTag("tr");
       row.addAttribute("class", "hash_row");
       table.add(row);
-      String key = entry.getKey().toString();
-      HtmlTag keyCell = new HtmlTag("td", key.trim());
+      HtmlTag keyCell = new HtmlTag("td");
+      addCellContent(keyCell, entry.getKey());
       keyCell.addAttribute("class", "hash_key");
       row.add(keyCell);
 
-      String value = entry.getValue().toString();
-      HtmlTag valueCell = new HtmlTag("td", value.trim());
+      HtmlTag valueCell = new HtmlTag("td");
+      addCellContent(valueCell, entry.getValue());
       valueCell.addAttribute("class", "hash_value");
       row.add(valueCell);
     }
-    return table.html().trim();
+    return table;
+  }
+
+  protected void addCellContent(HtmlTag valueCell, Object cellValue) {
+    String valueToAdd = ElementConverterHelper.elementToString(cellValue);
+    valueCell.add(valueToAdd.trim());
   }
 
   @Override

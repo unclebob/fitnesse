@@ -15,18 +15,20 @@ public class SlimTableFactory {
 
   private final Map<String, Class<? extends SlimTable>> tableTypes;
   private final Map<String, String> tableTypeArrays;
+  private final Map<String, String> aliasArrays;
 
   public  SlimTableFactory() {
     tableTypes = new HashMap<String, Class<? extends SlimTable>>(16);
     tableTypeArrays = new HashMap<String, String>();
-    addTableType("dt:", DecisionTable.class);
-    addTableType("decision:", DecisionTable.class);
-    addTableType("ddt:", DynamicDecisionTable.class);
-    addTableType("dynamic decision:", DynamicDecisionTable.class);
-    addTableType("ordered query:", OrderedQueryTable.class);
-    addTableType("subset query:", SubsetQueryTable.class);
-    addTableType("query:", QueryTable.class);
-    addTableType("table:", TableTable.class);
+    aliasArrays = new HashMap<String, String>();
+    addTableType("dt", DecisionTable.class);
+    addTableType("decision", DecisionTable.class);
+    addTableType("ddt", DynamicDecisionTable.class);
+    addTableType("dynamic decision", DynamicDecisionTable.class);
+    addTableType("ordered query", OrderedQueryTable.class);
+    addTableType("subset query", SubsetQueryTable.class);
+    addTableType("query", QueryTable.class);
+    addTableType("table", TableTable.class);
     addTableType("script", ScriptTable.class);
     addTableType("script:", ScriptTable.class);
     addTableType("scenario", ScenarioTable.class);
@@ -34,23 +36,30 @@ public class SlimTableFactory {
     addTableType("library", LibraryTable.class);
   }
 
-  protected SlimTableFactory(Map<String, Class<? extends SlimTable>> tableTypes, Map<String, String> tableTypeArrays) {
+  protected SlimTableFactory(Map<String, Class<? extends SlimTable>> tableTypes, Map<String, String> tableTypeArrays, Map<String, String> aliasArrays) {
     this.tableTypes = tableTypes;
     this.tableTypeArrays = tableTypeArrays;
+    this.aliasArrays = aliasArrays;
+
   }
 
   public void addTableType(String nameOrPrefix, Class<? extends SlimTable> tableClass) {
     if (tableTypes.get(nameOrPrefix) != null) {
       throw new IllegalStateException("A table type named '" + nameOrPrefix + "' already exists");
     }
-    tableTypes.put(nameOrPrefix.toLowerCase(), tableClass);
+    tableTypes.put(nameOrPrefix.toLowerCase().replaceAll(":", ""), tableClass);
   }
 
   public SlimTable makeSlimTable(Table table, String tableId, SlimTestContext slimTestContext) {
+    SlimTable newTable;
     String tableType = getFullTableName(table.getCellContents(0, 0));
-
+    //table.substitute(0, 0, tableType);
+    
     // First the "exceptions to the rule"
-    if (tableType.equalsIgnoreCase("define table type")) {
+    if ( tableType.equalsIgnoreCase("define alias")) {
+      parseDefineAliasTable(table);
+      return null;
+    } else if (tableType.equalsIgnoreCase("define table type")) {
       parseDefineTableTypeTable(table);
       return null;
     } else if (tableType.equalsIgnoreCase("comment") || tableType.startsWith("comment:")) {
@@ -60,23 +69,39 @@ public class SlimTableFactory {
     Class<? extends SlimTable> tableClass = getTableType(tableType);
 
     if (tableClass != null) {
-      return newTableForType(tableClass, table, tableId, slimTestContext);
+      newTable = newTableForType(tableClass, table, tableId, slimTestContext);
     } else if (!hasColon(tableType)) {
-      return new DecisionTable(table, tableId, slimTestContext);
+      newTable = new DecisionTable(table, tableId, slimTestContext);
+    }else {
+    	newTable = new SlimErrorTable(table, tableId, slimTestContext);
     }
-
-    return new SlimErrorTable(table, tableId, slimTestContext);
+    newTable.setFixtureName(getRawFixtureName(tableType));
+    return newTable;
   }
 
   private boolean hasColon(String tableType) {
     return tableType.contains(":");
   }
 
+  public String getRawTableTypeName(String fullTableName) {
+	    if (hasColon(fullTableName)) {
+	      return fullTableName.substring(0, fullTableName.indexOf(':')).trim().toLowerCase();
+	    }
+	    return "";
+	  }
+
+  public String getRawFixtureName(String fullTableName) {
+	    if (hasColon(fullTableName)) {
+	      return fullTableName.substring(fullTableName.indexOf(':') + 1).trim();
+	    }
+	    return fullTableName;
+	  }
+
   public Class<? extends SlimTable> getTableType(String tableType) {
     if (hasColon(tableType)) {
-      tableType = tableType.substring(0, tableType.indexOf(':') + 1);
+      tableType = tableType.substring(0, tableType.indexOf(':'));
     }
-    return tableTypes.get(tableType.toLowerCase());
+    return tableTypes.get(tableType.toLowerCase().trim());
   }
 
   private SlimTable newTableForType(Class<? extends SlimTable> tableClass,
@@ -99,14 +124,27 @@ public class SlimTableFactory {
   }
 
   private String getFullTableName(String tableName) {
-    if (hasColon(tableName)) {
-      return tableName;
+	String fixtureName=tableName;
+	String tableType;
+    String disgracedName = Disgracer.disgraceClassName(getRawFixtureName(tableName));
+	//check for an alias definition
+    if (aliasArrays.containsKey(disgracedName)) {
+      fixtureName = aliasArrays.get(disgracedName);
+      tableType = getRawTableTypeName(tableName);
+      if (hasColon(fixtureName)){
+      	tableType = getRawTableTypeName(fixtureName);
+      	fixtureName = getRawFixtureName(fixtureName);
+    	if (tableType.isEmpty()) tableType = getRawTableTypeName(tableName);
+    	if (fixtureName.isEmpty()) fixtureName = getRawFixtureName(tableName);
+      }
+      return tableType + ":" + fixtureName;
+    }else if (hasColon(tableName)) {
+    	// a table type definition exits in the table
+        return tableName;
     }
-
-    //check for a table type defined in a table type definition
-    String disgracedName = Disgracer.disgraceClassName(tableName);
-    if (tableTypeArrays.containsKey(disgracedName)) {
-      return tableTypeArrays.get(disgracedName) + ":" + tableName;
+      //check for a table type defined in a table type definition
+    else if (tableTypeArrays.containsKey(disgracedName)) {
+        return tableTypeArrays.get(disgracedName) + ":" + tableName;
     }
     return tableName;
   }
@@ -127,15 +165,31 @@ public class SlimTableFactory {
   }
 
   private String makeTableType(String tableSpecifier) {
-    String tableType = tableSpecifier.replace(':', ' ');
-    if (tableType.startsWith("as"))
-      tableType = tableType.substring(2);
+    tableSpecifier = tableSpecifier.replace(':', ' ');
+    if (tableSpecifier.startsWith("as"))
+    	tableSpecifier = tableSpecifier.substring(2);
 
-    return tableType.trim();
+    return tableSpecifier.trim();
   }
+
+  private SlimTable parseDefineAliasTable(Table table) {
+	    for (int rowIndex = 1; rowIndex < table.getRowCount(); rowIndex++)
+	      parseDefineAliasRow(table, rowIndex);
+	    return null;
+	  }
+
+	  private void parseDefineAliasRow(Table table, int rowIndex) {
+	    if (table.getColumnCountInRow(rowIndex) >= 2) {
+	      String fixtureName = table.getCellContents(0, rowIndex);
+	      String fixture = Disgracer.disgraceClassName(fixtureName);
+	      String tableSpecifier = table.getCellContents(1, rowIndex).trim();
+	      aliasArrays.put(fixture, tableSpecifier);
+	    }
+	  }
 
   public SlimTableFactory copy() {
     return new SlimTableFactory(new HashMap<String, Class<? extends SlimTable>>(tableTypes),
-            new HashMap<String, String>(tableTypeArrays));
+            new HashMap<String, String>(tableTypeArrays),
+            new HashMap<String, String>(aliasArrays));
   }
 }

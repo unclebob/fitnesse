@@ -14,18 +14,19 @@ If you want a test page to be run under SLIM, you simply set the TEST_SYSTEM var
 !3 The Slim Tables
 The first cell of a slim table tells you what kind of table it is. Here are the table types so far:
 
-| [[Decision Table][>DecisionTable]] | Supplies the inputs and outputs for decisions.  This is similar to the Fit Column Fixture |
-| [[Dynamic Decision Table][>DynamicDecisionTable]] | Has the same syntax as a >DecisionTable, but passes the column headers as parameters to the fixture. |
-| [[Query Table][>QueryTable]] | Supplies the expected results of a query.  This is similar to the Fit Row Fixture |
-| [[Subset Query Table][>SubsetQueryTable]] | Supplies a subset of the expected results of a query. |
-| [[Ordered query Table][>OrderedQueryTable]] | Supplies the expected results of a query.  The rows are expected to be in order.  This is similar to the Fit Row Fixture |
-| [[Script Table][>ScriptTable]] | A series of actions and checks.  Similar to Do Fixture. |
-| [[Table Table][>TableTable]] | Whatever you want it to be! |
-| [[Import][>ImportTable]] | Add a path to the fixture search path. |
-| [[Comment][>CommentTable]] | A table that does nothing. |
-| [[Scenario Table][>ScenarioTable]] | A table that can be called from other tables. |
-| [[Library Table][>LibraryTable]] | A table that installs fixtures available for all test pages |
-| [[Define Table Type][>DefineTableType]] | A helper table that defines the default table type for named fixtures. |
+|[[Decision Table][>DecisionTable]]               |Supplies the inputs and outputs for decisions.  This is similar to the Fit Column Fixture                               |
+|[[Dynamic Decision Table][>DynamicDecisionTable]]|Has the same syntax as a >DecisionTable, but passes the column headers as parameters to the fixture.                    |
+|[[Query Table][>QueryTable]]                     |Supplies the expected results of a query.  This is similar to the Fit Row Fixture                                       |
+|[[Subset Query Table][>SubsetQueryTable]]        |Supplies a subset of the expected results of a query.                                                                   |
+|[[Ordered query Table][>OrderedQueryTable]]      |Supplies the expected results of a query.  The rows are expected to be in order.  This is similar to the Fit Row Fixture|
+|[[Script Table][>ScriptTable]]                   |A series of actions and checks.  Similar to Do Fixture.                                                                 |
+|[[Table Table][>TableTable]]                     |Whatever you want it to be!                                                                                             |
+|[[Import][>ImportTable]]                         |Add a path to the fixture search path.                                                                                  |
+|[[Comment][>CommentTable]]                       |A table that does nothing.                                                                                              |
+|[[Scenario Table][>ScenarioTable]]               |A table that can be called from other tables.                                                                           |
+|[[Library Table][>LibraryTable]]                 |A table that installs fixtures available for all test pages                                                             |
+|[[Define Table Type][>DefineTableType]]          |A helper table that defines the default table type for named fixtures.                                                  |
+|[[Define Alias][>DefineAlias]]                   |A helper table that defines alias names for fixtures.                                                                   |
 
 !4 Data Types.
 The data in your tables is all Strings.  However your fixtures don't want to be constrained to Strings.  So Slim comes with several standard data type converters that will automatically convert the strings in the tables into the data types expected by your fixtures.
@@ -51,11 +52,12 @@ The Slim test system can be configured using the following properties:
 Those properties can be either provided by a wiki page, on the command line (e.g. ''-Dslim.port=9000'') or in the plugins.properties file.
 
 !4 Extra Goodies that are consistent throughout all Slim tables and ports.
-| [[''Exception Handling''][>ExceptionHandling]] |
-| [[''Symbols in tables''][>SymbolsInTables]] |
-| [[''Constructor arguments''][>ConstructorArguments]] |
-| [[''Value comparisons''][>ValueComparisons]] |
-| [[''Graceful names''][>GracefulNames]] |
+|[[''Exception Handling''][>ExceptionHandling]]      |
+|[[''Symbols in tables''][>SymbolsInTables]]         |
+|[[''Constructor arguments''][>ConstructorArguments]]|
+|[[''Value comparisons''][>ValueComparisons]]        |
+|[[''Graceful names''][>GracefulNames]]              |
 
 !4 Java goodies
-| [[''System Under Test''][>SystemUnderTest]] |
+|[[''System Under Test''][>SystemUnderTest]]                |
+|[[''Interaction Aware Fixture''][>InteractionAwareFixture]]|
