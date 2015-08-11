@@ -10,12 +10,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fitnesse.util.Clock;
 
 import fitnesse.FitNesseContext;
 
 public class RecentChangesWikiPage implements RecentChanges {
+  private static final Logger LOG = Logger.getLogger(RecentChangesWikiPage.class.getName());
 
   private static SimpleDateFormat makeDateFormat() {
     //SimpleDateFormat is not thread safe, so we need to create each instance independently.
@@ -43,13 +46,14 @@ public class RecentChangesWikiPage implements RecentChanges {
       while ((line = reader.readLine()) != null)
         lines.add(line);
     } catch (IOException e) {
-      // TODO: -AJM- It's only the recent changes file. Should we throw an error or just log to the console?
-      throw new RuntimeException("Unable to read recent changes", e);
+      LOG.log(Level.WARNING, "Unable to read recent changes", e);
     } finally {
       try {
-        reader.close();
+        if (reader != null) {
+          reader.close();
+        }
       } catch (IOException e) {
-        // Ignore
+        LOG.log(Level.FINE, "Unable to close recent changes file for reading", e);
       }
     }
     return lines;
