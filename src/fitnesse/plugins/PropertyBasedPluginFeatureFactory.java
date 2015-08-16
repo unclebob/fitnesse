@@ -1,10 +1,5 @@
 package fitnesse.plugins;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
 import fitnesse.ConfigurationParameter;
 import fitnesse.authentication.Authenticator;
 import fitnesse.components.ComponentFactory;
@@ -23,6 +18,8 @@ import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.WikiPageFactoryRegistry;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.SymbolType;
+
+import java.util.*;
 
 /**
  * Determines which plugin features to load based on componentFactory's properties (e.g. plugins.properties).
@@ -114,6 +111,10 @@ public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase 
         LOG.info("Loaded custom SLiM table type " + key + ":" + clazz.getName());
       }
     });
+    String[] tableClasses = getListFromProperties(ConfigurationParameter.DATA_TABLES_CLASSES);
+    tableClasses = tableClasses == null ? new String[]{} : tableClasses;
+    System.getProperties().put(ConfigurationParameter.DATA_TABLES_CLASSES.getKey(),
+      new HashSet<String>(Arrays.asList(tableClasses)));
   }
 
   @Override
