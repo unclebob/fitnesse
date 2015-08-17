@@ -5,6 +5,7 @@ The most basic implementation is the !-SimpleFileVersionsController-!. It just s
 !2 Git Version Controller
 For those of us who fancy a more tight integration with their source control system there is a Git based version controller available. This version controller creates a commit for every page change. The .RecentChanges page can also be tailored to show the Git version history, instead of the default file based history.
 
+The Git version controller is distributed as a separate module (it used to be part of FitNesse, up to version 20150814). You can find the
 To configure the Git version controller, add the following to your plugins.propeties:
 
 {{{VersionsController=fitnesse.wiki.fs.GitFileVersionsController
