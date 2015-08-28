@@ -5,8 +5,16 @@ import java.util.List;
 
 import fit.FixtureLoader;
 import fit.FixtureName;
+import fitnesse.testsystems.slim.tables.DecisionTable;
+import fitnesse.testsystems.slim.tables.DynamicDecisionTable;
+import fitnesse.testsystems.slim.tables.ImportTable;
+import fitnesse.testsystems.slim.tables.OrderedQueryTable;
+import fitnesse.testsystems.slim.tables.QueryTable;
+import fitnesse.testsystems.slim.tables.ScenarioTable;
+import fitnesse.testsystems.slim.tables.ScriptTable;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
+import fitnesse.testsystems.slim.tables.SubsetQueryTable;
 
 public class ColoredSlimTable extends SymbolTypeDecorator{
 
@@ -14,15 +22,7 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
 
   public ColoredSlimTable(Table baseSymbolType) {
         super("Table", baseSymbolType);
-
-        secondRowTitleClasses.add("fitnesse.testsystems.slim.tables.DecisionTable");
-        secondRowTitleClasses.add("fitnesse.testsystems.slim.tables.DynamicDecisionTable");
-        secondRowTitleClasses.add("fitnesse.testsystems.slim.tables.QueryTable");
-        secondRowTitleClasses.add("fitnesse.testsystems.slim.tables.SubsetQueryTable");
-        secondRowTitleClasses.add("fitnesse.testsystems.slim.tables.OrderedQueryTable");
     }
-
-    private List<String> secondRowTitleClasses = new ArrayList<String>();
 
     public String toTarget(Translator translator, Symbol symbol) {
         HtmlWriter writer = new HtmlWriter();
@@ -36,7 +36,6 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
         boolean colorTable = false;
         boolean isFirstColumnTitle = false;
         boolean isSecondRowTitle = false;
-        boolean isCommentFixture = false;
 
         for (Symbol child : symbol.getChildren()) {
           rowCount++;
@@ -57,12 +56,14 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
                 Class<? extends SlimTable> slimTableClazz = sf.getTableType(tableName);
                 if(slimTableClazz != null){
                     colorTable = true;
-                    if(secondRowTitleClasses.contains(slimTableClazz.getName())){
-                        isSecondRowTitle = true;
-                    }else if("fitnesse.testsystems.slim.tables.ImportTable".equals(slimTableClazz.getName())){
-                        isImportFixture = true;
-                    }else if("fitnesse.testsystems.slim.tables.ScriptTable".equals(slimTableClazz.getName()) ||
-                            "fitnesse.testsystems.slim.tables.ScenarioTable".equals(slimTableClazz.getName())) {
+                    if (DecisionTable.class.isAssignableFrom(slimTableClazz) ||
+                       DynamicDecisionTable.class.isAssignableFrom(slimTableClazz) ||
+                       QueryTable.class.isAssignableFrom(slimTableClazz)) {
+                      isSecondRowTitle = true;
+                    } else if (ImportTable.class.isAssignableFrom(slimTableClazz)) {
+                      isImportFixture = true;
+                    } else if (ScriptTable.class.isAssignableFrom(slimTableClazz) ||
+                               ScenarioTable.class.isAssignableFrom(slimTableClazz)) {
                         isFirstColumnTitle = true;
                     }
                 }
@@ -72,14 +73,11 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
                     List<String> potentialClasses = new FixtureName(tableName)
                         .getPotentialFixtureClassNames(FixtureLoader.instance().fixturePathElements);
                     for(String potentialClass: potentialClasses){
-                        Class<?> fixtureClazz;
-                        try{
-                            fixtureClazz = Class.forName(potentialClass);
-                            if(fixtureClazz == null){ continue; }
-                            colorTable = true;
-                            isSecondRowTitle = true;
-                        }catch(ClassNotFoundException cnfe){ }
-                        catch(NoClassDefFoundError ncdfe){ }
+                        if (isValidClass(potentialClass)) {
+                          colorTable = true;
+                          isSecondRowTitle = true;
+                          break;
+                        }
                     }
                 }
             }
@@ -99,7 +97,7 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
                         sum = sum + (int) b;
                     }
                     writer.putAttribute(CLASS_PROPERTY, "slimRowColor" + (sum % 10));
-                }else if(!isCommentFixture){
+                } else {
                     writer.putAttribute(CLASS_PROPERTY, "slimRowColor" + (rowCount % 2));
                 }
             }
@@ -116,7 +114,17 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
         return writer.toHtml();
     }
 
-    public SymbolType isApplicable(Translator translator){
+  private boolean isValidClass(String potentialClass) {
+    try {
+      return Class.forName(potentialClass) != null;
+    } catch (Exception e) {
+      return false;
+    }catch (NoClassDefFoundError e) {
+      return false;
+    }
+  }
+
+  public SymbolType isApplicable(Translator translator){
         Maybe<String> testSystem = Maybe.noString;
         if(translator instanceof HtmlTranslator){
             testSystem = ((HtmlTranslator) translator).getParsingPage().findVariable("TEST_SYSTEM");
