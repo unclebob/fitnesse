@@ -73,6 +73,11 @@ public class SymbolOffsetTest {
   }
 
   @Test
+  public void image() {
+    assertParsesWithOffset("!img-r http://files/fitnesse/images/symlinkDiagram.gif\n",
+            "SymbolList<0..55>[Image<0..54>[Link<7..14>[SymbolList<14..54>[Text<14..54>]]], Newline<54..55>]");
+  }
+  @Test
   public void onlyHasOffsetIfStartAndEndOffsetIsSet() {
     Symbol noOffsets = new Symbol(SymbolType.Text, "text");
     Symbol onlyStartOffset = new Symbol(SymbolType.Text, "text", 0);
