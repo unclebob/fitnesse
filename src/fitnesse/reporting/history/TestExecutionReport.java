@@ -59,12 +59,12 @@ public class TestExecutionReport extends ExecutionReport {
     result.relativePageName = XmlUtil.getTextValue(xmlResult, "relativePageName");
     result.tags = XmlUtil.getTextValue(xmlResult, "tags");
     result.runTimeInMillis = XmlUtil.getTextValue(xmlResult, "runTimeInMillis");
-    addResult(result);
 
     Element xmlInstructions = XmlUtil.getElementByTagName(xmlResult, "instructions");
     if (xmlInstructions != null) {
       unpackInstructions(result, xmlInstructions);
     }
+    addResult(result);
   }
 
   private void unpackInstructions(TestResult result, Element xmlInstructions) {
@@ -99,7 +99,7 @@ public class TestExecutionReport extends ExecutionReport {
   }
 
   public List<TestResult> getResults() {
-    return results;
+    return new ArrayList<TestResult>(results);
   }
 
   public void addResult(TestResult currentResult) {

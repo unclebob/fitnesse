@@ -29,6 +29,7 @@ public enum ConfigurationParameter {
   PLUGINS("Plugins"),
   RESPONDERS("Responders"),
   TEST_SYSTEMS("TestSystems"),
+  FORMATTERS("Formatters"),
   SYMBOL_TYPES("SymbolTypes"),
   SLIM_TABLES("SlimTables"),
   AUTHENTICATOR("Authenticator"),

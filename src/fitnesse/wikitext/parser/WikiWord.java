@@ -28,10 +28,6 @@ public class WikiWord extends SymbolType implements Translation {
                 formatWikiWord(symbol));
     }
 
-    public SourcePage getSourcePage() {
-      return sourcePage;
-    }
-    
     private String buildLink(String pagePath, String linkBody) {
          return new WikiWordBuilder(sourcePage, pagePath, linkBody).buildLink( "", pagePath);
     }

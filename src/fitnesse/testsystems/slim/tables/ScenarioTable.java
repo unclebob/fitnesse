@@ -15,11 +15,13 @@ import java.util.regex.Pattern;
 
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimTestResult;
+
 import org.apache.commons.lang.StringUtils;
 
 
@@ -380,6 +382,11 @@ private void splitInputAndOutputArguments(String argName) {
 
     ExecutionResult getExecutionResult() {
       return ExecutionResult.getExecutionResult(testSummary);
+    }
+
+    @Override
+    public TestPage getPageToTest() {
+      return testContext.getPageToTest();
     }
   }
 }

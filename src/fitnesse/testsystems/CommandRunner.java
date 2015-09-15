@@ -31,6 +31,7 @@ public class CommandRunner {
   private Map<String, String> environmentVariables;
   private final int timeout;
   private final ExecutionLogListener executionLogListener;
+  private String commandErrorMessage = "";
 
   /**
    *
@@ -83,6 +84,7 @@ public class CommandRunner {
       @Override
       public void write(String output) {
         executionLogListener.stdErr(output);
+        commandErrorMessage = output;
       }
     }), "CommandRunner stdErr").start();
 
@@ -234,5 +236,9 @@ public class CommandRunner {
 
   private interface OutputWriter {
     void write(String output);
+  }
+
+  public String getCommandErrorMessage() {
+	return commandErrorMessage;
   }
 }

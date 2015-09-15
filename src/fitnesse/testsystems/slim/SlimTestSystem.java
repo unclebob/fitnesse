@@ -26,8 +26,7 @@ import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.tables.SlimAssertion;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SyntaxError;
-
-import static fitnesse.slim.SlimServer.EXCEPTION_TAG;
+import static fitnesse.slim.SlimServer.*;
 
 public abstract class SlimTestSystem implements TestSystem {
   private static final Logger LOG = Logger.getLogger(SlimTestSystem.class.getName());
@@ -120,7 +119,7 @@ public abstract class SlimTestSystem implements TestSystem {
   }
 
   protected SlimTestContextImpl createTestContext(TestPage testPage) {
-    return new SlimTestContextImpl();
+    return new SlimTestContextImpl(testPage);
   }
 
   protected abstract void processAllTablesOnPage(TestPage testPage) throws IOException;

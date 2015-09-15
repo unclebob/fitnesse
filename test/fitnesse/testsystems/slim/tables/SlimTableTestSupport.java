@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fitnesse.slim.instructions.Instruction;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.slim.HtmlTable;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContext;
@@ -14,8 +15,10 @@ import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.TableScanner;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.InMemoryPage;
+
 import org.junit.Before;
 
 /**
@@ -49,7 +52,7 @@ public abstract class SlimTableTestSupport<T extends SlimTable> {
       String html = root.getHtml();
       TableScanner<HtmlTable> ts = new HtmlTableScanner(html);
       Table t = ts.getTable(0);
-      SlimTestContextImpl testContext = new SlimTestContextImpl();
+      SlimTestContextImpl testContext = new SlimTestContextImpl(new WikiTestPage(new WikiPageDummy()));
       return constructor.newInstance(t, "id", testContext);
     } catch (Exception e) {
       throw new RuntimeException(e);

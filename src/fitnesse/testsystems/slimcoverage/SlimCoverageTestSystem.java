@@ -59,7 +59,7 @@ public class SlimCoverageTestSystem extends HtmlSlimTestSystem {
     protected SlimTestContextImpl createTestContext(TestPage testPage) {
         String fullPath = testPage.getFullPath();
         SlimScenarioUsagePer usageByPage = usage.getUsageByPage(fullPath);
-        return new SlimCoverageTestContextImpl(usageByPage);
+        return new SlimCoverageTestContextImpl(testPage, usageByPage);
     }
 
     @Override

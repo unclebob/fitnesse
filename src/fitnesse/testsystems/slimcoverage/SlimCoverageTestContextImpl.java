@@ -2,13 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slimcoverage;
 
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.tables.ScenarioTable;
 
 public class SlimCoverageTestContextImpl extends SlimTestContextImpl {
   private final SlimScenarioUsagePer usage;
 
-  public SlimCoverageTestContextImpl(SlimScenarioUsagePer usageByPage) {
+  public SlimCoverageTestContextImpl(TestPage testPage, SlimScenarioUsagePer usageByPage) {
+    super(testPage);
     usage = usageByPage;
   }
 

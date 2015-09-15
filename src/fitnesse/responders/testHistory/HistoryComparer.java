@@ -3,6 +3,7 @@ package fitnesse.responders.testHistory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.xml.sax.SAXException;
 
@@ -13,7 +14,6 @@ public class HistoryComparer {
   // min for match is .8 content score + .2 topology bonus.
   static final double MIN_MATCH_SCORE = .8;
   static final double MAX_MATCH_SCORE = 1.2;
-  static ArrayList<String> resultContent;
 
   private static final String blankTable = "<table><tr><td></td></tr></table>";
 
@@ -23,10 +23,11 @@ public class HistoryComparer {
   String firstFileContent = "";
   String secondFileContent = "";
 
-  ArrayList<String> firstTableResults;
-  ArrayList<String> secondTableResults;
+  List<String> firstTableResults = new ArrayList<String>();
+  List<String> secondTableResults = new ArrayList<String>();
 
-  ArrayList<MatchedPair> matchedTables;
+  List<MatchedPair> matchedTables = new ArrayList<HistoryComparer.MatchedPair>();
+  List<String> resultContent = new ArrayList<String>();
 
   public String getFileContent(String filePath) throws IOException, SAXException {
     return attemptGetFileContent(filePath);
@@ -247,7 +248,7 @@ public class HistoryComparer {
     secondFileContent = content == null ? "" : content;
   }
 
-  public ArrayList<String> getResultContent() {
+  public List<String> getResultContent() {
     return resultContent;
   }
 
@@ -274,10 +275,7 @@ public class HistoryComparer {
     public boolean equals(Object obj) {
       if (obj == null) return false;
       if (getClass() != obj.getClass()) return false;
-      return this.equals((MatchedPair) (obj));
-    }
-
-    public boolean equals(MatchedPair match) {
+      MatchedPair match = (MatchedPair) obj;
       return (this.first == match.first && this.second == match.second);
     }
   }

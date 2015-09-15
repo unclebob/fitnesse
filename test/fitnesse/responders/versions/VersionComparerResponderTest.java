@@ -68,7 +68,7 @@ public class VersionComparerResponderTest {
     response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(400, response.getStatus());
     assertHasRegexp(
-        "Compare Failed because no Input Files were given. Select one or two please.",
+        "Compare failed because no input files were given. Select one or two please.",
         response.getContent());
 
   }

@@ -58,9 +58,9 @@ public class TestXmlFormatter extends BaseFormatter implements ExecutionLogListe
     resetTimer();
     appendHtmlToBuffer(WikiPageUtil.getHeaderPageHtml(getPage()));
     currentResult = newTestResult();
-    testResponse.addResult(currentResult);
     currentResult.relativePageName = testPage.getName();
     currentResult.tags = testPage.getData().getAttribute(PageData.PropertySUITES);
+    testResponse.addResult(currentResult);
   }
 
   @Override

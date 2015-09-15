@@ -59,7 +59,7 @@ public class WikiSourcePage implements SourcePage {
         PageCrawler crawler = page.getPageCrawler();
         WikiPagePath pagePath = PathParser.parse(pageName);
         if (pagePath == null) {
-          return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not have a valid WikiPage name.");
+          return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not have a valid wiki page name.");
         }
 
         WikiPage includedPage = crawler.getSiblingPage(pagePath);
