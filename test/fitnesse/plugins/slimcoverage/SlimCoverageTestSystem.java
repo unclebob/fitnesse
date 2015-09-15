@@ -1,4 +1,4 @@
-package fitnesse.testsystems.slimcoverage;
+package fitnesse.plugins.slimcoverage;
 
 import java.io.IOException;
 import java.util.Collection;

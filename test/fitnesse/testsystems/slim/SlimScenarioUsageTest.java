@@ -3,8 +3,8 @@ package fitnesse.testsystems.slim;
 import java.util.Collection;
 import java.util.Map;
 
-import fitnesse.testsystems.slimcoverage.SlimScenarioUsage;
-import fitnesse.testsystems.slimcoverage.SlimScenarioUsagePer;
+import fitnesse.plugins.slimcoverage.SlimScenarioUsage;
+import fitnesse.plugins.slimcoverage.SlimScenarioUsagePer;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;

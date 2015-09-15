@@ -25,7 +25,9 @@ import fitnesse.testrunner.MultipleTestSystemFactory;
 import fitnesse.testrunner.TestSystemFactoryRegistry;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testrunner.WikiTestPageUtil;
+import fitnesse.testsystems.ClassPath;
 import fitnesse.testsystems.Descriptor;
+import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.slim.CustomComparator;
@@ -100,13 +102,51 @@ public class PluginsLoaderTest {
     loader.loadResponders(responderFactory);
     loader.loadSymbolTypes(testProvider);
     loader.loadWikiPageFactories(testWikiPageFactoryRegistry);
-    loader.loadTestSystems(testTestSystemFactory);
     loader.loadSlimTables(testSlimTableFactory);
     loader.loadCustomComparators(testCustomComparatorsRegistry);
+    loader.loadTestSystems(testTestSystemFactory);
 
     assertEquals(WikiPageResponder.class, responderFactory.getResponderClass("custom1"));
     assertEquals(EditResponder.class, responderFactory.getResponderClass("custom2"));
     assertSymbolTypeMatch("!today", true);
+
+    TestSystem testSystem = testTestSystemFactory.create(new Descriptor() {
+      @Override
+      public String getTestSystem() {
+        return null;
+      }
+
+      @Override
+      public String getTestSystemType() {
+        return "slimCoverage";
+      }
+
+      @Override
+      public ClassPath getClassPath() {
+        return null;
+      }
+
+      @Override
+      public boolean runInProcess() {
+        return false;
+      }
+
+      @Override
+      public boolean isDebug() {
+        return false;
+      }
+
+      @Override
+      public String getVariable(String name) {
+        return null;
+      }
+
+      @Override
+      public ExecutionLogListener getExecutionLogListener() {
+        return null;
+      }
+    });
+    assertNotNull(testSystem);
   }
 
   @Test

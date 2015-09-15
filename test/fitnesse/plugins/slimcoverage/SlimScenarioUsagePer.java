@@ -1,4 +1,4 @@
-package fitnesse.testsystems.slimcoverage;
+package fitnesse.plugins.slimcoverage;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;

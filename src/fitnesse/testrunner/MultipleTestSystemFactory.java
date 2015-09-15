@@ -13,15 +13,12 @@ import fitnesse.testsystems.fit.FitTestSystem;
 import fitnesse.testsystems.fit.InProcessFitClientBuilder;
 import fitnesse.testsystems.slim.*;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
-import fitnesse.testsystems.slimcoverage.SlimCoverageTestSystem;
 
 public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemFactoryRegistry {
   private final Map<String, TestSystemFactory> testSystemFactories = new HashMap<String, TestSystemFactory>(4);
   private final Map<String, TestSystemFactory> inProcessTestSystemFactories = new HashMap<String, TestSystemFactory>(4);
 
   public MultipleTestSystemFactory(SlimTableFactory slimTableFactory, CustomComparatorRegistry customComparatorRegistry) {
-    registerTestSystemFactory("slimcoverage", new CoverageSlimTestSystemFactory(slimTableFactory, customComparatorRegistry));
-
     registerTestSystemFactory("slim", new HtmlSlimTestSystemFactory(slimTableFactory, customComparatorRegistry));
     registerTestSystemFactory("fit", new FitTestSystemFactory());
 
@@ -51,26 +48,6 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
       throw new RuntimeException(String.format("Unknown test system: '%s'", descriptor.getTestSystemType()));
     }
     return factory.create(descriptor);
-  }
-
-  static class CoverageSlimTestSystemFactory implements TestSystemFactory {
-    private final SlimTableFactory slimTableFactory;
-    private final CustomComparatorRegistry customComparatorRegistry;
-
-    public CoverageSlimTestSystemFactory(SlimTableFactory slimTableFactory,
-                                     CustomComparatorRegistry customComparatorRegistry) {
-      this.slimTableFactory = slimTableFactory;
-      this.customComparatorRegistry = customComparatorRegistry;
-    }
-
-    @Override
-    public final TestSystem create(Descriptor descriptor) throws IOException {
-      InProcessSlimClientBuilder clientBuilder = new InProcessSlimClientBuilder(descriptor);
-      SlimCoverageTestSystem testSystem = new SlimCoverageTestSystem("slimCoverage",
-              clientBuilder.getExecutionLogListener(), slimTableFactory.copy(), customComparatorRegistry);
-
-      return testSystem;
-    }
   }
 
   static class HtmlSlimTestSystemFactory implements TestSystemFactory {
