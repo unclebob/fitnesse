@@ -9,6 +9,8 @@ import fitnesse.ConfigurationParameter;
 import fitnesse.authentication.Authenticator;
 import fitnesse.components.ComponentFactory;
 import fitnesse.components.ComponentInstantiationException;
+import fitnesse.reporting.Formatter;
+import fitnesse.reporting.FormatterRegistry;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.testrunner.TestSystemFactoryRegistry;
@@ -43,7 +45,7 @@ public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase 
 
   @Override
   public void registerResponders(final ResponderFactory responderFactory) throws PluginException {
-    forEachNamedObject(ConfigurationParameter.RESPONDERS, new Registrar() {
+    forEachNamedObject(ConfigurationParameter.RESPONDERS, new KeyRegistrar() {
       @Override public void register(String key, Class clazz) {
         responderFactory.addResponder(key, clazz);
         LOG.info("Loaded responder " + key + ": " + clazz.getName());
@@ -69,27 +71,34 @@ public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase 
   }
 
   @Override
-  public void registerSymbolTypes(SymbolProvider symbolProvider) throws PluginException {
-    String[] symbolTypeNames = getListFromProperties(ConfigurationParameter.SYMBOL_TYPES);
-    if (symbolTypeNames != null) {
-      for (String symbolTypeName : symbolTypeNames) {
-        Class<SymbolType> symbolTypeClass = forName(symbolTypeName.trim());
-        symbolProvider.add(componentFactory.createComponent(symbolTypeClass));
-        LOG.info("Loaded SymbolType " + symbolTypeClass.getName());
+  public void registerSymbolTypes(final SymbolProvider symbolProvider) throws PluginException {
+    forEachObject(ConfigurationParameter.SYMBOL_TYPES, new Registrar<SymbolType>() {
+      @Override public void register(SymbolType instance) {
+        symbolProvider.add(instance);
+        LOG.info("Loaded SymbolType " + instance.getClass().getName());
       }
-    }
+    });
   }
 
   @Override
-  public void registerWikiPageFactories(WikiPageFactoryRegistry registrar) throws PluginException {
-    String[] factoryNames = getListFromProperties(ConfigurationParameter.WIKI_PAGE_FACTORIES);
-    if (factoryNames != null) {
-      for (String factoryName : factoryNames) {
-        Class<WikiPageFactory> factory = forName(factoryName.trim());
-        registrar.registerWikiPageFactory(componentFactory.createComponent(factory));
-        LOG.info("Loaded WikiPageFactory " + factory.getName());
+  public void registerWikiPageFactories(final WikiPageFactoryRegistry registrar) throws PluginException {
+    forEachObject(ConfigurationParameter.WIKI_PAGE_FACTORIES, new Registrar<WikiPageFactory>() {
+      @Override public void register(WikiPageFactory instance) {
+        registrar.registerWikiPageFactory(instance);
+        LOG.info("Loaded WikiPageFactory " + instance.getClass().getName());
       }
-    }
+    });
+  }
+
+  @Override
+  public void registerFormatters(final FormatterRegistry registrar) throws PluginException {
+    forEachClass(ConfigurationParameter.FORMATTERS, new ClassRegistrar<Formatter>() {
+      @Override
+      public void register(Class<Formatter> clazz) {
+        registrar.registerFormatter(clazz);
+        LOG.info("Loaded formatter " + clazz.getName());
+      }
+    });
   }
 
   @Override
@@ -99,7 +108,7 @@ public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase 
 
   @Override
   public void registerSlimTables(final SlimTableFactory slimTableFactory) throws PluginException {
-    forEachNamedObject(ConfigurationParameter.SLIM_TABLES, new Registrar<SlimTable>() {
+    forEachNamedObject(ConfigurationParameter.SLIM_TABLES, new KeyRegistrar<SlimTable>() {
       @Override public void register(String key, Class<SlimTable> clazz) {
         slimTableFactory.addTableType(key, clazz);
         LOG.info("Loaded custom SLiM table type " + key + ":" + clazz.getName());
@@ -109,7 +118,7 @@ public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase 
 
   @Override
   public void registerCustomComparators(final CustomComparatorRegistry customComparatorRegistry) throws PluginException {
-    forEachNamedObject(ConfigurationParameter.CUSTOM_COMPARATORS, new Registrar<CustomComparator>() {
+    forEachNamedObject(ConfigurationParameter.CUSTOM_COMPARATORS, new KeyRegistrar<CustomComparator>() {
       @Override public void register(String key, Class<CustomComparator> clazz) {
         customComparatorRegistry.addCustomComparator(key, componentFactory.createComponent(clazz));
         LOG.info("Loaded custom comparator " + key + ": " + clazz.getName());
@@ -119,7 +128,7 @@ public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase 
 
   @Override
   public void registerTestSystemFactories(final TestSystemFactoryRegistry registrar) throws PluginException {
-    forEachNamedObject(ConfigurationParameter.TEST_SYSTEMS, new Registrar<TestSystemFactory>() {
+    forEachNamedObject(ConfigurationParameter.TEST_SYSTEMS, new KeyRegistrar<TestSystemFactory>() {
       @Override public void register(String key, Class<TestSystemFactory> clazz) {
         registrar.registerTestSystemFactory(key, componentFactory.createComponent(clazz));
         LOG.info("Loaded test system " + key + ": " + clazz.getName());
@@ -127,7 +136,25 @@ public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase 
     });
   }
 
-  private void forEachNamedObject(final ConfigurationParameter parameter, Registrar registrar) throws PluginException {
+  private <T> void forEachClass(final ConfigurationParameter parameter, ClassRegistrar<T> registrar) throws PluginException {
+    String[] propList = getListFromProperties(parameter);
+    if (propList != null) {
+      for (String entry : propList) {
+        Class<T> clazz = forName(entry.trim());
+        registrar.register(clazz);
+      }
+    }
+  }
+
+  private <T> void forEachObject(final ConfigurationParameter parameter, final Registrar<T> registrar) throws PluginException {
+    forEachClass(parameter, new ClassRegistrar<T>() {
+      @Override public void register(Class<T> clazz) {
+        registrar.register(componentFactory.createComponent(clazz));
+      }
+    });
+  }
+
+  private <T> void forEachNamedObject(final ConfigurationParameter parameter, KeyRegistrar<T> registrar) throws PluginException {
     String[] propList = getListFromProperties(parameter);
     if (propList != null) {
       for (String entry : propList) {
@@ -141,9 +168,10 @@ public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase 
     }
   }
 
-  private void register(Registrar registrar, String prefix, String className) throws PluginException {
+  private <T> void register(KeyRegistrar<T> registrar, String prefix, String className) throws PluginException {
     try {
-      registrar.register(prefix, forName(className));
+      Class<T> clazz = forName(className);
+      registrar.register(prefix, clazz);
     } catch (ComponentInstantiationException e) {
       throw new PluginException("Can not register plug in " + className, e);
     }
@@ -164,6 +192,7 @@ public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase 
     }
   }
 
+  @SuppressWarnings("unchecked")
   private static <T> Class<T> forName(String className) throws PluginException {
     try {
       return (Class<T>) Class.forName(className);
@@ -172,7 +201,15 @@ public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase 
     }
   }
 
-  private static interface Registrar<T> {
+  private interface Registrar<T> {
+    void register(T instance);
+  }
+
+  private interface ClassRegistrar<T> {
+    void register(Class<T> clazz);
+  }
+
+  private interface KeyRegistrar<T> {
     void register(String key, Class<T> clazz);
   }
 }

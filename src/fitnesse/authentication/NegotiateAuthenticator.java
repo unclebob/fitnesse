@@ -103,13 +103,14 @@ public class NegotiateAuthenticator extends Authenticator {
   }
 
   // Responder used when negotiation has not started or completed
-  static protected class UnauthenticatedNegotiateResponder implements Responder {
+  protected static class UnauthenticatedNegotiateResponder implements Responder {
     private String token;
 
     public UnauthenticatedNegotiateResponder(final String token) {
       this.token = token;
     }
 
+    @Override
     public Response makeResponse(FitNesseContext context, Request request) {
       SimpleResponse response = new SimpleResponse(401);
       response.addHeader("WWW-Authenticate", token == null ? NEGOTIATE : NEGOTIATE + " " + token);
@@ -182,6 +183,7 @@ public class NegotiateAuthenticator extends Authenticator {
     return super.authenticate(context, request, privilegedResponder);
   }
 
+  @Override
   public boolean isAuthenticated(String username, String password) {
     return username != null;
   }

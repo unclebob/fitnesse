@@ -12,11 +12,11 @@ public class ImageTest {
 
     @Test
     public void parsesImages() throws Exception {
-        ParserTestHelper.assertParses("!img name", "SymbolList[Link[SymbolList[Text]]]");
-        ParserTestHelper.assertParses("!img http://name", "SymbolList[Link[SymbolList[Text]]]");
+        ParserTestHelper.assertParses("!img name", "SymbolList[Image[Link[SymbolList[Text]]]]");
+        ParserTestHelper.assertParses("!img http://name", "SymbolList[Image[Link[SymbolList[Text]]]]");
         ParserTestHelper.assertParses("!imgx name", "SymbolList[Text, Whitespace, Text]");
-        ParserTestHelper.assertParses("!img-l name", "SymbolList[Link[SymbolList[Text]]]");
-        ParserTestHelper.assertParses("!img-r name", "SymbolList[Link[SymbolList[Text]]]");
+        ParserTestHelper.assertParses("!img-l name", "SymbolList[Image[Link[SymbolList[Text]]]]");
+        ParserTestHelper.assertParses("!img-r name", "SymbolList[Image[Link[SymbolList[Text]]]]");
     }
 
     @Test
@@ -29,7 +29,7 @@ public class ImageTest {
 
     @Test
     public void imageWithWidth() throws Exception {
-        ParserTestHelper.assertParses("!img -w 640 name", "SymbolList[Link[SymbolList[Text]]]");
+        ParserTestHelper.assertParses("!img -w 640 name", "SymbolList[Image[Link[SymbolList[Text]]]]");
         TestRoot root = new TestRoot();
         WikiPage testPage = root.makePage("ImagePage", "!img -w 640 name");
         ParserTestHelper.assertTranslatesTo(testPage, "<img src=\"name\" width=\"640\"/>");
@@ -50,7 +50,7 @@ public class ImageTest {
 
     @Test
     public void imageWithMargin() throws Exception {
-        ParserTestHelper.assertParses("!img -m 10 name", "SymbolList[Link[SymbolList[Text]]]");
+        ParserTestHelper.assertParses("!img -m 10 name", "SymbolList[Image[Link[SymbolList[Text]]]]");
         TestRoot root = new TestRoot();
         WikiPage testPage = root.makePage("ImagePage", "!img -m 10 name");
         ParserTestHelper.assertTranslatesTo(testPage, "<img src=\"name\" style=\"margin:10px 10px 10px 10px;\"/>");
@@ -58,7 +58,7 @@ public class ImageTest {
 
     @Test
     public void imageWithBorder() throws Exception {
-        ParserTestHelper.assertParses("!img -b 1 name", "SymbolList[Link[SymbolList[Text]]]");
+        ParserTestHelper.assertParses("!img -b 1 name", "SymbolList[Image[Link[SymbolList[Text]]]]");
         TestRoot root = new TestRoot();
         WikiPage testPage = root.makePage("ImagePage", "!img -b 1 name");
         ParserTestHelper.assertTranslatesTo(testPage, "<img src=\"name\" style=\"border:1px solid black;\"/>");
@@ -66,7 +66,7 @@ public class ImageTest {
 
     @Test
     public void imageWithMarginBorderWidth() throws Exception {
-        ParserTestHelper.assertParses("!img -b 1 name", "SymbolList[Link[SymbolList[Text]]]");
+        ParserTestHelper.assertParses("!img -b 1 name", "SymbolList[Image[Link[SymbolList[Text]]]]");
         TestRoot root = new TestRoot();
         WikiPage testPage = root.makePage("ImagePage", "!img -m 5 -b 1 -w 50 name");
         ParserTestHelper.assertTranslatesTo(testPage, "<img src=\"name\" width=\"50\" style=\"border:1px solid black;margin:5px 5px 5px 5px;\"/>");

@@ -6,13 +6,12 @@ import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
-public abstract class BaseFormatter implements TestSystemListener<WikiTestPage> {
+public abstract class BaseFormatter implements Formatter {
   protected final Logger LOG = Logger.getLogger(getClass().getName());
 
   private final WikiPage page;

@@ -16,7 +16,8 @@ public class VariableTest {
         ParserTestHelper.assertTranslatesTo("${BoBo}", new TestVariableSource("BoBo", "y"), "y");
         assertTranslatesVariable("${x}", "y");
         assertTranslatesVariable("${z}", "<span class=\"meta\">undefined variable: z</span>");
-        assertTranslatesVariable("${}", "${}");
+      assertTranslatesVariable("${}", "${}");
+      assertTranslatesVariable("${x" /* eof */, "y");
     }
 
     private void assertTranslatesVariable(String variable, String expected) throws Exception {

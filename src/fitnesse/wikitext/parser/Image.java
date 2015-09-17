@@ -3,7 +3,7 @@ package fitnesse.wikitext.parser;
 import java.util.TreeMap;
 import java.util.Map;
 
-public class Image extends SymbolType implements Rule {
+public class Image extends SymbolType implements Rule, Translation {
     public static final Image symbolType = new Image();
     
     public Image() {
@@ -12,6 +12,7 @@ public class Image extends SymbolType implements Rule {
         wikiMatcher(new Matcher().string("!img-r"));
         wikiMatcher(new Matcher().string("!img"));
         wikiRule(this);
+        htmlTranslation(this);
     }
 
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
@@ -43,13 +44,13 @@ public class Image extends SymbolType implements Rule {
             Maybe<Symbol> link = Link.symbolType.getWikiRule().parse(parser.getCurrent(), parser);
             if (link.isNothing()) return Symbol.nothing;
             addOptions(link.getValue(), options);
-            return makeImageLink(link.getValue(), imageProperty);
+            return makeImageLink(current, link.getValue(), imageProperty);
         }
         else if (parser.getCurrent().isType(SymbolType.Text)) {
             Symbol list = new Symbol(SymbolType.SymbolList).add(parser.getCurrent());
             Symbol link = new Symbol(Link.symbolType).add(list);
             addOptions(link, options);
-            return makeImageLink(link, imageProperty);
+            return makeImageLink(current, link, imageProperty);
         }
         else return Symbol.nothing;
     }
@@ -62,7 +63,13 @@ public class Image extends SymbolType implements Rule {
       }
     }
 
-    private Maybe<Symbol> makeImageLink(Symbol link, String imageProperty) {
-        return new Maybe<Symbol>(link.putProperty(Link.ImageProperty, imageProperty));
+    private Maybe<Symbol> makeImageLink(Symbol current, Symbol link, String imageProperty) {
+        link.putProperty(Link.ImageProperty, imageProperty);
+        return new Maybe<Symbol>(current.add(link));
+    }
+
+    @Override
+    public String toTarget(Translator translator, Symbol symbol) {
+        return translator.translate(symbol.childAt(0));
     }
 }

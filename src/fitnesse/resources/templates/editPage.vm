@@ -100,6 +100,8 @@ $(function () {
 
       if (editor.activeEditor() === "wysiwyg") {
         editor.loadWikiText();
+      } else {
+        editor.codeMirrorEditor.save();
       }
 
       if (fieldValues().join('$$') !== originalFieldValues.join('$$')) {

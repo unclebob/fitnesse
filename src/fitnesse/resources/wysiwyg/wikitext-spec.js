@@ -216,8 +216,8 @@ describe("parser and formatter", function () {
 
     it("should ignore nested code blocks", function() {
         var dom = fragment(
-            element("p", element("pre", br(), "#!python", br(), "= level 1", br(), "{{{", br(), "= level 2", br()), " = level 1}}}"));
-        var wikitext = [
+            element("p", element("pre", br(), "#!python", br(), "= level 1", br(), "{{{", br(), "= level 2", br()), br(), "= level 1}}}"));
+        generateFragment(dom, [
             "{{{",
             "#!python",
             "= level 1",
@@ -225,15 +225,15 @@ describe("parser and formatter", function () {
             "= level 2",
             "}}}",
             "= level 1",
-            "}}}" ].join("\n");
-        generateFragment(dom, wikitext);
+            "}}}" ].join("\n"));
         generateWikitext(dom, [
             "{{{",
             "#!python",
             "= level 1",
             "{{{",
             "= level 2",
-            "}}}= level 1}}}" ].join("\n"));
+            "}}}",
+            "= level 1}}}" ].join("\n"));
     });
 
 
@@ -251,19 +251,14 @@ describe("parser and formatter", function () {
 
     it("paragraph", function() {
         var dom = fragment(
-            element("p", "Paragraph continued..."),
-            element("p", "Second paragraph continued..."));
-        generateFragment(dom, [
+            element("p", "Paragraph", br(), "continued..."),
+            element("p", "Second paragraph", br(), "continued..."));
+        generate(dom, [
             "Paragraph",
             "continued...",
             "",
             "Second paragraph",
-            "continued...",
-            "" ].join("\n"));
-        generate(dom, [
-            "Paragraph continued...",
-            "",
-            "Second paragraph continued..." ].join("\n"));
+            "continued..." ].join("\n"));
     });
 
     it("link", function() {
@@ -817,7 +812,7 @@ describe("parser and formatter", function () {
                 element("ul",
                     element("li", "sub 2.1"),
                     element("li", "sub 2.2"))),
-            element("p", "a. item A b. item B Paragraph"));
+            element("p", "a. item A", br(), "b. item B", br(), "Paragraph"));
         generateFragment(dom, [
             "- item 1",
             "- item 2",
@@ -832,7 +827,9 @@ describe("parser and formatter", function () {
             "   * sub 2.1",
             "   * sub 2.2",
             "",
-            "a. item A b. item B Paragraph" ].join("\n"));
+            "a. item A",
+            "b. item B",
+            "Paragraph" ].join("\n"));
     });
 
     it("list + code block", function() {
@@ -1240,20 +1237,28 @@ describe("parser and formatter", function () {
                         element("th", "cell", br(), "2")))));
         var wikitext = editor.domToWikitext(dom, { formatCodeBlock: true });
         expect(wikitext).toBe([
-            "!1 Heading 1",
-            "!2 Heading 2",
-            "!3 Heading 3",
-            "!4 Heading 4",
-            "!5 Heading 5",
-            "!6 Heading 6",
+            "!1 Heading",
+            "1",
+            "!2 Heading",
+            "2",
+            "!3 Heading",
+            "3",
+            "!4 Heading",
+            "4",
+            "!5 Heading",
+            "5",
+            "!6 Heading",
+            "6",
             "var Wysiwyg = function(textarea) { ... }",
             "",
             "> citation continued",
             "",
             "quote continued",
             "",
-            " * item 1 continued",
-            "   1 item 1.1",
+            " * item 1",
+            "continued",
+            "   1 item",
+            "1.1",
             "",
             "!define def {dt dd}",
             "| cell!-",

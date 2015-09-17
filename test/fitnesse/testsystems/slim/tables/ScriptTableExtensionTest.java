@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import fitnesse.html.HtmlUtil;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
@@ -25,6 +26,7 @@ import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.InMemoryPage;
+
 import org.apache.commons.collections.ListUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -88,7 +90,7 @@ public class ScriptTableExtensionTest {
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
-    SlimTestContextImpl testContext = new SlimTestContextImpl();
+    SlimTestContextImpl testContext = new SlimTestContextImpl(new WikiTestPage(root));
     return new HtmlScriptTable(t, "id", testContext);
   }
 

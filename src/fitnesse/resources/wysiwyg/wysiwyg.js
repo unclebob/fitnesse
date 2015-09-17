@@ -135,6 +135,7 @@ Wysiwyg.prototype.listenerToggleEditor = function (type) {
                 self.frame.style.display = self.wysiwygToolbar.style.display = "none";
                 self.frame.setAttribute("tabIndex", "-1");
                 self.textareaToolbar.style.display = "";
+                self.codeMirrorEditor.refresh();
                 setEditorMode(type);
             }
             self.focusTextarea();
@@ -830,6 +831,7 @@ Wysiwyg.prototype.focusWysiwyg = function () {
 
 Wysiwyg.prototype.loadWikiText = function () {
     this.codeMirrorEditor.setValue(this.domToWikitext(this.frame, this.options));
+    this.codeMirrorEditor.save();
     this.savedWysiwygHTML = null;
 };
 
@@ -2266,7 +2268,9 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
 
             if (text || (match && matchNumber > 0)) {
                 if (inParagraph() && (prevIndex === 0)) {
-                    text = text ? ((holder.hasChildNodes() && holder.lastChild.tagName !== 'BR' ? " " : "") + text) : "";
+                    if (text && holder.hasChildNodes() && holder.lastChild.tagName !== 'BR') {
+                        holder.appendChild(contentDocument.createElement("br"));
+                    }
                 }
                 if ((listDepth.length === 0 && !inTable() && !currentHeader) || holder === fragment) {
                     openParagraph();
@@ -2718,7 +2722,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
             if (name === "table") {
                 if ($(node).hasClass("hashtable")) {
                     tableType = "hashtable";
-                    _texts.push("!{")
+                    _texts.push("!{");
                     firstHashTableEntry = true;
                 } else {
                     tableType = "table";
@@ -2787,7 +2791,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                 } else if (escapeNewLines && node.nextSibling) {
                     _texts.push("!-\n-!");
                 } else if (!self.isBogusLineBreak(node)) {
-                    _texts.push(" ");
+                    _texts.push("\n");
                 }
                 break;
             case "pre":

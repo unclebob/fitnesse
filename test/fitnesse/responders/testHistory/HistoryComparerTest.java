@@ -42,10 +42,6 @@ public class HistoryComparerTest {
     context = FitNesseUtil.makeTestContext();
     firstContent = getContentWith("pass");
     secondContent = getContentWith("fail");
-    HistoryComparer.resultContent = new ArrayList<String>();
-    comparer.firstTableResults = new ArrayList<String>();
-    comparer.secondTableResults = new ArrayList<String>();
-    comparer.matchedTables = new ArrayList<HistoryComparer.MatchedPair>();
   }
 
   @Test
@@ -89,9 +85,9 @@ public class HistoryComparerTest {
     comparer.firstFileContent = "<table><tr><td>x</td></tr></table><table><tr><td>y</td></tr></table>";
     comparer.secondFileContent = "<table><tr><td>x</td></tr></table>";
     assertTrue(comparer.grabAndCompareTablesFromHtml());
-    assertEquals(2, HistoryComparer.resultContent.size());
-    assertEquals("pass", HistoryComparer.resultContent.get(0));
-    assertEquals("fail", HistoryComparer.resultContent.get(1));
+    assertEquals(2, comparer.resultContent.size());
+    assertEquals("pass", comparer.resultContent.get(0));
+    assertEquals("fail", comparer.resultContent.get(1));
   }
 
   @Test
@@ -239,12 +235,12 @@ public class HistoryComparerTest {
     comparer.lineUpTheTables();
     comparer.addBlanksToUnmatchingRows();
     comparer.makePassFailResultsFromMatches();
-    assertEquals("fail", HistoryComparer.resultContent.get(0));
-    assertEquals("fail", HistoryComparer.resultContent.get(1));
-    assertEquals("pass", HistoryComparer.resultContent.get(2));
-    assertEquals("fail", HistoryComparer.resultContent.get(3));
-    assertEquals("fail", HistoryComparer.resultContent.get(4));
-    assertEquals("pass", HistoryComparer.resultContent.get(5));
+    assertEquals("fail", comparer.resultContent.get(0));
+    assertEquals("fail", comparer.resultContent.get(1));
+    assertEquals("pass", comparer.resultContent.get(2));
+    assertEquals("fail", comparer.resultContent.get(3));
+    assertEquals("fail", comparer.resultContent.get(4));
+    assertEquals("pass", comparer.resultContent.get(5));
 
   }
 
@@ -257,8 +253,8 @@ public class HistoryComparerTest {
     boolean worked = comparer.compare("TestFolder/FirstFile", "TestFolder/SecondFile");
     assertTrue(worked);
     String expectedResult = "pass";
-    assertEquals(expectedResult, HistoryComparer.resultContent.get(0));
-    assertEquals(expectedResult, HistoryComparer.resultContent.get(1));
+    assertEquals(expectedResult, comparer.resultContent.get(0));
+    assertEquals(expectedResult, comparer.resultContent.get(1));
   }
 
   @Test
@@ -268,8 +264,8 @@ public class HistoryComparerTest {
     FileUtil.createFile("TestFolder/SecondFile", secondContent);
     boolean worked = comparer.compare("TestFolder/FirstFile", "TestFolder/SecondFile");
     assertTrue(worked);
-    assertEquals("pass", HistoryComparer.resultContent.get(0));
-    assertEquals("fail", HistoryComparer.resultContent.get(1));
+    assertEquals("pass", comparer.resultContent.get(0));
+    assertEquals("fail", comparer.resultContent.get(1));
   }
 
   public String generateHtmlFromWiki(String passOrFail) throws Exception {
