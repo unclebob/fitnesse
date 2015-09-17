@@ -14,6 +14,7 @@ var Wysiwyg = function (textarea, options) {
         lineNumbers: true,
         foldGutter: true,
         showCursorWhenSelecting: true,
+        viewportMargin: Infinity,
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
 
