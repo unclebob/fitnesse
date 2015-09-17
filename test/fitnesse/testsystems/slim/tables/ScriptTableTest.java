@@ -416,6 +416,16 @@ public class ScriptTableTest {
   }
 
   @Test
+  public void setSymbolUTF8() throws Exception {
+    buildInstructionsFor("|$ÆØÅ=|function|arg|\n", false);
+    List<CallAndAssignInstruction> expectedInstructions =
+      asList(
+        new CallAndAssignInstruction("scriptTable_id_0", "ÆØÅ", "scriptTableActor", "function", new Object[]{"arg"})
+      );
+    assertEquals(expectedInstructions, instructions());
+  }
+
+  @Test
   public void useSymbol() throws Exception {
     buildInstructionsFor("|function|$V|\n", false);
     List<CallInstruction> expectedInstructions =
