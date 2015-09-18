@@ -84,6 +84,9 @@ public class AddChildPageResponder implements SecureResponder {
     setAttributes(childPage);
     context.recentChanges.updateRecentChanges(childPage);
 
+    SimpleResponse sr;
+    sr = new SimpleResponse();
+    sr.createAutocomplete(context);
   }
 
   private void setAttributes(WikiPage childPage) {

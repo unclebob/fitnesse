@@ -54,6 +54,10 @@ public class DeleteFileResponder implements SecureResponder {
       }
     });
 
+    SimpleResponse sr;
+    sr = new SimpleResponse();
+    sr.createAutocomplete(context);
+
     response.redirect(context.contextRoot, resource);
     return response;
   }
