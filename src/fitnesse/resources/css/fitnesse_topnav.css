@@ -75,7 +75,7 @@ header li:before {
 }
 
 header h1 {
- float:left
+ float:left;
  top:25px;
  margin: 25px 5px 0 0;
  font-size:xx-large;
