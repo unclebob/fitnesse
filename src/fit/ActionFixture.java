@@ -1,6 +1,6 @@
 // Modified or written by Object Mentor, Inc. for inclusion with FitNesse.
 // Copyright (c) 2002 Cunningham & Cunningham, Inc.
-// Released under the terms of the GNU General Public License version 2 or later.package fit;
+// Released under the terms of the GNU General Public License version 2 or later.
 
 package fit;
 
@@ -11,10 +11,10 @@ import fit.exception.FitFailureException;
 import fit.exception.NoSuchMethodFitFailureException;
 
 public class ActionFixture extends Fixture {
+  protected static final Class<?> empty[] = {}; //NOSONAR
+
   protected Parse cells;
   private Fixture actor;
-  //TODO(code review): Would placing the array designator on the type make this harder or easier to read?
-  protected static final Class<?> empty[] = {};
 
   // Traversal ////////////////////////////////
 
