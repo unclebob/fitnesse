@@ -30,7 +30,7 @@ import static fitnesse.slim.VariableStore.SYMBOL_PATTERN;
 import static fitnesse.testsystems.slim.tables.ComparatorUtil.approximatelyEqual;
 
 public abstract class SlimTable {
-  private static final Pattern SYMBOL_ASSIGNMENT_PATTERN = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
+  private static final Pattern SYMBOL_ASSIGNMENT_PATTERN = Pattern.compile("\\A\\s*\\$([\\w\\p{L}]+)\\s*=\\s*\\Z");
 
   private String tableName;
   private int instructionNumber = 0;
