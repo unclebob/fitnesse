@@ -436,6 +436,16 @@ public class ScriptTableTest {
   }
 
   @Test
+  public void useSymbolUTF8() throws Exception {
+    buildInstructionsFor("|function|$ÆØÅ|\n", false);
+    List<CallInstruction> expectedInstructions =
+      asList(
+        new CallInstruction("scriptTable_id_0", "scriptTableActor", "function", new Object[]{"$ÆØÅ"})
+      );
+    assertEquals(expectedInstructions, instructions());
+  }
+
+  @Test
   public void noteDoesNothing() throws Exception {
     buildInstructionsFor("|note|blah|blah|\n", false);
     List<Instruction> expectedInstructions = Collections.emptyList();
