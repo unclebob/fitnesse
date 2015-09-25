@@ -82,6 +82,24 @@ public class SlimTableTest {
   }
 
   @Test
+  public void replaceSymbolsShouldMatchSingalUTF8SymbolName() throws Exception {
+    SlimTable table = new MockTable();
+    table.setSymbol("Æ", "ae");
+    table.setSymbol("Ø", "oe");
+    String actual = table.replaceSymbols("$Æ $Ø");
+    assertEquals("ae oe", actual);
+  }
+
+  @Test
+  public void replaceSymbolsShouldMatchUTF8SymbolName() throws Exception {
+    SlimTable table = new MockTable();
+    table.setSymbol("Ære", "honer");
+    table.setSymbol("Høre", "hear");
+    String actual = table.replaceSymbols("$Ære $Høre");
+    assertEquals("honer hear", actual);
+  }
+
+  @Test
   public void replaceSymbolsFullExpansion_ShouldReplaceSimpleSymbol() throws Exception {
     SlimTable table = new MockTable();
     table.setSymbol("x", "a");
@@ -118,6 +136,14 @@ public class SlimTableTest {
     table.setSymbol("x", "1");
     table.setSymbol("y", "1");
     assertEquals("this is $x->[1]1 and $y->[1]1", table.replaceSymbolsWithFullExpansion("this is $x1 and $y1"));
+  }
+
+  @Test
+  public void replaceSymbolsFullExpansion_ShouldReplaceUTF8Symbols() throws Exception {
+    SlimTable table = new MockTable();
+    table.setSymbol("æ", "1");
+    table.setSymbol("ø", "1");
+    assertEquals("this is $æ->[1]1 and $ø->[1]1", table.replaceSymbolsWithFullExpansion("this is $æ1 and $ø1"));
   }
 
 
