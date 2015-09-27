@@ -18,7 +18,7 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
 public class JUnitRunNotifierResultsListener
-        implements TestSystemListener<TestPage>, TestsRunnerListener, Closeable {
+        implements TestSystemListener, TestsRunnerListener, Closeable {
 
   private final Class<?> mainClass;
   private final RunNotifier notifier;

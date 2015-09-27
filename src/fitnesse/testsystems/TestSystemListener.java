@@ -4,14 +4,14 @@ package fitnesse.testsystems;
 
 import java.io.IOException;
 
-public interface TestSystemListener<PageType extends TestPage> {
+public interface TestSystemListener {
   void testSystemStarted(TestSystem testSystem) throws IOException;
 
   void testOutputChunk(String output) throws IOException;
 
-  void testStarted(PageType testPage) throws IOException;
+  void testStarted(TestPage testPage) throws IOException;
 
-  void testComplete(PageType testPage, TestSummary testSummary) throws IOException;
+  void testComplete(TestPage testPage, TestSummary testSummary) throws IOException;
 
   void testSystemStopped(TestSystem testSystem, Throwable cause /* may be null */);
 

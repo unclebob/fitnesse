@@ -184,7 +184,7 @@ public class MultipleTestsRunner implements Stoppable {
     executionLogListener.addExecutionLogListener(listener);
   }
 
-  private class InternalTestSystemListener implements TestSystemListener<WikiTestPage> {
+  private class InternalTestSystemListener implements TestSystemListener {
     @Override
     public void testSystemStarted(TestSystem testSystem) throws IOException {
       formatters.testSystemStarted(testSystem);
@@ -196,12 +196,12 @@ public class MultipleTestsRunner implements Stoppable {
     }
 
     @Override
-    public void testStarted(WikiTestPage testPage) throws IOException {
+    public void testStarted(TestPage testPage) throws IOException {
       formatters.testStarted(testPage);
     }
 
     @Override
-    public void testComplete(WikiTestPage testPage, TestSummary testSummary) throws IOException {
+    public void testComplete(TestPage testPage, TestSummary testSummary) throws IOException {
       formatters.testComplete(testPage, testSummary);
       testsInProgressCount--;
     }
