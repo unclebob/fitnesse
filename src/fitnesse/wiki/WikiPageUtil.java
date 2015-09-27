@@ -67,10 +67,7 @@ public class WikiPageUtil {
   }
 
   public static String makePageHtml(WikiPage page) {
-    StringBuffer buffer = new StringBuffer();
-    buffer.append(getHeaderPageHtml(page));
-    buffer.append(page.getHtml());
-    return buffer.toString();
+    return getHeaderPageHtml(page) + page.getHtml();
   }
 
   public static File resolveFileUri(String fullPageURI, File rootPath) {
