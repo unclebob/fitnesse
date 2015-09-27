@@ -6,6 +6,8 @@ public interface TestPage {
 
   String getVariable(String name);
 
+  String getName();
+
   String getFullPath();
 
   ClassPath getClassPath();

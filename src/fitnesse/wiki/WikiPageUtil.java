@@ -114,4 +114,8 @@ public class WikiPageUtil {
     }
     return Collections.emptyList();
   }
+
+  public static boolean isTestPage(WikiPage page) {
+    return page.getData().hasAttribute("Test");
+  }
 }

@@ -34,13 +34,6 @@ public class WikiTestPage implements TestPage {
     this.sourcePage = sourcePage;
   }
 
-  public static boolean isTestPage(WikiPage page) {
-    return isTestPage(page.getData());
-  }
-  public static boolean isTestPage(ReadOnlyPageData pageData) {
-    return pageData.hasAttribute("Test");
-  }
-
   public PageData getData() {
     return sourcePage.getData();
   }
@@ -170,10 +163,6 @@ public class WikiTestPage implements TestPage {
     boolean notIncludeScenarios = "false".equalsIgnoreCase(includeScenarioLibraries);
 
     return includeScenarios || (!notIncludeScenarios && isSlim);
-  }
-
-  public boolean isTestPage() {
-    return isTestPage(getData());
   }
 
   public List<WikiPage> getScenarioLibraries() {

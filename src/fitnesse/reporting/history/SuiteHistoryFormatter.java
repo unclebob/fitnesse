@@ -69,7 +69,7 @@ public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLog
   @Override
   public void testStarted(WikiTestPage test) {
     String pageName = test.getFullPath();
-    testHistoryFormatter = new TestXmlFormatter(context, test.getSourcePage(), writerFactory);
+    testHistoryFormatter = new TestXmlFormatter(context, WikiTestPageUtil.getSourcePage(test), writerFactory);
     testHistoryFormatter.testStarted(test);
     referenceToCurrentTest = new SuiteExecutionReport.PageHistoryReference(pageName, testHistoryFormatter.startedAt());
   }

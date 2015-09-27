@@ -59,7 +59,7 @@ public class TestXmlFormatter extends BaseFormatter implements ExecutionLogListe
     appendHtmlToBuffer(WikiPageUtil.getHeaderPageHtml(getPage()));
     currentResult = newTestResult();
     currentResult.relativePageName = testPage.getName();
-    currentResult.tags = testPage.getData().getAttribute(PageData.PropertySUITES);
+    currentResult.tags = WikiTestPageUtil.getSourcePage(testPage).getData().getAttribute(PageData.PropertySUITES);
     testResponse.addResult(currentResult);
   }
 
