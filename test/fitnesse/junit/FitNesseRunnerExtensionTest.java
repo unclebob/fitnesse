@@ -57,12 +57,12 @@ public class FitNesseRunnerExtensionTest {
     }
 
     @Override
-    public void testStarted(WikiTestPage test) {
+    public void testStarted(TestPage test) {
       super.testStarted(test);
     }
 
     @Override
-    public void testComplete(WikiTestPage test, TestSummary testSummary) {
+    public void testComplete(TestPage test, TestSummary testSummary) {
       super.testComplete(test, testSummary);
     }
 

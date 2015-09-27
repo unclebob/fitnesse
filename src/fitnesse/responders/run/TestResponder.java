@@ -11,16 +11,16 @@ import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.WikiPage;
 
-import static fitnesse.testrunner.WikiTestPage.isTestPage;
-import static java.util.Arrays.asList;
+import static fitnesse.wiki.WikiPageUtil.isTestPage;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 public class TestResponder extends SuiteResponder {
 
   @Override
   protected List<WikiPage> getPagesToRun() {
     if (isTestPage(page)) {
-      return asList(page);
+      return singletonList(page);
     } else {
       return emptyList();
     }
