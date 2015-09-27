@@ -457,7 +457,11 @@ Wysiwyg.prototype.setupTextareaMenuEvents = function () {
 
     $('#tt-format-wiki', container).click(function () {    
         var formatter = new WikiFormatter();
+        var scrollInfo = codeMirror.getScrollInfo();
+        var cursorInfo = codeMirror.getDoc().getCursor();
         codeMirror.setValue(formatter.format(codeMirror.getValue()));
+        codeMirror.scrollTo(scrollInfo.left, scrollInfo.top);
+        codeMirror.getDoc().setCursor(cursorInfo.line, cursorInfo.ch);
         codeMirror.focus();
     });
     
