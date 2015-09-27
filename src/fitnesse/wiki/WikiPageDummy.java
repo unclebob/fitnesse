@@ -10,38 +10,18 @@ import java.util.List;
 
 import fitnesse.util.Clock;
 
-public class WikiPageDummy implements WikiPage {
-  private static final long serialVersionUID = 1L;
+public class WikiPageDummy extends BaseWikiPage {
 
-  public String name;
   private PageData pageData;
-  private final WikiPage parent;
 
   public WikiPageDummy(String name, String content, WikiPage parent) {
-    this.name = name;
+    super(name, parent);
     pageData = new PageData(content, new WikiPageProperties());
-    this.parent = parent;
   }
 
   public WikiPageDummy() {
-    name = "Default";
+    super("Default", null);
     pageData = new PageData("", new WikiPageProperties());
-    this.parent = null;
-  }
-
-  @Override
-  public String getName() {
-    return name;
-  }
-
-  @Override
-  public WikiPage getParent() {
-    return parent;
-  }
-
-  @Override
-  public boolean isRoot() {
-    return parent == null;
   }
 
   @Override
@@ -63,11 +43,6 @@ public class WikiPageDummy implements WikiPage {
   @Override
   public List<WikiPage> getChildren() {
     return new ArrayList<WikiPage>();
-  }
-
-  @Override
-  public int compareTo(Object o) {
-    return 0;
   }
 
   @Override

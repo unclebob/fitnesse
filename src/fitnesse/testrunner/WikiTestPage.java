@@ -7,12 +7,14 @@ import java.util.List;
 import fitnesse.components.TraversalListener;
 import fitnesse.testsystems.ClassPath;
 import fitnesse.testsystems.TestPage;
-import fitnesse.wiki.BaseWikiPage;
+import fitnesse.wiki.BaseWikitextPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.ReadOnlyPageData;
+import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikitextPage;
 import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
@@ -47,9 +49,9 @@ public class WikiTestPage implements TestPage {
   public String getHtml() {
 
     // -AJM- Okay, this is not as clean as I'd like it to be, but for now it does the trick
-    if (sourcePage instanceof BaseWikiPage) {
+    if (containsWikitext()) {
       String content = getDecoratedContent();
-      ParsingPage parsingPage = BaseWikiPage.makeParsingPage((BaseWikiPage) sourcePage);
+      ParsingPage parsingPage = BaseWikitextPage.makeParsingPage((BaseWikitextPage) sourcePage);
 
       Symbol syntaxTree = Parser.make(parsingPage, content).parse();
 
@@ -57,6 +59,11 @@ public class WikiTestPage implements TestPage {
     } else {
       return sourcePage.getHtml();
     }
+  }
+
+  private boolean containsWikitext() {
+    return (sourcePage instanceof SymbolicPage && ((SymbolicPage) sourcePage).containsWikitext())
+            || (sourcePage instanceof WikitextPage);
   }
 
   @Override

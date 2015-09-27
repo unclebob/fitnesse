@@ -18,7 +18,7 @@ import util.FileUtil;
 
 public class SymbolicPageTest {
   private WikiPage root;
-  private BaseWikiPage pageOne;
+  private WikiPage pageOne;
   private WikiPage pageTwo;
   private SymbolicPage symPage;
   private String pageOnePath = "PageOne";
@@ -30,7 +30,7 @@ public class SymbolicPageTest {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     String pageOneContent = "page one";
-    pageOne = (BaseWikiPage) WikiPageUtil.addPage(root, PathParser.parse(pageOnePath), pageOneContent);
+    pageOne = WikiPageUtil.addPage(root, PathParser.parse(pageOnePath), pageOneContent);
     pageTwo = WikiPageUtil.addPage(root, PathParser.parse(pageTwoPath), pageTwoContent);
     symPage = new SymbolicPage("SymPage", pageTwo, pageOne);
   }

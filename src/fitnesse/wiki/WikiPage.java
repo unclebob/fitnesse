@@ -6,7 +6,7 @@ package fitnesse.wiki;
 import java.util.Collection;
 import java.util.List;
 
-public interface WikiPage extends Comparable<Object> {
+public interface WikiPage extends Comparable<WikiPage> {
 
   WikiPage getParent();
 
