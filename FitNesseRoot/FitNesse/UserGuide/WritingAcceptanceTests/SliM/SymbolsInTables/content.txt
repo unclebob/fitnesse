@@ -15,3 +15,6 @@ You can combine symbols as follows:
 
 The symbols V and X will be replaced with their values...  
 
+!3 Read also:
+
+.FitNesse.SuiteAcceptanceTests.SuiteSlimTests.SlimSymbols
