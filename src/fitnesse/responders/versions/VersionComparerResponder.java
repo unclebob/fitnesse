@@ -50,7 +50,7 @@ public class VersionComparerResponder implements Responder {
     this.context = context;
     getVersionsFromRequest(request);
     if (firstVersion.equals("") && secondVersion.equals("")) {
-      String message = "Compare Failed because no Input Files were given. Select one or two please.";
+      String message = "Compare failed because no input files were given. Select one or two please.";
       return makeErrorResponse(context, request, message);
     }
     WikiPage firstVersionPage = page.getVersion(firstVersion);

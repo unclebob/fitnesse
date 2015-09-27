@@ -5,12 +5,12 @@ import java.util.regex.Pattern;
 
 abstract public class SlimSymbol {
   public static final Pattern SYMBOL_PATTERN = Pattern
-      .compile("\\$([A-Za-z]\\w*)");
+      .compile("\\$([A-Za-z\\p{L}][\\w\\p{L}]*)");
 // This would be a better pattern as it allows to define the end of a symbol name with another $ sign  
 //  public static final Pattern SYMBOL_PATTERN = Pattern
-//      .compile("\\$([A-Za-z]\\w*)\\$?");
+//      .compile("\\$([A-Za-z\\p{L}][\\w\\p{L}]*)\\$?");  
   public static final Pattern SYMBOL_ASSIGNMENT_PATTERN = Pattern
-      .compile("\\A\\s*\\$([A-Za-z]\\w*)\\s*=\\s*\\Z");
+      .compile("\\A\\s*\\$([A-Za-z\\p{L}][\\w\\p{L}]*)\\s*=\\s*\\Z");
 
   protected String replacedString;
   private Matcher symbolMatcher;
