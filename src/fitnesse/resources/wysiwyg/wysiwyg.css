@@ -203,7 +203,7 @@ textarea#pageContent {
     position: relative;
     margin: 5% auto;
     padding: 5px 20px 13px 20px;
-    border: 1px solid #984D00
+    border: 1px solid #984D00;
     border-radius: 3px;
     background: #fff;
     /*background: -moz-linear-gradient(#fff, #999);*/

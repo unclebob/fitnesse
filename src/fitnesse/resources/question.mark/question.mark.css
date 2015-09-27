@@ -136,7 +136,6 @@
   text-align: center;
   background-color: #eee;
   background-repeat: repeat-x;
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f5f5f5), to(#eee));
   background-image: -webkit-linear-gradient(#f5f5f5 0%, #eee 100%);
   background-image: -moz-linear-gradient(#f5f5f5 0%, #eee 100%);
   background-image: -o-linear-gradient(#f5f5f5 0%, #eee 100%);

@@ -16,6 +16,9 @@ public class ConverterRegistry {
     addStandardConverters();
   }
 
+  private ConverterRegistry() {
+  }
+
   public static void resetToStandardConverters() {
     converters.clear();
     addStandardConverters();
@@ -47,8 +50,7 @@ public class ConverterRegistry {
   }
 
   public static <T> Converter<T> getConverterForClass(Class<? extends T> clazz) {
-    Converter<T> converter = getConverterForClass(clazz, null);
-    return converter;
+    return getConverterForClass(clazz, null);
   }
 
   @SuppressWarnings({ "unchecked", "rawtypes" })
