@@ -8,13 +8,13 @@
 |foo   |$x3_=        |
 |$x3_  |foo          |
 
-!3 Referencing undefined Slim symbols names raise no erro but return the symbol name
+!3 Referencing undefined Slim symbols names raise no error but return the symbol name
 
 !|test slim              |
 |string    |getStringArg?|
 |$UNDEFINED|$UNDEFINED   |
 
-!3 Slim symbols names are case sesitive
+!3 Slim symbols names are case sensitive
 
 !|test slim          |
 |string|getStringArg?|
@@ -25,7 +25,7 @@
 
 !3 Slim symbols names also support UTF8 names
 
-!|test slim   |3            |
+!|test slim                 |
 |string       |getStringArg?|
 |ØÅÆØÅÆ_ØÅÆØÅÆ|$Æ_ØÅ=       |
 |$Æ_ØÅ        |ØÅÆØÅÆ_ØÅÆØÅÆ|
