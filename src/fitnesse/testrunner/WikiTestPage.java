@@ -21,6 +21,7 @@ import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.WikiSourcePage;
 
+// TODO: need 2 implementations, one for wiki text pages (Fit, Slim) and one for non-wiki text pages. See PagesByTestSystem
 public class WikiTestPage implements TestPage {
   public static final String TEAR_DOWN = "TearDown";
   public static final String SET_UP = "SetUp";
@@ -72,6 +73,15 @@ public class WikiTestPage implements TestPage {
   @Override
   public ClassPath getClassPath() {
     return new ClassPath(new ClassPathBuilder().getClassPath(sourcePage), getPathSeparator());
+  }
+
+  @Override
+  public String getContent() {
+    if (containsWikitext()) {
+      return getDecoratedContent();
+    } else {
+      return sourcePage.getData().getContent();
+    }
   }
 
 
