@@ -108,7 +108,7 @@ public class VersionResponder implements SecureResponder {
     }
 
     public String render() {
-      if (WikiTestPage.isTestPage(page)) {
+      if (WikiPageUtil.isTestPage(page)) {
         WikiTestPage testPage = new WikiTestPage(page);
         return WikiTestPageUtil.makePageHtml(testPage);
       } else {

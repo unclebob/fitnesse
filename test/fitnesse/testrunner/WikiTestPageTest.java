@@ -108,6 +108,14 @@ public class WikiTestPageTest {
     assertNotSubString("Scenario Libraries", html);
   }
 
+  @Test
+  public void shouldReturnDecoratedContentForWikitextPages() throws Exception {
+    WikiPage slimTestPage = addPage("SlimTest", "!define TEST_SYSTEM {slim}\n");
+    TestPage testPage = new WikiTestPage(slimTestPage);
+    String content = testPage.getContent();
+    assertSubString("!define TEST_SYSTEM {slim}\n", content);
+  }
+
 
   @Test
   public void shouldNotIncludeScenarioLibrariesIfNotSlimTest() throws Exception {

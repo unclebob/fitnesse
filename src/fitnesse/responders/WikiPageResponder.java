@@ -79,7 +79,7 @@ public class WikiPageResponder implements SecureResponder {
     html.put("actions", new WikiPageActions(page));
     html.put("helpText", pageData.getProperties().get(PageData.PropertyHELP));
 
-    if (WikiTestPage.isTestPage(page)) {
+    if (WikiPageUtil.isTestPage(page)) {
       // Add test url inputs to context's variableSource.
       WikiTestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page);
       html.put("content", new WikiTestPageRenderer(testPage));

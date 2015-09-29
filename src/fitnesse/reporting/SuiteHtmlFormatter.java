@@ -8,7 +8,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
 
-import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.*;
 import fitnesse.util.TimeMeasurement;
 import fitnesse.html.HtmlTag;
@@ -78,7 +77,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
   }
 
   @Override
-  public void testStarted(WikiTestPage testPage) throws IOException {
+  public void testStarted(TestPage testPage) throws IOException {
     latestTestTime = new TimeMeasurement().start();
     super.testStarted(testPage);
 
@@ -146,7 +145,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
 
 
   @Override
-  public void testComplete(WikiTestPage testPage, TestSummary testSummary) throws IOException {
+  public void testComplete(TestPage testPage, TestSummary testSummary) throws IOException {
     latestTestTime.stop();
     super.testComplete(testPage, testSummary);
 

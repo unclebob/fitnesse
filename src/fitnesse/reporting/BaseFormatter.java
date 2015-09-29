@@ -2,6 +2,7 @@ package fitnesse.reporting;
 
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testrunner.WikiTestPage;
@@ -33,7 +34,7 @@ public abstract class BaseFormatter implements Formatter {
   }
 
   @Override
-  public void testStarted(WikiTestPage testPage) throws IOException {
+  public void testStarted(TestPage testPage) throws IOException {
   }
 
   @Override
@@ -41,7 +42,7 @@ public abstract class BaseFormatter implements Formatter {
   }
 
   @Override
-  public void testComplete(WikiTestPage test, TestSummary summary) throws IOException {
+  public void testComplete(TestPage test, TestSummary summary) throws IOException {
   }
 
   public int getErrorCount() {

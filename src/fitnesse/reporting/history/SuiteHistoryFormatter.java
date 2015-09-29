@@ -8,11 +8,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fitnesse.reporting.BaseFormatter;
-import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testrunner.WikiTestPageUtil;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -67,9 +68,9 @@ public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLog
   }
 
   @Override
-  public void testStarted(WikiTestPage test) {
+  public void testStarted(TestPage test) {
     String pageName = test.getFullPath();
-    testHistoryFormatter = new TestXmlFormatter(context, test.getSourcePage(), writerFactory);
+    testHistoryFormatter = new TestXmlFormatter(context, WikiTestPageUtil.getSourcePage(test), writerFactory);
     testHistoryFormatter.testStarted(test);
     referenceToCurrentTest = new SuiteExecutionReport.PageHistoryReference(pageName, testHistoryFormatter.startedAt());
   }
@@ -82,7 +83,7 @@ public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLog
   }
 
   @Override
-  public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
+  public void testComplete(TestPage test, TestSummary testSummary) throws IOException {
     testHistoryFormatter.testComplete(test, testSummary);
     testHistoryFormatter.close();
     referenceToCurrentTest.setTestSummary(testSummary);

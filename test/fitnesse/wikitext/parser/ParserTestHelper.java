@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import fitnesse.html.HtmlElement;
-import fitnesse.wiki.BaseWikiPage;
+import fitnesse.wiki.BaseWikitextPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 
@@ -75,7 +75,7 @@ public class ParserTestHelper {
 
   public static String translateTo(WikiPage page, String input) {
     ParsingPage.Cache cache = new ParsingPage.Cache();
-    VariableSource variableSource = new CompositeVariableSource(cache, new BaseWikiPage.ParentPageVariableSource(page));
+    VariableSource variableSource = new CompositeVariableSource(cache, new BaseWikitextPage.ParentPageVariableSource(page));
     Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page), variableSource, cache), input).parse();
     return new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page))).translateTree(list);
   }

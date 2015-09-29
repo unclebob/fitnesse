@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import fitnesse.wiki.BaseWikiPage;
+import fitnesse.wiki.BaseWikitextPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.VersionInfo;
@@ -23,7 +23,7 @@ import util.FileUtil;
 
 import static fitnesse.wiki.PageType.STATIC;
 
-public class FileSystemPage extends BaseWikiPage {
+public class FileSystemPage extends BaseWikitextPage {
 
   static final String contentFilename = "content.txt";
   static final String propertiesFilename = "properties.xml";
@@ -244,11 +244,11 @@ public class FileSystemPage extends BaseWikiPage {
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof FileSystemPage)) return false;
+  public boolean equals(Object other) {
+    if (this == other) return true;
+    if (!(other instanceof FileSystemPage)) return false;
 
-    FileSystemPage that = (FileSystemPage) o;
+    FileSystemPage that = (FileSystemPage) other;
 
     if (versionName != null ? !versionName.equals(that.versionName) : that.versionName != null) return false;
     return super.equals(that);
