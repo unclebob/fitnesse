@@ -22,23 +22,15 @@ public class ClassPath {
 
   public ClassPath(List<ClassPath> paths) {
     this.elements = new ArrayList<String>();
-    this.separator = paths.get(0).getSeparator();
+    this.separator = paths.get(0).separator;
 
     for (ClassPath path : paths) {
-      for (String element : path.getElements()) {
+      for (String element : path.elements) {
         if (!elements.contains(element)) {
           elements.add(element);
         }
       }
     }
-  }
-
-  public List<String> getElements() {
-    return elements;
-  }
-
-  public String getSeparator() {
-    return separator;
   }
 
   @Override
