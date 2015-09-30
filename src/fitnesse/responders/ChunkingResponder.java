@@ -8,6 +8,7 @@ import fitnesse.http.ChunkedDataProvider;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
+import fitnesse.util.Clock;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -70,7 +71,7 @@ public abstract class ChunkingResponder implements Responder, ChunkedDataProvide
       doSending();
     }
     catch (SocketException e) {
-      LOG.log(Level.WARNING, "Socket Exception at: " + System.currentTimeMillis(), e);
+      LOG.log(Level.WARNING, "Socket Exception at: " + Clock.currentTimeInMillis(), e);
       // normal. someone stopped the request.
     }
     catch (Exception e) {

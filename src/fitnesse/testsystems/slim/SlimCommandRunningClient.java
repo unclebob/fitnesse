@@ -12,6 +12,7 @@ import fitnesse.slim.protocol.SlimSerializer;
 import fitnesse.socketservice.SocketFactory;
 import fitnesse.testsystems.CommandRunner;
 
+import fitnesse.util.Clock;
 import org.apache.commons.lang.ArrayUtils;
 
 import java.io.IOException;
@@ -86,7 +87,7 @@ public class SlimCommandRunningClient implements SlimClient {
   @Override
   public void connect() throws IOException {
     final int sleepStep = 50; // milliseconds
-    long timeOut = System.currentTimeMillis() + connectionTimeout * 1000;
+    long timeOut = Clock.currentTimeInMillis() + connectionTimeout * 1000;
     LOG.finest("Trying to connect to host: " + hostName + " on port: " + port + " SSL=" + useSSL + " timeout setting: " + connectionTimeout);
     while (client == null) {
       if (slimRunner != null && slimRunner.isDead()) {
@@ -96,7 +97,7 @@ public class SlimCommandRunningClient implements SlimClient {
       try {
         client = SocketFactory.tryCreateClientSocket(hostName, port, useSSL, sslParameterClassName);
       } catch (IOException e) {
-        if (System.currentTimeMillis() > timeOut) {
+        if (Clock.currentTimeInMillis() > timeOut) {
           throw new SlimError("Error connecting to SLiM server on " + hostName + ":" + port, e);
         } else {
           try {
