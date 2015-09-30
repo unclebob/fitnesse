@@ -1,8 +1,0 @@
-!help
-
-!| script | 
-| Given a new wiki page |
-|# | Save the page again without any change|
-| save page | TestPage | with content | test data |
-| Then the history size is 1|
-

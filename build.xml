@@ -119,17 +119,12 @@
 			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/SuitePage/properties.xml" />
 			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/TestPage/content.txt" />
 			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/TestPage/properties.xml" />
-			<arg value="-doNotReplace:FitNesseRoot/.gitignore" />
 			<arg value="FitNesseRoot/FitNesse" />
 			<arg value="FitNesseRoot/FrontPage" />
 			<arg value="FitNesseRoot/PageFooter" />
 			<arg value="FitNesseRoot/PageHeader" />
 			<arg value="FitNesseRoot/TemplateLibrary" />
-			<arg value="FitNesseRoot/.gitignore" />
 		</java>
-
-        <copy file="FitNesseRoot/.gitignore" todir="${classes.dir}/Resources/FitNesseRoot" />
-        <replace file="${classes.dir}/Resources/FitNesseRoot/.gitignore"  token="###" value="" />
 	</target>
 
     <!--

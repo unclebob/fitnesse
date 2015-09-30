@@ -2,8 +2,6 @@ package fitnesse.wiki.fs;
 
 import fitnesse.ConfigurationParameter;
 import fitnesse.wiki.*;
-import org.eclipse.jgit.api.InitCommand;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import util.FileUtil;
 
 import java.io.File;
@@ -86,14 +84,5 @@ public class VersionsControllerFixture {
     lastUsedPage = pageCrawler.getPage(PathParser.parse(pageName));
     if (lastUsedPage == null) return "[Error: Page doesn't exists]";
     else return lastUsedPage.getData().getContent();
-}
-
-  public boolean initialiseGitRepository() throws GitAPIException {
-    FileUtil.createDir(TEST_DIR);
-    new InitCommand()
-            .setDirectory(new File(TEST_DIR))
-            .setBare(false)
-            .call();
-    return true;
   }
 }
