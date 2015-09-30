@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.Writer;
 
 import fitnesse.testrunner.TestsRunnerListener;
-import fitnesse.testrunner.WikiTestPage;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.RawHtml;

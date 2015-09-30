@@ -4,7 +4,6 @@ import java.io.Closeable;
 import java.io.IOException;
 
 import fitnesse.testrunner.TestsRunnerListener;
-import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionResult;

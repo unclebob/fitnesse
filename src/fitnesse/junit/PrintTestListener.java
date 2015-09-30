@@ -3,7 +3,6 @@ package fitnesse.junit;
 import java.io.Closeable;
 import java.util.logging.Logger;
 
-import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testrunner.WikiTestPageUtil;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;

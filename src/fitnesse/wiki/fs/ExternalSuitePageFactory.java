@@ -2,7 +2,6 @@ package fitnesse.wiki.fs;
 
 import java.io.File;
 
-import fitnesse.wiki.BaseWikitextPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wikitext.parser.VariableSource;

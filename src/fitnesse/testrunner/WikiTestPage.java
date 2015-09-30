@@ -10,7 +10,6 @@ import fitnesse.testsystems.TestPage;
 import fitnesse.wiki.BaseWikitextPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.ReadOnlyPageData;
 import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
