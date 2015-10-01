@@ -1,11 +1,9 @@
 package fitnesse.updates;
 
-import static org.junit.Assert.*;
-import static util.RegexTestCase.assertSubString;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 
 import fitnesse.FitNesseContext;
@@ -17,14 +15,17 @@ import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
 
-public class UpdaterImplementationTest {
+import static org.junit.Assert.*;
+import static util.RegexTestCase.assertSubString;
+
+public class WikiContentUpdaterTest {
   private File updateList;
   private File updateDoNotCopyOver;
   public static final String testDir = "testDir";
   public static final String rootName = "RooT";
 
   protected WikiPage root;
-  protected UpdaterImplementation updater;
+  protected WikiContentUpdater updater;
   protected WikiPage pageOne;
   protected WikiPage pageTwo;
   protected FitNesseContext context;
@@ -36,7 +37,7 @@ public class UpdaterImplementationTest {
     root = setTheRoot();
     createFakeJarFileResources();
     createFakeUpdateListFiles();
-    updater = new UpdaterImplementation(context);
+    updater = new WikiContentUpdater(context);
   }
 
   private WikiPage setTheRoot() throws Exception {
@@ -65,13 +66,12 @@ public class UpdaterImplementationTest {
 
   @Test
   public void shouldBeAbleToGetUpdateFilesAndMakeAlistFromThem() throws Exception {
-    ArrayList<String> updateArrayList = new ArrayList<String>();
-    updater.tryToParseTheFileIntoTheList(updateList, updateArrayList);
-    assertEquals("FitNesseRoot/files/TestFile", updateArrayList.get(0));
-    assertEquals("FitNesseRoot/files/BestFile", updateArrayList.get(1));
-    updateArrayList = new ArrayList<String>();
-    updater.tryToParseTheFileIntoTheList(updateDoNotCopyOver, updateArrayList);
-    assertEquals("FitNesseRoot/SpecialFile", updateArrayList.get(0));
+    String[] updateArrayList = updater.tryToParseTheFileIntoTheList(updateList);
+    assertEquals("FitNesseRoot/files/TestFile", updateArrayList[0]);
+    assertEquals("FitNesseRoot/files/BestFile", updateArrayList[1]);
+
+    updateArrayList = updater.tryToParseTheFileIntoTheList(updateDoNotCopyOver);
+    assertEquals("FitNesseRoot/SpecialFile", updateArrayList[0]);
   }
 
   @Test
@@ -92,9 +92,9 @@ public class UpdaterImplementationTest {
 
   @Test
   public void shouldCreateSomeFilesInTheRooTDirectory() throws Exception {
-    for (Update update : updater.getUpdates()) {
-        update.doUpdate();
-    }
+
+    updater.update();
+
     File testFile = new File(context.getRootPagePath(), "files/TestFile");
     File bestFile = new File(context.getRootPagePath(), "files/BestFile");
     File specialFile = new File(context.getRootPagePath(), "SpecialFile");
@@ -110,13 +110,33 @@ public class UpdaterImplementationTest {
   public void shouldReplaceFitNesseRootWithDirectoryRoot() throws Exception {
     String filePath = "FitNesseRoot/someFolder/someFile";
     setTheContext("MyNewRoot");
-    updater = new UpdaterImplementation(context);
+    updater = new WikiContentUpdater(context);
     File updatedPath = updater.getCorrectPathForTheDestination(filePath);
     assertEquals(portablePath("testDir/MyNewRoot/someFolder"), updatedPath.getPath());
   }
 
   @Test
+  public void testProperties() throws Exception {
+    updater = new WikiContentUpdater(context) {
+      @Override
+      List<Update> makeAllUpdates() {
+        return Collections.emptyList();
+      }
+    };
+    File file = new File(new File(testDir, rootName), "properties");
+    assertFalse(file.exists());
+    updater.update();
+    assertTrue(file.exists());
+  }
+
+  @Test
   public void updatesShouldBeRunIfCurrentVersionNotAlreadyUpdated() throws Exception {
+    updater = new WikiContentUpdater(context) {
+      @Override
+      List<Update> makeAllUpdates() {
+        return Collections.<Update>singletonList(new UpdateSpy());
+      }
+    };
     String version = "TestVersion";
     updater.setFitNesseVersion(version);
 
@@ -124,9 +144,7 @@ public class UpdaterImplementationTest {
     FileUtil.deleteFile(propertiesFile);
     assertFalse(propertiesFile.exists());
 
-    updater.setUpdates(new Update[]{
-      new UpdateSpy()
-    });
+
     updater.update();
     assertTrue(updateDone);
     assertTrue(propertiesFile.exists());
@@ -139,13 +157,16 @@ public class UpdaterImplementationTest {
 
   @Test
   public void updatesShouldNotBeRunIfCurrentVersionAlreadyUpdated() throws Exception {
+    updater = new WikiContentUpdater(context) {
+      @Override
+      List<Update> makeAllUpdates() {
+        return Collections.<Update>singletonList(new UpdateSpy());
+      }
+    };
     String version = "TestVersion";
     updater.setFitNesseVersion(version);
     Properties properties = updater.getProperties();
     properties.put("Version", version);
-    updater.setUpdates(new Update[]{
-      new UpdateSpy()
-    });
     updater.update();
     assertFalse(updateDone);
   }
@@ -153,7 +174,7 @@ public class UpdaterImplementationTest {
   @Test(expected = RuntimeException.class)
   public void shouldThrowExceptionInNoUpdateFileExists() throws Exception {
     FileUtil.deleteFile(updateList);
-    updater.tryToParseTheFileIntoTheList(updateList,new ArrayList<String>());
+    updater.tryToParseTheFileIntoTheList(updateList);
   }
 
   @After

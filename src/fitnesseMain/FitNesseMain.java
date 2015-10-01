@@ -7,7 +7,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.Updater;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.reporting.ExitCodeListener;
-import fitnesse.updates.UpdaterImplementation;
+import fitnesse.updates.WikiContentUpdater;
 
 import java.io.*;
 import java.util.logging.Level;
@@ -77,7 +77,7 @@ public class FitNesseMain {
 
   private boolean update(FitNesseContext context) throws IOException {
     if (!"true".equalsIgnoreCase(context.getProperty(OMITTING_UPDATES.getKey()))) {
-      Updater updater = new UpdaterImplementation(context);
+      Updater updater = new WikiContentUpdater(context);
       return updater.update();
     }
     return false;

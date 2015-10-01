@@ -3,35 +3,106 @@
 package fitnesse.updates;
 
 import fitnesse.FitNesseContext;
+import fitnesse.Updater;
 import util.FileUtil;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class UpdaterImplementation extends UpdaterBase {
+public class WikiContentUpdater implements Updater {
 
-  private List<String> updateDoNotCopyOver = new ArrayList<String>();
-  private List<String> updateList = new ArrayList<String>();
+
+  protected static final Logger LOG = Logger.getLogger(WikiContentUpdater.class.getName());
+
+  protected final FitNesseContext context;
+  private Properties rootProperties;
   private String fitNesseVersion;
 
-  public UpdaterImplementation(FitNesseContext context) throws IOException {
-    super(context);
+  public WikiContentUpdater(FitNesseContext context) throws IOException {
+    this.context = context;
+    rootProperties = loadProperties();
     fitNesseVersion = context.version.toString();
-    createUpdateAndDoNotCopyOverLists();
-    setUpdates(makeAllUpdates());
   }
 
-  private Update[] makeAllUpdates() {
+  public Properties getProperties() {
+    return rootProperties;
+  }
+
+  public Properties loadProperties() throws IOException {
+    Properties properties = new Properties();
+    File propFile = getPropertiesFile();
+    if (propFile.exists()) {
+      InputStream is = null;
+      try {
+        is = new FileInputStream(propFile);
+        properties.load(is);
+      } finally {
+        if (is != null)
+          is.close();
+      }
+    }
+    return properties;
+  }
+
+  private File getPropertiesFile() {
+    return new File(context.getRootPagePath(), "properties");
+  }
+
+  public void saveProperties() throws IOException {
+    OutputStream os = null;
+    File propFile = null;
+    try {
+      propFile = getPropertiesFile();
+      os = new FileOutputStream(propFile);
+      rootProperties.store(os, "#FitNesse properties");
+    } catch (IOException e) {
+      String fileName = (propFile != null) ? propFile.getAbsolutePath() : "<unknown>";
+      LOG.log(Level.SEVERE, "Filed to save properties file: \"" + fileName + "\". (exception: " + e + ")");
+      throw e;
+    } finally {
+      if (os != null)
+        os.close();
+    }
+  }
+
+  boolean performAllupdates() throws IOException {
+    List<Update> updates = makeAllUpdates();
+    for (Update update: updates) {
+      if (update.shouldBeApplied())
+        performUpdate(update);
+    }
+    return true;
+  }
+
+  private void performUpdate(Update update) {
+    try {
+//      LOG.info(update.getMessage());
+      update.doUpdate();
+    }
+    catch (Exception e) {
+      LOG.log(Level.SEVERE, "Update failed", e);
+    }
+  }
+
+  List<Update> makeAllUpdates() {
     List<Update> updates = new ArrayList<Update>();
     updates.addAll(addAllFilesToBeReplaced());
     updates.addAll(addAllFilesThatShouldNotBeCopiedOver());
-    return updates.toArray(new Update[updates.size()]);
+    return updates;
   }
 
   private List<Update> addAllFilesThatShouldNotBeCopiedOver() {
     List<Update> updates = new ArrayList<Update>();
+    String[] updateDoNotCopyOver = tryToParseTheFileIntoTheList(new File(context.getRootPagePath(), "updateDoNotCopyOverList"));
     for (String nonCopyableFile : updateDoNotCopyOver) {
       File path = getCorrectPathForTheDestination(nonCopyableFile);
       String source = getCorrectPathFromJar(nonCopyableFile);
@@ -42,6 +113,7 @@ public class UpdaterImplementation extends UpdaterBase {
 
   private List<Update> addAllFilesToBeReplaced() {
     List<Update> updates = new ArrayList<Update>();
+    String[] updateList = tryToParseTheFileIntoTheList(new File(context.getRootPagePath(), "updateList"));
     for (String updateableFile : updateList) {
       File path = getCorrectPathForTheDestination(updateableFile);
       String source = getCorrectPathFromJar(updateableFile);
@@ -50,57 +122,47 @@ public class UpdaterImplementation extends UpdaterBase {
     return updates;
   }
 
-  public String getCorrectPathFromJar(String updateableFile) {
+  String getCorrectPathFromJar(String updateableFile) {
     return "Resources/" + updateableFile;
   }
 
 
-  public File getCorrectPathForTheDestination(String updateableFile) {
+  File getCorrectPathForTheDestination(String updateableFile) {
     if (updateableFile.startsWith("FitNesseRoot"))
       updateableFile = updateableFile.replace("FitNesseRoot", context.getRootPagePath());
     return new File(updateableFile).getParentFile();
   }
 
-  private void createUpdateAndDoNotCopyOverLists() throws IOException {
-    getUpdateFilesFromJarFile();
-    File updateFileList = new File(context.getRootPagePath(), "updateList");
-    File updateDoNotCopyOverFileList = new File(context.getRootPagePath(), "updateDoNotCopyOverList");
-    tryToParseTheFileIntoTheList(updateFileList, updateList);
-    tryToParseTheFileIntoTheList(updateDoNotCopyOverFileList, updateDoNotCopyOver);
-  }
-
-  public void getUpdateFilesFromJarFile() throws IOException {
+  private void getUpdateFilesFromJarFile() throws IOException {
     Update update = new FileUpdate("Resources/updateList", new File(context.getRootPagePath()));
     update.doUpdate();
     update = new FileUpdate("Resources/updateDoNotCopyOverList", new File(context.getRootPagePath()));
     update.doUpdate();
   }
 
-  public void tryToParseTheFileIntoTheList(File updateFileList, List<String> list) {
+  String[] tryToParseTheFileIntoTheList(File updateFileList) {
     if (!updateFileList.exists())
       throw new RuntimeException("Could Not Find UpdateList");
 
     try {
-      parseTheFileContentToAList(updateFileList, list);
+      return parseTheFileContentToAList(updateFileList);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
 
   }
 
-  private void parseTheFileContentToAList(File updateFileList, List<String> list) throws IOException {
+  private String[] parseTheFileContentToAList(File updateFileList) throws IOException {
     String content = FileUtil.getFileContent(updateFileList);
-    String[] filePaths = content.split("\n");
-    for (String path : filePaths)
-      list.add(path);
-
+    return content.split("\n");
   }
 
   @Override
   public boolean update() throws IOException {
     if (shouldUpdate()) {
       LOG.info("Unpacking new version of FitNesse resources. Please be patient...");
-      super.update();
+      getUpdateFilesFromJarFile();
+      performAllupdates();
       LOG.info("**********************************************************");
       LOG.info("Files have been updated to a new version.");
       LOG.info("Please read the release notes on ");
