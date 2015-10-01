@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
+/**
+ * Little utility to assemble the updateLists, used from build script.
+ */
 public class UpdateFileList {
   private static final Logger LOG = Logger.getLogger(UpdateFileList.class.getName());
 
