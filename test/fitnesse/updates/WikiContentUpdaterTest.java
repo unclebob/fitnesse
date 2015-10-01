@@ -66,11 +66,11 @@ public class WikiContentUpdaterTest {
 
   @Test
   public void shouldBeAbleToGetUpdateFilesAndMakeAlistFromThem() throws Exception {
-    String[] updateArrayList = updater.tryToParseTheFileIntoTheList(updateList);
+    String[] updateArrayList = updater.parseResource("Resources/updateList");
     assertEquals("FitNesseRoot/files/TestFile", updateArrayList[0]);
     assertEquals("FitNesseRoot/files/BestFile", updateArrayList[1]);
 
-    updateArrayList = updater.tryToParseTheFileIntoTheList(updateDoNotCopyOver);
+    updateArrayList = updater.parseResource("Resources/updateDoNotCopyOverList");
     assertEquals("FitNesseRoot/SpecialFile", updateArrayList[0]);
   }
 
@@ -174,7 +174,7 @@ public class WikiContentUpdaterTest {
   @Test(expected = RuntimeException.class)
   public void shouldThrowExceptionInNoUpdateFileExists() throws Exception {
     FileUtil.deleteFile(updateList);
-    updater.tryToParseTheFileIntoTheList(updateList);
+    updater.parseResource("Resources/updateList");
   }
 
   @After
