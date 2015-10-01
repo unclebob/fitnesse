@@ -66,7 +66,14 @@ public class FitNesseMain {
 
     logStartupInfo(context);
 
-    update(context);
+    if (update(context)) {
+      LOG.info("**********************************************************");
+      LOG.info("Files have been updated to a new version.");
+      LOG.info("Please read the release notes on ");
+      LOG.info("http://localhost:" + context.port + "/FitNesse.ReleaseNotes");
+      LOG.info("to find out about the new features and fixes.");
+      LOG.info("**********************************************************");
+    }
 
     if ("true".equalsIgnoreCase(contextConfigurator.get(INSTALL_ONLY))) {
       return null;

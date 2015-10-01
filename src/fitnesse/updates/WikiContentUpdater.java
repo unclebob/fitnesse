@@ -163,13 +163,6 @@ public class WikiContentUpdater implements Updater {
       LOG.info("Unpacking new version of FitNesse resources. Please be patient...");
       getUpdateFilesFromJarFile();
       performAllupdates();
-      LOG.info("**********************************************************");
-      LOG.info("Files have been updated to a new version.");
-      LOG.info("Please read the release notes on ");
-      LOG.info("http://localhost:" + (context != null ? context.port : "xxx") +
-          "/FitNesse.ReleaseNotes");
-      LOG.info("to find out about the new features and fixes.");
-      LOG.info("**********************************************************");
 
       getProperties().put("Version", fitNesseVersion);
       saveProperties();
