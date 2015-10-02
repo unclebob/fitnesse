@@ -46,23 +46,7 @@ public class TestSummary {
     assert false : "hashCode not designed";
     return 42;
   }
-
-  public void tallyPageCounts(ExecutionResult result) {
-    switch (result) {
-    case ERROR:
-      exceptions += 1;
-      break;
-    case FAIL:
-      wrong += 1;
-      break;
-    case IGNORE:
-      ignores += 1;
-      break;
-    case PASS:
-      right += 1;
-    }
-  }
-
+  
   public void add(TestSummary testSummary) {
     right = getRight() + testSummary.getRight();
     wrong = getWrong() + testSummary.getWrong();

@@ -119,7 +119,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
       tag.add(HtmlUtil.makeSpanTag("", String.format("(%.03f seconds)", latestTestTime.elapsedSeconds())));
     }
 
-    pageCounts.tallyPageCounts(getExecutionResult(relativeName, testSummary, wasInterrupted()));
+    pageCounts.add(getExecutionResult(relativeName, testSummary, wasInterrupted()));
     HtmlTag insertScript = HtmlUtil.makeAppendElementScript(testSummariesId, tag.html());
     writeData(insertScript.html());
   }
