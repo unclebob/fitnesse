@@ -25,8 +25,7 @@ public class TestHistoryResponder implements SecureResponder {
     this.context = context;
     File resultsDirectory = context.getTestHistoryDirectory();
     String pageName = request.getResource();
-    TestHistory testHistory = new TestHistory();
-    testHistory.readPageHistoryDirectory(resultsDirectory, pageName);
+    TestHistory testHistory = new TestHistory(resultsDirectory, pageName);
 
     if (formatIsXML(request)) {
       return makeTestHistoryXmlResponse(testHistory);

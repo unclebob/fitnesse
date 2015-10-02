@@ -86,9 +86,8 @@ public class ExecutionLogResponder implements SecureResponder {
   private PageHistory getPageHistory(Request request) {
     if (resultsDirectory == null)
       resultsDirectory = context.getTestHistoryDirectory();
-    TestHistory history = new TestHistory();
     String pageName = request.getResource();
-    history.readPageHistoryDirectory(resultsDirectory, pageName);
+    TestHistory history = new TestHistory(resultsDirectory, pageName);
     return history.getPageHistory(pageName);
   }
 

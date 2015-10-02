@@ -34,8 +34,6 @@ public class JunitReFormatter extends BaseFormatter implements Closeable {
 @Override
   public void close() throws IOException {
     historyFormatter.close();
-    TestHistory testHistory = new TestHistory();
-    testHistory.readHistoryDirectory(context.getTestHistoryDirectory());
 
     // read file based on historyFormatter time-stamp
     VelocityContext velocityContext = new VelocityContext();

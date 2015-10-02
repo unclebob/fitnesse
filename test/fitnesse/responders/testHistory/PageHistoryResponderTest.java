@@ -38,7 +38,6 @@ import fitnesse.testutil.FitNesseUtil;
 
 public class PageHistoryResponderTest {
   private File resultsDirectory;
-  private TestHistory history;
   private SimpleDateFormat dateFormat = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
   private PageHistoryResponder responder;
   private SimpleResponse response;
@@ -51,7 +50,6 @@ public class PageHistoryResponderTest {
     resultsDirectory = new File("testHistoryDirectory");
     removeResultsDirectory();
     resultsDirectory.mkdir();
-    history = new TestHistory();
     responder = new PageHistoryResponder();
     Properties properties = new Properties();
     properties.setProperty("test.history.path", resultsDirectory.getPath());
@@ -104,7 +102,7 @@ public class PageHistoryResponderTest {
     File pageDirectory = addPageDirectory("TestPage");
     addTestResult(pageDirectory, "20090418123103_1_2_3_4");
 
-    history.readHistoryDirectory(resultsDirectory);
+    TestHistory history = new TestHistory(resultsDirectory);
     PageHistory pageHistory = history.getPageHistory("TestPage");
     assertEquals(1, pageHistory.size());
     assertEquals(7, pageHistory.maxAssertions());
@@ -126,7 +124,7 @@ public class PageHistoryResponderTest {
     addTestResult(pageDirectory, "20090503110451_6_5_3_1");
     addTestResult(pageDirectory, "20090418123103_1_2_3_4");
 
-    history.readHistoryDirectory(resultsDirectory);
+    TestHistory history = new TestHistory(resultsDirectory);
     PageHistory pageHistory = history.getPageHistory("TestPage");
     assertEquals(2, pageHistory.size());
     assertEquals(12, pageHistory.maxAssertions());
@@ -173,7 +171,7 @@ public class PageHistoryResponderTest {
   private PageHistory.PassFailBar computePassFailBarFor(int right, int wrong, int ignores, int exceptions) throws IOException, ParseException {
     File pageDirectory = addPageDirectory("TestPage");
     addTestResult(pageDirectory, String.format("20090503110451_%d_%d_%d_%d", right, wrong, ignores, exceptions));
-    history.readHistoryDirectory(resultsDirectory);
+    TestHistory history = new TestHistory(resultsDirectory);
     PageHistory pageHistory = history.getPageHistory("TestPage");
     Date date = dateFormat.parse("20090503110451");
     PageHistory.PassFailBar passFailBar = pageHistory.getPassFailBar(date, 50);
@@ -403,7 +401,7 @@ public class PageHistoryResponderTest {
     addTestResult(pageDirectory, "bad_File_name");
     addTestResult(pageDirectory, "20090418123103_1_2_3_4");
 
-    history.readHistoryDirectory(resultsDirectory);
+    TestHistory history = new TestHistory(resultsDirectory);
     PageHistory pageHistory = history.getPageHistory("TestPage");
     assertEquals(1, pageHistory.size());
   }

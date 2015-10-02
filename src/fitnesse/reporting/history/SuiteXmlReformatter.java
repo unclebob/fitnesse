@@ -39,8 +39,7 @@ public class SuiteXmlReformatter extends BaseFormatter implements Closeable {
   @Override
   public void close() throws IOException {
     historyFormatter.close();
-    testHistory = new TestHistory();
-    testHistory.readHistoryDirectory(context.getTestHistoryDirectory());
+    testHistory = new TestHistory(context.getTestHistoryDirectory());
 
     // read file based on historyFormatter timestamp
     VelocityContext velocityContext = new VelocityContext();

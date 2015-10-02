@@ -166,9 +166,8 @@ public class PageHistoryResponder implements SecureResponder {
   private void prepareResponse(Request request) {
     response = new SimpleResponse();
     File resultsDirectory = context.getTestHistoryDirectory();
-    TestHistory history = new TestHistory();
     String pageName = request.getResource();
-    history.readPageHistoryDirectory(resultsDirectory, pageName);
+    TestHistory history = new TestHistory(resultsDirectory, pageName);
     pageHistory = history.getPageHistory(pageName);
     page = context.pageFactory.newPage();
     PageTitle pageTitle = new PageTitle("Test History", PathParser.parse(request.getResource()), "");
