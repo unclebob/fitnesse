@@ -95,7 +95,7 @@ public class PageHistory extends PageHistoryReader{
   }
 
   private void countResult(TestResultRecord summary) {
-    ExecutionResult result = ExecutionResult.getExecutionResult(summary.getWikiPageName(), summary);
+    ExecutionResult result = ExecutionResult.getExecutionResult(summary.getWikiPageName(), summary.toTestSummary());
     if (result == ExecutionResult.FAIL || result == ExecutionResult.ERROR)
       failures++;
     else
@@ -218,7 +218,7 @@ public class PageHistory extends PageHistoryReader{
     public void addSummary(Date date, TestResultRecord summary) {
       minMaxDate(summary);
 
-      ExecutionResult result = ExecutionResult.getExecutionResult(summary.getWikiPageName(), summary);
+      ExecutionResult result = ExecutionResult.getExecutionResult(summary.getWikiPageName(), summary.toTestSummary());
 
       passFailList.add(new PassFailReport(date, result));
     }

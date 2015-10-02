@@ -148,9 +148,9 @@ public class TestHistoryResponderTest {
     assertEquals(date, pageHistory.getMinDate());
     assertEquals(date, pageHistory.getMaxDate());
     assertEquals(1, pageHistory.size());
-    TestResultRecord testSummary = pageHistory.get(date);
-    assertEquals(date, testSummary.getDate());
-    assertEquals(new TestSummary(1, 2, 3, 4), testSummary);
+    TestResultRecord testResultRecord = pageHistory.get(date);
+    assertEquals(date, testResultRecord.getDate());
+    assertEquals(new TestSummary(1, 2, 3, 4), testResultRecord.toTestSummary());
   }
 
   private File addTestResult(File pageDirectory, String testResultFileName) throws IOException {
@@ -172,9 +172,9 @@ public class TestHistoryResponderTest {
     assertEquals(dateFormat.parse("20090419000000"), pageHistory.getMaxDate());
     assertEquals(1, pageHistory.getPasses());
     assertEquals(2, pageHistory.getFailures());
-    assertEquals(new TestSummary(1, 0, 0, 0), pageHistory.get(dateFormat.parse("20090418000000")));
-    assertEquals(new TestSummary(1, 1, 0, 0), pageHistory.get(dateFormat.parse("20090419000000")));
-    assertEquals(new TestSummary(1, 0, 0, 1), pageHistory.get(dateFormat.parse("20090417000000")));
+    assertEquals(new TestSummary(1, 0, 0, 0), pageHistory.get(dateFormat.parse("20090418000000")).toTestSummary());
+    assertEquals(new TestSummary(1, 1, 0, 0), pageHistory.get(dateFormat.parse("20090419000000")).toTestSummary());
+    assertEquals(new TestSummary(1, 0, 0, 1), pageHistory.get(dateFormat.parse("20090417000000")).toTestSummary());
   }
 
   @Test
