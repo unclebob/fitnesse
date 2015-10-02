@@ -5,15 +5,15 @@ import java.util.TreeMap;
 
 public class HashFixture {
 
-  private Map hash;
+  private Map<String, Object> hash;
 
-  public void sendAsHash(Map hash) {
+  public void sendAsHash(Map<String, Object> hash) {
     this.hash = hash;
   }
 
-  public Map hash() {
+  public Map<String, Object> hash() {
     // Make result predictable (ordered)
-    return new TreeMap(hash);
+    return new TreeMap<String, Object>(hash);
   }
 
   public Object hashIs(String key) {
