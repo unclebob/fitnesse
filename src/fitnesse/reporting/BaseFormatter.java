@@ -5,7 +5,6 @@ import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.WikiPage;
 
