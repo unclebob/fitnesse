@@ -81,7 +81,7 @@ public class CustomLexerTest {
     return lexedTokens;
   }
 
-  public static class Lexer {
+  private static class Lexer {
 
     private final ParseSpecification specification;
     private final Scanner scanner;
@@ -89,15 +89,12 @@ public class CustomLexerTest {
 
     private Iterator<Symbol> symbolIterator = emptyIterator();
     private Symbol currentSymbol;
-    private int state;
 
     public Lexer(CharSequence buffer) {
-      this(buffer, 0, buffer.length(), 0);
+      this(buffer, 0, buffer.length());
     }
 
-    public Lexer(CharSequence buffer, int startOffset, int endOffset, int initialState) {
-      this.state = initialState;
-
+    public Lexer(CharSequence buffer, int startOffset, int endOffset) {
       Parser.make(new LexerParsingPage(), buffer.subSequence(startOffset, endOffset)).parse();
 
       ParsingPage currentPage = new LexerParsingPage();
@@ -108,19 +105,6 @@ public class CustomLexerTest {
       parser = new Parser(null, currentPage, scanner, specification);
 
       advance();
-    }
-
-    String getTokenText() {
-      return currentSymbol.getContent();
-    }
-
-    /**
-     * Returns the current state of the lexer.
-     *
-     * @return the lexer state.
-     */
-    public int getState() {
-      return state;
     }
 
     /**
