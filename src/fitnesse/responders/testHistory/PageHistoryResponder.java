@@ -174,6 +174,9 @@ public class PageHistoryResponder implements SecureResponder {
     PageTitle pageTitle = new PageTitle("Test History", PathParser.parse(request.getResource()), "");
     page.setPageTitle(pageTitle);
 
+    // FIXME: This variable might be assigned, but either way it is promptly dropped
+    // shortly after. Is there some non-obvious side-effects or initialization going
+    // on here or could this block potentially be removed? 
     String tags = "";    
     if (context.getRootPage() != null){
       WikiPagePath path = PathParser.parse(pageName);
