@@ -23,7 +23,6 @@ import org.junit.Before;
 import org.junit.Test;
 import fitnesse.util.Clock;
 import fitnesse.util.DateAlteringClock;
-import fitnesse.util.TimeMeasurement;
 
 public class SuiteHtmlFormatterTest {
   private SuiteHtmlFormatter formatter;
@@ -198,12 +197,4 @@ public class SuiteHtmlFormatterTest {
     assertHasRegexp("<li.*\\(page2\\).*<span.*>\\(0(" + getDecimalSeparatorForRegExp() + "){1}890 seconds\\)</span>.*</li>", pageBuffer.toString());
   }
 
-  private TimeMeasurement newConstantElapsedTimeMeasurement(final long theElapsedTime) {
-    return new TimeMeasurement() {
-      @Override
-      public long elapsed() {
-        return theElapsedTime;
-      }
-    };
-  }
 }
