@@ -25,16 +25,6 @@ public class SystemUnderTestMethodExecutor extends MethodExecutor {
     return MethodExecutionResult.noMethod(methodName, instance.getClass(), args.length);
   }
 
-  private Field findSystemUnderTest(Class<?> k) {
-    Field[] fields = k.getDeclaredFields();
-    for (Field field : fields) {
-      if (isSystemUnderTest(field)) {
-          return field;
-        }
-      }
-    return null;
-  }
-
   private Field findSystemUnderTest(String methodName, Class<?> k, Object[] args) {
     Field[] fields = k.getDeclaredFields();
     for (Field field : fields) {
