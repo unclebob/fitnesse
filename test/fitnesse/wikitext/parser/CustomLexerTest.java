@@ -83,9 +83,6 @@ public class CustomLexerTest {
 
   public static class Lexer {
 
-    private final CharSequence buffer;
-    private final int startOffset;
-    private final int endOffset;
     private final ParseSpecification specification;
     private final Scanner scanner;
     private final Parser parser;
@@ -99,9 +96,6 @@ public class CustomLexerTest {
     }
 
     public Lexer(CharSequence buffer, int startOffset, int endOffset, int initialState) {
-      this.buffer = buffer;
-      this.startOffset = startOffset;
-      this.endOffset = endOffset;
       this.state = initialState;
 
       Parser.make(new LexerParsingPage(), buffer.subSequence(startOffset, endOffset)).parse();
