@@ -102,7 +102,7 @@ public class RecentChangesWikiPage implements RecentChanges {
   }
 
   private String convertLinesToWikiText(List<String> lines) {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     for (Iterator<String> iterator = lines.iterator(); iterator.hasNext();) {
       String s = iterator.next();
       buffer.append(s).append("\n");

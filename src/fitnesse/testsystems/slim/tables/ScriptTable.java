@@ -258,7 +258,7 @@ public class ScriptTable extends SlimTable {
   }
 
   protected String getActionNameStartingAt(int startingCol, int endingCol, int row) {
-    StringBuffer actionName = new StringBuffer();
+    StringBuilder actionName = new StringBuilder();
     actionName.append(table.getCellContents(startingCol, row));
     int actionNameCol = startingCol + 2;
     while (actionNameCol <= endingCol &&

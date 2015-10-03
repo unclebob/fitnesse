@@ -70,7 +70,7 @@ public class ResponseParser {
   }
 
   private void parseChunks() throws IOException {
-    StringBuffer bodyBuffer = new StringBuffer();
+    StringBuilder bodyBuffer = new StringBuilder();
     int chunkSize = readChunkSize();
     while (chunkSize != 0) {
       bodyBuffer.append(input.read(chunkSize));
@@ -107,7 +107,7 @@ public class ResponseParser {
   }
 
   public String toString() {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     buffer.append("Status: ").append(status).append("\n");
     buffer.append("Headers: ").append("\n");
     for (String key : headers.keySet()) {

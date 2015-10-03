@@ -140,7 +140,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
   }
 
   public String toString() {
-    StringBuffer s = new StringBuffer();
+    StringBuilder s = new StringBuilder();
     s.append(super.toString("WikiPageProperties", 0));
     return s.toString();
   }

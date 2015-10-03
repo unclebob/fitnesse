@@ -193,7 +193,7 @@ public class Request {
   }
 
   private String concatenateItems(String existingItem, String value) {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     buffer.append(existingItem);
     buffer.append(',');
     buffer.append(value);

@@ -78,7 +78,7 @@ public class WikiPageProperty implements Serializable {
   }
 
   protected String toString(String key, int depth) {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
 
     for (int i = 0; i < depth; i++)
       buffer.append("\t");

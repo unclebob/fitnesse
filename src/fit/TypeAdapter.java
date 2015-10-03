@@ -327,7 +327,7 @@ public class TypeAdapter {
       if (o == null)
         return "";
       int length = Array.getLength(o);
-      StringBuffer b = new StringBuffer(5 * length);
+      StringBuilder b = new StringBuilder(5 * length);
       for (int i = 0; i < length; i++) {
         b.append(componentAdapter.toString(Array.get(o, i)));
         if (i < (length - 1)) {

@@ -35,7 +35,7 @@ public class StackTraceEnricher {
   }
 
   public String getStackTraceAsString(Throwable throwable) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     Throwable t = throwable;
     if (throwable.getStackTrace() == null || throwable.getStackTrace().length == 0) {
       t = throwable.fillInStackTrace();
