@@ -27,11 +27,7 @@ import fitnesse.reporting.history.TestExecutionReport;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.testsystems.ExecutionResult;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
 
 public class PageHistoryResponder implements SecureResponder {
   private SimpleDateFormat dateFormat = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
@@ -173,20 +169,6 @@ public class PageHistoryResponder implements SecureResponder {
     page = context.pageFactory.newPage();
     PageTitle pageTitle = new PageTitle("Test History", PathParser.parse(request.getResource()), "");
     page.setPageTitle(pageTitle);
-
-    // FIXME: This variable might be assigned, but either way it is promptly dropped
-    // shortly after. Is there some non-obvious side-effects or initialization going
-    // on here or could this block potentially be removed? 
-    String tags = "";    
-    if (context.getRootPage() != null){
-      WikiPagePath path = PathParser.parse(pageName);
-      PageCrawler crawler = context.getRootPage().getPageCrawler();
-      WikiPage wikiPage = crawler.getPage(path);
-      if(wikiPage != null) {
-        PageData pageData = wikiPage.getData();
-        tags = pageData.getAttribute(PageData.PropertySUITES);
-      }
-    }
   }
 
   public SecureOperation getSecureOperation() {
