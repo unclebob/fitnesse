@@ -16,6 +16,7 @@ public class SimpleAuthenticator extends Authenticator {
     p.propertyNames();
   }
 
+  @Override
   public boolean isAuthenticated(String username, String password) {
     return authenticated;
   }

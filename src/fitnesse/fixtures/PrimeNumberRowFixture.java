@@ -5,6 +5,7 @@ package fitnesse.fixtures;
 import fit.RowFixture;
 
 public class PrimeNumberRowFixture extends RowFixture {
+  @Override
   public Object[] query() throws Exception {
     PrimeData[] array = new PrimeData[5];
     array[0] = new PrimeData(11);
@@ -15,6 +16,7 @@ public class PrimeNumberRowFixture extends RowFixture {
     return array;
   }
 
+  @Override
   public Class<?> getTargetClass() {
     return PrimeData.class;
   }

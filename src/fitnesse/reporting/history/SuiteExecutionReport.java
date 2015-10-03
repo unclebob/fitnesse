@@ -83,6 +83,7 @@ public class SuiteExecutionReport extends ExecutionReport {
     template.merge(velocityContext, writer);
   }
 
+  @Override
   protected void unpackResults(Element testResults) {
     NodeList references = testResults.getElementsByTagName("pageHistoryReference");
     for (int referenceIndex = 0;referenceIndex < references.getLength();referenceIndex++){

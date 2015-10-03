@@ -19,6 +19,7 @@ public class SlimAssertion implements Assertion {
   @Override
   public fitnesse.testsystems.Instruction getInstruction() {
     return new fitnesse.testsystems.Instruction() {
+      @Override
       public String getId() {
         return instruction.getId();
       }

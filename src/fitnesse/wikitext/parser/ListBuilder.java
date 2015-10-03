@@ -7,6 +7,7 @@ public class ListBuilder implements Translation {
 
     public ListBuilder(String listTag) { this.listTag = listTag; }
 
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         HtmlTag list = new HtmlTag(listTag);
         for (Symbol child: symbol.getChildren()) {

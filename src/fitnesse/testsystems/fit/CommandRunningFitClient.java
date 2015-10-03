@@ -66,6 +66,7 @@ public class CommandRunningFitClient extends FitClient {
     return connectionEstablished;
   }
 
+  @Override
   public void join() {
     try {
       commandRunningStrategy.join();
@@ -85,6 +86,7 @@ public class CommandRunningFitClient extends FitClient {
     }
   }
 
+  @Override
   public void kill() {
     super.kill();
     commandRunningStrategy.kill();
@@ -157,6 +159,7 @@ public class CommandRunningFitClient extends FitClient {
         this.fitClient = fitClient;
       }
 
+      @Override
       public void run() {
         try {
           Thread.sleep(TIMEOUT);
@@ -182,6 +185,7 @@ public class CommandRunningFitClient extends FitClient {
         this.commandRunner = commandRunner;
       }
 
+      @Override
       public void run() {
         try {
           Thread.sleep(1000); // next waitFor() can finish too quickly on Linux!
@@ -240,6 +244,7 @@ public class CommandRunningFitClient extends FitClient {
     protected Thread createTestRunnerThread(final String testRunner, final String[] args) {
       final Method testRunnerMethod = getTestRunnerMethod(testRunner);
       Runnable fastFitServerRunnable = new Runnable() {
+        @Override
         public void run() {
           tryCreateTestRunner(testRunnerMethod, args);
         }

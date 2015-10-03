@@ -10,6 +10,7 @@ public class Nesting extends SymbolType implements Rule, Translation{
         htmlTranslation(this);
     }
 
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol nesting = parser.parseTo(SymbolType.CloseNesting, ParseSpecification.nestingPriority);
         if (!parser.getCurrent().isType(SymbolType.CloseNesting)) return Symbol.nothing;
@@ -17,6 +18,7 @@ public class Nesting extends SymbolType implements Rule, Translation{
         return new Maybe<Symbol>(current);
     }
 
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         return translator.translateTree(symbol) ;
     }

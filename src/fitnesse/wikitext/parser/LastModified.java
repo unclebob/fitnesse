@@ -15,6 +15,7 @@ public class LastModified extends SymbolType implements Translation {
         htmlTranslation(this);
     }
     
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         String user = translator.getPage().getProperty(PageData.LAST_MODIFYING_USER);
         String date = translator.getPage().getProperty(PageData.PropertyLAST_MODIFIED);

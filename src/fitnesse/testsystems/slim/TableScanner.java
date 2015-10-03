@@ -9,5 +9,6 @@ public interface TableScanner<T extends Table> extends Iterable<T> {
 
   public T getTable(int i);
 
+  @Override
   public Iterator<T> iterator();
 }

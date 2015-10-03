@@ -6,10 +6,12 @@ import fitnesse.slim.Converter;
 
 public class StringConverter implements Converter<String> {
 
+  @Override
   public String toString(String o) {
     return o != null ? o : NULL_VALUE;
   }
 
+  @Override
   public String fromString(String arg) {
     return arg;
   }

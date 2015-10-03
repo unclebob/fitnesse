@@ -28,6 +28,7 @@ public class SearchFormResponder implements Responder {
   static final String SEARCH_ATTRIBUTE_SKIP = PropertyPRUNE;
   static final String[] SPECIAL_ATTRIBUTES = { "SetUp", "TearDown" };
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
 

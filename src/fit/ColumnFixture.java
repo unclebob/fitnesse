@@ -44,6 +44,7 @@ public class ColumnFixture extends Fixture {
     }
   }
 
+  @Override
   public void check(Parse cell, TypeAdapter a) {
     try {
       executeIfNeeded();

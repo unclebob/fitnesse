@@ -7,6 +7,7 @@ import fit.Parse;
 
 // Used in acceptance suite
 public class PassFixture extends Fixture {
+  @Override
   public void doTable(Parse parse) {
     right(parse);
   }

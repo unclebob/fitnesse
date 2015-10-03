@@ -28,6 +28,7 @@ public class ErrorResponder implements Responder {
     this.statusCode = statusCode;
   }
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse(statusCode);
     HtmlPage html = context.pageFactory.newPage();

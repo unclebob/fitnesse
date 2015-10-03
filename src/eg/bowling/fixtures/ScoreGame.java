@@ -14,6 +14,7 @@ public class ScoreGame extends TableFixture {
   public static final int BLANK = -3;
   public static final int ERROR = -4;
 
+  @Override
   protected void doStaticTable(int rows) {
     game = new BowlingGame();
     doRolls();

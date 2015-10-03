@@ -62,6 +62,7 @@ public class ParseSpecification {
 
     public SymbolMatch findMatch(final ScanString input, final int startPosition, final SymbolStream symbols) {
         return provider.findMatch(input.charAt(0), new SymbolMatcher() {
+            @Override
             public SymbolMatch makeMatch(Matchable candidate) {
                 if (input.getOffset() != startPosition || !ignores(candidate)) {
                     SymbolMatch match = candidate.makeMatch(input, symbols);

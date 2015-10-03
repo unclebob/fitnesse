@@ -21,6 +21,7 @@ import fitnesse.wiki.*;
 
 public class WikiPageResponder implements SecureResponder {
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     WikiPage page = loadPage(context, request.getResource(), request.getMap());
     if (page == null)
@@ -98,6 +99,7 @@ public class WikiPageResponder implements SecureResponder {
     WikiImportingResponder.handleImportProperties(html, page);
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }

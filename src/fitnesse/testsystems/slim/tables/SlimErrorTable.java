@@ -14,10 +14,12 @@ public class SlimErrorTable extends SlimTable {
     super(table, id, testContext);
   }
 
+  @Override
   protected String getTableType() {
     return "UnknownTableType";
   }
 
+  @Override
   public List<SlimAssertion> getAssertions() {
 	// No need for Expectations, this is just an errorous table. Put a notification in.
     String tableType = table.getCellContents(0, 0);

@@ -146,6 +146,7 @@ public class ClassPathBuilder {
       }
     }
 
+    @Override
     public boolean accept(File dir, String name) {
       if (pattern != null)
         return pattern.equals(name);

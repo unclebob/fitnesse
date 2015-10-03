@@ -18,6 +18,7 @@ import fitnesse.wiki.WikiPagePath;
 
 public class RefactorPageResponder implements SecureResponder {
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     String resource = request.getResource();
 
@@ -45,6 +46,7 @@ public class RefactorPageResponder implements SecureResponder {
     return response;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();
   }

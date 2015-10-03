@@ -54,6 +54,7 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
     this(observer, pageTypes, attributes, splitSuitesIntoArray(suites));
   }
 
+  @Override
   protected boolean pageMatches(WikiPage page) {
 
     if (!meetsSetUpTearDownConditions(page)) {

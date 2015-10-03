@@ -9,6 +9,7 @@ public class JavaSlimFactory extends SlimFactory {
     this.timeout = timeout;
   }
 
+  @Override
   public StatementExecutorInterface getStatementExecutor() {
     StatementExecutorInterface statementExecutor = new StatementExecutor();
     if (timeout != null) {

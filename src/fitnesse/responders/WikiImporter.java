@@ -105,6 +105,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
     pageCatalog.remove(relativePathOfContext);
   }
 
+  @Override
   public void enterChildPage(WikiPage childPage, Date lastModified) {
     if (pageCatalog != null) {
       pageCatalog.remove(relativePath(childPage));
@@ -181,6 +182,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
     return "http://" + remoteHostname + ":" + remotePort + "/" + remotePathName;
   }
 
+  @Override
   public void exitPage() {
     remotePath.removeNameFromEnd();
     relativePath.removeNameFromEnd();
@@ -290,6 +292,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
     return orphans;
   }
 
+  @Override
   public void process(WikiPage page) {
     WikiPagePath relativePath = relativePath(page);
     pageCatalog.add(relativePath);
@@ -309,9 +312,11 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
 
   private static class NullWikiImporterClient implements WikiImporterClient {
 
+    @Override
     public void pageImported(WikiPage localPage) {
     }
 
+    @Override
     public void pageImportError(WikiPage localPage, Exception e) {
     }
   }

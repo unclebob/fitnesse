@@ -110,6 +110,7 @@ public class SuiteSpecificationRunner implements TraversalListener<WikiPage> {
   }
 
 
+  @Override
   public void process(WikiPage page) {
     for (WikiPage hit : testPageList) {
       if (hit.equals(page))

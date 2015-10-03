@@ -16,6 +16,7 @@ public class PrimeFactorsFixture extends RowFixture {
     public int factor;
   }
 
+  @Override
   public Object[] query() {
     int n = Integer.parseInt(args[0]);
     Collection<Factor> factors = new ArrayList<Factor>();
@@ -30,6 +31,7 @@ public class PrimeFactorsFixture extends RowFixture {
     return factors.toArray(new Factor[factors.size()]);
   }
 
+  @Override
   public Class<?> getTargetClass()             // get expected type of row
   {
     return Factor.class;

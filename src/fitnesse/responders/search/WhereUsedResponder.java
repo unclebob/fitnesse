@@ -12,6 +12,7 @@ public class WhereUsedResponder extends ResultResponder {
     new WhereUsedPageFinder(page, observer).search(root);
   }
 
+  @Override
   protected String getTitle() {
     return "Where Used Results";
   }

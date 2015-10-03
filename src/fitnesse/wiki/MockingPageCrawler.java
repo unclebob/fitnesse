@@ -4,6 +4,7 @@ package fitnesse.wiki;
 
 //TODO rename me
 public class MockingPageCrawler implements PageCrawlerDeadEndStrategy {
+  @Override
   public WikiPage getPageAfterDeadEnd(WikiPage context, WikiPagePath restOfPath, PageCrawler crawler) {
     return createMockPage(restOfPath.last(), context);
   }

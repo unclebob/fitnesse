@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
 public class StyleRule implements Rule {
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         String content = current.getContent();
         char beginner = content.charAt(content.length() - 1);

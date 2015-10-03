@@ -13,12 +13,14 @@ public class ReplacingFileUpdate extends FileUpdate {
     super(source, destination);
   }
 
+  @Override
   public void doUpdate() throws IOException {
     if (destinationFile().exists())
       destinationFile().delete();
     super.doUpdate();
   }
 
+  @Override
   public boolean shouldBeApplied() throws IOException {
     if (super.shouldBeApplied())
       return true;

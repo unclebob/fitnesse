@@ -13,12 +13,14 @@ public abstract class WikiPageFinder implements TraversalListener<WikiPage>, Pag
 
   protected abstract boolean pageMatches(WikiPage page);
 
+  @Override
   public void process(WikiPage page) {
     if (pageMatches(page)) {
       observer.process(page);
     }
   }
 
+  @Override
   public void search(WikiPage page) {
     page.getPageCrawler().traverse(this);
   }

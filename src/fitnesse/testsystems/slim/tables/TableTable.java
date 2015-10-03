@@ -21,10 +21,12 @@ public class TableTable extends SlimTable {
     super(table, tableId, slimTestContext);
   }
 
+  @Override
   protected String getTableType() {
     return ("tableTable");
   }
 
+  @Override
   public List<SlimAssertion> getAssertions() {
     SlimAssertion make = constructFixture(getFixtureName());
     Instruction doTable = callFunction(getTableName(), "doTable", tableAsList());

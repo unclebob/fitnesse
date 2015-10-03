@@ -162,6 +162,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
     writeData(insertScript.html());
   }
 
+  @Override
   protected String makeSummaryContent() {
     String summaryContent = "<strong>Test Pages:</strong> " + pageCounts.toString() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
     if (latestTestTime != null) {

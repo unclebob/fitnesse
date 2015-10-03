@@ -16,18 +16,22 @@ import fitnesse.wiki.PathParser;
 public abstract class ResultResponder extends ChunkingResponder implements
   SecureResponder, Traverser<Object> {
 
+  @Override
   protected PageCrawler getPageCrawler() {
     return root.getPageCrawler();
   }
 
+  @Override
   protected void doSending() {
     HtmlPage htmlPage = context.pageFactory.newPage();
     htmlPage.setTitle(getTitle());
     htmlPage.setPageTitle(new PageTitle(getTitle()) {
+      @Override
       public String getTitle() {
         return "search";
       }
 
+      @Override
       public String getLink() {
         return null;
       }
@@ -52,8 +56,10 @@ public abstract class ResultResponder extends ChunkingResponder implements
 
   protected abstract String getTitle() ;
 
+  @Override
   public abstract void traverse(TraversalListener<Object> observer);
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }

@@ -14,6 +14,7 @@ public class Alias extends SymbolType implements Rule, Translation {
         htmlTranslation(this);
     }
 
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol tag = parser.parseToIgnoreFirst(SymbolType.CloseBracket);
         if (!parser.isMoveNext(SymbolType.OpenBracket)) return Symbol.nothing;
@@ -24,6 +25,7 @@ public class Alias extends SymbolType implements Rule, Translation {
         return new Maybe<Symbol>(current.add(tag).add(link));
     }
 
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         if (symbol.childAt(0).childAt(0).isType(WikiWord.symbolType)) return translator.translate(symbol.childAt(0));
 

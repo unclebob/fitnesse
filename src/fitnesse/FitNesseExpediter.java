@@ -68,6 +68,7 @@ public class FitNesseExpediter implements ResponseSender {
     return requestParsingTimeLimit;
   }
 
+  @Override
   public void send(byte[] bytes) {
     try {
       output.write(bytes);
@@ -78,6 +79,7 @@ public class FitNesseExpediter implements ResponseSender {
     }
   }
 
+  @Override
   public void close() {
     try {
       log(socket, request, response);
@@ -88,6 +90,7 @@ public class FitNesseExpediter implements ResponseSender {
     }
   }
 
+  @Override
   public Socket getSocket() {
     return socket;
   }
@@ -170,6 +173,7 @@ public class FitNesseExpediter implements ResponseSender {
 
   private Thread createParsingThread(final Request request) {
     Thread parseThread = new Thread() {
+      @Override
       public synchronized void run() {
         try {
           request.parse();

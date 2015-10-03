@@ -7,6 +7,7 @@ import fitnesse.responders.editing.EditResponder;
 public class SavePageRequester extends ResponseRequester {
   public String saveContents;
 
+  @Override
   protected void details() {
     request.addInput("responder", "saveData");
     request.addInput(EditResponder.TIME_STAMP, "9999999999999");

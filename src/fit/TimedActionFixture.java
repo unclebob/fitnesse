@@ -15,12 +15,14 @@ public class TimedActionFixture extends ActionFixture {
     return new SimpleDateFormat("hh:mm:ss");
   }
 
+  @Override
   public void doTable(Parse table) {
     super.doTable(table);
     table.parts.parts.last().more = td("time");
     table.parts.parts.last().more = td("split");
   }
 
+  @Override
   public void doCells(Parse cells) {
     Date start = time();
     super.doCells(cells);

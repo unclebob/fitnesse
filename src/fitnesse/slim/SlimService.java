@@ -86,6 +86,7 @@ public class SlimService {
     final SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interaction, options.daemon, options.useSSL, options.sslParameterClassName);
     int actualPort = slimservice.getPort();
     service = new Thread() {
+      @Override
       public void run() {
         try {
           slimservice.accept();

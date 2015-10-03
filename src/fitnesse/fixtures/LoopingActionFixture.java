@@ -22,6 +22,7 @@ public class LoopingActionFixture extends ActionFixture {
     return getClass().getMethod(methodName, empty);
   }
 
+  @Override
   public void doRows(Parse rows) {
     this.rows = rows;
     while (this.rows != null) {
@@ -30,6 +31,7 @@ public class LoopingActionFixture extends ActionFixture {
     }
   }
 
+  @Override
   public void doCells(Parse cells) {
     this.cells = cells;
     try {

@@ -11,6 +11,7 @@ public class TestFixture extends Fixture {
     super.summary.put(FixtureDecorator.ENCAPSULATED_FIXTURE_NAME, TestFixture.class.getName());
   }
 
+  @Override
   public void doTable(Parse table) {
     super.summary.put(TABLE_CONTENTS, new Table(table).toString());
   }

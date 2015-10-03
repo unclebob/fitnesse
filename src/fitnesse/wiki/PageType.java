@@ -5,6 +5,7 @@ import static fitnesse.wiki.PageData.*;
 public enum PageType {
 
   SUITE("Suite") {
+    @Override
     public boolean validForPageName(String pageName) {
       return (pageName.startsWith(toString())
           && !pageName.equals(SUITE_SETUP_NAME) && !pageName.equals(SUITE_TEARDOWN_NAME))
@@ -12,6 +13,7 @@ public enum PageType {
     }
   },
   TEST("Test") {
+    @Override
     public boolean validForPageName(String pageName) {
       return pageName.startsWith(toString())
           || pageName.endsWith(toString())
@@ -20,6 +22,7 @@ public enum PageType {
     }
   },
   STATIC("Static") {
+    @Override
     public boolean validForPageName(String pageName) {
       return true;
     }

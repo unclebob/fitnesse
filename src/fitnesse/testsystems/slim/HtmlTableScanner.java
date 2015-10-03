@@ -65,14 +65,17 @@ public class HtmlTableScanner implements TableScanner<HtmlTable> {
     }
   }
 
+  @Override
   public int getTableCount() {
     return tables.size();
   }
 
+  @Override
   public HtmlTable getTable(int i) {
     return tables.get(i);
   }
 
+  @Override
   public Iterator<HtmlTable> iterator() {
     return tables.iterator();
   }

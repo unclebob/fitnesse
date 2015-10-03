@@ -6,6 +6,7 @@ import fit.Fixture;
 import fit.Parse;
 
 public class OutputWritingFixture extends Fixture {
+  @Override
   public void doTable(Parse parse) {
     Parse cell = parse.parts.more.parts;
     String value = cell.text();

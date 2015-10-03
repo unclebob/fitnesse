@@ -9,6 +9,7 @@ public class RawHtml extends HtmlElement {
     this.html = html;
   }
 
+  @Override
   public String html() {
     return html;
   }

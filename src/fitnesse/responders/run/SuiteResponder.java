@@ -326,6 +326,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     return runner;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureTestOperation();
   }
@@ -408,6 +409,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   public static class HistoryWriterFactory implements TestXmlFormatter.WriterFactory {
 
+    @Override
     public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
       File resultPath = new File(makePageHistoryFileName(context, page, counts, time));
       File resultDirectory = new File(resultPath.getParent());

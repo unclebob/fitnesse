@@ -10,6 +10,7 @@ public class Variable extends SymbolType implements Rule, Translation {
         htmlTranslation(this);
     }
     
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Maybe<String> name = parser.parseToAsString(SymbolType.CloseBrace);
         if (name.isNothing() || name.getValue().isEmpty()) return Symbol.nothing;
@@ -30,6 +31,7 @@ public class Variable extends SymbolType implements Rule, Translation {
         return new Maybe<Symbol>(current);
     }
 
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         return translator.translate(symbol.childAt(1));
     }

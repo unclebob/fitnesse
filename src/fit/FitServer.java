@@ -203,6 +203,7 @@ public class FitServer {
   }
 
   class TablePrintingFixtureListener implements FixtureListener {
+    @Override
     public void tableFinished(Parse table) {
       try {
         byte[] bytes = readTable(table);
@@ -214,6 +215,7 @@ public class FitServer {
       }
     }
 
+    @Override
     public void tablesFinished(Counts count) {
       try {
         FitProtocol.writeCounts(count, socketOutput);

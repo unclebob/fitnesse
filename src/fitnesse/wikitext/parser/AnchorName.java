@@ -11,6 +11,7 @@ public class AnchorName extends SymbolType implements Rule {
         htmlTranslation(new HtmlBuilder("a").attribute("name", 0).body(-1, " ").inline());
     }
 
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         List<Symbol> tokens = parser.moveNext(new SymbolType[] {SymbolType.Whitespace, SymbolType.Text});
         if (tokens.isEmpty()) return Symbol.nothing;

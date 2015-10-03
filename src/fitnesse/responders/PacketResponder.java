@@ -28,6 +28,7 @@ public class PacketResponder implements SecureResponder {
   List<JSONObject> tables = new ArrayList<JSONObject>();
   private String jsonpFunction;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     response = new SimpleResponse();
     jsonpFunction = (String) request.getInput("jsonp");
@@ -107,6 +108,7 @@ public class PacketResponder implements SecureResponder {
     return rowList;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }

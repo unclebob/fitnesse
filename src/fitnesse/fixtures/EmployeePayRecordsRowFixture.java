@@ -5,6 +5,7 @@ package fitnesse.fixtures;
 import fit.RowFixture;
 
 public class EmployeePayRecordsRowFixture extends RowFixture {
+  @Override
   public Object[] query() throws Exception {
     EmployeePayRecord[] records = new EmployeePayRecord[2];
     records[0] = new EmployeePayRecord(1, 1000);
@@ -12,6 +13,7 @@ public class EmployeePayRecordsRowFixture extends RowFixture {
     return records;
   }
 
+  @Override
   public Class<?> getTargetClass() {
     return EmployeePayRecord.class;
   }

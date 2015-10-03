@@ -69,6 +69,7 @@ public class VersionInfo implements Comparable<VersionInfo> {
     return age;
   }
 
+  @Override
   public int compareTo(VersionInfo otherVersion) {
       return getCreationTime().compareTo(otherVersion.getCreationTime());
   }

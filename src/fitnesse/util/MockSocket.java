@@ -48,14 +48,17 @@ public class MockSocket extends Socket {
     this.output = output;
   }
 
+  @Override
   public synchronized InputStream getInputStream() {
     return input;
   }
 
+  @Override
   public synchronized OutputStream getOutputStream() {
     return output;
   }
 
+  @Override
   public void close() {
     closed = true;
     try {
@@ -67,6 +70,7 @@ public class MockSocket extends Socket {
     }
   }
 
+  @Override
   public boolean isClosed() {
     return closed;
   }
@@ -86,6 +90,7 @@ public class MockSocket extends Socket {
     this.host = host;
   }
 
+  @Override
   public SocketAddress getRemoteSocketAddress() {
     return new InetSocketAddress(host, 123);
   }

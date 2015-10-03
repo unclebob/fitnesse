@@ -15,6 +15,7 @@ public class Image extends SymbolType implements Rule, Translation {
         htmlTranslation(this);
     }
 
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
     	  String imageProperty =
             current.getContent().endsWith("l") ? Link.Left

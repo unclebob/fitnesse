@@ -19,11 +19,13 @@ public class TimeRange extends TimeBasedFixtureDecorator {
     super(stopWatch);
   }
 
+  @Override
   protected void run(Fixture fixture, Parse table) {
     super.run(fixture, table);
     summary.put(ACTUAL_TIME_TAKEN, new Long(elapsedTime));
   }
 
+  @Override
   protected void setupDecorator(String[] arguments) throws InvalidInputException {
     if (arguments.length != 2) {
       throw new InvalidInputException("Time range must be specified");
@@ -34,6 +36,7 @@ public class TimeRange extends TimeBasedFixtureDecorator {
     summary.put(MAX_TIME, new Long(maxTime));
   }
 
+  @Override
   protected void updateColumnsBasedOnResults(Parse table) {
     updateColumns(table.parts.parts.more, elapsedTime, minTime, false);
     updateColumns(table.parts.parts.more.more.more, elapsedTime, maxTime, true);

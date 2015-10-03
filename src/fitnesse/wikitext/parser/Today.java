@@ -24,6 +24,7 @@ public class Today extends SymbolType implements Rule, Translation {
         htmlTranslation(this);
     }
 
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         List<Symbol> lookAhead = parser.peek(new SymbolType[] {SymbolType.Whitespace, SymbolType.DateFormatOption});
         if (!lookAhead.isEmpty()) {
@@ -55,6 +56,7 @@ public class Today extends SymbolType implements Rule, Translation {
         return option.equals("-t")
                 || option.equals("-xml");
     }
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         String increment = symbol.getProperty(Today.Increment);
         int incrementInt =
