@@ -51,9 +51,7 @@ public class Logger {
   }
 
   static String makeLogFileName(Calendar calendar) {
-    StringBuilder name = new StringBuilder();
-    name.append("fitnesse").append(format(makeFileNameFormat(), calendar)).append(".log");
-    return name.toString();
+    return "fitnesse" + format(makeFileNameFormat(), calendar) + ".log";
   }
 
   public void log(LogData data) {

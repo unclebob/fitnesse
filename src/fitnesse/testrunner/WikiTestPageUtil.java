@@ -8,10 +8,7 @@ import fitnesse.wiki.WikiPageUtil;
 public class WikiTestPageUtil {
 
   public static String makePageHtml(WikiTestPage page){
-    StringBuilder buffer = new StringBuilder();
-    buffer.append(WikiPageUtil.getHeaderPageHtml(page.getSourcePage()));
-    buffer.append(page.getHtml());
-    return buffer.toString();
+    return WikiPageUtil.getHeaderPageHtml(page.getSourcePage()) + page.getHtml();
   }
 
   public static WikiPage getSourcePage(TestPage testPage) {
