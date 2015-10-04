@@ -7,3 +7,5 @@ jdk:
 install: ant resolve
 
 script: ant release
+
+sudo: false
