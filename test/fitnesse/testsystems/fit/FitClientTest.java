@@ -8,7 +8,6 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertSubString;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import fitnesse.testsystems.CompositeExecutionLogListener;
