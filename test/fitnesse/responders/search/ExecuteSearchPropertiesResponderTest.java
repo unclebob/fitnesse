@@ -28,6 +28,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageUtil;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -134,21 +135,9 @@ public class ExecuteSearchPropertiesResponderTest {
   private void assertPageTypesMatch(PageType... pageTypes) {
     MockRequest request = new MockRequest();
     List<PageType> types = Arrays.asList(pageTypes);
-    final String commaSeparatedPageTypes = buildPageTypeListForRequest(pageTypes);
+    final String commaSeparatedPageTypes = StringUtils.join(pageTypes, ",");
     request.addInput(PAGE_TYPE_ATTRIBUTE, commaSeparatedPageTypes);
     assertEquals(types, responder.getPageTypesFromInput(request));
-  }
-
-  private String buildPageTypeListForRequest(PageType... pageTypes) {
-    StringBuffer buffer = new StringBuffer();
-    for (PageType type: pageTypes) {
-      buffer.append(type.toString());
-      buffer.append(',');
-    }
-    buffer.deleteCharAt(buffer.length()-1);
-
-    final String commaSeparatedPageTypes = buffer.toString();
-    return commaSeparatedPageTypes;
   }
 
   @Test
