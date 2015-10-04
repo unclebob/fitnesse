@@ -29,6 +29,7 @@ public class HistoryComparerTest {
   @Before
   public void setUp() throws Exception {
     comparer = new HistoryComparer() {
+      @Override
       public String getFileContent(String filePath) {
         if (filePath.equals("TestFolder/FileOne"))
           return "this is file one";

@@ -134,6 +134,7 @@ public class FitClientTest implements FitClientListener {
   public void testReadyForSending() throws Exception {
     CommandRunningFitClient.TIMEOUT = 5000;
     Thread startThread = new Thread() {
+      @Override
       public void run() {
         try {
           client.start();

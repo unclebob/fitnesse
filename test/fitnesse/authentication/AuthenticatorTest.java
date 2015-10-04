@@ -25,10 +25,12 @@ public class AuthenticatorTest {
 
   class DummySecureResponder implements SecureResponder {
 
+    @Override
     public SecureOperation getSecureOperation() {
       return new AlwaysSecureOperation();
     }
 
+    @Override
     public Response makeResponse(FitNesseContext context, Request request) {
       return null;
     }

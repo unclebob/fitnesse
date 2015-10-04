@@ -184,18 +184,22 @@ public class WikiContentUpdaterTest {
   }
 
   private class UpdateSpy implements Update {
+    @Override
     public String getName() {
       return "test";
     }
 
+    @Override
     public String getMessage() {
       return "test";
     }
 
+    @Override
     public boolean shouldBeApplied() {
       return true;
     }
 
+    @Override
     public void doUpdate() {
       updateDone = true;
     }

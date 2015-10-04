@@ -127,10 +127,12 @@ public class SlimTableTest {
       super(null, null, new SlimTestContextImpl(new WikiTestPage(new WikiPageDummy())));
     }
 
+    @Override
     protected String getTableType() {
       return null;
     }
 
+    @Override
     public List<SlimAssertion> getAssertions() {
       return Collections.emptyList();
     }

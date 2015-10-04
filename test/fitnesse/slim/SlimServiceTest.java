@@ -10,24 +10,29 @@ import static org.junit.Assert.*;
 
 public class SlimServiceTest extends SlimServiceTestBase {
 
+  @Override
   protected String getImport() {
     return "fitnesse.slim.test";
   }
 
+  @Override
   protected void startSlimService() throws IOException {
     SlimService.Options options = SlimService.parseCommandLine(new String[]{"8099"});
     SlimService.startWithFactoryAsync(JavaSlimFactory.createJavaSlimFactory(options), options);
   }
 
+  @Override
   protected void closeSlimService() throws InterruptedException {
     SlimService.waitForServiceToStopAsync();
     assertFalse(SlimService.service.isAlive());
   }
 
+  @Override
   protected String expectedExceptionMessage() {
     return "java.lang.Exception: This is my exception";
   }
 
+  @Override
   protected String expectedStopTestExceptionMessage() {
     return "ABORT_SLIM_TEST:fitnesse.slim.test.TestSlim$StopTestException: This is a stop test exception";
   }

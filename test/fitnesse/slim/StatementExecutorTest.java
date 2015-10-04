@@ -8,18 +8,22 @@ public class StatementExecutorTest extends StatementExecutorTestBase {
     private boolean echoCalled = false;
     private boolean speakCalled;
 
+    @Override
     public void speak() {
       speakCalled = true;
     }
 
+    @Override
     public boolean speakCalled() {
       return speakCalled;
     }
 
+    @Override
     public void echo() {
       echoCalled = true;
     }
 
+    @Override
     public boolean echoCalled() {
       return echoCalled;
     }
@@ -31,14 +35,17 @@ public class StatementExecutorTest extends StatementExecutorTestBase {
     public MySystemUnderTestBase sut = new MySystemUnderTestJava();
     private boolean echoCalled = false;
 
+    @Override
     public void echo() {
       echoCalled = true;
     }
 
+    @Override
     public boolean echoCalled() {
       return echoCalled;
     }
 
+    @Override
     public MySystemUnderTestBase getSystemUnderTest() {
       return sut;
     }
@@ -48,14 +55,17 @@ public class StatementExecutorTest extends StatementExecutorTestBase {
     public MySystemUnderTestBase systemUnderTest = new MySystemUnderTestJava();
     private boolean echoCalled;
 
+    @Override
     public void echo() {
       echoCalled = true;
     }
 
+    @Override
     public boolean echoCalled() {
       return echoCalled;
     }
 
+    @Override
     public MySystemUnderTestBase getSystemUnderTest() {
       return systemUnderTest;
     }
@@ -64,10 +74,12 @@ public class StatementExecutorTest extends StatementExecutorTestBase {
   public static class SimpleFixtureJava extends SimpleFixture {
     private boolean echoCalled;
 
+    @Override
     public void echo() {
       echoCalled = true;
     }
 
+    @Override
     public boolean echoCalled() {
       return echoCalled;
     }
@@ -77,18 +89,22 @@ public class StatementExecutorTest extends StatementExecutorTestBase {
     private boolean echoCalled;
     private boolean speakCalled;
 
+    @Override
     public void echo() {
       echoCalled = true;
     }
 
+    @Override
     public void speak() {
       speakCalled = true;
     }
 
+    @Override
     public boolean speakCalled() {
       return speakCalled;
     }
 
+    @Override
     public boolean echoCalled() {
       return echoCalled;
     }
@@ -97,10 +113,12 @@ public class StatementExecutorTest extends StatementExecutorTestBase {
   public static class FileSupportJava extends FileSupport {
     private boolean deleteCalled;
 
+    @Override
     public void delete(String fileName) {
       deleteCalled = true;
     }
 
+    @Override
     public boolean deleteCalled() {
       return deleteCalled;
     }

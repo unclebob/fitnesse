@@ -23,10 +23,12 @@ public class RenamePageResponderTest extends ResponderTestCase {
   private String pageOneName;
   private String pageTwoName;
 
+  @Override
   protected Responder responderInstance() {
     return new RenamePageResponder();
   }
 
+  @Override
   @Before
   public void setUp() throws Exception {
     super.setUp();

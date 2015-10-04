@@ -18,17 +18,20 @@ public class ReplacingFileUpdateTest extends UpdateTestCase {
   public final String destDirName = "subDir";
   public File destFile;
 
+  @Override
   public void setUp() throws Exception {
     super.setUp();
     destFile = new File(new File(testDir.getPath(), destDirName), "testFile");
     sourceFile.createNewFile();
   }
 
+  @Override
   public void tearDown() throws Exception {
     super.tearDown();
     sourceFile.delete();
   }
 
+  @Override
   protected Update makeUpdate() throws Exception {
     return new ReplacingFileUpdate("testFile", new File(context.getRootPagePath(), destDirName));
   }

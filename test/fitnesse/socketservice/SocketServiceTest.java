@@ -24,6 +24,7 @@ public class SocketServiceTest {
 
   public SocketServiceTest() {
     connectionCounter = new SocketServer() {
+      @Override
       public void serve(Socket s) {
         connections++;
       }
@@ -128,6 +129,7 @@ public class SocketServiceTest {
 }
 
 class HelloService implements SocketServer {
+  @Override
   public void serve(Socket s) {
     try {
       PrintStream ps = GetPrintStream(s);
@@ -139,6 +141,7 @@ class HelloService implements SocketServer {
 }
 
 class EchoService implements SocketServer {
+  @Override
   public void serve(Socket s) {
     try {
       PrintStream ps = GetPrintStream(s);

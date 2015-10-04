@@ -41,6 +41,7 @@ public class ShutdownResponderTest {
   @Test
   public void testShutdownCalledFromServer() throws Exception {
     Thread thread = new Thread() {
+      @Override
       public void run() {
         try {
           RequestBuilder request = new RequestBuilder("/?responder=shutdown");

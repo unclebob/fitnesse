@@ -43,10 +43,12 @@ public class LoopTest extends FixtureDecoratorTestCase {
     TestCaseHelper.assertCounts(TestCaseHelper.counts(15, 0, 0, 0), decorator.counts);
   }
 
+  @Override
   protected String geDecoratorHTMLRow() {
     return FIRST_HTML_ROW;
   }
 
+  @Override
   protected int numberOfAssertionsOnDecorator() {
     return 0;
   }

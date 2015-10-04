@@ -19,6 +19,7 @@ public class HtmlSlimResponder extends SlimResponder {
     this.customComparatorRegistry = customComparatorRegistry;
   }
 
+  @Override
   protected SlimTestSystem getTestSystem() throws IOException {
 
     SlimCommandRunningClient slimClient;

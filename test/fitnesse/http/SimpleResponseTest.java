@@ -18,6 +18,7 @@ public class SimpleResponseTest implements ResponseSender {
   private String text;
   private boolean closed = false;
 
+  @Override
   public void send(byte[] bytes) {
     try {
       buffer.append(new String(bytes, "UTF-8"));

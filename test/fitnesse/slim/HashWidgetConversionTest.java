@@ -14,6 +14,7 @@ public class HashWidgetConversionTest extends HashWidgetConversionTestBase {
       theMap = map;
     }
     
+    @Override
     public boolean setMap(Map<String, String> map) {
       return false;
     }

@@ -15,6 +15,7 @@ import org.junit.Test;
 
 public class RefactorPageResponderTest extends ResponderTestCase {
 
+  @Override
   @Before
   public void setUp() throws Exception {
     super.setUp();

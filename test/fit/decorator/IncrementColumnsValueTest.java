@@ -16,10 +16,12 @@ public class IncrementColumnsValueTest extends FixtureDecoratorTestCase {
     + "</td><td>ColumnName</td><td>of type</td><td>int</td><td>by</td><td>1</td></tr>";
   private FixtureDecorator decorator = new IncrementColumnsValue();
 
+  @Override
   protected String geDecoratorHTMLRow() {
     return FIRST_HTML_ROW;
   }
 
+  @Override
   protected int numberOfAssertionsOnDecorator() {
     return 0;
   }

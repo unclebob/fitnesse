@@ -65,6 +65,7 @@ public class ContentReplacingSearchObserverTest {
   private Matcher<WikiPage> contentMatches(final String simpleReplacement) {
     return new TypeSafeMatcher<WikiPage>() {
 
+      @Override
       public boolean matchesSafely(WikiPage wikiPage) {
         try {
           return wikiPage.getData().getContent().matches(String.format(".*%s.*", simpleReplacement));
@@ -73,6 +74,7 @@ public class ContentReplacingSearchObserverTest {
         }
       }
 
+      @Override
       public void describeTo(Description description) {
         description.appendText("content matching ").appendValue(simpleReplacement);
       }

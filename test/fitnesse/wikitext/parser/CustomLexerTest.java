@@ -318,8 +318,11 @@ public class CustomLexerTest {
     static final EmptyIterator<Object> EMPTY_ITERATOR
             = new EmptyIterator<Object>();
 
+    @Override
     public boolean hasNext() { return false; }
+    @Override
     public E next() { throw new NoSuchElementException(); }
+    @Override
     public void remove() { throw new IllegalStateException(); }
   }
 

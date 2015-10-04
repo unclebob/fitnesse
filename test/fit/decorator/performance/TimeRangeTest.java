@@ -18,10 +18,12 @@ public class TimeRangeTest extends FixtureDecoratorTestCase {
     + "</td><td>0</td><td>milliseconds min and max</td><td>999999999</td><td>milliseconds</td></tr>";
   private TimeRange decorator = new TimeRange();
 
+  @Override
   protected String geDecoratorHTMLRow() {
     return FIRST_HTML_ROW;
   }
 
+  @Override
   protected int numberOfAssertionsOnDecorator() {
     return 2;
   }

@@ -12,15 +12,18 @@ import java.io.File;
 public class FileUpdateTest extends UpdateTestCase {
   public final File testFile = new File("classes/testFile");
 
+  @Override
   protected Update makeUpdate() throws Exception {
     return new FileUpdate("testFile", new File(new File(context.getRootPagePath(), "files"), "images"));
   }
 
+  @Override
   public void setUp() throws Exception {
     super.setUp();
     testFile.createNewFile();
   }
 
+  @Override
   public void tearDown() throws Exception {
     super.tearDown();
     testFile.delete();

@@ -43,6 +43,7 @@ public class DeltaTest {
     assertEquals(expectedDelta, new Delta("String", "value"));
     assertEquals(new Delta(STRING_DATA_TYPE, "1.200"), new Delta("anyValueOtherThanIntAndDouble", "1.200"));
     Delta delta = new Delta("String", "ABC") {
+      @Override
       public String addTo(String originalValue, int numberofTime) {
         return null;
       }
