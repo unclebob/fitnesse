@@ -57,24 +57,24 @@ public abstract class StatementExecutorTestBase {
     public MySystemUnderTestBase getSystemUnderTest();
   }
 
-  public abstract static class MySystemUnderTestBase implements Speak, Echo {
+  abstract static class MySystemUnderTestBase implements Speak, Echo {
   }
 
-  public static abstract class MyAnnotatedSystemUnderTestFixture implements Echo,
+  abstract static class MyAnnotatedSystemUnderTestFixture implements Echo,
       SystemUnderTestFixture {
   }
 
-  public static abstract class FixtureWithNamedSystemUnderTestBase implements Echo,
+  abstract static class FixtureWithNamedSystemUnderTestBase implements Echo,
       SystemUnderTestFixture {
   }
 
-  public static abstract class SimpleFixture implements Echo {
+  abstract static class SimpleFixture implements Echo {
   }
 
-  public static abstract class EchoSupport implements Echo, Speak {
+  abstract static class EchoSupport implements Echo, Speak {
   }
 
-  public static abstract class FileSupport implements Delete {
+  abstract static class FileSupport implements Delete {
   }
 
   public abstract void init() throws Exception;

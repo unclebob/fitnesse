@@ -303,7 +303,7 @@ public class PluginsLoaderTest {
     }
   }
 
-  static public class DummyPlugin {
+  public static class DummyPlugin {
 
     public static void registerResponders(ResponderFactory factory) {
       factory.addResponder("custom1", WikiPageResponder.class);
@@ -315,7 +315,7 @@ public class PluginsLoaderTest {
     }
   }
 
-  static public class InstantiableDummyPlugin {
+  public static class InstantiableDummyPlugin {
 
     public final ComponentFactory componentFactory;
 

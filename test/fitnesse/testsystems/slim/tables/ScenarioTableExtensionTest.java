@@ -140,7 +140,7 @@ public class ScenarioTableExtensionTest {
    * parameters having to be specified in the first row also.
    */
   public static class AutoArgScenarioTable extends ScenarioTable {
-    private final static Pattern ARG_PATTERN = Pattern.compile("@\\{(.+?)\\}");
+    private static final Pattern ARG_PATTERN = Pattern.compile("@\\{(.+?)\\}");
     private static final Pattern OUT_PATTERN = Pattern.compile("\\$(.+?)=");
 
     private Set<String> inputs;
