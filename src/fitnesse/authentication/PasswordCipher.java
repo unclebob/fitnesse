@@ -3,5 +3,5 @@
 package fitnesse.authentication;
 
 public interface PasswordCipher {
-  public String encrypt(String password);
+  String encrypt(String password);
 }
