@@ -85,7 +85,7 @@ public class PageCrawlerImpl implements PageCrawler {
 
   @Override
   public String getRelativeName(WikiPage page) {
-    StringBuffer name = new StringBuffer();
+    StringBuilder name = new StringBuilder();
     for (WikiPage p = page; !p.isRoot() && !p.equals(context); p = p.getParent()) {
       if (p != page)
         name.insert(0, ".");

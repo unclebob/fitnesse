@@ -78,7 +78,7 @@ public class WikiPageProperty implements Serializable {
   }
 
   protected String toString(String key, int depth) {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
 
     for (int i = 0; i < depth; i++)
       buffer.append("\t");
@@ -87,8 +87,7 @@ public class WikiPageProperty implements Serializable {
       buffer.append(" = ").append(getValue());
     buffer.append("\n");
 
-    for (Iterator<?> iterator = keySet().iterator(); iterator.hasNext();) {
-      String childKey = (String) iterator.next();
+    for (String childKey : keySet()) {
       WikiPageProperty value = getProperty(childKey);
       if (value != null)
         buffer.append(value.toString(childKey, depth + 1));

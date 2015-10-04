@@ -11,7 +11,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -81,8 +80,7 @@ public class RequestBuilder {
 
   private void sendHeaders(OutputStream output) throws IOException {
     addHostHeader();
-    for (Iterator<String> iterator = headers.keySet().iterator(); iterator.hasNext();) {
-      String key = iterator.next();
+    for (String key : headers.keySet()) {
       output.write((key + ": " + headers.get(key)).getBytes(CHARENCODING));
       output.write(ENDL);
     }
@@ -94,8 +92,7 @@ public class RequestBuilder {
       bodyParts.add(new ByteArrayInputStream(bytes));
       bodyLength += bytes.length;
     } else {
-      for (Iterator<String> iterator = inputs.keySet().iterator(); iterator.hasNext();) {
-        String name = iterator.next();
+      for (String name : inputs.keySet()) {
         Object value = inputs.get(name);
         StringBuilder partBuffer = new StringBuilder();
         partBuffer.append("--").append(getBoundary()).append("\r\n");
@@ -116,9 +113,8 @@ public class RequestBuilder {
           addBodyPart(partBuffer.toString());
         }
       }
-      StringBuilder tail = new StringBuilder();
-      tail.append("--").append(getBoundary()).append("--").append("\r\n");
-      addBodyPart(tail.toString());
+      String tail = "--" + getBoundary() + "--" + "\r\n";
+      addBodyPart(tail);
     }
     addHeader("Content-Length", bodyLength + "");
   }
@@ -130,9 +126,7 @@ public class RequestBuilder {
   }
 
   private void sendBody(OutputStream output) throws IOException {
-    for (Iterator<InputStream> iterator = bodyParts.iterator(); iterator.hasNext();) {
-      InputStream input = iterator.next();
-
+    for (InputStream input : bodyParts) {
       StreamReader reader = new StreamReader(input);
       while (!reader.isEof()) {
         byte[] bytes = reader.readBytes(1000);
@@ -155,8 +149,7 @@ public class RequestBuilder {
   public String inputString() throws UnsupportedEncodingException {
     StringBuilder buffer = new StringBuilder();
     boolean first = true;
-    for (Iterator<String> iterator = inputs.keySet().iterator(); iterator.hasNext();) {
-      String key = iterator.next();
+    for (String key : inputs.keySet()) {
       String value = (String) inputs.get(key);
       if (!first)
         buffer.append("&");

@@ -60,7 +60,7 @@ public class PathParser {
   }
 
   public static String render(WikiPagePath path) {
-    StringBuffer renderedPath = new StringBuffer();
+    StringBuilder renderedPath = new StringBuilder();
     if (path.isSubPagePath())
       renderedPath.append(">");
     else if (path.isBackwardSearchPath())

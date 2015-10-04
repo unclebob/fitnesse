@@ -193,11 +193,7 @@ public class Request {
   }
 
   private String concatenateItems(String existingItem, String value) {
-    StringBuffer buffer = new StringBuffer();
-    buffer.append(existingItem);
-    buffer.append(',');
-    buffer.append(value);
-    return buffer.toString();
+    return existingItem + ',' + value;
   }
 
   private boolean itemExistAndMismatches(Object existingItem, String value) {

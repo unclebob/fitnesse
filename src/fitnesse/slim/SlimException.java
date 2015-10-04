@@ -74,7 +74,7 @@ public class SlimException extends Exception {
    */
   @Override
   public String toString() {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
 
     if (isStopTestException(getCause())) {
       sb.append(SlimServer.EXCEPTION_STOP_TEST_TAG);

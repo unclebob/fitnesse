@@ -41,11 +41,7 @@ public abstract class Instruction {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder();
-    sb.append("Instruction");
-    sb.append("{id='").append(id).append('\'');
-    sb.append('}');
-    return sb.toString();
+    return "Instruction{id='" + id + "'}";
   }
 
   @Override

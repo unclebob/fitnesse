@@ -69,7 +69,7 @@ public class HtmlUtil {
     String getElement = "document.getElementById(\"" + idElementToAppend + "\")";
     String escapedHtml = escapeHtmlForJavaScript(htmlToAppend);
     
-    StringBuffer script = new StringBuffer();
+    StringBuilder script = new StringBuilder();
     script.append("var existingContent = ").append(getElement).append(".innerHTML;");
     script.append(HtmlTag.endl);
     script.append(getElement).append(".innerHTML = existingContent + \"").append(escapedHtml).append("\";");

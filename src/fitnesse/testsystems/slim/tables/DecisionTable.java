@@ -46,7 +46,7 @@ public class DecisionTable extends SlimTable {
   }
 
   private String getScenarioName() {
-    StringBuffer nameBuffer = new StringBuffer();
+    StringBuilder nameBuffer = new StringBuilder();
     for (int nameCol = 0; nameCol < table.getColumnCountInRow(0); nameCol += 2) {
       if (nameCol == 0)
         nameBuffer.append(getFixtureName(table.getCellContents(nameCol, 0)));
