@@ -71,7 +71,7 @@ public class StreamReaderTest {
   @Test
   public void testReadNumberOfBytesAsString() throws Exception {
     startReading(new ReadCount(100));
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     for (int i = 0; i < 100; i++) {
       buffer.append("*");
       writeToPipe("*");
@@ -84,7 +84,7 @@ public class StreamReaderTest {
   @Test
   public void testReadNumberOfBytes() throws Exception {
     startReading(new ReadCountBytes(100));
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     for (int i = 0; i < 100; i++) {
       buffer.append("*");
       writeToPipe("*");
