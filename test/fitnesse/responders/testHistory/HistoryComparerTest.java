@@ -8,7 +8,6 @@ import static util.RegexTestCase.assertSubString;
 
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.ArrayList;
 
 import fitnesse.wiki.*;
 import org.apache.velocity.app.VelocityEngine;

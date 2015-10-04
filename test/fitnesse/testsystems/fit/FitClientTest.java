@@ -23,7 +23,6 @@ public class FitClientTest implements FitClientListener {
   private List<TestSummary> counts = new ArrayList<TestSummary>();
   private CommandRunningFitClient client;
   private boolean exceptionOccurred = false;
-  private int port = 9080;
 
   @Before
   public void setUp() throws Exception {

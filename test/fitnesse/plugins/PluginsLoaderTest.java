@@ -24,7 +24,6 @@ import fitnesse.responders.editing.EditResponder;
 import fitnesse.testrunner.MultipleTestSystemFactory;
 import fitnesse.testrunner.TestSystemFactoryRegistry;
 import fitnesse.testrunner.WikiTestPage;
-import fitnesse.testrunner.WikiTestPageUtil;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemFactory;
