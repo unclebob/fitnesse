@@ -11,6 +11,7 @@ public class HashingCipher implements PasswordCipher {
     "Like a long-leggedfly upon the stream\n" +
       "His mind moves upon silence.";
 
+  @Override
   public String encrypt(String value) {
     byte[] crypted = repeatEncryption(theMagicLock.getBytes(), value.getBytes());
     byte[] squeezed = fillToSize(crypted, 15);

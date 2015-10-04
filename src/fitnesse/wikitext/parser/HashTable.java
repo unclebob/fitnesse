@@ -11,6 +11,7 @@ public class HashTable extends SymbolType implements Rule, Translation {
         wikiRule(this);
         htmlTranslation(this);        
     }
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         while (true) {
             Symbol row = new Symbol(SymbolType.SymbolList);
@@ -27,6 +28,7 @@ public class HashTable extends SymbolType implements Rule, Translation {
 
     private static final String[] cellClasses = {"hash_key", "hash_value"};
 
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         HtmlTag table = new HtmlTag("table");
         table.addAttribute("class", "hash_table");

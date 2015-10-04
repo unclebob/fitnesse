@@ -7,10 +7,12 @@ import fitnesse.util.StringUtils;
 
 public class CharConverter implements Converter<Character> {
 
+  @Override
   public String toString(Character o) {
     return o != null ? o.toString() : NULL_VALUE;
   }
 
+  @Override
   public Character fromString(String arg) {
     return !StringUtils.isBlank(arg) ? arg.charAt(0) : null;
   }

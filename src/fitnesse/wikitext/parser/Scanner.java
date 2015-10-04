@@ -14,6 +14,7 @@ public class Scanner {
         this(
             new TextMaker(
                 new VariableSource() {
+                        @Override
                         public Maybe<String> findVariable(String name) {
                             return Maybe.noString;
                         }

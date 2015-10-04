@@ -17,6 +17,7 @@ import fitnesse.html.template.PageTitle;
 public class DeleteConfirmationResponder implements SecureResponder {
   private String resource;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
     resource = request.getResource();
@@ -48,6 +49,7 @@ public class DeleteConfirmationResponder implements SecureResponder {
     }
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();
   }

@@ -23,6 +23,7 @@ public class MovedPageReferenceRenamer extends ReferenceRenamer {
     this.newParentName = newParentName;
   }
 
+    @Override
     public boolean visit(Symbol node) {
         try {
             if (node.isType(WikiWord.symbolType)) {
@@ -36,6 +37,7 @@ public class MovedPageReferenceRenamer extends ReferenceRenamer {
         return true;
     }
 
+    @Override
     public boolean visitChildren(Symbol node) {
         return !node.isType(Alias.symbolType);
     }

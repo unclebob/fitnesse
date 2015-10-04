@@ -7,6 +7,7 @@ public class TagGroup extends HtmlTag {
     super("group");
   }
 
+  @Override
   public String html(int depth) {
     StringBuffer buffer = new StringBuffer();
     for (HtmlElement element : this) {

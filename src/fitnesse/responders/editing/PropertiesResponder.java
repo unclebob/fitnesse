@@ -35,6 +35,7 @@ public class PropertiesResponder implements SecureResponder {
   private SimpleResponse response;
   private HtmlPage html;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     response = new SimpleResponse();
     resource = request.getResource();
@@ -209,6 +210,7 @@ public class PropertiesResponder implements SecureResponder {
     return null;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }

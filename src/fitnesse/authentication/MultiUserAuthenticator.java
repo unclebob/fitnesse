@@ -16,6 +16,7 @@ public class MultiUserAuthenticator extends Authenticator {
     cipher = passwords.getCipher();
   }
 
+  @Override
   public boolean isAuthenticated(String username, String password) {
     if (username == null || password == null)
       return false;

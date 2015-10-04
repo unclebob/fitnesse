@@ -27,6 +27,7 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
   public static final String SECURITY = "Security";
   public static final String SPECIAL = "Special";
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }

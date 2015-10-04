@@ -21,6 +21,7 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
         super("Table", baseSymbolType);
     }
 
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         HtmlWriter writer = new HtmlWriter();
         writer.startTag("table");
@@ -121,6 +122,7 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
     }
   }
 
+  @Override
   public SymbolType isApplicable(Translator translator){
         Maybe<String> testSystem = Maybe.noString;
         if(translator instanceof HtmlTranslator){

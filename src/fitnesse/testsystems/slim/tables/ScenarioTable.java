@@ -40,6 +40,7 @@ public class ScenarioTable extends SlimTable {
     super(table, tableId, testContext);
   }
 
+  @Override
   protected String getTableType() {
     return instancePrefix;
   }

@@ -3,6 +3,7 @@
 package fitnesse.authentication;
 
 public class TransparentCipher implements PasswordCipher {
+  @Override
   public String encrypt(String password) {
     return password;
   }

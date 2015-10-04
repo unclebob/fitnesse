@@ -11,6 +11,7 @@ import fit.decorator.util.Table;
 public abstract class FixtureDecorator extends Fixture {
   static final String ENCAPSULATED_FIXTURE_NAME = "EncapsulatedFixtureName";
 
+  @Override
   public void doTable(Parse table) {
     if (table.parts.more == null) {
       return;

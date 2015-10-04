@@ -5,6 +5,7 @@ import java.util.List;
 
 public class SymbolType implements Matchable {
     private static final Rule defaultRule = new Rule() {
+        @Override
         public Maybe<Symbol> parse(Symbol current, Parser parser) {
             return new Maybe<Symbol>(current);
         }
@@ -135,10 +136,12 @@ public class SymbolType implements Matchable {
 
     @Override public String toString() { return name; }
 
+    @Override
     public boolean matchesFor(SymbolType symbolType) {
         return this.name.equals(symbolType.name);
     }
 
+    @Override
     public SymbolMatch makeMatch(ScanString input, SymbolStream symbols) {
         for (Matcher matcher: getWikiMatchers()) {
             Maybe<Integer> matchLength = matcher.makeMatch(input, symbols);

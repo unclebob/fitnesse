@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class NameWikiPageResponder extends BasicResponder {
+  @Override
   protected String contentFrom(FitNesseContext context, Request request, WikiPage requestedPage) {
     List<String> lines = addLines(request, requestedPage, "");
 
@@ -86,6 +87,7 @@ public class NameWikiPageResponder extends BasicResponder {
 	return result;
   }
 
+  @Override
   protected String getContentType() {
     return "text/plain";
   }

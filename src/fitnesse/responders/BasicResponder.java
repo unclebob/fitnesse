@@ -15,6 +15,7 @@ import fitnesse.wiki.WikiPagePath;
 
 public abstract class BasicResponder implements SecureResponder {
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     WikiPage requestedPage = getRequestedPage(request, context);
 
@@ -50,6 +51,7 @@ public abstract class BasicResponder implements SecureResponder {
     return Response.Format.HTML.getContentType();
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new InsecureOperation();
   }

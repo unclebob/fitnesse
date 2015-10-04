@@ -28,6 +28,7 @@ public class MergeResponder implements Responder {
     this.request = request;
   }
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
     resource = this.request.getResource();

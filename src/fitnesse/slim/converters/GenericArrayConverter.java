@@ -16,6 +16,7 @@ public class GenericArrayConverter<T> implements Converter<Object> {
     this.componentConverter = componentConverter;
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public String toString(Object array) {
     if (array == null)
@@ -41,6 +42,7 @@ public class GenericArrayConverter<T> implements Converter<Object> {
     return result;
   }
 
+  @Override
   public Object fromString(String arg) {
     if (StringUtils.isBlank(arg))
       return null;

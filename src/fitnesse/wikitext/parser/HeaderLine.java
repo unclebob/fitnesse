@@ -17,6 +17,7 @@ public class HeaderLine extends SymbolType implements Translation {
         htmlTranslation(this);
     }
 
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         HtmlTag result = new HtmlTag("h" + symbol.getProperty(LineRule.Level));
         result.add(translator.translate(symbol.childAt(0)).trim());

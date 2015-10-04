@@ -160,6 +160,7 @@ public class WikiTestPage implements TestPage {
     return getPathNameForPage(sourcePage);
   }
 
+  @Override
   public String getName() {
     return sourcePage.getName();
   }

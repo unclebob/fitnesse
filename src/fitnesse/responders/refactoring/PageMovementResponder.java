@@ -35,6 +35,7 @@ public abstract class PageMovementResponder implements SecureResponder {
 
   protected abstract void execute() throws RefactorException;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     if (!getAndValidateRefactoredPage(context, request)) {
       return new NotFoundResponder().makeResponse(context, request);
@@ -158,6 +159,7 @@ public abstract class PageMovementResponder implements SecureResponder {
 	  return childPath.startsWith(parentPath);
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();
   }

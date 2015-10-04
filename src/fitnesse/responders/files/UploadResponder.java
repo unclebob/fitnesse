@@ -29,6 +29,7 @@ public class UploadResponder implements SecureResponder {
 
   private String rootPath;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     rootPath = context.getRootPagePath();
     SimpleResponse response = new SimpleResponse();
@@ -107,6 +108,7 @@ public class UploadResponder implements SecureResponder {
     return "copy_" + copyId + "_of_" + filename;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();
   }

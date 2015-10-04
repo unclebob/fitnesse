@@ -12,30 +12,37 @@ public class WikiSourcePage implements SourcePage {
 
     public WikiSourcePage(WikiPage page) { this.page = page; }
 
+    @Override
     public String getName() { return page.getName(); }
 
+    @Override
     public String getFullName() {
         return page.getPageCrawler().getFullPath().toString();
     }
 
+    @Override
     public String getPath() {
         return page.getPageCrawler().getFullPath().parentPath().toString();
     }
 
+    @Override
     public String getFullPath() {
         return page.getPageCrawler().getFullPath().toString();
     }
 
+    @Override
     public String getContent() {
         return page.getData().getContent();
     }
 
+    @Override
     public boolean targetExists(String wikiWordPath) {
         WikiPagePath pathOfWikiWord = PathParser.parse(wikiWordPath);
         WikiPage parentPage = page.getParent();
         return parentPage.getPageCrawler().getPage(pathOfWikiWord) != null;
     }
 
+    @Override
     public String makeFullPathOfTarget(String wikiWordPath) {
         WikiPagePath pathOfWikiWord = PathParser.parse(wikiWordPath);
         if (pathOfWikiWord == null) throw new IllegalArgumentException("Can't parse path: " + wikiWordPath);
@@ -43,6 +50,7 @@ public class WikiSourcePage implements SourcePage {
         return PathParser.render(parentPage.getPageCrawler().getFullPathOfChild(pathOfWikiWord));
     }
 
+    @Override
     public String findParentPath(String targetName) {
         String[] pathElements = targetName.split("\\.");
         String target = pathElements[0];
@@ -55,6 +63,7 @@ public class WikiSourcePage implements SourcePage {
         return "." + targetName;
     }
 
+    @Override
     public Maybe<SourcePage> findIncludedPage(String pageName) {
         PageCrawler crawler = page.getPageCrawler();
         WikiPagePath pagePath = PathParser.parse(pageName);
@@ -74,6 +83,7 @@ public class WikiSourcePage implements SourcePage {
     }
 
 
+  @Override
   public Collection<SourcePage> getChildren() {
         ArrayList<SourcePage> children = new ArrayList<SourcePage>();
         for (WikiPage child: page.getChildren()) {
@@ -82,10 +92,12 @@ public class WikiSourcePage implements SourcePage {
         return children;
     }
 
+    @Override
     public boolean hasProperty(String propertyKey) {
         return page.getData().getProperties().has(propertyKey);
     }
 
+    @Override
     public String getProperty(String propertyKey) {
         String propertyValue = page.getData().getAttribute(propertyKey);
         return propertyValue != null ? propertyValue.trim() : "";
@@ -98,6 +110,7 @@ public class WikiSourcePage implements SourcePage {
         return false;
     }
 
+    @Override
     public String makeUrl(String wikiWordPath) {
         return makeFullPathOfTarget(wikiWordPath) ;
     }
@@ -110,6 +123,7 @@ public class WikiSourcePage implements SourcePage {
         return false;
     }
 
+    @Override
     public int compareTo(SourcePage other) {
         return getName().compareTo(other.getName());
     }

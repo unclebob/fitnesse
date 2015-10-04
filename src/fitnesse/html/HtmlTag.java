@@ -30,6 +30,7 @@ public class HtmlTag extends HtmlElement implements Iterable<HtmlElement> {
     return tagName;
   }
 
+  @Override
   public String html() {
     return html(0);
   }

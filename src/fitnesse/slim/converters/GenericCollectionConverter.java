@@ -35,6 +35,7 @@ public class GenericCollectionConverter<T, C extends Collection<T>> implements C
     this.componentConverter = componentConverter;
   }
 
+  @Override
   public String toString(C collection) {
     if (collection == null)
       return NULL_VALUE;
@@ -57,6 +58,7 @@ public class GenericCollectionConverter<T, C extends Collection<T>> implements C
     return result;
   }
 
+  @Override
   public C fromString(String arg) {
     if (StringUtils.isBlank(arg))
       return null;

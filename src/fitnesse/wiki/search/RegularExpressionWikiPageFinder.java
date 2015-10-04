@@ -20,6 +20,7 @@ public class RegularExpressionWikiPageFinder extends WikiPageFinder {
     this.regularExpression = Pattern.compile(regularExpression);
   }
 
+  @Override
   protected boolean pageMatches(WikiPage page) {
     String pageContent = page.getData().getContent();
 

@@ -13,6 +13,7 @@ import java.util.TreeSet;
 public class SummaryFixture extends Fixture {
   public static final String countsKey = "counts";
 
+  @Override
   public void doTable(Parse table) {
     summary.put(countsKey, counts());
     SortedSet<String> keys = new TreeSet<String>(summary.keySet());

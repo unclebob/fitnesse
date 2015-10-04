@@ -9,10 +9,12 @@ import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 
 public class PageDataWikiPageResponder extends BasicResponder {
+  @Override
   protected String contentFrom(FitNesseContext context, Request request, WikiPage requestedPage) {
     return requestedPage.getData().getContent();
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }

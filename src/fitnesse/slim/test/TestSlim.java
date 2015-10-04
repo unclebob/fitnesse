@@ -61,6 +61,7 @@ public class TestSlim implements TestSlimInterface {
 
   }
 
+  @Override
   public boolean niladWasCalled() {
     return niladWasCalled;
   }
@@ -97,14 +98,17 @@ public class TestSlim implements TestSlimInterface {
     listArg = l;
   }
 
+  @Override
   public List<Object> getListArg() {
     return listArg;
   }
 
+  @Override
   public String getStringArg() {
     return stringArg;
   }
 
+  @Override
   public Date getDateArg() {
     return new Date(dateArg.getTime());
   }
@@ -113,6 +117,7 @@ public class TestSlim implements TestSlimInterface {
     intArg = arg;
   }
 
+  @Override
   public int getIntArg() {
     return intArg;
   }
@@ -121,6 +126,7 @@ public class TestSlim implements TestSlimInterface {
     doubleArg = arg;
   }
 
+  @Override
   public double getDoubleArg() {
     return doubleArg;
   }
@@ -131,14 +137,17 @@ public class TestSlim implements TestSlimInterface {
     charArg = c;
   }
 
+  @Override
   public Integer getIntegerObjectArg() {
     return integerObjectArg;
   }
 
+  @Override
   public double getDoubleObjectArg() {
     return doubleObjectArg;
   }
 
+  @Override
   public char getCharArg() {
     return charArg;
   }
@@ -236,6 +245,7 @@ public class TestSlim implements TestSlimInterface {
     return zork;
   }
 
+  @Override
   public Zork getZork() {
     return zork;
   }

@@ -123,35 +123,43 @@ public class BowlingGame implements Bowling {
       currentBall++;
   }
 
+  @Override
   public int currentFrame() {
     return currentFrame;
   }
 
+  @Override
   public int currentBall() {
     return currentBall;
   }
 
+  @Override
   public int scoreableFrame() {
     return scoreableFrame;
   }
 
+  @Override
   public boolean validGame() {
     return true;
   }
 
+  @Override
   public boolean gameOver() {
     return currentFrame == 10 && currentBall == 0;
   }
 
+  @Override
   public boolean isGameOver() {
     return gameOver;
   }
 
+  @Override
   public void roll(int pins) {
     bowlingScorer.roll(pins);
     changeState();
   }
 
+  @Override
   public int score(int frame) {
     return bowlingScorer.score(frame);
   }

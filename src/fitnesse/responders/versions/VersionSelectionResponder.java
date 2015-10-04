@@ -18,6 +18,7 @@ import java.util.*;
 
 public class VersionSelectionResponder implements SecureResponder {
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
     String resource = request.getResource();
@@ -49,6 +50,7 @@ public class VersionSelectionResponder implements SecureResponder {
     return list;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }

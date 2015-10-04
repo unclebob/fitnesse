@@ -42,6 +42,7 @@ public class SuiteContentsFinder {
     List<WikiPage> testPages = addTestPagesToSuite(pageToRun, suiteFilter);
 
     Collections.sort(testPages, new Comparator<WikiPage>() {
+      @Override
       public int compare(WikiPage p1, WikiPage p2) {
         try {
           WikiPagePath path1 = p1.getPageCrawler().getFullPath();

@@ -27,6 +27,7 @@ import fitnesse.util.XmlUtil;
 public class RssResponder implements SecureResponder {
   private RssFeed feed;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     WikiPage contextPage = getContextPage(context, request.getResource());
     WikiPage recentChangesPage = context.getRootPage().getChildPage(RecentChanges.RECENT_CHANGES);
@@ -68,6 +69,7 @@ public class RssResponder implements SecureResponder {
     return string != null && !string.isEmpty();
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }

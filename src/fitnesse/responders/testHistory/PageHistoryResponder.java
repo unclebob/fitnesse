@@ -40,6 +40,7 @@ public class PageHistoryResponder implements SecureResponder {
   private HtmlPage page;
   private FitNesseContext context;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
     prepareResponse(request);
@@ -185,6 +186,7 @@ public class PageHistoryResponder implements SecureResponder {
     }
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }

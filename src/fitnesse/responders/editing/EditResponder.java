@@ -38,6 +38,7 @@ public class EditResponder implements SecureResponder {
   public EditResponder() {
   }
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     boolean nonExistent = request.hasInput("nonExistent");
     return doMakeResponse(context, request, nonExistent);
@@ -109,6 +110,7 @@ public class EditResponder implements SecureResponder {
     html.put(CONTENT_INPUT_NAME, HtmlUtil.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }

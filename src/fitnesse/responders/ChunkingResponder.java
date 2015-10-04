@@ -29,6 +29,7 @@ public abstract class ChunkingResponder implements Responder, ChunkedDataProvide
   protected FitNesseContext context;
   private boolean dontChunk = false;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
     this.request = request;
@@ -66,6 +67,7 @@ public abstract class ChunkingResponder implements Responder, ChunkedDataProvide
     return true;
   }
 
+  @Override
   public void startSending() {
     try {
       doSending();

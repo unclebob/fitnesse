@@ -20,6 +20,7 @@ import fitnesse.wiki.fs.FileVersion;
 public class DeleteFileResponder implements SecureResponder {
   public String resource;
 
+  @Override
   public Response makeResponse(FitNesseContext context, final Request request) throws IOException {
     Response response = new SimpleResponse();
     resource = request.getResource();
@@ -58,6 +59,7 @@ public class DeleteFileResponder implements SecureResponder {
     return response;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();
   }

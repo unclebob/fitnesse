@@ -6,6 +6,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.Request;
 
 public class AlwaysSecureOperation implements SecureOperation {
+  @Override
   public boolean shouldAuthenticate(FitNesseContext context, Request request) {
     return true;
   }

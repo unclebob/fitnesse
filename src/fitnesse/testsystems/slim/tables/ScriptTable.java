@@ -26,6 +26,7 @@ public class ScriptTable extends SlimTable {
    *
    * @return table type
    */
+  @Override
   protected String getTableType() {
     return "scriptTable";
   }
@@ -102,6 +103,7 @@ public class ScriptTable extends SlimTable {
     return "note";
   }
 
+  @Override
   public List<SlimAssertion> getAssertions() throws SyntaxError {
     List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
     ScenarioTable.setDefaultChildClass(getClass());
@@ -203,6 +205,7 @@ public class ScriptTable extends SlimTable {
   }
 
   private static class ScenarioTableLengthComparator implements java.util.Comparator<ScenarioTable> {
+    @Override
     public int compare(ScenarioTable st1, ScenarioTable st2) {
       int size1 = st1.getInputs().size();
       int size2 = st2.getInputs().size();

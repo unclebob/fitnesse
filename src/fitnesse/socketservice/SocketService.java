@@ -39,6 +39,7 @@ public class SocketService {
     this.serverSocket = serverSocket;
     serviceThread = new Thread(
             new Runnable() {
+              @Override
               public void run() {
                 serviceThread();
               }
@@ -117,6 +118,7 @@ public class SocketService {
       socket = s;
     }
 
+    @Override
     public void run() {
       try {
         server.serve(socket);

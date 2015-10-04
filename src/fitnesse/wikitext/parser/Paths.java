@@ -19,6 +19,7 @@ public class Paths {
     private class TreeWalker implements SymbolTreeWalker {
         public List<String> result = new ArrayList<String>();
 
+        @Override
         public boolean visit(Symbol node) {
             if (node.getType() instanceof PathsProvider) {
                 result.addAll(((PathsProvider) node.getType()).providePaths(translator, node));
@@ -26,6 +27,7 @@ public class Paths {
             return true;
         }
 
+        @Override
         public boolean visitChildren(Symbol node) { return true; }
     }
 }

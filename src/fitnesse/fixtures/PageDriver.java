@@ -243,6 +243,7 @@ public class PageDriver {
       super(attribute, prefix);
     }
 
+    @Override
     public boolean accept(Node node) {
       if (!(node instanceof Tag)) {
         return false;

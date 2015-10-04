@@ -11,6 +11,7 @@ public class MockWikiImporter extends WikiImporter {
   public static final String mockContent = "mock importer content";
   public boolean fail;
 
+  @Override
   protected void importRemotePageContent(WikiPage localPage) {
     if (fail)
       importerClient.pageImportError(localPage, new Exception("blah"));
@@ -24,6 +25,7 @@ public class MockWikiImporter extends WikiImporter {
     localPage.commit(data);
   }
 
+  @Override
   public void importWiki(WikiPage page) {
     for (Iterator<?> iterator = page.getChildren().iterator(); iterator.hasNext();) {
       WikiPage next = (WikiPage) iterator.next();
@@ -31,6 +33,7 @@ public class MockWikiImporter extends WikiImporter {
     }
   }
 
+  @Override
   public void process(WikiPage page) {
     setMockContent(page);
   }

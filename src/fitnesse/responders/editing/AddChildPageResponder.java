@@ -23,10 +23,12 @@ public class AddChildPageResponder implements SecureResponder {
   private String user;
 
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureWriteOperation();
   }
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     parseRequest(context, request);
     if (currentPage == null)

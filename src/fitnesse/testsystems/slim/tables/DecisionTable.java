@@ -19,10 +19,12 @@ public class DecisionTable extends SlimTable {
     super(table, id, context);
   }
 
+  @Override
   protected String getTableType() {
     return instancePrefix;
   }
 
+  @Override
   public List<SlimAssertion> getAssertions() throws SyntaxError {
     if (table.getRowCount() == 2)
       throw new SyntaxError("DecisionTables should have at least three rows.");

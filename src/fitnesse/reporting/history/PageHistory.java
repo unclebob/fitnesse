@@ -42,6 +42,7 @@ public class PageHistory extends PageHistoryReader{
 
   private Comparator<Date> reverseChronologicalDateComparator() {
     return new Comparator<Date>() {
+      @Override
       public int compare(Date d1, Date d2) {
         long diff = d2.getTime() - d1.getTime();
         if (diff < 0)
@@ -53,6 +54,7 @@ public class PageHistory extends PageHistoryReader{
     };
   }
 
+  @Override
   void processTestFile(TestResultRecord record) throws ParseException {
     Date date = record.getDate();
     addTestResult(record, date);

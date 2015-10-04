@@ -25,6 +25,7 @@ public class DeletePageResponder implements SecureResponder {
   private WikiPagePath path;
   private FitNesseContext context;
 
+  @Override
   public Response makeResponse(final FitNesseContext context, final Request request) {
     this.context = context;
     intializeResponse(request);
@@ -101,6 +102,7 @@ public class DeletePageResponder implements SecureResponder {
     html.put("pageName", qualifiedPageName);
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();
   }

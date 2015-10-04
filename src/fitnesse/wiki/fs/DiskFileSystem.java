@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class DiskFileSystem implements FileSystem {
+  @Override
   public void makeFile(File file, String content) throws IOException {
     FileUtil.createFile(file, content);
   }

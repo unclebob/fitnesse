@@ -14,6 +14,7 @@ public class Help extends SymbolType implements Rule, Translation {
         htmlTranslation(this);
     }
     
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         List<Symbol> lookAhead = parser.peek(new SymbolType[] {SymbolType.Whitespace, SymbolType.Text});
         if (!lookAhead.isEmpty()) {
@@ -26,6 +27,7 @@ public class Help extends SymbolType implements Rule, Translation {
         return new Maybe<Symbol>(current);
     }
 
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         String helpText = translator.getPage().getProperty(PageData.PropertyHELP);
         String editText = helpText.isEmpty() ? "edit help text" : "edit";

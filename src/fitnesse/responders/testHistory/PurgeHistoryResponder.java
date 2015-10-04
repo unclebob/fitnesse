@@ -14,6 +14,7 @@ import fitnesse.responders.ErrorResponder;
 
 public class PurgeHistoryResponder implements SecureResponder {
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     if (hasValidInputs(request)) {
       purgeHistory(request, context);
@@ -62,6 +63,7 @@ public class PurgeHistoryResponder implements SecureResponder {
     return new ErrorResponder("Invalid Amount Of Days").makeResponse(context, request);
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();
   }

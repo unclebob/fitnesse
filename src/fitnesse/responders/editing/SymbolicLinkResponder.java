@@ -43,6 +43,7 @@ public class SymbolicLinkResponder implements Responder {
     this(new DiskFileSystem());
   }
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     resource = request.getResource();
     this.context = context;

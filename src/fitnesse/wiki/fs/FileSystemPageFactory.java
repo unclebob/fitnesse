@@ -91,6 +91,7 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
       this.variableSource = variableSource;
     }
 
+    @Override
     public List<WikiPage> getChildren(FileSystemPage page) {
       List<WikiPage> children = getNormalChildren(page);
       children.addAll(getSymlinkChildren(page));

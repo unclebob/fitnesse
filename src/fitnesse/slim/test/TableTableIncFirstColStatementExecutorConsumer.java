@@ -19,6 +19,7 @@ public class TableTableIncFirstColStatementExecutorConsumer implements Statement
    * (non-Javadoc)
    * @see fitnesse.slim.StatementExecutorConsumer#setStatementExecutor(fitnesse.slim.StatementExecutorInterface)
    */
+  @Override
   public void setStatementExecutor(StatementExecutorInterface statementExecutor) {
     this.context = statementExecutor;
   }

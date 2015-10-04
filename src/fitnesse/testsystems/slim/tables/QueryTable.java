@@ -19,6 +19,7 @@ public class QueryTable extends SlimTable {
     super(table, id, testContext);
   }
 
+  @Override
   protected String getTableType() {
     return "queryTable";
   }

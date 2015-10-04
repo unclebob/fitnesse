@@ -10,12 +10,14 @@ public class Evaluator extends SymbolType implements Rule, Translation {
         htmlTranslation(this);
     }
 
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol body = parser.parseTo(SymbolType.CloseEvaluator);
         if (parser.atEnd()) return Symbol.nothing;
         return new Maybe<Symbol>(current.add(body));
     }
 
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         String body = translator.translate(symbol.childAt(0));
         Maybe<String> result = new FormattedExpression(body).evaluate();

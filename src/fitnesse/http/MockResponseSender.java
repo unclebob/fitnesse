@@ -17,6 +17,7 @@ public class MockResponseSender implements ResponseSender {
     socket = new MockSocket("Mock");
   }
 
+  @Override
   public void send(byte[] bytes) {
     try {
       socket.getOutputStream().write(bytes);
@@ -53,6 +54,7 @@ public class MockResponseSender implements ResponseSender {
       socket = new MockSocket(new PipedInputStream(), out);
     }
 
+    @Override
     public void doSending(Response response) throws IOException {
       response.sendTo(this);
       assert closed;
