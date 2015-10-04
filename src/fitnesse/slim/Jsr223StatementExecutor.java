@@ -29,7 +29,7 @@ public abstract class Jsr223StatementExecutor implements StatementExecutorInterf
   }
 
   @Override
-  public void create(String instanceName, String className, Object[] args) {
+  public void create(String instanceName, String className, Object... args) {
     callMethod("create", new Object[] {instanceName, className, args});
   }
 
