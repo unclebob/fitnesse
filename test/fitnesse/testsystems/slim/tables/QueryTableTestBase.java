@@ -87,7 +87,7 @@ public abstract class QueryTableTestBase {
             new MakeInstruction("queryTable_id_0", "queryTable_id", "fixture", new Object[]{"argument"}),
             new CallInstruction("queryTable_id_1", "queryTable_id", "table", new Object[]{asList(asList("n", "2n"))}),
             new CallInstruction("queryTable_id_2", "queryTable_id", "query"));
-    org.junit.Assert.assertEquals(expectedInstructions, instructions());
+    assertEquals(expectedInstructions, instructions());
   }
 
   private List<Instruction> instructions() {
@@ -274,13 +274,13 @@ public abstract class QueryTableTestBase {
                                     asList("2n", "4")))))
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
-    org.junit.Assert.assertEquals(
-      "[" +
-        headRow +
-        "[n, 2n], " +
-        "[pass(2), pass($V->[4])]" +
-        "]",
-      HtmlUtil.unescapeWiki(qt.getTable().toString())
+    assertEquals(
+            "[" +
+                    headRow +
+                    "[n, 2n], " +
+                    "[pass(2), pass($V->[4])]" +
+                    "]",
+            HtmlUtil.unescapeWiki(qt.getTable().toString())
     );
   }
 
@@ -356,13 +356,13 @@ public abstract class QueryTableTestBase {
                                             asList("2n", "4")))))
     );
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
-    org.junit.Assert.assertEquals(
-      "[" +
-        headRow +
-        "[n, 2n], " +
-        "[pass(2), fail(a=4;e=$V->[5])]" +
-        "]",
-      HtmlUtil.unescapeWiki(qt.getTable().toString())
+    assertEquals(
+            "[" +
+                    headRow +
+                    "[n, 2n], " +
+                    "[pass(2), fail(a=4;e=$V->[5])]" +
+                    "]",
+            HtmlUtil.unescapeWiki(qt.getTable().toString())
     );
   }
 
@@ -385,7 +385,7 @@ public abstract class QueryTableTestBase {
 
   protected void evaluateResults(Map<String, Object> pseudoResults, String expectedTable) {
     SlimAssertion.evaluateExpectations(assertions, pseudoResults);
-    org.junit.Assert.assertEquals(expectedTable, qt.getTable().toString());
+    assertEquals(expectedTable, qt.getTable().toString());
   }
 
   @Test
