@@ -196,7 +196,7 @@ public class FixtureTest {
   }
 
   private static String makeFixtureTable(String table[][]) {
-    StringBuffer buf = new StringBuffer();
+    StringBuilder buf = new StringBuilder();
     buf.append("<table>\n");
     for (String[] row : table) {
       buf.append("  <tr>");

@@ -19,8 +19,7 @@ public class SocketServiceTest {
   private int connections = 0;
   private SocketServer connectionCounter;
   private SocketService ss;
-  private final static int portNumber = 1999;
-
+  private static final int PORT_NUMBER = 1999;
 
   public SocketServiceTest() {
     connectionCounter = new SocketServer() {
@@ -38,32 +37,32 @@ public class SocketServiceTest {
 
   @Test
   public void testNoConnections() throws Exception {
-    ss = new SocketService(portNumber, connectionCounter);
+    ss = new SocketService(PORT_NUMBER, connectionCounter);
     ss.close();
     assertEquals(0, connections);
   }
 
   @Test
   public void testOneConnection() throws Exception {
-    ss = new SocketService(portNumber, connectionCounter);
-    connect(portNumber);
+    ss = new SocketService(PORT_NUMBER, connectionCounter);
+    connect(PORT_NUMBER);
     ss.close();
     assertEquals(1, connections);
   }
 
   @Test
   public void testManyConnections() throws Exception {
-    ss = new SocketService(portNumber, connectionCounter);
+    ss = new SocketService(PORT_NUMBER, connectionCounter);
     for (int i = 0; i < 10; i++)
-      connect(portNumber);
+      connect(PORT_NUMBER);
     ss.close();
     assertEquals(10, connections);
   }
 
   @Test
   public void testSendMessage() throws Exception {
-    ss = new SocketService(portNumber, new HelloService());
-    Socket s = new Socket("localhost", portNumber);
+    ss = new SocketService(PORT_NUMBER, new HelloService());
+    Socket s = new Socket("localhost", PORT_NUMBER);
     BufferedReader br = GetBufferedReader(s);
     String answer = br.readLine();
     s.close();
@@ -73,8 +72,8 @@ public class SocketServiceTest {
 
   @Test
   public void testReceiveMessage() throws Exception {
-    ss = new SocketService(portNumber, new EchoService());
-    Socket s = new Socket("localhost", portNumber);
+    ss = new SocketService(PORT_NUMBER, new EchoService());
+    Socket s = new Socket("localhost", PORT_NUMBER);
     BufferedReader br = GetBufferedReader(s);
     PrintStream ps = GetPrintStream(s);
     ps.println("MyMessage");
@@ -86,12 +85,12 @@ public class SocketServiceTest {
 
   @Test
   public void testMultiThreaded() throws Exception {
-    ss = new SocketService(portNumber, new EchoService());
-    Socket s = new Socket("localhost", portNumber);
+    ss = new SocketService(PORT_NUMBER, new EchoService());
+    Socket s = new Socket("localhost", PORT_NUMBER);
     BufferedReader br = GetBufferedReader(s);
     PrintStream ps = GetPrintStream(s);
 
-    Socket s2 = new Socket("localhost", portNumber);
+    Socket s2 = new Socket("localhost", PORT_NUMBER);
     BufferedReader br2 = GetBufferedReader(s2);
     PrintStream ps2 = GetPrintStream(s2);
 

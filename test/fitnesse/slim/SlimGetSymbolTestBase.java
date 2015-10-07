@@ -10,7 +10,7 @@ import org.junit.Test;
 
 // Extracted Test class to be implemented by all Java based Slim ports
 
-abstract public class SlimGetSymbolTestBase {
+public abstract class SlimGetSymbolTestBase {
   protected StatementExecutorInterface caller;
 
   @Before

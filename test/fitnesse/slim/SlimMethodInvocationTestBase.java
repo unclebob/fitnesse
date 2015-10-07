@@ -20,7 +20,7 @@ import org.junit.Test;
 // Extracted Test class to be implemented by all Java based Slim ports
 // The tests for PhpSlim and JsSlim implement this class
 
-abstract public class SlimMethodInvocationTestBase {
+public abstract class SlimMethodInvocationTestBase {
   protected StatementExecutorInterface caller;
   protected TestSlimInterface testSlim;
   protected String testClass = "TestSlim";

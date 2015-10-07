@@ -129,7 +129,7 @@ public class NameWikiPageResponderTest {
     assertHasRegexp("FrontPage 2", response.getContent());
   }
 
-  static private int CountLines(String s) {
+  private static int CountLines(String s) {
     if(s == null) { return 0; }
     return s.split("\r\n|\r|\n").length;
   }

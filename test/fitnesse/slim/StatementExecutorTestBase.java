@@ -35,46 +35,46 @@ public abstract class StatementExecutorTestBase {
 
   protected int library = 0;
 
-  public interface Echo {
-    public void echo();
+  interface Echo {
+    void echo();
 
-    public boolean echoCalled();
+    boolean echoCalled();
   }
 
-  public interface Speak {
-    public void speak();
+  interface Speak {
+    void speak();
 
-    public boolean speakCalled();
+    boolean speakCalled();
   }
 
-  public interface Delete {
-    public void delete(String fileName);
+  interface Delete {
+    void delete(String fileName);
 
-    public boolean deleteCalled();
+    boolean deleteCalled();
   }
 
-  public interface SystemUnderTestFixture {
-    public MySystemUnderTestBase getSystemUnderTest();
+  interface SystemUnderTestFixture {
+    MySystemUnderTestBase getSystemUnderTest();
   }
 
-  public abstract static class MySystemUnderTestBase implements Speak, Echo {
+  abstract static class MySystemUnderTestBase implements Speak, Echo {
   }
 
-  public static abstract class MyAnnotatedSystemUnderTestFixture implements Echo,
+  abstract static class MyAnnotatedSystemUnderTestFixture implements Echo,
       SystemUnderTestFixture {
   }
 
-  public static abstract class FixtureWithNamedSystemUnderTestBase implements Echo,
+  abstract static class FixtureWithNamedSystemUnderTestBase implements Echo,
       SystemUnderTestFixture {
   }
 
-  public static abstract class SimpleFixture implements Echo {
+  abstract static class SimpleFixture implements Echo {
   }
 
-  public static abstract class EchoSupport implements Echo, Speak {
+  abstract static class EchoSupport implements Echo, Speak {
   }
 
-  public static abstract class FileSupport implements Delete {
+  abstract static class FileSupport implements Delete {
   }
 
   public abstract void init() throws Exception;

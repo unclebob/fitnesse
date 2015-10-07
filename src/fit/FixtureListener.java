@@ -4,7 +4,7 @@
 package fit;
 
 public interface FixtureListener {
-  public void tableFinished(Parse table);
+  void tableFinished(Parse table);
 
-  public void tablesFinished(Counts count);
+  void tablesFinished(Counts count);
 }
