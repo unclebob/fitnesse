@@ -298,6 +298,7 @@ public class PluginsLoaderTest {
       p.propertyNames();
     }
 
+    @Override
     public boolean isContentAcceptable(String content, String page) {
       return false;
     }

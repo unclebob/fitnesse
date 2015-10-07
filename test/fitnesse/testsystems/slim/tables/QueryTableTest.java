@@ -11,10 +11,12 @@ import static java.util.Arrays.asList;
 
 public class QueryTableTest extends QueryTableTestBase {
 
+  @Override
   protected String tableType() {
     return "query";
   }
 
+  @Override
   protected Class<QueryTable> queryTableClass() {
     return QueryTable.class;
   }

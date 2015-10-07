@@ -18,6 +18,7 @@ public class ChunkingResponderTest {
 
   private Exception exception;
   private ChunkingResponder responder = new ChunkingResponder() {
+    @Override
     protected void doSending() throws Exception {
       throw exception;
     }

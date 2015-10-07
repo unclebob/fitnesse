@@ -71,6 +71,7 @@ public class SuiteSpecificationMatchFinderTest implements TraversalListener<Wiki
     assertPagesFound("TestPageOne", "ChildPage");
   }
   
+  @Override
   public void process(WikiPage page) {
     hits.add(page);
   }

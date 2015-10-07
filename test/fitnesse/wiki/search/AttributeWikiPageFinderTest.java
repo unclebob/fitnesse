@@ -26,6 +26,7 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
 
   private List<WikiPage> hits = new ArrayList<WikiPage>();
 
+  @Override
   public void process(WikiPage page) {
     hits.add(page);
   }

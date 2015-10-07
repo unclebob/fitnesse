@@ -106,6 +106,7 @@ public class InputStreamResponseTest implements ResponseSender {
     testFileOutput.close();
   }
 
+  @Override
   public void send(byte[] bytes) {
     if (bytesSent < 500)
       try {

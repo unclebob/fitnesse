@@ -16,9 +16,11 @@ import org.junit.Test;
 public abstract class FixtureDecoratorTestCase {
   protected static final long ELAPSED = 20;
   protected Timer stopWatch = new Timer() {
+    @Override
     public void start() {
     }
 
+    @Override
     public long elapsed() {
       return ELAPSED;
     }
@@ -116,9 +118,11 @@ public abstract class FixtureDecoratorTestCase {
 
   private FixtureDecorator dummyFitDecorator() {
     FixtureDecorator decorator = new FixtureDecorator() {
+      @Override
       protected void setupDecorator(String[] args) throws InvalidInputException {
       }
 
+      @Override
       protected void updateColumnsBasedOnResults(Parse table) {
       }
     };

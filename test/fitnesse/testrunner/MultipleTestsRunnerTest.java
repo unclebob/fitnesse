@@ -84,6 +84,7 @@ public class MultipleTestsRunnerTest {
     public ForTestSystem(String testSystemType) {
       this.testSystemType = testSystemType;
     }
+    @Override
     public boolean matches(Object descriptor) {
       return testSystemType.equals(((Descriptor) descriptor).getTestSystemType());
     }

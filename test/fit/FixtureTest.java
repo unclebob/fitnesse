@@ -174,6 +174,7 @@ public class FixtureTest {
   @Test
   public void testCanChangeFriendlyExceptions() throws Exception {
     Fixture fixture = new Fixture() {
+      @Override
       public boolean isFriendlyException(Throwable exception) {
         return true;
       }

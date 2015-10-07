@@ -133,6 +133,7 @@ public class FitNesseExpediterTest {
 
   private Thread makeSendingThread(final FitNesseExpediter sender) {
     Thread senderThread = new Thread(new Runnable() {
+      @Override
       public void run() {
         try {
           sender.start();
@@ -147,6 +148,7 @@ public class FitNesseExpediterTest {
 
   private Thread makeParsingThread() {
     Thread parseResponseThread = new Thread(new Runnable() {
+      @Override
       public void run() {
         try {
           response = new ResponseParser(clientInput);
@@ -160,10 +162,12 @@ public class FitNesseExpediterTest {
   }
 
   class StoneWallAuthenticator extends Authenticator {
+    @Override
     public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) {
       return new UnauthorizedResponder();
     }
 
+    @Override
     public boolean isAuthenticated(String username, String password) {
       return false;
     }

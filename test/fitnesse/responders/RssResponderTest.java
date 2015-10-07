@@ -33,10 +33,12 @@ public class RssResponderTest extends ResponderTestCase {
   private String hostName;
 
   // Return an instance of the Responder being tested.
+  @Override
   protected Responder responderInstance() {
     return new RssResponder();
   }
 
+  @Override
   @Before
   public void setUp() throws Exception {
     super.setUp();

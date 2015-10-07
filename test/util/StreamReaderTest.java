@@ -231,6 +231,7 @@ public class StreamReaderTest {
   }
 
   abstract class ReadThread extends Thread {
+    @Override
     public void run() {
       try {
         doRead();
@@ -244,6 +245,7 @@ public class StreamReaderTest {
   }
 
   class ReadLine extends ReadThread {
+    @Override
     public void doRead() throws Exception {
       readResult = reader.readLine();
     }
@@ -256,6 +258,7 @@ public class StreamReaderTest {
       this.amount = amount;
     }
 
+    @Override
     public void doRead() throws Exception {
       readResult = reader.read(amount);
     }
@@ -268,12 +271,14 @@ public class StreamReaderTest {
       boundary = b;
     }
 
+    @Override
     public void doRead() throws Exception {
       readResult = reader.readUpTo(boundary);
     }
   }
 
   class ReadLineBytes extends ReadThread {
+    @Override
     public void doRead() throws Exception {
       byteResult = reader.readLineBytes();
     }
@@ -286,6 +291,7 @@ public class StreamReaderTest {
       this.amount = amount;
     }
 
+    @Override
     public void doRead() throws Exception {
       byteResult = reader.readBytes(amount);
     }
@@ -298,6 +304,7 @@ public class StreamReaderTest {
       boundary = b;
     }
 
+    @Override
     public void doRead() throws Exception {
       byteResult = reader.readBytesUpTo(boundary);
     }

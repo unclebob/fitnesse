@@ -28,10 +28,12 @@ public class MovePageResponderTest extends ResponderTestCase {
   private MovePageResponder moveResponder;
   private PageCrawler crawler;
 
+  @Override
   protected Responder responderInstance() {
     return new MovePageResponder();
   }
 
+  @Override
   @Before
   public void setUp() throws Exception {
     super.setUp();

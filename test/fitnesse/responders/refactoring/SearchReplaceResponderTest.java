@@ -16,6 +16,7 @@ public class SearchReplaceResponderTest extends ResponderTestCase {
   private WikiPagePath pagePath;
   private WikiPage somePage;
 
+  @Override
   @Before
   public void setUp() throws Exception {
     super.setUp();

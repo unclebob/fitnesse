@@ -24,6 +24,7 @@ public class SslSocketServiceTest {
 
   public SslSocketServiceTest() {
     connectionCounter = new SocketServer() {
+      @Override
       public void serve(Socket s) {
         connections++;
       }
@@ -140,6 +141,7 @@ public class SslSocketServiceTest {
 }
 
 class HelloService2 implements SocketServer {
+  @Override
   public void serve(Socket s) {
     try {
       PrintStream ps = GetPrintStream(s);
@@ -151,6 +153,7 @@ class HelloService2 implements SocketServer {
 }
 
 class EchoService2 implements SocketServer {
+  @Override
   public void serve(Socket s) {
     try {
       PrintStream ps = GetPrintStream(s);

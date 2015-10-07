@@ -239,10 +239,12 @@ public class ConverterRegistryTest {
    * PRIVATE
    */
   private static class StringBuilderConverter implements Converter<StringBuilder> {
+    @Override
     public String toString(StringBuilder o) {
       return "customConverter";
     }
 
+    @Override
     public StringBuilder fromString(String arg) {
       throw new IllegalStateException();
     }

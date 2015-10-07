@@ -453,6 +453,7 @@ public class TestResponderTest {
       this.semaphore = semaphore;
     }
 
+    @Override
     public void run() {
       waitForSemaphore();
       SuiteResponder.runningTestingTracker.stopAllProcesses();

@@ -92,10 +92,12 @@ public class MaxTimeTest extends FixtureDecoratorTestCase {
     executeAndAssert(expected, fitPage, new MaxTime(stopWatch));
   }
 
+  @Override
   protected String geDecoratorHTMLRow() {
     return FIRST_HTML_ROW;
   }
 
+  @Override
   protected int numberOfAssertionsOnDecorator() {
     return 1;
   }
