@@ -14,6 +14,8 @@ As a result you will see .FrontPage below:
 |'''Parameters:'''|
 |!style_code(-seamless)|''causes the included page to be rendered without an enclosing box.''|
 |!style_code(-c)|''causes the included page to be collapsed.''|
+|!style_code(-setup)|''causes the included page to be used for test/suite setup.''|
+|!style_code(-teardown)|''causes the included page to be used for test/suite teardown.''|
 
 !3 '''Watch out for !include cycles'''
 Don't include a page that already includes the page that you are including from. ;-)
