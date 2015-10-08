@@ -130,7 +130,6 @@ public class WikiContentUpdater implements Updater {
       String source = getCorrectPathFromJar(updateableFile);
       updates.add(updateFactory.create(source, path));
     }
-    updates.add(new FileUpdate(updateFileResource, new File(context.getRootPagePath())));
     return updates;
   }
 

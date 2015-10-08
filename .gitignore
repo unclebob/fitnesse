@@ -32,10 +32,7 @@ tmp/*
 /test-classes/
 /bin/
 FitNesseRoot/properties
-FitNesseRoot/updateList
-FitNesseRoot/updateDoNotCopyOverList
 FitNesseRoot/ErrorLogs/*
 FitNesseRoot/files/testResults/*
-FitNesseRoot/files/testProgress/*
 FitNesseRoot/RecentChanges
 desktop.ini
