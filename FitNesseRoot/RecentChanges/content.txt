@@ -1,2 +1,0 @@
-|FitNesse.UserGuide.AdministeringFitNesse.SourceCodeControl||22:30:16 Wed, Aug 19, 2015|
-|RecentChanges||11:12:45 Wed, Sep 25, 2013|
