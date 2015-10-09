@@ -3,7 +3,6 @@ package fitnesse.slim.test.statementexecutorconsumer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import fitnesse.slim.SlimSymbol;
 import fitnesse.slim.StatementExecutor;
