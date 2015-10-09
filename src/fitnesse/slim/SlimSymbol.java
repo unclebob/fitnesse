@@ -3,7 +3,7 @@ package fitnesse.slim;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-abstract public class SlimSymbol {
+public abstract class SlimSymbol {
   public static final Pattern SYMBOL_PATTERN = Pattern
       .compile("\\$([A-Za-z\\p{L}][\\w\\p{L}]*)");
 // This would be a better pattern as it allows to define the end of a symbol name with another $ sign
