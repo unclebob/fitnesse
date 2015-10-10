@@ -27,8 +27,11 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TestXmlFormatter extends BaseFormatter implements ExecutionLogListener, Closeable {
+  private static final Logger LOG = Logger.getLogger(TestXmlFormatter.class.getName());
+
   private final FitNesseContext context;
   private final WriterFactory writerFactory;
   private TimeMeasurement currentTestStartTime;
