@@ -17,4 +17,10 @@ public class ClassPathTest {
 
     assertThat(cp.toString(), is("foo.jar,baz.jar,bar.jar"));
   }
+
+  @Test
+  public void shouldHandleSpaceInPath() {
+    ClassPath cp = new ClassPath(asList("dir/foo.jar", "other dir/bar.jar"), ";");
+    assertThat(cp.toString(), is("dir/foo.jar;\"other dir/bar.jar\""));
+  }
 }

@@ -22,10 +22,10 @@ public class ClassPath {
 
   public ClassPath(List<ClassPath> paths) {
     this.elements = new ArrayList<String>();
-    this.separator = paths.get(0).getSeparator();
+    this.separator = paths.get(0).separator;
 
     for (ClassPath path : paths) {
-      for (String element : path.getElements()) {
+      for (String element : path.elements) {
         if (!elements.contains(element)) {
           elements.add(element);
         }
@@ -33,23 +33,21 @@ public class ClassPath {
     }
   }
 
-  public List<String> getElements() {
-    return elements;
-  }
-
-  public String getSeparator() {
-    return separator;
-  }
-
   @Override
   public String toString() {
     if (elements.isEmpty()) {
       return "defaultPath";
     } else {
-      String result = StringUtils.join(elements, separator);
-      if (result.contains(" ") && !(result.startsWith("\"") && result.endsWith("\""))) {
-    	 result = "\""+result +"\"";
+      List<String> newElements = new ArrayList<String>();
+      for (String element : elements) {
+        if (element.contains(" ") && !(element.startsWith("\"") && element.endsWith("\""))) {
+          newElements.add("\""+element +"\"");
+        } else {
+          newElements.add(element);
+        }
       }
+
+      String result = StringUtils.join(newElements, separator);
       return result;
     }
   }
