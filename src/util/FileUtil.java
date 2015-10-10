@@ -170,11 +170,10 @@ public class FileUtil {
     return lines;
   }
 
-  public static void writeLinesToFile(File file, List<?> lines) throws FileNotFoundException {
+  public static void writeLinesToFile(File file, List<String> lines) throws FileNotFoundException {
     PrintStream output = new PrintStream(new FileOutputStream(file));
-    for (Object line : lines) {
-      String lineAsString = (String) line;
-      output.println(lineAsString);
+    for (String line : lines) {
+      output.println(line);
     }
     output.close();
   }
