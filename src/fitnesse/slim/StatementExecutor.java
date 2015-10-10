@@ -131,8 +131,8 @@ public class StatementExecutor implements StatementExecutorInterface {
 	if (!ignoreSymbols){
 		args = context.replaceSymbols(args);
 	}
-    for (int i = 0; i < executorChain.size(); i++) {
-    	MethodExecutionResult result = executorChain.get(i).execute(instanceName, methodName, args);   		
+    for (MethodExecutor anExecutorChain : executorChain) {
+      MethodExecutionResult result = anExecutorChain.execute(instanceName, methodName, args);
       if (result.hasResult()) {
         return result;
       }

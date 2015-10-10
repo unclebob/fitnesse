@@ -116,8 +116,7 @@ public class FitNesseExpediterTest {
 
     byte[] bytes = "GET /root HTTP/1.1\r\n\r\n".getBytes();
     try {
-      for (int i = 0; i < bytes.length; i++) {
-        byte aByte = bytes[i];
+      for (byte aByte : bytes) {
         clientOutput.write(aByte);
         clientOutput.flush();
         Thread.sleep(20);

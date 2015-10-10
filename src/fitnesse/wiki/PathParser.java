@@ -39,8 +39,7 @@ public class PathParser {
       pathName = pathName.substring(1);
     }
     String[] names = pathName.split("\\" + PATH_SEPARATOR);
-    for (int i = 0; i < names.length; i++) {
-      String pageName = names[i];
+    for (String pageName : names) {
       if (isWikiPath(pageName))
         path.addNameToEnd(pageName);
       else

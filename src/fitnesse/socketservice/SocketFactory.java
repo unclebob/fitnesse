@@ -158,9 +158,9 @@ public final class SocketFactory {
 
         Certificate[] cchain = ss.getPeerCertificates();
         LOG.log(Level.FINEST, "The Certificates used by peer");
-        for (int i = 0; i < cchain.length; i++) {
-          LOG.log(Level.FINEST, "   " + cchain[i].toString());
-          LOG.log(Level.FINEST, "   " + ((X509Certificate) cchain[i]).getSubjectDN());
+        for (Certificate aCchain : cchain) {
+          LOG.log(Level.FINEST, "   " + aCchain.toString());
+          LOG.log(Level.FINEST, "   " + ((X509Certificate) aCchain).getSubjectDN());
         }
 
       } catch (Exception e) {

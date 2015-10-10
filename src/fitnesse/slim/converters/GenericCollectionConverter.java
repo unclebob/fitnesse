@@ -70,8 +70,8 @@ public class GenericCollectionConverter<T, C extends Collection<T>> implements C
       throw new IllegalStateException("Collection should have a default constructor", e);
     }
     String[] strings = ListConverterHelper.fromStringToArrayOfStrings(arg);
-    for (int i = 0; i < strings.length; i++) {
-      collection.add(componentConverter.fromString(strings[i]));
+    for (String string : strings) {
+      collection.add(componentConverter.fromString(string));
     }
     return collection;
   }
