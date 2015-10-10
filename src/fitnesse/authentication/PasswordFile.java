@@ -82,8 +82,9 @@ public class PasswordFile {
   private void savePasswords() throws FileNotFoundException {
     List<String> lines = new LinkedList<String>();
     lines.add("!" + cipher.getClass().getName());
-    for (String user : passwordMap.keySet()) {
-      String password = passwordMap.get(user);
+    for (Map.Entry<String, String> entry : passwordMap.entrySet()) {
+      String user = entry.getKey();
+      String password = entry.getValue();
       lines.add(user + ":" + password);
     }
     FileUtil.writeLinesToFile(passwordFile, lines);

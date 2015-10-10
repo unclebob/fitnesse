@@ -13,6 +13,7 @@ import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import util.StreamReader;
@@ -80,8 +81,8 @@ public class RequestBuilder {
 
   private void sendHeaders(OutputStream output) throws IOException {
     addHostHeader();
-    for (String key : headers.keySet()) {
-      output.write((key + ": " + headers.get(key)).getBytes(CHARENCODING));
+    for (Map.Entry<String, String> entry : headers.entrySet()) {
+      output.write((entry.getKey() + ": " + entry.getValue()).getBytes(CHARENCODING));
       output.write(ENDL);
     }
   }
@@ -92,8 +93,9 @@ public class RequestBuilder {
       bodyParts.add(new ByteArrayInputStream(bytes));
       bodyLength += bytes.length;
     } else {
-      for (String name : inputs.keySet()) {
-        Object value = inputs.get(name);
+      for (Map.Entry<String, Object> entry : inputs.entrySet()) {
+        String name = entry.getKey();
+        Object value = entry.getValue();
         StringBuilder partBuffer = new StringBuilder();
         partBuffer.append("--").append(getBoundary()).append("\r\n");
         partBuffer.append("Content-Disposition: form-data; name=\"").append(name).append("\"").append("\r\n");
@@ -149,10 +151,11 @@ public class RequestBuilder {
   public String inputString() throws UnsupportedEncodingException {
     StringBuilder buffer = new StringBuilder();
     boolean first = true;
-    for (String key : inputs.keySet()) {
-      String value = (String) inputs.get(key);
+    for (Map.Entry<String, Object> entry : inputs.entrySet()) {
+      String value = (String) entry.getValue();
       if (!first)
         buffer.append("&");
+      String key = entry.getKey();
       buffer.append(key).append("=").append(URLEncoder.encode(value, CHARENCODING));
       first = false;
     }

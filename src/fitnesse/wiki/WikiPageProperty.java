@@ -72,6 +72,7 @@ public class WikiPageProperty implements Serializable {
     return children == null ? Collections.<String>emptySet() : children.keySet();
   }
 
+  @Override
   public String toString() {
     return toString("WikiPageProperty root", 0);
   }

@@ -47,6 +47,7 @@ public class PageFactory {
     return velocityEngine;
   }
 
+  @Override
   public String toString() {
     return getClass().getName();
   }

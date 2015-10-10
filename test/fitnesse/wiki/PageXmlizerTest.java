@@ -224,9 +224,9 @@ public class PageXmlizerTest {
     assertSubString("this is some content", marshaledValue);
 
     String[] propertyLines = properties.toXml().split("\n");
-    for (int i = 0; i < propertyLines.length; i++) {
-      String propertyLine = propertyLines[i].trim();
-      assertSubString(propertyLine, marshaledValue);
+    for (String propertyLine : propertyLines) {
+      String trimmedPropertyLine = propertyLine.trim();
+      assertSubString(trimmedPropertyLine, marshaledValue);
     }
   }
 

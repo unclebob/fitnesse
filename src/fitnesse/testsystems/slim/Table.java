@@ -33,6 +33,7 @@ public interface Table {
   Table asTemplate(CellContentSubstitution substitution) throws SyntaxError;
 
   // Mainly for IDE navigation
+  @Override
   String toString();
 
   interface CellContentSubstitution {

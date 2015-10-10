@@ -47,9 +47,9 @@ public class ErrorResponder implements Responder {
   public static String makeExceptionString(Throwable e) {
     StringBuilder buffer = new StringBuilder();
     buffer.append(e.toString()).append("\n");
-    StackTraceElement[] stackTreace = e.getStackTrace();
-    for (int i = 0; i < stackTreace.length; i++)
-      buffer.append("\t" + stackTreace[i]).append("\n");
+    for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+      buffer.append("\t" + stackTraceElement).append("\n");
+    }
 
     return buffer.toString();
   }

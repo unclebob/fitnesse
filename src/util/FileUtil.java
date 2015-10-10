@@ -15,7 +15,6 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -173,9 +172,9 @@ public class FileUtil {
 
   public static void writeLinesToFile(File file, List<?> lines) throws FileNotFoundException {
     PrintStream output = new PrintStream(new FileOutputStream(file));
-    for (Iterator<?> iterator = lines.iterator(); iterator.hasNext();) {
-      String line = (String) iterator.next();
-      output.println(line);
+    for (Object line : lines) {
+      String lineAsString = (String) line;
+      output.println(lineAsString);
     }
     output.close();
   }
@@ -206,11 +205,11 @@ public class FileUtil {
     File[] files = dir.listFiles();
     if (files == null)
       return new File[0];
-    for (int i = 0; i < files.length; i++) {
-      if (files[i].isDirectory())
-        dirSet.add(files[i]);
+    for (File file : files) {
+      if (file.isDirectory())
+        dirSet.add(file);
       else
-        fileSet.add(files[i]);
+        fileSet.add(file);
     }
     List<File> fileList = new LinkedList<File>();
     fileList.addAll(dirSet);

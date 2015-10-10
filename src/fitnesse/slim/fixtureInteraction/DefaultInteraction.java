@@ -63,7 +63,7 @@ public class DefaultInteraction implements FixtureInteraction {
   private Constructor<?> getConstructor(Constructor<?>[] constructors,
                                         Object[] args) {
     for (Constructor<?> constructor : constructors) {
-      Class<?> arguments[] = constructor.getParameterTypes();
+      Class<?>[] arguments = constructor.getParameterTypes();
       if (arguments.length == args.length) {
         return constructor;
       }
