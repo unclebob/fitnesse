@@ -21,6 +21,7 @@ public class FixtureName {
       this.nameAsString = tableName;
   }
 
+  @Override
   public String toString() {
     return nameAsString;
   }

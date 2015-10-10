@@ -170,6 +170,7 @@ public class CustomLexerTest {
       this.type = type;
     }
 
+    @Override
     public String toString() {
       return type.toString();
     }

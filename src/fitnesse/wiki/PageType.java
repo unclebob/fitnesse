@@ -66,6 +66,7 @@ public enum PageType {
     this.description = description;
   }
 
+  @Override
   public String toString() {
     return description;
   }

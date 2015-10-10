@@ -44,7 +44,8 @@ public class TestSlim implements TestSlimInterface {
     testSlim.setString(string);
     return testSlim;
   }
-  
+
+  @Override
   public String toString() {
     return "TestSlim: " + constructorArg + ", " + stringArg;
   }

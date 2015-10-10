@@ -22,9 +22,9 @@ public class ExecutionStatus {
     return style;
   }
 
+  @Override
   public String toString() {
     return "Execution Report: " + message;
-
   }
 
 }

@@ -269,10 +269,12 @@ public class HistoryComparer {
       this.matchScore = matchScore;
     }
 
+    @Override
     public String toString() {
       return "[first: " + first + ", second: " + second + ", matchScore: " + matchScore + "]";
     }
 
+    @Override
     public int hashCode() {
       return this.first + this.second;
     }

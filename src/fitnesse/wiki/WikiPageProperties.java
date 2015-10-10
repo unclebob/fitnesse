@@ -139,6 +139,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
     parent.appendChild(element);
   }
 
+  @Override
   public String toString() {
     return super.toString("WikiPageProperties", 0);
   }

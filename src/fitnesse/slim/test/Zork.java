@@ -20,6 +20,7 @@ public class Zork {
     return false;
   }
 
+  @Override
   public int hashCode() {
     assert false : "hashCode not designed";
   return 42;

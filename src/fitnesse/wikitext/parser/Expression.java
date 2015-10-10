@@ -210,6 +210,7 @@ public class Expression {
   /*
    * The String value of this Expression.
    */
+  @Override
   public String toString() {
     return x.intern();
   }
