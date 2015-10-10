@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 
 public class WikiContentUpdater implements Updater {
 
-  protected static final Logger LOG = Logger.getLogger(WikiContentUpdater.class.getName());
+  private static final Logger LOG = Logger.getLogger(WikiContentUpdater.class.getName());
 
   protected final FitNesseContext context;
   private Properties rootProperties;
