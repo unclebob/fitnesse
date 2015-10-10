@@ -69,7 +69,7 @@ public class PropertiesResponder implements SecureResponder {
   private JSONObject makeJson() {
     response.setContentType(Response.Format.JSON);
     JSONObject jsonObject = new JSONObject();
-    String attributes[] = new String[] { TEST.toString(), PropertySEARCH,
+    String[] attributes = { TEST.toString(), PropertySEARCH,
         PropertyEDIT, PropertyPROPERTIES, PropertyVERSIONS, PropertyREFACTOR,
         PropertyWHERE_USED, PropertyRECENT_CHANGES, SUITE.toString(),
         PropertyPRUNE, PropertySECURE_READ, PropertySECURE_WRITE,
