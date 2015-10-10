@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ImportAndViewResponder implements SecureResponder, WikiImporterClient {
-  private final Logger LOG = Logger.getLogger(ImportAndViewResponder.class.getName());
+  private static final Logger LOG = Logger.getLogger(ImportAndViewResponder.class.getName());
 
   private WikiPage page;
 

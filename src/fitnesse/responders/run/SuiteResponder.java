@@ -59,7 +59,7 @@ import static fitnesse.responders.WikiImportingTraverser.ImportError;
 import static fitnesse.wiki.WikiImportProperty.isAutoUpdated;
 
 public class SuiteResponder extends ChunkingResponder implements SecureResponder {
-  private final Logger LOG = Logger.getLogger(SuiteResponder.class.getName());
+  private static final Logger LOG = Logger.getLogger(SuiteResponder.class.getName());
 
   private static final String NOT_FILTER_ARG = "excludeSuiteFilter";
   private static final String AND_FILTER_ARG = "runTestsMatchingAllTags";

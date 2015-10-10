@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SuiteContentsFinder {
-  public static final Logger LOG = Logger.getLogger(SuiteContentsFinder.class.getName());
+  private static final Logger LOG = Logger.getLogger(SuiteContentsFinder.class.getName());
 
   private final WikiPage pageToRun;
   private final WikiPage wikiRootPage;

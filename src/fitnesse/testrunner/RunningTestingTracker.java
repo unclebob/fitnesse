@@ -8,7 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RunningTestingTracker {
-  public static final Logger LOG = Logger.getLogger(RunningTestingTracker.class.getName());
+  private static final Logger LOG = Logger.getLogger(RunningTestingTracker.class.getName());
 
   private Map<String, Stoppable> processes = new ConcurrentHashMap<String, Stoppable>();
   private int nextTicketNumber = 1;
