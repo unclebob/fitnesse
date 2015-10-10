@@ -9,10 +9,8 @@ import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 public abstract class BaseFormatter implements Formatter {
-  protected final Logger LOG = Logger.getLogger(getClass().getName());
 
   private final WikiPage page;
 
