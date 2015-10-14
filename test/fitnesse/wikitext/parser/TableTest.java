@@ -4,14 +4,23 @@ import fitnesse.html.HtmlElement;
 import org.junit.Test;
 
 public class TableTest {
+
   @Test
   public void scansTables() {
     ParserTestHelper.assertScansTokenType("|a|\n", "Table", true);
     ParserTestHelper.assertScansTokenType("!|a|\n", "Table", true);
     ParserTestHelper.assertScansTokenType("-|a|\n", "Table", true);
     ParserTestHelper.assertScansTokenType("-!|a|\n", "Table", true);
+    ParserTestHelper.assertScansTokenType("!|  a  |\n", "Table", true);
   }
 
+  @Test
+  public void parsesTables() {
+    ParserTestHelper.assertParses("|a|\n", "SymbolList[Table[TableRow[TableCell[Text]]]]");
+    ParserTestHelper.assertParses("!|a|\n", "SymbolList[Table[TableRow[TableCell[Text]]]]");
+    ParserTestHelper.assertParses("|  a  |\n", "SymbolList[Table[TableRow[TableCell[Whitespace, Text, Whitespace]]]]");
+    ParserTestHelper.assertParses("!|  a  |\n", "SymbolList[Table[TableRow[TableCell[Whitespace, Text, Whitespace]]]]");
+  }
   @Test
   public void translatesTables() {
     ParserTestHelper.assertTranslatesTo("|a|\n", tableWithCell("a"));

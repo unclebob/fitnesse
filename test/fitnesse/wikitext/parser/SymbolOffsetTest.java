@@ -55,7 +55,7 @@ public class SymbolOffsetTest {
             "-!| table |",
             "SymbolList<0..11>[" +
                     "Table<0..11>[TableRow<3..11>[" +
-                    "TableCell<3..11>[Text<3..10>]]]]");
+                    "TableCell<3..11>[Whitespace<3..4>, Text<4..9>, Whitespace<9..10>]]]]");
   }
 
   @Test
