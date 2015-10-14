@@ -47,9 +47,6 @@ public class ClassPath {
       return "defaultPath";
     } else {
       String result = StringUtils.join(elements, separator);
-      if (result.contains(" ") && !(result.startsWith("\"") && result.endsWith("\""))) {
-    	 result = "\""+result +"\"";
-      }
       return result;
     }
   }
