@@ -73,7 +73,7 @@ function WikiFormatter()
    *   - increase the non colspan columns if the colspan columns lengths are greater
    *   - adjust colspan columns to pad out to the max length of the row
    *
-   * Feel free to refator as necessary for clarity
+   * Feel free to refactor as necessary for clarity
    */
   this.calculateColumnWidths = function(rows) {
     var widths = this.getRealColumnWidths(rows);
@@ -283,11 +283,8 @@ function WikiFormatter()
   };
 
   this.adjustColspansForWidths = function(widths, maxWidths) {
-    var colspan = null;
-    var lastNumberOfColumnsWidth = null
-
     this.each(widths, function(row, rowIndex) {
-      colspan = maxWidths.length - row.length + 1;
+      var colspan = maxWidths.length - row.length + 1;
 
       if(colspan > 1) {
         row[row.length - 1] = this.getWidthOfLastNumberOfColumns(maxWidths, colspan);
