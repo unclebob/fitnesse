@@ -21,12 +21,12 @@ public class TestHistoryResponder implements SecureResponder {
 
   private FitNesseContext context;
   
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
     File resultsDirectory = context.getTestHistoryDirectory();
     String pageName = request.getResource();
-    TestHistory testHistory = new TestHistory();
-    testHistory.readPageHistoryDirectory(resultsDirectory, pageName);
+    TestHistory testHistory = new TestHistory(resultsDirectory, pageName);
 
     if (formatIsXML(request)) {
       return makeTestHistoryXmlResponse(testHistory);
@@ -62,6 +62,7 @@ public class TestHistoryResponder implements SecureResponder {
     return "xml".equalsIgnoreCase(format);
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }

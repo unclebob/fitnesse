@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SuiteContentsFinder {
-  public static final Logger LOG = Logger.getLogger(SuiteContentsFinder.class.getName());
+  private static final Logger LOG = Logger.getLogger(SuiteContentsFinder.class.getName());
 
   private final WikiPage pageToRun;
   private final WikiPage wikiRootPage;
@@ -42,6 +42,7 @@ public class SuiteContentsFinder {
     List<WikiPage> testPages = addTestPagesToSuite(pageToRun, suiteFilter);
 
     Collections.sort(testPages, new Comparator<WikiPage>() {
+      @Override
       public int compare(WikiPage p1, WikiPage p2) {
         try {
           WikiPagePath path1 = p1.getPageCrawler().getFullPath();

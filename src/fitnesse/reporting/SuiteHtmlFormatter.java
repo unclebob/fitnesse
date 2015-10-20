@@ -8,7 +8,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
 
-import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.*;
 import fitnesse.util.TimeMeasurement;
 import fitnesse.html.HtmlTag;
@@ -78,7 +77,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
   }
 
   @Override
-  public void testStarted(WikiTestPage testPage) throws IOException {
+  public void testStarted(TestPage testPage) throws IOException {
     latestTestTime = new TimeMeasurement().start();
     super.testStarted(testPage);
 
@@ -120,7 +119,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
       tag.add(HtmlUtil.makeSpanTag("", String.format("(%.03f seconds)", latestTestTime.elapsedSeconds())));
     }
 
-    pageCounts.tallyPageCounts(getExecutionResult(relativeName, testSummary, wasInterrupted()));
+    pageCounts.add(getExecutionResult(relativeName, testSummary, wasInterrupted()));
     HtmlTag insertScript = HtmlUtil.makeAppendElementScript(testSummariesId, tag.html());
     writeData(insertScript.html());
   }
@@ -146,7 +145,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
 
 
   @Override
-  public void testComplete(WikiTestPage testPage, TestSummary testSummary) throws IOException {
+  public void testComplete(TestPage testPage, TestSummary testSummary) throws IOException {
     latestTestTime.stop();
     super.testComplete(testPage, testSummary);
 
@@ -163,6 +162,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
     writeData(insertScript.html());
   }
 
+  @Override
   protected String makeSummaryContent() {
     String summaryContent = "<strong>Test Pages:</strong> " + pageCounts.toString() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
     if (latestTestTime != null) {

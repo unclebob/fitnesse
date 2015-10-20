@@ -15,6 +15,7 @@ public class Image extends SymbolType implements Rule, Translation {
         htmlTranslation(this);
     }
 
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
     	  String imageProperty =
             current.getContent().endsWith("l") ? Link.Left
@@ -56,11 +57,13 @@ public class Image extends SymbolType implements Rule, Translation {
     }
 
     private void addOptions(Symbol link, Map<String, String> options) {
-      for(String key : options.keySet()) {
-        if (key.equals("-w")) link.putProperty(Link.WidthProperty, options.get(key));
-        if (key.equals("-m")) link.putProperty(Link.StyleProperty, String.format("%2$smargin:%1$spx %1$spx %1$spx %1$spx;", options.get(key), link.getProperty(Link.StyleProperty)));
-        if (key.equals("-b")) link.putProperty(Link.StyleProperty, String.format("%2$sborder:%1$spx solid black;", options.get(key), link.getProperty(Link.StyleProperty)));
-      }
+        for (Map.Entry<String, String> entry : options.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            if (key.equals("-w")) link.putProperty(Link.WidthProperty, value);
+            if (key.equals("-m")) link.putProperty(Link.StyleProperty, String.format("%2$smargin:%1$spx %1$spx %1$spx %1$spx;", value, link.getProperty(Link.StyleProperty)));
+            if (key.equals("-b")) link.putProperty(Link.StyleProperty, String.format("%2$sborder:%1$spx solid black;", value, link.getProperty(Link.StyleProperty)));
+        }
     }
 
     private Maybe<Symbol> makeImageLink(Symbol current, Symbol link, String imageProperty) {

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.logging.Level;
@@ -102,10 +101,9 @@ public class RecentChangesWikiPage implements RecentChanges {
   }
 
   private String convertLinesToWikiText(List<String> lines) {
-    StringBuffer buffer = new StringBuffer();
-    for (Iterator<String> iterator = lines.iterator(); iterator.hasNext();) {
-      String s = iterator.next();
-      buffer.append(s).append("\n");
+    StringBuilder buffer = new StringBuilder();
+    for (String line : lines) {
+      buffer.append(line).append("\n");
     }
     return buffer.toString();
   }

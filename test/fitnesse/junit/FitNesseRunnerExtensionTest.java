@@ -3,15 +3,12 @@ package fitnesse.junit;
 import fitnesse.FitNesseContext;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.testrunner.MultipleTestsRunner;
-import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.*;
 import org.junit.runner.RunWith;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 
 import java.io.IOException;
-
-import static org.junit.Assert.assertNull;
 
 @RunWith(FitNesseRunnerExtensionTest.SuiteExtension.class)
 @FitNesseRunner.FitnesseDir(".")
@@ -57,12 +54,12 @@ public class FitNesseRunnerExtensionTest {
     }
 
     @Override
-    public void testStarted(WikiTestPage test) {
+    public void testStarted(TestPage test) {
       super.testStarted(test);
     }
 
     @Override
-    public void testComplete(WikiTestPage test, TestSummary testSummary) {
+    public void testComplete(TestPage test, TestSummary testSummary) {
       super.testComplete(test, testSummary);
     }
 

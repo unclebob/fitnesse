@@ -81,29 +81,20 @@ public class CustomLexerTest {
     return lexedTokens;
   }
 
-  public static class Lexer {
+  private static class Lexer {
 
-    private final CharSequence buffer;
-    private final int startOffset;
-    private final int endOffset;
     private final ParseSpecification specification;
     private final Scanner scanner;
     private final Parser parser;
 
     private Iterator<Symbol> symbolIterator = emptyIterator();
     private Symbol currentSymbol;
-    private int state;
 
     public Lexer(CharSequence buffer) {
-      this(buffer, 0, buffer.length(), 0);
+      this(buffer, 0, buffer.length());
     }
 
-    public Lexer(CharSequence buffer, int startOffset, int endOffset, int initialState) {
-      this.buffer = buffer;
-      this.startOffset = startOffset;
-      this.endOffset = endOffset;
-      this.state = initialState;
-
+    public Lexer(CharSequence buffer, int startOffset, int endOffset) {
       Parser.make(new LexerParsingPage(), buffer.subSequence(startOffset, endOffset)).parse();
 
       ParsingPage currentPage = new LexerParsingPage();
@@ -114,19 +105,6 @@ public class CustomLexerTest {
       parser = new Parser(null, currentPage, scanner, specification);
 
       advance();
-    }
-
-    String getTokenText() {
-      return currentSymbol.getContent();
-    }
-
-    /**
-     * Returns the current state of the lexer.
-     *
-     * @return the lexer state.
-     */
-    public int getState() {
-      return state;
     }
 
     /**
@@ -192,6 +170,7 @@ public class CustomLexerTest {
       this.type = type;
     }
 
+    @Override
     public String toString() {
       return type.toString();
     }
@@ -340,8 +319,11 @@ public class CustomLexerTest {
     static final EmptyIterator<Object> EMPTY_ITERATOR
             = new EmptyIterator<Object>();
 
+    @Override
     public boolean hasNext() { return false; }
+    @Override
     public E next() { throw new NoSuchElementException(); }
+    @Override
     public void remove() { throw new IllegalStateException(); }
   }
 

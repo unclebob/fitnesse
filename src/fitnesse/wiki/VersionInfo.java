@@ -69,14 +69,17 @@ public class VersionInfo implements Comparable<VersionInfo> {
     return age;
   }
 
+  @Override
   public int compareTo(VersionInfo otherVersion) {
       return getCreationTime().compareTo(otherVersion.getCreationTime());
   }
 
+  @Override
   public String toString() {
     return getName();
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o != null && o instanceof VersionInfo) {
       VersionInfo otherVersion = (VersionInfo) o;
@@ -85,6 +88,7 @@ public class VersionInfo implements Comparable<VersionInfo> {
       return false;
   }
 
+  @Override
   public int hashCode() {
     return getName().hashCode();
   }

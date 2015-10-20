@@ -168,6 +168,7 @@ public abstract class Binding {
   public abstract void doCell(Fixture fixture, Parse cell) throws Throwable;
 
   public static class SaveBinding extends Binding {
+    @Override
     public void doCell(Fixture fixture, Parse cell) {
       try {
         //TODO-MdM hmm... somehow this needs to regulated by the fixture.
@@ -187,6 +188,7 @@ public abstract class Binding {
   }
 
   public static class RecallBinding extends Binding {
+    @Override
     public void doCell(Fixture fixture, Parse cell) throws Exception {
       String symbolName = cell.text();
       if (!Fixture.hasSymbol(symbolName))
@@ -206,6 +208,7 @@ public abstract class Binding {
   }
 
   public static class SetBinding extends Binding {
+    @Override
     public void doCell(Fixture fixture, Parse cell) throws Throwable {
       if ("".equals(cell.text()))
         fixture.handleBlankCell(cell, adapter);
@@ -214,18 +217,21 @@ public abstract class Binding {
   }
 
   public static class QueryBinding extends Binding {
+    @Override
     public void doCell(Fixture fixture, Parse cell) {
       fixture.check(cell, adapter);
     }
   }
 
   public static class RegexQueryBinding extends Binding {
+    @Override
     public void doCell(Fixture fixture, Parse cell) {
       fixture.check(cell, adapter);
     }
   }
 
   public static class NullBinding extends Binding {
+    @Override
     public void doCell(Fixture fixture, Parse cell) {
       fixture.ignore(cell);
     }

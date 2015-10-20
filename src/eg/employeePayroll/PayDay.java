@@ -10,6 +10,7 @@ public class PayDay extends RowEntryFixture {
   public Date payDate;
   public int checkNumber;
 
+  @Override
   public void enterRow() throws Exception {
 
   }

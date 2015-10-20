@@ -16,6 +16,7 @@ public class Table extends SymbolType implements Rule, Translation {
     htmlTranslation(this);
   }
 
+  @Override
   public Maybe<Symbol> parse(Symbol current, Parser parser) {
     String content = current.getContent();
     if (content.charAt(0) == '-') current.putProperty("hideFirst", "");
@@ -65,6 +66,7 @@ public class Table extends SymbolType implements Rule, Translation {
     return symbol.getContent().contains("\n|");
   }
 
+  @Override
   public String toTarget(Translator translator, Symbol symbol) {
       HtmlWriter writer = new HtmlWriter();
       writer.startTag("table");
@@ -99,6 +101,7 @@ public class Table extends SymbolType implements Rule, Translation {
   protected String translateCellBody(Translator translator, Symbol cell) {
     final String literalDelimiter = new String(new char[]{255, 1, 255});
     cell.walkPreOrder(new SymbolTreeWalker() {
+      @Override
       public boolean visit(Symbol node) {
         if (node.isType(Literal.symbolType)) {
           node.setContent(literalDelimiter + node.getContent() + literalDelimiter);
@@ -106,6 +109,7 @@ public class Table extends SymbolType implements Rule, Translation {
         return true;
       }
 
+      @Override
       public boolean visitChildren(Symbol node) {
         return true;
       }

@@ -16,6 +16,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public class RollbackResponder implements SecureResponder {
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
 
@@ -38,6 +39,7 @@ public class RollbackResponder implements SecureResponder {
     return response;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureWriteOperation();
   }

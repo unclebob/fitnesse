@@ -22,6 +22,7 @@ public class ResponseRequester extends ColumnFixture {
     return status() == 200;
   }
 
+  @Override
   public void execute() throws Exception {
     setRequest(new MockRequest());
 

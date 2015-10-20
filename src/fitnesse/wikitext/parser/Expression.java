@@ -14,7 +14,7 @@ public class Expression {
    */
   private double term() {
     double ans = 0;
-    StringBuffer temp = new StringBuffer();
+    StringBuilder temp = new StringBuilder();
     while (!s.isEmpty() && Character.isDigit(s.charAt(0))) {
       temp.append(Integer.parseInt("" + s.charAt(0)));
       advance();
@@ -210,6 +210,7 @@ public class Expression {
   /*
    * The String value of this Expression.
    */
+  @Override
   public String toString() {
     return x.intern();
   }

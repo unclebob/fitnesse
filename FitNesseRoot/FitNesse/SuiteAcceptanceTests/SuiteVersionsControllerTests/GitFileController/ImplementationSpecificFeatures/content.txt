@@ -1,2 +1,0 @@
-!1 Test suite !help
-!contents -R2 -g -p -f -h

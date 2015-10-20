@@ -267,6 +267,7 @@ public class ScenarioAndDecisionTableScriptOnlyExtensionTest {
     public DiffScriptTable2(Table table, String tableId, SlimTestContext context) {
       super(table, tableId, context);
     }
+    @Override
     protected String getTableType() {
       return DIFF_SCRIPT_TABLE2_TYPE;
     }

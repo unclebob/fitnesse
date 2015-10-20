@@ -35,6 +35,7 @@ public class PropertiesResponder implements SecureResponder {
   private SimpleResponse response;
   private HtmlPage html;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     response = new SimpleResponse();
     resource = request.getResource();
@@ -68,7 +69,7 @@ public class PropertiesResponder implements SecureResponder {
   private JSONObject makeJson() {
     response.setContentType(Response.Format.JSON);
     JSONObject jsonObject = new JSONObject();
-    String attributes[] = new String[] { TEST.toString(), PropertySEARCH,
+    String[] attributes = { TEST.toString(), PropertySEARCH,
         PropertyEDIT, PropertyPROPERTIES, PropertyVERSIONS, PropertyREFACTOR,
         PropertyWHERE_USED, PropertyRECENT_CHANGES, SUITE.toString(),
         PropertyPRUNE, PropertySECURE_READ, PropertySECURE_WRITE,
@@ -209,6 +210,7 @@ public class PropertiesResponder implements SecureResponder {
     return null;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }

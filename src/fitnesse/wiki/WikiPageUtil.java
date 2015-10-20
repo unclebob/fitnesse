@@ -67,10 +67,7 @@ public class WikiPageUtil {
   }
 
   public static String makePageHtml(WikiPage page) {
-    StringBuffer buffer = new StringBuffer();
-    buffer.append(getHeaderPageHtml(page));
-    buffer.append(page.getHtml());
-    return buffer.toString();
+    return getHeaderPageHtml(page) + page.getHtml();
   }
 
   public static File resolveFileUri(String fullPageURI, File rootPath) {
@@ -113,5 +110,9 @@ public class WikiPageUtil {
       return xrefPages;
     }
     return Collections.emptyList();
+  }
+
+  public static boolean isTestPage(WikiPage page) {
+    return page.getData().hasAttribute("Test");
   }
 }

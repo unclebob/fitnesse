@@ -116,8 +116,8 @@ public class SlimTableTest {
   public void replaceSymbols_ShouldReplaceConcutenatedSymbols() throws Exception {
     SlimTable table = new MockTable();
     table.setSymbol("x", "1");
-    table.setSymbol("y", "1");
-    assertEquals("this is $x->[1]1 and $y->[1]1", table.replaceSymbolsWithFullExpansion("this is $x1 and $y1"));
+    table.setSymbol("y", "a");
+    assertEquals("this is $x1->[11] and $yb->[ab]", table.replaceSymbolsWithFullExpansion("this is $x1 and $yb"));
   }
 
 
@@ -127,10 +127,12 @@ public class SlimTableTest {
       super(null, null, new SlimTestContextImpl(new WikiTestPage(new WikiPageDummy())));
     }
 
+    @Override
     protected String getTableType() {
       return null;
     }
 
+    @Override
     public List<SlimAssertion> getAssertions() {
       return Collections.emptyList();
     }

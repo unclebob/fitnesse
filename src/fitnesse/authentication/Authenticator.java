@@ -41,6 +41,7 @@ public abstract class Authenticator {
 
   public abstract boolean isAuthenticated(String username, String password);
 
+  @Override
   public String toString() {
     return getClass().getName();
   }

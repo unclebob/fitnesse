@@ -23,6 +23,7 @@ public class RowEntryFixtureTest {
       public int a = 0;
       public int b = 0;
 
+      @Override
       public void enterRow() throws Exception {
         throw new Exception(ERROR_MESSAGE);
       }

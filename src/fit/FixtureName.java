@@ -4,7 +4,6 @@
 package fit;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -21,6 +20,7 @@ public class FixtureName {
       this.nameAsString = tableName;
   }
 
+  @Override
   public String toString() {
     return nameAsString;
   }
@@ -37,8 +37,7 @@ public class FixtureName {
     List<String> candidateClassNames = new ArrayList<String>();
 
     if (!isFullyQualified()) {
-      for (Iterator<String> i = fixturePathElements.iterator(); i.hasNext();) {
-        String packageName = i.next();
+      for (String packageName : fixturePathElements) {
         addBlahAndBlahFixture(packageName + ".", candidateClassNames);
       }
     }

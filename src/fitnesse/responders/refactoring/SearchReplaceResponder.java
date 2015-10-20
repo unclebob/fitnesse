@@ -16,6 +16,7 @@ public class SearchReplaceResponder extends ResultResponder implements Traversal
     return String.format("Replaced %d matches for your search.", hits);
   }
 
+  @Override
   protected String getTitle() {
     return String.format("Replacing matching content \"%s\" with content \"%s\"",
         getSearchString(), getReplacementString());
@@ -29,6 +30,7 @@ public class SearchReplaceResponder extends ResultResponder implements Traversal
     return (String) request.getInput("searchString");
   }
 
+  @Override
   public void process(WikiPage page) {
     contentReplaceObserver.process(page);
     webOutputObserver.process(page);

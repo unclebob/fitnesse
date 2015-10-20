@@ -22,6 +22,7 @@ public class PageReferenceRenamer extends ReferenceRenamer {
     this.newName = newName;
   }
 
+    @Override
     public boolean visit(Symbol node) {
         try {
             if (node.isType(WikiWord.symbolType)) {
@@ -41,6 +42,7 @@ public class PageReferenceRenamer extends ReferenceRenamer {
         return true;
     }
 
+    @Override
     public boolean visitChildren(Symbol node) {
         return !node.isType(Alias.symbolType);
     }

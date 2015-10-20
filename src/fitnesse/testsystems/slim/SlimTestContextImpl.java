@@ -21,22 +21,27 @@ public class SlimTestContextImpl implements SlimTestContext {
     this.pageToTest = pageToTest;
   }
 
+  @Override
   public String getSymbol(String symbolName) {
     return symbols.get(symbolName);
   }
 
+  @Override
   public void setSymbol(String symbolName, String value) {
     symbols.put(symbolName, value);
   }
 
+  @Override
   public void addScenario(String scenarioName, ScenarioTable scenarioTable) {
     scenarios.put(scenarioName, scenarioTable);
   }
 
+  @Override
   public ScenarioTable getScenario(String scenarioName) {
     return scenarios.get(scenarioName);
   }
 
+  @Override
   public Collection<ScenarioTable> getScenarios() {
     return scenarios.values();
   }
@@ -75,6 +80,7 @@ public class SlimTestContextImpl implements SlimTestContext {
     return testSummary;
   }
 
+  @Override
   public TestPage getPageToTest() {
     return pageToTest;
   }

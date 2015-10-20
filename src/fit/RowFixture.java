@@ -40,6 +40,7 @@ public abstract class RowFixture extends ColumnFixture {
 
   public abstract Object[] query() throws Exception;  // get rows to be compared
 
+  @Override
   public abstract Class<?> getTargetClass();             // get expected type of row
 
   protected void match(List<?> expected, List<?> computed, int col) {

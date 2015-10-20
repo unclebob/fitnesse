@@ -17,6 +17,7 @@ public class FitNesseServer implements SocketServer {
     this.context = context;
   }
 
+  @Override
   public void serve(Socket s) {
     serve(s, 10000);
   }

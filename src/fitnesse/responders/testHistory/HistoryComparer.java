@@ -147,15 +147,18 @@ public class HistoryComparer {
   }
 
   private class FirstResultAdjustmentStrategy implements ResultAdjustmentStrategy {
+    @Override
     public boolean matchIsNotLinedUp(int matchIndex) {
       MatchedPair matchedPair = matchedTables.get(matchIndex);
       return matchedPair.first < matchedPair.second;
     }
 
+    @Override
     public void insertBlankTableBefore(int matchIndex) {
       firstTableResults.add(matchedTables.get(matchIndex).first, blankTable);
     }
 
+    @Override
     public MatchedPair getAdjustedMatch(int matchIndex) {
       MatchedPair matchedPair = matchedTables.get(matchIndex);
       return new MatchedPair(matchedPair.first + 1, matchedPair.second, matchedPair.matchScore);
@@ -164,15 +167,18 @@ public class HistoryComparer {
   }
 
   private class SecondResultAdjustmentStrategy implements ResultAdjustmentStrategy {
+    @Override
     public boolean matchIsNotLinedUp(int matchIndex) {
       MatchedPair matchedPair = matchedTables.get(matchIndex);
       return matchedPair.first > matchedPair.second;
     }
 
+    @Override
     public void insertBlankTableBefore(int matchIndex) {
       secondTableResults.add(matchedTables.get(matchIndex).second, blankTable);
     }
 
+    @Override
     public MatchedPair getAdjustedMatch(int matchIndex) {
       MatchedPair matchedPair = matchedTables.get(matchIndex);
       return new MatchedPair(matchedPair.first, matchedPair.second + 1, matchedPair.matchScore);
@@ -263,10 +269,12 @@ public class HistoryComparer {
       this.matchScore = matchScore;
     }
 
+    @Override
     public String toString() {
       return "[first: " + first + ", second: " + second + ", matchScore: " + matchScore + "]";
     }
 
+    @Override
     public int hashCode() {
       return this.first + this.second;
     }

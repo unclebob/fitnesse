@@ -8,7 +8,6 @@ antlib/*
 javadoc/*
 lib/*
 dependencies/*
-.svn
 .classpath
 .project
 .settings
@@ -32,3 +31,8 @@ tmp/*
 /classes
 /test-classes/
 /bin/
+FitNesseRoot/properties
+FitNesseRoot/ErrorLogs/*
+FitNesseRoot/files/testResults/*
+FitNesseRoot/RecentChanges
+desktop.ini

@@ -24,6 +24,7 @@ public class Matcher {
     public Matcher whitespace() {
         if (firsts == null) firsts = defaultList;
         matches.add(new ScanMatch() {
+            @Override
             public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
                 int length = input.whitespaceLength(offset);
                 return length > 0 ? new Maybe<Integer>(length) : Maybe.noInteger;
@@ -34,6 +35,7 @@ public class Matcher {
 
     public Matcher startLine() {
         matches.add(new ScanMatch() {
+            @Override
             public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
                 return isStartLine(input, symbols, offset) ? new Maybe<Integer>(0) : Maybe.noInteger;
             }
@@ -43,6 +45,7 @@ public class Matcher {
 
     public Matcher startLineOrCell() {
         matches.add(new ScanMatch() {
+            @Override
             public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
                 return isStartLine(input, symbols, offset) || isStartCell(symbols)
                  ? new Maybe<Integer>(0) : Maybe.noInteger;
@@ -66,6 +69,7 @@ public class Matcher {
             firsts = Collections.singletonList(delimiter.charAt(0));
         }
         matches.add(new ScanMatch() {
+            @Override
             public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
                 return input.matches(delimiter, offset) ? new Maybe<Integer>(delimiter.length()) : Maybe.noInteger;
             }
@@ -76,6 +80,7 @@ public class Matcher {
     public Matcher listDigit() {
         firstIsDigit('1');
         matches.add(new ScanMatch() {
+            @Override
             public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
                 return isDigitInput('1', input, offset) ? new Maybe<Integer>(1) : Maybe.noInteger;
             }
@@ -100,6 +105,7 @@ public class Matcher {
     public Matcher digits() {
         firstIsDigit('0');
         matches.add(new ScanMatch() {
+            @Override
             public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
                 int size = 0;
                 while (isDigitInput('0', input, offset + size)) size++;
@@ -111,6 +117,7 @@ public class Matcher {
 
     public Matcher ignoreWhitespace() {
         matches.add(new ScanMatch() {
+            @Override
             public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
                 return new Maybe<Integer>(input.whitespaceLength(offset));
             }
@@ -123,6 +130,7 @@ public class Matcher {
             firsts = Collections.singletonList(delimiter);
         }
         matches.add(new ScanMatch() {
+            @Override
             public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
                 int size = 0;
                 while (input.charAt(offset + size) == delimiter) size++;
@@ -134,6 +142,7 @@ public class Matcher {
 
     public Matcher endsWith(final char[] terminators) {
         matches.add(new ScanMatch() {
+            @Override
             public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
                 int size = 0;
                 while (true) {

@@ -92,7 +92,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     	arguments = ArrayUtils.add(arguments, "-ssl");
     	arguments = ArrayUtils.add(arguments, useSSL);
     }    	
-    String slimFlags[] = getSlimFlags();
+    String[] slimFlags = getSlimFlags();
     if (slimFlags != null)
     	for (String flag : slimFlags)
     		arguments = ArrayUtils.add(arguments, flag);

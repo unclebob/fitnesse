@@ -33,8 +33,7 @@ public class HashingCipherTest {
 
   @Test
   public void testLengthOfHash() throws Exception {
-    for (int i = 0; i < inputs.length; i++) {
-      String input = inputs[i];
+    for (String input : inputs) {
       String encryption = crypter.encrypt(input);
       assertEquals(input, 20, encryption.length());
     }
@@ -42,8 +41,7 @@ public class HashingCipherTest {
 
   @Test
   public void testSameInputGivesSameOutput() throws Exception {
-    for (int i = 0; i < inputs.length; i++) {
-      String input = inputs[i];
+    for (String input : inputs) {
       String encryption1 = crypter.encrypt(input);
       String encryption2 = crypter.encrypt(input);
       assertEquals(input, encryption1, encryption2);
@@ -64,8 +62,8 @@ public class HashingCipherTest {
     }
 
     TimeMeasurement measurement = new TimeMeasurement().start();
-    for (int i = 0; i < inputs.length; i++) {
-      crypter.encrypt(inputs[i]);
+    for (String input : inputs) {
+      crypter.encrypt(input);
     }
     long duration = measurement.elapsed();
 

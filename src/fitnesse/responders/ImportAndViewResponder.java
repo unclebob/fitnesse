@@ -16,10 +16,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ImportAndViewResponder implements SecureResponder, WikiImporterClient {
-  private final Logger LOG = Logger.getLogger(ImportAndViewResponder.class.getName());
+  private static final Logger LOG = Logger.getLogger(ImportAndViewResponder.class.getName());
 
   private WikiPage page;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) throws MalformedURLException {
     String resource = request.getResource();
 
@@ -56,13 +57,16 @@ public class ImportAndViewResponder implements SecureResponder, WikiImporterClie
     }
   }
 
+  @Override
   public void pageImported(WikiPage localPage) {
   }
 
+  @Override
   public void pageImportError(WikiPage localPage, Exception e) {
     LOG.log(Level.WARNING, "Page import error", e);
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }

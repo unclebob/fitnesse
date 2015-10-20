@@ -8,7 +8,6 @@ import static util.RegexTestCase.assertSubString;
 
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.ArrayList;
 
 import fitnesse.wiki.*;
 import org.apache.velocity.app.VelocityEngine;
@@ -30,6 +29,7 @@ public class HistoryComparerTest {
   @Before
   public void setUp() throws Exception {
     comparer = new HistoryComparer() {
+      @Override
       public String getFileContent(String filePath) {
         if (filePath.equals("TestFolder/FileOne"))
           return "this is file one";

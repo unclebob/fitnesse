@@ -30,6 +30,7 @@ public class SearchResponder extends ResultResponder {
     return "Found " + hits + " results for your search.";
   }
 
+  @Override
   protected String getTitle() {
     return getSearchType() + " Search Results for '" + getSearchString() + "'";
   }
@@ -48,6 +49,7 @@ public class SearchResponder extends ResultResponder {
     }
   }
 
+  @Override
   protected boolean shouldRespondWith404() {
     return false;
   }

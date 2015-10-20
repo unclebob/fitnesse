@@ -40,6 +40,7 @@ public class ScenarioTable extends SlimTable {
     super(table, tableId, testContext);
   }
 
+  @Override
   protected String getTableType() {
     return instancePrefix;
   }
@@ -135,7 +136,7 @@ private void splitInputAndOutputArguments(String argName) {
   }
 
   private String getNameFromAlternatingCells() {
-    StringBuffer nameBuffer = new StringBuffer();
+    StringBuilder nameBuffer = new StringBuilder();
 
     for (int nameCol = 1; nameCol < colsInHeader; nameCol += 2)
       nameBuffer.append(table.getCellContents(nameCol, 0)).append(" ");

@@ -11,9 +11,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import util.StreamReader;
@@ -81,9 +81,8 @@ public class RequestBuilder {
 
   private void sendHeaders(OutputStream output) throws IOException {
     addHostHeader();
-    for (Iterator<String> iterator = headers.keySet().iterator(); iterator.hasNext();) {
-      String key = iterator.next();
-      output.write((key + ": " + headers.get(key)).getBytes(CHARENCODING));
+    for (Map.Entry<String, String> entry : headers.entrySet()) {
+      output.write((entry.getKey() + ": " + entry.getValue()).getBytes(CHARENCODING));
       output.write(ENDL);
     }
   }
@@ -94,9 +93,9 @@ public class RequestBuilder {
       bodyParts.add(new ByteArrayInputStream(bytes));
       bodyLength += bytes.length;
     } else {
-      for (Iterator<String> iterator = inputs.keySet().iterator(); iterator.hasNext();) {
-        String name = iterator.next();
-        Object value = inputs.get(name);
+      for (Map.Entry<String, Object> entry : inputs.entrySet()) {
+        String name = entry.getKey();
+        Object value = entry.getValue();
         StringBuilder partBuffer = new StringBuilder();
         partBuffer.append("--").append(getBoundary()).append("\r\n");
         partBuffer.append("Content-Disposition: form-data; name=\"").append(name).append("\"").append("\r\n");
@@ -116,9 +115,8 @@ public class RequestBuilder {
           addBodyPart(partBuffer.toString());
         }
       }
-      StringBuilder tail = new StringBuilder();
-      tail.append("--").append(getBoundary()).append("--").append("\r\n");
-      addBodyPart(tail.toString());
+      String tail = "--" + getBoundary() + "--" + "\r\n";
+      addBodyPart(tail);
     }
     addHeader("Content-Length", bodyLength + "");
   }
@@ -130,9 +128,7 @@ public class RequestBuilder {
   }
 
   private void sendBody(OutputStream output) throws IOException {
-    for (Iterator<InputStream> iterator = bodyParts.iterator(); iterator.hasNext();) {
-      InputStream input = iterator.next();
-
+    for (InputStream input : bodyParts) {
       StreamReader reader = new StreamReader(input);
       while (!reader.isEof()) {
         byte[] bytes = reader.readBytes(1000);
@@ -155,11 +151,11 @@ public class RequestBuilder {
   public String inputString() throws UnsupportedEncodingException {
     StringBuilder buffer = new StringBuilder();
     boolean first = true;
-    for (Iterator<String> iterator = inputs.keySet().iterator(); iterator.hasNext();) {
-      String key = iterator.next();
-      String value = (String) inputs.get(key);
+    for (Map.Entry<String, Object> entry : inputs.entrySet()) {
+      String value = (String) entry.getValue();
       if (!first)
         buffer.append("&");
+      String key = entry.getKey();
       buffer.append(key).append("=").append(URLEncoder.encode(value, CHARENCODING));
       first = false;
     }

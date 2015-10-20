@@ -11,6 +11,7 @@ import fitnesse.html.template.HtmlPage;
 
 public class UnauthorizedResponder implements Responder {
   
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse(401);
     response.addHeader("WWW-Authenticate", "Basic realm=\"FitNesse\"");

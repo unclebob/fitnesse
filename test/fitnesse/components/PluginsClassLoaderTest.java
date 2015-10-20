@@ -5,6 +5,7 @@ import static util.RegexTestCase.assertMatches;
 import static util.RegexTestCase.assertNotSubString;
 import static util.RegexTestCase.assertSubString;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import java.io.File;
 import java.net.URL;
@@ -73,10 +74,7 @@ public class PluginsClassLoaderTest {
 
   private String classpathAsString(URLClassLoader classLoader) {
     URL[] urls = classLoader.getURLs();
-    StringBuffer urlString = new StringBuffer();
-    for (int i = 0; i < urls.length; i++)
-      urlString.append(urls[i].toString()).append(":");
-    return urlString.toString();
+    return StringUtils.join(urls, ":");
   }
 
 

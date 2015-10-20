@@ -35,7 +35,7 @@ public abstract class ExecutionReport {
   }
 
   public void tallyPageCounts(ExecutionResult result) {
-    finalCounts.tallyPageCounts(result);
+    finalCounts.add(result);
   }
 
   @Override

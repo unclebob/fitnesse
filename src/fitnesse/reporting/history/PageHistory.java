@@ -42,6 +42,7 @@ public class PageHistory extends PageHistoryReader{
 
   private Comparator<Date> reverseChronologicalDateComparator() {
     return new Comparator<Date>() {
+      @Override
       public int compare(Date d1, Date d2) {
         long diff = d2.getTime() - d1.getTime();
         if (diff < 0)
@@ -53,6 +54,7 @@ public class PageHistory extends PageHistoryReader{
     };
   }
 
+  @Override
   void processTestFile(TestResultRecord record) throws ParseException {
     Date date = record.getDate();
     addTestResult(record, date);
@@ -95,7 +97,7 @@ public class PageHistory extends PageHistoryReader{
   }
 
   private void countResult(TestResultRecord summary) {
-    ExecutionResult result = ExecutionResult.getExecutionResult(summary.getWikiPageName(), summary);
+    ExecutionResult result = ExecutionResult.getExecutionResult(summary.getWikiPageName(), summary.toTestSummary());
     if (result == ExecutionResult.FAIL || result == ExecutionResult.ERROR)
       failures++;
     else
@@ -218,7 +220,7 @@ public class PageHistory extends PageHistoryReader{
     public void addSummary(Date date, TestResultRecord summary) {
       minMaxDate(summary);
 
-      ExecutionResult result = ExecutionResult.getExecutionResult(summary.getWikiPageName(), summary);
+      ExecutionResult result = ExecutionResult.getExecutionResult(summary.getWikiPageName(), summary.toTestSummary());
 
       passFailList.add(new PassFailReport(date, result));
     }

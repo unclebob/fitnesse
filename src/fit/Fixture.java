@@ -257,7 +257,7 @@ public class Fixture {
   }
 
   public static String camel(String name) {
-    StringBuffer b = new StringBuffer(name.length());
+    StringBuilder b = new StringBuilder(name.length());
     StringTokenizer t = new StringTokenizer(name);
     b.append(t.nextToken());
     while (t.hasMoreTokens()) {

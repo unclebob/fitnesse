@@ -21,6 +21,7 @@ import fitnesse.wiki.*;
 
 public class WikiPageResponder implements SecureResponder {
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     WikiPage page = loadPage(context, request.getResource(), request.getMap());
     if (page == null)
@@ -79,7 +80,7 @@ public class WikiPageResponder implements SecureResponder {
     html.put("actions", new WikiPageActions(page));
     html.put("helpText", pageData.getProperties().get(PageData.PropertyHELP));
 
-    if (WikiTestPage.isTestPage(page)) {
+    if (WikiPageUtil.isTestPage(page)) {
       // Add test url inputs to context's variableSource.
       WikiTestPage testPage = new TestPageWithSuiteSetUpAndTearDown(page);
       html.put("content", new WikiTestPageRenderer(testPage));
@@ -98,6 +99,7 @@ public class WikiPageResponder implements SecureResponder {
     WikiImportingResponder.handleImportProperties(html, page);
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }

@@ -22,6 +22,7 @@ public abstract class TimeBasedFixtureDecorator extends FixtureDecorator {
     this.stopWatch = new DefaultTimer();
   }
 
+  @Override
   protected void run(Fixture fixture, Parse table) {
     stopWatch.start();
     super.run(fixture, table);

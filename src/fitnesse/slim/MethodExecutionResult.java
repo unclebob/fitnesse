@@ -40,6 +40,7 @@ public class MethodExecutionResult {
       this.instanceName = instanceName;
     }
 
+    @Override
     public Object returnValue() {
       throw new SlimError(String.format("message:<<%s %s.>>", SlimServer.NO_INSTANCE, instanceName));
     }
@@ -86,6 +87,7 @@ public class MethodExecutionResult {
   }
   
   @SuppressWarnings({"unchecked", "rawtypes"})
+  @Override
   public String toString() {
     Converter converter = ConverterRegistry.getConverterForClass(type);
     if (converter != null)

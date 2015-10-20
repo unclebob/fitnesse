@@ -105,11 +105,11 @@ CodeMirror.defineSimpleMode("fitnesse", {
     //Headers
     {regex: /!\d .+/, token: "header"},
     //Centering
-    {regex: /!c/, token: "header"},
+    {regex: /!c .+/, token: "header"},
     //Note
-    {regex: /!note/, token: "quote"},
+    {regex: /!note .+/, token: "quote"},
     //Image
-    {regex: /!img/, token: "quote"},
+    {regex: /!img https?:\/\/[\dA-Za-z\.\/\?#-]+/, token: "quote"},
     //External links
     {regex: /https?:\/\/[\dA-Za-z\.\/\?#-]+/, token: "link"},
     //Lists
@@ -117,18 +117,18 @@ CodeMirror.defineSimpleMode("fitnesse", {
     //Variable
     {regex: /!define/, token: "quote"},
     //Classpath
-    {regex: /!path/, token: "quote"},
+    {regex: /!path .+/, token: "quote"},
     //Table
     {regex: /\|.*/, token: "variable-3"},
     //Hash-Table
     {regex: /!{.*}/, token: "link"},
     //Collapsable Sections
-    {regex: /!\*+.*/, token: "header"},
+    {regex: /!\*+ .*/, token: "header"},
     {regex: /\*+!/, token: "header"},
     //Table of contents
     {regex: /!contents.*/, token: "keyword"},
     //Include
-    {regex: /!include +/, token: "keyword"},
+    {regex: /!include .+/, token: "keyword"},
     //Help
     {regex: /!help (-editable)?/, token: "keyword"},
     //Last modified

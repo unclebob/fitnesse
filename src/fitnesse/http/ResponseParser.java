@@ -70,7 +70,7 @@ public class ResponseParser {
   }
 
   private void parseChunks() throws IOException {
-    StringBuffer bodyBuffer = new StringBuffer();
+    StringBuilder bodyBuffer = new StringBuilder();
     int chunkSize = readChunkSize();
     while (chunkSize != 0) {
       bodyBuffer.append(input.read(chunkSize));
@@ -106,13 +106,15 @@ public class ResponseParser {
     return headers.containsKey(key);
   }
 
+  @Override
   public String toString() {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     buffer.append("Status: ").append(status).append("\n");
     buffer.append("Headers: ").append("\n");
-    for (String key : headers.keySet()) {
-      buffer.append("\t").append(key).append(": ").append(headers.get(key)).append("\n");
-
+    for (Map.Entry<String, String> entry : headers.entrySet()) {
+      String key = entry.getKey();
+      String value = entry.getValue();
+      buffer.append("\t").append(key).append(": ").append(value).append("\n");
     }
     buffer.append("Body: ").append("\n");
     buffer.append(body);

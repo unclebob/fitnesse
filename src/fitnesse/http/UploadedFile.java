@@ -28,6 +28,7 @@ public class UploadedFile {
     return file;
   }
 
+  @Override
   public String toString() {
     try {
       return "name : " + getName() + "; type : " + getType() + "; content : " + FileUtil.getFileContent(file);

@@ -55,8 +55,7 @@ public class HistoryPurgerTest {
 
     historyPurger.deleteTestHistoryOlderThanDays();
 
-    TestHistory history = new TestHistory();
-    history.readHistoryDirectory(resultsDirectory);
+    TestHistory history = new TestHistory(resultsDirectory);
     PageHistory pageHistory = history.getPageHistory("SomePage");
     assertEquals(1, pageHistory.size());
     assertNotNull(pageHistory.get(makeDate("20090615000000")));
@@ -79,8 +78,7 @@ public class HistoryPurgerTest {
 
     historyPurger.deleteTestHistoryOlderThanDays(PathParser.parse("SomePage"));
 
-    TestHistory history = new TestHistory();
-    history.readHistoryDirectory(resultsDirectory);
+    TestHistory history = new TestHistory(resultsDirectory);
     PageHistory pageHistory = history.getPageHistory("SomePage");
     assertNotNull(pageHistory.get(makeDate("20090615000000")));
     assertNull(pageHistory.get(makeDate("20090614000000")));

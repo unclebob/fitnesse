@@ -10,6 +10,7 @@ public class SystemUnderTestMethodExecutor extends MethodExecutor {
     this.context = context;
   }
 
+  @Override
   public MethodExecutionResult execute(String instanceName, String methodName, Object[] args) throws Throwable {
     Object instance;
     try {
@@ -17,7 +18,7 @@ public class SystemUnderTestMethodExecutor extends MethodExecutor {
     } catch (SlimError e) {
       return MethodExecutionResult.noInstance(instanceName + "." + methodName);
     }
-    Field field = findSystemUnderTest(instance.getClass());
+    Field field = findSystemUnderTest(methodName, instance.getClass(), args);
     if (field != null) {
       Object systemUnderTest = field.get(instance);
       return findAndInvoke(methodName, args, systemUnderTest);
@@ -25,11 +26,13 @@ public class SystemUnderTestMethodExecutor extends MethodExecutor {
     return MethodExecutionResult.noMethod(methodName, instance.getClass(), args.length);
   }
 
-  private Field findSystemUnderTest(Class<?> k) {
+  private Field findSystemUnderTest(String methodName, Class<?> k, Object[] args) {
     Field[] fields = k.getDeclaredFields();
     for (Field field : fields) {
       if (isSystemUnderTest(field)) {
-        return field;
+        if (null != findMatchingMethod(methodName, field.getType(), args.length)) {
+          return field;
+        }
       }
     }
     return null;

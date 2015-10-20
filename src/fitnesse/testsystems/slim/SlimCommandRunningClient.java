@@ -2,6 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
+import fitnesse.slim.SlimError;
+import fitnesse.slim.SlimException;
+import fitnesse.slim.SlimStreamReader;
+import fitnesse.slim.SlimVersion;
+import fitnesse.slim.instructions.*;
+import fitnesse.slim.protocol.SlimDeserializer;
+import fitnesse.slim.protocol.SlimSerializer;
+import fitnesse.socketservice.SocketFactory;
+import fitnesse.testsystems.CommandRunner;
+
+import fitnesse.util.Clock;
+import org.apache.commons.lang.ArrayUtils;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -11,23 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import fitnesse.slim.SlimError;
-import fitnesse.slim.SlimException;
-import fitnesse.slim.SlimStreamReader;
-import fitnesse.slim.SlimVersion;
-import fitnesse.slim.instructions.AssignInstruction;
-import fitnesse.slim.instructions.CallAndAssignInstruction;
-import fitnesse.slim.instructions.CallInstruction;
-import fitnesse.slim.instructions.ImportInstruction;
-import fitnesse.slim.instructions.Instruction;
-import fitnesse.slim.instructions.InstructionExecutor;
-import fitnesse.slim.instructions.MakeInstruction;
-import fitnesse.slim.protocol.SlimDeserializer;
-import fitnesse.slim.protocol.SlimSerializer;
-import fitnesse.socketservice.SocketFactory;
-import fitnesse.testsystems.CommandRunner;
-import org.apache.commons.lang.ArrayUtils;
 
 import static java.util.Arrays.asList;
 
@@ -91,7 +87,7 @@ public class SlimCommandRunningClient implements SlimClient {
   @Override
   public void connect() throws IOException {
     final int sleepStep = 50; // milliseconds
-    long timeOut = System.currentTimeMillis() + connectionTimeout * 1000;
+    long timeOut = Clock.currentTimeInMillis() + connectionTimeout * 1000;
     LOG.finest("Trying to connect to host: " + hostName + " on port: " + port + " SSL=" + useSSL + " timeout setting: " + connectionTimeout);
     while (client == null) {
       if (slimRunner != null && slimRunner.isDead()) {
@@ -101,7 +97,7 @@ public class SlimCommandRunningClient implements SlimClient {
       try {
         client = SocketFactory.tryCreateClientSocket(hostName, port, useSSL, sslParameterClassName);
       } catch (IOException e) {
-        if (System.currentTimeMillis() > timeOut) {
+        if (Clock.currentTimeInMillis() > timeOut) {
           throw new SlimError("Error connecting to SLiM server on " + hostName + ":" + port, e);
         } else {
           try {

@@ -17,6 +17,7 @@ public class WikiWord extends SymbolType implements Translation {
         this.sourcePage = sourcePage;
     }
 
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         if ("true".equals(symbol.getProperty(WITH_EDIT))) {
           return buildEditableLink(

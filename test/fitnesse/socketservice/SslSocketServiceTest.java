@@ -19,11 +19,11 @@ public class SslSocketServiceTest {
   private int connections = 0;
   private SocketServer connectionCounter;
   private SocketService ss;
-  private final static int portNumber = 1999;
-
+  private static final int PORT_NUMBER = 1999;
 
   public SslSocketServiceTest() {
     connectionCounter = new SocketServer() {
+      @Override
       public void serve(Socket s) {
         connections++;
       }
@@ -37,25 +37,25 @@ public class SslSocketServiceTest {
 
   @Test
   public void testNoConnections() throws Exception {
-    ss = new SocketService(portNumber, true, connectionCounter,"fitnesse.socketservice.SslParametersWiki");
+    ss = new SocketService(PORT_NUMBER, true, connectionCounter,"fitnesse.socketservice.SslParametersWiki");
     ss.close();
     assertEquals(0, connections);
   }
 
   @Test
   public void testOneConnection() throws Exception {
-	 ss = new SocketService(portNumber, true, connectionCounter,"fitnesse.socketservice.SslParametersWiki");
-    connect(portNumber);
+	 ss = new SocketService(PORT_NUMBER, true, connectionCounter,"fitnesse.socketservice.SslParametersWiki");
+    connect(PORT_NUMBER);
     ss.close();
     assertEquals(1, connections);
   }
 
   @Test
   public void testManyConnections() throws Exception {
-     ss = new SocketService(portNumber, true, new EchoService(),"fitnesse.socketservice.SslParametersWiki");
+     ss = new SocketService(PORT_NUMBER, true, new EchoService(),"fitnesse.socketservice.SslParametersWiki");
     String answer = ""; 
     for (int i = 0; i < 10; i++){
-        Socket s = SocketFactory.tryCreateClientSocket("localhost", portNumber, true, "fitnesse.socketservice.SslParametersWiki");
+        Socket s = SocketFactory.tryCreateClientSocket("localhost", PORT_NUMBER, true, "fitnesse.socketservice.SslParametersWiki");
     	System.out.print("Peer: " + SocketFactory.peerName(s) + "\n");
         BufferedReader br = GetBufferedReader(s);
         PrintStream ps = GetPrintStream(s);
@@ -70,9 +70,9 @@ public class SslSocketServiceTest {
 
   @Test
   public void testSendMessage() throws Exception {
-	ss = new SocketService(portNumber, true, new HelloService(),"fitnesse.socketservice.SslParametersWiki");
+	ss = new SocketService(PORT_NUMBER, true, new HelloService(),"fitnesse.socketservice.SslParametersWiki");
 
-    Socket s = SocketFactory.tryCreateClientSocket("localhost", portNumber, true, "fitnesse.socketservice.SslParametersWiki");
+    Socket s = SocketFactory.tryCreateClientSocket("localhost", PORT_NUMBER, true, "fitnesse.socketservice.SslParametersWiki");
 
     BufferedReader br = GetBufferedReader(s);
     String answer = br.readLine();
@@ -83,8 +83,8 @@ public class SslSocketServiceTest {
 
   @Test
   public void testReceiveMessage() throws Exception {
-	ss = new SocketService(portNumber, true, new EchoService(),"fitnesse.socketservice.SslParametersWiki");
-    Socket s = SocketFactory.tryCreateClientSocket("localhost", portNumber, true, "fitnesse.socketservice.SslParametersWiki");
+	ss = new SocketService(PORT_NUMBER, true, new EchoService(),"fitnesse.socketservice.SslParametersWiki");
+    Socket s = SocketFactory.tryCreateClientSocket("localhost", PORT_NUMBER, true, "fitnesse.socketservice.SslParametersWiki");
     BufferedReader br = GetBufferedReader(s);
     PrintStream ps = GetPrintStream(s);
     ps.println("MyMessage");
@@ -96,12 +96,12 @@ public class SslSocketServiceTest {
 
   @Test
   public void testMultiThreaded() throws Exception {
-	ss = new SocketService(portNumber, true, new EchoService(),"fitnesse.socketservice.SslParametersWiki");
-    Socket s = SocketFactory.tryCreateClientSocket("localhost", portNumber, true, "fitnesse.socketservice.SslParametersWiki");
+	ss = new SocketService(PORT_NUMBER, true, new EchoService(),"fitnesse.socketservice.SslParametersWiki");
+    Socket s = SocketFactory.tryCreateClientSocket("localhost", PORT_NUMBER, true, "fitnesse.socketservice.SslParametersWiki");
     BufferedReader br = GetBufferedReader(s);
     PrintStream ps = GetPrintStream(s);
 
-    Socket s2 = SocketFactory.tryCreateClientSocket("localhost", portNumber, true, "fitnesse.socketservice.SslParametersWiki");
+    Socket s2 = SocketFactory.tryCreateClientSocket("localhost", PORT_NUMBER, true, "fitnesse.socketservice.SslParametersWiki");
     BufferedReader br2 = GetBufferedReader(s2);
     PrintStream ps2 = GetPrintStream(s2);
 
@@ -140,6 +140,7 @@ public class SslSocketServiceTest {
 }
 
 class HelloService2 implements SocketServer {
+  @Override
   public void serve(Socket s) {
     try {
       PrintStream ps = GetPrintStream(s);
@@ -151,6 +152,7 @@ class HelloService2 implements SocketServer {
 }
 
 class EchoService2 implements SocketServer {
+  @Override
   public void serve(Socket s) {
     try {
       PrintStream ps = GetPrintStream(s);

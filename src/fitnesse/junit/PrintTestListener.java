@@ -3,9 +3,10 @@ package fitnesse.junit;
 import java.io.Closeable;
 import java.util.logging.Logger;
 
-import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testrunner.WikiTestPageUtil;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -13,7 +14,7 @@ import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.util.TimeMeasurement;
 
-public class PrintTestListener implements TestSystemListener<WikiTestPage>, Closeable {
+public class PrintTestListener implements TestSystemListener, Closeable {
   private static final Logger LOG = Logger.getLogger(PrintTestListener.class.getName());
 
   private TimeMeasurement timeMeasurement;
@@ -25,13 +26,13 @@ public class PrintTestListener implements TestSystemListener<WikiTestPage>, Clos
   }
 
   @Override
-  public void testStarted(WikiTestPage test) {
+  public void testStarted(TestPage test) {
     timeMeasurement = new TimeMeasurement().start();
   }
 
   @Override
-  public void testComplete(WikiTestPage test, TestSummary testSummary) {
-    LOG.info(new WikiPagePath(test.getSourcePage()).toString() + " r " + testSummary.getRight() + " w "
+  public void testComplete(TestPage test, TestSummary testSummary) {
+    LOG.info(new WikiPagePath(WikiTestPageUtil.getSourcePage(test)).toString() + " r " + testSummary.getRight() + " w "
         + testSummary.getWrong() + " " + testSummary.getExceptions()
         + " " + timeMeasurement.elapsedSeconds() + " seconds");
   }

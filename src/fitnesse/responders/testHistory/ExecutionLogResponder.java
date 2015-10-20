@@ -28,6 +28,7 @@ public class ExecutionLogResponder implements SecureResponder {
   private File resultsDirectory;
   private FitNesseContext context;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
     PageHistory pageHistory = getPageHistory(request);
@@ -86,9 +87,8 @@ public class ExecutionLogResponder implements SecureResponder {
   private PageHistory getPageHistory(Request request) {
     if (resultsDirectory == null)
       resultsDirectory = context.getTestHistoryDirectory();
-    TestHistory history = new TestHistory();
     String pageName = request.getResource();
-    history.readPageHistoryDirectory(resultsDirectory, pageName);
+    TestHistory history = new TestHistory(resultsDirectory, pageName);
     return history.getPageHistory(pageName);
   }
 
@@ -96,6 +96,7 @@ public class ExecutionLogResponder implements SecureResponder {
     this.resultsDirectory = resultsDirectory;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }

@@ -18,12 +18,14 @@ public class Link extends SymbolType implements Rule, Translation {
         htmlTranslation(this);
     }
     
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol targetList = parser.parseToEnds(-1,
                 SymbolProvider.linkTargetProvider,
                 new SymbolType[] {SymbolType.Newline, SymbolType.Whitespace});
         return new Maybe<Symbol>(current.add(targetList));
     }
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         String target = symbol.getContent() + translator.translate(symbol.childAt(0));
         return buildLink(translator, target, symbol);

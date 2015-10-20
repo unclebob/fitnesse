@@ -337,7 +337,7 @@ public class TestResponderTest {
   public void slimScenarioXmlFormat() throws Exception {
     responder.turnOffChunking();
     request.addInput("format", "xml");
-    doSimpleRun(XmlChecker.slimScenarioTable);
+    doSimpleRun(XmlChecker.SLIM_SCENARIO_TABLE);
     xmlChecker.assertXmlReportOfSlimScenarioTableIsCorrect();
   }
 
@@ -453,6 +453,7 @@ public class TestResponderTest {
       this.semaphore = semaphore;
     }
 
+    @Override
     public void run() {
       waitForSemaphore();
       SuiteResponder.runningTestingTracker.stopAllProcesses();
@@ -703,7 +704,7 @@ public class TestResponderTest {
       checkExpectation(instructionList, 4, "decisionTable_0_10", "1", "3", "pass", "ReturnedValueExpectation", null, null, "wow");
     }
 
-    public final static String slimScenarioTable =
+    private static final String SLIM_SCENARIO_TABLE =
       "!define TEST_SYSTEM {slim}\n" +
         "\n" +
         "!|scenario|f|a|\n" +

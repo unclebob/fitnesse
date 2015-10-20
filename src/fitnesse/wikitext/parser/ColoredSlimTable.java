@@ -1,6 +1,5 @@
 package fitnesse.wikitext.parser;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import fit.FixtureLoader;
@@ -8,13 +7,11 @@ import fit.FixtureName;
 import fitnesse.testsystems.slim.tables.DecisionTable;
 import fitnesse.testsystems.slim.tables.DynamicDecisionTable;
 import fitnesse.testsystems.slim.tables.ImportTable;
-import fitnesse.testsystems.slim.tables.OrderedQueryTable;
 import fitnesse.testsystems.slim.tables.QueryTable;
 import fitnesse.testsystems.slim.tables.ScenarioTable;
 import fitnesse.testsystems.slim.tables.ScriptTable;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
-import fitnesse.testsystems.slim.tables.SubsetQueryTable;
 
 public class ColoredSlimTable extends SymbolTypeDecorator{
 
@@ -24,6 +21,7 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
         super("Table", baseSymbolType);
     }
 
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         HtmlWriter writer = new HtmlWriter();
         writer.startTag("table");
@@ -124,6 +122,7 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
     }
   }
 
+  @Override
   public SymbolType isApplicable(Translator translator){
         Maybe<String> testSystem = Maybe.noString;
         if(translator instanceof HtmlTranslator){

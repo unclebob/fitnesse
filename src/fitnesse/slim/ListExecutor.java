@@ -63,10 +63,12 @@ public class ListExecutor {
   }
 
   private class LoggingExecutive extends Executive {
+    @Override
     public void prepareToExecute() {
       verboseMessage("!1 Instructions");
     }
 
+    @Override
     public Object executeStatement(Object statement) {
       List<Object> statementList = asStatementList(statement);
       verboseMessage(statementList + "\n");

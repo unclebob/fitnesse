@@ -34,6 +34,7 @@ public class Table {
     return firstRow;
   }
 
+  @Override
   public String toString() {
     return toSimpleText(table, new StringBuffer());
   }

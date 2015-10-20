@@ -5,6 +5,7 @@ package fitnesse.authentication;
 import fitnesse.wiki.PageData;
 
 public class SecureTestOperation extends SecurePageOperation {
+  @Override
   protected String getSecurityMode() {
     return PageData.PropertySECURE_TEST;
   }

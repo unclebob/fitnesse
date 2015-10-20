@@ -12,6 +12,7 @@ public class AnchorReference extends SymbolType implements Rule, Translation {
         htmlTranslation(this);
     }
 
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         List<Symbol> tokens = parser.moveNext(new SymbolType[] {SymbolType.Text});
         if (tokens.isEmpty()) return Symbol.nothing;
@@ -22,6 +23,7 @@ public class AnchorReference extends SymbolType implements Rule, Translation {
         return new Maybe<Symbol>(current.add(tokens.get(0)));
     }
 
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         String name = translator.translate(symbol.childAt(0));
         return HtmlUtil.makeLink("#" + name, ".#" + name).html();

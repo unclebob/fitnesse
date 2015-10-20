@@ -10,6 +10,7 @@ public class See extends SymbolType implements Rule {
         htmlTranslation(new HtmlBuilder("b").body(0, "See: ").inline());
     }
     
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol next = parser.moveNext(1);
         if (next.isType(WikiWord.symbolType)) {

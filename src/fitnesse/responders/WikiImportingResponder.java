@@ -36,6 +36,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     }
   }
 
+  @Override
   protected void doSending() throws Exception {
     data = page.getData();
 
@@ -80,6 +81,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     return html;
   }
 
+  @Override
   protected PageCrawler getPageCrawler() {
     return root.getPageCrawler();
   }

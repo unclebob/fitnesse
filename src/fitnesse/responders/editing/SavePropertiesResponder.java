@@ -14,7 +14,6 @@ import fitnesse.responders.NotFoundResponder;
 import fitnesse.wiki.*;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,8 +46,7 @@ public class SavePropertiesResponder implements SecureResponder {
     attrs.addAll(Arrays.asList(PageData.SECURITY_ATTRIBUTES));
     attrs.add(PageData.PropertyPRUNE);
 
-    for (Iterator<String> i = attrs.iterator(); i.hasNext();) {
-      String attribute = i.next();
+    for (String attribute : attrs) {
       if (isChecked(request, attribute))
         data.setAttribute(attribute);
       else
@@ -72,8 +70,7 @@ public class SavePropertiesResponder implements SecureResponder {
     types.addAll(Arrays.asList(PageData.PAGE_TYPE_ATTRIBUTES));
     data.setAttribute(pageType);
 
-    for (Iterator<String> i = types.iterator(); i.hasNext();) {
-      String type = i.next();
+    for (String type : types) {
       if (!pageType.equals(type))
         data.removeAttribute(type);
     }

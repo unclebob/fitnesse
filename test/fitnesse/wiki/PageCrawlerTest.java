@@ -156,6 +156,7 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
     assertTrue(traversedPages.contains("ChildOne"));
   }
 
+  @Override
   public void process(WikiPage page) {
     traversedPages.add(page.getName());
   }

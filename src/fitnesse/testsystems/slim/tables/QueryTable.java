@@ -19,6 +19,7 @@ public class QueryTable extends SlimTable {
     super(table, id, testContext);
   }
 
+  @Override
   protected String getTableType() {
     return "queryTable";
   }
@@ -301,6 +302,8 @@ public class QueryTable extends SlimTable {
             String expectedValue = table.getCellContents(fieldIndex, tableRow);
             if (matches(actualValue, expectedValue)) {
               score++;
+            } else {
+              break;
             }
           }
         }

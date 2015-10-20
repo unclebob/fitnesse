@@ -1,56 +1,56 @@
 The rows in a query table represent the expected results of a query.  
 You can specify them precisely if you like as in the following:
 
-|Query:employees hired before|10-Dec-1980                                     |
-|company number              |employee number|first name|last name|hire date  |
-|4808147                     |9942           |Bill      |Mitchell |19-Dec-1966|
-|4808147                     |1429           |Bob       |Martin   |10-Oct-1975|
+| Query:employees hired before | 10-Dec-1980 |
+| company number | employee number | first name | last name | hire date |
+| 4808147 | 9942 | Bill | Mitchell | 19-Dec-1966 |
+| 4808147 | 1429 | Bob | Martin | 10-Oct-1975 |
 
 Or you can leave cells blank and allow them to be filled in:
 
-|Query:employees hired before|10-Dec-1980                   |
-|employee number             |first name|last name|hire date|
-|1429                        |          |         |         |
-|8832                        |          |         |         |
+| Query:employees hired before | 10-Dec-1980 |
+| employee number | first name | last name | hire date |
+| 1429 | | | |
+| 8832 | | | |
 
-The code for the fixture is: {{{
-package fitnesse.slim.test;
-
-import static fitnesse.util.ListUtility.list;
+The code for the fixture is:{{{package fitnesse.slim.test;
 
 import java.util.Date;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+
 public class EmployeesHiredBefore {
-  private Date date;
 
   public EmployeesHiredBefore(Date date) {
-    this.date = date;
   }
 
   public void table(List<List<String>> table) {
-    //optional function
+    // optional function
   }
 
-  public List<Object> query() {
+  public List<List<List<String>>> query() {
 
     return
-      list(
-        list(
-          list("employee number", "1429"),
-          list("first name", "Bob"),
-          list("last name", "Martin"),
-          list("hire date", "10-Oct-1974")
+      asList( // table level
+        asList( // row level
+          asList("company number", "4808147"), // cell column name, value
+          asList("employee number", "1429"),
+          asList("first name", "Bob"),
+          asList("last name", "Martin"),
+          asList("hire date", "10-Oct-1974")
         ),
-        list(
-          list("employee number", "8832"),
-          list("first name", "James"),
-          list("last name", "Grenning"),
-          list("hire date", "15-Dec-1979")
+        asList(
+          asList("company number", "5123122"),
+          asList("employee number", "8832"),
+          asList("first name", "James"),
+          asList("last name", "Grenning"),
+          asList("hire date", "15-Dec-1979")
         )
       );
   }
-} }}}
+}
+}}}
 Note the ''list'' function simply builds an !-ArrayList-! from it's arguments.  It's in the !-ListUtility-! class
 
 The first thing to notice is the ''Query:'' in the first cell of the table.  This tells the Slim table processor that this is a query table.  Next notice the constructor argument.  (See ConstructorArguments).  The column headers are ''field names''.  The fixture class must have a ''query'' method that returns a list of rows.  Each row is a list of fields.  Each field is a two-element list composed of the ''field name'' and it's string value.
@@ -61,7 +61,7 @@ If a !style_code(table) method is declared in the fixture it will be called befo
 
 In analogy to decision tables you can define comment columns by prefixing the header with the hash symbol.
 
-|Query:employees hired before|10-Dec-1980                   |
-|last name|hire date|# comment|
-|Grenning |         ||
-|Martin   |         |we hired him first|
+| Query:employees hired before | 10-Dec-1980 |
+| last name | hire date | # comment |
+| Grenning | | |
+| Martin | | we hired him first |

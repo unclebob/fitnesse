@@ -41,6 +41,7 @@ public class TestExecutionReport extends ExecutionReport {
     unpackXml(xmlDocument);
   }
 
+  @Override
   protected void unpackResults(Element testResults) {
     NodeList xmlResults = testResults.getElementsByTagName("result");
     for (int resultIndex = 0; resultIndex < xmlResults.getLength(); resultIndex++) {

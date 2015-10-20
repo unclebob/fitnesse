@@ -13,7 +13,7 @@ import util.GracefulNamer;
 
 public class SuiteOverviewTree {
 
-  private TreeItem treeRoot = new TreeItem("root", "");
+  private final TreeItem treeRoot = new TreeItem("root", "");
 
   public SuiteOverviewTree(List<WikiPage> wikiPagelist) {
     makeTree(convertToPageList(wikiPagelist));

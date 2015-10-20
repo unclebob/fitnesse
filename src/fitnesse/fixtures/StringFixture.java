@@ -11,11 +11,13 @@ public class StringFixture extends ColumnFixture {
   public String value;
   private String expected;
 
+  @Override
   public void check(Parse cell, TypeAdapter a) {
     expected = cell.text();
     super.check(cell, a);
   }
 
+  @Override
   public void execute() throws Exception {
     value = value.trim();
   }

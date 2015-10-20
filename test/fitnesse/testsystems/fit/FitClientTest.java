@@ -8,7 +8,6 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertSubString;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import fitnesse.testsystems.CompositeExecutionLogListener;
@@ -23,7 +22,6 @@ public class FitClientTest implements FitClientListener {
   private List<TestSummary> counts = new ArrayList<TestSummary>();
   private CommandRunningFitClient client;
   private boolean exceptionOccurred = false;
-  private int port = 9080;
 
   @Before
   public void setUp() throws Exception {
@@ -135,6 +133,7 @@ public class FitClientTest implements FitClientListener {
   public void testReadyForSending() throws Exception {
     CommandRunningFitClient.TIMEOUT = 5000;
     Thread startThread = new Thread() {
+      @Override
       public void run() {
         try {
           client.start();
@@ -161,9 +160,10 @@ public class FitClientTest implements FitClientListener {
     client.join();
 
     assertFalse(exceptionOccurred);
-    StringBuffer buffer = new StringBuffer();
-    for (Iterator<String> iterator = outputs.iterator(); iterator.hasNext();)
-      buffer.append(iterator.next());
+    StringBuilder buffer = new StringBuilder();
+    for (String output : outputs) {
+      buffer.append(output);
+    }
 
     assertSubString("\uba80\uba81\uba82\uba83", buffer.toString());
   }

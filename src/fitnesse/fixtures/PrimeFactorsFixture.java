@@ -16,15 +16,22 @@ public class PrimeFactorsFixture extends RowFixture {
     public int factor;
   }
 
+  @Override
   public Object[] query() {
     int n = Integer.parseInt(args[0]);
     Collection<Factor> factors = new ArrayList<Factor>();
-    for (int f = 2; n > 1; f++)
-      for (; n % f == 0; n /= f)
+    int f = 2;
+    while (n > 1) {
+      while (n % f == 0) {
         factors.add(new Factor(f));
+        n /= f;
+      }
+      f++;
+    }
     return factors.toArray(new Factor[factors.size()]);
   }
 
+  @Override
   public Class<?> getTargetClass()             // get expected type of row
   {
     return Factor.class;

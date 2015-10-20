@@ -16,6 +16,7 @@ import fitnesse.wiki.WikiPagePath;
 
 public class RawContentResponder implements SecureResponder {
   
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     String resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);
@@ -31,6 +32,7 @@ public class RawContentResponder implements SecureResponder {
     return response;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }

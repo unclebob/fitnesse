@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 import fitnesse.reporting.BaseFormatter;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testrunner.WikiTestPage;
 import util.FileUtil;
 
 /**
@@ -141,12 +141,12 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
   private Map<String, TestSummary> testSummaries = new HashMap<String, TestSummary>();
 
   @Override
-  public void testStarted(WikiTestPage test) throws IOException {
+  public void testStarted(TestPage test) throws IOException {
     resultsRepository.open(test.getFullPath());
   }
 
   @Override
-  public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
+  public void testComplete(TestPage test, TestSummary testSummary) throws IOException {
     String fullPath = test.getFullPath();
     visitedTestPages.add(fullPath);
     totalSummary.add(testSummary);
@@ -208,7 +208,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
 
     @Override
     public String toString() {
-      StringBuffer sb = new StringBuffer();
+      StringBuilder sb = new StringBuilder();
       sb.append("<tr class=\"").append(getCssClass(testSummary)).append("\"><td>").append(
               "<a href=\"").append(testName).append(".html\">").append(testName).append("</a>").append(
               "</td><td>").append(testSummary.getRight()).append("</td><td>").append(testSummary.getWrong())
@@ -244,7 +244,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
 
     @Override
     public String toString() {
-      StringBuffer sb = new StringBuffer();
+      StringBuilder sb = new StringBuilder();
       sb.append(SUMMARY_HEADER);
       for (String s : visitedTestPages) {
         sb.append(summaryRow(s, testSummaries.get(s)));

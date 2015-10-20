@@ -10,6 +10,7 @@ public class Define extends SymbolType implements Rule, Translation {
         htmlTranslation(this);
     }
     
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         if (!parser.isMoveNext(SymbolType.Whitespace)) return Symbol.nothing;
 
@@ -41,6 +42,7 @@ public class Define extends SymbolType implements Rule, Translation {
       return parser.parseToAsString(close);
     }
 
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         HtmlTag result = new HtmlTag("span", "variable defined: "
                 + translator.translate(symbol.childAt(0))

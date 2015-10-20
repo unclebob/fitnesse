@@ -37,6 +37,7 @@ public class FitClient implements SocketAccepter {
     listeners.add(listener);
   }
 
+  @Override
   public synchronized void acceptSocket(Socket socket) throws IOException, InterruptedException {
     checkForPulse();
     fitSocket = socket;
@@ -115,6 +116,7 @@ public class FitClient implements SocketAccepter {
   }
 
   private class FitListeningRunnable implements Runnable {
+    @Override
     public void run() {
       listenToFit();
     }

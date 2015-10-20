@@ -71,8 +71,7 @@ public class WildcardTest {
 
   private List<String> fileArrayToStringList(File[] files) {
     List<String> list = new ArrayList<String>();
-    for (int i = 0; i < files.length; i++) {
-      File file = files[i];
+    for (File file : files) {
       list.add(file.getName());
     }
     return list;

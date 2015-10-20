@@ -28,6 +28,7 @@ public class CartesianVector {
     return null;
   }
 
+  @Override
   public boolean equals(Object obj) {
     if (obj instanceof CartesianVector) {
       CartesianVector v = (CartesianVector) obj;
@@ -37,6 +38,7 @@ public class CartesianVector {
     return false;
   }
 
+  @Override
   public int hashCode() {
     assert false : "hashCode not designed";
   return 42;

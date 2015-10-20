@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class VariableStore {
-  public static final Pattern SYMBOL_PATTERN = Pattern.compile("\\$([A-Za-z]\\w*)");
+
   private Map<String, MethodExecutionResult> variables = new HashMap<String, MethodExecutionResult>();
-  private Matcher symbolMatcher;
 
   public void setSymbol(String name, MethodExecutionResult value) {
     variables.put(name, value);
@@ -19,7 +16,7 @@ public class VariableStore {
   public MethodExecutionResult getSymbol(String name) {
     return variables.get(name);
   }
-  
+
   public Object getStored(String nameWithDollar) {
     if (nameWithDollar == null || !nameWithDollar.startsWith("$"))
       return null;
@@ -33,7 +30,7 @@ public class VariableStore {
 
   private boolean containsValueFor(String nameWithDollar) {
     return nameWithDollar != null && nameWithDollar.startsWith("$")
-    && variables.containsKey(nameWithDollar.substring(1));
+        && variables.containsKey(nameWithDollar.substring(1));
   }
 
   public Object[] replaceSymbols(Object[] args) {
@@ -64,34 +61,32 @@ public class VariableStore {
   }
 
   public String replaceSymbolsInString(String arg) {
-    int startingPosition = 0;
-    while (true) {
-      if ("".equals(arg) || null == arg) {
-        break;
+    // Symbol assignments are not done by the fixture code so remove them and
+    // return an empty string
+    if (SlimSymbol.isSymbolAssignment(arg) != null)
+      return "";
+
+    return new SlimSymbol() {
+
+      @Override
+      protected String getSymbolValue(String symbolName) {
+        return getStoreSymbolValue(symbolName);
       }
-      symbolMatcher = SYMBOL_PATTERN.matcher(arg);
-      if (symbolMatcher.find(startingPosition)) {
-        String symbolName = symbolMatcher.group(1);
-        arg = replaceSymbolInArg(arg, symbolName);
-        startingPosition = symbolMatcher.start(1);
-      } else {
-        break;
-      }
-    }
-    return arg;
+
+    }.replace(arg);
+
   }
 
-  private String replaceSymbolInArg(String arg, String symbolName) {
+  private String getStoreSymbolValue(String symbolName) {
     if (variables.containsKey(symbolName)) {
       String replacement = "null";
       Object value = variables.get(symbolName);
       if (value != null) {
         replacement = value.toString();
       }
-      arg = arg.substring(0, symbolMatcher.start()) + replacement
-          + arg.substring(symbolMatcher.end());
+      return replacement;
     }
-    return arg;
+    return null;
   }
 
 }

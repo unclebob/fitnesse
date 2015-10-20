@@ -74,7 +74,7 @@ public class FileSystemPageTest {
 
   @Test
   public void testBigContent() throws Exception {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     for (int i = 0; i < 1000; i++)
       buffer.append("abcdefghijklmnopqrstuvwxyz");
     WikiPageUtil.addPage(root, PathParser.parse("BigPage"), buffer.toString());

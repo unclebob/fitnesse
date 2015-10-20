@@ -19,6 +19,7 @@ public class ChunkedResponse extends Response {
       dontChunk = true;
   }
 
+  @Override
   public void sendTo(ResponseSender sender) {
     this.sender = sender;
     sender.send(makeHttpHeaders().getBytes());
@@ -84,6 +85,7 @@ public class ChunkedResponse extends Response {
     close();
   }
 
+  @Override
   public int getContentSize() {
     return bytesSent;
   }

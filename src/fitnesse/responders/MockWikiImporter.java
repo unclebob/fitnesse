@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import java.util.Iterator;
-
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
@@ -11,6 +9,7 @@ public class MockWikiImporter extends WikiImporter {
   public static final String mockContent = "mock importer content";
   public boolean fail;
 
+  @Override
   protected void importRemotePageContent(WikiPage localPage) {
     if (fail)
       importerClient.pageImportError(localPage, new Exception("blah"));
@@ -24,13 +23,14 @@ public class MockWikiImporter extends WikiImporter {
     localPage.commit(data);
   }
 
+  @Override
   public void importWiki(WikiPage page) {
-    for (Iterator<?> iterator = page.getChildren().iterator(); iterator.hasNext();) {
-      WikiPage next = (WikiPage) iterator.next();
-      next.getPageCrawler().traverse(this);
+    for (WikiPage child : page.getChildren()) {
+      child.getPageCrawler().traverse(this);
     }
   }
 
+  @Override
   public void process(WikiPage page) {
     setMockContent(page);
   }

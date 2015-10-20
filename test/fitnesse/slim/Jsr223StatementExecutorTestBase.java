@@ -17,10 +17,12 @@ public abstract class Jsr223StatementExecutorTestBase extends StatementExecutorT
       this.fixtureProxy = fixtureProxy;
     }
 
+    @Override
     public void delete(String fileName) {
       fixtureProxy.delete(fileName);
     }
 
+    @Override
     public boolean deleteCalled() {
       return fixtureProxy.deleteCalled();
     }
@@ -34,18 +36,22 @@ public abstract class Jsr223StatementExecutorTestBase extends StatementExecutorT
       this.fixtureProxy = fixtureProxy;
     }
 
+    @Override
     public void echo() {
       fixtureProxy.echo();
     }
 
+    @Override
     public boolean echoCalled() {
       return fixtureProxy.echoCalled();
     }
 
+    @Override
     public void speak() {
       fixtureProxy.speak();
     }
 
+    @Override
     public boolean speakCalled() {
       return fixtureProxy.speakCalled();
     }
@@ -58,10 +64,12 @@ public abstract class Jsr223StatementExecutorTestBase extends StatementExecutorT
       this.fixtureProxy = fixtureProxy;
     }
 
+    @Override
     public void echo() {
       fixtureProxy.echo();
     }
 
+    @Override
     public boolean echoCalled() {
       return fixtureProxy.echoCalled();
     }
@@ -76,14 +84,17 @@ public abstract class Jsr223StatementExecutorTestBase extends StatementExecutorT
       this.fixtureProxy = fixtureProxy;
     }
 
+    @Override
     public void echo() {
       fixtureProxy.echo();
     }
 
+    @Override
     public boolean echoCalled() {
       return fixtureProxy.echoCalled();
     }
 
+    @Override
     public MySystemUnderTestBase getSystemUnderTest() {
       return fixtureProxy.getSystemUnderTest();
     }
@@ -96,18 +107,22 @@ public abstract class Jsr223StatementExecutorTestBase extends StatementExecutorT
       this.fixtureProxy = fixtureProxy;
     }
 
+    @Override
     public void echo() {
       fixtureProxy.echo();
     }
 
+    @Override
     public boolean echoCalled() {
       return fixtureProxy.echoCalled();
     }
 
+    @Override
     public void speak() {
       fixtureProxy.speak();
     }
 
+    @Override
     public boolean speakCalled() {
       return fixtureProxy.speakCalled();
     }
@@ -122,14 +137,17 @@ public abstract class Jsr223StatementExecutorTestBase extends StatementExecutorT
       this.fixtureProxy = fixtureProxy;
     }
 
+    @Override
     public void echo() {
       fixtureProxy.echo();
     }
 
+    @Override
     public boolean echoCalled() {
       return fixtureProxy.echoCalled();
     }
 
+    @Override
     public MySystemUnderTestBase getSystemUnderTest() {
       return fixtureProxy.getSystemUnderTest();
     }
@@ -144,27 +162,34 @@ public abstract class Jsr223StatementExecutorTestBase extends StatementExecutorT
       proxy = instance;
     }
 
+    @Override
     public void echo() {
     }
 
+    @Override
     public boolean echoCalled() {
       return (Boolean) callMethod("echoCalled");
     }
 
+    @Override
     public void speak() {
     }
 
+    @Override
     public boolean speakCalled() {
       return (Boolean) callMethod("speakCalled");
     }
 
+    @Override
     public void delete(String fileName) {
     }
 
+    @Override
     public boolean deleteCalled() {
       return (Boolean) callMethod("deleteCalled");
     }
 
+    @Override
     public MySystemUnderTestBase getSystemUnderTest() {
       return new MySystemUnderTestJsr223(new FixtureProxyJsr223(
           callMethod("getSystemUnderTest")));
@@ -201,6 +226,7 @@ public abstract class Jsr223StatementExecutorTestBase extends StatementExecutorT
     return myInstance;
   }
 
+  @Override
   protected void createFixtureInstance(String fixtureClass) throws Exception  {
     statementExecutor.create(INSTANCE_NAME, fixtureClass,
         new Object[] {});

@@ -19,6 +19,7 @@ import fitnesse.wiki.fs.FileVersion;
 
 public class RenameFileResponder implements SecureResponder {
 
+  @Override
   public Response makeResponse(FitNesseContext context, final Request request) throws IOException {
     Response response = new SimpleResponse();
     String resource = request.getResource();
@@ -71,6 +72,7 @@ public class RenameFileResponder implements SecureResponder {
     return response;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();
   }

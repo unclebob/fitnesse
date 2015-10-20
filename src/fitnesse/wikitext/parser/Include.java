@@ -14,6 +14,7 @@ public class Include extends SymbolType implements Rule, Translation {
         htmlTranslation(this);
     }
     
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol next = parser.moveNext(1);
         if (!next.isType(SymbolType.Whitespace)) return Symbol.nothing;
@@ -73,6 +74,7 @@ public class Include extends SymbolType implements Rule, Translation {
       return new Maybe<Symbol>(current);
     }
 
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         if (symbol.getChildren().size() < 4) {
             return translator.translate(symbol.childAt(2));

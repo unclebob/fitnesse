@@ -116,8 +116,7 @@ public class FitNesseExpediterTest {
 
     byte[] bytes = "GET /root HTTP/1.1\r\n\r\n".getBytes();
     try {
-      for (int i = 0; i < bytes.length; i++) {
-        byte aByte = bytes[i];
+      for (byte aByte : bytes) {
         clientOutput.write(aByte);
         clientOutput.flush();
         Thread.sleep(20);
@@ -133,6 +132,7 @@ public class FitNesseExpediterTest {
 
   private Thread makeSendingThread(final FitNesseExpediter sender) {
     Thread senderThread = new Thread(new Runnable() {
+      @Override
       public void run() {
         try {
           sender.start();
@@ -147,6 +147,7 @@ public class FitNesseExpediterTest {
 
   private Thread makeParsingThread() {
     Thread parseResponseThread = new Thread(new Runnable() {
+      @Override
       public void run() {
         try {
           response = new ResponseParser(clientInput);
@@ -160,10 +161,12 @@ public class FitNesseExpediterTest {
   }
 
   class StoneWallAuthenticator extends Authenticator {
+    @Override
     public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) {
       return new UnauthorizedResponder();
     }
 
+    @Override
     public boolean isAuthenticated(String username, String password) {
       return false;
     }

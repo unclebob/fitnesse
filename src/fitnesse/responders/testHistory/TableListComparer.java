@@ -70,6 +70,7 @@ public class TableListComparer {
   public void sortMatchesByScore() {
     Collections.sort(tableMatches, new Comparator<MatchedPair>() {
 
+      @Override
       public int compare(MatchedPair match1, MatchedPair match2) {
         if (match1.matchScore > match2.matchScore)
           return -1;
@@ -84,6 +85,7 @@ public class TableListComparer {
   public void sortMatchesByTableIndex() {
     Collections.sort(tableMatches, new Comparator<MatchedPair>() {
 
+      @Override
       public int compare(MatchedPair match1, MatchedPair match2) {
         if (match1.first > match2.first)
           return 1;

@@ -6,6 +6,7 @@ import fit.Fixture;
 import fit.Parse;
 
 public class ClasspathPrintingFixture extends Fixture {
+  @Override
   public void doTable(Parse table) {
     table.parts.parts.addToBody("<br/>classpath: " + System.getProperty("java.class.path"));
   }

@@ -189,12 +189,12 @@ public class WikiPageResponderTest {
       return requestPage(name, new HashMap<String,String>());
   }
 
-  private SimpleResponse requestPage(String name, Map<String,String> inputs) throws Exception {
+  private SimpleResponse requestPage(String name, Map<String, String> inputs) throws Exception {
     final MockRequest request = new MockRequest();
     request.setResource(name);
 
-    for(String input: inputs.keySet()){
-        request.addInput(input, inputs.get(input));
+    for(Map.Entry<String, String> entry : inputs.entrySet()){
+        request.addInput(entry.getKey(), entry.getValue());
     }
     final Responder responder = new WikiPageResponder();
     return (SimpleResponse) responder.makeResponse(context, request);

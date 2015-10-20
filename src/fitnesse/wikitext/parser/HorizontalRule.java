@@ -11,6 +11,7 @@ public class HorizontalRule extends SymbolType implements Translation {
         htmlTranslation(this);
     }
     
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         HtmlTag html = new HtmlTag("hr");
         int size = symbol.getContent().length() - 3;

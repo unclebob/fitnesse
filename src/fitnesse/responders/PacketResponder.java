@@ -28,6 +28,7 @@ public class PacketResponder implements SecureResponder {
   List<JSONObject> tables = new ArrayList<JSONObject>();
   private String jsonpFunction;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     response = new SimpleResponse();
     jsonpFunction = (String) request.getInput("jsonp");
@@ -72,7 +73,7 @@ public class PacketResponder implements SecureResponder {
 
   private void addTableToPacket(Table t) throws JSONException {
     JSONObject table = new JSONObject();
-    JSONObject parents[] = new JSONObject[10];
+    JSONObject[] parents = new JSONObject[10];
     parents[0] = table;
     for (int row = 0; row < t.getRowCount(); row++) {
       List<String> rowList = getRowFromTable(t, row);
@@ -107,6 +108,7 @@ public class PacketResponder implements SecureResponder {
     return rowList;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }

@@ -12,13 +12,13 @@ public interface StatementExecutorInterface extends InstructionExecutor {
    * Have a look to this FitNesse page for some examples:
    * FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TableTableSuite.TestTableTableImplementingStatementExecutorConsumer
    */
-  public abstract Object getSymbol(String symbolName);
+  Object getSymbol(String symbolName);
 	
-  public abstract Object getInstance(String instanceName);
+  Object getInstance(String instanceName);
 
-  public abstract boolean stopHasBeenRequested();
+  boolean stopHasBeenRequested();
 
-  public abstract void reset();
+  void reset();
 
-  public abstract void setInstance(String actorInstanceName, Object actor);
+  void setInstance(String actorInstanceName, Object actor);
 }

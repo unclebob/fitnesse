@@ -30,6 +30,7 @@ public class ShutdownResponder implements SecureResponder {
     response.setContent(html.html());
 
     Thread shutdownThread = new Thread() {
+      @Override
       public void run() {
         try {
           context.fitNesse.stop();

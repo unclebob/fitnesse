@@ -16,6 +16,7 @@ public class Collapsible extends SymbolType implements Rule, Translation {
       htmlTranslation(this);
   }
 
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         String state = "";
         Symbol next = parser.moveNext(1);
@@ -46,6 +47,7 @@ public class Collapsible extends SymbolType implements Rule, Translation {
                 .add(bodyText));
     }
 
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         String option = symbol.getProperty(Collapsible.STATE);
         String title = translator.translate(symbol.childAt(0));

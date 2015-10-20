@@ -5,9 +5,10 @@ package fitnesse.testsystems.slim;
 import java.util.Iterator;
 
 public interface TableScanner<T extends Table> extends Iterable<T> {
-  public int getTableCount();
+  int getTableCount();
 
-  public T getTable(int i);
+  T getTable(int i);
 
-  public Iterator<T> iterator();
+  @Override
+  Iterator<T> iterator();
 }

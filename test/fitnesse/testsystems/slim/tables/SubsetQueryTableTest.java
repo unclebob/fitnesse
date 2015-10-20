@@ -8,10 +8,12 @@ import static java.util.Arrays.asList;
 
 public class SubsetQueryTableTest extends QueryTableTestBase {
 
+  @Override
   protected String tableType() {
     return "subset query";
   }
 
+  @Override
   protected Class<SubsetQueryTable> queryTableClass() {
     return SubsetQueryTable.class;
   }

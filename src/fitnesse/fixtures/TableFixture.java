@@ -9,6 +9,7 @@ import fit.exception.FitFailureException;
 public abstract class TableFixture extends Fixture {
   protected Parse firstRow;
 
+  @Override
   public void doRows(Parse rows) {
     firstRow = rows;
     if (rows == null)

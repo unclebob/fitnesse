@@ -5,11 +5,11 @@ package fitnesse.updates;
 import java.io.IOException;
 
 public interface Update {
-  public String getName();
+  String getName();
 
-  public String getMessage();
+  String getMessage();
 
-  public boolean shouldBeApplied() throws IOException;
+  boolean shouldBeApplied() throws IOException;
 
-  public void doUpdate() throws IOException;
+  void doUpdate() throws IOException;
 }

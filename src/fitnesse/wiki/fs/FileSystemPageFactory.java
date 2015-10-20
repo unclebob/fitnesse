@@ -1,10 +1,16 @@
 package fitnesse.wiki.fs;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
+
 import fitnesse.ConfigurationParameter;
 import fitnesse.components.ComponentFactory;
-import fitnesse.wiki.BaseWikiPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.SymbolicPage;
+import fitnesse.wiki.VariableTool;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.WikiPageFactoryRegistry;
@@ -12,15 +18,8 @@ import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wikitext.parser.VariableSource;
-import fitnesse.wiki.VariableTool;
 import fitnesse.wikitext.parser.Maybe;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
+import fitnesse.wikitext.parser.VariableSource;
 
 public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, WikiPageFactoryRegistry {
   private final FileSystem fileSystem;
@@ -92,6 +91,7 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
       this.variableSource = variableSource;
     }
 
+    @Override
     public List<WikiPage> getChildren(FileSystemPage page) {
       List<WikiPage> children = getNormalChildren(page);
       children.addAll(getSymlinkChildren(page));
@@ -112,7 +112,7 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
       return children;
     }
 
-    protected List<WikiPage> getSymlinkChildren(BaseWikiPage page) {
+    protected List<WikiPage> getSymlinkChildren(WikiPage page) {
       List<WikiPage> children = new LinkedList<WikiPage>();
       WikiPageProperties props = page.getData().getProperties();
       WikiPageProperty symLinksProperty = props.getProperty(SymbolicPage.PROPERTY_NAME);
@@ -152,7 +152,7 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
     }
 
 
-    private WikiPage createSymbolicPage(BaseWikiPage page, String linkName) {
+    private WikiPage createSymbolicPage(WikiPage page, String linkName) {
       WikiPageProperty symLinkProperty = page.getData().getProperties().getProperty(SymbolicPage.PROPERTY_NAME);
       if (symLinkProperty == null)
         return null;
@@ -166,7 +166,7 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
         return createInternalSymbolicPage(linkPath, linkName, page);
     }
 
-    private WikiPage createExternalSymbolicLink(String linkPath, String linkName, BaseWikiPage parent) {
+    private WikiPage createExternalSymbolicLink(String linkPath, String linkName, WikiPage parent) {
       String fullPagePath = new VariableTool(variableSource).replace(linkPath);
       File file = WikiPageUtil.resolveFileUri(fullPagePath, rootPath);
       File parentDirectory = file.getParentFile();
@@ -179,7 +179,7 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
       return null;
     }
 
-    protected WikiPage createInternalSymbolicPage(String linkPath, String linkName, BaseWikiPage parent) {
+    protected WikiPage createInternalSymbolicPage(String linkPath, String linkName, WikiPage parent) {
       WikiPagePath path = PathParser.parse(linkPath);
       if (path == null) {
         return null;

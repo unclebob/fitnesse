@@ -27,11 +27,7 @@ import fitnesse.reporting.history.TestExecutionReport;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.testsystems.ExecutionResult;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
 
 public class PageHistoryResponder implements SecureResponder {
   private SimpleDateFormat dateFormat = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
@@ -40,6 +36,7 @@ public class PageHistoryResponder implements SecureResponder {
   private HtmlPage page;
   private FitNesseContext context;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
     prepareResponse(request);
@@ -166,26 +163,15 @@ public class PageHistoryResponder implements SecureResponder {
   private void prepareResponse(Request request) {
     response = new SimpleResponse();
     File resultsDirectory = context.getTestHistoryDirectory();
-    TestHistory history = new TestHistory();
     String pageName = request.getResource();
-    history.readPageHistoryDirectory(resultsDirectory, pageName);
+    TestHistory history = new TestHistory(resultsDirectory, pageName);
     pageHistory = history.getPageHistory(pageName);
     page = context.pageFactory.newPage();
     PageTitle pageTitle = new PageTitle("Test History", PathParser.parse(request.getResource()), "");
     page.setPageTitle(pageTitle);
-
-    String tags = "";    
-    if (context.getRootPage() != null){
-      WikiPagePath path = PathParser.parse(pageName);
-      PageCrawler crawler = context.getRootPage().getPageCrawler();
-      WikiPage wikiPage = crawler.getPage(path);
-      if(wikiPage != null) {
-        PageData pageData = wikiPage.getData();
-        tags = pageData.getAttribute(PageData.PropertySUITES);
-      }
-    }
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }

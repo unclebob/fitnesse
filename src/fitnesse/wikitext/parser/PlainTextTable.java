@@ -8,6 +8,7 @@ public class PlainTextTable extends SymbolType implements Rule {
         htmlTranslation(new Table());
     }
     
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol table = parser.getCurrent();
         table.putProperty("class", "plain_text_table");

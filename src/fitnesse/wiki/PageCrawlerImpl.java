@@ -12,10 +12,12 @@ public class PageCrawlerImpl implements PageCrawler {
     this.context = context;
   }
 
+  @Override
   public WikiPage getPage(WikiPagePath path) {
     return getPage(path, null);
   }
 
+  @Override
   public WikiPage getPage(WikiPagePath path, PageCrawlerDeadEndStrategy deadEndStrategy) {
     return getPage(context, path, deadEndStrategy);
   }
@@ -59,10 +61,12 @@ public class PageCrawlerImpl implements PageCrawler {
       return null;
   }
 
+  @Override
   public boolean pageExists(WikiPagePath path) {
     return getPage(path) != null;
   }
 
+  @Override
   public WikiPagePath getFullPathOfChild(WikiPagePath childPath) {
     WikiPagePath fullPathOfChild;
     if (childPath.isAbsolute())
@@ -74,12 +78,14 @@ public class PageCrawlerImpl implements PageCrawler {
     return fullPathOfChild;
   }
 
+  @Override
   public WikiPagePath getFullPath() {
     return new WikiPagePath(context);
   }
 
+  @Override
   public String getRelativeName(WikiPage page) {
-    StringBuffer name = new StringBuffer();
+    StringBuilder name = new StringBuilder();
     for (WikiPage p = page; !p.isRoot() && !p.equals(context); p = p.getParent()) {
       if (p != page)
         name.insert(0, ".");
@@ -88,6 +94,7 @@ public class PageCrawlerImpl implements PageCrawler {
     return name.toString();
   }
 
+  @Override
   public WikiPage getClosestInheritedPage(final String pageName) {
     final WikiPage[] foundPage = new WikiPage[1];
     traversePageAndAncestors(new TraversalListener<WikiPage>() {
@@ -101,6 +108,7 @@ public class PageCrawlerImpl implements PageCrawler {
     return foundPage[0];
   }
 
+  @Override
   public WikiPage getRoot() {
     return getRoot(context);
   }
@@ -112,6 +120,7 @@ public class PageCrawlerImpl implements PageCrawler {
       return getRoot(page.getParent());
   }
 
+  @Override
   public void traverse(TraversalListener<? super WikiPage> listener) {
     traverse(context, listener);
   }
@@ -131,6 +140,7 @@ public class PageCrawlerImpl implements PageCrawler {
      It was a gross error to have the whole wiki know that references
      were relative to the parent instead of the page.
      */
+  @Override
   public WikiPage getSiblingPage(WikiPagePath pathRelativeToSibling) {
     return getSiblingPage(context, pathRelativeToSibling);
   }
@@ -155,6 +165,7 @@ public class PageCrawlerImpl implements PageCrawler {
     }
   }
 
+  @Override
   public WikiPage findAncestorWithName(String name) {
     for (WikiPage current = context.getParent(); !current.isRoot(); current = current.getParent()) {
       if (current.getName().equals(name)) return current;
@@ -162,6 +173,7 @@ public class PageCrawlerImpl implements PageCrawler {
     return null;
   }
 
+  @Override
   public void traverseUncles(final String uncleName, final TraversalListener<? super WikiPage> callback) {
     traversePageAndAncestors(new TraversalListener<WikiPage>() {
       @Override
@@ -173,6 +185,7 @@ public class PageCrawlerImpl implements PageCrawler {
     });
   }
 
+  @Override
   public void traversePageAndAncestors(TraversalListener<? super WikiPage> callback) {
     WikiPage page = context;
     while (!page.isRoot()) {

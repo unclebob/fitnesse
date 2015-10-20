@@ -1,6 +1,6 @@
 !2 Defining and Expressing Variables.
 You can define a variable to represent any amount of text.
- * Variable names may contain letters, numbers, and periods; e.g., MYTEST.someVar or user.name
+ * Variable names may contain letters, numbers, periods and underscores; e.g., MYTEST.someVar or user.name or USER_NAME 
  * You can define a variable in three ways: 
   * !style_code(!-!define var {text}-!) - as a delimited block of text 
   * !style_code[!-!define var othervar-!] - by copying the value of another variable 

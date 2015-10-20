@@ -63,9 +63,10 @@ public class RecentChangesWikiPageTest {
   @Test
   public void testMaxSize() throws Exception {
     for (int i = 0; i < 101; i++) {
-      StringBuffer b = new StringBuffer("LotsOfAs");
-      for (int j = 0; j < i; j++)
+      StringBuilder b = new StringBuilder("LotsOfAs");
+      for (int j = 0; j < i; j++) {
         b.append("a");
+      }
       WikiPage page = rootPage.addChildPage(b.toString());
       recentChangesWikiPage.updateRecentChanges(page);
     }

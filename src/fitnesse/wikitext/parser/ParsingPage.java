@@ -91,6 +91,7 @@ public class ParsingPage implements VariableSource {
       this.namedPage = namedPage;
     }
 
+    @Override
     public Maybe<String> findVariable(String key) {
       String value;
       if (key.equals("PAGE_NAME"))

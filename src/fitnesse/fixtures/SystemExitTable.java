@@ -13,6 +13,7 @@ public class SystemExitTable  extends ColumnFixture {
   }
 
   // slim:
+  @Override
   public void execute() {
     try {
       System.exit(exitCode);

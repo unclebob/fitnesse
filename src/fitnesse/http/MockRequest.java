@@ -33,15 +33,18 @@ public class MockRequest extends Request {
     uploadedFiles.put(name, uploadedFile);
   }
 
+  @Override
   public void getCredentials() {
   }
 
+  @Override
   public void setCredentials(String username, String password) {
     authorizationUsername = username;
     authorizationPassword = password;
 
   }
 
+  @Override
   public void parse() {
   }
 }

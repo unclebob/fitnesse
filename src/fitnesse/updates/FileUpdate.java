@@ -23,6 +23,7 @@ public class FileUpdate implements Update {
     filename = new File(source).getName();
   }
 
+  @Override
   public void doUpdate() throws IOException {
     makeSureDirectoriesExist();
     copyResource();
@@ -58,6 +59,7 @@ public class FileUpdate implements Update {
     return ClassLoader.getSystemResource(resource);
   }
 
+  @Override
   public String getMessage() {
     return ".";
   }
@@ -66,10 +68,12 @@ public class FileUpdate implements Update {
     return new File(destination, filename);
   }
 
+  @Override
   public String getName() {
     return "FileUpdate(" + filename + ")";
   }
 
+  @Override
   public boolean shouldBeApplied() throws IOException {
     return !destinationFile().exists();
   }

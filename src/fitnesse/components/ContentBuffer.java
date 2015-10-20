@@ -66,6 +66,7 @@ public class ContentBuffer {
   public InputStream getInputStream() throws IOException {
     close();
     return new FileInputStream(tempFile) {
+      @Override
       public void close() throws IOException {
         try {
           super.close();

@@ -277,10 +277,12 @@ public class WikiImporterTest implements WikiImporterClient {
     return page;
   }
 
+  @Override
   public void pageImported(WikiPage page) {
     imports.add(page);
   }
 
+  @Override
   public void pageImportError(WikiPage page, Exception e) {
     errors.add(e);
   }

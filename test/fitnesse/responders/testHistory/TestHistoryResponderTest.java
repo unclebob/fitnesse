@@ -31,7 +31,6 @@ import util.FileUtil;
 
 public class TestHistoryResponderTest {
   private File resultsDirectory;
-  private TestHistory history;
   private SimpleDateFormat dateFormat = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
   private TestHistoryResponder responder;
   private SimpleResponse response;
@@ -43,7 +42,6 @@ public class TestHistoryResponderTest {
     resultsDirectory = context.getTestHistoryDirectory();
     removeResultsDirectory();
     resultsDirectory.mkdirs();
-    history = new TestHistory();
     responder = new TestHistoryResponder();
   }
 
@@ -74,14 +72,14 @@ public class TestHistoryResponderTest {
 
   @Test
   public void emptyHistoryDirectoryShouldShowNoPages() throws Exception {
-    history.readHistoryDirectory(resultsDirectory);
+    TestHistory history = new TestHistory(resultsDirectory);
     assertEquals(0, history.getPageNames().size());
   }
 
   @Test
   public void historyDirectoryWithOnePageDirectoryShouldShowOnePage() throws Exception {
     addPageDirectoryWithOneResult("SomePage", "20090418123103_1_2_3_4");
-    history.readHistoryDirectory(resultsDirectory);
+    TestHistory history = new TestHistory(resultsDirectory);
     assertEquals(1, history.getPageNames().size());
     assertTrue(history.getPageNames().contains("SomePage"));
   }
@@ -89,7 +87,7 @@ public class TestHistoryResponderTest {
   @Test
   public void historyDirectoryWithOneEmptyPageDirectoryShouldShowNoPages() throws Exception {
     addPageDirectory("SomePage");
-    history.readHistoryDirectory(resultsDirectory);
+    TestHistory history = new TestHistory(resultsDirectory);
     assertEquals(0, history.getPageNames().size());
     assertFalse(history.getPageNames().contains("SomePage"));
   }
@@ -98,7 +96,7 @@ public class TestHistoryResponderTest {
   public void historyDirectoryWithTwoPageDirectoriesShouldShowTwoPages() throws Exception {
     addPageDirectoryWithOneResult("PageOne", "20090418123103_1_2_3_4");
     addPageDirectoryWithOneResult("PageTwo", "20090418123103_1_2_3_4");
-    history.readHistoryDirectory(resultsDirectory);
+    TestHistory history = new TestHistory(resultsDirectory);
     assertEquals(2, history.getPageNames().size());
     assertTrue(history.getPageNames().contains("PageOne"));
     assertTrue(history.getPageNames().contains("PageTwo"));
@@ -108,7 +106,7 @@ public class TestHistoryResponderTest {
   public void historyDirectoryWithTwoEmptyPageDirectoriesShouldShowNoPages() throws Exception {
     addPageDirectory("SomePage");
     addPageDirectory("SomeOtherPage");
-    history.readHistoryDirectory(resultsDirectory);
+    TestHistory history = new TestHistory(resultsDirectory);
     assertEquals(0, history.getPageNames().size());
     assertFalse(history.getPageNames().contains("SomePage"));
     assertFalse(history.getPageNames().contains("SomeOtherPage"));
@@ -120,7 +118,7 @@ public class TestHistoryResponderTest {
     addPageDirectoryWithOneResult("ParentOne.PageTwo", "20090418123103_1_2_3_4");
     addPageDirectoryWithOneResult("ParentTwo.PageThree", "20090418123103_1_2_3_4");
 
-    history.readPageHistoryDirectory(resultsDirectory, "ParentOne");
+    TestHistory history = new TestHistory(resultsDirectory, "ParentOne");
     Set<String> pageNames = history.getPageNames();
     assertEquals(2, pageNames.size());
     assertTrue(pageNames.contains("ParentOne.PageOne"));
@@ -130,7 +128,7 @@ public class TestHistoryResponderTest {
   @Test
   public void pageDirectoryWithNoResultsShouldShowNoHistory() throws Exception {
     addPageDirectory("SomePage");
-    history.readHistoryDirectory(resultsDirectory);
+    TestHistory history = new TestHistory(resultsDirectory);
     PageHistory pageHistory = history.getPageHistory("SomePage");
     assertNull(pageHistory);
   }
@@ -139,7 +137,7 @@ public class TestHistoryResponderTest {
   public void pageDirectoryWithOneResultShouldShowOneHistoryRecord() throws Exception {
     addPageDirectoryWithOneResult("SomePage", "20090418123103_1_2_3_4");
 
-    history.readHistoryDirectory(resultsDirectory);
+    TestHistory history = new TestHistory(resultsDirectory);
     PageHistory pageHistory = history.getPageHistory("SomePage");
     assertEquals(1, pageHistory.getFailures());
     assertEquals(0, pageHistory.getPasses());
@@ -148,9 +146,9 @@ public class TestHistoryResponderTest {
     assertEquals(date, pageHistory.getMinDate());
     assertEquals(date, pageHistory.getMaxDate());
     assertEquals(1, pageHistory.size());
-    TestResultRecord testSummary = pageHistory.get(date);
-    assertEquals(date, testSummary.getDate());
-    assertEquals(new TestSummary(1, 2, 3, 4), testSummary);
+    TestResultRecord testResultRecord = pageHistory.get(date);
+    assertEquals(date, testResultRecord.getDate());
+    assertEquals(new TestSummary(1, 2, 3, 4), testResultRecord.toTestSummary());
   }
 
   private File addTestResult(File pageDirectory, String testResultFileName) throws IOException {
@@ -165,16 +163,17 @@ public class TestHistoryResponderTest {
     addTestResult(pageDirectory, "20090418000000_1_0_0_0");
     addTestResult(pageDirectory, "20090419000000_1_1_0_0");
     addTestResult(pageDirectory, "20090417000000_1_0_0_1");
-    history.readHistoryDirectory(resultsDirectory);
+
+    TestHistory history = new TestHistory(resultsDirectory);
     PageHistory pageHistory = history.getPageHistory("SomePage");
     assertEquals(3, pageHistory.size());
     assertEquals(dateFormat.parse("20090417000000"), pageHistory.getMinDate());
     assertEquals(dateFormat.parse("20090419000000"), pageHistory.getMaxDate());
     assertEquals(1, pageHistory.getPasses());
     assertEquals(2, pageHistory.getFailures());
-    assertEquals(new TestSummary(1, 0, 0, 0), pageHistory.get(dateFormat.parse("20090418000000")));
-    assertEquals(new TestSummary(1, 1, 0, 0), pageHistory.get(dateFormat.parse("20090419000000")));
-    assertEquals(new TestSummary(1, 0, 0, 1), pageHistory.get(dateFormat.parse("20090417000000")));
+    assertEquals(new TestSummary(1, 0, 0, 0), pageHistory.get(dateFormat.parse("20090418000000")).toTestSummary());
+    assertEquals(new TestSummary(1, 1, 0, 0), pageHistory.get(dateFormat.parse("20090419000000")).toTestSummary());
+    assertEquals(new TestSummary(1, 0, 0, 1), pageHistory.get(dateFormat.parse("20090417000000")).toTestSummary());
   }
 
   @Test
@@ -189,7 +188,7 @@ public class TestHistoryResponderTest {
     for (String fileName : testResultFilenames)
       addTestResult(pageDirectory, fileName);
 
-    history.readHistoryDirectory(resultsDirectory);
+    TestHistory history = new TestHistory(resultsDirectory);
     PageHistory pageHistory = history.getPageHistory("SomePage");
     BarGraph barGraph = pageHistory.getBarGraph();
     return barGraph;
@@ -297,7 +296,8 @@ public class TestHistoryResponderTest {
   public void shouldNotCountABadDirectoryNameAsAHistoryDirectory() throws Exception {
     addPageDirectoryWithOneResult("SomePage", "20090419123103_1_0_0_0");
     addPageDirectoryWithOneResult("bad+directory+name", "20090419123103_1_0_0_0");
-    history.readHistoryDirectory(resultsDirectory);
+
+    TestHistory history = new TestHistory(resultsDirectory);
     assertEquals(1, history.getPageNames().size());
     assertTrue(history.getPageNames().contains("SomePage"));
   }
@@ -314,7 +314,7 @@ public class TestHistoryResponderTest {
     addTestResult(pageDirectory, "bad_file_page_thing");        //bad
 
     makeResponse();
-    history.readHistoryDirectory(resultsDirectory);
+    TestHistory history = new TestHistory(resultsDirectory);
     PageHistory pageHistory = history.getPageHistory("SomePage");
     assertEquals(3, pageHistory.size());
   }

@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import fitnesse.slim.SlimSymbol;
 import fitnesse.slim.instructions.AssignInstruction;
 import fitnesse.slim.instructions.CallAndAssignInstruction;
 import fitnesse.slim.instructions.CallInstruction;
@@ -24,13 +25,9 @@ import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
-
-import static fitnesse.slim.VariableStore.SYMBOL_PATTERN;
-
 import static fitnesse.testsystems.slim.tables.ComparatorUtil.approximatelyEqual;
 
 public abstract class SlimTable {
-  private static final Pattern SYMBOL_ASSIGNMENT_PATTERN = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
 
   private String tableName;
   private int instructionNumber = 0;
@@ -178,8 +175,7 @@ public abstract class SlimTable {
   }
 
   protected String ifSymbolAssignment(String expected) {
-    Matcher matcher = SYMBOL_ASSIGNMENT_PATTERN.matcher(expected);
-    return matcher.find() ? matcher.group(1) : null;
+	return SlimSymbol.isSymbolAssignment(expected);
   }
 
   public SlimTestContext getTestContext() {
@@ -273,61 +269,40 @@ public abstract class SlimTable {
     }
   }
 
-  class SymbolReplacer {
-    protected String replacedString;
-    private Matcher symbolMatcher;
-    private int startingPosition;
-
-    SymbolReplacer(String s) {
-      this.replacedString = s;
-      symbolMatcher = SYMBOL_PATTERN.matcher(s);
+  class SymbolReplacer extends SlimSymbol{
+    private String toReplace; 
+    public SymbolReplacer(String s) {
+      super();
+      toReplace=s;
     }
 
-    String replace() {
-      replaceAllSymbols();
-      return replacedString;
-    }
-
-    private void replaceAllSymbols() {
-      startingPosition = 0;
-      while (symbolFound())
-        replaceSymbol();
-    }
-
-    private void replaceSymbol() {
-      String symbolName = symbolMatcher.group(1);
-      String value = formatSymbol(symbolName);
-      String prefix = replacedString.substring(0, symbolMatcher.start());
-      String suffix = replacedString.substring(symbolMatcher.end());
-      replacedString = prefix + value + suffix;
-      int replacementEnd = symbolMatcher.start() + value.length();
-      startingPosition = Math.min(replacementEnd, replacedString.length());
-    }
-
-    private String formatSymbol(String symbolName) {
+    //TODO: This is only implemented in the SlimServer but not in the Slim Client so it can't work properly :(
+    // Should be removed. Would this breaks other SLIM Client implementations .Net ... ? 
+    @Override
+    protected String getSymbolValue(String symbolName) {
       String value = getSymbol(symbolName);
       if (value == null) {
         for (int i = symbolName.length() - 1; i > 0; i--) {
           String str = symbolName.substring(0, i);
           if ((value = getSymbol(str)) != null)
-            return formatSymbolValue(str, value) + symbolName.substring(i, symbolName.length());
+          return value + symbolName.substring(i, symbolName.length());
         }
 
-        return "$" + symbolName;
+        return null;
       } else
-        return formatSymbolValue(symbolName, value);
+        return value;
     }
 
-
-    private boolean symbolFound() {
-      symbolMatcher = SYMBOL_PATTERN.matcher(replacedString);
-      return symbolMatcher.find(startingPosition);
-    }
-
-    protected String formatSymbolValue(String name, String value) {
-      return value;
+//    @Override
+//    protected String getSymbolValue(String symbolName){
+//      return getSymbol(symbolName);
+//    }
+    
+    public String replace(){
+      return replace(toReplace);
     }
   }
+  
 
   class FullExpansionSymbolReplacer extends SymbolReplacer {
     FullExpansionSymbolReplacer(String s) {

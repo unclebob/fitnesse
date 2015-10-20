@@ -68,7 +68,9 @@ public class ResponseExaminer extends ColumnFixture {
 
     matcher = p.matcher(getValue());
     int matches = 0;
-    for (matches = 0; matcher.find(); matches++) ;
+    while (matcher.find()) {
+      matches++;
+    }
     return matches;
   }
 

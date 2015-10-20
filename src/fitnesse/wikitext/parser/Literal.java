@@ -9,6 +9,7 @@ public class Literal extends SymbolType implements Rule {
         wikiRule(this);
     }
     
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         SymbolType type = current.getType();
         int offset = parser.getOffset();

@@ -4,11 +4,12 @@ import java.io.IOException;
 import java.io.Writer;
 
 import fitnesse.testrunner.TestsRunnerListener;
-import fitnesse.testrunner.WikiTestPage;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.RawHtml;
+import fitnesse.testrunner.WikiTestPageUtil;
 import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.PageCrawler;
@@ -41,9 +42,9 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
 	  return relativeName;
   }
 
-  protected String getRelativeName(WikiTestPage testPage) {
+  protected String getRelativeName(TestPage testPage) {
     PageCrawler pageCrawler = getPage().getPageCrawler();
-    String relativeName = pageCrawler.getRelativeName(testPage.getSourcePage());
+    String relativeName = pageCrawler.getRelativeName(WikiTestPageUtil.getSourcePage(testPage));
     if ("".equals(relativeName)) {
       relativeName = String.format("(%s)", testPage.getName());
     }
@@ -94,7 +95,7 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   }
 
   @Override
-  public void testStarted(WikiTestPage testPage) throws IOException {
+  public void testStarted(TestPage testPage) throws IOException {
     relativeName = getRelativeName(testPage);
   }
 

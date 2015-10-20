@@ -119,17 +119,12 @@
 			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/SuitePage/properties.xml" />
 			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/TestPage/content.txt" />
 			<arg value="-doNotReplace:FitNesseRoot/TemplateLibrary/TestPage/properties.xml" />
-			<arg value="-doNotReplace:FitNesseRoot/.gitignore" />
 			<arg value="FitNesseRoot/FitNesse" />
 			<arg value="FitNesseRoot/FrontPage" />
 			<arg value="FitNesseRoot/PageFooter" />
 			<arg value="FitNesseRoot/PageHeader" />
 			<arg value="FitNesseRoot/TemplateLibrary" />
-			<arg value="FitNesseRoot/.gitignore" />
 		</java>
-
-        <copy file="FitNesseRoot/.gitignore" todir="${classes.dir}/Resources/FitNesseRoot" />
-        <replace file="${classes.dir}/Resources/FitNesseRoot/.gitignore"  token="###" value="" />
 	</target>
 
     <!--
@@ -141,7 +136,7 @@
     <target name="compile-server" depends="stamp-version, resolve" description="compile FitNesse sources">
         <mkdir dir="${classes.dir}" />
 	    <ivy:cachepath pathid="compile.classpath" conf="default"/>
-        <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" source="1.6" target="1.6" includeantruntime="false">
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" source="1.6" target="1.6" includeantruntime="false" encoding="UTF-8">
             <classpath>
                 <path refid="compile.classpath"/>
             </classpath>
@@ -156,7 +151,7 @@
 
     <target name="compile-fit" description="compile FIT sources only">
         <mkdir dir="${classes.dir}" />
-        <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" source="1.6" target="1.6" includeantruntime="false">
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" source="1.6" target="1.6" includeantruntime="false" encoding="UTF-8">
             <include name="fit/**/*.java"/>
             <include name="util/*.java"/>
         </javac>

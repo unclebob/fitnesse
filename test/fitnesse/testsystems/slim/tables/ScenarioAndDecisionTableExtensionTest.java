@@ -234,6 +234,7 @@ public class ScenarioAndDecisionTableExtensionTest {
     public DiffScriptTable(Table table, String tableId, SlimTestContext context) {
       super(table, tableId, context);
     }
+    @Override
     protected String getTableType() {
       return "diffScriptTable";
     }

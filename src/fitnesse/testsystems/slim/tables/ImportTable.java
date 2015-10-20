@@ -16,10 +16,12 @@ public class ImportTable extends SlimTable {
     super(table, id, testContext);
   }
 
+  @Override
   protected String getTableType() {
     return "import";
   }
 
+  @Override
   public List<SlimAssertion> getAssertions() throws SyntaxError {
     int rows = table.getRowCount();
     List<SlimAssertion> instructions = new ArrayList<SlimAssertion>(rows);

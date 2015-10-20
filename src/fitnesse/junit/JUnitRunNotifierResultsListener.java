@@ -4,10 +4,10 @@ import java.io.Closeable;
 import java.io.IOException;
 
 import fitnesse.testrunner.TestsRunnerListener;
-import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -17,7 +17,7 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
 public class JUnitRunNotifierResultsListener
-        implements TestSystemListener<WikiTestPage>, TestsRunnerListener, Closeable {
+        implements TestSystemListener, TestsRunnerListener, Closeable {
 
   private final Class<?> mainClass;
   private final RunNotifier notifier;
@@ -41,26 +41,22 @@ public class JUnitRunNotifierResultsListener
   }
 
   @Override
-  public void testStarted(WikiTestPage test) {
+  public void testStarted(TestPage test) {
     firstFailure = null;
-    if (test.isTestPage()) {
-      notifier.fireTestStarted(descriptionFor(test));
-    }
+    notifier.fireTestStarted(descriptionFor(test));
   }
 
   @Override
-  public void testComplete(WikiTestPage test, TestSummary testSummary) {
+  public void testComplete(TestPage test, TestSummary testSummary) {
     increaseCompletedTests();
     if (firstFailure != null) {
       notifier.fireTestFailure(new Failure(descriptionFor(test), firstFailure));
-    } else if (test.isTestPage()) {
-      if (testSummary.getExceptions() > 0) {
-        notifier.fireTestFailure(new Failure(descriptionFor(test), new Exception("Exception occurred on page " + test.getFullPath())));
-      } else if (testSummary.getWrong() > 0) {
-        notifier.fireTestFailure(new Failure(descriptionFor(test), new AssertionError("Test failures occurred on page " + test.getFullPath())));
-      } else {
-        notifier.fireTestFinished(descriptionFor(test));
-      }
+    } else if (testSummary.getExceptions() > 0) {
+      notifier.fireTestFailure(new Failure(descriptionFor(test), new Exception("Exception occurred on page " + test.getFullPath())));
+    } else if (testSummary.getWrong() > 0) {
+      notifier.fireTestFailure(new Failure(descriptionFor(test), new AssertionError("Test failures occurred on page " + test.getFullPath())));
+    } else {
+      notifier.fireTestFinished(descriptionFor(test));
     }
   }
 
@@ -110,7 +106,7 @@ public class JUnitRunNotifierResultsListener
     }
   }
 
-  private Description descriptionFor(WikiTestPage test) {
+  private Description descriptionFor(TestPage test) {
     return Description.createTestDescription(mainClass, test.getFullPath());
   }
 

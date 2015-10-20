@@ -61,9 +61,11 @@ public class ResponseTest {
       super(formatString);
     }
 
+    @Override
     public void sendTo(ResponseSender sender) {
     }
 
+    @Override
     public int getContentSize() {
       return 0;
     }

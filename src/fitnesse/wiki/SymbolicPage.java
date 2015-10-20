@@ -3,15 +3,13 @@
 package fitnesse.wiki;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.Symbol;
 
-public class SymbolicPage extends BaseWikiPage {
-  private static final long serialVersionUID = 1L;
+public class SymbolicPage extends BaseWikitextPage {
 
   public static final String PROPERTY_NAME = "SymbolicLinks";
 
@@ -25,6 +23,10 @@ public class SymbolicPage extends BaseWikiPage {
 
   public WikiPage getRealPage() {
     return realPage;
+  }
+
+  public boolean containsWikitext() {
+    return realPage instanceof WikitextPage;
   }
 
   @Override
@@ -57,8 +59,7 @@ public class SymbolicPage extends BaseWikiPage {
     List<WikiPage> children = realPage.getChildren();
     List<WikiPage> symChildren = new LinkedList<WikiPage>();
     //TODO: -AcD- we need a better cyclic infinite recursion algorithm here.
-    for (Iterator<WikiPage> iterator = children.iterator(); iterator.hasNext();) {
-      WikiPage child = iterator.next();
+    for (WikiPage child : children) {
       symChildren.add(new SymbolicPage(child.getName(), child, this));
     }
     return symChildren;
@@ -86,7 +87,7 @@ public class SymbolicPage extends BaseWikiPage {
 
   @Override
   public String getVariable(String name) {
-    if (realPage instanceof WikitextPage) {
+    if (containsWikitext()) {
       return super.getVariable(name);
     }
     return realPage.getVariable(name);
@@ -94,7 +95,7 @@ public class SymbolicPage extends BaseWikiPage {
 
   @Override
   public String getHtml() {
-    if (realPage instanceof WikitextPage) {
+    if (containsWikitext()) {
       return super.getHtml();
     }
     return realPage.getHtml();
@@ -102,7 +103,7 @@ public class SymbolicPage extends BaseWikiPage {
 
   @Override
   public ParsingPage getParsingPage() {
-    if (realPage instanceof WikitextPage) {
+    if (containsWikitext()) {
       return super.getParsingPage();
     }
     return null;
@@ -110,7 +111,7 @@ public class SymbolicPage extends BaseWikiPage {
 
   @Override
   public Symbol getSyntaxTree() {
-    if (realPage instanceof WikitextPage) {
+    if (containsWikitext()) {
       return super.getSyntaxTree();
     }
     return Symbol.emptySymbol;
