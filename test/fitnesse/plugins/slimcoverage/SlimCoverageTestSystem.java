@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import fitnesse.slim.instructions.Instruction;
-import fitnesse.testsystems.ExecutionLogListener;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.SlimClient;
@@ -15,15 +16,14 @@ import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.testsystems.slim.tables.SyntaxError;
+import fitnesse.wiki.WikiPageDummy;
 
 public class SlimCoverageTestSystem extends HtmlSlimTestSystem {
-    private final ExecutionLogListener executionLogListener;
     private final SlimScenarioUsage usage;
 
-    public SlimCoverageTestSystem(String testSystemName, ExecutionLogListener executionLogListener, SlimTableFactory slimTableFactory, CustomComparatorRegistry customComparatorRegistry) {
+    public SlimCoverageTestSystem(String testSystemName, SlimTableFactory slimTableFactory, CustomComparatorRegistry customComparatorRegistry) {
         super(testSystemName, dummySlimClient(), slimTableFactory, customComparatorRegistry);
         this.usage = new SlimScenarioUsage();
-        this.executionLogListener = executionLogListener;
     }
 
     private static SlimClient dummySlimClient() {
@@ -78,79 +78,110 @@ public class SlimCoverageTestSystem extends HtmlSlimTestSystem {
     @Override
     public void bye() throws IOException {
         try {
-            super.bye();
-        } finally {
             reportScenarioUsage();
+        } finally {
+            super.bye();
         }
     }
 
-    protected ExecutionLogListener getListener() {
-        return executionLogListener;
+    protected void reportScenarioUsageHeader(String header) throws IOException {
+        testOutputChunk("<h4>" + header + "</h4>");
     }
 
-    protected void reportScenarioUsage() {
-        ExecutionLogListener listener = getListener();
-        listener.stdOut("Scenario Usage Report -------------------------------");
-        listener.stdOut("");
+    protected void reportScenarioUsageNewline() throws IOException {
+        testOutputChunk("<br/>");
+    }
+
+    protected void reportScenarioUsage() throws IOException {
+        WikiPageDummy pageDummy = new WikiPageDummy("Scenario Usage Report", "Scenario Usage Report Content", null);
+        WikiTestPage testPage = new WikiTestPage(pageDummy);
+        testStarted(testPage);
 
         Map<String, Integer> totalUsage = usage.getScenarioUsage().getUsage();
         if (totalUsage.isEmpty()) {
-            listener.stdOut("No scenarios in run");
+            testOutputChunk("No scenarios in run");
         } else {
             Collection<String> unused = usage.getUnusedScenarios();
             if (!unused.isEmpty()) {
-                listener.stdOut("Unused scenarios:");
+                reportScenarioUsageHeader("Unused scenarios:");
+                testOutputChunk("<ul>");
                 for (String scenarioName : unused) {
-                    listener.stdOut(scenarioName);
+                    testOutputChunk("<li>" + scenarioName + "</li>");
                 }
-                listener.stdOut("\n");
+                testOutputChunk("</ul>");
+                reportScenarioUsageNewline();
             }
 
-            listener.stdOut("Total usage count per scenario:");
+            reportScenarioUsageHeader("Total usage count per scenario:");
+            testOutputChunk("<table>");
+            testOutputChunk("<tr><th>Scenario</th><th>Count</th></tr>");
             for (Map.Entry<String, Integer> totalUsageEntry : totalUsage.entrySet()) {
-                listener.stdOut(totalUsageEntry.getKey()
-                        + "\t"
+                testOutputChunk("<tr>");
+                testOutputChunk("<td>");
+                testOutputChunk(totalUsageEntry.getKey()
+                        + "</td><td>"
                         + totalUsageEntry.getValue());
+                testOutputChunk("</td>");
+                testOutputChunk("</tr>");
             }
-            listener.stdOut("\n");
+            testOutputChunk("</table>");
+            reportScenarioUsageNewline();
 
-            listener.stdOut("Scenarios grouped by usage scope:");
+            reportScenarioUsageHeader("Scenarios grouped by usage scope:");
+            testOutputChunk("<ul>");
             for (Map.Entry<String, Collection<String>> sByScopeEntry : usage.getScenariosBySmallestScope().entrySet()) {
                 String scope = sByScopeEntry.getKey();
-                listener.stdOut(scope);
+                testOutputChunk("<li>");
+                testOutputChunk(scope);
+                testOutputChunk("<ul>");
                 for (String scenario : sByScopeEntry.getValue()) {
-                    listener.stdOut("\t"
-                            + scenario);
+                    testOutputChunk("<li>" + scenario + "</li>");
                 }
+                testOutputChunk("</ul>");
+                testOutputChunk("</li>");
             }
-            listener.stdOut("\n");
+            testOutputChunk("</ul>");
+            reportScenarioUsageNewline();
 
-            listener.stdOut("Usage count per scenario per page:");
+            reportScenarioUsageHeader("Usage count per scenario per page:");
+            testOutputChunk("<table>");
+            testOutputChunk("<tr><th>Page</th><th>Scenario</th><th>Count</th></tr>");
             for (SlimScenarioUsagePer usagePerPage : usage.getUsage()) {
                 String pageName = usagePerPage.getGroupName();
                 for (Map.Entry<String, Integer> usagePerScenario : usagePerPage.getUsage().entrySet()) {
-                    listener.stdOut(pageName
-                            + "\t"
+                    testOutputChunk("<tr>");
+                    testOutputChunk("<td>");
+                    testOutputChunk(pageName
+                            + "</td><td>"
                             + usagePerScenario.getKey()
-                            + "\t"
+                            + "</td><td>"
                             + usagePerScenario.getValue());
+                    testOutputChunk("</td>");
+                    testOutputChunk("</tr>");
                 }
             }
+            testOutputChunk("</table>");
 
             Map<String, Collection<String>> overriddenPerPage = usage.getOverriddenScenariosPerPage();
             if (!overriddenPerPage.isEmpty()) {
-                listener.stdOut("\n");
-                listener.stdOut("Overridden scenario(s) per page:");
+                reportScenarioUsageNewline();
+                reportScenarioUsageHeader("Overridden scenario(s) per page:");
+                testOutputChunk("<ul>");
                 for (Map.Entry<String, Collection<String>> overriddenForPage : overriddenPerPage.entrySet()) {
                     String pageName = overriddenForPage.getKey();
+                    testOutputChunk("<li>");
+                    testOutputChunk(pageName);
+                    testOutputChunk("<ul>");
                     for (String scenario : overriddenForPage.getValue()) {
-                        listener.stdOut(pageName
-                                + "\t"
-                                + scenario);
+                        testOutputChunk("<li>" + scenario + "</li>");
                     }
+                    testOutputChunk("</ul>");
+                    testOutputChunk("</li>");
                 }
+                testOutputChunk("</ul>");
             }
         }
+        testComplete(testPage, new TestSummary(0, 0, 1, 0));
     }
 
 }

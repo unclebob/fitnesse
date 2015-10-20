@@ -6,7 +6,6 @@ import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
-import fitnesse.testsystems.slim.InProcessSlimClientBuilder;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 
 /**
@@ -24,9 +23,8 @@ public class CoverageSlimTestSystemFactory implements TestSystemFactory {
 
   @Override
   public final TestSystem create(Descriptor descriptor) throws IOException {
-    InProcessSlimClientBuilder clientBuilder = new InProcessSlimClientBuilder(descriptor);
     SlimCoverageTestSystem testSystem = new SlimCoverageTestSystem("slimCoverage",
-            clientBuilder.getExecutionLogListener(), slimTableFactory.copy(), customComparatorRegistry);
+            slimTableFactory.copy(), customComparatorRegistry);
 
     return testSystem;
   }
