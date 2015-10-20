@@ -11,7 +11,11 @@ import fitnesse.testsystems.fit.CommandRunningFitClient;
 import fitnesse.testsystems.fit.FitClientBuilder;
 import fitnesse.testsystems.fit.FitTestSystem;
 import fitnesse.testsystems.fit.InProcessFitClientBuilder;
-import fitnesse.testsystems.slim.*;
+import fitnesse.testsystems.slim.CustomComparatorRegistry;
+import fitnesse.testsystems.slim.HtmlSlimTestSystem;
+import fitnesse.testsystems.slim.InProcessSlimClientBuilder;
+import fitnesse.testsystems.slim.SlimClientBuilder;
+import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 
 public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemFactoryRegistry {

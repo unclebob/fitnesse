@@ -1,10 +1,10 @@
 package fitnesse.testsystems.slim;
 
+import fitnesse.slim.instructions.Instruction;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
-import fitnesse.slim.instructions.Instruction;
 
 public interface SlimClient {
   void start() throws IOException;
