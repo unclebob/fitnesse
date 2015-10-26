@@ -2,7 +2,7 @@ package fitnesse.wikitext.parser;
 
 public class Literal extends SymbolType implements Rule {
     public static final Literal symbolType = new Literal();
-    
+
     public Literal() {
         super("Literal", CloseLiteral);
         wikiMatcher(new Matcher().string("!-"));
@@ -12,9 +12,10 @@ public class Literal extends SymbolType implements Rule {
     @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         SymbolType type = current.getType();
-        int offset = parser.getOffset();
+        int startOffset = current.getStartOffset();
         String literal = parser.parseLiteral(closeType());
         if (parser.atEnd())  return Symbol.nothing;
-        return new Maybe<Symbol>(new Symbol(type, literal, offset));
+        int endOffset = parser.getOffset();
+        return new Maybe<Symbol>(new Symbol(type, literal, startOffset, endOffset));
     }
 }

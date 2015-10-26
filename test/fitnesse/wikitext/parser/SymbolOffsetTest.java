@@ -62,7 +62,7 @@ public class SymbolOffsetTest {
   public void literalText() {
     assertParsesWithOffset(
             "Some !-literal text-!",
-            "SymbolList<0..21>[Text<0..4>, Whitespace<4..5>, Literal<7..19>]");
+            "SymbolList<0..21>[Text<0..4>, Whitespace<4..5>, Literal<5..21>]");
   }
 
   @Test
