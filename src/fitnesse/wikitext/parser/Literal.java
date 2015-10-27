@@ -12,10 +12,8 @@ public class Literal extends SymbolType implements Rule {
     @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         SymbolType type = current.getType();
-        int startOffset = current.getStartOffset();
         String literal = parser.parseLiteral(closeType());
         if (parser.atEnd())  return Symbol.nothing;
-        int endOffset = parser.getOffset();
-        return new Maybe<Symbol>(new Symbol(type, literal, startOffset, endOffset));
+        return new Maybe<Symbol>(new Symbol(type, literal));
     }
 }

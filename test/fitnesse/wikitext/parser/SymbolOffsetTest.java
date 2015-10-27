@@ -85,6 +85,18 @@ public class SymbolOffsetTest {
   }
 
   @Test
+  public void style() {
+    assertParsesWithOffset("some !style_thingy(content)\n",
+            "SymbolList<0..28>[Text<0..4>, Whitespace<4..5>, Style<5..27>[SymbolList<19..27>[Text<19..26>]], Newline<27..28>]");
+  }
+
+  @Test
+  public void preformat() {
+    assertParsesWithOffset("some {{{content\nline2\n}}}\n",
+            "SymbolList<0..26>[Text<0..4>, Whitespace<4..5>, Preformat<5..25>[SymbolList<8..25>[Text<8..22>]], Newline<25..26>]");
+  }
+
+  @Test
   public void onlyHasOffsetIfStartAndEndOffsetIsSet() {
     Symbol noOffsets = new Symbol(SymbolType.Text, "text");
     Symbol onlyStartOffset = new Symbol(SymbolType.Text, "text", 0);
