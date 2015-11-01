@@ -37,7 +37,7 @@ The !-SlimServer-! maintains five pieces of data that are operated on by the ins
  * ''[0.3]'' '''Actors:''' A stack of actor objects.
 
 !3 The Instructions
-There are four instructions in the Slim protocol.  import, make, call, and callAndAssign.  That's all.
+There are five instructions in the Slim protocol.  import, make, call, callAndAssign, and ''[0.4]'' assign.  That's all.
 
 !4 Import
 [''<id>'', import, ''<path>'']
@@ -53,7 +53,7 @@ This instruction causes slim to search for a class named ''<class>'' using the l
 
 ''[0.2]'' '''Fixture Chaining:''' Symbols can be used in the ''Make'' command to represent a class name.  If the ''<class>'' argument of the ''Make'' command contains '$' characters, then Slim should replace any symbols that have been created by previous ''callAndAssign'' commands.  This allows !-FitNesse-! to compose fixture names from symbols set by fixtures, and therefore enables fixture chaining.
 
-''[0.3]'' '''Symbol Copy:''' If ''<class>'' consists entirely of a single symbol name prefixed with $, then the item from the dictionary of symbol values with the symbol name is added to the dictionary of created objects with the name ''<instance>''. The ''<arg>'' strings are ignored and no constructor is called.
+''[0.3]'' '''Symbol Copy:''' If ''<class>'' consists entirely of a single symbol name prefixed with $, and the item from the dictionary of symbol values with the symbol name is not a string, then the item is added to the dictionary of created objects with the name ''<instance>''. The ''<arg>'' strings are ignored and no constructor is called.
 
 !4 Call
 [''<id>'', call,''<instance>'',''<function>'',''<arg>...'']
