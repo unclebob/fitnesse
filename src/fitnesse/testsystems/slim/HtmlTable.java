@@ -9,13 +9,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import fitnesse.html.HtmlUtil;
-import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionResult;
-import fitnesse.testsystems.TestResult;
-import fitnesse.testsystems.slim.results.SlimExceptionResult;
-import fitnesse.testsystems.slim.results.SlimTestResult;
-import fitnesse.testsystems.slim.tables.SyntaxError;
 import org.htmlparser.Node;
 import org.htmlparser.Tag;
 import org.htmlparser.nodes.TextNode;
@@ -25,6 +18,15 @@ import org.htmlparser.tags.TableHeader;
 import org.htmlparser.tags.TableRow;
 import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
+
+import fitnesse.html.HtmlDiffUtil;
+import fitnesse.html.HtmlUtil;
+import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestResult;
+import fitnesse.testsystems.slim.results.SlimExceptionResult;
+import fitnesse.testsystems.slim.results.SlimTestResult;
+import fitnesse.testsystems.slim.tables.SyntaxError;
 
 public class HtmlTable implements Table {
   private static final Logger LOG = Logger.getLogger(HtmlTable.class.getName());
@@ -351,9 +353,17 @@ public class HtmlTable implements Table {
           return String.format("<span class=\"pass\">%s</span>", message);
         case FAIL:
           if (testResult.hasActual() && testResult.hasExpected()) {
-            return String.format("[%s] <span class=\"fail\">expected [%s]</span>",
-                    asHtml(testResult.getActual()),
-                    asHtml(testResult.getExpected()));
+            if (qualifiesAsHtml(testResult.getActual()) || qualifiesAsHtml(testResult.getExpected())) {
+              return String.format("[%s] <span class=\"fail\">expected [%s]</span>",
+                  asHtml(testResult.getActual()),
+                  asHtml(testResult.getExpected()));
+            } else {
+              return String.format("[%s] <span class=\"fail\">expected [%s]</span>",
+                  HtmlDiffUtil.buildActual(testResult.getActual(), testResult.getExpected()),
+                new HtmlDiffUtil.ExpectedBuilder(testResult.getActual(), testResult.getExpected())
+                        .setOpeningTag("</span><span class=\"diff\">")
+                        .setClosingTag("</span><span class=\"fail\">").build());
+            }
           } else if ((testResult.hasActual() || testResult.hasExpected()) && testResult.hasMessage()) {
             return String.format("[%s] <span class=\"fail\">%s</span>",
                     asHtml(testResult.hasActual() ? testResult.getActual() : testResult.getExpected()),
