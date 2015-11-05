@@ -68,11 +68,11 @@ public class HtmlDiffUtilTest {
     String expected = "axc";
     String htmlDiff = null;
     htmlDiff = new HtmlDiffUtil.ActualBuilder(actual, expected)
-        .setClosingTag("</span class=\"diff\">").build();
-    Assert.assertEquals("a<span class=\"diff\">b</span class=\"diff\">c", htmlDiff);
+        .setClosingTag("</span><em>extra</em>").build();
+    Assert.assertEquals("a<span class=\"diff\">b</span><em>extra</em>c", htmlDiff);
     htmlDiff = new HtmlDiffUtil.ExpectedBuilder(actual, expected)
-        .setClosingTag("</span class=\"diff\">").build();
-    Assert.assertEquals("a<span class=\"diff\">x</span class=\"diff\">c", htmlDiff);
+        .setClosingTag("</span><em>extra</em>").build();
+    Assert.assertEquals("a<span class=\"diff\">x</span><em>extra</em>c", htmlDiff);
   }
 
   @Test
