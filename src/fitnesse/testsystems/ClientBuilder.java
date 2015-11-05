@@ -14,14 +14,14 @@ public abstract class ClientBuilder<T> {
   static final String[] DEFAULT_COMMAND_PATTERN = {
           javaExecutable(),
           "-cp",
-          fitnesseJar(System.getProperty("java.class.path")) + File.pathSeparator + "%p",
+          "\"" + fitnesseJar(System.getProperty("java.class.path")) + File.pathSeparator + "%p" + "\"",
           "%m" };
   static final String[] DEFAULT_JAVA_DEBUG_COMMAND = {
           javaExecutable(),
           "-Xdebug",
           "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000",
           "-cp",
-          "%p",
+          "\"" + fitnesseJar(System.getProperty("java.class.path")) + File.pathSeparator + "%p" + "\"",
           "%m"};
   static final String DEFAULT_CSHARP_DEBUG_RUNNER_FIND = "runner.exe";
   static final String DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE = "runnerw.exe";

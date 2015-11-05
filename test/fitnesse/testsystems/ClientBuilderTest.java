@@ -152,7 +152,7 @@ public class ClientBuilderTest {
     String sep = System.getProperty("path.separator");
     String prefix = join(clientBuilder.getCommandPattern());
     assertTrue(prefix.contains("java"));
-    assertTrue(prefix.contains(" -cp fitnesse.jar" + sep + "%p %m"));
+    assertTrue(prefix.contains(" -cp \"fitnesse.jar" + sep + "%p\" %m"));
   }
 
   @Test
@@ -161,9 +161,10 @@ public class ClientBuilderTest {
     WikiPage page = makeTestPage(pageText);
     WikiPageDescriptor descriptor = new WikiPageDescriptor(page, false, true, "");
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
+    String sep = System.getProperty("path.separator");
     String prefix = join(clientBuilder.getCommandPattern());
     assertTrue(prefix.contains("java"));
-    assertTrue(prefix.contains(" -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m"));
+    assertTrue(prefix.contains(" -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp \"fitnesse.jar" + sep + "%p\" %m"));
   }
 
   @Test
