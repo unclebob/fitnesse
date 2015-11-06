@@ -118,10 +118,9 @@ public class FitNesseMain {
     boolean outputRedirectedToFile = outputFile != null;
 
     if (outputRedirectedToFile) {
-      LOG.info("-----Command Output redirected to " + outputFile + "-----");
+      LOG.info("Command Output redirected to: " + outputFile);
       os = new FileOutputStream(outputFile);
     } else {
-      LOG.info("-----Command Output-----");
       os = System.out;
     }
 
@@ -130,8 +129,6 @@ public class FitNesseMain {
 
     if (outputRedirectedToFile) {
       os.close();
-    } else {
-      LOG.info("-----Command Complete-----");
     }
   }
 
