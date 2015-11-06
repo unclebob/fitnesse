@@ -179,12 +179,8 @@ public abstract class ClientBuilder<T> {
     String javaHome = System.getenv("JAVA_HOME");
     String result = "java";
     if (javaHome != null) {
-      boolean wrapInQuotes = javaHome.contains(" "); 
       String separator = File.separator;
       result = javaHome + separator + "bin" + separator + "java"; 
-      if (wrapInQuotes) {
-    	  result = "\"" + result + "\"";
-      }
     }
     return result;
   }
