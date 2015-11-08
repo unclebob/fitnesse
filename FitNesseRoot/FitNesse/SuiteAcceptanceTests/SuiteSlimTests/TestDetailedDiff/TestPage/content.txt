@@ -1,21 +1,8 @@
 !define TEST_SYSTEM {slim}
 
-!3 Diff of failed tests
-
-!4 Original intentionally failing tests
-
-The subordinate page >TestPage collects the following tests. The page is disabled because of many tests fails intentionally. It is useful for manual tests only.
-
-!4 Test wrapper for test
-
-!*> Tests for type string
-
-!| script |
-|given page|TestPage|with content|${SUT_PATH} !-
-!define TEST_SYSTEM {slim}
-
 !| import |
 | fitnesse.slim.test |
+
 
 Test Strings by plain compare, neither custom compare nor regular expression.
 In this case detailed diff is wanted.
@@ -55,24 +42,7 @@ In this case no detailed diff is wanted.
 | abc           | =~/^\w{1}$/      | no match |
 | abc           | =~/[ABC]+/       | no match |
 | abc           | =~/[ABC]+/i      | wrong syntax, disable value comparison, use string comparison |
--!|
-|test results for page|TestPage|should contain|!-<span class="pass">abc</span>-!|
-|test results for page|TestPage|should contain|!-[<span class="diff">abc</span>] <span class="fail">expected [</span><span class="diff">xyz</span><span class="fail">]</span>-!|
-|test results for page|TestPage|should contain|!-[<span class="diff">a</span>bc] <span class="fail">expected [</span><span class="diff">x</span><span class="fail">bc]</span>-!|
-|test results for page|TestPage|should contain|!-[a<span class="diff">b</span>c] <span class="fail">expected [a</span><span class="diff">y</span><span class="fail">c]</span>-!|
-|test results for page|TestPage|should contain|!-[ab<span class="diff">c</span>] <span class="fail">expected [ab</span><span class="diff">z</span><span class="fail">]</span>-!|
-|test results for page|TestPage|should contain|!-[] <span class="fail">expected [</span><span class="diff">xyz</span><span class="fail">]</span>-!|
-|test results for page|TestPage|should contain|!-[<span class="diff">H</span>ello <span class="diff">W</span>or<span class="diff">l</span>d] <span class="fail">expected [</span><span class="diff">W</span><span class="fail">ell</span><span class="diff">c</span><span class="fail">o</span><span class="diff">me</span><span class="fail"> </span><span class="diff">L</span><span class="fail">ord]-!|
-*!
 
-!*> Tests for type int
-
-!| script |
-|given page|TestPage|with content|${SUT_PATH} !-
-!define TEST_SYSTEM {slim}
-
-!| import |
-| fitnesse.slim.test |
 
 Test integers by string comparison.
 In this case detailed diff ist wanted.
@@ -98,18 +68,7 @@ In this case no detailed diff is wanted.
 | 1          | 2<_<0         | nok, logically wrong |
 | 1          | 0>_>2         | wrong syntax, disable value comparison, use string comparison |
 | 1          | 2>_>0         | wrong syntax, disable value comparison, use string comparison |
--!|
-|test results for page|TestPage|should contain||
-*!
 
-!*> Tests for type double
-
-!| script |
-|given page|TestPage|with content|${SUT_PATH} !-
-!define TEST_SYSTEM {slim}
-
-!| import |
-| fitnesse.slim.test |
 
 Test doubles by string comparison.
 In this case detailed diff ist wanted.
@@ -141,18 +100,8 @@ In this case no detailed diff is wanted.
 | 1.0           | ~=1.0            | ok |
 | 1.1           | ~=1.0            | nok |
 | 0.9           | ~=1.0            | nok |
--!|
-|test results for page|TestPage|should contain||
-*!
 
-!*> Tests of fitnesse symbols
 
-!| script |
-|given page|TestPage|with content|${SUT_PATH} !-
-!define TEST_SYSTEM {slim}
-
-!| import |
-| fitnesse.slim.test |
 Test symbols by string comparison.
 
 | Detailed Diff |
@@ -169,28 +118,8 @@ Test symbols by string comparison.
 | ayc           | $symbol          | |
 | abz           | $symbol          | |
 |               | $symbol          | |
--!|
-|test results for page|TestPage|should contain|!-<span class="pass">abc</span>-!|
-|test results for page|TestPage|should contain|!-[<span class="diff">abc</span>] <span class="fail">expected [</span><span class="diff">xyz</span><span class="fail">]</span>-!|
-|test results for page|TestPage|should contain|!-[<span class="diff">a</span>bc] <span class="fail">expected [</span><span class="diff">x</span><span class="fail">bc]</span>-!|
-|test results for page|TestPage|should contain|!-[a<span class="diff">b</span>c] <span class="fail">expected [a</span><span class="diff">y</span><span class="fail">c]</span>-!|
-|test results for page|TestPage|should contain|!-[ab<span class="diff">c</span>] <span class="fail">expected [ab</span><span class="diff">z</span><span class="fail">]</span>-!|
-|test results for page|TestPage|should contain|!-&lt;span class="pass"&gt;$symbol-&gt;[abc]&lt;/span&gt;-!|
-|test results for page|TestPage|should contain|!-[<span class="diff">xyz</span>] <span class="fail">expected [$symbol-&gt;[</span><span class="diff">abc</span><span class="fail">]]</span>-!|
-|test results for page|TestPage|should contain|!-[<span class="diff">x</span>bc] <span class="fail">expected [$symbol-&gt;[</span><span class="diff">a</span><span class="fail">bc]]</span>-!|
-|test results for page|TestPage|should contain|!-[a<span class="diff">y</span>c] <span class="fail">expected [$symbol-&gt;[a</span><span class="diff">b</span><span class="fail">c]]</span>-!|
-|test results for page|TestPage|should contain|!-[ab<span class="diff">z</span>] <span class="fail">expected [$symbol-&gt;[ab</span><span class="diff">c</span><span class="fail">]]</span>-!|
-|test results for page|TestPage|should contain|!-[] <span class="fail">expected [$symbol-&gt;[</span><span class="diff">abc</span><span class="fail">]]</span>-!|
-*!
 
-!*> Tests of custom comparator
 
-!| script |
-|given page|TestPage|with content|${SUT_PATH} !-
-!define TEST_SYSTEM {slim}
-
-!| import |
-| fitnesse.slim.test |
 Test custom comparator, see FitNesse.UserGuide.AdministeringFitNesse.ConfigurationFile
 The inverse comparator fitnesse.slim.test.InverseComparator negates the method String.equals(String).
 
@@ -203,18 +132,8 @@ The inverse comparator fitnesse.slim.test.InverseComparator negates the method S
 | check | echo | abc | inverse:cba | 
 | note  | only 'abc' is nok |
 | check | echo | abc | inverse:abc |
--!|
-|test results for page|TestPage|should contain||
-*!
 
-!*> Tests of scenario
 
-!| script |
-|given page|TestPage|with content|${SUT_PATH} !-
-!define TEST_SYSTEM {slim}
-
-!| import |
-| fitnesse.slim.test |
 Test Scenario and Script
 
 !| Scenario | Detailed Diff Scenario Test |
@@ -224,7 +143,3 @@ Test Scenario and Script
 
 !| Script |
 | Detailed Diff Scenario Test |
--!|
-|test results for page|TestPage|should contain|!-<span class="pass">hello</span>-!|
-|test results for page|TestPage|should contain|!-[h<span class="diff">e</span>llo] <span class="fail">expected [h</span><span class="diff">a</span><span class="fail">llo]</span>-!|
-*!

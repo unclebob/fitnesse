@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.htmlparser.Node;
@@ -40,8 +41,8 @@ public class HtmlTable implements Table {
           "abbr|dfn|i|b|s|u|code|var|samp|kbd|sup|sub|q|cite|span|br|ins|del|img|embed|object|video|audio|label|" +
           "output|datalist|progress|command|canvas|time|meter)([ >].*</\\1>|[^>]*/>)" + SYMBOL_ASSIGNMENT_SUFFIX + "?$",
           Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-  private static final Pattern SYMBOL_REPLACEMENT_PATTERN = Pattern.compile("^" + SYMBOL_ASSIGNMENT + ".*" +
-          SYMBOL_ASSIGNMENT_SUFFIX + "$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+  private static final Pattern SYMBOL_REPLACEMENT_PATTERN = Pattern.compile("^(" + SYMBOL_ASSIGNMENT + ")(.*)(" +
+          SYMBOL_ASSIGNMENT_SUFFIX + ")$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
   private List<Row> rows = new ArrayList<Row>();
   private TableTag tableNode;
@@ -357,6 +358,15 @@ public class HtmlTable implements Table {
               return String.format("[%s] <span class=\"fail\">expected [%s]</span>",
                   asHtml(testResult.getActual()),
                   asHtml(testResult.getExpected()));
+            } if (qualifiesAsSymbolReplacement(testResult.getExpected())) {
+              String[] symbol = parseSymbol(testResult.getExpected());
+              return String.format("[%s] <span class=\"fail\">expected [%s]</span>",
+                  HtmlDiffUtil.buildActual(testResult.getActual(), symbol[1]),
+                  HtmlUtil.escapeHTML(symbol[0]) + 
+                  new HtmlDiffUtil.ExpectedBuilder(testResult.getActual(), symbol[1])
+                        .setOpeningTag("</span><span class=\"diff\">")
+                        .setClosingTag("</span><span class=\"fail\">").build() + 
+                  HtmlUtil.escapeHTML(symbol[2]));
             } else {
               return String.format("[%s] <span class=\"fail\">expected [%s]</span>",
                   HtmlDiffUtil.buildActual(testResult.getActual(), testResult.getExpected()),
@@ -407,6 +417,17 @@ public class HtmlTable implements Table {
 
   static boolean qualifiesAsSymbolReplacement(String text) {
     return text.startsWith("$") && SYMBOL_REPLACEMENT_PATTERN.matcher(text).matches();
+  }
+  
+  private static String[] parseSymbol(String text) {
+    Matcher matcher = SYMBOL_REPLACEMENT_PATTERN.matcher(text);
+    String[] symbols = new String[] {"","",""};
+    if (matcher.matches()) {
+      symbols[0] = matcher.group(1);
+      symbols[1] = matcher.group(2);
+      symbols[2] = matcher.group(3);
+    }
+    return symbols;
   }
 
   static boolean qualifiesAsHtml(String text) {
