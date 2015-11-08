@@ -9,14 +9,14 @@ If you were testing the division function of a calculator application, you might
 
 In !-FitNesse-!, tests are expressed as tables of '''input''' data and '''expected output''' data. Here is one way to specify a few division tests in !-FitNesse-!:
 
-| eg.Division |
+| eg.Division                         |
 | numerator | denominator | quotient? |
-| 10 | 2 | 5.0 |
-| 12.6 | 3 | 4.2 |
-| 22 | 7 | ~=3.14 |
-| 9 | 3 | <5 |
-| 11 | 2 | 4<_<6 |
-| 100 | 4 | 33 |
+| 10        | 2           | 5.0       |
+| 12.6      | 3           | 4.2       |
+| 22        | 7           | ~=3.14    |
+| 9         | 3           | <5        |
+| 11        | 2           | 4<_<6     |
+| 100       | 4           | 33        |
 
 This style of !-FitNesse-! test table is called a [[Decision Table][<UserGuide.WritingAcceptanceTests.SliM.DecisionTable]], each row represents a complete scenario of example inputs and outputs. Here, the "numerator" and "denominator" columns are for inputs, and the question mark in the "quotient?" column tells !-FitNesse-! that this is our column of expected outputs. Notice our "10/2 = 5.0" scenario. Try reading it as a question: ''"If I give you a numerator of 10 and denominator of 2, do I get back a 5?"''
 

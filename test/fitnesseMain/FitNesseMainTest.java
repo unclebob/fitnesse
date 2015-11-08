@@ -103,7 +103,7 @@ public class FitNesseMainTest {
   @Test
   public void canRunSingleCommand() throws Exception {
     String response = runFitnesseMainWith("-o",  "-c", "/root");
-    assertThat(response, containsString("Command Output"));
+    assertThat(response, containsString("Executing command:"));
   }
 
   @Test
