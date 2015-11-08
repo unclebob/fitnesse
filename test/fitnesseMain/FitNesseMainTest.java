@@ -104,6 +104,7 @@ public class FitNesseMainTest {
   public void canRunSingleCommand() throws Exception {
     String response = runFitnesseMainWith("-o",  "-c", "/root");
     assertThat(response, containsString("Executing command:"));
+    assertThat(response, not(containsString("Starting FitNesse on port:")));
   }
 
   @Test
