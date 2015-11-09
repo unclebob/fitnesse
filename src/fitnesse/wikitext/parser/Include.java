@@ -6,6 +6,7 @@ import fitnesse.wiki.PathParser;
 public class Include extends SymbolType implements Rule, Translation {
     private static final String[] setUpSymbols = new String[] {"COLLAPSE_SETUP"};
     private static final String includeHelpOption = "-h";
+    private static final SymbolProvider wikiLinkSymbolProvider = new SymbolProvider(new SymbolType[] { WikiWord.symbolType });
 
     public Include() {
         super("Include");
@@ -31,12 +32,11 @@ public class Include extends SymbolType implements Rule, Translation {
         if (!next.isType(SymbolType.Text) && !next.isType(WikiWord.symbolType)) return Symbol.nothing;
 
         String includedPageName = next.getContent();
-        if (parser.peek().isType(SymbolType.Text)) {
-          Maybe<String> remainderOfPageName = parser.parseToAsString(SymbolType.Whitespace);
-          if (!remainderOfPageName.isNothing()) {
-            includedPageName += remainderOfPageName.getValue();
-          }
+        while (parser.peek().isType(SymbolType.Text) || parser.peek().isType(WikiWord.symbolType)) {
+          Symbol remainderOfPageName = parser.moveNext(1);
+          includedPageName += remainderOfPageName.getContent();
         }
+
         SourcePage sourcePage = parser.getPage().getNamedPage();
 
         // Record the page name anyway, since we might want to show an error if it's invalid

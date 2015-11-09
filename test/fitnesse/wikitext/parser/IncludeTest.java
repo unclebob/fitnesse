@@ -97,6 +97,20 @@ public class IncludeTest {
   }
 
   @Test
+  public void translatesWithAllNonWikiWord() throws Exception {
+    TestRoot root = new TestRoot();
+    WikiPage currentPage = root.makePage("PageOne", "!include page_two.non_wiki");
+    WikiPage pageTwo = root.makePage("page_two");
+    root.makePage(pageTwo, "non_wiki", "page ''two''");
+
+    String result = ParserTestHelper.translateTo(currentPage);
+
+    assertContains(result, "class=\"collapsible\"");
+    assertContains(result, "Included page: <a href=\"page_two.non_wiki\">page_two.non_wiki</a> <a href=\"page_two.non_wiki?edit&amp;redirectToReferer=true&amp;redirectAction=\" class=\"edit\">(edit)</a>");
+    assertContains(result, "page <i>two</i>");
+  }
+
+  @Test
   public void setupsAreHidden() throws Exception {
     String result = ParserTestHelper.translateTo(makePageThatIncludesSetup());
 
@@ -124,6 +138,34 @@ public class IncludeTest {
       .withContent("!include -teardown >TearDown")
       .withTarget("PageTwo.TearDown")
       .withIncludedPage(new TestSourcePage().withContent("teardown"));
+  }
+
+  @Test
+  public void shouldIncludePathWithNonWikiWordFollowedByNewLines() throws Exception {
+    String result = ParserTestHelper.translateTo(makePageThatIncludesPageFromNonWikiWordPath("\n" +
+            "\n" +
+            "\n" +
+            "  "));
+
+    assertContains(result, "class=\"collapsible\"");
+    assertContains(result, "<a href=\"FrontPage.Tests.non_wiki_word\">");
+    assertContains(result, "Hello world!");
+  }
+
+  @Test
+  public void shouldIncludePathWithNonWikiWordFollowedBySpaces() throws Exception {
+    String result = ParserTestHelper.translateTo(makePageThatIncludesPageFromNonWikiWordPath(" Some other text\n"));
+
+    assertContains(result, "class=\"collapsible\"");
+    assertContains(result, "<a href=\"FrontPage.Tests.non_wiki_word\">");
+    assertContains(result, "Hello world!");
+  }
+
+  private TestSourcePage makePageThatIncludesPageFromNonWikiWordPath(String trailingContent) {
+    return new TestSourcePage()
+            .withContent("\n!include .FrontPage.Tests.non_wiki_word" + trailingContent)
+            .withTarget("FrontPage.Tests.non_wiki_word")
+            .withIncludedPage(new TestSourcePage().withContent("Hello world!"));
   }
 
   @Test
