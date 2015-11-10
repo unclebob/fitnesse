@@ -270,8 +270,8 @@ ${OPT}${BAR} ''optional table row'' ${BAR}${OPT} ''optional 2nd column'' ${BAR}$
 !anchor GlobalVARIABLES
 !2 Global Variables ${TopOfPAGE}
 | ''' NAME ''' | ''' Java Default ''' | '''!-FitLibrary (Unix) Default-!''' | ''' .NET Default       ''' |
-| ${CODE} COMMAND_PATTERN   ${CODEend} | !- java -cp "%p" %m -! | !- java -cp "%p" %m -! | !- %m %p  -! |
-| ${CODE} REMOTE_DEBUG_COMMAND${CODEend} | !- REMOTE DEBUG COMMAND, or java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp "%p" %m-! | !-java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp "%p" %m-! | !-java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp "%p" %m-! |
+| ${CODE} COMMAND_PATTERN   ${CODEend} | !- java -cp %p %m -! | !- java -cp %p %m -! | !- %m %p  -! |
+| ${CODE} REMOTE_DEBUG_COMMAND${CODEend} | !- REMOTE DEBUG COMMAND, or java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m-! | !-java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m-! | !-java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m-! |
 | ${CODE} PATH_SEPARATOR    ${CODEend} | ${SPC} : ${SPC} ''!-(system-dependent)-!'' | ${SPC} : ${SPC} ''!-(system-dependent)-!'' | ${SPC} !-;-! ${SPC} |
 | ${CODE} TEST_RUNNER       ${CODEend} | !-fit.FitServer-! | !-fitlibrary.suite.FitLibraryServer-! | !-dotnet\FitServer.exe-! |
 | ${CODE} REMOTE_DEBUG_RUNNER ${CODEend} | !-TEST_RUNNER -! | !-same as for java-! | !-dotnet\FitServer.exe-! |

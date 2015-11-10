@@ -137,16 +137,18 @@ public class Symbol {
       return startOffset != -1 && endOffset != -1;
     }
 
-    void setStartOffset(int startOffset) {
+    Symbol setStartOffset(int startOffset) {
       this.startOffset = startOffset;
+      return this;
     }
 
     public int getStartOffset() {
       return startOffset;
     }
 
-    void setEndOffset(int endOffset) {
+    Symbol setEndOffset(int endOffset) {
       this.endOffset = endOffset;
+      return this;
     }
 
     public int getEndOffset() {

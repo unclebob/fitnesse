@@ -9,19 +9,21 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.SystemUtils;
+
 public abstract class ClientBuilder<T> {
   static final String COMMAND_PATTERN = "COMMAND_PATTERN";
   static final String[] DEFAULT_COMMAND_PATTERN = {
           javaExecutable(),
           "-cp",
-          "\"" + fitnesseJar(System.getProperty("java.class.path")) + File.pathSeparator + "%p" + "\"",
+          fitnesseJar(System.getProperty("java.class.path")) + File.pathSeparator + "%p",
           "%m" };
   static final String[] DEFAULT_JAVA_DEBUG_COMMAND = {
           javaExecutable(),
           "-Xdebug",
           "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000",
           "-cp",
-          "\"" + fitnesseJar(System.getProperty("java.class.path")) + File.pathSeparator + "%p" + "\"",
+          fitnesseJar(System.getProperty("java.class.path")) + File.pathSeparator + "%p",
           "%m"};
   static final String DEFAULT_CSHARP_DEBUG_RUNNER_FIND = "runner.exe";
   static final String DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE = "runnerw.exe";
@@ -41,6 +43,9 @@ public abstract class ClientBuilder<T> {
     for (int i = 0; i < commandPattern.length; i++) {
       command[i] = replace(commandPattern[i], "%p", classPath);
       command[i] = replace(command[i], "%m", testRunner);
+      if (SystemUtils.IS_OS_WINDOWS && command[i].contains(" ")) {
+        command[i] = "\"" + command[i] + "\"";
+      }
     }
     return command;
   }
@@ -174,12 +179,8 @@ public abstract class ClientBuilder<T> {
     String javaHome = System.getenv("JAVA_HOME");
     String result = "java";
     if (javaHome != null) {
-      boolean wrapInQuotes = javaHome.contains(" "); 
       String separator = File.separator;
       result = javaHome + separator + "bin" + separator + "java"; 
-      if (wrapInQuotes) {
-    	  result = "\"" + result + "\"";
-      }
     }
     return result;
   }

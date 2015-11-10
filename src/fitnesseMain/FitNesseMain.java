@@ -8,6 +8,7 @@ import fitnesse.Updater;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.reporting.ExitCodeListener;
 import fitnesse.updates.WikiContentUpdater;
+import fitnesse.util.StringUtils;
 
 import java.io.*;
 import java.util.logging.Level;
@@ -103,6 +104,7 @@ public class FitNesseMain {
 
         return exitCodeListener.getFailCount();
       } else {
+        LOG.info("Starting FitNesse on port: " + context.port);
         context.fitNesse.start();
       }
     }
@@ -118,10 +120,9 @@ public class FitNesseMain {
     boolean outputRedirectedToFile = outputFile != null;
 
     if (outputRedirectedToFile) {
-      LOG.info("-----Command Output redirected to " + outputFile + "-----");
+      LOG.info("Command Output redirected to: " + outputFile);
       os = new FileOutputStream(outputFile);
     } else {
-      LOG.info("-----Command Output-----");
       os = System.out;
     }
 
@@ -130,8 +131,6 @@ public class FitNesseMain {
 
     if (outputRedirectedToFile) {
       os.close();
-    } else {
-      LOG.info("-----Command Complete-----");
     }
   }
 
@@ -145,7 +144,6 @@ public class FitNesseMain {
     LOG.info("authenticator: " + context.authenticator);
     LOG.info("page factory: " + context.pageFactory);
     LOG.info("page theme: " + context.pageFactory.getTheme());
-    LOG.info("Starting FitNesse on port: " + context.port);
   }
 
   public void configureLogging(boolean verbose) {

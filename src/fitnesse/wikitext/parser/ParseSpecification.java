@@ -108,6 +108,7 @@ public class ParseSpecification {
             scanner.moveNextIgnoreFirst(this);
             if (scanner.isEnd()) return Maybe.nothingBecause("scanner is at end of buffer");
             Symbol currentToken = scanner.getCurrent();
+            int startOffset = currentToken.getStartOffset();
             if (endsOn(currentToken.getType()) || parser.parentOwns(currentToken.getType(), this)) {
                 scanner.copy(backup);
                 return Maybe.nothingBecause("At termination symbol or parent owns symbol");
@@ -115,11 +116,11 @@ public class ParseSpecification {
             if (terminatesOn(currentToken.getType())) return Maybe.nothingBecause("At termination symbol");
             Rule currentRule = currentToken.getType().getWikiRule();
             Maybe<Symbol> parsedSymbol = currentRule.parse(currentToken, parser);
-            currentToken.setEndOffset(scanner.getOffset());
             if (parsedSymbol.isNothing()) {
                 ignoreFirst(currentToken.getType());
                 scanner.copy(backup);
             } else {
+                parsedSymbol.getValue().setStartOffset(startOffset).setEndOffset(scanner.getOffset());
                 clearIgnoresFirst();
                 return parsedSymbol;
             }

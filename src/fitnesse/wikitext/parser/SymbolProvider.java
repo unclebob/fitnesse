@@ -38,7 +38,7 @@ public class SymbolProvider {
           Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
 
     public static final SymbolProvider literalTableProvider = new SymbolProvider(
-            new SymbolType[] {SymbolType.EndCell, SymbolType.Newline, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
+            new SymbolType[] {SymbolType.EndCell, SymbolType.Whitespace, SymbolType.Newline, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
 
     // This scheme is used for parsing system properties (accessed by PageData.getVariable()).
     public static final SymbolProvider variableDefinitionSymbolProvider = new SymbolProvider(new SymbolType[] {

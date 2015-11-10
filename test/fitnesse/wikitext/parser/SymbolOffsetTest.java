@@ -55,14 +55,14 @@ public class SymbolOffsetTest {
             "-!| table |",
             "SymbolList<0..11>[" +
                     "Table<0..11>[TableRow<3..11>[" +
-                    "TableCell<3..11>[Text<3..10>]]]]");
+                    "TableCell<3..11>[Whitespace<3..4>, Text<4..9>, Whitespace<9..10>]]]]");
   }
 
   @Test
   public void literalText() {
     assertParsesWithOffset(
             "Some !-literal text-!",
-            "SymbolList<0..21>[Text<0..4>, Whitespace<4..5>, Literal<7..19>]");
+            "SymbolList<0..21>[Text<0..4>, Whitespace<4..5>, Literal<5..21>]");
   }
 
   @Test
@@ -82,6 +82,18 @@ public class SymbolOffsetTest {
   public void define() {
     assertParsesWithOffset("!define TEST_SYSTEM {slim}\n",
             "SymbolList<0..27>[Define<0..26>[Text<-1..-1>, Text<-1..-1>], Newline<26..27>]");
+  }
+
+  @Test
+  public void style() {
+    assertParsesWithOffset("some !style_thingy(content)\n",
+            "SymbolList<0..28>[Text<0..4>, Whitespace<4..5>, Style<5..27>[SymbolList<19..27>[Text<19..26>]], Newline<27..28>]");
+  }
+
+  @Test
+  public void preformat() {
+    assertParsesWithOffset("some {{{content\nline2\n}}}\n",
+            "SymbolList<0..26>[Text<0..4>, Whitespace<4..5>, Preformat<5..25>[SymbolList<8..25>[Text<8..22>]], Newline<25..26>]");
   }
 
   @Test
