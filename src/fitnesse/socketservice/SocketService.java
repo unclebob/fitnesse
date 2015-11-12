@@ -38,11 +38,6 @@ public class SocketService {
     serviceThread.start();
   }
 
-  @Deprecated
-  public int getPort() {
-    return serverSocket.getLocalPort();
-  }
-
   public void close() throws IOException {
     waitForServiceThreadToStart();
     running = false;
