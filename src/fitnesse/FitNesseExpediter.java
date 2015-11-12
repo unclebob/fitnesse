@@ -90,11 +90,6 @@ public class FitNesseExpediter implements ResponseSender {
     }
   }
 
-  @Override
-  public Socket getSocket() {
-    return socket;
-  }
-
   public Request makeRequest() {
     request = new Request(input);
     request.setPeerDn(SocketFactory.peerDn(socket));

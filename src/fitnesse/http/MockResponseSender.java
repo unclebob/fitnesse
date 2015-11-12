@@ -38,11 +38,6 @@ public class MockResponseSender implements ResponseSender {
     closed = true;
   }
 
-  @Override
-  public Socket getSocket() {
-    return new MockSocket(new PipedInputStream(), output);
-  }
-
   public String sentData() {
     try {
       return ((ByteArrayOutputStream) output).toString(FileUtil.CHARENCODING);
