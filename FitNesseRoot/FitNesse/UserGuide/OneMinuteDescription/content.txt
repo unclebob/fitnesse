@@ -1,6 +1,8 @@
 [[A Two-Minute Example][TwoMinuteExample]]
 
 !1 What is !-FitNesse-!?
+FitNesse acts as a bridge between the different stake holders (disciplines) in a software delivery process.  It's wiki server makes it easy to document the software. It's test execution capabilities allow you to verify the documentation against the software, ensuring the documentation remains up to date and the software is not facing regression.
+
 !3 !-FitNesse-! is a software development collaboration tool
 Great software requires collaboration and communication. !-FitNesse-! is a tool for enhancing collaboration in software development.
 
@@ -10,16 +12,14 @@ It's an invaluable way to collaborate on complicated problems (and get them righ
 
 (''The above description is adapted from James Shore's description of Ward Cunningham's [[Fit Framework][WritingAcceptanceTests.FitFramework]], which is one of the test systems upon which !-FitNesse-! depends.'')
 
-!3 !-FitNesse-! is a software testing tool.
+!3 !-FitNesse-! is a software testing tool
 From another perspective, !-FitNesse-! is a lightweight, open-source framework that makes it easy for software teams to:
 
  * Collaboratively define [[Acceptance Tests][AcceptanceTests]], web pages containing simple tables of inputs and expected outputs.
  * Run those tests and see the results (see [[Two Minute Example][TwoMinuteExample]]).
 
-!3 !-FitNesse-! is a wiki.
+!3 !-FitNesse-! is a wiki
  * You can ''easily'' create and edit pages. (See [[Editing Pages][<FitNesse.FullReferenceGuide.UserGuide.FitNesseWiki.EditingFitNessePages]].)
-
-!3 !-FitNesse-! is a web server.
  * It requires '''no configuration or setup'''.
  * Just run it and then direct your browser to the machine where it is running (see [[Downloading and Installing][http://fitnesse.org/FitNesseDownload]]).
 

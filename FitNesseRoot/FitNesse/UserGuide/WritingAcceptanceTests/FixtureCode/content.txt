@@ -2,42 +2,8 @@
 
 !define TEST_SYSTEM {slim}
 *!
-Let's look at our division test table again:
 
-| eg.Division |
-| numerator | denominator | quotient? |
-| 10 | 2 | 5.0 |
-| 12.6 | 3 | 4.2 |
-| 100 | 4 | 33 |
-
-What '''really''' happens when we click that test button? (Try clicking it again.) What gets run?
-
- * First, FitNesse submits the test table to [[Slim][<UserGuide.WritingAcceptanceTests.SliM]], the underlying test system (FitNesse is a wiki GUI built on top of Slim).
- * Slim looks for and runs the fixture code corresponding to the test table.
- * By design, the fixture code calls some underlying application code to do the real work, and report results back to the fixture
- * Fit gives Fitnesse back the results from running the fixture code
- * FitNesse figures out whether to turn table cells red or green (or yellow, if an exception was thrown) and displays the results page accordingly
-
-!3 What is Fixture Code?
-The fixture is the Java (or some other supported language) class that Slim will use to process the contents of the table. In the top row of the table above, "eg" specifies a Java package (or other language namespace), and "Division" specifies the actual class to be called.
-
-Here is what the Java version of the Division class might look like:{{{
-public class Division {
-  private double numerator, denominator;
-  public void setNumerator(double numerator) {this.numerator = numerator;}
-  public void setDenominator(double denominator} {this.denominator = denominator;}
-  public double quotient() {return numerator/denominator;}
-} }}}
-
-!3 How Slim Uses Fixture Code to Process the Test Table
-The Division table is an example of a [[Decision Table][<UserGuide.WritingAcceptanceTests.SliM.DecisionTable]]; just one of many different kinds of tables. Slim processes the rows of example data ('''from left to right'''), it stores the values from the ''numerator'' and ''denominator'' columns in the corresponding fields in our Division class using the setter functions. For each row, it then calls the quotient() method on our Division class, which returns what we would expect it to: the numerator divided by the denominator. So the Decision Table directs Slim to call setNumerator(10) and setDenominator(2); and then to call quotient().  The value is returned to the Decision Table which colors the appropriate cell.
-
-Click the Test button again and see what happens to the column of expected outputs under the ''quotient?'' header. For each cell of expected output, the Decision Table compares the value it expects to get back with what it actually gets. If the return value matches the value in the corresponding table cell, FitNesse turns the cell green. Otherwise FitNesse turns the cell red, and shows both the expected and actual values. (If Slim encounters an exception, or cannot find a fixture, field, or method, it turns the corresponding table cell yellow, and inserts a stack trace.)
-
-!3 Wait a Minute. That's ''Too'' Simple.
-How right you are. In the real world, the fixture code would not be doing any of the real work (though a single division operation is not much work). The fixture code would delegate to real application code, which in turn would do the work. In general, fixture code should be '''as thin as possible'''. It should be nothing but '''piping and wiring''' between the FitNesse table and the application code under test.
-
-So with that bit of wisdom in our minds, let's look at something a bit more realistic.
+In the [[Two Minute Example][<UserGuide.TwoMinuteExample]] we saw how a table containing acceptance tests can be created. The example in itself was pretty trivial. Here we dig more into the details of FitNesse and its fixtures.
 
 !2 Something a Bit More Realistic: A Trivia Game
 As much as we might like to, we shall not immediately leap into an application to analyze the seismic data resulting from setting off dozens of sticks of dynamite on the floor of the Gulf of Mexico. Partly because so many fish would die, and partly because that's going too far in the complexity direction.
