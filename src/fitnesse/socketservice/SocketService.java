@@ -7,6 +7,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.LinkedList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,7 +22,8 @@ public class SocketService {
   private final Thread serviceThread;
   private volatile boolean running = false;
   private final SocketServer server;
-  private final LinkedList<Thread> threads = new LinkedList<Thread>();
+
+  private final ExecutorService executorService = new ForkJoinPool();
   private volatile boolean everRan = false;
 
   public SocketService(int port, boolean useHTTPS, SocketServer server, String sslParameterClassName ) throws IOException {
@@ -58,7 +64,8 @@ public class SocketService {
     serverSocket.close();
     try {
       serviceThread.join();
-      waitForServerThreads();
+      executorService.shutdown();
+      executorService.awaitTermination(5, TimeUnit.SECONDS);
     } catch (InterruptedException e) {
       LOG.log(Level.WARNING, "Thread joining interrupted", e);
     }
@@ -92,23 +99,7 @@ public class SocketService {
   }
 
   private void startServerThread(Socket s) {
-    Thread serverThread = new Thread(new ServerRunner(s));
-    synchronized (threads) {
-      threads.add(serverThread);
-    }
-    serverThread.start();
-  }
-
-  private void waitForServerThreads() throws InterruptedException {
-    while (!threads.isEmpty()) {
-      Thread t;
-      synchronized (threads) {
-        if (threads.size() < 1)
-          return;
-        t = threads.getFirst();
-      }
-      t.join();
-    }
+    executorService.submit(new ServerRunner(s));
   }
 
   private class ServerRunner implements Runnable {
@@ -122,10 +113,8 @@ public class SocketService {
     public void run() {
       try {
         server.serve(socket);
-        synchronized (threads) {
-          threads.remove(Thread.currentThread());
-        }
       } catch (Exception e) {
+        LOG.log(Level.FINE, "Exception thrown while handling server request", e);
       }
     }
   }
