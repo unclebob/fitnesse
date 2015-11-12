@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import java.io.ByteArrayOutputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,6 +15,7 @@ import fitnesse.wiki.WikiPageUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import util.FileUtil;
 
 public class ExposeThreadingIssueInMockResponseTest {
   private WikiPage root;
@@ -55,10 +57,11 @@ public class ExposeThreadingIssueInMockResponseTest {
     request.setResource(testPage.getName());
 
     Response response = responder.makeResponse(context, request);
-    MockResponseSender sender = new MockResponseSender();
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    MockResponseSender sender = new MockResponseSender(output);
     sender.doSending(response);
 
-    results = sender.sentData();
+    results = output.toString(FileUtil.CHARENCODING);
   }
 
   private String classpathWidgets() {

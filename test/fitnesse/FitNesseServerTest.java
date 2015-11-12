@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.regex.Pattern;
 
 import fitnesse.components.LogData;
@@ -16,6 +18,7 @@ import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
 import org.junit.Before;
 import org.junit.Test;
+import util.FileUtil;
 
 import static org.junit.Assert.*;
 import static util.RegexTestCase.assertSubString;
@@ -119,8 +122,7 @@ public class FitNesseServerTest {
     MockSocket s = new MockSocket(requestLine);
     FitNesseServer server = new FitNesseServer(context);
     server.serve(s, 1000);
-    String output = s.getOutput();
-    return output;
+    return ((ByteArrayOutputStream) s.getOutputStream()).toString(FileUtil.CHARENCODING);
   }
 
   private static boolean hasSubString(String expected, String output) {

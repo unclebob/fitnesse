@@ -91,7 +91,7 @@ public class FitNesse {
         throw new Exception("error loading page: " + response.getStatus());
     }
     response.withoutHttpHeaders();
-    MockResponseSender sender = new MockResponseSender.OutputStreamSender(out);
+    MockResponseSender sender = new MockResponseSender(out);
     sender.doSending(response);
   }
 }
