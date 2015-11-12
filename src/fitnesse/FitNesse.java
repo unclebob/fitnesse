@@ -58,7 +58,9 @@ public class FitNesse {
     }
     try {
       if (context.port > 0) {
-        ServerSocket serverSocket = SocketFactory.tryCreateServerSocket(context.port, context.useHTTPS, context.sslClientAuth, context.sslParameterClassName);
+        ServerSocket serverSocket = context.useHTTPS
+                ? SocketFactory.createSslServerSocket(context.port, context.sslClientAuth, context.sslParameterClassName)
+                : SocketFactory.createServerSocket(context.port);
         theService = new SocketService(new FitNesseServer(context), false, serverSocket);
       }
       return true;

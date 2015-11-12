@@ -6,11 +6,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,34 +23,22 @@ public class SocketService {
   private final ExecutorService executorService = new ForkJoinPool();
   private volatile boolean everRan = false;
 
-  public SocketService(int port, boolean useHTTPS, SocketServer server, String sslParameterClassName ) throws IOException {
-	    this(port, useHTTPS, server, false, sslParameterClassName);
-}
-  public SocketService(int port, SocketServer server) throws IOException {
-    this(port, false, server, false, null);
-  }
-  public SocketService(int port, SocketServer server, boolean daemon) throws IOException {
-	  this(port, false, server, daemon, null);
-  }
-  
-  public SocketService(int port, boolean useHTTPS, SocketServer server, boolean daemon, String sslParameterClassName) throws IOException {
-    this(server, daemon, SocketFactory.tryCreateServerSocket(port, useHTTPS, false,  sslParameterClassName));
-  }
-
   public SocketService(SocketServer server, boolean daemon, ServerSocket serverSocket) throws IOException {
     this.server = server;
     this.serverSocket = serverSocket;
     serviceThread = new Thread(
-            new Runnable() {
-              @Override
-              public void run() {
-                serviceThread();
-              }
-            }
+      new Runnable() {
+        @Override
+        public void run() {
+          serviceThread();
+        }
+      }
     );
     serviceThread.setDaemon(daemon);
     serviceThread.start();
   }
+
+  @Deprecated
   public int getPort() {
     return serverSocket.getLocalPort();
   }

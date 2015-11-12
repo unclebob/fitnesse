@@ -132,7 +132,7 @@ public class SlimService {
     this.slimServer = slimServer;
 
     try {
-      serverSocket = SocketFactory.tryCreateServerSocket(port, useSSL, useSSL, sslParameterClassName);
+      serverSocket = useSSL ? SocketFactory.createSslServerSocket(port, useSSL, sslParameterClassName) : SocketFactory.createServerSocket(port);
     } catch (java.lang.OutOfMemoryError e) {
       System.err.println("Out of Memory. Aborting.");
       e.printStackTrace();

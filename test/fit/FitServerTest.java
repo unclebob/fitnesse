@@ -208,7 +208,7 @@ public class FitServerTest {
   }
 
   private void establishConnection() throws Exception {
-    serverSocket = SocketFactory.tryCreateServerSocket(PORT_NUMBER);
+    serverSocket = SocketFactory.createServerSocket(PORT_NUMBER);
     socket = null;
 
     listenForConnectionSocket();

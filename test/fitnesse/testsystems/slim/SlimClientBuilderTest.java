@@ -99,7 +99,7 @@ public class SlimClientBuilderTest {
   public void createSlimServiceFailsFastWhenSlimPortIsNotAvailable() throws Exception {
     final int slimServerPort = 10258;
     Descriptor descriptor = mock(Descriptor.class);
-    ServerSocket slimSocket = SocketFactory.tryCreateServerSocket(slimServerPort);
+    ServerSocket slimSocket = SocketFactory.createServerSocket(slimServerPort);
     try {
       InProcessSlimClientBuilder sys = new InProcessSlimClientBuilder(descriptor);
       String[] slimArguments = new String[] { Integer.toString(slimServerPort) };

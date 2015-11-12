@@ -37,14 +37,19 @@ public class SocketServiceTest {
 
   @Test
   public void testNoConnections() throws Exception {
-    ss = new SocketService(PORT_NUMBER, connectionCounter);
+    SocketServer connectionCounter1 = this.connectionCounter;
+    ss = createSocketService(connectionCounter1);
     ss.close();
     assertEquals(0, connections);
   }
 
+  public SocketService createSocketService(SocketServer socketServer) throws IOException {
+    return new SocketService(socketServer, false, SocketFactory.createServerSocket(PORT_NUMBER));
+  }
+
   @Test
   public void testOneConnection() throws Exception {
-    ss = new SocketService(PORT_NUMBER, connectionCounter);
+    ss = createSocketService(connectionCounter);
     connect(PORT_NUMBER);
     ss.close();
     assertEquals(1, connections);
@@ -52,7 +57,7 @@ public class SocketServiceTest {
 
   @Test
   public void testManyConnections() throws Exception {
-    ss = new SocketService(PORT_NUMBER, connectionCounter);
+    ss = createSocketService(connectionCounter);
     for (int i = 0; i < 10; i++)
       connect(PORT_NUMBER);
     ss.close();
@@ -61,7 +66,7 @@ public class SocketServiceTest {
 
   @Test
   public void testSendMessage() throws Exception {
-    ss = new SocketService(PORT_NUMBER, new HelloService());
+    ss = createSocketService(new HelloService());
     Socket s = new Socket("localhost", PORT_NUMBER);
     BufferedReader br = GetBufferedReader(s);
     String answer = br.readLine();
@@ -72,7 +77,7 @@ public class SocketServiceTest {
 
   @Test
   public void testReceiveMessage() throws Exception {
-    ss = new SocketService(PORT_NUMBER, new EchoService());
+    ss = createSocketService(new EchoService());
     Socket s = new Socket("localhost", PORT_NUMBER);
     BufferedReader br = GetBufferedReader(s);
     PrintStream ps = GetPrintStream(s);
@@ -85,7 +90,7 @@ public class SocketServiceTest {
 
   @Test
   public void testMultiThreaded() throws Exception {
-    ss = new SocketService(PORT_NUMBER, new EchoService());
+    ss = createSocketService(new EchoService());
     Socket s = new Socket("localhost", PORT_NUMBER);
     BufferedReader br = GetBufferedReader(s);
     PrintStream ps = GetPrintStream(s);
