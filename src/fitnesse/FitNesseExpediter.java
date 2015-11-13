@@ -20,8 +20,16 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.GregorianCalendar;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static java.lang.String.format;
 
 public class FitNesseExpediter implements ResponseSender {
   private static final Logger LOG = Logger.getLogger(FitNesseExpediter.class.getName());
@@ -33,9 +41,7 @@ public class FitNesseExpediter implements ResponseSender {
   private Response response;
   private final FitNesseContext context;
   protected long requestParsingTimeLimit;
-  private long requestProgress;
-  private long requestParsingDeadline;
-  private volatile boolean hasError;
+  private final ExecutorService executorService = new ForkJoinPool(1);
 
   public FitNesseExpediter(Socket s, FitNesseContext context) throws IOException {
     this.context = context;
@@ -97,33 +103,40 @@ public class FitNesseExpediter implements ResponseSender {
     return request;
   }
 
-  public void sendResponse() throws IOException {
+  private void sendResponse() throws IOException {
     response.sendTo(this);
   }
 
-  private Response makeResponse(Request request) throws SocketException {
+  private Response makeResponse(final Request request) throws SocketException {
     try {
-      // TODO: change to Future with ExecutionService
-      Thread parseThread = createParsingThread(request);
-      parseThread.start();
+      executorService.submit(new Callable<Request>() {
+        @Override
+        public Request call() throws Exception {
+          request.parse();
+          return request;
+        }
+      }).get(requestParsingTimeLimit, TimeUnit.MILLISECONDS);
 
-      waitForRequest(request);
-      if (!hasError) {
+      if (request.hasBeenParsed()) {
         if (context.contextRoot.equals(request.getRequestUri() + "/")) {
           response = new SimpleResponse();
           response.redirect(context.contextRoot, "");
         } else {
           response = createGoodResponse(request);
         }
+      } else {
+        reportError(400, "The request could not be parsed.");
       }
-    }
-    catch (SocketException se) {
+    } catch (SocketException se) {
       throw se;
+    } catch (TimeoutException e) {
+      reportError(408, "The client request has been unproductive for too long. It has timed out and will no longer be processed.");
+    } catch (HttpException e) {
+      reportError(400, e.getMessage());
+    } catch (Exception e) {
+      reportError(e);
     }
-    catch (Exception e) {
-      LOG.log(Level.WARNING, "Unable to handle request", e);
-      response = new ErrorResponder(e).makeResponse(context, request);
-    }
+
     // Add those as default headers?
     response.addHeader("Server", "FitNesse-" + context.version);
     response.addHeader("Connection", "close");
@@ -138,58 +151,10 @@ public class FitNesseExpediter implements ResponseSender {
     return responder.makeResponse(context, request);
   }
 
-  private void waitForRequest(Request request) throws InterruptedException {
-    long now = Clock.currentTimeInMillis();
-    requestParsingDeadline = now + requestParsingTimeLimit;
-    requestProgress = 0;
-    while (!hasError && !request.hasBeenParsed()) {
-      Thread.sleep(10);
-      if (timeIsUp() && parsingIsUnproductive(request))
-        reportError(408, "The client request has been unproductive for too long. It has timed out and will no longer be processed.");
-    }
-  }
-
-  private boolean parsingIsUnproductive(Request request) {
-    long updatedRequestProgress = request.numberOfBytesParsed();
-    if (updatedRequestProgress > requestProgress) {
-      requestProgress = updatedRequestProgress;
-      return false;
-    } else
-      return true;
-  }
-
-  private boolean timeIsUp() {
-    long now = Clock.currentTimeInMillis();
-    if (now > requestParsingDeadline) {
-      requestParsingDeadline = now + requestParsingTimeLimit;
-      return true;
-    } else
-      return false;
-  }
-
-  private Thread createParsingThread(final Request request) {
-    Thread parseThread = new Thread() {
-      @Override
-      public synchronized void run() {
-        try {
-          request.parse();
-        }
-        catch (HttpException e) {
-          reportError(400, e.getMessage());
-        }
-        catch (Exception e) {
-          reportError(e);
-        }
-      }
-    };
-    return parseThread;
-  }
-
   private void reportError(int status, String message) {
     try {
       response = new ErrorResponder(message).makeResponse(context, request);
       response.setStatus(status);
-      hasError = true;
     }
     catch (Exception e) {
       LOG.log(Level.WARNING, "Can not report error (status = " + status + ", message = " + message + ")", e);
@@ -198,7 +163,6 @@ public class FitNesseExpediter implements ResponseSender {
 
   private void reportError(Exception e) {
     response = new ErrorResponder(e).makeResponse(context, request);
-    hasError = true;
   }
 
   public static LogData makeLogData(Socket socket, Request request, Response response) {

@@ -2,8 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.PipedInputStream;
@@ -106,7 +106,7 @@ public class FitNesseExpediterTest {
   }
 
   @Test
-  public void testSlowButCompleteRequest() throws Exception {
+  public void slowButCompleteRequestCanTimeOut() throws Exception {
     final FitNesseExpediter sender = preparePipedFitNesseExpediter();
 
     Thread senderThread = makeSendingThread(sender);
@@ -114,6 +114,9 @@ public class FitNesseExpediterTest {
     Thread parseResponseThread = makeParsingThread();
     parseResponseThread.start();
 
+    boolean pipeHasBeenClosed = false;
+
+    // 22 bytes * 20ms sleep => 440 ms for the whole request. Time limit is set to 200ms.
     byte[] bytes = "GET /root HTTP/1.1\r\n\r\n".getBytes();
     try {
       for (byte aByte : bytes) {
@@ -123,11 +126,14 @@ public class FitNesseExpediterTest {
       }
     }
     catch (IOException pipedClosed) {
+      pipeHasBeenClosed = true;
     }
 
     parseResponseThread.join();
 
-    assertEquals(200, response.getStatus());
+    assertTrue(pipeHasBeenClosed);
+    assertEquals(408, response.getStatus());
+    assertThat(response.getBody(), containsString("The client request has been unproductive for too long. It has timed out and will no longer be processed."));
   }
 
   private Thread makeSendingThread(final FitNesseExpediter sender) {
