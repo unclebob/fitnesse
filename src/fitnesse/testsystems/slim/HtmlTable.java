@@ -358,21 +358,18 @@ public class HtmlTable implements Table {
               return String.format("[%s] <span class=\"fail\">expected [%s]</span>",
                   asHtml(testResult.getActual()),
                   asHtml(testResult.getExpected()));
-            } if (qualifiesAsSymbolReplacement(testResult.getExpected())) {
-              String[] symbol = parseSymbol(testResult.getExpected());
-              return String.format("[%s] <span class=\"fail\">expected [%s]</span>",
-                  HtmlDiffUtil.buildActual(testResult.getActual(), symbol[1]),
-                  HtmlUtil.escapeHTML(symbol[0]) + 
-                  new HtmlDiffUtil.ExpectedBuilder(testResult.getActual(), symbol[1])
-                        .setOpeningTag("</span><span class=\"diff\">")
-                        .setClosingTag("</span><span class=\"fail\">").build() + 
-                  HtmlUtil.escapeHTML(symbol[2]));
             } else {
+              String[] actual = parseSymbol(testResult.getActual());
+              String[] expected = parseSymbol(testResult.getExpected());
               return String.format("[%s] <span class=\"fail\">expected [%s]</span>",
-                  HtmlDiffUtil.buildActual(testResult.getActual(), testResult.getExpected()),
-                new HtmlDiffUtil.ExpectedBuilder(testResult.getActual(), testResult.getExpected())
-                        .setOpeningTag("</span><span class=\"diff\">")
-                        .setClosingTag("</span><span class=\"fail\">").build());
+                HtmlUtil.escapeHTML(actual[0]) +
+                  HtmlDiffUtil.buildActual(actual[1], expected[1]) +
+                  HtmlUtil.escapeHTML(actual[2]),
+                HtmlUtil.escapeHTML(expected[0]) + 
+                  new HtmlDiffUtil.ExpectedBuilder(testResult.getActual(), expected[1])
+                    .setOpeningTag("</span><span class=\"diff\">")
+                    .setClosingTag("</span><span class=\"fail\">").build() + 
+                  HtmlUtil.escapeHTML(expected[2]));
             }
           } else if ((testResult.hasActual() || testResult.hasExpected()) && testResult.hasMessage()) {
             return String.format("[%s] <span class=\"fail\">%s</span>",
@@ -426,6 +423,8 @@ public class HtmlTable implements Table {
       symbols[0] = matcher.group(1);
       symbols[1] = matcher.group(2);
       symbols[2] = matcher.group(3);
+    } else {
+      symbols[1] = text;
     }
     return symbols;
   }
