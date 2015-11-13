@@ -40,7 +40,7 @@ public class FitNesseExpediter implements ResponseSender {
   private Request request;
   private Response response;
   private final FitNesseContext context;
-  protected long requestParsingTimeLimit;
+  private long requestParsingTimeLimit;
   private final ExecutorService executorService = new ForkJoinPool(1);
 
   public FitNesseExpediter(Socket s, FitNesseContext context) throws IOException {
