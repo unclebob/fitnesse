@@ -31,11 +31,9 @@ public class SlimServer implements SocketServer {
   public static final String EXCEPTION_STOP_TEST_TAG = "__EXCEPTION__:ABORT_SLIM_TEST:";
   public static final String EXCEPTION_STOP_SUITE_TAG = "__EXCEPTION__:ABORT_SLIM_SUITE:";
 
-  private final boolean verbose;
   private final SlimFactory slimFactory;
 
-  public SlimServer(boolean verbose, SlimFactory slimFactory) {
-    this.verbose = verbose;
+  public SlimServer(SlimFactory slimFactory) {
     this.slimFactory = slimFactory;
   }
 
@@ -64,7 +62,7 @@ public class SlimServer implements SocketServer {
   }
 
   private void tryProcessInstructions(SlimStreamReader reader, OutputStream writer) throws IOException {
-    ListExecutor executor = slimFactory.getListExecutor(verbose);
+    ListExecutor executor = slimFactory.getListExecutor();
     String header = SlimVersion.SLIM_HEADER + SlimVersion.VERSION + "\n";
     SlimStreamReader.sendSlimHeader(writer, header);
 
