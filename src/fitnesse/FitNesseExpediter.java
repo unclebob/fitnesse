@@ -39,16 +39,20 @@ public class FitNesseExpediter implements ResponseSender {
   private final OutputStream output;
   private final FitNesseContext context;
   private final ExecutorService executorService = new ForkJoinPool(1);
-  private long requestParsingTimeLimit;
+  private final long requestParsingTimeLimit;
   private Request request;
   private Response response;
 
-  public FitNesseExpediter(Socket s, FitNesseContext context) throws IOException {
+  public FitNesseExpediter(Socket socket, FitNesseContext context) throws IOException {
+    this(socket, context, 10000);
+  }
+
+  public FitNesseExpediter(Socket socket, FitNesseContext context, long requestParsingTimeLimit) throws IOException {
     this.context = context;
-    socket = s;
-    input = s.getInputStream();
-    output = s.getOutputStream();
-    requestParsingTimeLimit = 10000;
+    this.socket = socket;
+    input = socket.getInputStream();
+    output = socket.getOutputStream();
+    this.requestParsingTimeLimit = requestParsingTimeLimit;
   }
 
   public void start() {
@@ -65,14 +69,6 @@ public class FitNesseExpediter implements ResponseSender {
       // This catch is intentional, since it's the last point where we can catch exceptions that occur in this thread.
       LOG.log(Level.WARNING, "Unexpected exception", e);
     }
-  }
-
-  public void setRequestParsingTimeLimit(long t) {
-    requestParsingTimeLimit = t;
-  }
-
-  public long getRequestParsingTimeLimit() {
-    return requestParsingTimeLimit;
   }
 
   @Override

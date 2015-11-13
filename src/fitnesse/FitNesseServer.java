@@ -24,8 +24,7 @@ public class FitNesseServer implements SocketServer {
 
   public void serve(Socket s, long requestTimeout) {
     try {
-      FitNesseExpediter sender = new FitNesseExpediter(s, context);
-      sender.setRequestParsingTimeLimit(requestTimeout);
+      FitNesseExpediter sender = new FitNesseExpediter(s, context, requestTimeout);
       sender.start();
     }
     catch (Exception e) {

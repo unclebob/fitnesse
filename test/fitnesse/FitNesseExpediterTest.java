@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class FitNesseExpediterTest {
+  public static final int REQUEST_PARSING_TIME_LIMIT = 200;
   private FitNesseExpediter expediter;
   private MockSocket socket;
   private FitNesseContext context;
@@ -70,7 +71,7 @@ public class FitNesseExpediterTest {
     senderThread.start();
     Thread parseResponseThread = makeParsingThread();
     parseResponseThread.start();
-    Thread.sleep(sender.getRequestParsingTimeLimit() + 100);
+    Thread.sleep(REQUEST_PARSING_TIME_LIMIT + 100);
 
     parseResponseThread.join();
 
@@ -83,8 +84,7 @@ public class FitNesseExpediterTest {
     clientInput = new PipedInputStream();
     PipedOutputStream socketOutput = new PipedOutputStream(clientInput);
     MockSocket socket = new MockSocket(socketInput, socketOutput);
-    final FitNesseExpediter sender = new FitNesseExpediter(socket, context);
-    sender.setRequestParsingTimeLimit(200);
+    final FitNesseExpediter sender = new FitNesseExpediter(socket, context, REQUEST_PARSING_TIME_LIMIT);
     return sender;
   }
 
