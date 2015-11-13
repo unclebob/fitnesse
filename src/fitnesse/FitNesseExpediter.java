@@ -75,7 +75,7 @@ public class FitNesseExpediter implements ResponseSender {
       output.flush();
     }
     catch (IOException e) {
-      LOG.log(Level.INFO, "Output stream closed unexpectedly (Stop button pressed?)", e);
+      LOG.log(Level.INFO, format("Output stream closed unexpectedly: %s (Stop button pressed?)", e.getMessage()));
     }
   }
 
