@@ -45,13 +45,6 @@ public class FitNesse {
       filesDir.mkdir();
   }
 
-  public static void main(String[] args) throws Exception {
-    System.out.println("DEPRECATED:  use java -jar fitnesse.jar or java -cp fitnesse.jar fitnesseMain.FitNesseMain");
-    Class<?> mainClass = Class.forName("fitnesseMain.FitNesseMain");
-    Method mainMethod = mainClass.getMethod("main", String[].class);
-    mainMethod.invoke(null, new Object[]{args});
-  }
-
   public boolean start() {
     if (makeDirs) {
       establishRequiredDirectories();
