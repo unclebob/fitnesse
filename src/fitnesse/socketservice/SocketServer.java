@@ -14,8 +14,7 @@ public interface SocketServer {
 
   void serve(Socket s) throws IOException;
 
-  //TODO: Hm, how does static inner classes in interfaces work...
-  static class StreamUtility {
+  class StreamUtility {
     public static PrintStream GetPrintStream(Socket s) throws IOException {
       OutputStream os = s.getOutputStream();
       return new PrintStream(os);
