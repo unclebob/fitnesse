@@ -37,11 +37,11 @@ public class FitNesseExpediter implements ResponseSender {
   private final Socket socket;
   private final InputStream input;
   private final OutputStream output;
+  private final FitNesseContext context;
+  private final ExecutorService executorService = new ForkJoinPool(1);
+  private long requestParsingTimeLimit;
   private Request request;
   private Response response;
-  private final FitNesseContext context;
-  private long requestParsingTimeLimit;
-  private final ExecutorService executorService = new ForkJoinPool(1);
 
   public FitNesseExpediter(Socket s, FitNesseContext context) throws IOException {
     this.context = context;
@@ -53,9 +53,10 @@ public class FitNesseExpediter implements ResponseSender {
 
   public void start() {
     try {
-      Request request = makeRequest();
-      makeResponse(request);
-      sendResponse();
+      // Storing them in instance fields, since we need info for logging when the connection is closed.
+      request = makeRequest();
+      response = makeResponse(request);
+      sendResponse(response);
     }
     catch (SocketException se) {
       // can be thrown by makeResponse or sendResponse.
@@ -96,18 +97,19 @@ public class FitNesseExpediter implements ResponseSender {
     }
   }
 
-  public Request makeRequest() {
-    request = new Request(input);
+  private Request makeRequest() {
+    Request request = new Request(input);
     request.setPeerDn(SocketFactory.peerDn(socket));
     request.setContextRoot(context.contextRoot);
     return request;
   }
 
-  private void sendResponse() throws IOException {
+  private void sendResponse(Response response) throws IOException {
     response.sendTo(this);
   }
 
   private Response makeResponse(final Request request) throws SocketException {
+    Response response;
     try {
       executorService.submit(new Callable<Request>() {
         @Override
@@ -125,16 +127,16 @@ public class FitNesseExpediter implements ResponseSender {
           response = createGoodResponse(request);
         }
       } else {
-        reportError(400, "The request could not be parsed.");
+        response = reportError(request, 400, "The request could not be parsed.");
       }
     } catch (SocketException se) {
       throw se;
     } catch (TimeoutException e) {
-      reportError(408, "The client request has been unproductive for too long. It has timed out and will no longer be processed.");
+      response = reportError(request, 408, "The client request has been unproductive for too long. It has timed out and will no longer be processed.");
     } catch (HttpException e) {
-      reportError(400, e.getMessage());
+      response = reportError(request, 400, e.getMessage());
     } catch (Exception e) {
-      reportError(e);
+      response = reportError(request, e);
     }
 
     // Add those as default headers?
@@ -151,30 +153,22 @@ public class FitNesseExpediter implements ResponseSender {
     return responder.makeResponse(context, request);
   }
 
-  private void reportError(int status, String message) {
-    try {
-      response = new ErrorResponder(message).makeResponse(context, request);
-      response.setStatus(status);
-    }
-    catch (Exception e) {
-      LOG.log(Level.WARNING, "Can not report error (status = " + status + ", message = " + message + ")", e);
-    }
+  private Response reportError(Request request, int status, String message) {
+    return new ErrorResponder(message, status).makeResponse(context, request);
   }
 
-  private void reportError(Exception e) {
-    response = new ErrorResponder(e).makeResponse(context, request);
+  private Response reportError(Request request, Exception e) {
+    return new ErrorResponder(e).makeResponse(context, request);
   }
 
   public static LogData makeLogData(Socket socket, Request request, Response response) {
-    LogData data = new LogData(
+    return new LogData(
         ((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress().getHostAddress(),
         new GregorianCalendar(),
         request.getRequestLine(),
         response.getStatus(),
         response.getContentSize(),
         request.getAuthorizationUsername());
-
-    return data;
   }
 
   public void log(Socket s, Request request, Response response) {
