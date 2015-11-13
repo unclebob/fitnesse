@@ -8,6 +8,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.util.concurrent.ForkJoinPool;
 
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.UnauthorizedResponder;
@@ -29,14 +30,16 @@ public class FitNesseExpediterTest {
   private PipedInputStream clientInput;
   private PipedOutputStream clientOutput;
   private ResponseParser response;
+  private java.util.concurrent.ExecutorService executorService;
 
   @Before
   public void setUp() throws Exception {
     context = FitNesseUtil.makeTestContext();
+    executorService = new ForkJoinPool(2);
     WikiPage root = context.getRootPage();
     root.addChildPage("FrontPage");
     socket = new MockSocket();
-    expediter = new FitNesseExpediter(socket, context);
+    expediter = new FitNesseExpediter(socket, context, executorService);
   }
 
   @Test
@@ -44,7 +47,7 @@ public class FitNesseExpediterTest {
     context = FitNesseUtil.makeTestContext(new StoneWallAuthenticator());
     WikiPage root = context.getRootPage();
     root.addChildPage("FrontPage");
-    expediter = new FitNesseExpediter(socket, context);
+    expediter = new FitNesseExpediter(socket, context, executorService);
     MockRequest request = new MockRequest();
     Response response = expediter.createGoodResponse(request);
     assertEquals(401, response.getStatus());
@@ -84,8 +87,7 @@ public class FitNesseExpediterTest {
     clientInput = new PipedInputStream();
     PipedOutputStream socketOutput = new PipedOutputStream(clientInput);
     MockSocket socket = new MockSocket(socketInput, socketOutput);
-    final FitNesseExpediter sender = new FitNesseExpediter(socket, context, REQUEST_PARSING_TIME_LIMIT);
-    return sender;
+    return new FitNesseExpediter(socket, context, executorService, REQUEST_PARSING_TIME_LIMIT);
   }
 
   @Test
@@ -137,22 +139,21 @@ public class FitNesseExpediterTest {
   }
 
   private Thread makeSendingThread(final FitNesseExpediter sender) {
-    Thread senderThread = new Thread(new Runnable() {
+    return new Thread(new Runnable() {
       @Override
       public void run() {
         try {
-          sender.start();
+          sender.run();
         }
         catch (Exception e) {
           e.printStackTrace();
         }
       }
     });
-    return senderThread;
   }
 
   private Thread makeParsingThread() {
-    Thread parseResponseThread = new Thread(new Runnable() {
+    return new Thread(new Runnable() {
       @Override
       public void run() {
         try {
@@ -163,7 +164,6 @@ public class FitNesseExpediterTest {
         }
       }
     });
-    return parseResponseThread;
   }
 
   class StoneWallAuthenticator extends Authenticator {

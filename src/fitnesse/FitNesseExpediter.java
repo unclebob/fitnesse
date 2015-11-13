@@ -19,6 +19,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -31,31 +32,33 @@ import java.util.logging.Logger;
 
 import static java.lang.String.format;
 
-public class FitNesseExpediter implements ResponseSender {
+public class FitNesseExpediter implements ResponseSender, Runnable {
   private static final Logger LOG = Logger.getLogger(FitNesseExpediter.class.getName());
 
   private final Socket socket;
   private final InputStream input;
   private final OutputStream output;
   private final FitNesseContext context;
-  private final ExecutorService executorService = new ForkJoinPool(1);
+  private final ExecutorService executorService;
   private final long requestParsingTimeLimit;
   private Request request;
   private Response response;
 
-  public FitNesseExpediter(Socket socket, FitNesseContext context) throws IOException {
-    this(socket, context, 10000);
+  public FitNesseExpediter(Socket socket, FitNesseContext context, ExecutorService executorService) throws IOException {
+    this(socket, context, executorService, 10000);
   }
 
-  public FitNesseExpediter(Socket socket, FitNesseContext context, long requestParsingTimeLimit) throws IOException {
+  public FitNesseExpediter(Socket socket, FitNesseContext context, ExecutorService executorService, long requestParsingTimeLimit) throws IOException {
     this.context = context;
     this.socket = socket;
+    this.executorService = executorService;
     input = socket.getInputStream();
     output = socket.getOutputStream();
     this.requestParsingTimeLimit = requestParsingTimeLimit;
   }
 
-  public void start() {
+  @Override
+  public void run() {
     try {
       // Storing them in instance fields, since we need info for logging when the connection is closed.
       request = makeRequest();

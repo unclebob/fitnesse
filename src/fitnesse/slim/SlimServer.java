@@ -13,6 +13,11 @@ import java.net.Socket;
 import java.util.List;
 
 
+/**
+ * Handle Slim requests.
+ *
+ * Note this class is re-entrant (do not keep instance state!)
+ */
 public class SlimServer implements SocketServer {
   public static final String MALFORMED_INSTRUCTION = "MALFORMED_INSTRUCTION";
   public static final String NO_CLASS = "NO_CLASS";
@@ -26,11 +31,8 @@ public class SlimServer implements SocketServer {
   public static final String EXCEPTION_STOP_TEST_TAG = "__EXCEPTION__:ABORT_SLIM_TEST:";
   public static final String EXCEPTION_STOP_SUITE_TAG = "__EXCEPTION__:ABORT_SLIM_SUITE:";
 
-  private SlimStreamReader reader;
-  private OutputStream writer;
-  private ListExecutor executor;
-  private boolean verbose;
-  private SlimFactory slimFactory;
+  private final boolean verbose;
+  private final SlimFactory slimFactory;
 
   public SlimServer(boolean verbose, SlimFactory slimFactory) {
     this.verbose = verbose;
@@ -39,35 +41,39 @@ public class SlimServer implements SocketServer {
 
   @Override
   public void serve(Socket s) {
+    SocketFactory.printSocketInfo(s);
+    SlimStreamReader reader = null;
+    OutputStream writer = null;
     try {
-      tryProcessInstructions(s);
+      reader = SlimStreamReader.getReader(s);
+      writer = SlimStreamReader.getByteWriter(s);
+      tryProcessInstructions(reader, writer);
     } catch (Throwable e) { // NOSONAR
       // Intentional catch-all, since this is the last point we can communicate failures back to FitNesse
       System.err.println("Error while executing SLIM instructions: " + e.getMessage());
       e.printStackTrace(System.err);
     } finally {
       slimFactory.stop();
-      close();
+      try {
+        if (reader != null) reader.close();
+        if (writer != null) writer.close();
+      } catch (Exception e) {
+
+      }
     }
   }
 
-  private void tryProcessInstructions(Socket s) throws IOException {
-    initialize(s);
-    boolean more = true;
-    while (more)
-      more = processOneSetOfInstructions();
-  }
-
-  private void initialize(Socket s) throws IOException {
-    SocketFactory.printSocketInfo(s);
-    reader = SlimStreamReader.getReader(s);
-    writer = SlimStreamReader.getByteWriter(s);
-    executor = slimFactory.getListExecutor(verbose);
+  private void tryProcessInstructions(SlimStreamReader reader, OutputStream writer) throws IOException {
+    ListExecutor executor = slimFactory.getListExecutor(verbose);
     String header = SlimVersion.SLIM_HEADER + SlimVersion.VERSION + "\n";
     SlimStreamReader.sendSlimHeader(writer, header);
+
+    boolean more = true;
+    while (more)
+      more = processOneSetOfInstructions(reader, writer, executor);
   }
 
-  private boolean processOneSetOfInstructions() throws IOException {
+  private boolean processOneSetOfInstructions(SlimStreamReader reader, OutputStream writer, ListExecutor executor) throws IOException {
     String instructions = reader.getSlimMessage();
     // Not sure why this is need but we keep it.
     if (instructions == null) return true;
@@ -77,25 +83,16 @@ public class SlimServer implements SocketServer {
     }
 
     // Do some real work
-    String resultString = executeInstructions(instructions);
+    String resultString = executeInstructions(executor, instructions);
     SlimStreamReader.sendSlimMessage(writer, resultString);
     return true;
   }
 
-  private String executeInstructions(String instructions) {
+  private String executeInstructions(ListExecutor executor, String instructions) {
     List<Object> statements = SlimDeserializer.deserialize(instructions);
     List<Object> results = executor.execute(statements);
     String resultString = SlimSerializer.serialize(results);
     return resultString;
-  }
-
-  private void close() {
-    try {
-      reader.close();
-      writer.close();
-    } catch (Exception e) {
-
-    }
   }
 
 }

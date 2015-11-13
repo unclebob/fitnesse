@@ -9,6 +9,7 @@ import fitnesse.http.Response;
 import fitnesse.socketservice.SocketFactory;
 import fitnesse.socketservice.SocketService;
 import fitnesse.util.MockSocket;
+import fitnesse.util.SerialExecutorService;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +17,12 @@ import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.net.BindException;
 import java.net.ServerSocket;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,9 +31,17 @@ public class FitNesse {
   private final FitNesseContext context;
   private boolean makeDirs = true;
   private volatile SocketService theService;
+  private ExecutorService executorService;
 
   public FitNesse(FitNesseContext context) {
     this.context = context;
+    RejectedExecutionHandler rejectionHandler = new RejectedExecutionHandler() {
+      @Override
+      public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+        LOG.log(Level.WARNING, "Could not handle request. Thread pool is exhausted.");
+      }
+    };
+    this.executorService = new ThreadPoolExecutor(5, 100, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(2), rejectionHandler);
   }
 
   public FitNesse dontMakeDirs() {
@@ -54,7 +69,7 @@ public class FitNesse {
         ServerSocket serverSocket = context.useHTTPS
                 ? SocketFactory.createSslServerSocket(context.port, context.sslClientAuth, context.sslParameterClassName)
                 : SocketFactory.createServerSocket(context.port);
-        theService = new SocketService(new FitNesseServer(context), false, serverSocket);
+        theService = new SocketService(new FitNesseServer(context, executorService), false, serverSocket);
       }
       return true;
     } catch (BindException e) {
@@ -80,7 +95,7 @@ public class FitNesse {
 
   public void executeSingleCommand(String command, OutputStream out) throws Exception {
     Request request = new MockRequestBuilder(command).noChunk().build();
-    FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(), context);
+    FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(), context, new SerialExecutorService());
     Response response = expediter.createGoodResponse(request);
     if (response.getStatus() != 200){
         throw new Exception("error loading page: " + response.getStatus());

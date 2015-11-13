@@ -8,6 +8,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.util.MockSocket;
+import fitnesse.util.SerialExecutorService;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPagePath;
 
@@ -34,7 +35,7 @@ public class ResponseRequester extends ColumnFixture {
     request.parseRequestUri("/" + uri);
     WikiPagePath path = PathParser.parse(request.getResource()); // uri;
     FitnesseFixtureContext.page = FitnesseFixtureContext.context.getRootPage().getPageCrawler().getPage(path);
-    FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(""), FitnesseFixtureContext.context);
+    FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(""), FitnesseFixtureContext.context, new SerialExecutorService());
     FitnesseFixtureContext.response = expediter.createGoodResponse(request);
     FitnesseFixtureContext.sender = new MockResponseSender();
     FitnesseFixtureContext.sender.doSending(FitnesseFixtureContext.response);
