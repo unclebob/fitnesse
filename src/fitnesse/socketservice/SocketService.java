@@ -6,12 +6,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Runs a separate service (thread) to handle new connections.
+ */
 public class SocketService {
   private static final Logger LOG = Logger.getLogger(SocketService.class.getName());
 
@@ -20,7 +20,6 @@ public class SocketService {
   private volatile boolean running = false;
   private final SocketServer server;
 
-  private final ExecutorService executorService = new ForkJoinPool();
   private volatile boolean everRan = false;
 
   public SocketService(SocketServer server, boolean daemon, ServerSocket serverSocket) throws IOException {
@@ -44,8 +43,6 @@ public class SocketService {
     serverSocket.close();
     try {
       serviceThread.join();
-      executorService.shutdown();
-      executorService.awaitTermination(5, TimeUnit.SECONDS);
     } catch (InterruptedException e) {
       LOG.log(Level.WARNING, "Thread joining interrupted", e);
     }
@@ -66,7 +63,7 @@ public class SocketService {
           SocketFactory.printSocketInfo(s);
         }
         everRan = true;
-        startServerThread(s);
+        server.serve(s);
       } catch (java.lang.OutOfMemoryError e) {
         LOG.log(Level.SEVERE, "Can't create new thread.  Out of Memory.  Aborting.", e);
         System.exit(99);
@@ -77,26 +74,4 @@ public class SocketService {
       }
     }
   }
-
-  private void startServerThread(Socket s) {
-    executorService.submit(new ServerRunner(s));
-  }
-
-  private class ServerRunner implements Runnable {
-    private Socket socket;
-
-    ServerRunner(Socket s) {
-      socket = s;
-    }
-
-    @Override
-    public void run() {
-      try {
-        server.serve(socket);
-      } catch (Exception e) {
-        LOG.log(Level.FINE, "Exception thrown while handling server request", e);
-      }
-    }
-  }
-
 }

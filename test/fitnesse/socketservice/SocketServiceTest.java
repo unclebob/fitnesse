@@ -13,6 +13,7 @@ import java.io.PrintStream;
 import java.net.Socket;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class SocketServiceTest {
@@ -86,30 +87,6 @@ public class SocketServiceTest {
     s.close();
     ss.close();
     assertEquals("MyMessage", answer);
-  }
-
-  @Test
-  public void testMultiThreaded() throws Exception {
-    ss = createSocketService(new EchoService());
-    Socket s = new Socket("localhost", PORT_NUMBER);
-    BufferedReader br = GetBufferedReader(s);
-    PrintStream ps = GetPrintStream(s);
-
-    Socket s2 = new Socket("localhost", PORT_NUMBER);
-    BufferedReader br2 = GetBufferedReader(s2);
-    PrintStream ps2 = GetPrintStream(s2);
-
-    ps2.println("MyMessage2");
-    String answer2 = br2.readLine();
-    s2.close();
-
-    ps.println("MyMessage1");
-    String answer = br.readLine();
-    s.close();
-
-    ss.close();
-    assertEquals("MyMessage2", answer2);
-    assertEquals("MyMessage1", answer);
   }
 
   private void connect(int port) {
