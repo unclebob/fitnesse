@@ -38,18 +38,14 @@ public class SlimServer implements SocketServer {
   }
 
   @Override
-  public void serve(Socket s) {
-    SocketFactory.printSocketInfo(s);
+  public void serve(Socket s) throws IOException {
+//    SocketFactory.printSocketInfo(s);
     SlimStreamReader reader = null;
     OutputStream writer = null;
     try {
       reader = SlimStreamReader.getReader(s);
       writer = SlimStreamReader.getByteWriter(s);
       tryProcessInstructions(reader, writer);
-    } catch (Throwable e) { // NOSONAR
-      // Intentional catch-all, since this is the last point we can communicate failures back to FitNesse
-      System.err.println("Error while executing SLIM instructions: " + e.getMessage());
-      e.printStackTrace(System.err);
     } finally {
       slimFactory.stop();
       try {

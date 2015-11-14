@@ -1,6 +1,7 @@
 package fitnesse.slim.instructions;
 
 import fitnesse.slim.SlimException;
+import fitnesse.slim.SlimServer;
 import fitnesse.slim.instructions.SystemExitSecurityManager.SystemExitException;
 
 public abstract class Instruction {

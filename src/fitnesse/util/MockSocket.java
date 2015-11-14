@@ -21,8 +21,8 @@ import util.FileUtil;
 public class MockSocket extends Socket {
   private static final Logger LOG = Logger.getLogger(MockSocket.class.getName());
 
-  InputStream input;
-  OutputStream output;
+  private final InputStream input;
+  private final OutputStream output;
   private String host;
   private boolean closed;
 
@@ -81,6 +81,6 @@ public class MockSocket extends Socket {
 
   @Override
   public SocketAddress getRemoteSocketAddress() {
-    return new InetSocketAddress(host, 123);
+    return new InetSocketAddress(host != null ? host : "internal", 123);
   }
 }

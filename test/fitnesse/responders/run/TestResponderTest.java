@@ -430,7 +430,7 @@ public class TestResponderTest {
     if (semaphore.exists())
       semaphore.delete();
 
-    new Thread(makeStopTestsRunnable(semaphore)).start();
+    new Thread(new WaitForSemaphoreThenStopProcesses(semaphore)).start();
 
     doSimpleRun(createAndWaitFixture(semaphoreName));
     assertHasRegexp("Testing was interrupted", results);
@@ -440,10 +440,6 @@ public class TestResponderTest {
   private String createAndWaitFixture(String semaphoreName) {
     return "!define TEST_SYSTEM {slim}\n" +
       "!|fitnesse.testutil.CreateFileAndWaitFixture|" + semaphoreName + "|\n";
-  }
-
-  private Runnable makeStopTestsRunnable(File semaphore) {
-    return new WaitForSemaphoreThenStopProcesses(semaphore);
   }
 
   private class WaitForSemaphoreThenStopProcesses implements Runnable {

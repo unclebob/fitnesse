@@ -78,6 +78,7 @@ public class SlimService {
   }
 
   // For testing only -- for now
+  @Deprecated
   public static synchronized int startWithFactoryAsync(SlimFactory slimFactory, Options options) throws IOException {
     if (service != null && service.isAlive()) {
       service.interrupt();
@@ -100,6 +101,7 @@ public class SlimService {
   }
 
   // For testing, mainly.
+  @Deprecated
   public static void waitForServiceToStopAsync() throws InterruptedException {
     // wait for service to close.
     for (int i = 0; i < 1000; i++) {
