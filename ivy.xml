@@ -35,7 +35,7 @@
 		<dependency org="commons-lang" name="commons-lang" rev="2.6" conf="default,standalone,maven->default" />
 		<dependency org="org.json" name="json" rev="20140107" conf="default,standalone,maven->default" />
 		<dependency org="org.apache.ant" name="ant" rev="1.9.4" conf="default" transitive="false" />
-		<dependency org="com.googlecode.java-diff-utils" name="diffutils" rev="1.3.0" conf="default,slim,standalone,maven->default"/>
+		<dependency org="com.googlecode.java-diff-utils" name="diffutils" rev="1.3.0" conf="default,standalone,maven->default"/>
 		<dependency org="junit" name="junit" rev="4.12" conf="default,test->default" />
 		<!-- scope: test -->
 		<dependency org="org.mockito" name="mockito-core" rev="1.10.19" conf="test->default" />

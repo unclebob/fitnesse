@@ -20,7 +20,6 @@ import org.htmlparser.tags.TableRow;
 import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
 
-import fitnesse.html.HtmlDiffUtil;
 import fitnesse.html.HtmlUtil;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionResult;
