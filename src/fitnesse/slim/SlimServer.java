@@ -6,6 +6,7 @@ import fitnesse.slim.protocol.SlimDeserializer;
 import fitnesse.slim.protocol.SlimSerializer;
 import fitnesse.socketservice.SocketFactory;
 import fitnesse.socketservice.SocketServer;
+import util.FileUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -48,12 +49,8 @@ public class SlimServer implements SocketServer {
       tryProcessInstructions(reader, writer);
     } finally {
       slimFactory.stop();
-      try {
-        if (reader != null) reader.close();
-        if (writer != null) writer.close();
-      } catch (Exception e) {
-
-      }
+      FileUtil.close(reader);
+      FileUtil.close(writer);
     }
   }
 
