@@ -40,7 +40,7 @@ public class SlimServer implements SocketServer {
 
   @Override
   public void serve(Socket s) throws IOException {
-//    SocketFactory.printSocketInfo(s);
+    SocketFactory.printSocketInfo(s);
     SlimStreamReader reader = null;
     OutputStream writer = null;
     try {
@@ -82,8 +82,7 @@ public class SlimServer implements SocketServer {
   private String executeInstructions(ListExecutor executor, String instructions) {
     List<Object> statements = SlimDeserializer.deserialize(instructions);
     List<Object> results = executor.execute(statements);
-    String resultString = SlimSerializer.serialize(results);
-    return resultString;
+    return SlimSerializer.serialize(results);
   }
 
 }

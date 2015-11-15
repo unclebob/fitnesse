@@ -122,23 +122,30 @@ public final class SocketFactory {
 
   public static void printSocketInfo(Socket theSocket) {
 
+    if (LOG.isLoggable(Level.FINER)) {
+      LOG.log(Level.FINER, "Socket class: " + theSocket.getClass());
+      LOG.log(Level.FINER, "   Remote address = " + theSocket.getRemoteSocketAddress().toString());
+      LOG.log(Level.FINER, "   Local socket address = " + theSocket.getLocalSocketAddress().toString());
+    }
 
-    LOG.log(Level.FINER, "Socket class: " + theSocket.getClass());
-    LOG.log(Level.FINER, "   Remote address = " + theSocket.getRemoteSocketAddress().toString());
-    LOG.log(Level.FINER, "   Local socket address = " + theSocket.getLocalSocketAddress().toString());
-    LOG.log(Level.FINEST, "   Closed = " + theSocket.isClosed());
-    LOG.log(Level.FINEST, "   Connected = " + theSocket.isConnected());
-    LOG.log(Level.FINEST, "   Bound = " + theSocket.isBound());
-    LOG.log(Level.FINEST, "   isInputShutdown = " + theSocket.isInputShutdown());
-    LOG.log(Level.FINEST, "   isOutputShutdown = " + theSocket.isOutputShutdown());
+    if (LOG.isLoggable(Level.FINEST)) {
+      LOG.log(Level.FINEST, "   Closed = " + theSocket.isClosed());
+      LOG.log(Level.FINEST, "   Connected = " + theSocket.isConnected());
+      LOG.log(Level.FINEST, "   Bound = " + theSocket.isBound());
+      LOG.log(Level.FINEST, "   isInputShutdown = " + theSocket.isInputShutdown());
+      LOG.log(Level.FINEST, "   isOutputShutdown = " + theSocket.isOutputShutdown());
+    }
+
     if (isSSLSocket(theSocket)) {
       SSLSocket s = (SSLSocket) theSocket;
-      LOG.log(Level.FINEST, "   Need client authentication = " + s.getNeedClientAuth());
-      LOG.log(Level.FINEST, "   Want client authentication = " + s.getWantClientAuth());
-      LOG.log(Level.FINEST, "   Use client mode = " + s.getUseClientMode());
+      SSLSession ss = s.getSession();
 
-      try {
-        SSLSession ss = s.getSession();
+      if (LOG.isLoggable(Level.FINEST)) {
+        LOG.log(Level.FINEST, "   Need client authentication = " + s.getNeedClientAuth());
+
+        LOG.log(Level.FINEST, "   Want client authentication = " + s.getWantClientAuth());
+        LOG.log(Level.FINEST, "   Use client mode = " + s.getUseClientMode());
+
         LOG.log(Level.FINEST, "Session class: " + ss.getClass());
         LOG.log(Level.FINEST, "   ID is " + new BigInteger(ss.getId()));
         LOG.log(Level.FINEST, "   Session created in " + ss.getCreationTime());
@@ -146,18 +153,29 @@ public final class SocketFactory {
         LOG.log(Level.FINEST, "   Cipher suite = " + ss.getCipherSuite());
         LOG.log(Level.FINEST, "   Protocol = " + ss.getProtocol());
         LOG.log(Level.FINEST, "   LocalPrincipal = " + ss.getLocalPrincipal().getName());
-        LOG.log(Level.FINEST, "   PeerPrincipal = " + ss.getPeerPrincipal().getName());
-        LOG.log(Level.FINE, "   PeerName = " + peerName(s));
+        try {
+          LOG.log(Level.FINEST, "   PeerPrincipal = " + ss.getPeerPrincipal().getName());
+        } catch (SSLPeerUnverifiedException e) {
+          LOG.warning("Could not retrieve Peer principal information: " + e.getMessage());
+        }
+      }
 
-        Certificate[] cchain = ss.getPeerCertificates();
+      if (LOG.isLoggable(Level.FINE)) {
+        LOG.log(Level.FINE, "   PeerName = " + peerName(s));
+      }
+
+      if (LOG.isLoggable(Level.FINEST)) {
+        Certificate[] cchain = new Certificate[0];
+        try {
+          cchain = ss.getPeerCertificates();
+        } catch (SSLPeerUnverifiedException e) {
+          LOG.warning("Could not retrieve certeficate for peer: " + e.getMessage());
+        }
         LOG.log(Level.FINEST, "The Certificates used by peer");
         for (Certificate aCchain : cchain) {
           LOG.log(Level.FINEST, "   " + aCchain.toString());
           LOG.log(Level.FINEST, "   " + ((X509Certificate) aCchain).getSubjectDN());
         }
-
-      } catch (Exception e) {
-        LOG.warning(e.toString());
       }
     }
   }
