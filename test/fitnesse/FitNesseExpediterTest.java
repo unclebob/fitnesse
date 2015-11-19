@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.Executors;
 
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.UnauthorizedResponder;
@@ -35,7 +35,7 @@ public class FitNesseExpediterTest {
   @Before
   public void setUp() throws Exception {
     context = FitNesseUtil.makeTestContext();
-    executorService = new ForkJoinPool(2);
+    executorService = Executors.newFixedThreadPool(2);
     WikiPage root = context.getRootPage();
     root.addChildPage("FrontPage");
     socket = new MockSocket();

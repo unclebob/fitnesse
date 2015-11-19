@@ -2,6 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.BindException;
+import java.net.ServerSocket;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import fitnesse.http.MockRequestBuilder;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Request;
@@ -10,21 +23,6 @@ import fitnesse.socketservice.SocketFactory;
 import fitnesse.socketservice.SocketService;
 import fitnesse.util.MockSocket;
 import fitnesse.util.SerialExecutorService;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.reflect.Method;
-import java.net.BindException;
-import java.net.ServerSocket;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.RejectedExecutionHandler;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class FitNesse {
   private static final Logger LOG = Logger.getLogger(FitNesse.class.getName());
