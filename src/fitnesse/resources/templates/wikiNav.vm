@@ -50,7 +50,7 @@
    <li #group(3)><a href="${contextRoot}files" accesskey="f">Files</a></li>
   #end
   #if( $actions.withSearch )
-   <li#group(3)><a href="?searchForm" accesskey="s">Search</a></li>
+   <li#group(3)><a href="?responder=search" accesskey="s">Search</a></li>
   #end
   #if( $actions.withRecentChanges )
    <li#group(3)><a href="${contextRoot}RecentChanges" accesskey="">Recent Changes</a></li>

@@ -90,13 +90,15 @@ label {
     margin-left: 145px;
 }
 .propertiesPage .properties fieldset,
-.searchForm .properties fieldset {
+.searchForm .properties fieldset,
+.searchResults .properties fieldset {
     display: inline-block;
     vertical-align: top;
 	border: none;
 }
 .propertiesPage .properties label,
-.searchForm .properties label {
+.searchForm .properties label,
+.searchResults .properties label {
 	display: block;
     text-align: left;
 }

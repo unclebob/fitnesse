@@ -38,7 +38,7 @@ public class SearchFormResponder implements Responder {
     html.setPageTitle(new PageTitle("Search Form"));
     html.put("viewLocation", request.getResource());
     html.setNavTemplate("viewNav");
-    html.put("pageTypeAttributes", PageType.values());
+    html.put("pageTypeAttributes", PageType.valuesAsString());
     html.put("actionAttributes", SEARCH_ACTION_ATTRIBUTES);
     html.put("navigationAttributes", SEARCH_NAVIGATION_ATTRIBUTES);
     html.put("securityAttributes", SECURITY_ATTRIBUTES);

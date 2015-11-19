@@ -1,8 +1,5 @@
 package fitnesse.responders.search;
 
-import static fitnesse.responders.search.SearchFormResponder.SEARCH_ACTION_ATTRIBUTES;
-import static fitnesse.responders.search.SearchFormResponder.SEARCH_ATTRIBUTE_SKIP;
-import static fitnesse.responders.search.SearchFormResponder.SPECIAL_ATTRIBUTES;
 import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTE;
 import static fitnesse.wiki.PageData.PropertySUITES;
 import static fitnesse.wiki.PageData.SECURITY_ATTRIBUTES;
@@ -107,7 +104,7 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
 
     PageFinder finder = new AttributeWikiPageFinder(observer, pageTypes,
         attributes, suites);
-    finder.search(page);
+    finder.search(getSearchScope());
   }
 
 }

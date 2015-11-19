@@ -18,6 +18,6 @@ Examine the requested page to ensure the correct links are displayed in the corr
 |<li><a href="SomePage?whereUsed" accesskey="w">Where Used</a></li> |true    |
 |<li><a href="SomePage?versions" accesskey="v">Versions</a></li>    |true    |
 |<a href="/files" accesskey="f">Files</a></li>                      |true    |
-|<li><a href="?searchForm" accesskey="s">Search</a></li>            |true    |
+|<li><a href="?responder=search" accesskey="s">Search</a></li>            |true    |
 |<li><a href="/RecentChanges" accesskey="">Recent Changes</a></li>  |true    |
 |<a href="/FitNesse.UserGuide" accesskey="">User Guide</a></li>     |true    |
