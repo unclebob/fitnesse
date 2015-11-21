@@ -50,6 +50,7 @@ public class ConverterRegistry {
   }
 
   public static <T> Converter<T> getConverterForClass(Class<? extends T> clazz) {
+    // While the casting may be redundant, it is required for JDK9.
     return (Converter<T>) getConverterForClass(clazz, null);
   }
 
