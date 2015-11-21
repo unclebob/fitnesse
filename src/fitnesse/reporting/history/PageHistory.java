@@ -75,17 +75,16 @@ public class PageHistory extends PageHistoryReader{
   }
 
   public String getPageFileName(Date date){
-    if(pageFiles.get(date) != null)
-    return pageFiles.get(date).getName();
+    if (pageFiles.get(date) != null) {
+      return pageFiles.get(date).getName();
+    }
     return null;
   }
-
 
   private void setMaxAssertions(TestResultRecord summary) {
     int assertions = summary.getRight() + summary.getWrong() + summary.getExceptions();
     maxAssertions = Math.max(maxAssertions, assertions);
   }
-
 
   private void setMinMaxDate(Date date) {
     if (minDate == null)
