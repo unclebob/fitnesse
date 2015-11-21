@@ -50,7 +50,7 @@ public class ConverterRegistry {
   }
 
   public static <T> Converter<T> getConverterForClass(Class<? extends T> clazz) {
-    return getConverterForClass(clazz, null);
+    return (Converter<T>) getConverterForClass(clazz, null);
   }
 
   @SuppressWarnings({ "unchecked", "rawtypes" })
