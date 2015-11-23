@@ -12,7 +12,7 @@ import fitnesse.html.HtmlUtil;
 
 public class HtmlDiffUtil {
 
-  public static abstract class Builder {
+  public abstract static class Builder {
     protected List<Character> text;
     protected final Patch<Character> patch;
     protected final StringBuilder stringBuilder = new StringBuilder();

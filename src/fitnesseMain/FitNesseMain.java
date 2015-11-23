@@ -8,7 +8,6 @@ import fitnesse.Updater;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.reporting.ExitCodeListener;
 import fitnesse.updates.WikiContentUpdater;
-import fitnesse.util.StringUtils;
 
 import java.io.*;
 import java.util.logging.Level;
