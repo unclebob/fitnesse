@@ -7,14 +7,14 @@ If you were testing the division function of a calculator application, you might
 
 In !-FitNesse-!, tests are expressed as tables of '''input''' data and '''expected output''' data. Here is one way to specify a few division tests in !-FitNesse-!:
 
-| eg.Division |
-| numerator | denominator | quotient? |
-| 10 | 2 | 5.0 |
-| 12.6 | 3 | 4.2 |
-| 22 | 7 | ~=3.14 |
-| 9 | 3 | <5 |
-| 11 | 2 | 4<_<6 |
-| 100 | 4 | 33 |
+|eg.Division                    |
+|numerator|denominator|quotient?|
+|10       |2          |5.0      |
+|12.6     |3          |4.2      |
+|22       |7          |~=3.14   |
+|9        |3          |<5       |
+|11       |2          |4<_<6    |
+|100      |4          |33       |
 
 This style of !-FitNesse-! test table is called a [[Decision Table][<UserGuide.WritingAcceptanceTests.SliM.DecisionTable]], each row represents a complete scenario of example inputs and outputs. Here, the "numerator" and "denominator" columns are for inputs, and the question mark in the "quotient?" column tells !-FitNesse-! that this is our column of expected outputs. Notice our "10/2 = 5.0" scenario. Try reading it as a question: ''"If I give you a numerator of 10 and denominator of 2, do I get back a 5?"''
 
@@ -43,7 +43,7 @@ The wiki markup for our table above (with some omissions) looks like this:{{{|eg
 |numerator|denominator|quotient?|
 |10       |2          |5        |
 |12.6     |3          |4.2      |
-|100      |4          |33       |  }}}The vertical bars delimit table cells. For this table, there is not much more too it than that. You don't have to line up the vertical bars this way; we just do it to make it easier to read.
+|100      |4          |33       |}}}The vertical bars delimit table cells. For this table, there is not much more too it than that. You don't have to line up the vertical bars this way; we just do it to make it easier to read.
 
 Note that if you don't like mucking about with a markup language at all, you can create your test tables in a spreadsheet such as Excel, copy them to the clipboard, and use the '''Spreadsheet to Fitnesse''' button on the Edit page to have FitNesse format your table properly for you.
 
@@ -52,7 +52,7 @@ Note that if you don't like mucking about with a markup language at all, you can
 !3 Fixture Code
 What '''really''' happens when we click that test button? (Try clicking it again.) What gets run?
 
- * First, FitNesse submits the test table to [[Slim][<UserGuide.WritingAcceptanceTests.SliM]], the underlying test system (a test system is contains the code required to actually perform the tests).
+ * First, FitNesse submits the test table to [[Slim][<UserGuide.WritingAcceptanceTests.SliM]], the underlying test system (a test system contains the code required to actually perform the tests).
  * Slim looks for and runs the fixture code corresponding to the test table.
  * By design, the fixture code calls some underlying application code to do the real work, and report results back to the fixture
  * Fit gives Fitnesse back the results from running the fixture code
