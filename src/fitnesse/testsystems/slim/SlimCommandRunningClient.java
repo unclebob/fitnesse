@@ -95,7 +95,7 @@ public class SlimCommandRunningClient implements SlimClient {
       	throw new SlimError(slimErrorMessage);
       }
       try {
-        client = SocketFactory.tryCreateClientSocket(hostName, port, useSSL, sslParameterClassName);
+        client = SocketFactory.createClientSocket(hostName, port, useSSL, sslParameterClassName);
       } catch (IOException e) {
         if (Clock.currentTimeInMillis() > timeOut) {
           throw new SlimError("Error connecting to SLiM server on " + hostName + ":" + port, e);

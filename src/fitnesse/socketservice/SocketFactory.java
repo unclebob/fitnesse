@@ -28,31 +28,24 @@ public final class SocketFactory {
 
   }
 
-  public static ServerSocket tryCreateServerSocket(int port) throws IOException {
-    return tryCreateServerSocket(port, false, false, null);
+  public static ServerSocket createServerSocket(int port) throws IOException {
+    LOG.log(Level.FINER, "Creating plain socket on port: " + port);
+    return new ServerSocket(port);
   }
 
-
-  @SuppressWarnings("resource")
-  public static ServerSocket tryCreateServerSocket(int port, boolean useSSL, boolean needClientAuth, String sslParameterClassName) throws IOException {
+  public static ServerSocket createSslServerSocket(int port, boolean needClientAuth, String sslParameterClassName) throws IOException {
     ServerSocket socket;
-    if (!useSSL) {
-      LOG.log(Level.FINER, "Creating plain socket on port: " + port);
-      socket = new ServerSocket(port);
-    } else {
-      LOG.log(Level.FINER, "Creating SSL socket on port: " + port);
+    LOG.log(Level.FINER, "Creating SSL socket on port: " + port);
 
-      SSLServerSocketFactory ssf = SslParameters.setSslParameters(sslParameterClassName).createSSLServerSocketFactory();
-      socket = ssf.createServerSocket(port);
-      if (needClientAuth) {
-        ((SSLServerSocket) socket).setNeedClientAuth(true);
-      }
+    SSLServerSocketFactory ssf = SslParameters.setSslParameters(sslParameterClassName).createSSLServerSocketFactory();
+    socket = ssf.createServerSocket(port);
+    if (needClientAuth) {
+      ((SSLServerSocket) socket).setNeedClientAuth(true);
     }
-
     return socket;
   }
 
-  public static Socket tryCreateClientSocket(String hostName, int port, boolean useSSL, String sslParameterClassName) throws IOException {
+  public static Socket createClientSocket(String hostName, int port, boolean useSSL, String sslParameterClassName) throws IOException {
     if (!useSSL) {
       LOG.log(Level.FINER, "Creating plain client: " + hostName + ":" + port);
       return new Socket(hostName, port);

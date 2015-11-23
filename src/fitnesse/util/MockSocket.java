@@ -75,17 +75,6 @@ public class MockSocket extends Socket {
     return closed;
   }
 
-  public String getOutput() {
-    if (output instanceof ByteArrayOutputStream) {
-      try {
-        return ((ByteArrayOutputStream) output).toString(FileUtil.CHARENCODING);
-      } catch (UnsupportedEncodingException e) {
-        throw new RuntimeException(e);
-      }
-    } else
-      return "";
-  }
-
   public void setHost(String host) {
     this.host = host;
   }

@@ -3,6 +3,7 @@
 package fitnesse;
 
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,9 +13,11 @@ public class FitNesseServer implements SocketServer {
   private static final Logger LOG = Logger.getLogger(FitNesseServer.class.getName());
 
   private FitNesseContext context;
+  private ExecutorService executorService;
 
-  public FitNesseServer(FitNesseContext context) {
+  public FitNesseServer(FitNesseContext context, ExecutorService executorService) {
     this.context = context;
+    this.executorService = executorService;
   }
 
   @Override
@@ -24,9 +27,8 @@ public class FitNesseServer implements SocketServer {
 
   public void serve(Socket s, long requestTimeout) {
     try {
-      FitNesseExpediter sender = new FitNesseExpediter(s, context);
-      sender.setRequestParsingTimeLimit(requestTimeout);
-      sender.start();
+      FitNesseExpediter sender = new FitNesseExpediter(s, context, executorService, requestTimeout);
+      executorService.submit(sender);
     }
     catch (Exception e) {
       LOG.log(Level.SEVERE, "Error while serving socket " + s, e);

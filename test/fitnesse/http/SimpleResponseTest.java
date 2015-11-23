@@ -33,11 +33,6 @@ public class SimpleResponseTest implements ResponseSender {
     closed = true;
   }
 
-  @Override
-  public Socket getSocket() {
-    return null;
-  }
-
   @Before
   public void setUp() throws Exception {
     buffer = new StringBuffer();

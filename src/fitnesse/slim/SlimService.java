@@ -73,7 +73,7 @@ public class SlimService {
   }
 
   public static void startWithFactory(SlimFactory slimFactory, Options options) throws IOException {
-    SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interaction, options.daemon, options.useSSL, options.sslParameterClassName);
+    SlimService slimservice = new SlimService(slimFactory.getSlimServer(), options.port, options.interaction, options.daemon, options.useSSL, options.sslParameterClassName);
     slimservice.accept();
   }
 
@@ -83,7 +83,7 @@ public class SlimService {
       service.interrupt();
       throw new SlimError("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
     }
-    final SlimService slimservice = new SlimService(slimFactory.getSlimServer(options.verbose), options.port, options.interaction, options.daemon, options.useSSL, options.sslParameterClassName);
+    final SlimService slimservice = new SlimService(slimFactory.getSlimServer(), options.port, options.interaction, options.daemon, options.useSSL, options.sslParameterClassName);
     int actualPort = slimservice.getPort();
     service = new Thread() {
       @Override
@@ -132,7 +132,7 @@ public class SlimService {
     this.slimServer = slimServer;
 
     try {
-      serverSocket = SocketFactory.tryCreateServerSocket(port, useSSL, useSSL, sslParameterClassName);
+      serverSocket = useSSL ? SocketFactory.createSslServerSocket(port, useSSL, sslParameterClassName) : SocketFactory.createServerSocket(port);
     } catch (java.lang.OutOfMemoryError e) {
       System.err.println("Out of Memory. Aborting.");
       e.printStackTrace();

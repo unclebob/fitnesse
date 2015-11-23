@@ -2,6 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.BindException;
+import java.net.ServerSocket;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import fitnesse.http.MockRequestBuilder;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Request;
@@ -9,24 +22,24 @@ import fitnesse.http.Response;
 import fitnesse.socketservice.SocketFactory;
 import fitnesse.socketservice.SocketService;
 import fitnesse.util.MockSocket;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.reflect.Method;
-import java.net.BindException;
-import java.net.ServerSocket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import fitnesse.util.SerialExecutorService;
 
 public class FitNesse {
   private static final Logger LOG = Logger.getLogger(FitNesse.class.getName());
   private final FitNesseContext context;
   private boolean makeDirs = true;
   private volatile SocketService theService;
+  private ExecutorService executorService;
 
   public FitNesse(FitNesseContext context) {
     this.context = context;
+    RejectedExecutionHandler rejectionHandler = new RejectedExecutionHandler() {
+      @Override
+      public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+        LOG.log(Level.WARNING, "Could not handle request. Thread pool is exhausted.");
+      }
+    };
+    this.executorService = new ThreadPoolExecutor(5, 100, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(2), rejectionHandler);
   }
 
   public FitNesse dontMakeDirs() {
@@ -45,21 +58,16 @@ public class FitNesse {
       filesDir.mkdir();
   }
 
-  public static void main(String[] args) throws Exception {
-    System.out.println("DEPRECATED:  use java -jar fitnesse.jar or java -cp fitnesse.jar fitnesseMain.FitNesseMain");
-    Class<?> mainClass = Class.forName("fitnesseMain.FitNesseMain");
-    Method mainMethod = mainClass.getMethod("main", String[].class);
-    mainMethod.invoke(null, new Object[]{args});
-  }
-
   public boolean start() {
     if (makeDirs) {
       establishRequiredDirectories();
     }
     try {
       if (context.port > 0) {
-        ServerSocket serverSocket = SocketFactory.tryCreateServerSocket(context.port, context.useHTTPS, context.sslClientAuth, context.sslParameterClassName);
-        theService = new SocketService(new FitNesseServer(context), false, serverSocket);
+        ServerSocket serverSocket = context.useHTTPS
+                ? SocketFactory.createSslServerSocket(context.port, context.sslClientAuth, context.sslParameterClassName)
+                : SocketFactory.createServerSocket(context.port);
+        theService = new SocketService(new FitNesseServer(context, executorService), false, serverSocket);
       }
       return true;
     } catch (BindException e) {
@@ -85,13 +93,13 @@ public class FitNesse {
 
   public void executeSingleCommand(String command, OutputStream out) throws Exception {
     Request request = new MockRequestBuilder(command).noChunk().build();
-    FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(), context);
+    FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(), context, new SerialExecutorService());
     Response response = expediter.createGoodResponse(request);
     if (response.getStatus() != 200){
         throw new Exception("error loading page: " + response.getStatus());
     }
     response.withoutHttpHeaders();
-    MockResponseSender sender = new MockResponseSender.OutputStreamSender(out);
+    MockResponseSender sender = new MockResponseSender(out);
     sender.doSending(response);
   }
 }
