@@ -137,8 +137,13 @@
 #else
 #set ( $searchStr  = false)
 #end
-#set ( $searchType = $request.getInput("responder")) 
-#if (!$searchStr && $searchType.equals("search"))
+#if ($request.hasInput("responder"))
+#set ( $searchType = $request.getInput("responder"))
+#else
+#set ( $searchType  = $queryString)
+#end
+#if ((!$searchStr && $searchType.equals("search"))
+	|| $searchType.equals("searchForm"))
 
 #else
 

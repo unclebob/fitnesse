@@ -111,8 +111,7 @@
     Mousetrap.bind('w', function() { window.location.href ="$localPath?whereUsed"; });
   #end
   #if( $actions.withSearch )
-    Mousetrap.bind('s', function() { window.location.href ="$localPath?responder=search"; });
-    Mousetrap.bind('g s', function() { window.location.href ="$localPath?responder=search&searchScope=root"; });
+    Mousetrap.bind('s', function() { window.location.href ="$localPath?searchForm"; });
     Mousetrap.bind('/', function() { 
       document.getElementById('searchString').focus();
       return false;  // stops the / character appearing in search box

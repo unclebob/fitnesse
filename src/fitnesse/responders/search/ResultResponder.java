@@ -22,7 +22,6 @@ import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageType;
-import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
 
@@ -58,7 +57,6 @@ public abstract class ResultResponder extends ChunkingResponder implements
   protected void doSending() {
     if (page == null)
       page = root;
-      // page = context.getRootPage().getPageCrawler().getPage(PathParser.parse("FrontPage"));
     String queryString = request.getQueryString() == null ? "" : request.getQueryString();
     
     PageTitle pageTitle = new PageTitle(page.getPageCrawler().getFullPath() );
