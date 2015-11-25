@@ -9,15 +9,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import fitnesse.html.HtmlTag;
-import fitnesse.wikitext.parser.Matcher;
-import fitnesse.wikitext.parser.Maybe;
-import fitnesse.wikitext.parser.Parser;
-import fitnesse.wikitext.parser.Rule;
-import fitnesse.wikitext.parser.ScanString;
-import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.SymbolType;
-import fitnesse.wikitext.parser.Translation;
-import fitnesse.wikitext.parser.Translator;
+import fitnesse.util.Clock;
 
 public class SysdateWidget extends SymbolType implements Rule, Translation
 {
@@ -38,41 +30,56 @@ public class SysdateWidget extends SymbolType implements Rule, Translation
     return result.html();
   }
 
-  /**
-   * @param arg0
-   * @param arg1
-   * @return
-   * @see fitnesse.wikitext.parser.Rule#parse(fitnesse.wikitext.parser.Symbol, fitnesse.wikitext.parser.Parser)
-   */
   @Override
   public Maybe<Symbol> parse(final Symbol symbol, final Parser parser)
   {
     if (!parser.isMoveNext(SymbolType.Whitespace))
+    {
       return Symbol.nothing;
+    }
 
     final Maybe<String> name = parser.parseToAsString(SymbolType.Whitespace);
 
     if (parser.atEnd())
+    {
       return Symbol.nothing;
+    }
+
     if (!ScanString.isVariableName(name.getValue()))
+    {
       return Symbol.nothing;
+    }
 
     final Symbol next = parser.moveNext(1);
     final SymbolType close = next.closeType();
     if (close == SymbolType.Empty)
+    {
       return Symbol.nothing;
+    }
 
     final Maybe<String> valueString = parser.parseToAsString(close);
-    final String value = evaluateDateValue(valueString.getValue());
+
+    String value = "";
+    try
+    {
+      value = evaluateDateValue(valueString.getValue());
+    }
+    catch (Exception e)
+    {
+      return Symbol.nothing;
+    }
 
     if (parser.atEnd())
+    {
       return Symbol.nothing;
+    }
+
     parser.getPage().putVariable(name.getValue(), value);
 
     return new Maybe<Symbol>(symbol.add(name.getValue()).add(value));
   }
 
-  private String evaluateDateValue(final String param)
+  private String evaluateDateValue(final String param) throws ParseException
   {
 
     String result = "Invalid date format: " + param;
@@ -91,48 +98,35 @@ public class SysdateWidget extends SymbolType implements Rule, Translation
 
       if (format != null)
       {
-        try
+        final SimpleDateFormat formatter = new SimpleDateFormat();
+        if (hasParam(param, "utc"))
         {
-          final SimpleDateFormat formatter = new SimpleDateFormat();
+          formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+        }
+
+        formatter.applyPattern(format);
+        result = formatter.format(date);
+
+        if (hasParam(param, "unix"))
+        {
+          final SimpleDateFormat unixFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
           if (hasParam(param, "utc"))
           {
-            formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+            unixFormatter.setTimeZone(TimeZone.getTimeZone("GMT"));
           }
-
-          formatter.applyPattern(format);
-          result = formatter.format(date);
-
-          if (hasParam(param, "unix"))
-          {
-            final SimpleDateFormat unixFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-            if (hasParam(param, "utc"))
-            {
-              unixFormatter.setTimeZone(TimeZone.getTimeZone("GMT"));
-            }
-            date = unixFormatter.parse(result);
-            result = Long.toString(date.getTime() / 1000);
-          }
-          else if (hasParam(param, "last_of_month"))
-          {
-            date = setLastofMonth(cal);
-            result = formatter.format(date);
-          }
+          date = unixFormatter.parse(result);
+          result = Long.toString(date.getTime() / 1000);
         }
-        catch (final Exception _exception)
+        else if (hasParam(param, "last_of_month"))
         {
-          // do not override result string
+          date = setLastofMonth(cal);
+          result = formatter.format(date);
         }
       }
     }
     return result;
   }
 
-  /**
-   * TODO ~method description
-   * 
-   * @param date
-   * @return
-   */
   private Date setLastofMonth(final Calendar cal)
   {
     cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
@@ -177,6 +171,9 @@ public class SysdateWidget extends SymbolType implements Rule, Translation
   private Calendar getCalculatedDate(final String widgetParam)
   {
     final Calendar cal = Calendar.getInstance();
+
+    cal.setTimeInMillis(Clock.currentTimeInMillis());
+
     final String params = removeDateFormat(widgetParam);
     final String[] paramArr = params.split(" ");
 
@@ -277,15 +274,4 @@ public class SysdateWidget extends SymbolType implements Rule, Translation
     return result;
   }
 
-  public static void main(final String[] aArgs) throws ParseException
-  {
-    final SimpleDateFormat form = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-    final Date date = form.parse("04.04.2013 10:08:18");
-
-    System.out.println(form.format(date) + " = " + date.getTime());
-
-    final SysdateWidget _widget = new SysdateWidget();
-    // System.out.println(form.format(date) + " = " + _widget.evaluateDateValue("{dd.MM.2013 10:08:18}"));
-    System.out.println(form.format(date) + " = " + _widget.evaluateDateValue("{dd.MM.2013 10:08:18} unix"));
-  }
 }

@@ -5,15 +5,6 @@ package fitnesse.wikitext.parser;
 import java.util.Random;
 
 import fitnesse.html.HtmlTag;
-import fitnesse.wikitext.parser.Matcher;
-import fitnesse.wikitext.parser.Maybe;
-import fitnesse.wikitext.parser.Parser;
-import fitnesse.wikitext.parser.Rule;
-import fitnesse.wikitext.parser.ScanString;
-import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.SymbolType;
-import fitnesse.wikitext.parser.Translation;
-import fitnesse.wikitext.parser.Translator;
 
 public class RandomNumber extends SymbolType implements Rule, Translation
 {
@@ -28,35 +19,38 @@ public class RandomNumber extends SymbolType implements Rule, Translation
   @Override
   public String toTarget(final Translator translator, final Symbol symbol)
   {
-    final HtmlTag result = new HtmlTag("span", "random number defined: " + translator.translate(symbol.childAt(0)) + "="
-        + translator.translate(symbol.childAt(1)));
+    final HtmlTag result = new HtmlTag("span",
+        "random number defined: " + translator.translate(symbol.childAt(0)) + "=" + translator.translate(symbol.childAt(1)));
     result.addAttribute("class", "meta");
     return result.html();
   }
 
-  /**
-   * @param arg0
-   * @param arg1
-   * @return
-   * @see fitnesse.wikitext.parser.Rule#parse(fitnesse.wikitext.parser.Symbol, fitnesse.wikitext.parser.Parser)
-   */
   @Override
   public Maybe<Symbol> parse(final Symbol symbol, final Parser parser)
   {
     String _value = "Invalid range! Use: !randomNumber (min max)";
     if (!parser.isMoveNext(SymbolType.Whitespace))
+    {
       return Symbol.nothing;
+    }
 
     final Maybe<String> name = parser.parseToAsString(SymbolType.Whitespace);
     if (parser.atEnd())
+    {
       return Symbol.nothing;
+    }
+
     if (!ScanString.isVariableName(name.getValue()))
+    {
       return Symbol.nothing;
+    }
 
     final Symbol next = parser.moveNext(1);
     final SymbolType close = next.closeType();
     if (close == SymbolType.Empty)
+    {
       return Symbol.nothing;
+    }
 
     try
     {
@@ -69,8 +63,7 @@ public class RandomNumber extends SymbolType implements Rule, Translation
     }
     catch (final Exception e)
     {
-      // do nothing
-      e.printStackTrace();
+      return Symbol.nothing;
     }
 
     parser.getPage().putVariable(name.getValue(), _value);
