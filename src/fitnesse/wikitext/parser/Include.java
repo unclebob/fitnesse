@@ -6,7 +6,6 @@ import fitnesse.wiki.PathParser;
 public class Include extends SymbolType implements Rule, Translation {
     private static final String[] setUpSymbols = new String[] {"COLLAPSE_SETUP"};
     private static final String includeHelpOption = "-h";
-    private static final SymbolProvider wikiLinkSymbolProvider = new SymbolProvider(new SymbolType[] { WikiWord.symbolType });
 
     public Include() {
         super("Include");
