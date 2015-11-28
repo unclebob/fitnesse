@@ -5,7 +5,6 @@ package fitnesse.util;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
@@ -15,8 +14,6 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import util.FileUtil;
 
 public class MockSocket extends Socket {
   private static final Logger LOG = Logger.getLogger(MockSocket.class.getName());
