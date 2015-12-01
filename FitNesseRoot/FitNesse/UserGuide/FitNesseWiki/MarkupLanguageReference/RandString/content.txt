@@ -1,0 +1,22 @@
+'''randomString''' generates a random string with a defined length, out of a defined charater set and allocates it to a variable
+
+'''Syntax'''
+{{{!randomString variablename (min-length max-length charset1[,charset2,...])}}}
+
+|'''Markup Text'''                                    |'''Displays as:'''                               |'''Variable defined'''|
+|!-!randomString string1 (30 40 a-z,A-Z,3-8,ä,ö,Ü,$)-!|!randomString string1 (30 40 a-z,A-Z,3-8,ä,ö,Ü,$)|${string1}            |
+|!-!!randomString string2 (12 12 b-h,3-8)-!           |!randomString string2 (12 12 a-z,3-8)            |${string2}            |
+|!-!randomString string3 (6 6 A-Z,0-9)-!              |!randomString string3 (6 6 A-Z,0-9)              |${string3}            |
+
+'''Character sets:'''
+ * a-z
+ * A-Z
+ * 0-9
+ * ä
+ * Ä
+ * ö
+ * Ö
+ * ü
+ * Ü
+ * $
+ * etc

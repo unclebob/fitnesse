@@ -1,0 +1,9 @@
+'''randomNumber''' generates a random value within the defined range and allocates it to a variable
+
+'''Syntax'''
+{{{!randomNumber variablename (min max)}}}
+
+|'''Markup Text'''|'''Displays as:'''|'''Variable defined'''|'''Remark'''|
+|!-!randomNumber number1 (40 100)-!|!randomNumber number1 (40 100)|${number1}|min = 40, max = 100|
+|!-!randomNumber number2 (0 1000)-!|!randomNumber number2 (0 1000)|${number2}|min = 0, max = 1000|
+|!-!randomNumber number3 (-500 0)-!|!randomNumber number3 (-500 0)|${number3}|min = -500, max = 0|

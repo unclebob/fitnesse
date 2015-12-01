@@ -1,0 +1,25 @@
+'''!-!sysdate-!''' defines a variable which holds a time/date in a defined format and calculates a given offset
+
+'''Syntax'''
+{{{!sysdate variablename ({definition of the time/date format} definition of offset)}}}
+
+|'''Markup Text'''                                       |'''Displays as'''                                   |'''Variable defined'''|'''Remark'''                                         |
+|!-!sysdate date0 ({dd.MM.yyyy HH:mm:ss})-!              |!sysdate date0 ({dd.MM.yyyy HH:mm:ss})              |${date0}              |current date/time in the defined format              |
+|!-!sysdate date1 ({yyyy-dd-MM'T'HH:mm:ss})-!            |!sysdate date1 ({yyyy-dd-MM'T'HH:mm:ss})            |${date1}              |current date/time in the defined format              |
+|!-!sysdate date2 ({yyyyMMddHHmmss})-!                   |!sysdate date2 ({yyyyMMddHHmmss})                   |${date2}              |current date/time in the defined format              |
+|!-!sysdate date3 ({01.MM.yyyy 00:00:00})-!              |!sysdate date3 ({01.MM.yyyy 00:00:00})              |${date3}              |first day of the current month                       |
+|!-!sysdate date4 ({dd.MM.yyyy 23:59:59} last_of_month)-!|!sysdate date4 ({dd.MM.yyyy 23:59:59} last_of_month)|${date4}              |last day of the current month                        |
+|!-!sysdate date5 ({dd.MM.yyyy HH:mm:ss} +1h)-!          |!sysdate date5 ({dd.MM.yyyy HH:mm:ss} +1h)          |${date5}              |current date/time with thime shift +1 hour           |
+|!-!sysdate date6 ({dd.MM.yyyy HH:mm:ss} -4m +3h)-!      |!sysdate date6 ({dd.MM.yyyy HH:mm:ss} -1y -4m)      |${date6}              |current date/time with thime shift -1 year -4 minutes|
+|!-!sysdate date7 ({dd.MM.yyyy HH:mm:ss} unix)-!         |!sysdate date7 ({dd.MM.yyyy HH:mm:ss} unix)         |${date7}              |current date/time with UNIX format                   |
+|!-!sysdate date8 ({dd.MM.yyyy HH:mm:ss} utc)-!          |!sysdate date8 ({dd.MM.yyyy HH:mm:ss} utc)          |${date8}              |current date/time for UTC                            |
+
+Possible arguments for time/date shift:
+ * s -> Seconds
+ * m -> Minutes
+ * h -> Hours
+ * d -> Days
+ * M -> Months
+ * y -> Years
+
+
