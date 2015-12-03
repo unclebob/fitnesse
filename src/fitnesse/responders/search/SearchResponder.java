@@ -14,7 +14,8 @@ import fitnesse.components.TraversalListener;
 public class SearchResponder extends ResultResponder {
 
   private String getSearchString() {
-    return (String) request.getInput("searchString");
+    String searchString = (String) request.getInput("searchString");
+    return searchString == null ? "" : searchString;
   }
 
   private String getSearchType() {
@@ -26,6 +27,7 @@ public class SearchResponder extends ResultResponder {
       return "Content";
   }
 
+ 
   protected String getPageFooterInfo(int hits) {
     return "Found " + hits + " results for your search.";
   }
@@ -41,10 +43,10 @@ public class SearchResponder extends ResultResponder {
     if (!"".equals(searchString)) {
       String searchType = getSearchType();
       if ("Title".equals(searchType))
-        new TitleWikiPageFinder(searchString, observer).search(root);
+        new TitleWikiPageFinder(searchString, observer).search(getSearchScope());
       else {
         Pattern regularExpression = Pattern.compile(searchString, CASE_INSENSITIVE + LITERAL);
-        new RegularExpressionWikiPageFinder(regularExpression, observer).search(root);
+        new RegularExpressionWikiPageFinder(regularExpression, observer).search(getSearchScope());
       }
     }
   }
