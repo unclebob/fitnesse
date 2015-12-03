@@ -44,7 +44,7 @@ public class ComponentFactory {
       else
         componentClass = defaultComponent;
     } catch (Exception e) {
-      throw new ComponentInstantiationException("Unable to look up component for type " + componentType, e);
+      throw new ComponentInstantiationException("Unable to look up component for type '" + componentType + "' with classname '" + componentClassName + "'", e);
     }
 
     if (componentClass != null) {
