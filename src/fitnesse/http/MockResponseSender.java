@@ -5,11 +5,8 @@ package fitnesse.http;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PipedInputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.Socket;
 
-import fitnesse.util.MockSocket;
 import util.FileUtil;
 
 public class MockResponseSender implements ResponseSender {
