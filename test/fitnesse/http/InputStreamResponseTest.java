@@ -121,10 +121,4 @@ public class InputStreamResponseTest implements ResponseSender {
   public void close() {
     closed = true;
   }
-
-  @Override
-  public Socket getSocket() //TODO-MdM maybe get rid of this method.
-  {
-    return null;
-  }
 }

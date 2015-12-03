@@ -113,9 +113,13 @@ public abstract class SlimTestSystem implements TestSystem {
     testSystemListener.addTestSystemListener(listener);
   }
 
-  private void initializeTest(TestPage pageToTest) {
-    testContext = new SlimTestContextImpl(pageToTest);
+  private void initializeTest(TestPage testPage) {
+    testContext = createTestContext(testPage);
     stopTestCalled = false;
+  }
+
+  protected SlimTestContextImpl createTestContext(TestPage testPage) {
+    return new SlimTestContextImpl(testPage);
   }
 
   protected abstract void processAllTablesOnPage(TestPage testPage) throws IOException;

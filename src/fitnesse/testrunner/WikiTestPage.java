@@ -167,7 +167,9 @@ public class WikiTestPage implements TestPage {
 
   public boolean shouldIncludeScenarioLibraries() {
     // Should consider all of the decorated content to resolve those variables.
-    boolean isSlim = "slim".equalsIgnoreCase(sourcePage.getVariable(WikiPageIdentity.TEST_SYSTEM));
+    String testSystem = sourcePage.getVariable(WikiPageIdentity.TEST_SYSTEM);
+    boolean isSlim = "slim".equalsIgnoreCase(testSystem)
+                      || "slimCoverage".equalsIgnoreCase(testSystem);
     String includeScenarioLibraries = sourcePage.getVariable("INCLUDE_SCENARIO_LIBRARIES");
     boolean includeScenarios = "true".equalsIgnoreCase(includeScenarioLibraries);
     boolean notIncludeScenarios = "false".equalsIgnoreCase(includeScenarioLibraries);

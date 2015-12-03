@@ -26,7 +26,7 @@ public class HtmlSlimResponderTest {
 
   private void assertTestResultsContain(String fragment) {
     String unescapedResults = unescape(testResults);
-    assertTrue(unescapedResults, unescapedResults.contains(fragment));
+    assertTrue("'" + fragment + "' not found in: " +unescapedResults, unescapedResults.contains(fragment));
   }
 
   private void assertTestResultsDoNotContain(String fragment) {

@@ -99,7 +99,7 @@ public class StatementTimeoutExecutor implements StatementExecutorInterface {
     } catch (TimeoutException e) {
       throw new SlimException(Integer.toString(timeout), SlimServer.TIMED_OUT, true);
     } catch (InterruptedException e) {
-      throw new SlimException(e);
+      throw new SlimError("Statement execution was interrupted", e);
     } catch (ExecutionException e) {
       Throwable cause = e.getCause();
       if (cause instanceof SlimException) {

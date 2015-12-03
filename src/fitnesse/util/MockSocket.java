@@ -5,7 +5,6 @@ package fitnesse.util;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
@@ -16,13 +15,11 @@ import java.net.SocketAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import util.FileUtil;
-
 public class MockSocket extends Socket {
   private static final Logger LOG = Logger.getLogger(MockSocket.class.getName());
 
-  InputStream input;
-  OutputStream output;
+  private final InputStream input;
+  private final OutputStream output;
   private String host;
   private boolean closed;
 
@@ -75,23 +72,19 @@ public class MockSocket extends Socket {
     return closed;
   }
 
-  public String getOutput() {
-    if (output instanceof ByteArrayOutputStream) {
-      try {
-        return ((ByteArrayOutputStream) output).toString(FileUtil.CHARENCODING);
-      } catch (UnsupportedEncodingException e) {
-        throw new RuntimeException(e);
-      }
-    } else
-      return "";
-  }
-
   public void setHost(String host) {
     this.host = host;
   }
 
   @Override
   public SocketAddress getRemoteSocketAddress() {
-    return new InetSocketAddress(host, 123);
+    // Mock a socket address, to keep the logging happy.
+    return new InetSocketAddress(host != null ? host : "internal", 123);
+  }
+
+  @Override
+  public SocketAddress getLocalSocketAddress() {
+    // Mock a socket address, to keep the logging happy.
+    return new InetSocketAddress(host != null ? host : "internal", 123);
   }
 }

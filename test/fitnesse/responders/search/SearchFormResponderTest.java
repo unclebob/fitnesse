@@ -12,19 +12,26 @@ import org.junit.Test;
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.http.MockRequest;
-import fitnesse.http.SimpleResponse;
+import fitnesse.http.MockResponseSender;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
 
 public class SearchFormResponderTest {
   private String content;
-
+ 
   @Before
   public void setUp() throws Exception {
     FitNesseContext context = FitNesseUtil.makeTestContext();
     SearchFormResponder responder = new SearchFormResponder();
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
-    content = response.getContent();
-  }
+    MockRequest request = new MockRequest();
+    request.addInput(Request.NOCHUNK, "");
+    Response response =  responder.makeResponse(context, request);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    content = sender.sentData();
 
+  }
+     
   public void testFocusOnSearchBox() throws Exception {
     assertSubString("onload=\"document.forms[0].searchString.focus()\"", content);
   }

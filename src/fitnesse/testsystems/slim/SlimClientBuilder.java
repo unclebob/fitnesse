@@ -113,7 +113,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   private int findFreePort() {
     int port;
     try {
-      ServerSocket socket = SocketFactory.tryCreateServerSocket(0);
+      ServerSocket socket = SocketFactory.createServerSocket(0);
       port = socket.getLocalPort();
       socket.close();
     } catch (Exception e) {

@@ -60,6 +60,15 @@ public enum PageType {
     return STATIC;
   }
 
+  public static String [] valuesAsString(){
+    PageType [] ee = PageType.values();
+    String [] stringArray = new String [ee.length]; 
+    for (int i = 0; i < ee.length; i++) {
+      stringArray[i] = ee[i].toString();
+    }
+    return stringArray;
+    
+  }
   private String description;
 
   PageType(String description) {

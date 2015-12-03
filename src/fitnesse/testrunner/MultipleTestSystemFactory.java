@@ -14,6 +14,7 @@ import fitnesse.testsystems.fit.InProcessFitClientBuilder;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.InProcessSlimClientBuilder;
+import fitnesse.testsystems.slim.SlimClient;
 import fitnesse.testsystems.slim.SlimClientBuilder;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
@@ -89,7 +90,7 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
     @Override
     public TestSystem create(Descriptor descriptor) throws IOException {
       InProcessSlimClientBuilder clientBuilder = new InProcessSlimClientBuilder(descriptor);
-      SlimCommandRunningClient slimClient = clientBuilder.build();
+      SlimClient slimClient = clientBuilder.build();
       HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(clientBuilder.getTestSystemName(), slimClient,
               slimTableFactory.copy(), customComparatorRegistry);
 
