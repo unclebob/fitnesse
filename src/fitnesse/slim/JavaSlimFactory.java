@@ -35,7 +35,11 @@ public class JavaSlimFactory extends SlimFactory {
   }
 
   public static SlimFactory createJavaSlimFactory(SlimService.Options options) {
-    return new JavaSlimFactory(options.statementTimeout, options.verbose);
+    return createJavaSlimFactory(options.statementTimeout, options.verbose);
+  }
+
+  public static SlimFactory createJavaSlimFactory(Integer timeout, boolean verbose) {
+    return new JavaSlimFactory(timeout, verbose);
   }
 
   public static SlimFactory createJavaSlimFactory() {

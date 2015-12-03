@@ -6,6 +6,7 @@ import fitnesse.slim.protocol.SlimDeserializer;
 import fitnesse.slim.protocol.SlimSerializer;
 import fitnesse.socketservice.SocketFactory;
 import fitnesse.socketservice.SocketServer;
+import util.FileUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -38,7 +39,7 @@ public class SlimServer implements SocketServer {
   }
 
   @Override
-  public void serve(Socket s) {
+  public void serve(Socket s) throws IOException {
     SocketFactory.printSocketInfo(s);
     SlimStreamReader reader = null;
     OutputStream writer = null;
@@ -46,18 +47,10 @@ public class SlimServer implements SocketServer {
       reader = SlimStreamReader.getReader(s);
       writer = SlimStreamReader.getByteWriter(s);
       tryProcessInstructions(reader, writer);
-    } catch (Throwable e) { // NOSONAR
-      // Intentional catch-all, since this is the last point we can communicate failures back to FitNesse
-      System.err.println("Error while executing SLIM instructions: " + e.getMessage());
-      e.printStackTrace(System.err);
     } finally {
       slimFactory.stop();
-      try {
-        if (reader != null) reader.close();
-        if (writer != null) writer.close();
-      } catch (Exception e) {
-
-      }
+      FileUtil.close(reader);
+      FileUtil.close(writer);
     }
   }
 
@@ -89,8 +82,7 @@ public class SlimServer implements SocketServer {
   private String executeInstructions(ListExecutor executor, String instructions) {
     List<Object> statements = SlimDeserializer.deserialize(instructions);
     List<Object> results = executor.execute(statements);
-    String resultString = SlimSerializer.serialize(results);
-    return resultString;
+    return SlimSerializer.serialize(results);
   }
 
 }

@@ -22,6 +22,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
+import fitnesse.slim.SlimStreamReader;
+
 public class FileUtil {
 
   public static final String CHARENCODING = "UTF-8";
@@ -246,4 +248,13 @@ public class FileUtil {
     }
   }
 
+  public static void close(StreamReader reader) {
+    if (reader != null) {
+      try {
+        reader.close();
+      } catch (IOException e) {
+        throw new RuntimeException("Unable to close stream reader", e);
+      }
+    }
+  }
 }

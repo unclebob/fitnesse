@@ -48,7 +48,6 @@ public class SlimService {
   private final SlimServer slimServer;
   private final boolean daemon;
   private final Executor executor = Executors.newFixedThreadPool(5);
-  static Thread service;
 
   public static void main(String[] args) throws IOException {
     Options options = parseCommandLine(args);
@@ -75,38 +74,6 @@ public class SlimService {
   public static void startWithFactory(SlimFactory slimFactory, Options options) throws IOException {
     SlimService slimservice = new SlimService(slimFactory.getSlimServer(), options.port, options.interaction, options.daemon, options.useSSL, options.sslParameterClassName);
     slimservice.accept();
-  }
-
-  // For testing only -- for now
-  public static synchronized int startWithFactoryAsync(SlimFactory slimFactory, Options options) throws IOException {
-    if (service != null && service.isAlive()) {
-      service.interrupt();
-      throw new SlimError("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
-    }
-    final SlimService slimservice = new SlimService(slimFactory.getSlimServer(), options.port, options.interaction, options.daemon, options.useSSL, options.sslParameterClassName);
-    int actualPort = slimservice.getPort();
-    service = new Thread() {
-      @Override
-      public void run() {
-        try {
-          slimservice.accept();
-        } catch (IOException e) {
-          throw new SlimError(e);
-        }
-      }
-    };
-    service.start();
-    return actualPort;
-  }
-
-  // For testing, mainly.
-  public static void waitForServiceToStopAsync() throws InterruptedException {
-    // wait for service to close.
-    for (int i = 0; i < 1000; i++) {
-      if (!service.isAlive())
-        break;
-      Thread.sleep(50);
-    }
   }
 
   public static Options parseCommandLine(String[] args) {

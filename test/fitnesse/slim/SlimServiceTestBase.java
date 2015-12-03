@@ -25,8 +25,37 @@ import static org.junit.Assert.*;
 // The tests for PhpSlim and JsSlim implement this class
 
 public abstract class SlimServiceTestBase {
+  static Thread service;
   protected List<Instruction> statements;
   protected SlimCommandRunningClient slimClient;
+
+  public static synchronized void startWithFactoryAsync(SlimFactory slimFactory, SlimService.Options options) throws IOException {
+    if (service != null && service.isAlive()) {
+      service.interrupt();
+      throw new SlimError("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
+    }
+    final SlimService slimservice = new SlimService(slimFactory.getSlimServer(), options.port, options.interaction, options.daemon, options.useSSL, options.sslParameterClassName);
+    service = new Thread() {
+      @Override
+      public void run() {
+        try {
+          slimservice.accept();
+        } catch (IOException e) {
+          throw new SlimError(e);
+        }
+      }
+    };
+    service.start();
+  }
+
+  public static void waitForServiceToStopAsync() throws InterruptedException {
+    // wait for service to close.
+    for (int i = 0; i < 1000; i++) {
+      if (!service.isAlive())
+        break;
+      Thread.sleep(50);
+    }
+  }
 
   protected abstract void startSlimService() throws Exception;
 

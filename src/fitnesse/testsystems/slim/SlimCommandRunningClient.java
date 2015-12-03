@@ -8,6 +8,7 @@ import fitnesse.slim.SlimStreamReader;
 import fitnesse.slim.SlimVersion;
 import fitnesse.slim.instructions.*;
 import fitnesse.slim.protocol.SlimDeserializer;
+import fitnesse.slim.protocol.SlimListBuilder;
 import fitnesse.slim.protocol.SlimSerializer;
 import fitnesse.socketservice.SocketFactory;
 import fitnesse.testsystems.CommandRunner;
@@ -20,6 +21,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -112,10 +114,10 @@ public class SlimCommandRunningClient implements SlimClient {
 
     reader = SlimStreamReader.getReader(client);
     writer = SlimStreamReader.getByteWriter(client);
-    validateConnection(useSSL);
+    validateConnection();
   }
 
-  private void validateConnection(boolean isSslConnection) throws IOException {
+  private void validateConnection() throws IOException {
     // Convert seconds to milliseconds
     int waittime = connectionTimeout * 1000;
     int oldTimeout = client.getSoTimeout();
@@ -162,60 +164,12 @@ public class SlimCommandRunningClient implements SlimClient {
   @Override
   public Map<String, Object> invokeAndGetResponse(List<Instruction> statements) throws IOException {
     if (statements.isEmpty())
-      return new HashMap<String, Object>();
-    String instructions = SlimSerializer.serialize(toList(statements));
+      return Collections.emptyMap();
+    String instructions = SlimSerializer.serialize(new SlimListBuilder(slimServerVersion).toList(statements));
     SlimStreamReader.sendSlimMessage(writer, instructions);
     String results = reader.getSlimMessage();
     List<Object> resultList = SlimDeserializer.deserialize(results);
     return resultToMap(resultList);
-  }
-
-  private interface ToListExecutor extends InstructionExecutor {
-
-  }
-
-  private List<Object> toList(List<Instruction> instructions) {
-    final List<Object> statementsAsList = new ArrayList<Object>(instructions.size());
-    for (final Instruction instruction : instructions) {
-      ToListExecutor executor = new ToListExecutor() {
-        @Override
-        public void addPath(String path) throws SlimException {
-          statementsAsList.add(asList(instruction.getId(), ImportInstruction.INSTRUCTION, path));
-        }
-
-        @Override
-        public Object callAndAssign(String symbolName, String instanceName, String methodsName, Object... arguments) throws SlimException {
-          Object[] list = new Object[]{instruction.getId(), CallAndAssignInstruction.INSTRUCTION, symbolName, instanceName, methodsName};
-          statementsAsList.add(asList(ArrayUtils.addAll(list, arguments)));
-          return null;
-        }
-
-        @Override
-        public Object call(String instanceName, String methodName, Object... arguments) throws SlimException {
-          Object[] list = new Object[]{instruction.getId(), CallInstruction.INSTRUCTION, instanceName, methodName};
-          statementsAsList.add(asList(ArrayUtils.addAll(list, arguments)));
-          return null;
-        }
-
-        @Override
-        public void create(String instanceName, String className, Object... constructorArgs) throws SlimException {
-          Object[] list = new Object[]{instruction.getId(), MakeInstruction.INSTRUCTION, instanceName, className};
-          statementsAsList.add(asList(ArrayUtils.addAll(list, constructorArgs)));
-        }
-
-        @Override
-        public void assign(String symbolName, Object value) {
-          if (slimServerVersion < 0.4) {
-            throw new SlimError("The assign instruction is available as of SLIM protocol version 0.4");
-          }
-          Object[] list = new Object[]{instruction.getId(), AssignInstruction.INSTRUCTION, symbolName, value};
-          statementsAsList.add(asList(list));
-        }
-      };
-
-      instruction.execute(executor);
-    }
-    return statementsAsList;
   }
 
   @Override

@@ -18,13 +18,13 @@ public class SlimServiceTest extends SlimServiceTestBase {
   @Override
   protected void startSlimService() throws IOException {
     SlimService.Options options = SlimService.parseCommandLine(new String[]{"8099"});
-    SlimService.startWithFactoryAsync(JavaSlimFactory.createJavaSlimFactory(options), options);
+    startWithFactoryAsync(JavaSlimFactory.createJavaSlimFactory(options), options);
   }
 
   @Override
   protected void closeSlimService() throws InterruptedException {
-    SlimService.waitForServiceToStopAsync();
-    assertFalse(SlimService.service.isAlive());
+    waitForServiceToStopAsync();
+    assertFalse(service.isAlive());
   }
 
   @Override

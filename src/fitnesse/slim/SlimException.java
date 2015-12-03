@@ -117,6 +117,6 @@ public class SlimException extends Exception {
   }
 
   public static boolean isStopSuiteException(Throwable t) {
-    return t != null && t.getClass().toString().contains("StopSuite");
+    return t != null && t.getClass().toString().contains("StopSuite") || t instanceof InterruptedException;
   }
 }
