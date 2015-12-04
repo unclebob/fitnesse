@@ -38,6 +38,6 @@ Within the first couple of weeks, the programmers get those first two test table
 
 The point of this is that when it comes to addressing any ambiguities or misunderstandings in requirements, '''test tables are the perfect thing to talk about'''. By refining the test tables, and organizing the requirements discussion around them, the team successively refines the system itself. (They may also successively refine their ability to deliver the system iteratively and incrementally, but that's another story!)
 !2 Learning More
-If you haven't already done so, check out the [[One Minute Description][<FitNesse.UserGuide.OneMinuteDescription]] and the [[Two Minute Example][<FitNesse.UserGuide.TwoMinuteExample]]. Otherwise, you should also check out AcceptanceTests.
+If you haven't already done so, check out the [[Two Minute Example][<FitNesse.UserGuide.TwoMinuteExample]]. You should also check out AcceptanceTests.
 
 
