@@ -64,9 +64,18 @@ The fixture is the Java (or some other supported language) class that Slim will 
 Here is what the Java version of the Division class might look like:{{{
 public class Division {
   private double numerator, denominator;
-  public void setNumerator(double numerator) {this.numerator = numerator;}
-  public void setDenominator(double denominator) {this.denominator = denominator;}
-  public double quotient() {return numerator/denominator;}
+  
+  public void setNumerator(double numerator) {
+    this.numerator = numerator;
+  }
+  
+  public void setDenominator(double denominator) {
+    this.denominator = denominator;
+  }
+  
+  public double quotient() {
+    return numerator/denominator;
+  }
 } }}}
 
 !3 How Slim Uses Fixture Code to Process the Test Table

@@ -25,7 +25,7 @@ To make it easy for all stake holders to interact with FitNesse, requirements 
 
 Because the specifications can actually be executed, FitNesse provides a method to demonstrate even to non-coders that the application works as designed. This can prevent problems leading to [[Project Death by Requirements][>ProjectDeathByRequirements]]. The goal is for FitNesse to operate at a level just ''below'' the user interface level, demonstrating that, given various inputs to your application, the correct results are computed. In a sense, you could consider it an alternative user interface for the application.
 
-Convinced? Have a more in depth look at how FitNesse works in a [[Two-Minute Example][>TwoMinuteExample]]. [[Download and install][http://fitnesse.org/FitNesseDownload]] FitNesse on your machine, if you haven't done so already.
+Convinced? Have a more in depth look at how FitNesse works in our [[Two Minute Example][>TwoMinuteExample]]. [[Download and install][http://fitnesse.org/FitNesseDownload]] FitNesse on your machine, if you haven't done so already. Then learn how to [[work with the FitNesse wiki][>FitNesseWiki]] and [[write Acceptance Tests][>WritingAcceptanceTests]].
 
 !3 Brief history
 FitNesse started as an HTML and [[wiki][http://wiki.org/wiki.cgi?WhatIsWiki]] "front-end" to [[FIT][http://fit.c2.com/]] ("Framework for Integrated Testing") back in 2001.
