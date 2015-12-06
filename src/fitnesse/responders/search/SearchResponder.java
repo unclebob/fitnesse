@@ -34,7 +34,7 @@ public class SearchResponder extends ResultResponder {
 
   @Override
   protected String getTitle() {
-    return getSearchType() + " Search Results for '" + getSearchString() + "'";
+    return (request.getInput("searchType") == null) ? "Search Form" : getSearchType() + " Search Results for '" + getSearchString() + "'";
   }
 
   @Override

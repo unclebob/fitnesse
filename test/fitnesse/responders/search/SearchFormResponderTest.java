@@ -4,7 +4,7 @@ package fitnesse.responders.search;
 
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
-import static fitnesse.responders.search.SearchFormResponder.*;
+import static fitnesse.responders.search.SearchResponder.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,7 @@ public class SearchFormResponderTest {
   @Before
   public void setUp() throws Exception {
     FitNesseContext context = FitNesseUtil.makeTestContext();
-    SearchFormResponder responder = new SearchFormResponder();
+    SearchResponder responder = new SearchResponder();
     MockRequest request = new MockRequest();
     request.addInput(Request.NOCHUNK, "");
     Response response =  responder.makeResponse(context, request);

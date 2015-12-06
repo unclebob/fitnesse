@@ -60,7 +60,7 @@ public class ResponderFactory {
     addResponder("edit", EditResponder.class);
     addResponder("saveData", SaveResponder.class);
     addResponder("search", SearchResponder.class);
-    addResponder("searchForm", SearchFormResponder.class);
+    addResponder("searchForm", SearchResponder.class);
     addResponder("stoptest", StopTestResponder.class);
     addResponder("test", TestResponder.class);
     addResponder("suite", SuiteResponder.class);
