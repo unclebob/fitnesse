@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <properties>
+<Edit/>
 <Files/>
-<Help>A brief example. Read this one second.</Help>
+<Help>A brief example.</Help>
 <Properties/>
-<RecentChanges>true</RecentChanges>
+<RecentChanges/>
 <Refactor/>
 <Search/>
 <Test/>

@@ -1,4 +1,5 @@
-!**< variables
+!***< variables
+
 !define REGRACE_LINK {true}
 *!
 !1 !c FitNesse User Guide
@@ -8,52 +9,34 @@
 !c FitNesse contributors
 ----
 !3 Table of Contents
- * [[Getting Started][#gettingstarted]]
+ * [[Introduction][#introduction]]
  * [[Working with the FitNesse wiki][>FitNesseWiki]]
  * [[Writing Acceptance Tests][>WritingAcceptanceTests]] (jump directly to [[Fit][>WritingAcceptanceTests.FitFramework]] or [[Slim][>WritingAcceptanceTests.SliM]])
  * [[Administering FitNesse][>AdministeringFitNesse]]
  * [[Quick Reference Guide][>QuickReferenceGuide]]
  * [[Full Reference Guide][<FitNesse.FullReferenceGuide]] (takes some time to load)
-
+!anchor introduction
 !2 Introduction
+FitNesse is a tool for specifying and verifying application acceptance criteria (requirements). It acts as a bridge between the different stake holders (disciplines) in a software delivery process. It's wiki server makes it easy to document the software. It's test execution capabilities allow you to verify the documentation against the software, ensuring the documentation remains up to date and the software is not facing regression.
 
-FitNesse started as an HTML and [[wiki][http://wiki.org/wiki.cgi?WhatIsWiki]] "front-end" to [[FIT][http://fit.c2.com/]] (("Framework for Integrated Testing")). 
+For this to work, the tests should be defined on a business level, in conjuntion with business representatives. They are basically business requirements, layed out in a way easy to understand by all stakeholders. When your requirements are unambiguous, they can be automatically verified with your application. 
 
-!** From the [[Fit website][http://fit.c2.com/]]:
+To make it easy for all stake holders to interact with FitNesse, requirements can be created and edited through the web browser. It's a wiki! By writing specifications (also known as [[Acceptance Tests][>AcceptanceTests]]), you can create a common understanding among the team (coders and non-coders). This helps tremendously in [[delivering the right system][>DeliveringTheRightSystem]]. Specifications can be written in wiki syntax or in a rich text editor, so no knowledge of the wiki syntax is required.
+
+Because the specifications can actually be executed, FitNesse provides a method to demonstrate even to non-coders that the application works as designed. This can prevent problems leading to [[Project Death by Requirements][>ProjectDeathByRequirements]]. The goal is for FitNesse to operate at a level just ''below'' the user interface level, demonstrating that, given various inputs to your application, the correct results are computed. In a sense, you could consider it an alternative user interface for the application.
+
+Convinced? Have a more in depth look at how FitNesse works in our [[Two Minute Example][>TwoMinuteExample]]. [[Download and install][http://fitnesse.org/FitNesseDownload]] FitNesse on your machine, if you haven't done so already. Then learn how to [[work with the FitNesse wiki][>FitNesseWiki]] and [[write Acceptance Tests][>WritingAcceptanceTests]].
+
+!3 Brief history
+FitNesse started as an HTML and [[wiki][http://wiki.org/wiki.cgi?WhatIsWiki]] "front-end" to [[FIT][http://fit.c2.com/]] ("Framework for Integrated Testing") back in 2001.
+
+!*** From the [[Fit website][http://fit.c2.com/]]:
+
 Great software requires collaboration and communication. Fit is a tool for enhancing collaboration in software development. It's an invaluable way to collaborate on complicated problems -and get them right- early in development.
 
-Fit allows customers, testers, and programmers to learn what their software should do and what it does do. It automatically compares customers' expectations to actual results.
+Fit allows customers, testers, and programmers to learn what their software ''should'' do and what it ''does'' do. It automatically compares customers' expectations to actual results.
+
 *!
-!anchor gettingstarted
 Interestingly both the wiki and Fit were developed by Ward Cunningham, and you can read about them both on Ward's [[c2 wiki][http://fit.c2.com/]].
 
 Nowadays FitNesse is a comprehensive tool, supports multiple test systems and has been used for many software and even hardware projects.
-
-!2 Getting Started
-!-FitNesse-! is a [[wiki web server][http://wiki.org/wiki.cgi?WhatIsWiki]]. Learn how to use wiki features to create and change !-FitNesse-! pages.
-
-!-FitNesse-! is an application testing suite that allows you to test the business layer of your application. It is not a browser automation tool, although there are such tools that work with !-FitNesse-!.
-
-It is not a unit testing tool. The tests that !-FitNesse-! runs integrate the various layers of your application together, demonstrating even to non-coders that the application works as designed.
-
-It is an ''integration testing tool''. That means that it provides a method to automatically determine that your application is working correctly. Not your beautiful user interface, with all its fancy CSS and slick Ajax calls, but the stuff underneath, where the actual brains of the application live.
-
-The goal is for !-FitNesse-! to operate at a level just ''below'' the user interface level, demonstrating that, given various inputs to your application, the correct results are returned. In a sense, you could consider it an alternative user interface for the application.
-
-
-| [[A One-Minute Description][>OneMinuteDescription]] | ''What is !-FitNesse-!? Start here.'' |
-| [[A Two-Minute Example][>TwoMinuteExample]] | ''A brief example. Read this one second.'' |
-
-Before you start editing content, you might be interested in some background on why !-FitNesse-! has been built
-
-| [[Project Death by Requirements][>ProjectDeathByRequirements]] | ''Why use automated acceptance tests? What goes wrong when we don't use them?'' |
-| [[Acceptance Tests][>AcceptanceTests]] | ''What are the advantages of ''!-FitNesse-!'' automated acceptance tests?'' |
-| [[Delivering the Right System][>DeliveringTheRightSystem]] | How Teams Can Use FitNesse: an Introduction |
-
-Convinced? [[Download and install][http://fitnesse.org/FitNesseDownload]] on your machine, if you haven't done so already.
-
-----
-
-For Fit test system users:
-
- * >FixtureGallery
