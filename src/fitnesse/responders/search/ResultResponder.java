@@ -64,7 +64,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
     HtmlPage htmlPage = context.pageFactory.newPage();
     htmlPage.setTitle(getTitle());
     htmlPage.setPageTitle(pageTitle);
-    htmlPage.setMainTemplate("searchResults");
+    htmlPage.setMainTemplate(getTemplate());
 
     htmlPage.put("queryString", queryString);
     htmlPage.put("page", page);
@@ -82,6 +82,10 @@ public abstract class ResultResponder extends ChunkingResponder implements
     htmlPage.render(response.getWriter());
     
     response.closeAll();
+  }
+
+  protected String getTemplate() {
+    return "searchResults";
   }
 
   protected abstract String getTitle() ;

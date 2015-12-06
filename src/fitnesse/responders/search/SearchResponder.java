@@ -2,24 +2,24 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import static java.util.regex.Pattern.CASE_INSENSITIVE;
-import static java.util.regex.Pattern.LITERAL;
-
 import java.util.regex.Pattern;
 
+import fitnesse.components.TraversalListener;
 import fitnesse.wiki.search.RegularExpressionWikiPageFinder;
 import fitnesse.wiki.search.TitleWikiPageFinder;
-import fitnesse.components.TraversalListener;
+
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import static java.util.regex.Pattern.LITERAL;
 
 public class SearchResponder extends ResultResponder {
 
   private String getSearchString() {
-    String searchString = (String) request.getInput("searchString");
+    String searchString = request.getInput("searchString");
     return searchString == null ? "" : searchString;
   }
 
   private String getSearchType() {
-    String searchType = (String) request.getInput("searchType");
+    String searchType = request.getInput("searchType");
 
     if (searchType == null || searchType.toLowerCase().contains("title"))
       return "Title";
@@ -37,6 +37,10 @@ public class SearchResponder extends ResultResponder {
     return (request.getInput("searchType") == null) ? "Search Form" : getSearchType() + " Search Results for '" + getSearchString() + "'";
   }
 
+  @Override
+  protected String getTemplate() {
+    return "search";
+  }
   @Override
   public void traverse(TraversalListener<Object> observer) {
     String searchString = getSearchString();

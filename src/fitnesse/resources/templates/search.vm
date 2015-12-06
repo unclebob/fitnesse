@@ -1,0 +1,132 @@
+	#####################
+	### Show Search Form
+	#####################
+	
+	
+	<script type="text/javascript">
+	$(document).ready(function(){
+	    $(".tip-top").tooltip({
+	        placement : 'top'
+	    });
+	    $(".tip-right").tooltip({
+	        placement : 'right'
+	    });
+	    $(".tip-bottom").tooltip({
+	        placement : 'bottom'
+	    });
+	    $(".tip-left").tooltip({
+	        placement : 'left'
+	    });
+	});
+	</script>
+	
+	
+	#macro( checked $type $attr )#if( $request.getInput($type).contains($attr) ) checked="checked"#end#end
+	
+	<div class="container-fluid">
+	  <ul class="nav nav-tabs">
+	    <li  class="navbar-form #if(!$request.getInput("responder").contains("Properties")) active#end "><a data-toggle="pill" href="#form1">Text Search</a></li>
+	    <li  class="navbar-form #if($request.getInput("responder").contains("Properties")) active#end "><a data-toggle="pill" href="#form2">Properties Search</a></li>
+	  </ul>
+	  <div class="tab-content">
+	    <div id="form1" class="tab-pane #if (!$request.getInput("responder").contains("Properties"))in active #end ">
+	
+						<form>
+						 <input type="hidden" name="responder" value="search"/>
+						 <fieldset>
+						  <label for="searchString">Text:</label>
+						  <input type="text" id="searchString" name="searchString" value="#if ($request.hasInput("searchString"))#escape($request.getInput("searchString"))#end" placeholder="Enter search text"/>
+						 </fieldset>
+						  <fieldset>
+						   <label for="searchScope">Scope:</label>
+						   <input type="radio" id="root" name="searchScope" value="root" #checked( "searchScope" "root")/>All
+						   #foreach( $breadCrumb in $pageTitle.BreadCrumbs )
+						   	<input type="radio" id="$breadCrumb" name="searchScope" value="$breadCrumb.Name" #checked( "searchScope" $breadCrumb.Name)/>$breadCrumb.Name
+						   #end
+						   <input type="radio" id="leaf" name="searchScope" value="" #if( !$request.hasInput("searchScope") || $request.getInput("searchScope").equals("") ) checked="checked"#end#/>$page.getName()
+						  </fieldset>
+						 <fieldset class="buttons">
+							  <input type="submit" name="searchType" value="Search Titles" data-toggle="tooltip" class="tip-bottom" data-original-title="Searches in page titles only.  Will run fairly quickly."/>
+							  <input type="submit" name="searchType" value="Search Content" data-toggle="tooltip" class="tip-bottom" data-original-title="Searches in the content of every page.  Don't hold your breath."/>
+							<a class="button" href="$viewLocation">Back</a>
+						 </fieldset>
+						</form>
+	        </div>
+	    <div id="form2" class="tab-pane #if ($request.getInput("responder").contains("Properties"))in active #end">
+						<form>
+						 <input type="hidden" name="responder" value="executeSearchProperties"/>
+						 <fieldset>
+						  <label for="Suites">Tags:</label>
+						  <input type="text"  name="Suites"#if ($request.hasInput("Suites")) value="$request.getInput("Suites")"#end placeholder="Enter search Tags, separated with comma"/>
+						 </fieldset>
+						 
+						  <fieldset>
+						   <label for="searchScope">Scope:</label>
+						   <input type="radio" id="root" name="searchScope" value="root" #checked( "searchScope" "root")/>All
+						   #foreach( $breadCrumb in $pageTitle.BreadCrumbs )
+						   	<input type="radio" id="$breadCrumb" name="searchScope" value="$breadCrumb.Name" #checked( "searchScope" $breadCrumb.Name)/>$breadCrumb.Name
+						   #end
+						   <input type="radio" id="leaf" name="searchScope" value="" #if( !$request.hasInput("searchScope") || $request.getInput("searchScope").equals("") ) checked="checked"#end#/>$page.getName()
+						  </fieldset>
+	
+						 <div class="properties">
+						  <fieldset>
+						   <legend>Page type:</legend>
+						   #foreach( $pageType in $pageTypeAttributes )
+						   <label for="$pageType"><input type="checkbox" id="$pageType" name="PageType" value="$pageType"#checked( "PageType" $pageType)/>$pageType</label>
+						   #end
+	
+						   <label for="Prune"><input type="checkbox" id="Prune" name="Prune"#if( $request.hasInput("Prune")) checked="checked"#end/>Skip</label>
+						  </fieldset>
+							 
+						  <fieldset>
+						   <legend>Actions:</legend>
+						   #foreach( $action in $actionAttributes )
+						   <label for="$action"><input type="checkbox" id="$action" name="Action" value="$action"#checked( "Action" $action )/>$action</label>
+						   #end
+						  </fieldset>
+	
+						  <fieldset>
+						   <legend>Navigation:</legend>
+						   #foreach( $navigation in $navigationAttributes )
+						   <label for="$navigation"><input type="checkbox" id="$navigation" name="Action" value="$navigation"#checked( "Action" $navigation )/>$navigation</label>
+						   #end
+						  </fieldset>
+							
+						  <fieldset>
+						   <legend>Security:</legend>
+						   #foreach( $security in $securityAttributes )
+						   <label for="$security"><input type="checkbox" id="$security" name="Security" value="$security"#checked( "Security" $security )/>$security</label>
+						   #end
+						  </fieldset>
+	
+						  <fieldset>
+						   <legend>Special pages:</legend>
+						   #foreach( $special in $specialAttributes )
+						   <label for="$special"><input type="checkbox" id="$special" name="Special" value="$special"#checked( "Special" $special )/>$special</label>
+						   #end
+						  </fieldset>
+						 </div>
+						 <fieldset class="buttons">
+						  <input type="submit" name="Search" value="Search Properties"/>
+						 </fieldset>
+						</form>
+	    </div>
+	    </div>
+	</div>
+	
+	<script type="text/javascript">
+	#if (!$request.getInput("responder").contains("Properties")) 
+		document.forms[0].searchString.focus();
+	#else
+		document.forms[1].Suites.focus();
+	#end
+	</script>
+
+#####################
+### Show Result Set
+### but only if a search was done already
+#####################
+#if( $request.hasInput("searchString") )
+ #parse("searchResults.vm")
+#end
