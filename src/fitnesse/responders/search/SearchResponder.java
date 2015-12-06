@@ -39,7 +39,7 @@ public class SearchResponder extends ResultResponder {
 
   @Override
   protected String getTemplate() {
-    return "search";
+    return "searchForm";
   }
   @Override
   public void traverse(TraversalListener<Object> observer) {
