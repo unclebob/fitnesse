@@ -27,6 +27,16 @@ public class SearchReplaceResponder extends ResultResponder implements Traversal
         getSearchString(), getReplacementString());
   }
 
+  @Override
+  protected PageFinder getPageFinder(TraversalListener<WikiPage> observer) {
+    webOutputObserver = observer;
+    String searchString = getSearchString();
+    String replacementString = getReplacementString();
+
+    contentReplaceObserver = new ContentReplacingSearchObserver(searchString, replacementString);
+    return new RegularExpressionWikiPageFinder(searchString, this);
+  }
+
   private String getReplacementString() {
     return request.getInput("replacementString");
   }
@@ -40,16 +50,4 @@ public class SearchReplaceResponder extends ResultResponder implements Traversal
     contentReplaceObserver.process(page);
     webOutputObserver.process(page);
   }
-
-  @Override
-  public void traverse(TraversalListener<Object> observer) {
-    webOutputObserver = observer;
-    String searchString = getSearchString();
-    String replacementString = getReplacementString();
-
-    contentReplaceObserver = new ContentReplacingSearchObserver(searchString, replacementString);
-    PageFinder finder = new RegularExpressionWikiPageFinder(searchString, this);
-    finder.search(page);
-  }
-
 }

@@ -11,6 +11,7 @@ import java.util.Map;
 
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.search.AttributeWikiPageFinder;
 import fitnesse.wiki.search.PageFinder;
 import fitnesse.components.TraversalListener;
@@ -97,19 +98,17 @@ public class SearchPropertiesResponder extends ResultResponder {
   }
 
   @Override
-  public void traverse(TraversalListener<Object> observer) {
+  protected PageFinder getPageFinder(TraversalListener<WikiPage> observer) {
     List<PageType> pageTypes = getPageTypesFromInput(request);
     Map<String, Boolean> attributes = getAttributesFromInput(request);
     String suites = getSuitesFromInput(request);
 
     if (pageTypes == null && attributes.isEmpty() && suites == null) {
       response.add("No search properties were specified.");
-      return;
+      return null;
     }
 
-    PageFinder finder = new AttributeWikiPageFinder(observer, pageTypes,
-        attributes, suites);
-    finder.search(getSearchScope());
+    return new AttributeWikiPageFinder(observer, pageTypes, attributes, suites);
   }
 
 }

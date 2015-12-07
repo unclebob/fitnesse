@@ -5,6 +5,8 @@ package fitnesse.responders.search;
 import java.util.regex.Pattern;
 
 import fitnesse.components.TraversalListener;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.search.PageFinder;
 import fitnesse.wiki.search.RegularExpressionWikiPageFinder;
 import fitnesse.wiki.search.TitleWikiPageFinder;
 
@@ -43,17 +45,18 @@ public class SearchResponder extends ResultResponder {
   }
 
   @Override
-  public void traverse(TraversalListener<Object> observer) {
+  protected PageFinder getPageFinder(TraversalListener<WikiPage> observer) {
     String searchString = getSearchString();
     if (!"".equals(searchString)) {
       String searchType = getSearchType();
       if ("Title".equals(searchType))
-        new TitleWikiPageFinder(searchString, observer).search(getSearchScope());
+        return new TitleWikiPageFinder(searchString, observer);
       else {
         Pattern regularExpression = Pattern.compile(searchString, CASE_INSENSITIVE + LITERAL);
-        new RegularExpressionWikiPageFinder(regularExpression, observer).search(getSearchScope());
+        return new RegularExpressionWikiPageFinder(regularExpression, observer);
       }
     }
+    return null;
   }
 
   @Override
