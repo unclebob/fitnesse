@@ -17,6 +17,11 @@ public class SearchReplaceResponder extends ResultResponder implements Traversal
   }
 
   @Override
+  protected String getTemplate() {
+    return "searchResults";
+  }
+
+  @Override
   protected String getTitle() {
     return String.format("Replacing matching content \"%s\" with content \"%s\"",
         getSearchString(), getReplacementString());

@@ -50,11 +50,6 @@ public class SearchPropertiesResponder extends ResultResponder {
     return request.getInput(PropertySUITES);
   }
 
-  @Override
-  protected String getTemplate() {
-    return "searchForm";
-  }
-
   private boolean isSuitesGiven(Request request) {
     return request.hasInput(PropertySUITES);
   }
@@ -80,7 +75,7 @@ public class SearchPropertiesResponder extends ResultResponder {
   private void getListboxAttributesFromRequest(Request request,
       String inputAttributeName, String[] attributeList,
       Map<String, Boolean> attributes) {
-    String requested = (String) request.getInput(inputAttributeName);
+    String requested = request.getInput(inputAttributeName);
     if (requested == null) {
       requested = IGNORED;
     }
@@ -89,6 +84,11 @@ public class SearchPropertiesResponder extends ResultResponder {
         attributes.put(searchAttribute, requested.contains(searchAttribute));
       }
     }
+  }
+
+  @Override
+  protected String getTemplate() {
+    return "searchForm";
   }
 
   @Override

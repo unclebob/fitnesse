@@ -84,9 +84,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
     response.closeAll();
   }
 
-  protected String getTemplate() {
-    return "searchResults";
-  }
+  protected abstract String getTemplate();
 
   protected abstract String getTitle() ;
 

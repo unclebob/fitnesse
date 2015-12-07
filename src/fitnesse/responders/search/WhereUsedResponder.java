@@ -13,6 +13,11 @@ public class WhereUsedResponder extends ResultResponder {
   }
 
   @Override
+  protected String getTemplate() {
+    return "searchResults";
+  }
+
+  @Override
   protected String getTitle() {
     return "Where Used Results";
   }

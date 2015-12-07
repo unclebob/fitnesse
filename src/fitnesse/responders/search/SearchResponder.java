@@ -33,14 +33,15 @@ public class SearchResponder extends ResultResponder {
   }
 
   @Override
+  protected String getTemplate() {
+    return "searchForm";
+  }
+
+  @Override
   protected String getTitle() {
     return (request.getInput("searchType") == null) ? "Search Form" : getSearchType() + " Search Results for '" + getSearchString() + "'";
   }
 
-  @Override
-  protected String getTemplate() {
-    return "searchForm";
-  }
   @Override
   public void traverse(TraversalListener<Object> observer) {
     String searchString = getSearchString();
