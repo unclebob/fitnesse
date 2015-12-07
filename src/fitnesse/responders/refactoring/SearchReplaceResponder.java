@@ -28,11 +28,11 @@ public class SearchReplaceResponder extends ResultResponder implements Traversal
   }
 
   private String getReplacementString() {
-    return (String) request.getInput("replacementString");
+    return request.getInput("replacementString");
   }
 
   private String getSearchString() {
-    return (String) request.getInput("searchString");
+    return request.getInput("searchString");
   }
 
   @Override
