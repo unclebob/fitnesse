@@ -56,7 +56,7 @@ public class SearchFormResponderTest {
   @Test
   public void propertiesForm() throws Exception {
     assertHasRegexp("<input.*value=\"Search Properties\".*>", content);
-    assertHasRegexp("<input.*name=\"responder\".*value=\"executeSearchProperties\"", content);
+    assertHasRegexp("<input.*name=\"responder\".*value=\"searchProperties\"", content);
 
     for (String attributeName : SEARCH_ACTION_ATTRIBUTES) {
       assertSubString(attributeName, content);
