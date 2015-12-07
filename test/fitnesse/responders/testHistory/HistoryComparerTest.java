@@ -289,6 +289,7 @@ public class HistoryComparerTest {
     result.exceptions = "0";
     result.content = generateHtmlFromWiki(passOrFail);
     result.relativePageName = "testPageOne";
+    result.dateString = "2015-10-09T12:23:13-01:00";
     report.addResult(result);
     Writer writer = new StringWriter();
     VelocityEngine engine = context.pageFactory.getVelocityEngine();

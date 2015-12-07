@@ -5,7 +5,7 @@
 #foreach ($reference in $suiteExecutionReport.pageHistoryReferences)
   <pageHistoryReference>
     <name>#escape($reference.pageName)</name>
-    <date>$reference.getDateString()</date>
+    <date>$reference.dateString</date>
     <pageHistoryLink>$reference.pageName?pageHistory&amp;resultDate=$reference.resultDate</pageHistoryLink>
     <counts>
       <right>$reference.testSummary.right</right>

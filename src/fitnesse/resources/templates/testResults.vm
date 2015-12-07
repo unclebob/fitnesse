@@ -10,7 +10,8 @@
       <ignores>$!result.ignores</ignores>
       <exceptions>$!result.exceptions</exceptions>
     </counts>
-   <runTimeInMillis>$result.RunTimeInMillis</runTimeInMillis>
+    <date>$result.dateString</date>
+    <runTimeInMillis>$result.runTimeInMillis</runTimeInMillis>
     <content>#escape($result.Content)</content>
     <relativePageName>$result.RelativePageName</relativePageName>
     #if($result.Tags)

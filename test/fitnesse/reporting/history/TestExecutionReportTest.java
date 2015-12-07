@@ -52,6 +52,7 @@ public class TestExecutionReportTest {
     result.exceptions = "4";
     result.relativePageName = "relativePageName";
     result.tags = "tags";
+    result.dateString = "2015-12-07T17:12:11+01:00";
     result.runTimeInMillis = "234";
     expected.addResult(result);
   }
