@@ -17,7 +17,7 @@ import fitnesse.components.TraversalListener;
 import fitnesse.http.Request;
 import fitnesse.wiki.PageType;
 
-public class ExecuteSearchPropertiesResponder extends ResultResponder {
+public class SearchPropertiesResponder extends ResultResponder {
 
   public static final String IGNORED = "Any";
   public static final String ACTION = "Action";
@@ -30,7 +30,7 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
   }
 
   protected List<PageType> getPageTypesFromInput(Request request) {
-    String requestedPageTypes = (String) request.getInput(PAGE_TYPE_ATTRIBUTE);
+    String requestedPageTypes = request.getInput(PAGE_TYPE_ATTRIBUTE);
     if (requestedPageTypes == null) {
       return null;
     }
@@ -47,7 +47,12 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
     if (!isSuitesGiven(request))
       return null;
 
-    return (String) request.getInput(PropertySUITES);
+    return request.getInput(PropertySUITES);
+  }
+
+  @Override
+  protected String getTemplate() {
+    return "searchForm";
   }
 
   private boolean isSuitesGiven(Request request) {

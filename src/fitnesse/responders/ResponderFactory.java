@@ -71,7 +71,7 @@ public class ResponderFactory {
     addResponder("names", NameWikiPageResponder.class);
     addResponder("properties", PropertiesResponder.class);
     addResponder("saveProperties", SavePropertiesResponder.class);
-    addResponder("executeSearchProperties", ExecuteSearchPropertiesResponder.class);
+    addResponder("executeSearchProperties", SearchPropertiesResponder.class);
     addResponder("whereUsed", WhereUsedResponder.class);
     addResponder("refactor", RefactorPageResponder.class);
     addResponder("deletePage", DeletePageResponder.class);

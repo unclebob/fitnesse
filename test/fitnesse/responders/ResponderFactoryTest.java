@@ -28,7 +28,7 @@ import fitnesse.responders.refactoring.SearchReplaceResponder;
 import fitnesse.responders.run.StopTestResponder;
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
-import fitnesse.responders.search.ExecuteSearchPropertiesResponder;
+import fitnesse.responders.search.SearchPropertiesResponder;
 import fitnesse.responders.search.SearchResponder;
 import fitnesse.responders.search.WhereUsedResponder;
 import fitnesse.responders.testHistory.HistoryComparerResponder;
@@ -213,7 +213,7 @@ public class ResponderFactoryTest {
 
   @Test
   public void testCreateExecuteSearchPropertiesResponder() throws Exception {
-    assertResponderTypeMatchesInput("executeSearchProperties", ExecuteSearchPropertiesResponder.class);
+    assertResponderTypeMatchesInput("executeSearchProperties", SearchPropertiesResponder.class);
   }
 
   @Test
