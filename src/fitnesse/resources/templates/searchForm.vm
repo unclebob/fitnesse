@@ -99,6 +99,6 @@
  $('input').tooltip();
 </script>
 
-#if( $request.hasInput("searchType") )
+#if( $request.hasInput("searchType") || $focusPropertiesTab )
  #parse("searchResults.vm")
 #end

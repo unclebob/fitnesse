@@ -101,6 +101,7 @@ public class SearchPropertiesResponderTest {
 
     MockRequest request = new MockRequest();
     request.setResource("PageOne");
+    request.addInput("responder", "searchProperties");
     request.addInput("Action", "Any");
     request.addInput("Security", "Any");
     request.addInput("Special", "Any");
