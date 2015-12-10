@@ -20,6 +20,13 @@ public class DateTimeUtilTest {
   }
 
   @Test
+  public void canParseISO8601DateFormat() {
+    // If not, it will throw runtime exception
+    String dateString = "2015-10-12T18:00:00+00:00";
+    DateTimeUtil.getDateFromString(dateString);
+  }
+
+  @Test
   public void canParseUSDateFormat() {
     // If not, it will throw runtime exception
     String dateString = "12/31/1969 18:00:00";

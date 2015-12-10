@@ -391,7 +391,7 @@ public class PageHistoryResponderTest {
     result.exceptions = "44";
     result.relativePageName = "relativePageName";
     result.content = "wad of HTML content\u001B after control character";
-    result.dateString = "2015-07-03T12:56:57Z";
+    result.dateString = "2015-07-03T12:56:57+00:00";
     result.runTimeInMillis = "99";
     return testResponse;
   }
