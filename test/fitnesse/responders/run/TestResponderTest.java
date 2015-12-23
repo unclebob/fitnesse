@@ -607,6 +607,28 @@ public class TestResponderTest {
     assertHasRegexp("<td><span class=\"pass\">wow</span></td>", HtmlUtil.unescapeHTML(results));
   }
 
+  @Test
+  public void xmlFormatterShouldContainExecutionLog() throws Exception {
+    WikiPage suitePage = WikiPageUtil.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
+    WikiPage testPage = WikiPageUtil.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
+
+    WikiPagePath testPagePath = testPage.getPageCrawler().getFullPath();
+    String resource = PathParser.render(testPagePath);
+    request.setResource(resource);
+    request.addInput("format", "xml");
+    request.addInput("nochunk", "nochunk");
+
+    Response response = responder.makeResponse(context, request);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    results = sender.sentData();
+
+    assertHasRegexp("<executionLog>", results);
+    assertHasRegexp("<testSystem>fit:fit.FitServer</testSystem>", results);
+    assertHasRegexp("<exitCode>0</exitCode>", results);
+    assertHasRegexp("<stdOut>Output of TestPage.*</stdOut>", results);
+    assertHasRegexp("<stdErr></stdErr>", results);
+  }
 
   private String errorWritingTable(String message) {
     return "\n|!-fitnesse.testutil.ErrorWritingFixture-!|\n" +
@@ -723,7 +745,6 @@ public class TestResponderTest {
       String runTimeInMillis = XmlUtil.getTextValue(result, "runTimeInMillis");
       assertThat(Long.parseLong(runTimeInMillis), is(not(0L)));
 
-      assertTablesInSlimScenarioAreCorrect(result);
       assertInstructionsOfSlimScenarioTableAreCorrect(result);
     }
 
@@ -759,49 +780,6 @@ public class TestResponderTest {
         Element instructionElement = (Element) instructionList.item(i);
         assertInstructionHas(instructionElement, instructionContents[i]);
       }
-    }
-
-    private void assertTablesInSlimScenarioAreCorrect(Element result) throws Exception {
-//      Element tables = getElementByTagName(result, "tables");
-//      NodeList tableList = tables.getElementsByTagName("table");
-//      assertEquals(5, tableList.getLength());
-//
-//      String tableNames[] = {"scenarioTable_0", "scriptTable_1", "decisionTable_2", "decisionTable_2_0/scriptTable_0", "decisionTable_2_1/scriptTable_0"};
-//      String tableValues[][][] = {
-//        {
-//          {"scenario", "f", "a"},
-//          {"check", "echo int", "@a", "@a"}
-//        },
-//        {
-//          {"script", "pass(fitnesse.slim.test.TestSlim)"}
-//        },
-//        {
-//          {"f"},
-//          {"a"},
-//          {"1", "pass(scenario:decisionTable_2_0/scriptTable_0)"},
-//          {"2", "pass(scenario:decisionTable_2_1/scriptTable_0)"}
-//        },
-//        {
-//          {"scenario", "f", "a"},
-//          {"check", "echo int", "1", "pass(1)"}
-//        },
-//        {
-//          {"scenario", "f", "a"},
-//          {"check", "echo int", "2", "pass(2)"}
-//        }
-//      };
-//
-//      for (int tableIndex = 0; tableIndex < tableList.getLength(); tableIndex++) {
-//        assertEquals(tableNames[tableIndex], XmlUtil.getTextValue((Element) tableList.item(tableIndex), "name"));
-//
-//        Element tableElement = (Element) tableList.item(tableIndex);
-//        NodeList rowList = tableElement.getElementsByTagName("row");
-//        for (int rowIndex = 0; rowIndex < rowList.getLength(); rowIndex++) {
-//          NodeList colList = ((Element) rowList.item(rowIndex)).getElementsByTagName("col");
-//          for (int colIndex = 0; colIndex < colList.getLength(); colIndex++)
-//            assertEquals(tableValues[tableIndex][rowIndex][colIndex], XmlUtil.getElementText((Element) colList.item(colIndex)));
-//        }
-//      }
     }
 
     private void checkExpectation(NodeList instructionList, int index, String id, String col, String row, String status, String type, String actual, String expected, String message) throws Exception {

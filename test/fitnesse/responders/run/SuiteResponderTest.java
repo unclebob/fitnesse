@@ -481,6 +481,22 @@ public class SuiteResponderTest {
   }
 
   @Test
+  public void showExecutionLogInXmlFormat() throws Exception {
+    request.addInput("format", "xml");
+    request.addInput("nochunk", "nochunk");
+    addTestToSuite("SlimTest", simpleSlimDecisionTable);
+
+    String results = runSuite();
+
+    assertHasRegexp("<executionLog>", results);
+    assertHasRegexp("<testSystem>fit:fit.FitServer</testSystem>", results);
+    assertHasRegexp("<testSystem>slim:in-process</testSystem>", results);
+    assertHasRegexp("<exitCode>0</exitCode>", results);
+    assertHasRegexp("<stdOut>.*</stdOut>", results);
+    assertHasRegexp("<stdErr>.*</stdErr>", results);
+  }
+
+  @Test
   public void loadsCustomFormatters() throws IOException {
 
     context.formatterFactory.registerFormatter(FooFormatter.class);

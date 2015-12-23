@@ -43,6 +43,7 @@ import fitnesse.testrunner.RunningTestingTracker;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testrunner.SuiteFilter;
 import fitnesse.testsystems.ConsoleExecutionLogListener;
+import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
@@ -234,6 +235,9 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
       addHistoryFormatter(runner);
     } else {
       runner.addExecutionLogListener(new ConsoleExecutionLogListener());
+    }
+    if (mainFormatter instanceof ExecutionLogListener) {
+      runner.addExecutionLogListener((ExecutionLogListener) mainFormatter);
     }
     for (Formatter formatter : context.formatterFactory.createFormatters()) {
       runner.addTestSystemListener(formatter);
