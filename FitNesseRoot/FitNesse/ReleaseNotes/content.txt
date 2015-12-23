@@ -4,6 +4,7 @@
  * Detailed diff for failed Slim tests ([[824][https://github.com/unclebob/fitnesse/pull/824]])
  * Git version control support is now a [[plugin][http://fitnesse.org/PlugIns]] ([[792][https://github.com/unclebob/fitnesse/pull/792]])
  * Customized !-UnauthorizedResponder-! ([[841][https://github.com/unclebob/fitnesse/pull/841]])
+ * Slim query table fields are now matched left to right ([[788][https://github.com/unclebob/fitnesse/pull/788]])
  * Improved search screen ([[838][https://github.com/unclebob/fitnesse/pull/838]])
  * FitNesse now uses java.util.concurrent thread pools instead of spawning unmanaged threads ([[830][https://github.com/unclebob/fitnesse/pull/830]])
  * Execution log information is displayed when executing suites and tests with format=xml ([[816][https://github.com/unclebob/fitnesse/issues/816]])
