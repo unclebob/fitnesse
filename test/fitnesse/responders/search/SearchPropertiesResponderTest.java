@@ -1,7 +1,7 @@
 package fitnesse.responders.search;
 
-import static fitnesse.responders.search.ExecuteSearchPropertiesResponder.ACTION;
-import static fitnesse.responders.search.ExecuteSearchPropertiesResponder.SPECIAL;
+import static fitnesse.responders.search.SearchPropertiesResponder.ACTION;
+import static fitnesse.responders.search.SearchPropertiesResponder.SPECIAL;
 import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTE;
 import static fitnesse.wiki.PageData.PropertyPRUNE;
 import static fitnesse.wiki.PageType.STATIC;
@@ -32,13 +32,13 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ExecuteSearchPropertiesResponderTest {
-  private ExecuteSearchPropertiesResponder responder;
+public class SearchPropertiesResponderTest {
+  private SearchPropertiesResponder responder;
   private FitNesseContext context;
 
   @Before
   public void setUp() throws Exception {
-    responder = new ExecuteSearchPropertiesResponder();
+    responder = new SearchPropertiesResponder();
     context = FitNesseUtil.makeTestContext();
   }
 
@@ -101,6 +101,7 @@ public class ExecuteSearchPropertiesResponderTest {
 
     MockRequest request = new MockRequest();
     request.setResource("PageOne");
+    request.addInput("responder", "searchProperties");
     request.addInput("Action", "Any");
     request.addInput("Security", "Any");
     request.addInput("Special", "Any");

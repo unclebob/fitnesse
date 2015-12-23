@@ -3,13 +3,25 @@
 package fitnesse.responders.search;
 
 import fitnesse.components.TraversalListener;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.search.PageFinder;
 import fitnesse.wiki.search.WhereUsedPageFinder;
 
 public class WhereUsedResponder extends ResultResponder {
 
   @Override
-  public void traverse(TraversalListener<Object> observer) {
-    new WhereUsedPageFinder(page, observer).search(root);
+  public PageFinder getPageFinder(TraversalListener<WikiPage> observer) {
+    return new WhereUsedPageFinder(page, observer);
+  }
+
+  @Override
+  protected WikiPage getSearchScope() {
+    return root;
+  }
+
+  @Override
+  protected String getTemplate() {
+    return "searchResults";
   }
 
   @Override

@@ -243,3 +243,7 @@ article th {
     padding-bottom: 1em;
     border-bottom: 1px solid #984D00;
 }
+
+.nav-tabs {
+	display: none;
+}

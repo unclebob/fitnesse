@@ -23,10 +23,11 @@ import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.search.PageFinder;
 
 
 public abstract class ResultResponder extends ChunkingResponder implements
-  SecureResponder, Traverser<Object> {
+  SecureResponder, Traverser<WikiPage> {
 
   static final String[] SEARCH_ACTION_ATTRIBUTES = { PropertyEDIT, PropertyVERSIONS,
     PropertyPROPERTIES, PropertyREFACTOR, PropertyWHERE_USED };
@@ -64,7 +65,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
     HtmlPage htmlPage = context.pageFactory.newPage();
     htmlPage.setTitle(getTitle());
     htmlPage.setPageTitle(pageTitle);
-    htmlPage.setMainTemplate("searchResults");
+    htmlPage.setMainTemplate(getTemplate());
 
     htmlPage.put("queryString", queryString);
     htmlPage.put("page", page);
@@ -84,10 +85,19 @@ public abstract class ResultResponder extends ChunkingResponder implements
     response.closeAll();
   }
 
+  @Override
+  public final void traverse(TraversalListener<WikiPage> observer) {
+    PageFinder pageFinder = getPageFinder(observer);
+    if (pageFinder != null) {
+      pageFinder.search(getSearchScope());
+    }
+  }
+
+  protected abstract String getTemplate();
+
   protected abstract String getTitle() ;
 
-  @Override
-  public abstract void traverse(TraversalListener<Object> observer);
+  protected abstract PageFinder getPageFinder(TraversalListener<WikiPage> observer);
 
   @Override
   public SecureOperation getSecureOperation() {

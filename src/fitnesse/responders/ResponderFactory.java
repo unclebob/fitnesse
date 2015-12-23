@@ -60,7 +60,7 @@ public class ResponderFactory {
     addResponder("edit", EditResponder.class);
     addResponder("saveData", SaveResponder.class);
     addResponder("search", SearchResponder.class);
-    addResponder("searchForm", SearchFormResponder.class);
+    addResponder("searchForm", SearchResponder.class);
     addResponder("stoptest", StopTestResponder.class);
     addResponder("test", TestResponder.class);
     addResponder("suite", SuiteResponder.class);
@@ -71,7 +71,9 @@ public class ResponderFactory {
     addResponder("names", NameWikiPageResponder.class);
     addResponder("properties", PropertiesResponder.class);
     addResponder("saveProperties", SavePropertiesResponder.class);
-    addResponder("executeSearchProperties", ExecuteSearchPropertiesResponder.class);
+    addResponder("searchProperties", SearchPropertiesResponder.class);
+    // Deprecated:
+    addResponder("executeSearchProperties", SearchPropertiesResponder.class);
     addResponder("whereUsed", WhereUsedResponder.class);
     addResponder("refactor", RefactorPageResponder.class);
     addResponder("deletePage", DeletePageResponder.class);

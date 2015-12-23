@@ -11,13 +11,14 @@ import java.util.Map;
 
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.search.AttributeWikiPageFinder;
 import fitnesse.wiki.search.PageFinder;
 import fitnesse.components.TraversalListener;
 import fitnesse.http.Request;
 import fitnesse.wiki.PageType;
 
-public class ExecuteSearchPropertiesResponder extends ResultResponder {
+public class SearchPropertiesResponder extends ResultResponder {
 
   public static final String IGNORED = "Any";
   public static final String ACTION = "Action";
@@ -30,7 +31,7 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
   }
 
   protected List<PageType> getPageTypesFromInput(Request request) {
-    String requestedPageTypes = (String) request.getInput(PAGE_TYPE_ATTRIBUTE);
+    String requestedPageTypes = request.getInput(PAGE_TYPE_ATTRIBUTE);
     if (requestedPageTypes == null) {
       return null;
     }
@@ -47,7 +48,7 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
     if (!isSuitesGiven(request))
       return null;
 
-    return (String) request.getInput(PropertySUITES);
+    return request.getInput(PropertySUITES);
   }
 
   private boolean isSuitesGiven(Request request) {
@@ -75,7 +76,7 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
   private void getListboxAttributesFromRequest(Request request,
       String inputAttributeName, String[] attributeList,
       Map<String, Boolean> attributes) {
-    String requested = (String) request.getInput(inputAttributeName);
+    String requested = request.getInput(inputAttributeName);
     if (requested == null) {
       requested = IGNORED;
     }
@@ -87,24 +88,27 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
   }
 
   @Override
+  protected String getTemplate() {
+    return "searchForm";
+  }
+
+  @Override
   protected String getTitle() {
     return "Search Page Properties Results";
   }
 
   @Override
-  public void traverse(TraversalListener<Object> observer) {
+  protected PageFinder getPageFinder(TraversalListener<WikiPage> observer) {
     List<PageType> pageTypes = getPageTypesFromInput(request);
     Map<String, Boolean> attributes = getAttributesFromInput(request);
     String suites = getSuitesFromInput(request);
 
     if (pageTypes == null && attributes.isEmpty() && suites == null) {
       response.add("No search properties were specified.");
-      return;
+      return null;
     }
 
-    PageFinder finder = new AttributeWikiPageFinder(observer, pageTypes,
-        attributes, suites);
-    finder.search(getSearchScope());
+    return new AttributeWikiPageFinder(observer, pageTypes, attributes, suites);
   }
 
 }
