@@ -23,7 +23,7 @@
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/bootstrap/css/fitnesse-bootstrap.css">
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/question.mark/question.mark.css" />
 
-  <script src="${contextRoot}files/fitnesse/javascript/jquery-1.7.2.min.js" type="text/javascript"></script>
+  <script src="${contextRoot}files/fitnesse/javascript/jquery-1.11.3.min.js" type="text/javascript"></script>
   <script src="${contextRoot}files/fitnesse/javascript/fitnesse.js" type="text/javascript"></script>
 
   <script src="${contextRoot}files/fitnesse/bootstrap/js/bootstrap.js" type="text/javascript"></script>

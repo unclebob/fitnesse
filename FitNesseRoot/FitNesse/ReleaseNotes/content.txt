@@ -8,6 +8,7 @@
  * FitNesse now uses java.util.concurrent thread pools instead of spawning unmanaged threads ([[830][https://github.com/unclebob/fitnesse/pull/830]])
  * Execution log information is displayed when executing suites and tests with format=xml ([[816][https://github.com/unclebob/fitnesse/issues/816]])
  * Many, many code consistency fixes thanks to @hansjoachim ([[807][https://github.com/unclebob/fitnesse/pull/807]], [[808][https://github.com/unclebob/fitnesse/pull/808]], [[810][https://github.com/unclebob/fitnesse/pull/810]], [[811][https://github.com/unclebob/fitnesse/pull/811]], [[812][https://github.com/unclebob/fitnesse/pull/812]], [[817][https://github.com/unclebob/fitnesse/pull/817]], [[818][https://github.com/unclebob/fitnesse/pull/818]], [[829][https://github.com/unclebob/fitnesse/pull/829]], [[836][https://github.com/unclebob/fitnesse/pull/836]], [[840][https://github.com/unclebob/fitnesse/pull/840]])
+ * Under the hood: JQuery has been upgraded to 1.11.3 (was 1.7.2)
  * Issues fixed:
    * Class path issues (on windows and paths with spaces) ([[821][https://github.com/unclebob/fitnesse/pull/821]])
    * Fix issues with non-wiki words and symbolic links ([[820][https://github.com/unclebob/fitnesse/pull/820]])
@@ -28,7 +29,6 @@
    * WYSIWYG (rich text) breaks inlinecode in table ([[756][https://github.com/unclebob/fitnesse/pull/756]])
    * Rich text editor retains line breaks ([[756][https://github.com/unclebob/fitnesse/pull/756]], [[777][https://github.com/unclebob/fitnesse/pull/77]])
    * XML result files do no longer contain HTML output by default (as it was a few releases ago) ([[771][https://github.com/unclebob/fitnesse/pull/771]])
-
 
 For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=12&state=closed.
 
