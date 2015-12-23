@@ -1,16 +1,17 @@
 <?xml version="1.0"?>
-#set($suiteTotalRunTimeSeconds = $suiteExecutionReport.totalRunTimeInMillis / 1000 )
-<testsuite name="#escape($suiteExecutionReport.rootPath)" tests="$suiteExecutionReport.pageHistoryReferences.size()" failures="$suiteExecutionReport.finalCounts.wrong" disabled="$suiteExecutionReport.finalCounts.ignores" errors="$suiteExecutionReport.finalCounts.exceptions" time="$suiteTotalRunTimeSeconds">
+#set( $String = "" )
+#macro( format $s )$String.format("%.3f", $s)#end
+#set($suiteTotalRunTimeSeconds = $suiteExecutionReport.totalRunTimeInMillis / 1000.0 )
+<testsuite name="#escape($suiteExecutionReport.rootPath)" tests="$suiteExecutionReport.pageHistoryReferences.size()" failures="$suiteExecutionReport.finalCounts.wrong" disabled="$suiteExecutionReport.finalCounts.ignores" errors="$suiteExecutionReport.finalCounts.exceptions" time="#format($suiteTotalRunTimeSeconds)">
   #foreach ($reference in $suiteExecutionReport.pageHistoryReferences)
     #set($classname = $formatter.getClassName($reference))
-	#set($runTimeSeconds = $reference.RunTimeInMillis / 1000 )
-    <testcase name="#escape($reference.pageName)" assertions="$reference.testSummary.right" time="$runTimeSeconds">
+	#set($runTimeSeconds = $reference.RunTimeInMillis / 1000.0 )
+    <testcase name="#escape($reference.pageName)" assertions="$reference.testSummary.right" time="#format($runTimeSeconds)">
 	#if($reference.testSummary.exceptions > 0)
 	  <error message="$reference.testSummary.exceptions exceptions"/>
 	#end
 	#if($reference.testSummary.wrong > 0)
-	  <failure message="$reference.testSummary.wrong errors"/>
-	#end
+	  <failure message="$reference.testSummary.wrong errors"/>	#end
       <system-out>$reference.pageName?pageHistory&amp;resultDate=$reference.resultDate</system-out>
     </testcase>
   #end
