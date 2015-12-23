@@ -4,11 +4,10 @@
 
 To add your first "page", click the [[Edit][.FrontPage?edit]] button and add a [[!-WikiWord-!][.FitNesse.UserGuide.FitNesseWiki.WikiWord]] to the page.
 
-|'''To Learn More...'''                                                                                            |
-|[[A One-Minute Description][.FitNesse.UserGuide.OneMinuteDescription]]|''What is FitNesse Start here.''           |
-|[[A Two-Minute Example][.FitNesse.UserGuide.TwoMinuteExample]]        |''A brief example. Read this one next.''   |
-|[[User Guide][.FitNesse.UserGuide]]                                   |''Answer the rest of your questions here.''|
-|[[Acceptance Tests][.FitNesse.SuiteAcceptanceTests]]                  |''FitNesse's suite of Acceptance Tests''   |
-|[[Release Notes][.FitNesse.ReleaseNotes]]                             |''Find out about FitNesse's new features'' |
+|'''To Learn More...'''                                                                                    |
+|[[User Guide][.FitNesse.UserGuide]]                           |''Answer the rest of your questions here.''|
+|[[A Two-Minute Example][.FitNesse.UserGuide.TwoMinuteExample]]|''A brief example. Read this one next.''   |
+|[[Acceptance Tests][.FitNesse.SuiteAcceptanceTests]]          |''FitNesse's suite of Acceptance Tests''   |
+|[[Release Notes][.FitNesse.ReleaseNotes]]                     |''Find out about FitNesse's new features'' |
 
 !note Release ${FITNESSE_VERSION}
