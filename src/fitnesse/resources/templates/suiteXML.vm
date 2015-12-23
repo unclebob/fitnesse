@@ -10,7 +10,8 @@
       <ignores>$reference.testSummary.ignores</ignores>
       <exceptions>$reference.testSummary.exceptions</exceptions>
     </counts>
-    <runTimeInMillis>$reference.RunTimeInMillis</runTimeInMillis>
+    <date>$reference.dateString</date>
+    <runTimeInMillis>$reference.runTimeInMillis</runTimeInMillis>
     <relativePageName>#escape($reference.relativePageName)</relativePageName>
     <pageHistoryLink>$reference.pageName?pageHistory&amp;resultDate=$reference.resultDate</pageHistoryLink>
     #set($testResult = $formatter.getTestResult($reference))

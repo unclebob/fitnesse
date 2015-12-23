@@ -16,6 +16,7 @@ import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
+import fitnesse.util.DateTimeUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
@@ -26,6 +27,7 @@ import fitnesse.util.TimeMeasurement;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,6 +64,7 @@ public class TestXmlFormatter extends BaseFormatter implements ExecutionLogListe
     resetTimer();
     appendHtmlToBuffer(WikiPageUtil.getHeaderPageHtml(getPage()));
     currentResult = newTestResult();
+    currentResult.dateString = DateTimeUtil.formatDate(new Date());
     currentResult.relativePageName = testPage.getName();
     currentResult.tags = WikiTestPageUtil.getSourcePage(testPage).getData().getAttribute(PageData.PropertySUITES);
     testResponse.addResult(currentResult);
