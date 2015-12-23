@@ -15,24 +15,25 @@
  * [[Administering FitNesse][>AdministeringFitNesse]]
  * [[Quick Reference Guide][>QuickReferenceGuide]]
  * [[Full Reference Guide][<FitNesse.FullReferenceGuide]] (takes some time to load)
+
 !anchor introduction
 !2 Introduction
-FitNesse is a tool for specifying and verifying application acceptance criteria (requirements). It acts as a bridge between the different stake holders (disciplines) in a software delivery process. It's wiki server makes it easy to document the software. It's test execution capabilities allow you to verify the documentation against the software, ensuring the documentation remains up to date and the software is not facing regression.
+FitNesse is a tool for specifying and verifying application acceptance criteria (requirements). It acts as a bridge between the different stakeholders (disciplines) in a software delivery process. It's wiki server makes it easy to document the software.It's testexecution capabilities allow you to verify the documentation against the software, ensuring the documentation remains up to date and the software is not facing regression.
 
-For this to work, the tests should be defined on a business level, in conjuntion with business representatives. They are basically business requirements, layed out in a way easy to understand by all stakeholders. When your requirements are unambiguous, they can be automatically verified with your application. 
+For this to work, the tests should be defined on a business level, in conjunction with business representatives. They are basically business requirements, laid out in a way easy to understand by all stakeholders. When your requirements are unambiguous, they can be automatically verified with your application.
 
-To make it easy for all stake holders to interact with FitNesse, requirements can be created and edited through the web browser. It's a wiki! By writing specifications (also known as [[Acceptance Tests][>AcceptanceTests]]), you can create a common understanding among the team (coders and non-coders). This helps tremendously in [[delivering the right system][>DeliveringTheRightSystem]]. Specifications can be written in wiki syntax or in a rich text editor, so no knowledge of the wiki syntax is required.
+To make it easy for all stakeholders to interact with FitNesse, requirements can be created and edited through the web browser. It's a wiki! By writing specifications (also known as [[Acceptance Tests][>AcceptanceTests]]), you can create a common understanding among the team (coders and non-coders). This helps tremendously in [[delivering the right system][>DeliveringTheRightSystem]]. Specifications can be written in wiki syntax or in a rich text editor, so no knowledge of the wiki syntax is required.
 
-Because the specifications can actually be executed, FitNesse provides a method to demonstrate even to non-coders that the application works as designed. This can prevent problems leading to [[Project Death by Requirements][>ProjectDeathByRequirements]]. The goal is for FitNesse to operate at a level just ''below'' the user interface level, demonstrating that, given various inputs to your application, the correct results are computed. In a sense, you could consider it an alternative user interface for the application.
+Because the specifications can actually be executed, FitNesse provides a method to demonstrate even to non-coders that the application works as designed. This can prevent problems leading to [[Project Death by Requirements][>ProjectDeathByRequirements]]. The goal is for FitNesse to operate at a level just ''below'' the user interface level, demonstrating that, given various inputs to your application, the correct results are computed. In a sense, you could consider it an alternative user interface for the application.
 
-Convinced? Have a more in depth look at how FitNesse works in our [[Two Minute Example][>TwoMinuteExample]]. [[Download and install][http://fitnesse.org/FitNesseDownload]] FitNesse on your machine, if you haven't done so already. Then learn how to [[work with the FitNesse wiki][>FitNesseWiki]] and [[write Acceptance Tests][>WritingAcceptanceTests]].
+Convinced? Have a more in-depth look at how FitNesse works in our [[Two Minute Example][>TwoMinuteExample]]. [[Download and install][http://fitnesse.org/FitNesseDownload]] FitNesse on your machine, if you haven't done so already. Then learn how to [[work with the FitNesse wiki][>FitNesseWiki]] and [[write Acceptance Tests][>WritingAcceptanceTests]].
 
 !3 Brief history
 FitNesse started as an HTML and [[wiki][http://wiki.org/wiki.cgi?WhatIsWiki]] "front-end" to [[FIT][http://fit.c2.com/]] ("Framework for Integrated Testing") back in 2001.
 
 !*** From the [[Fit website][http://fit.c2.com/]]:
 
-Great software requires collaboration and communication. Fit is a tool for enhancing collaboration in software development. It's an invaluable way to collaborate on complicated problems -and get them right- early in development.
+Great software requires collaboration and communication.Fitis a tool for enhancing collaboration in software development. It's an invaluable way to collaborate on complicated problems -and get them right- early in development.
 
 Fit allows customers, testers, and programmers to learn what their software ''should'' do and what it ''does'' do. It automatically compares customers' expectations to actual results.
 
