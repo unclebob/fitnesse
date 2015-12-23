@@ -2,20 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.reporting;
 
-public class ExecutionStatus {
-  public static final ExecutionStatus OK = new ExecutionStatus("Tests Executed OK", "ok");
-  public static final ExecutionStatus ERROR = new ExecutionStatus("Errors Occurred", "error");
+public enum ExecutionStatus {
+  OK("ok"),
+  ERROR("error");
 
-  private String message;
-  private String style;
+  private final String style;
 
-  public ExecutionStatus(String message, String style) {
-    this.message = message;
+  ExecutionStatus(String style) {
     this.style = style;
-  }
-
-  public String getMessage() {
-    return message;
   }
 
   public String getStyle() {
@@ -24,7 +18,7 @@ public class ExecutionStatus {
 
   @Override
   public String toString() {
-    return "Execution Report: " + message;
+    return "Execution Status: " + style;
   }
 
 }

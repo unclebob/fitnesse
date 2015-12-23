@@ -265,9 +265,9 @@ public class TestResponderTest {
   }
 
   @Test
-  public void testExecutionStatusAppears() throws Exception {
+  public void testExecutionLogLinkAppears() throws Exception {
     doSimpleRun(passFixtureTable());
-    assertHasRegexp("Tests Executed OK", results);
+    assertHasRegexp("class=\\\\\"ok\\\\\">Execution Log", results);
   }
 
   @Test
@@ -374,7 +374,7 @@ public class TestResponderTest {
   @Test
   public void testExecutionStatusOk() throws Exception {
     doSimpleRun(passFixtureTable());
-    assertTrue(results.contains(">Tests Executed OK<"));
+    assertTrue(results.contains(">Execution Log<"));
     assertTrue(results.contains("\\\"ok\\\""));
   }
 
@@ -382,7 +382,7 @@ public class TestResponderTest {
   public void debugTest() throws Exception {
     request.addInput("debug", "");
     doSimpleRun(passFixtureTable());
-    assertTrue(results.contains(">Tests Executed OK<"));
+    assertTrue(results.contains(">Execution Log<"));
     assertTrue(results.contains("\\\"ok\\\""));
     assertTrue("should be fast test", responder.isDebug());
   }
@@ -391,7 +391,7 @@ public class TestResponderTest {
   public void testExecutionStatusError() throws Exception {
     debug = false;
     doSimpleRun(crashFixtureTable());
-    assertTrue(results.contains(">Errors Occurred<"));
+    assertTrue(results.contains(">Execution Log<"));
     assertTrue(results.contains("\\\"error\\\""));
   }
 
@@ -399,7 +399,7 @@ public class TestResponderTest {
   public void testExecutionStatusErrorHasPriority() throws Exception {
     debug = false;
     doSimpleRun(errorWritingTable("blah") + crashFixtureTable());
-    assertTrue(results.contains(">Errors Occurred<"));
+    assertTrue(results.contains("class=\\\"error\\\">Execution Log<"));
   }
 
   @Test
@@ -497,7 +497,7 @@ public class TestResponderTest {
     sender.doSending(response);
     results = sender.sentData();
 
-    assertTrue(results.contains(">Tests Executed OK<"));
+    assertTrue(results.contains(">Execution Log<"));
     assertHasRegexp("\\?executionLog", results);
     assertSubString("Test Page tags", results);
 

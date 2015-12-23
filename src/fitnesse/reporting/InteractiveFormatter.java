@@ -154,7 +154,7 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   }
 
   public static String makeExecutionStatusLink(ExecutionStatus executionStatus) {
-    HtmlTag status = HtmlUtil.makeLink("?executionLog", executionStatus.getMessage());
+    HtmlTag status = HtmlUtil.makeLink("?executionLog", "Execution Log");
     status.addAttribute("class", executionStatus.getStyle());
     return status.html();
   }
