@@ -11,7 +11,6 @@ import static util.RegexTestCase.assertMatches;
 import static util.RegexTestCase.assertSubString;
 
 import java.io.UnsupportedEncodingException;
-import java.net.Socket;
 
 import org.junit.After;
 import org.junit.Before;

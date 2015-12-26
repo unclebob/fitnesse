@@ -3,7 +3,6 @@
 package fitnesse.testsystems.slim;
 
 import fitnesse.slim.SlimError;
-import fitnesse.slim.SlimException;
 import fitnesse.slim.SlimStreamReader;
 import fitnesse.slim.SlimVersion;
 import fitnesse.slim.instructions.*;
@@ -14,20 +13,16 @@ import fitnesse.socketservice.SocketFactory;
 import fitnesse.testsystems.CommandRunner;
 
 import fitnesse.util.Clock;
-import org.apache.commons.lang.ArrayUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import static java.util.Arrays.asList;
 
 public class SlimCommandRunningClient implements SlimClient {
   private static final Logger LOG = Logger.getLogger(SlimCommandRunningClient.class.getName());

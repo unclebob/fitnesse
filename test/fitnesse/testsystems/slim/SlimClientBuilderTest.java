@@ -1,10 +1,5 @@
 package fitnesse.testsystems.slim;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-
-import fitnesse.socketservice.SocketFactory;
-
 import fitnesse.testsystems.Descriptor;
 import org.junit.Before;
 import org.junit.Test;

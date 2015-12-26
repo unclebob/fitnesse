@@ -4,7 +4,6 @@ package fitnesse.responders.run.slimResponder;
 
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.SlimClient;
-import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.InProcessSlimClientBuilder;
 import fitnesse.testsystems.slim.SlimClientBuilder;

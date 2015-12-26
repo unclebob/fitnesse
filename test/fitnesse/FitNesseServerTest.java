@@ -21,7 +21,6 @@ import org.junit.Test;
 import util.FileUtil;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 import static util.RegexTestCase.assertSubString;
 
 public class FitNesseServerTest {
