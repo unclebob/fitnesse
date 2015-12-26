@@ -92,14 +92,37 @@ There are a few things to keep in mind when working from an IDE:
    you set the "post-compile" target from the build file, you won't have any trouble with
    cleaning, building and executing tests from your IDE.
 
-2. Apache Ivy is used for dependency management. Your IDE can be set up to support Ivy.
-    * In IntelliJ set IvyIDEA in "Project Structure" -> "Modules" -> "Dependencies".
-    * In Eclipse, install IvyDE and set it up.
-
-   Alternatively,
+2. Apache Ivy is used for dependency management. Your IDE can be set up to support Ivy. Alternatively,
    ```
    $ ant retrieve
    ```
-   will download the dependencies and copy them to lib/, from where your
+   will download the dependencies and copy them to `lib/`, from where your
    IDE can pick them up.
 
+#### Import FitNesse in Eclipse
+
+1. Clone the FitNesse Git repository from https://github.com/unclebob/fitnesse.
+2. Install the _IvyDE_ plugin if you haven't already done so.
+3. Import FitNesse via _Project..._ -> _Java_ -> _Java Project from existing Ant Buildfile_. It asks from a javac target to use. Just pick any. Make sure both `src` and `test` directories are marked as source paths.
+4. Open _Properties_ (right-mouse click). In _Java Build Path_ select _Libraries_ and _Add Library..._. Select IvyDE. The _Main_ settings are okay by default. On the _Settings_ tab, select `ivysettings.xml` from the project folder. 
+5. While still in the _Properties_ dialog, change the output folders in the _Source_ tab: for the `src` directory, change it to `classes`, for the `test` directory, change it to `test-classes`. Apply the changes are you're good to go.
+
+#### Import FitNesse in IntelliJ IDEA (15)
+
+1. Clone the FitNesse Git repository from https://github.com/unclebob/fitnesse.
+2. Install the _IvyIDEA_ plugin if you haven't already done so.
+3. From the welcome screen (the one you get when all projects are closed), click _Import Project_.
+4. Select the folder containing the fitnesse project.
+5. Now the Import project wizard guides you through the import process:
+   1. We're not importing from an existing model, so _Create project from existing sources_.
+   2. Give it a name.
+   3. IntelliJ finds the `src` and `test` folder.
+   4. There are no plugins defined, so deselect those. The `test-plugin-*.jar` files are used for some unit tests.
+   5. Everything should look fine in the review screen: one module named `fitnesse` with a `src` and a `test` folder.
+   6. Select a JDK. At least Java 6 is required.
+   7. Now IntelliJ starts looking for frameworks. It should come up with IvyIDEA.
+   8. Finish the wizard. The project should be opened.
+6. We're almost there. The IvyIDEA plugin is not completely configured yet. To fix this open _File_ -> _Project Structure..._ go to _Modules_:
+   1. Select the `fitnesse` module and set the output path to the `classes` folder and the test output path to `test-classes`. This ensures IntelliJ works nicely with the Ant tasks we want to execute as part of the build process.
+   2. Select IvyIDEA. Tell it to use _Module specific ivy settings_ and select `ivysettings.xml` from the project folder.
+7. Open the Ant Build tool, add the projects `build.xml` file and right click on the `post-compile` task. Select _Execute on_ -> _Before Compilation_. Apply the changes are you're good to go.
