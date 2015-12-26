@@ -2,9 +2,8 @@ A Library Table is a table that can be used to install support fixtures so they 
 
 The format of the Library table is similar to the ImportTable.
 
-|Library|
-|echo support|
-|file support|
+|Library    |
+|echo script|
 
 The first row contains the word '''Library'''. This is a reserved word so slim knows which table is executed. All subsequent rows are fixtures. In this case !-SliM-! will expect two fixtures: !-EchoSupport-! and !-FileSupport-!. These fixtures will be located the same as "normal" fixtures, meaning it will use the ImportTable's paths to scan.
 
@@ -27,12 +26,10 @@ public class MyFixture {
 }
 }}}
 
-|Library|
-|file support|
-
-|script|my fixture|
-|do business logic|/tmp|
-|delete|/tmp|
+|script|my fixture                                                                |
+|check |do business logic                           |42                           |
+|note  |The following invocation is triggered on the "echo script" library fixture|
+|echo  |Hello world                                                               |
 
 
 '''Order of method execution'''
