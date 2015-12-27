@@ -125,6 +125,12 @@ public class PageDriver {
     return examiner.matches();
   }
 
+  public String extractMatch(String pattern, String type, int group) throws Exception {
+    examiner.type = type;
+    examiner.pattern = pattern;
+    return examiner.found(group);
+  }
+
   public boolean contentContains(String subString) throws Exception {
     examiner.type = "contents";
     examiner.extractValueFromResponse();
