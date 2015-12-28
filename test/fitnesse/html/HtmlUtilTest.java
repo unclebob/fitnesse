@@ -134,6 +134,13 @@ public class HtmlUtilTest {
   }
 
   @Test
+  public void shouldEscapeBackslashes() {
+    String appendText = "<p>My string has escaped \\r \\n</p>";
+    HtmlTag scriptTag = HtmlUtil.makeAppendElementScript("element-name", appendText);
+    assertSubString("My string has escaped \\\\r \\\\n", scriptTag.html());
+  }
+
+  @Test
   public void testMakeSilentLink() {
     HtmlTag tag = HtmlUtil.makeSilentLink("test?responder", new RawHtml("string with \"quotes\""));
     assertSubString("<a href=\"#\" onclick=\"doSilentRequest('test?responder')\">string with \"quotes\"</a>", tag.html());

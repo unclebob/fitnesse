@@ -56,10 +56,11 @@ public class HtmlUtil {
   }
   
   public static String escapeHtmlForJavaScript(String html) {
-    html = html.replaceAll("\"", "\\\\\"");
-    html = html.replaceAll("\t", "\\\\t");
-    html = html.replaceAll("\n", "\\\\n");
-    html = html.replaceAll("\r", "\\\\r");
+    html = html.replaceAll("\\\\", "\\\\\\\\"); // backslash
+    html = html.replaceAll("\"", "\\\\\""); //  quote
+    html = html.replaceAll("\t", "\\\\t"); // tab
+    html = html.replaceAll("\n", "\\\\n"); // newline
+    html = html.replaceAll("\r", "\\\\r"); // line feed
     html = html.replaceAll(HtmlElement.endl, "\\\\n");
     return html;
   }
