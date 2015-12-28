@@ -13,7 +13,6 @@ import java.io.PrintStream;
 import java.net.Socket;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class SslSocketServiceTest {
@@ -120,32 +119,6 @@ public class SslSocketServiceTest {
       Thread.sleep(ms);
     }
     catch (InterruptedException e) {
-    }
-  }
-}
-
-class HelloService2 implements SocketServer {
-  @Override
-  public void serve(Socket s) {
-    try {
-      PrintStream ps = GetPrintStream(s);
-      ps.println("Hello");
-    }
-    catch (IOException e) {
-    }
-  }
-}
-
-class EchoService2 implements SocketServer {
-  @Override
-  public void serve(Socket s) {
-    try {
-      PrintStream ps = GetPrintStream(s);
-      BufferedReader br = GetBufferedReader(s);
-      String token = br.readLine();
-      ps.println(token);
-    }
-    catch (IOException e) {
     }
   }
 }

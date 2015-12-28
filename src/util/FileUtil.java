@@ -22,8 +22,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
-import fitnesse.slim.SlimStreamReader;
-
 public class FileUtil {
 
   public static final String CHARENCODING = "UTF-8";

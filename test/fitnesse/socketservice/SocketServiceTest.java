@@ -13,7 +13,6 @@ import java.io.PrintStream;
 import java.net.Socket;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class SocketServiceTest {

@@ -8,7 +8,6 @@ import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
 
 import java.io.UnsupportedEncodingException;
-import java.net.Socket;
 
 import org.junit.Before;
 import org.junit.Test;
