@@ -10,6 +10,7 @@ import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
+import fitnesse.util.StringUtils;
 
 public class QueryTable extends SlimTable {
   private static final String COMMENT_COLUMN_MARKER = "#";
@@ -302,7 +303,7 @@ public class QueryTable extends SlimTable {
             String expectedValue = table.getCellContents(fieldIndex, tableRow);
             if (matches(actualValue, expectedValue)) {
               score++;
-            } else {
+            } else if (!StringUtils.isBlank(expectedValue)) {
               break;
             }
           }

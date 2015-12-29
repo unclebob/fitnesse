@@ -72,7 +72,6 @@ public abstract class QueryTableTestBase {
     return constructor.newInstance(t, "id", testContext);
   }
 
-  @SuppressWarnings("unchecked")
   protected void assertQueryResults(String queryRows, List<List<List<String>>> queryResults, String table) throws Exception {
     makeQueryTableAndBuildInstructions(queryTableHeader + queryRows);
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(asList(asList("queryTable_id_0", "OK"), asList("queryTable_id_1", "blah"), asList("queryTable_id_2", queryResults)));
@@ -80,7 +79,6 @@ public abstract class QueryTableTestBase {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void instructionsForQueryTable() throws Exception {
     makeQueryTableAndBuildInstructions(queryTableHeader);
     List<Instruction> expectedInstructions = asList(
@@ -422,4 +420,84 @@ public abstract class QueryTableTestBase {
     assertEquals(ExecutionResult.IGNORE, result.getExecutionResult());
   }
 
+  /* When one row has a higher score "from the right", it is still the row that is correct from the left that should match. */
+  @Test
+  public void shouldMatchQueryFromLeftToRight() throws Exception {
+    makeQueryTableAndBuildInstructions("|" + tableType() + ":fixture|argument|\n" +
+            "|x|n|2n|\n" +
+            "|1|2|4|\n" +
+            "|2|3|6|\n");
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+            asList(
+                    asList("queryTable_id_0", "OK"),
+                    asList("queryTable_id_1", "blah"),
+                    asList("queryTable_id_2",
+                            asList(
+                                    asList(
+                                            asList("x", "1"),
+                                            asList("n", "3"),
+                                            asList("2n", "6"))))));
+    evaluateResults(pseudoResults, "[" +
+            headRow +
+            "[x, n, 2n], " +
+            "[pass(1), fail(a=3;e=2), fail(a=6;e=4)], " +
+            "[fail(e=2;missing), 3, 6]" +
+            "]");
+  }
+
+  @Test
+  public void shouldMatchQueryFromLeftToRightWithFirstCellEmpty() throws Exception {
+    makeQueryTableAndBuildInstructions("|" + tableType() + ":fixture|argument|\n" +
+            "|x|n|2n|\n" +
+            "||2|4|\n" +
+            "||3|6|\n");
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+            asList(
+                    asList("queryTable_id_0", "OK"),
+                    asList("queryTable_id_1", "blah"),
+                    asList("queryTable_id_2",
+                            asList(
+                                    asList(
+                                            asList("x", "1"),
+                                            asList("n", "2"),
+                                            asList("2n", "4")),
+                                    asList(
+                                            asList("x", "1"),
+                                            asList("n", "3"),
+                                            asList("2n", "6"))))));
+    evaluateResults(pseudoResults, "[" +
+            headRow +
+            "[x, n, 2n], " +
+            "[ignore(1), pass(2), pass(4)], " +
+            "[ignore(1), pass(3), pass(6)]" +
+            "]");
+  }
+
+  @Test
+  public void shouldMatchQueryFromLeftToRightWithSecondCellEmpty() throws Exception {
+    makeQueryTableAndBuildInstructions("|" + tableType() + ":fixture|argument|\n" +
+            "|x|n|2n|\n" +
+            "|1||4|\n" +
+            "|1||6|\n");
+    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
+            asList(
+                    asList("queryTable_id_0", "OK"),
+                    asList("queryTable_id_1", "blah"),
+                    asList("queryTable_id_2",
+                            asList(
+                                    asList(
+                                            asList("x", "1"),
+                                            asList("n", "2"),
+                                            asList("2n", "4")),
+                                    asList(
+                                            asList("x", "1"),
+                                            asList("n", "3"),
+                                            asList("2n", "6"))))));
+    evaluateResults(pseudoResults, "[" +
+            headRow +
+            "[x, n, 2n], " +
+            "[pass(1), ignore(2), pass(4)], " +
+            "[pass(1), ignore(3), pass(6)]" +
+            "]");
+  }
 }

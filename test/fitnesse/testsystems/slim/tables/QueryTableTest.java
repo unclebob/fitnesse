@@ -66,29 +66,4 @@ public class QueryTableTest extends QueryTableTestBase {
         "[pass(1), pass(3), fail(a=5;e=6)]" +
         "]");
   }
-
-  /* When one row has a higher score "from the right", it is still the row that is correct from the left that should match. */
-  @Test
-  public void shouldMatchQueryFromLeftToRight() throws Exception {
-    makeQueryTableAndBuildInstructions("|" + tableType() + ":fixture|argument|\n" +
-      "|x|n|2n|\n" +
-      "|1|2|4|\n" +
-      "|2|3|6|\n");
-    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(
-      asList(
-        asList("queryTable_id_0", "OK"),
-        asList("queryTable_id_1", "blah"),
-        asList("queryTable_id_2",
-          asList(
-            asList(
-              asList("x", "1"),
-              asList("n", "3"),
-              asList("2n", "6"))))));
-    evaluateResults(pseudoResults, "[" +
-      headRow +
-      "[x, n, 2n], " +
-      "[pass(1), fail(a=3;e=2), fail(a=6;e=4)], " +
-      "[fail(e=2;missing), 3, 6]" +
-      "]");
-  }
 }
