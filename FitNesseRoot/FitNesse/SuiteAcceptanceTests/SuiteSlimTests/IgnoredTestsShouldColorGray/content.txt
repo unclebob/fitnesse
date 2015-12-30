@@ -4,12 +4,10 @@ See also: >TestPage.
 
 !| script                          |
 |given test page|${TestPageName}|
-|and Test System setup is|!define TEST_SYSTEM {slim}|
+|and Test System setup is|!define TEST_SYSTEM {slim}${SUT_PATH}|
 |and Setup content is|!-
 !|import|
 |fitnesse.slim.test|
-
-${SUT_PATH}
 
 !|Scenario|Stop Test|
 |start|ConstructorThrows|stop test|
