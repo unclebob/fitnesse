@@ -9,6 +9,8 @@ See also: >TestPage.
 !|import|
 |fitnesse.slim.test|
 
+${SUT_PATH}
+
 !|Scenario|Stop Test|
 |start|ConstructorThrows|stop test|
 
