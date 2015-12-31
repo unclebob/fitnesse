@@ -17,7 +17,8 @@ public class ResponseExaminer extends ColumnFixture {
   public int number;
   private Matcher matcher;
   private int currentLine = 0;
-    private int currentPosition = 0;
+  private int currentPosition = 0;
+  private int group =0;
 
   // Content is escaped, since it's used by both FIT and SLiM.
   public String contents() throws Exception {
@@ -74,12 +75,24 @@ public class ResponseExaminer extends ColumnFixture {
     return matches;
   }
 
+
+
   public void extractValueFromResponse() throws Exception {
     setValue(null);
     if (type.equals("contents"))
       setValue(HtmlUtil.unescapeHTML(FitnesseFixtureContext.sender.sentData()));
     else if (type.equals("fullContents"))
       setValue(fullContents());
+    else if (type.equals("rawContents"))
+      setValue(FitnesseFixtureContext.sender.sentData());
+    else if (type.equals("stringContents"))
+      setValue(FitnesseFixtureContext.sender.toString());
+    else if (type.equals("pageContents"))
+      setValue(FitnesseFixtureContext.page.toString());
+    else if (type.equals("pageHtml"))
+      setValue(FitnesseFixtureContext.page.getHtml());
+    else if (type.equals("matchers"))
+      setValue(matcher.group(group));
     else if (type.equals("status"))
       setValue("" + FitnesseFixtureContext.response.getStatus());
     else if (type.equals("headers")) {
@@ -126,8 +139,20 @@ public class ResponseExaminer extends ColumnFixture {
     return lineizedContent;
   }
 
-  public String found() {
-    return matcher.group(0);
+  public String found() throws Exception {
+    return found(this.group);
+  }
+  
+  public String found(int group) throws Exception {
+    Pattern p = Pattern.compile(pattern, Pattern.MULTILINE + Pattern.DOTALL);
+    extractValueFromResponse();
+
+    matcher = p.matcher(getValue());
+   return matcher.find() ?  matcher.group(group) : null; 
+  }
+
+  public Matcher matcher(){ 
+   return matcher; 
   }
 
   public String source() {
@@ -154,6 +179,10 @@ public class ResponseExaminer extends ColumnFixture {
 
   public void setNumber(int number) {
     this.number = number;
+  }
+
+  public void setGroup(int number) {
+    this.group = number;
   }
 
   public String getValue() {
