@@ -10,7 +10,7 @@ import fitnesse.junit.FitNesseRunner.ConfigFile;
 
 
 @RunWith(FitNesseSuite.class)
-@Name("FitNesse.SuiteAcceptanceTests.SuiteSlimTests")
+@Name("FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TableTableSuite")
 @FitnesseDir(".")
 @OutputDir("tmp")
 @ConfigFile("plugins.properties")
