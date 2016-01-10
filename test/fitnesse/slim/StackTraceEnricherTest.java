@@ -2,12 +2,11 @@ package fitnesse.slim;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.regex.Pattern;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,31 +16,30 @@ import static org.junit.Assert.*;
 public class StackTraceEnricherTest {
   private static final String JUNIT_JAR_PATTERN = "[junit";
   private static final String RT_JAR = "rt.jar";
-  private static final String NON_EXISTING_FILE = "/this/should/not/exist/at/all/sadfbas";
+  private static final String COMMONS_LANG_VERSION = "2.6";
+  private static final Pattern COMMONS_LANG_JAR = Pattern.compile("commons-lang(-2.6)?.jar");
 
   private Throwable exception;
   private Throwable exceptionWithCause;
-  private String javaVersion;
   private StackTraceEnricher enricher;
 
   @Before
   public void setUp() {
-    exception = createIOException();
+    exception = createException();
     exceptionWithCause = createIllegalArgumentExceptionWithCause();
-    javaVersion = getJavaVersion();
     enricher = new StackTraceEnricher();
   }
 
-  private IOException createIOException() {
-    IOException exception = null;
+  private Exception createException() {
+    Exception exception = null;
     try {
-      new FileInputStream(new File(NON_EXISTING_FILE));
-      fail("Managed to find a file that shouldn't exist " + NON_EXISTING_FILE);
-    } catch (IOException ioe) {
-      if (ioe.getStackTrace() == null || ioe.getStackTrace().length == 0) {
-        ioe.fillInStackTrace();
+      org.apache.commons.lang.StringUtils.getLevenshteinDistance(null, null);
+      fail("StringUtils.getLevenshteinDistance() changed its contract, expected IllegalArgumentException");
+    } catch (IllegalArgumentException iae) {
+      if (iae.getStackTrace() == null || iae.getStackTrace().length == 0) {
+        iae.fillInStackTrace();
       }
-      exception = ioe;
+      exception = iae;
     }
     return exception;
   }
@@ -56,40 +54,29 @@ public class StackTraceEnricherTest {
     return exception;
   }
 
-  private void throwIOException() throws IOException {
-    throw createIOException();
+  private void throwException() throws Exception {
+    throw createException();
   }
 
   private void throwIllegalArgumentExceptionWithIOExceptionCause() {
     try {
-      throwIOException();
-      fail("No IOException was thrown.");
+      throwException();
+      fail("No Exception was thrown.");
     } catch (Exception e) {
       throw new IllegalArgumentException("Custom IllegalArgumentException message", e);
     }
   }
 
-  private String getJavaVersion() {
-    String version;
-    String fullVersion = System.getProperty("java.runtime.version", "Failed to read Java RT version");
-    if (fullVersion.contains("-")) {
-      version = fullVersion.substring(0, fullVersion.indexOf('-'));
-    } else {
-      version = fullVersion;
-    }
-    return version;
-  }
-
-  private StackTraceElement getJavaLangStackTraceElement(Throwable exception) {
+  private StackTraceElement getCommonsLangStackTraceElement(Throwable exception) {
     StackTraceElement javaLangElement = null;
     for (StackTraceElement element : exception.getStackTrace()) {
-      if (element.getClassName().startsWith("java.lang")) {
+      if (element.getClassName().startsWith("org.apache.commons.lang")) {
         javaLangElement = element;
         break;
       }
     }
     if (javaLangElement == null) {
-      fail("Unable to find a java.lang class in the stack trace.");
+      fail("Unable to find a org.apache.commons.lang class in the stack trace.");
     }
     return javaLangElement;
   }
@@ -124,20 +111,23 @@ public class StackTraceEnricherTest {
 
   @Test
   public void shouldAddVersionWhenAvailable() {
-    assertTrue("Version not added for rt.jar", enricher.getStackTraceAsString(exception).contains(RT_JAR + ":" +
-        javaVersion));
+    String stackTraceAsString = enricher.getStackTraceAsString(exception);
+    String fragment = ".jar:2.6";
+
+    assertTrue(String.format("Version not added for commons-lang.jar. Did not find '%s' in \n%s", fragment, stackTraceAsString),
+            stackTraceAsString.contains(fragment));
   }
 
   @Test
   public void shouldGetVersionForClassInJarWithVersion() {
-    assertTrue("Version not retrieved for java.lang.reflect.Method",
-        enricher.getVersion(java.lang.reflect.Method.class).contains(javaVersion));
+    assertTrue("Version not retrieved for org.apache.commons.lang.ArrayUtils",
+        enricher.getVersion(org.apache.commons.lang.ArrayUtils.class).contains(COMMONS_LANG_VERSION));
   }
 
   @Test
   public void shouldGetVersionForStackTraceElementInJarWithVersion() {
-    StackTraceElement javaLangElement = getJavaLangStackTraceElement(exception);
-    assertTrue("Version not retrieved for " + javaLangElement.getClassName(), enricher.getVersion(javaLangElement).contains(javaVersion));
+    StackTraceElement commonsLangElement = getCommonsLangStackTraceElement(exception);
+    assertTrue("Version not retrieved for " + commonsLangElement.getClassName(), enricher.getVersion(commonsLangElement).contains(COMMONS_LANG_VERSION));
   }
 
   @Test
@@ -148,9 +138,9 @@ public class StackTraceEnricherTest {
 
   @Test
   public void shouldGetLocationForStackTraceElementInJarWithVersion() {
-    StackTraceElement javaLangElement = getJavaLangStackTraceElement(exception);
-    assertEquals("Version not retrieved for " + javaLangElement.getClassName(), enricher.getLocation(javaLangElement),
-        RT_JAR);
+    StackTraceElement commonsLangElement = getCommonsLangStackTraceElement(exception);
+    assertTrue("Version not retrieved for " + commonsLangElement.getClassName(),
+            COMMONS_LANG_JAR.matcher(enricher.getLocation(commonsLangElement)).matches());
   }
 
   @Test
@@ -201,7 +191,7 @@ public class StackTraceEnricherTest {
   @Test
   public void shouldParseCauseExceptions() {
     String parsedString = enricher.getStackTraceAsString(exceptionWithCause);
-    assertTrue("No FileNotFoundException found as cause in stacktrace.",
-            parsedString.contains("\nCaused by: java.io.FileNotFoundException:"));
+    assertTrue("No IllegalArgumentException found as cause in stacktrace.",
+            parsedString.contains("\nCaused by: java.lang.IllegalArgumentException:"));
   }
 }
