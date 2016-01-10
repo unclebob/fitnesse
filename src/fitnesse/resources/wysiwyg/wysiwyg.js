@@ -9,13 +9,28 @@
  ****/
 
 var Wysiwyg = function (textarea, options) {
+
+	
+	CodeMirror.commands.autocomplete = function(cm) {
+        cm.showHint({hint: CodeMirror.hint.fitnesse_anyword});
+    };
+
+	CodeMirror.commands.save = function(cm) {
+    	$(document.f).submit(); 
+    	return false; 
+    }
+
     this.codeMirrorEditor = CodeMirror.fromTextArea(textarea, {
         mode: "fitnesse",
         lineNumbers: true,
         foldGutter: true,
         showCursorWhenSelecting: true,
         viewportMargin: Infinity,
-        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+		extraKeys: {
+			"Ctrl-Space": "autocomplete",
+		}
+  
     });
 
     var self = this;

@@ -233,7 +233,6 @@
 		<delete dir="${classes.dir}" />
 		<delete dir="${test.classes.dir}" />
 		<delete dir="${results.dir}" />
-		<delete dir="${lib.dir}" />
 		<delete dir="${dist.dir}" />
 		<delete dir="${javadoc.dir}" />
 		<delete file="updateList"/>
@@ -280,6 +279,7 @@
 	</target>
 
 	<target name="retrieve" depends="resolve" description="Copy dependencies to lib/, mainly for Acceptance tests and IDE's">
+		<delete dir="${lib.dir}" />
 		<ivy:retrieve pattern="${lib.dir}/[artifact].[ext]" conf="standalone,default,test" />
 	</target>
 
