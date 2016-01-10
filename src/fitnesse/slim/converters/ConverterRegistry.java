@@ -49,7 +49,7 @@ public class ConverterRegistry {
     }
   }
 
-  public static <T> Converter<T> getConverterForClass(Class<? extends T> clazz) {
+  public static <T> Converter<T> getConverterForClass(Class<T> clazz) {
     return getConverterForClass(clazz, null);
   }
 
