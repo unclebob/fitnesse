@@ -191,9 +191,11 @@ public class SuiteResponderTest {
   }
 
   @Test
-  public void testExecutionStatusAppears() throws Exception {
+  public void testExecutionLogLinkAppears() throws Exception {
     String results = runSuite();
-    assertHasRegexp("Tests Executed OK", results);
+    // Lots of escaping: the content is escaped, since it's written from Javascript.
+    // Everything needs to be double escaped because it's handled as a regexp.
+    assertHasRegexp("class=\\\\\"ok\\\\\">Execution Log", results);
   }
 
   @Test
