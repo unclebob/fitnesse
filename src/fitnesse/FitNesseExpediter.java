@@ -127,10 +127,14 @@ public class FitNesseExpediter implements ResponseSender, Runnable {
     } catch (SocketException se) {
       throw se;
     } catch (TimeoutException e) {
-      response = reportError(request, 408, "The client request has been unproductive for too long. It has timed out and will no longer be processed.");
+      String message = "The client request has been unproductive for too long. It has timed out and will no longer be processed.";
+      LOG.log(Level.FINE, message, e);
+      response = reportError(request, 408, message);
     } catch (HttpException e) {
+      LOG.log(Level.FINE, "An error occured while fulfilling user request", e);
       response = reportError(request, 400, e.getMessage());
     } catch (Exception e) {
+      LOG.log(Level.WARNING, "An error occured while fulfilling user request", e);
       response = reportError(request, e);
     }
 
