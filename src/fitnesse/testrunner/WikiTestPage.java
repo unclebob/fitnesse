@@ -55,8 +55,7 @@ public class WikiTestPage implements TestPage {
   }
 
   private boolean containsWikitext() {
-    return (sourcePage instanceof SymbolicPage && ((SymbolicPage) sourcePage).containsWikitext())
-            || (sourcePage instanceof WikitextPage);
+    return SymbolicPage.containsWikitext(sourcePage);
   }
 
   @Override

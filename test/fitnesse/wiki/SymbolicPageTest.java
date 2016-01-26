@@ -2,10 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-
 import java.io.File;
 import java.util.List;
 
@@ -15,6 +11,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 public class SymbolicPageTest {
   private WikiPage root;
@@ -75,6 +74,20 @@ public class SymbolicPageTest {
     assertEquals(SymbolicPage.class, page.getClass());
     SymbolicPage symChild = (SymbolicPage) page;
     assertEquals(childPage, symChild.getRealPage());
+  }
+
+  @Test
+  public void canDetermineIfOriginalPageIsWikiTextPage() throws Exception {
+    WikiPage symSymPage = new SymbolicPage("SymSymPage", symPage, pageOne);
+    assertTrue(SymbolicPage.containsWikitext(symSymPage));
+  }
+
+  @Test
+  public void canDetermineIfOriginalPageIsNotWikiTextPage() throws Exception {
+    WikiPage wikiPage = mock(WikiPage.class);
+    WikiPage symPage = new SymbolicPage("SymPage", wikiPage, pageOne);
+    WikiPage symSymPage = new SymbolicPage("SymSymPage", symPage, pageOne);
+    assertFalse(SymbolicPage.containsWikitext(symSymPage));
   }
 
   @Test

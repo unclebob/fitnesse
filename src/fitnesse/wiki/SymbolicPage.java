@@ -25,8 +25,8 @@ public class SymbolicPage extends BaseWikitextPage {
     return realPage;
   }
 
-  public boolean containsWikitext() {
-    return realPage instanceof WikitextPage;
+  private boolean containsWikitext() {
+    return containsWikitext(realPage);
   }
 
   @Override
@@ -116,4 +116,13 @@ public class SymbolicPage extends BaseWikitextPage {
     }
     return Symbol.emptySymbol;
   }
+
+  public static boolean containsWikitext(WikiPage wikiPage) {
+    if (wikiPage instanceof SymbolicPage) {
+      return containsWikitext(((SymbolicPage) wikiPage).realPage);
+    } else {
+      return wikiPage instanceof WikitextPage;
+    }
+  }
+
 }
