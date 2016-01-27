@@ -35,6 +35,10 @@ public class DeletePageResponder implements SecureResponder {
     else
       tryToDeletePage(request);
 
+    SimpleResponse sr;
+    sr = new SimpleResponse();
+    sr.createAutocomplete(context);
+
     return response;
   }
 
@@ -74,7 +78,7 @@ public class DeletePageResponder implements SecureResponder {
 
   private String buildConfirmationHtml(final WikiPage root, final String qualifiedPageName, final FitNesseContext context) {
     HtmlPage html = context.pageFactory.newPage();
-    
+
     String tags = "";
 
     WikiPagePath path = PathParser.parse(qualifiedPageName);

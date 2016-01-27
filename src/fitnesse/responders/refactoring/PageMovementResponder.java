@@ -61,6 +61,10 @@ public abstract class PageMovementResponder implements SecureResponder {
     SimpleResponse response = new SimpleResponse();
     response.redirect(context.contextRoot, createRedirectionUrl(newParentPage, getNewPageName()));
 
+    SimpleResponse sr;
+    sr = new SimpleResponse();
+    sr.createAutocomplete(context);
+
     return response;
   }
 
