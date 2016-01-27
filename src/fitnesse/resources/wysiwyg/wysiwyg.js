@@ -10,7 +10,6 @@
 
 var Wysiwyg = function (textarea, options) {
 
-	
 	CodeMirror.commands.autocomplete = function(cm) {
         cm.showHint({hint: CodeMirror.hint.fitnesse_anyword});
     };
@@ -18,7 +17,7 @@ var Wysiwyg = function (textarea, options) {
 	CodeMirror.commands.save = function(cm) {
     	$(document.f).submit(); 
     	return false; 
-    }
+    };
 
     this.codeMirrorEditor = CodeMirror.fromTextArea(textarea, {
         mode: "fitnesse",
@@ -28,9 +27,8 @@ var Wysiwyg = function (textarea, options) {
         viewportMargin: Infinity,
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
 		extraKeys: {
-			"Ctrl-Space": "autocomplete",
+			"Ctrl-Space": "autocomplete"
 		}
-  
     });
 
     var self = this;
@@ -457,7 +455,7 @@ Wysiwyg.prototype.setupTextareaMenuEvents = function () {
         codeMirror.focus();
     });
 
-    $('#tt-format-wiki', container).click(function () {    
+    $('#tt-format-wiki', container).click(function () {
         var formatter = new WikiFormatter();
         var scrollInfo = codeMirror.getScrollInfo();
         var cursorInfo = codeMirror.getDoc().getCursor();

@@ -121,7 +121,6 @@ public class ZipFileVersionsController implements VersionsController {
       return;
     }
 
-    // if (isFileInFilesSection()) return version;
     ZipOutputStream zos = null;
     File commonBaseDir = commonBaseDir(fileVersions);
     try {

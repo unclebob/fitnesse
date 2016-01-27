@@ -51,7 +51,7 @@ public class InProcessSlimClient implements SlimClient {
         try {
           slimServer.serve(socket);
           executionLogListener.exitCode(0);
-        } catch (Throwable t) {
+        } catch (Throwable t) { // NOSONAR
           // This point is not reached since no errors bubble up this far
           executionLogListener.exceptionOccurred(t);
         }
