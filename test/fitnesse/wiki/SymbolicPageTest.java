@@ -101,6 +101,23 @@ public class SymbolicPageTest {
   }
 
   @Test
+  public void wikitextPageShouldReadParentVariable() {
+    WikiPage pageWithVariable = WikiPageUtil.addPage(root, PathParser.parse("ChildOne"), "!define Variable {my variable}");
+    WikiPage symPage = new SymbolicPage("SymPage", pageOne, pageWithVariable);
+
+    assertEquals("my variable", symPage.getVariable("Variable"));
+  }
+
+  @Test
+  public void nonWikitextPageShouldReadParentVariable() {
+    WikiPage pageWithVariable = WikiPageUtil.addPage(root, PathParser.parse("ChildOne"), "!define Variable {my variable}");
+    WikiPage realPage = mock(WikiPage.class);
+    WikiPage symPage = new SymbolicPage("SymPage", realPage, pageWithVariable);
+
+    assertEquals("my variable", symPage.getVariable("Variable"));
+  }
+
+  @Test
   public void testCyclicSymbolicLinks() throws Exception {
     PageData data = pageOne.getData();
     data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymOne", pageTwoPath);

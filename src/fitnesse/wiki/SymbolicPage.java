@@ -90,7 +90,8 @@ public class SymbolicPage extends BaseWikitextPage {
     if (containsWikitext()) {
       return super.getVariable(name);
     }
-    return realPage.getVariable(name);
+    String value = realPage.getVariable(name);
+    return (value == null && !isRoot()) ? getParent().getVariable(name) : value;
   }
 
   @Override
