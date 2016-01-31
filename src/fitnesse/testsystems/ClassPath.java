@@ -1,5 +1,8 @@
 package fitnesse.testsystems;
 
+import java.io.File;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,6 +37,17 @@ public class ClassPath {
     }
   }
 
+  public ClassPath withLocationForClass(String testRunner) {
+    String location = findLocationForClass(testRunner);
+    if (location != null) {
+      List<String> newElements = new ArrayList<String>();
+      newElements.add(location);
+      newElements.addAll(elements);
+      return new ClassPath(newElements, separator);
+    }
+    return this;
+  }
+
   public List<String> getElements() {
     return elements;
   }
@@ -50,5 +64,18 @@ public class ClassPath {
       String result = StringUtils.join(elements, separator);
       return result;
     }
+  }
+
+  private String findLocationForClass(String mainClass) {
+    String mainClassFile = mainClass.replaceAll("\\.", "/") + ".class";
+    URL url = getClass().getClassLoader().getResource(mainClassFile);
+    if (url == null) return null;
+    String path = url.getPath();
+    if ("file".equals(url.getProtocol())) {
+      return new File(path.substring(0, path.length() - mainClassFile.length())).getAbsolutePath();
+    } else if ("jar".equals(url.getProtocol())) {
+      return new File(URI.create(path.substring(0, path.indexOf("!/")))).getAbsolutePath();
+    }
+    return null;
   }
 }

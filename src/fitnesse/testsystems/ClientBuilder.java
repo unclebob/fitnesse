@@ -2,9 +2,8 @@ package fitnesse.testsystems;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -41,23 +40,17 @@ public abstract class ClientBuilder<T> {
   }
 
   protected String[] buildCommand(String[] commandPattern, String testRunner, ClassPath classPath) {
-    String[] command = new String[commandPattern.length];
-    String classPathStr;
 
-    if (javaExecutable().equals(commandPattern[0])) {
-      // We're dealing with Java, try to look up the test runner and prepend that jar file.
-      String testRunnerJar = findLocationForClass(getClass(), testRunner);
-      if (testRunnerJar != null) {
-        classPathStr = testRunnerJar + File.pathSeparator + classPath.toString();
-      } else {
-        classPathStr = classPath.toString();
-      }
+    ClassPath completeClassPath;
+    if (isJava(commandPattern[0])) {
+      completeClassPath = classPath.withLocationForClass(testRunner);
     } else {
-      classPathStr = classPath.toString();
+      completeClassPath = classPath;
     }
 
+    String[] command = new String[commandPattern.length];
     for (int i = 0; i < commandPattern.length; i++) {
-      command[i] = replace(commandPattern[i], "%p", classPathStr);
+      command[i] = replace(commandPattern[i], "%p", completeClassPath.toString());
       command[i] = replace(command[i], "%m", testRunner);
       if (SystemUtils.IS_OS_WINDOWS && command[i].contains(" ")) {
         command[i] = "\"" + command[i] + "\"";
@@ -66,6 +59,9 @@ public abstract class ClientBuilder<T> {
     return command;
   }
 
+  private boolean isJava(String command) {
+    return command.toLowerCase().contains("java");
+  }
 
   protected static String replace(String value, String mark, String replacement) {
     return value.replaceAll(mark, Matcher.quoteReplacement(replacement));
@@ -92,7 +88,6 @@ public abstract class ClientBuilder<T> {
     return program;
   }
 
-
   public String getTestRunner() {
     if (isDebug())
       return getTestRunnerDebug();
@@ -105,12 +100,11 @@ public abstract class ClientBuilder<T> {
     if (testRunner != null)
       return parseCommandLine(testRunner);
     testRunner = getVariable(COMMAND_PATTERN);
-    if (testRunner == null || testRunner.toLowerCase().contains("java")) {
+    if (testRunner == null || isJava(testRunner)) {
       return DEFAULT_JAVA_DEBUG_COMMAND;
     }
     return parseCommandLine(testRunner);
   }
-
 
   public String[] getCommandPattern() {
     if (isDebug())
@@ -132,10 +126,10 @@ public abstract class ClientBuilder<T> {
 		Matcher m = p.matcher(commandLine);
 		while(m.find())
 		{
-		  String token = (m.group(1)==null) ? m.group(0) : m.group(1);   
+		  String token = (m.group(1)==null) ? m.group(0) : m.group(1);
 		  result.add(token);
 		}
-		return result.toArray(new String[result.size()]); 
+		return result.toArray(new String[result.size()]);
   }
 
   public Map<String, String> createClasspathEnvironment(ClassPath classPath) {
@@ -172,10 +166,11 @@ public abstract class ClientBuilder<T> {
 
   protected static String javaExecutable() {
     String javaHome = System.getenv("JAVA_HOME");
-    String result = "java";
+    String result;
     if (javaHome != null) {
-      String separator = File.separator;
-      result = javaHome + separator + "bin" + separator + "java"; 
+      result = javaHome + File.separator + "bin" + File.separator + "java";
+    } else {
+      result = "java";
     }
     return result;
   }
@@ -224,19 +219,6 @@ public abstract class ClientBuilder<T> {
     public void exceptionOccurred(Throwable e) {
       executionLogListener.exceptionOccurred(e);
     }
-  }
-
-  protected static String findLocationForClass(Class<?> context, String mainClass) {
-    String mainClassFile = mainClass.replaceAll("\\.", "/") + ".class";
-    URL url = context.getClassLoader().getResource(mainClassFile);
-    if (url == null) return null;
-    String path = url.getPath();
-    if ("file".equals(url.getProtocol())) {
-      return new File(path.substring(0, path.length() - mainClassFile.length())).getAbsolutePath();
-    } else if ("jar".equals(url.getProtocol())) {
-      return new File(URI.create(path.substring(0, path.indexOf("!/")))).getAbsolutePath();
-    }
-    return null;
   }
 
 }

@@ -39,21 +39,6 @@ public class ClientBuilderTest {
   }
 
   @Test
-  public void lookupJarForClassFromDirecotry() {
-    String mainClass = "fitnesse.slim.SlimService";
-    String path = ClientBuilder.findLocationForClass(getClass(), mainClass);
-    String userDir = System.getProperty("user.dir");
-    assertTrue(String.format("Paths '%s' and '%s' are not identical", path, userDir), path.toLowerCase().startsWith(userDir.toLowerCase()));
-  }
-
-  @Test
-  public void lookupJarForClassFromJar() {
-    String mainClass = "org.apache.velocity.app.VelocityEngine";
-    String path = ClientBuilder.findLocationForClass(getClass(), mainClass);
-    assertTrue("Lookup did not resolve to the right jar file: " + path, path.matches(".*[\\\\/]velocity.*\\.jar"));
-  }
-
-  @Test
   public void buildDefaultTestSystemName() throws Exception {
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "");
     WikiPageDescriptor descriptor = new WikiPageDescriptor(testPage, false, false, "");
