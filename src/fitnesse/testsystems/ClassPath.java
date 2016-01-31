@@ -2,6 +2,7 @@ package fitnesse.testsystems;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -17,7 +18,7 @@ public class ClassPath {
   }
 
   public ClassPath(String defaultPath, String pathSeparator) {
-    this(Arrays.asList(defaultPath), pathSeparator);
+    this(Collections.singletonList(defaultPath), pathSeparator);
   }
 
   public ClassPath(List<ClassPath> paths) {

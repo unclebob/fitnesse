@@ -40,19 +40,24 @@ public abstract class ClientBuilder<T> {
     this.descriptor = descriptor;
   }
 
-  protected String[] buildCommand(String[] commandPattern, String testRunner, String classPath) {
+  protected String[] buildCommand(String[] commandPattern, String testRunner, ClassPath classPath) {
     String[] command = new String[commandPattern.length];
+    String classPathStr;
 
     if (javaExecutable().equals(commandPattern[0])) {
       // We're dealing with Java, try to look up the test runner and prepend that jar file.
       String testRunnerJar = findLocationForClass(getClass(), testRunner);
       if (testRunnerJar != null) {
-        classPath = testRunnerJar + File.pathSeparator + classPath;
+        classPathStr = testRunnerJar + File.pathSeparator + classPath.toString();
+      } else {
+        classPathStr = classPath.toString();
       }
+    } else {
+      classPathStr = classPath.toString();
     }
 
     for (int i = 0; i < commandPattern.length; i++) {
-      command[i] = replace(commandPattern[i], "%p", classPath);
+      command[i] = replace(commandPattern[i], "%p", classPathStr);
       command[i] = replace(command[i], "%m", testRunner);
       if (SystemUtils.IS_OS_WINDOWS && command[i].contains(" ")) {
         command[i] = "\"" + command[i] + "\"";
@@ -133,17 +138,17 @@ public abstract class ClientBuilder<T> {
 		return result.toArray(new String[result.size()]); 
   }
 
-  public Map<String, String> createClasspathEnvironment(String classPath) {
+  public Map<String, String> createClasspathEnvironment(ClassPath classPath) {
     String classpathProperty = getVariable(CLASSPATH_PROPERTY);
     Map<String, String> environmentVariables = null;
     if (classpathProperty != null) {
-      environmentVariables = Collections.singletonMap(classpathProperty, classPath);
+      environmentVariables = Collections.singletonMap(classpathProperty, classPath.toString());
     }
     return environmentVariables;
   }
 
-  public String getClassPath() {
-    return descriptor.getClassPath().toString();
+  public ClassPath getClassPath() {
+    return descriptor.getClassPath();
   }
 
   public boolean isDebug() {
