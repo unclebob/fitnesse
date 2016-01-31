@@ -1,9 +1,6 @@
 package fitnesse.testsystems;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
 import java.util.Arrays;
 
 import fitnesse.testrunner.WikiPageDescriptor;
@@ -17,8 +14,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static fitnesse.testsystems.ClientBuilder.replace;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ClientBuilderTest {
 
@@ -42,51 +39,18 @@ public class ClientBuilderTest {
   }
 
   @Test
-  public void shouldIncludeStandaloneJarByDefault() {
-    assertEquals("fitnesse.jar", ClientBuilder.fitnesseJar("fitnesse.jar"));
-    assertEquals("fitnesse-20121220.jar",
-            ClientBuilder.fitnesseJar("fitnesse-20121220.jar"));
-    assertEquals("fitnesse-standalone.jar",
-            ClientBuilder.fitnesseJar("fitnesse-standalone.jar"));
-    assertEquals("fitnesse-standalone-20121220.jar",
-            ClientBuilder.fitnesseJar("fitnesse-standalone-20121220.jar"));
-    assertEquals("fitnesse.jar",
-            ClientBuilder.fitnesseJar("fitnesse-book.jar"));
-    assertEquals(
-            "fitnesse-standalone-20121220.jar",
-            ClientBuilder.fitnesseJar(String
-                    .format("irrelevant.jar%1$sfitnesse-book.jar%1$sfitnesse-standalone-20121220.jar",
-                            System.getProperty("path.separator"))));
-    assertEquals(String.format("lib%sfitnesse-standalone.jar", File.separator),
-            ClientBuilder.fitnesseJar(String.format("lib%sfitnesse-standalone.jar", File.separator)));
-  }
-
-  @Test
-  public void lookupJarForClassFromDirecotry() throws IOException {
+  public void lookupJarForClassFromDirecotry() {
     String mainClass = "fitnesse.slim.SlimService";
-    String path = getLocationForClass(mainClass);
+    String path = ClientBuilder.findLocationForClass(getClass(), mainClass);
     String userDir = System.getProperty("user.dir");
     assertTrue(String.format("Paths '%s' and '%s' are not identical", path, userDir), path.toLowerCase().startsWith(userDir.toLowerCase()));
   }
 
   @Test
-  public void lookupJarForClassFromJar() throws IOException {
+  public void lookupJarForClassFromJar() {
     String mainClass = "org.apache.velocity.app.VelocityEngine";
-    String path = getLocationForClass(mainClass);
+    String path = ClientBuilder.findLocationForClass(getClass(), mainClass);
     assertTrue("Lookup did not resolve to the right jar file: " + path, path.matches(".*[\\\\/]velocity.*\\.jar"));
-  }
-
-  protected String getLocationForClass(String mainClass) throws IOException {
-    String mainClassFile = mainClass.replaceAll("\\.", "/") + ".class";
-    URL url = getClass().getClassLoader().getResource(mainClassFile);
-    if (url == null) throw new IllegalStateException("Can not determine SUT jar. Class " + mainClass + " can not be found on the class path.");
-    String path = url.getPath();
-    if ("file".equals(url.getProtocol())) {
-      return new File(path.substring(0, path.length() - mainClassFile.length())).getAbsolutePath();
-    } else if ("jar".equals(url.getProtocol())) {
-      return new File(URI.create(path.substring(0, path.indexOf("!/")))).getAbsolutePath();
-    }
-    throw new IllegalStateException("Can not handle protocol " + url.getProtocol() + " to determine location for class " + mainClass + ".");
   }
 
   @Test
@@ -177,10 +141,9 @@ public class ClientBuilderTest {
     WikiPage page = makeTestPage(pageText);
     WikiPageDescriptor descriptor = new WikiPageDescriptor(page, false, false, "");
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
-    String sep = System.getProperty("path.separator");
     String prefix = join(clientBuilder.getCommandPattern());
     assertTrue(prefix.contains("java"));
-    assertTrue(prefix.contains(" -cp fitnesse.jar" + sep + "%p %m"));
+    assertTrue(prefix.contains(" -cp %p %m"));
   }
 
   @Test
@@ -189,10 +152,9 @@ public class ClientBuilderTest {
     WikiPage page = makeTestPage(pageText);
     WikiPageDescriptor descriptor = new WikiPageDescriptor(page, false, true, "");
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
-    String sep = System.getProperty("path.separator");
     String prefix = join(clientBuilder.getCommandPattern());
     assertTrue(prefix.contains("java"));
-    assertTrue(prefix.contains(" -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp fitnesse.jar" + sep + "%p %m"));
+    assertTrue(prefix.contains(" -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m"));
   }
 
   @Test

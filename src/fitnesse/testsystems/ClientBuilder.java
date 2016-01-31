@@ -2,6 +2,8 @@ package fitnesse.testsystems;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,14 +18,14 @@ public abstract class ClientBuilder<T> {
   static final String[] DEFAULT_COMMAND_PATTERN = {
           javaExecutable(),
           "-cp",
-          fitnesseJar(System.getProperty("java.class.path")) + File.pathSeparator + "%p",
+          "%p",
           "%m" };
   static final String[] DEFAULT_JAVA_DEBUG_COMMAND = {
           javaExecutable(),
           "-Xdebug",
           "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000",
           "-cp",
-          fitnesseJar(System.getProperty("java.class.path")) + File.pathSeparator + "%p",
+          "%p",
           "%m"};
   static final String DEFAULT_CSHARP_DEBUG_RUNNER_FIND = "runner.exe";
   static final String DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE = "runnerw.exe";
@@ -40,6 +42,15 @@ public abstract class ClientBuilder<T> {
 
   protected String[] buildCommand(String[] commandPattern, String testRunner, String classPath) {
     String[] command = new String[commandPattern.length];
+
+    if (javaExecutable().equals(commandPattern[0])) {
+      // We're dealing with Java, try to look up the test runner and prepend that jar file.
+      String testRunnerJar = findLocationForClass(getClass(), testRunner);
+      if (testRunnerJar != null) {
+        classPath = testRunnerJar + File.pathSeparator + classPath;
+      }
+    }
+
     for (int i = 0; i < commandPattern.length; i++) {
       command[i] = replace(commandPattern[i], "%p", classPath);
       command[i] = replace(command[i], "%m", testRunner);
@@ -154,27 +165,6 @@ public abstract class ClientBuilder<T> {
     return program;
   }
 
-  protected static String fitnesseJar(String classpath) {
-    for (String pathEntry: classpath.split(File.pathSeparator)) {
-      String[] paths = pathEntry.split(java.util.regex.Pattern.quote(File.separator));
-      String jarFile = paths[paths.length-1];
-      if ("fitnesse-standalone.jar".equals(jarFile)) {
-        return pathEntry;
-      }
-      if (jarFile.matches("fitnesse-\\d\\d\\d\\d\\d\\d\\d\\d.jar")) {
-        return pathEntry;
-      }
-      if (jarFile.matches("fitnesse-standalone-\\d\\d\\d\\d\\d\\d\\d\\d.jar")) {
-        return pathEntry;
-      }
-      if (jarFile.matches("fitnesse-\\d\\d\\d\\d\\d\\d\\d\\d-standalone.jar")) {
-        return pathEntry;
-      }
-    }
-
-    return "fitnesse.jar";
-  }
-
   protected static String javaExecutable() {
     String javaHome = System.getenv("JAVA_HOME");
     String result = "java";
@@ -230,4 +220,18 @@ public abstract class ClientBuilder<T> {
       executionLogListener.exceptionOccurred(e);
     }
   }
+
+  protected static String findLocationForClass(Class<?> context, String mainClass) {
+    String mainClassFile = mainClass.replaceAll("\\.", "/") + ".class";
+    URL url = context.getClassLoader().getResource(mainClassFile);
+    if (url == null) return null;
+    String path = url.getPath();
+    if ("file".equals(url.getProtocol())) {
+      return new File(path.substring(0, path.length() - mainClassFile.length())).getAbsolutePath();
+    } else if ("jar".equals(url.getProtocol())) {
+      return new File(URI.create(path.substring(0, path.indexOf("!/")))).getAbsolutePath();
+    }
+    return null;
+  }
+
 }
