@@ -4,8 +4,6 @@ First, build a page with variable definitions followed immediately by a classpat
 
 !| script |
 | given page | ClasspathTestPage | with content | !-!define PI {3.141592}
-!path classes
-!path fitnesse-standalone.jar
 | fitnesse.testutil.PassFixture |-! |
 | make | ClasspathTestPage | a test page |
 | its test results should contain | PassFixture |

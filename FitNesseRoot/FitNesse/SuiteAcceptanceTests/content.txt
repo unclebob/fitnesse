@@ -15,7 +15,6 @@
 
 !2 ''Classpaths''
 !define SUT_PATH (!-
-!path classes
 !path lib/*.jar
 -!)
 ----
