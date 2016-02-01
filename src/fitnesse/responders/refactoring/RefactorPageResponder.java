@@ -15,6 +15,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.responders.AutoCompleteUtil;
 
 public class RefactorPageResponder implements SecureResponder {
 
@@ -31,7 +32,7 @@ public class RefactorPageResponder implements SecureResponder {
         tags = pageData.getAttribute(PageData.PropertySUITES);
       }
     }
-    
+
     HtmlPage page = context.pageFactory.newPage();
 
     page.setMainTemplate("refactorForm");
@@ -41,6 +42,7 @@ public class RefactorPageResponder implements SecureResponder {
     page.put("request", request);
     page.put("type", request.getInput("type"));
     page.put("viewLocation", request.getResource());
+    page.put("suiteMap", AutoCompleteUtil.createSuiteList(context));
     SimpleResponse response = new SimpleResponse();
     response.setContent(page.html());
     return response;
