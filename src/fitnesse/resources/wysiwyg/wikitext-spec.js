@@ -9,7 +9,7 @@ describe("parser and formatter", function () {
 
         Wysiwyg.editorMode = 'wysiwyg';
         var options = Wysiwyg.getOptions();
-        editor = new Wysiwyg(document.getElementById("pageContent"), options);
+        editor = Wysiwyg.newInstance(document.getElementById("pageContent"), options);
         jasmine.Clock.tick(1000);
 
         contentDocument = editor.contentDocument;

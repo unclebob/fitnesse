@@ -78,10 +78,8 @@
 <script type="text/javascript">
 $(function () {
 
-  var editors = Wysiwyg.initialize();
-  if (editors) {
-    var editor = editors[0];
-
+  var editor = Wysiwyg.initialize(document.getElementById('pageContent'));
+  if (editor) {
     // On cancel button:
     
     function fieldValues () {
@@ -112,13 +110,13 @@ $(function () {
       }
     };
 
-    var rte = $('#editor .wysiwyg');
+    var rte = $(editor.frame);
     var wrappedElement = $(editor.codeMirrorEditor.getWrapperElement());
-      $(window).resize(function () {
-        var h = $('#save_buttons').position().top;
-        rte.height(h - rte.position().top - 6);
-        wrappedElement.height(h - wrappedElement.position().top - 6);
-      }).resize();
+    $(window).resize(function () {
+      var h = $('#save_buttons').position().top;
+      rte.height(h - rte.position().top - 6);
+      wrappedElement.height(h - wrappedElement.position().top - 6);
+    }).resize();
   }
 
   /* Tags */

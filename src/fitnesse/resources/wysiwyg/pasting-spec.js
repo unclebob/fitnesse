@@ -19,7 +19,7 @@ describe("Copying and pasting", function () {
 
         Wysiwyg.paths = { base: ".", stylesheets: ["../css/fitnesse_wiki.css", "editor.css"] };
         var options = Wysiwyg.getOptions();
-        editor = new Wysiwyg(document.getElementById("pageContent"), options);
+        editor = Wysiwyg.newInstance(document.getElementById("pageContent"), options);
         jasmine.Clock.tick(1000);
 
         contentDocument = editor.contentDocument;

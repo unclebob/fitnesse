@@ -2124,7 +2124,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
 
         if (!inTable() || tableClassName === "hashtable") {
             h = holder;
-            
+
             // Just ensure you can type between to tables
             if (h.lastChild && h.lastChild.tagName === 'TABLE') {
             	h.appendChild(d.createElement('p'));
@@ -2441,7 +2441,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
         decorationStack = [];
 
         handleLine(line);
-        
+
         // Close headers here, since they should not interfere with other line types parsed.
         if (currentHeader) {
             closeHeader();
@@ -2449,7 +2449,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
         if (inTable() && !inEscapedText() && !inHashTable() && !inCodeBlock()) {
             handleTableCell(-1);
         }
-        
+
     }
     closeToFragment();
 
@@ -3674,27 +3674,10 @@ if (document.createTreeWalker) {
     Wysiwyg.prototype.treeWalk = Wysiwyg.prototype._treeWalkEmulation;
 }
 
-Wysiwyg.instances = [];
 Wysiwyg.count = 0;
-Wysiwyg.paths = null;
 
 Wysiwyg.newInstance = function (textarea, options) {
-    var instance = new Wysiwyg(textarea, options);
-    Wysiwyg.instances.push(instance);
-    return instance;
-};
-
-Wysiwyg.findInstance = function (textarea) {
-    var instances = Wysiwyg.instances;
-    var length = instances.length;
-    var i;
-    for (i = 0; i < length; i++) {
-        var instance = instances[i];
-        if (instance.textarea === textarea) {
-            return instance;
-        }
-    }
-    return null;
+    return new Wysiwyg(textarea, options);
 };
 
 Wysiwyg.getOptions = function () {
@@ -3829,7 +3812,7 @@ Wysiwyg.getTextContent = (function () {
     }
 })();
 
-Wysiwyg.initialize = function () {
+Wysiwyg.initialize = function (textArea) {
     if ("replace".replace(/[a-e]/g, function () { return "*"; }) !== "r*pl***") {
         return;
     }
@@ -3837,16 +3820,7 @@ Wysiwyg.initialize = function () {
         return;
     }
     var options = Wysiwyg.getOptions();
-    var textAreas = document.getElementsByTagName("textarea");
-    var editors = [];
-    var i;
-    for (i = 0; i < textAreas.length; i++) {
-        var textArea = textAreas[i];
-        if (/\bwikitext\b/.test(textArea.className || "")) {
-            editors.push(Wysiwyg.newInstance(textArea, options));
-        }
-    }
-    return editors;
+    return Wysiwyg.newInstance(textArea, options);
 };
 
 // vim:et:ai:ts=4
