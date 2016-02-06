@@ -1,3 +1,3 @@
-<ul>
+<ul class="nav navbar-nav">
  <li><a href="/$viewLocation">View</a></li>
 </ul>
