@@ -1,17 +1,21 @@
 body {
   padding-top: 100px;
+  padding-bottom: 100px;
 }
 
 header,
-article,
-footer {
+article {
   margin: 0 40px;
 }
 
 footer {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  .well;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 15px 40px;
+  background-color: @navbar-default-bg;
+  min-height: @navbar-height;
+  border-top: 1px solid @navbar-default-border;
 }
 
 table {
