@@ -1061,7 +1061,7 @@ Wysiwyg.prototype.insertImage = function () {
 
     loadFiles();
 
-    var insertImageBox = $('#' + insertImage);
+    var insertImageBox = $('#' + insertImage + " > div");
     insertImageBox
         .on('click', 'span', function () {
             path = Array.prototype.slice.call($(this).data());
