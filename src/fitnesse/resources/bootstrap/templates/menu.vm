@@ -18,7 +18,7 @@
 
     #if( $actions.withEdit)
         #if($actions.newPageTemplates.size() > 0)
-            <li id="add" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Add <b class="caret"></b></a>
+            <li id="add" class="dropdown" aria-haspopup="true"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Add <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     #foreach ($tmpl in $actions.newPageTemplates.entrySet())
                         <li><a href="$localPath?new&pageTemplate=$tmpl.value">$tmpl.key</a></li>
@@ -30,7 +30,7 @@
         #end
     #end
 
-    <li id="tools" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools <b class="caret"></b></a>
+    <li id="tools" class="dropdown" aria-haspopup="true"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools <b class="caret"></b></a>
         #set( $nav_newsection = 0 )
         #macro( group $n )#if( $nav_newsection != 0 && $nav_newsection != $n ) class="divider"#end#set( $nav_newsection = $n )#end
         <ul class="dropdown-menu">
