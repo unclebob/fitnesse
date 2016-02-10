@@ -148,13 +148,13 @@ $(function () {
   <fieldset>
   <p>1. From the files section: <a href="/files" class="button" target="_blank">Manage</a></p>
   <pre></pre>
-  <ul></ul>
+  <ul class="select-box"></ul>
   </fieldset>
   <fieldset>
   <p>2. Provide a URL:</p>
-  <input class="url" type="text" value=""></input><br/>
-  <button value="Add">Add</button>
+  <input class="image-url" type="text" value=""></input><br/>
   </fieldset>
+  <button class="btn-primary" value="Add">Add</button>
   <a href="#" class="button">Cancel</a>
  </div>
 </div>

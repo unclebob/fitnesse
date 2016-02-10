@@ -295,3 +295,33 @@ div.contents li > a.static {
 .CodeMirror {
   border: 1px solid #d7d7d7;
 }
+
+.modal-dialog {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0,0,0,0.2);
+    z-index: 99999;
+    display: none;
+    /*-webkit-transition: opacity 400ms ease-in;*/
+    /*-moz-transition: opacity 400ms ease-in;*/
+    /*transition: opacity 400ms ease-in;*/
+    pointer-events: none;
+}
+
+.modal-dialog:target {
+    display: block;
+    pointer-events: auto;
+}
+
+.modal-dialog > div {
+    width: 400px;
+    position: relative;
+    margin: 5% auto;
+    padding: 5px 20px 13px 20px;
+    border: 1px solid #a5a5a5;
+    border-radius: 4px;
+    background: #fff;
+}

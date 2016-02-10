@@ -18,7 +18,6 @@
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/fitnesse_pages.css" />
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/${theme}.css" />
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/wysiwyg/wysiwyg.css" media="screen"/>
-  <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/question.mark/question.mark.css" />
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/fitnesse_print.css" media="print" />
   <link rel="wysiwyg.base" href="${contextRoot}" />
   <link rel="wysiwyg.stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/fitnesse.css" media="screen" />
