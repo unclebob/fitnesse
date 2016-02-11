@@ -3,79 +3,83 @@
 <div id="-shortcut-keys" class="modal-dialog">
  <div>
   <h4>Keyboard Shortcuts <kbd>?</kbd></h4>
-
+  <div>
   <ul class="help-list">
-   <li class="help-key-unit">
+
+   <li><h4>General</h4></li>
+   <li>
     <kbd>t</kbd>
     <span class="help-key-def">Test page or suite</span>
    </li>
-   <li class="help-key-unit">
+   <li>
     <kbd>e</kbd>
     <span class="help-key-def">Edit page</span>
    </li>
-   <li class="help-key-unit">
+   <li>
     <kbd>v</kbd>
     <span class="help-key-def">View page (after test)</span>
    </li>
-   <li class="help-key-unit">
+   <li>
     <kbd>a</kbd>
     <span class="help-key-def">Add new page</span>
    </li>
 
+   <li><h4>Go To</h4></li>
+   <li>
+    <kbd>g u</kbd>
+    <span class="help-key-def">User Guide</span>
+   </li>
+   <li>
+    <kbd>g q</kbd>
+    <span class="help-key-def">Quick Reference Guide</span>
+   </li>
+   <li>
+    <kbd>g f</kbd>
+    <span class="help-key-def">Full Reference Guide</span>
+   </li>
+   <li>
+    <kbd>g c</kbd>
+    <span class="help-key-def">Recent Changes</span>
+   </li>
+  </ul>
+  <ul class="help-list">
    <li><h4>Edit Mode</h4></li>
-   <li class="help-key-unit">
+   <li>
     <kbd>CTRL+s</kbd>
     <span class="help-key-def">Save page</span>
    </li>
-   <li class="help-key-unit">
+   <li>
     <kbd>ESC</kbd>
     <span class="help-key-def">Cancel edit</span>
    </li>
 
    <li><h4>Tools</h4></li>
-   <li class="help-key-unit">
+   <li>
     <kbd>p</kbd>
     <span class="help-key-def">Properties</span>
    </li>
-   <li class="help-key-unit">
+   <li>
     <kbd>w</kbd>
     <span class="help-key-def">Where used?</span>
    </li>
-   <li class="help-key-unit">
+   <li>
     <kbd>AK+v</kbd>
     <span class="help-key-def">Versions</span>
    </li>
-   <li class="help-key-unit">
+   <li>
     <kbd>AK+h</kbd>
     <span class="help-key-def">Page History</span>
    </li>
-   <li class="help-key-unit">
+   <li>
     <kbd>/</kbd>
     <span class="help-key-def">Focus on search bar</span>
    </li>
-   <li class="help-key-unit">
+   <li>
     <kbd>s</kbd>
     <span class="help-key-def">Open search page</span>
    </li>
-
-   <li><h4>Go To</h4></li>
-   <li class="help-key-unit">
-    <kbd>g u</kbd>
-    <span class="help-key-def">User Guide</span>
-   </li>
-   <li class="help-key-unit">
-    <kbd>g q</kbd>
-    <span class="help-key-def">Quick Reference Guide</span>
-   </li>
-   <li class="help-key-unit">
-    <kbd>g f</kbd>
-    <span class="help-key-def">Full Reference Guide</span>
-   </li>
-   <li class="help-key-unit">
-    <kbd>g c</kbd>
-    <span class="help-key-def">Recent Changes</span>
-   </li>
   </ul>
+  </div>
   <a href="#" class="button">Close</a>
  </div>
 </div>

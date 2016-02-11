@@ -296,32 +296,41 @@ div.contents li > a.static {
   border: 1px solid #d7d7d7;
 }
 
-.modal-dialog {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: rgba(0,0,0,0.2);
-    z-index: 99999;
+.modal-dialog:before{
+    content: "";
     display: none;
-    /*-webkit-transition: opacity 400ms ease-in;*/
-    /*-moz-transition: opacity 400ms ease-in;*/
-    /*transition: opacity 400ms ease-in;*/
-    pointer-events: none;
+    background: rgba(0,0,0,.2);
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 2000;
 }
 
-.modal-dialog:target {
+.modal-dialog:target:before {
     display: block;
-    pointer-events: auto;
 }
 
 .modal-dialog > div {
-    width: 400px;
-    position: relative;
-    margin: 5% auto;
-    padding: 5px 20px 13px 20px;
-    border: 1px solid #a5a5a5;
+    display: none;
+    position: fixed;
+    background-color: white;
+    border: 1px solid #a6a6a6;
+    padding: 8px 16px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
     border-radius: 4px;
-    background: #fff;
+    margin: auto;
+    margin-left: 50%;
+    z-index: 2001;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+.modal-dialog:target > div {
+    display: block;
+}
+
+.help-list {
+    list-style: none;
+    display: inline-block;
+    padding: 0;
 }
