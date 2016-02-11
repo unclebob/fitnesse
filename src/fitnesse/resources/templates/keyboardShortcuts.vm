@@ -80,7 +80,7 @@
    </li>
   </ul>
   </div>
-  <a href="#" class="button">Close</a>
+  <a href="javascript:history.back()" class="button">Close</a>
  </div>
 </div>
 

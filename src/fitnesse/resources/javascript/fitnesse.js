@@ -75,10 +75,10 @@ $(document)
     .ready(function () {
         $(".modal-dialog").keyup(function (e) {
            if (e.keyCode == 27) {
-               window.location.hash = "";
+               window.history.back();
            }
         }).click(function () {
-           window.location.hash = "";
+            window.history.back();
         });
         $(".modal-dialog > div").click(function (e) {
             e.stopPropagation();
