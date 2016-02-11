@@ -5,14 +5,14 @@ body {
 
 header,
 article {
-  margin: 0 40px;
+  margin: 0 @page-margin-horizontal;
 }
 
 footer {
   position: fixed;
   bottom: 0;
   width: 100%;
-  padding: 15px 40px;
+  padding: 15px @page-margin-horizontal;
   background-color: @navbar-default-bg;
   min-height: @navbar-height;
   border-top: 1px solid @navbar-default-border;
@@ -40,10 +40,9 @@ label {
 .navbar-brand {
   display: block;
   background-image: url(../../images/fitnesse-logo-small.png);
-  background-size: 168px 31px;
-  width: 168px;
-  height: 31px;
-  margin: 8px 16px 8px 4px;
+  width: 200px;
+  height: 37px;
+  margin: 5px 15px 5px 5px;
 
   span {
     display: none;
@@ -70,7 +69,7 @@ a[name] {
 .page-actions {
   display: none;
   float: right;
-  padding: 8px 40px;
+  padding: 8px @page-margin-horizontal;
   li {
     display: inline;
     .btn;
@@ -80,7 +79,7 @@ a[name] {
 }
 
 .breadcrumb {
-  padding: 8px 40px;
+  padding: 8px @page-margin-horizontal;
   margin: 0;
   #gradient > .vertical-three-colors(#ffffff, #ffffff, 80%, rgba(255, 255, 255, 0.0));
   background-color: transparent;
@@ -371,7 +370,7 @@ fieldset {
 // Specific pages:
 
 .editPage #editor {
-  margin: 0 40px;
+  margin: 0 @page-margin-horizontal;
 }
 
 .editPage .textarea-toolbar,
@@ -400,7 +399,7 @@ fieldset {
 }
 
 .editPage #save_buttons {
-  margin: 8px 40px;
+  margin: 8px @page-margin-horizontal;
 }
 
 #tt-wrap-text {
