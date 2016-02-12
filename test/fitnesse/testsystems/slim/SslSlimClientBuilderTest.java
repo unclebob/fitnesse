@@ -65,7 +65,7 @@ public class SslSlimClientBuilderTest {
 	    		"!define slim.pool.size {1}\n" +
 	    		"!define wiki.protocol.ssl.parameter.class {"+ clientParameters + "}\n"
     );
-	    WikiPageDescriptor descriptor = new WikiPageDescriptor(testPage, false, false, "test-classes" + File.pathSeparator + "classes");	    descriptor.getExecutionLogListener().addExecutionLogListener(new ConsoleExecutionLogListener());
+	    WikiPageDescriptor descriptor = new WikiPageDescriptor(testPage, false, false, "test-classes", "classes");	    descriptor.getExecutionLogListener().addExecutionLogListener(new ConsoleExecutionLogListener());
 	    System.out.print("----------------------------------------------------\n");
 	    System.out.print("SLIM_SSL: " + descriptor.getVariable("SLIM_SSL") + "\n");
 	    System.out.print("slim.timeout: " + descriptor.getVariable("slim.timeout") + "\n");

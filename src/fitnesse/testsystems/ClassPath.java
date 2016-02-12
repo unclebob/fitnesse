@@ -1,7 +1,11 @@
 package fitnesse.testsystems;
 
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -17,7 +21,7 @@ public class ClassPath {
   }
 
   public ClassPath(String defaultPath, String pathSeparator) {
-    this(Arrays.asList(defaultPath), pathSeparator);
+    this(Collections.singletonList(defaultPath), pathSeparator);
   }
 
   public ClassPath(List<ClassPath> paths) {
@@ -31,6 +35,17 @@ public class ClassPath {
         }
       }
     }
+  }
+
+  public ClassPath withLocationForClass(String testRunner) {
+    String location = findLocationForClass(testRunner);
+    if (location != null) {
+      List<String> newElements = new ArrayList<String>();
+      newElements.add(location);
+      newElements.addAll(elements);
+      return new ClassPath(newElements, separator);
+    }
+    return this;
   }
 
   public List<String> getElements() {
@@ -48,6 +63,29 @@ public class ClassPath {
     } else {
       String result = StringUtils.join(elements, separator);
       return result;
+    }
+  }
+
+  private String findLocationForClass(String mainClass) {
+    String mainClassFile = mainClass.replaceAll("\\.", "/") + ".class";
+    URL url = getClass().getClassLoader().getResource(mainClassFile);
+    if (url == null) return null;
+
+    if ("file".equals(url.getProtocol())) {
+      String path = uri(url).getPath();
+      return new File(path.substring(0, path.length() - mainClassFile.length())).getAbsolutePath();
+    } else if ("jar".equals(url.getProtocol())) {
+      String path = url.getPath();
+      return new File(URI.create(path.substring(0, path.indexOf("!/")))).getAbsolutePath();
+    }
+    return null;
+  }
+
+  private URI uri(URL url) {
+    try {
+      return url.toURI();
+    } catch (URISyntaxException e) {
+      throw new RuntimeException("Could not convert URL " + url + " to URI", e);
     }
   }
 }

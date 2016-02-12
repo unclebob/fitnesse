@@ -1,9 +1,4 @@
 !include -c .FitNesse.SuiteAcceptanceTests.SetUp
-!***< classpath
-
-!path classes
-!path lib/*.jar
-*!
 ----
 A Scenario table is a table that can be called from other tables; namely ScriptTable and DecisionTable.
 

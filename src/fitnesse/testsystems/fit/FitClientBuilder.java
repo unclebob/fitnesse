@@ -2,6 +2,7 @@ package fitnesse.testsystems.fit;
 
 import java.util.Map;
 
+import fitnesse.testsystems.ClassPath;
 import fitnesse.testsystems.ClientBuilder;
 import fitnesse.testsystems.Descriptor;
 
@@ -14,7 +15,7 @@ public class FitClientBuilder extends ClientBuilder<CommandRunningFitClient> {
   @Override
   public CommandRunningFitClient build() {
     String testRunner = getTestRunner();
-    String classPath = getClassPath();
+    ClassPath classPath = getClassPath();
     String[] command = buildCommand(getCommandPattern(), testRunner, classPath);
     Map<String, String> environmentVariables = createClasspathEnvironment(classPath);
     CommandRunningFitClient.CommandRunningStrategy runningStrategy =

@@ -1,6 +1,5 @@
 package fitnesse.testsystems;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -9,7 +8,6 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.InMemoryPage;
-
 import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,27 +37,6 @@ public class ClientBuilderTest {
     assertEquals("\\path\\to\\somewhere", replace("\\path\\%p\\somewhere", "%p", "to"));
     assertEquals("\\path\\to\\somewhere", replace("\\path%p", "%p", "\\to\\somewhere"));
   }
-
-  @Test
-  public void shouldIncludeStandaloneJarByDefault() {
-    assertEquals("fitnesse.jar", ClientBuilder.fitnesseJar("fitnesse.jar"));
-    assertEquals("fitnesse-20121220.jar",
-            ClientBuilder.fitnesseJar("fitnesse-20121220.jar"));
-    assertEquals("fitnesse-standalone.jar",
-            ClientBuilder.fitnesseJar("fitnesse-standalone.jar"));
-    assertEquals("fitnesse-standalone-20121220.jar",
-            ClientBuilder.fitnesseJar("fitnesse-standalone-20121220.jar"));
-    assertEquals("fitnesse.jar",
-            ClientBuilder.fitnesseJar("fitnesse-book.jar"));
-    assertEquals(
-            "fitnesse-standalone-20121220.jar",
-            ClientBuilder.fitnesseJar(String
-                    .format("irrelevant.jar%1$sfitnesse-book.jar%1$sfitnesse-standalone-20121220.jar",
-                            System.getProperty("path.separator"))));
-    assertEquals(String.format("lib%sfitnesse-standalone.jar", File.separator),
-            ClientBuilder.fitnesseJar(String.format("lib%sfitnesse-standalone.jar", File.separator)));
-  }
-
 
   @Test
   public void buildDefaultTestSystemName() throws Exception {
@@ -149,10 +126,9 @@ public class ClientBuilderTest {
     WikiPage page = makeTestPage(pageText);
     WikiPageDescriptor descriptor = new WikiPageDescriptor(page, false, false, "");
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
-    String sep = System.getProperty("path.separator");
     String prefix = join(clientBuilder.getCommandPattern());
     assertTrue(prefix.contains("java"));
-    assertTrue(prefix.contains(" -cp fitnesse.jar" + sep + "%p %m"));
+    assertTrue(prefix.contains(" -cp %p %m"));
   }
 
   @Test
@@ -161,10 +137,9 @@ public class ClientBuilderTest {
     WikiPage page = makeTestPage(pageText);
     WikiPageDescriptor descriptor = new WikiPageDescriptor(page, false, true, "");
     MockClientBuilder clientBuilder = new MockClientBuilder(descriptor);
-    String sep = System.getProperty("path.separator");
     String prefix = join(clientBuilder.getCommandPattern());
     assertTrue(prefix.contains("java"));
-    assertTrue(prefix.contains(" -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp fitnesse.jar" + sep + "%p %m"));
+    assertTrue(prefix.contains(" -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m"));
   }
 
   @Test
