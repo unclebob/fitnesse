@@ -1,4 +1,4 @@
-<ul>
+<ul class="nav navbar-nav">
  <li ><a href="$localPath?responder=versions">Versions</a></li>
  <li ><a href="$localPath">Get out</a></li>
 </ul>

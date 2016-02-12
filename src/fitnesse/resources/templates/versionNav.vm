@@ -1,4 +1,4 @@
-<ul>
+<ul class="nav navbar-nav">
  #if( $!nextVersion )
  <li ><a href="$localPath?responder=viewVersion&version=$nextVersion">Next</a></li>
  #end
