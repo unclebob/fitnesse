@@ -59,7 +59,7 @@
   <input type="text" name="newLocation" value="" size="80" class="wikipath" list="suites" placeholder="enter first two chars of suite name here" autocomplete="off" />
   <datalist id="suites">
     #foreach ($suiteEntry in $suiteMap)
-        <option value="#escape($suiteEntry)">
+        <option value="#escape($suiteEntry)"/>
     #end
   </datalist>
  </fieldset>

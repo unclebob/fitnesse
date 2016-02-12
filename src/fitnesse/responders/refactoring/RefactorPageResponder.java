@@ -2,10 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.components.TraversalListener;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -15,7 +19,6 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import fitnesse.responders.AutoCompleteUtil;
 
 public class RefactorPageResponder implements SecureResponder {
 
@@ -24,9 +27,10 @@ public class RefactorPageResponder implements SecureResponder {
     String resource = request.getResource();
 
     String tags = "";
+    WikiPage wikiPage = null;
     if(context.getRootPage() != null){
       WikiPagePath path = PathParser.parse(resource);
-      WikiPage wikiPage = context.getRootPage().getPageCrawler().getPage(path);
+      wikiPage = context.getRootPage().getPageCrawler().getPage(path);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();
         tags = pageData.getAttribute(PageData.PropertySUITES);
@@ -34,18 +38,40 @@ public class RefactorPageResponder implements SecureResponder {
     }
 
     HtmlPage page = context.pageFactory.newPage();
+    String type = request.getInput("type");
 
     page.setMainTemplate("refactorForm");
     page.setTitle("Refactor: " + resource);
     page.setPageTitle(new PageTitle("Refactor", PathParser.parse(resource), tags));
     page.put("refactoredRootPage", resource);
     page.put("request", request);
-    page.put("type", request.getInput("type"));
+    page.put("type", type);
     page.put("viewLocation", request.getResource());
-    page.put("suiteMap", AutoCompleteUtil.createSuiteList(context));
+    if ("move".equals(type)) {
+      page.put("suiteMap", collectPageNames(wikiPage, context.getRootPage()));
+    }
     SimpleResponse response = new SimpleResponse();
     response.setContent(page.html());
     return response;
+  }
+
+  List<String> collectPageNames(final WikiPage thisPage, WikiPage rootPage) {
+    final List<String> pageNames = new ArrayList<String>();
+    if (thisPage != null) {
+      final WikiPagePath thisPagePath = thisPage.getPageCrawler().getFullPath();
+      rootPage.getPageCrawler().traverse(new TraversalListener<WikiPage>() {
+
+        @Override
+        public void process(WikiPage page) {
+          WikiPagePath pagePath = page.getPageCrawler().getFullPath();
+          pagePath.makeAbsolute();
+          if (!thisPagePath.equals(pagePath) && !pagePath.isEmpty()) {
+            pageNames.add(pagePath.toString());
+          }
+        }
+      });
+    }
+    return pageNames;
   }
 
   @Override

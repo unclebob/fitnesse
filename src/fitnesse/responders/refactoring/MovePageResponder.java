@@ -30,7 +30,7 @@ public class MovePageResponder extends PageMovementResponder {
   }
 
   private static String getNameofNewParent(Request request) {
-    String newParentName = (String) request.getInput("newLocation");
+    String newParentName = request.getInput("newLocation");
     if (".".equals(newParentName)) {
       return "";
     }
