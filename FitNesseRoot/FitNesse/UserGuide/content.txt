@@ -16,8 +16,8 @@
  * [[Quick Reference Guide][>QuickReferenceGuide]]
  * [[Full Reference Guide][<FitNesse.FullReferenceGuide]] (takes some time to load)
 
-!anchor introduction
-!2 Introduction
+!1 Introduction !anchor introduction
+
 FitNesse is a tool for specifying and verifying application acceptance criteria (requirements). It acts as a bridge between the different stakeholders (disciplines) in a software delivery process. It's wiki server makes it easy to document the software.It's testexecution capabilities allow you to verify the documentation against the software, ensuring the documentation remains up to date and the software is not facing regression.
 
 For this to work, the tests should be defined on a business level, in conjunction with business representatives. They are basically business requirements, laid out in a way easy to understand by all stakeholders. When your requirements are unambiguous, they can be automatically verified with your application.

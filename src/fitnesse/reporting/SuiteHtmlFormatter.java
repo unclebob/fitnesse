@@ -51,18 +51,21 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
 
   private void writeTestOutputDiv(String relativeName, String fullPathName) throws IOException {
     if (!testBasePathName.equals(fullPathName)) {
-      HtmlTag pageNameBar = HtmlUtil.makeDivTag("test_output_name");
-      HtmlTag anchor = HtmlUtil.makeLink(fullPathName, relativeName);
-      anchor.addAttribute("id", relativeName + currentTest);
-      anchor.addAttribute("class", "test_name");
-      HtmlTag title = new HtmlTag("h3", anchor);
+      HtmlTag title = new HtmlTag("h3");
 
-      HtmlTag topLink = HtmlUtil.makeLink("#" + TEST_SUMMARIES_ID, "Top");
+      HtmlTag anchor = HtmlUtil.makeLink(fullPathName, relativeName);
+      anchor.addAttribute("class", "test_name");
+      title.add(anchor);
+
+      HtmlTag name = new HtmlTag("a");
+      name.addAttribute("name", relativeName + currentTest);
+      title.add(name);
+
+      HtmlTag topLink = HtmlUtil.makeLink("#", "Top");
       topLink.addAttribute("class", "top_of_page");
 
-      pageNameBar.add(title);
-      pageNameBar.add(topLink);
-      writeData(pageNameBar.html());
+      title.add(new HtmlTag("small", topLink));
+      writeData(title.html());
     }
     writeData("<div class=\"alternating_block\">");
   }

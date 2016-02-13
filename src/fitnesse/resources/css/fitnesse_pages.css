@@ -225,6 +225,7 @@ span.error {
 #test-action .error {
 	background-color: red;
 }
+/* Keep around for old pages: */
 .test_output_name h3 {
 	display: inline;
 }
