@@ -15,24 +15,24 @@ To define a particular page's help text, navigate to that page, click '''Propert
 
 '''Page Properties'''
 To facilitate the verification of test, suite, and symbolic links, the -p option will append a series of characters to denote a particular property that is set for that page.  The default characters are:
-|''' Character '''|''' Property '''|''' Description '''|
-| !3 !c * | Suite         | The Suite property box is checked |
-| !3 !c + | Test          | The Test property box is checked |
-| !3 !c @ | Imported      | The page is imported from an external source |
-| !3 !c > | Symbolic Link | The page is a symbolic link of the current page |
-| !3 !c - |Skipped        | The skip property box is checked; this page and all its chidlren are excluded from suite tests |
+|''' Character '''|''' Property '''|''' Description '''                                                                           |
+|!c *             |Suite           |The Suite property box is checked                                                             |
+|!c +             |Test            |The Test property box is checked                                                              |
+|!c @             |Imported        |The page is imported from an external source                                                  |
+|!c >             |Symbolic Link   |The page is a symbolic link of the current page                                               |
+|!c -             |Skipped         |The skip property box is checked; this page and all its chidlren are excluded from suite tests|
 
 The character set for properties may be changed via the PROPERTY_CHARACTERS variable; this variable is positional in the order specified above.
 
 !3 Global Variables that Modify TOC
-|''' NAME '''         |''' Default '''|''' Values '''    |''' Notes '''|
-| FILTER_TOC          | false         |true!-|-!false    |'' Append suite fiters to TOC (-f flag) ''|
-| HELP_PREFIX_TOC     | :<''space''>  |''any string''    |'' Define prefix for help text suffix ''|
-| HELP_TOC            | false         |true!-|-!false    |'' Append help text to TOC (-h flag) ''|
-| MORE_SUFFIX_TOC     | <''space''>...|''any string''    |'' Define sequence to show more TOC levels ''|
-| PROPERTY_CHARACTERS |!- *+@>- -!    |''any characters''|'' Define property icons for TOC ''|
-| PROPERTY_TOC        | false         |true!-|-!false    |'' Append property icons to TOC (-p flag) ''|
-| REGRACE_TOC         | false         |true!-|-!false    |'' Makes !contents list graceful (-g flag) ''|
+|''' NAME '''       |''' Default '''|''' Values '''    |''' Notes '''                                |
+|FILTER_TOC         |false          |true!-|-!false    |'' Append suite fiters to TOC (-f flag) ''   |
+|HELP_PREFIX_TOC    |:<''space''>   |''any string''    |'' Define prefix for help text suffix ''     |
+|HELP_TOC           |false          |true!-|-!false    |'' Append help text to TOC (-h flag) ''      |
+|MORE_SUFFIX_TOC    |<''space''>... |''any string''    |'' Define sequence to show more TOC levels ''|
+|PROPERTY_CHARACTERS|!- *+@>- -!    |''any characters''|'' Define property icons for TOC ''          |
+|PROPERTY_TOC       |false          |true!-|-!false    |'' Append property icons to TOC (-p flag) '' |
+|REGRACE_TOC        |false          |true!-|-!false    |'' Makes !contents list graceful (-g flag) ''|
 !note (See the ''root'' page for overrides)
 
 !3 !-AcceptanceTests-! for the ''' !contents ''' widget
