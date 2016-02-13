@@ -82,9 +82,9 @@ public class FitNesseContext {
     fitNesse = new FitNesse(this);
     pageFactory = new PageFactory(this);
     String protocol = variableSource.getProperty(WIKI_PROTOCOL_PROPERTY);
-    this.useHTTPS = (protocol == null ?  false : (protocol.equalsIgnoreCase("https")));
+    this.useHTTPS = (protocol != null && protocol.equalsIgnoreCase("https"));
     String clientAuth = variableSource.getProperty(SSL_CLIENT_AUTH_PROPERTY);
-    this.sslClientAuth = (clientAuth == null) ? false : (clientAuth.equalsIgnoreCase("required"));
+    this.sslClientAuth = (clientAuth != null && clientAuth.equalsIgnoreCase("required"));
     this.sslParameterClassName = variableSource.getProperty(SSL_PARAMETER_CLASS_PROPERTY);
   }
 
