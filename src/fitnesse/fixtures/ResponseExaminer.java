@@ -123,7 +123,7 @@ public class ResponseExaminer extends ColumnFixture {
     StringTokenizer tokenizedLines = tokenizeLines(lineizedContent);
     for (int i = number; i != 0; i--)
       value = tokenizedLines.nextToken();
-    return value.trim();
+    return value != null ? value.trim() : null;
   }
 
   private StringTokenizer tokenizeLines(String lineizedContent) {
@@ -135,8 +135,7 @@ public class ResponseExaminer extends ColumnFixture {
   }
 
   public static String convertBreaksToLineSeparators(String pageContent) {
-    String lineizedContent = pageContent.replaceAll("<br/>", System.getProperty("line.separator"));
-    return lineizedContent;
+    return pageContent.replaceAll("<br/>", System.getProperty("line.separator"));
   }
 
   public String found() throws Exception {

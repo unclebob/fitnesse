@@ -106,7 +106,9 @@ public class Table {
       currentRow = nextRow;
       nextRow = nextRow.more;
     }
-    currentRow.more = null;
+    if (currentRow != null) {
+      currentRow.more = null;
+    }
     return currentRow;
   }
 
