@@ -104,11 +104,6 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
     return new SecureTestOperation();
   }
 
-  boolean slimOpen() {
-    boolean slimOpen = false;
-    return slimOpen;
-  }
-
   public TestSummary getTestSummary() {
     return testSummary;
   }

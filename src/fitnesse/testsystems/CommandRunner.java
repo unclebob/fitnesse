@@ -133,7 +133,8 @@ public class CommandRunner {
         Thread.sleep(timeStep);
       }
     } catch (InterruptedException e) {
-      LOG.log(Level.FINE, "Wait for death of process " + process + " interrupted", e);
+      LOG.log(Level.WARNING, "Wait for death of process " + process + " interrupted", e);
+      Thread.currentThread().interrupt();
     }
     LOG.warning("Could not detect death of command line test runner.");
   }

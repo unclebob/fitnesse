@@ -99,8 +99,8 @@ public class SlimCommandRunningClient implements SlimClient {
         } else {
           try {
             Thread.sleep(sleepStep);
-          } catch (InterruptedException i) {
-            throw new SlimError("Wait for connection interrupted.");
+          } catch (InterruptedException e1) {
+            Thread.currentThread().interrupt();
           }
         }
       }

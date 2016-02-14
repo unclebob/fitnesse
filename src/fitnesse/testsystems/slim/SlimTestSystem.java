@@ -66,12 +66,8 @@ public abstract class SlimTestSystem implements TestSystem {
 
   @Override
   public void start() throws IOException {
-    try {
-      slimClient.start();
-      testSystemListener.testSystemStarted(this);
-    } catch (SlimError e) {
-      exceptionOccurred(e);
-    }
+    slimClient.start();
+    testSystemListener.testSystemStarted(this);
   }
 
   @Override
