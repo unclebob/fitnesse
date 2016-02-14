@@ -5,6 +5,7 @@ package util;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
@@ -140,8 +141,7 @@ public class StreamReader {
         try {
           Thread.sleep(sleepStep);
         } catch (InterruptedException e) {
-          // Ignore
-          //e.printStackTrace();
+          throw new InterruptedIOException("Interrupted while awaiting data: " + e.getMessage());
         }
         retryCounter--;
         if (retryCounter <= 0) {
