@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 public interface SlimClient {
-  void start() throws IOException;
+  void start() throws IOException, SlimVersionMismatch;
 
   Map<String, Object> invokeAndGetResponse(List<Instruction> statements) throws IOException;
 
-  void connect() throws IOException;
+  void connect() throws IOException, SlimVersionMismatch;
 
   void bye() throws IOException;
 

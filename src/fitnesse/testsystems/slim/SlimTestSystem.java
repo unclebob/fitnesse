@@ -66,7 +66,12 @@ public abstract class SlimTestSystem implements TestSystem {
 
   @Override
   public void start() throws IOException {
-    slimClient.start();
+    try {
+      slimClient.start();
+    } catch (SlimVersionMismatch slimVersionMismatch) {
+      exceptionOccurred(slimVersionMismatch);
+      return;
+    }
     testSystemListener.testSystemStarted(this);
   }
 
