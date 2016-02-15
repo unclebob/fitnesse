@@ -12,8 +12,8 @@ import fitnesse.socketservice.SocketServer;
 public class FitNesseServer implements SocketServer {
   private static final Logger LOG = Logger.getLogger(FitNesseServer.class.getName());
 
-  private FitNesseContext context;
-  private ExecutorService executorService;
+  private final FitNesseContext context;
+  private final ExecutorService executorService;
 
   public FitNesseServer(FitNesseContext context, ExecutorService executorService) {
     this.context = context;
