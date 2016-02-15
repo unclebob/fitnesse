@@ -35,7 +35,7 @@ public class InProcessSlimClient implements SlimClient {
   }
 
   @Override
-  public void start() throws IOException {
+  public void start() throws IOException, SlimVersionMismatch {
     commandStarted();
 
     PipedInputStream socketInput = new PipedInputStream();
@@ -87,17 +87,17 @@ public class InProcessSlimClient implements SlimClient {
   }
 
   @Override
-  public void connect() throws IOException {
+  public void connect() throws IOException, SlimVersionMismatch {
     String slimServerVersionMessage = reader.readLine();
     if (!isConnected(slimServerVersionMessage)) {
-      throw new SlimError("Got invalid slim header from client. Read the following: " + slimServerVersionMessage);
+      throw new SlimVersionMismatch("Got invalid slim header from client. Read the following: " + slimServerVersionMessage);
     }
 
     slimServerVersion = Double.parseDouble(slimServerVersionMessage.replace(SlimVersion.SLIM_HEADER, ""));
     if (slimServerVersion == SlimCommandRunningClient.NO_SLIM_SERVER_CONNECTION_FLAG) {
-      throw new SlimError("Slim Protocol Version Error: Server did not respond with a valid version number.");
+      throw new SlimVersionMismatch("Slim Protocol Version Error: Server did not respond with a valid version number.");
     } else if (slimServerVersion < SlimCommandRunningClient.MINIMUM_REQUIRED_SLIM_VERSION) {
-      throw new SlimError(String.format("Slim Protocol Version Error: Expected V%s but was V%s", SlimCommandRunningClient.MINIMUM_REQUIRED_SLIM_VERSION, slimServerVersion));
+      throw new SlimVersionMismatch(String.format("Slim Protocol Version Error: Expected V%s but was V%s", SlimCommandRunningClient.MINIMUM_REQUIRED_SLIM_VERSION, slimServerVersion));
     }
   }
 

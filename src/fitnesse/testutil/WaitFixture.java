@@ -3,11 +3,7 @@ package fitnesse.testutil;
 
 public class WaitFixture  {
 
-  public WaitFixture() {
-    try {
+  public WaitFixture() throws InterruptedException {
       Thread.sleep(2000);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
   }
 }

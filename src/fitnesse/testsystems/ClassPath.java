@@ -7,10 +7,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
 
 public class ClassPath {
+
+  private static final Logger LOG = Logger.getLogger(ClassPath.class.getName());
 
   private final List<String> elements;
   private final String separator;
@@ -61,8 +65,7 @@ public class ClassPath {
     if (elements.isEmpty()) {
       return "defaultPath";
     } else {
-      String result = StringUtils.join(elements, separator);
-      return result;
+      return StringUtils.join(elements, separator);
     }
   }
 
@@ -72,8 +75,11 @@ public class ClassPath {
     if (url == null) return null;
 
     if ("file".equals(url.getProtocol())) {
-      String path = uri(url).getPath();
-      return new File(path.substring(0, path.length() - mainClassFile.length())).getAbsolutePath();
+      URI uri = toUri(url);
+      if (uri != null) {
+        String path = uri.getPath();
+        return new File(path.substring(0, path.length() - mainClassFile.length())).getAbsolutePath();
+      }
     } else if ("jar".equals(url.getProtocol())) {
       String path = url.getPath();
       return new File(URI.create(path.substring(0, path.indexOf("!/")))).getAbsolutePath();
@@ -81,11 +87,12 @@ public class ClassPath {
     return null;
   }
 
-  private URI uri(URL url) {
+  private URI toUri(URL url) {
     try {
       return url.toURI();
     } catch (URISyntaxException e) {
-      throw new RuntimeException("Could not convert URL " + url + " to URI", e);
+      LOG.log(Level.SEVERE, "Could not convert URL '" + url + "' to URI. Ignoring it for now.", e);
+      return null;
     }
   }
 }

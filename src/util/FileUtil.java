@@ -107,33 +107,9 @@ public class FileUtil {
   public static void deleteFile(File file) {
     if (!file.exists())
       return;
-    for (int i = 0; i < 10; i++) {
-        if (file.delete()) {
-            waitUntilFileDeleted(file);
-            return;
-        }
-        waitFor(10);
-    }
-    throw new RuntimeException("Could not delete '" + file.getAbsoluteFile() + "'");
+    if (!file.delete())
+      throw new RuntimeException("Could not delete '" + file.getAbsolutePath() + "'");
   }
-
-  private static void waitUntilFileDeleted(File file) {
-    int i = 10;
-    while (file.exists()) {
-      if (--i <= 0) {
-        break;
-      }
-      waitFor(500);
-    }
-  }
-    
-    private static void waitFor(int milliseconds) {
-        try {
-          Thread.sleep(milliseconds);
-        }
-        catch (InterruptedException e) {
-        }
-    }
 
   public static String getFileContent(String path) throws IOException {
     File input = new File(path);
@@ -149,8 +125,7 @@ public class FileUtil {
     FileInputStream stream = null;
     try {
       stream = new FileInputStream(input);
-      byte[] bytes = new StreamReader(stream).readBytes((int) size);
-      return bytes;
+      return new StreamReader(stream).readBytes((int) size);
     } finally {
       if (stream != null)
         stream.close();

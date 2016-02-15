@@ -44,7 +44,8 @@ public class SocketCatcher implements SocketServer {
     try {
       accepter.acceptSocket(s);
     } catch (InterruptedException e) {
-      LOG.log(Level.SEVERE, "Fit client interrupted", e);
+      LOG.log(Level.SEVERE, "Fit client interrupted");
+      Thread.currentThread().interrupt();
     }
   }
 }

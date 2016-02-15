@@ -44,7 +44,8 @@ public class SocketService {
     try {
       serviceThread.join();
     } catch (InterruptedException e) {
-      LOG.log(Level.WARNING, "Thread joining interrupted", e);
+      LOG.log(Level.WARNING, "Thread joining interrupted");
+      Thread.currentThread().interrupt();
     }
   }
 
@@ -68,7 +69,7 @@ public class SocketService {
         LOG.log(Level.SEVERE, "Can't create new thread.  Out of Memory.  Aborting.", e);
         System.exit(99);
       } catch (SocketException sox) {
-        running = false;// do nothing
+        running = false; // do nothing
       } catch (IOException e) {
         throw new RuntimeException(e);
       }

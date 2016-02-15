@@ -54,18 +54,18 @@ public class SlimCommandRunningClient implements SlimClient {
   }
 
   @Override
-  public void start() throws IOException {
+  public void start() throws IOException, SlimVersionMismatch {
     slimRunner.asynchronousStart();
     connect();
     checkForVersionMismatch();
   }
 
-  private void checkForVersionMismatch() {
+  private void checkForVersionMismatch() throws SlimVersionMismatch {
     double serverVersionNumber = getServerVersion();
     if (serverVersionNumber == NO_SLIM_SERVER_CONNECTION_FLAG) {
-      throw new SlimError("Slim Protocol Version Error: Server did not respond with a valid version number.");
+      throw new SlimVersionMismatch("Slim Protocol Version Error: Server did not respond with a valid version number.");
     } else if (serverVersionNumber < requiredSlimVersion) {
-      throw new SlimError(String.format("Slim Protocol Version Error: Expected V%s but was V%s", requiredSlimVersion, serverVersionNumber));
+      throw new SlimVersionMismatch(String.format("Slim Protocol Version Error: Expected V%s but was V%s", requiredSlimVersion, serverVersionNumber));
     }
   }
 
@@ -99,8 +99,8 @@ public class SlimCommandRunningClient implements SlimClient {
         } else {
           try {
             Thread.sleep(sleepStep);
-          } catch (InterruptedException i) {
-            throw new SlimError("Wait for connection interrupted.");
+          } catch (InterruptedException e1) {
+            Thread.currentThread().interrupt();
           }
         }
       }
