@@ -26,7 +26,7 @@ public class FitNesseUtil {
 
   private static FitNesse instance = null;
 
-  public static void startFitnesseWithContext(FitNesseContext context) {
+  public static void startFitnesseWithContext(FitNesseContext context) throws IOException {
     instance = context.fitNesse;
     instance.start();
   }

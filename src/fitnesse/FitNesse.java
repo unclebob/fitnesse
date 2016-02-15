@@ -28,10 +28,10 @@ import fitnesse.util.SerialExecutorService;
 
 public class FitNesse {
   private static final Logger LOG = Logger.getLogger(FitNesse.class.getName());
+
   private final FitNesseContext context;
-  private boolean makeDirs = true;
+  private final ExecutorService executorService;
   private volatile SocketService theService;
-  private ExecutorService executorService;
 
   public FitNesse(FitNesseContext context) {
     this.context = context;
@@ -45,26 +45,7 @@ public class FitNesse {
             new DaemonThreadFactory(), rejectionHandler);
   }
 
-  public FitNesse dontMakeDirs() {
-    makeDirs = false;
-    return this;
-  }
-
-  private void establishRequiredDirectories() {
-    establishDirectory(context.getRootPagePath());
-    establishDirectory(context.getRootPagePath() + "/files");
-  }
-
-  private static void establishDirectory(String path) {
-    File filesDir = new File(path);
-    if (!filesDir.exists())
-      filesDir.mkdir();
-  }
-
   public void start() throws IOException {
-    if (makeDirs) {
-      establishRequiredDirectories();
-    }
     if (context.port > 0) {
       ServerSocket serverSocket = context.useHTTPS
               ? SocketFactory.createSslServerSocket(context.port, context.sslClientAuth, context.sslParameterClassName)
@@ -78,9 +59,8 @@ public class FitNesse {
       theService.close();
       theService = null;
     }
-    if (executorService != null) {
+    if (!executorService.isShutdown()) {
       executorService.shutdown();
-      executorService = null;
     }
   }
 

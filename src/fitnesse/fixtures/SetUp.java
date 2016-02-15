@@ -34,7 +34,6 @@ public class SetUp extends Fixture {
         return true;
       }
     }, properties);
-    context.fitNesse.dontMakeDirs();
     File historyDirectory = context.getTestHistoryDirectory();
     if (historyDirectory.exists())
       FileUtil.deleteFileSystemDirectory(historyDirectory);

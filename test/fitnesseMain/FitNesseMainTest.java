@@ -61,7 +61,6 @@ public class FitNesseMainTest {
     context.withParameter(ConfigurationParameter.COMMAND, "command");
 
     FitNesse fitNesse = mock(FitNesse.class);
-    when(fitNesse.start()).thenReturn(true);
 
     context = spy(context);
     doAnswer(fitNesseContextWith(fitNesse)).when(context).makeFitNesseContext();
@@ -74,22 +73,17 @@ public class FitNesseMainTest {
   }
 
   @Test
-  public void testDirCreations() throws IOException, PluginException {
-    FitNesse fitnesse = context.makeFitNesseContext().fitNesse;
-    fitnesse.start();
+  public void testDirCreations() throws Exception {
+    runFitnesseMainWith("-o", "-c", "/root", "-r", "testFitnesseRoot");
 
-    try {
-      assertTrue(new File("testFitnesseRoot").exists());
-      assertTrue(new File("testFitnesseRoot/files").exists());
-    } finally {
-      fitnesse.stop();
-    }
+    assertTrue(new File("testFitnesseRoot").exists());
+    assertTrue(new File("testFitnesseRoot/files").exists());
   }
 
   @Test
   public void testIsRunning() throws Exception {
     FitNesseContext context = FitNesseUtil.makeTestContext();
-    FitNesse fitnesse = context.fitNesse.dontMakeDirs();
+    FitNesse fitnesse = context.fitNesse;
 
     assertFalse(fitnesse.isRunning());
 

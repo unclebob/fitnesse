@@ -65,6 +65,13 @@ public class FitNesseMain {
 
     FitNesseContext context = contextConfigurator.makeFitNesseContext();
 
+    if (!establishRequiredDirectories(context.getRootPagePath())) {
+      LOG.severe("FitNesse cannot be started...");
+      LOG.severe("Unable to create FitNesse root directory in " + context.getRootPagePath());
+      LOG.severe("Ensure you have sufficient permissions to create this folder.");
+      return 1;
+    }
+
     logStartupInfo(context);
 
     if (update(context)) {
@@ -89,6 +96,16 @@ public class FitNesseMain {
       return 1;
     }
 
+  }
+
+
+  private boolean establishRequiredDirectories(String rootPagePath) {
+    return establishDirectory(new File(rootPagePath)) &&
+            establishDirectory(new File(rootPagePath, "files"));
+  }
+
+  private static boolean establishDirectory(File path) {
+    return path.exists() || path.mkdir();
   }
 
   private boolean update(FitNesseContext context) throws IOException {
