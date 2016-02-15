@@ -104,7 +104,7 @@ public class SuiteResponderTest {
     String results = runSuite();
     assertSubString("href=\\\"#TestOne1\\\"", results);
     assertSubString("1 right", results);
-    assertSubString("id=\"TestOne1\"", results);
+    assertSubString("name=\"TestOne1\"", results);
     assertSubString(" href=\"SuitePage.TestOne\"", results);
     assertSubString("PassFixture", results);
   }
@@ -131,8 +131,8 @@ public class SuiteResponderTest {
     assertSubString("href=\\\"#TestTwo2\\\"", results);
     assertSubString("1 right", results);
     assertSubString("2 wrong", results);
-    assertSubString("id=\"TestOne1\"", results);
-    assertSubString("id=\"TestTwo2\"", results);
+    assertSubString("name=\"TestOne1\"", results);
+    assertSubString("name=\"TestTwo2\"", results);
     assertSubString("PassFixture", results);
     assertSubString("FailFixture", results);
   }
@@ -151,7 +151,7 @@ public class SuiteResponderTest {
     assertNotSubString("href=\\\"#TestTwo2\\\"", results);
     assertSubString("1 right", results);
     assertSubString("0 wrong", results);
-    assertSubString("id=\"TestOne1\"", results);
+    assertSubString("name=\"TestOne1\"", results);
     assertNotSubString("id=\"TestTwo2\"", results);
     assertSubString("PassFixture", results);
     assertNotSubString("FailFixture", results);

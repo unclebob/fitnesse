@@ -1,7 +1,7 @@
 <ul><li id="test-action"></li></ul>
 ## The menu is only shown after the page executed.
 <div class="hidden">
-#parse( "wikiNav.vm" )
+#parse( "menu.vm" )
 </div>
 <script type="text/javascript">//<!--
  $(function() {

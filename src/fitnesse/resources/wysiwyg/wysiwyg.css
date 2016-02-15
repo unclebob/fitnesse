@@ -167,76 +167,32 @@ textarea#pageContent {
 	display: none;
 }
 
-.image-selector {
-    position: absolute;
-    background-color: white;
-    margin-top: 30px;
-    border:1px solid red;
-    z-index: 999;
-    width: 300px;
-    left: calc(50% - 150px);
-}
-
-
-.modal-dialog {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: rgba(0,0,0,0.4);
-    z-index: 99999;
-    display: none;
-    /*-webkit-transition: opacity 400ms ease-in;*/
-    /*-moz-transition: opacity 400ms ease-in;*/
-    /*transition: opacity 400ms ease-in;*/
-    pointer-events: none;
-}
-
-.modal-dialog:target {
-    display: block;
-    pointer-events: auto;
-}
-
-.modal-dialog > div {
-    width: 400px;
-    position: relative;
-    margin: 5% auto;
-    padding: 5px 20px 13px 20px;
-    border: 1px solid #984D00;
-    border-radius: 3px;
-    background: #fff;
-    /*background: -moz-linear-gradient(#fff, #999);*/
-    /*background: -webkit-linear-gradient(#fff, #999);*/
-    /*background: -o-linear-gradient(#fff, #999);*/
-}
-
-.modal-dialog ul {
+.select-box ul {
     border: 1px solid #eee;
     padding-left: 28px;
     height: 15em;
     overflow: auto;
     width: 370px;
 }
-.modal-dialog li {
+.select-box li {
     list-style: none outside;
     padding: 2px;
     cursor: pointer;
 }
-.modal-dialog li:nth-child(odd) {
+.select-box li:nth-child(odd) {
     background: #fff
 }
-.modal-dialog li:nth-child(even) {
+.select-box li:nth-child(even) {
     background: #efefef
 }
-.modal-dialog li:hover {
+.select-box li:hover {
     background: #dbeaf9;
 }
 
-.modal-dialog .directory {
+.select-box .directory {
     list-style-image: url('../images/folder.gif');
 }
 
-.modal-dialog .url {
+.image-url {
     width: 100%
 }

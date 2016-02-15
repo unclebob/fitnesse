@@ -225,6 +225,7 @@ span.error {
 #test-action .error {
 	background-color: red;
 }
+/* Keep around for old pages: */
 .test_output_name h3 {
 	display: inline;
 }
@@ -294,4 +295,43 @@ div.contents li > a.static {
 }
 .CodeMirror {
   border: 1px solid #d7d7d7;
+}
+
+.modal-dialog:before{
+    content: "";
+    display: none;
+    background: rgba(0,0,0,.2);
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 2000;
+}
+
+.modal-dialog:target:before {
+    display: block;
+}
+
+.modal-dialog > div {
+    display: none;
+    position: fixed;
+    background-color: white;
+    border: 1px solid #a6a6a6;
+    padding: 8px 16px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    margin: auto;
+    margin-left: 50%;
+    z-index: 2001;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+.modal-dialog:target > div {
+    display: block;
+}
+
+.help-list {
+    list-style: none;
+    display: inline-block;
+    padding: 0;
 }
