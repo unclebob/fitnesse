@@ -61,26 +61,16 @@ public class FitNesse {
       filesDir.mkdir();
   }
 
-  public boolean start() {
+  public void start() throws IOException {
     if (makeDirs) {
       establishRequiredDirectories();
     }
-    try {
-      if (context.port > 0) {
-        ServerSocket serverSocket = context.useHTTPS
-                ? SocketFactory.createSslServerSocket(context.port, context.sslClientAuth, context.sslParameterClassName)
-                : SocketFactory.createServerSocket(context.port);
-        theService = new SocketService(new FitNesseServer(context, executorService), false, serverSocket);
-      }
-      return true;
-    } catch (BindException e) {
-      LOG.severe("FitNesse cannot be started...");
-      LOG.severe("Port " + context.port + " is already in use.");
-      LOG.severe("Use the -p <port#> command line argument to use a different port.");
-    } catch (Exception e) {
-      LOG.log(Level.SEVERE, "Error while starting the FitNesse socket service", e);
+    if (context.port > 0) {
+      ServerSocket serverSocket = context.useHTTPS
+              ? SocketFactory.createSslServerSocket(context.port, context.sslClientAuth, context.sslParameterClassName)
+              : SocketFactory.createServerSocket(context.port);
+      theService = new SocketService(new FitNesseServer(context, executorService), false, serverSocket);
     }
-    return false;
   }
 
   public synchronized void stop() throws IOException {

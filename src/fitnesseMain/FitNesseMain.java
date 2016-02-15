@@ -10,6 +10,7 @@ import fitnesse.reporting.ExitCodeListener;
 import fitnesse.updates.WikiContentUpdater;
 
 import java.io.*;
+import java.net.BindException;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -33,8 +34,8 @@ public class FitNesseMain {
     try {
         exitCode = new FitNesseMain().launchFitNesse(arguments);
     } catch (Exception e){
-        e.printStackTrace(System.out);
-        exitCode = 1;
+      LOG.log(Level.SEVERE, "Error while starting the FitNesse", e);
+      exitCode = 1;
     }
     if (exitCode != null) {
       exit(exitCode);
@@ -79,7 +80,15 @@ public class FitNesseMain {
       return null;
     }
 
-    return launch(context);
+    try {
+      return launch(context);
+    } catch (BindException e) {
+      LOG.severe("FitNesse cannot be started...");
+      LOG.severe("Port " + context.port + " is already in use.");
+      LOG.severe("Use the -p <port#> command line argument to use a different port.");
+      return 1;
+    }
+
   }
 
   private boolean update(FitNesseContext context) throws IOException {
