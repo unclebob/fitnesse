@@ -6,6 +6,7 @@
 
     <property environment="env"/>
     <property name="env.FITNESSE_TEST_PORT" value="8080"/>
+    <property name="min.java.version" value="1.8"/>
     <property name="src.dir" location="src"/>
     <property name="test.src.dir" location="test"/>
     <property name="classes.dir" location="classes"/>
@@ -136,7 +137,7 @@
     <target name="compile-server" depends="stamp-version, resolve" description="compile FitNesse sources">
         <mkdir dir="${classes.dir}" />
         <ivy:cachepath pathid="compile.classpath" conf="default"/>
-        <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" source="1.6" target="1.6" includeantruntime="false" encoding="UTF-8">
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" source="${min.java.version}" target="${min.java.version}" includeantruntime="false" encoding="UTF-8">
             <classpath>
                 <path refid="compile.classpath"/>
             </classpath>
@@ -151,7 +152,7 @@
 
     <target name="compile-fit" description="compile FIT sources only">
         <mkdir dir="${classes.dir}" />
-        <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" source="1.6" target="1.6" includeantruntime="false" encoding="UTF-8">
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" source="${min.java.version}" target="${min.java.version}" includeantruntime="false" encoding="UTF-8">
             <include name="fit/**/*.java"/>
             <include name="util/*.java"/>
         </javac>
@@ -160,7 +161,7 @@
     <target name="compile-slim" depends="resolve" description="compile SLIM sources only">
         <mkdir dir="${classes.dir}" />
         <ivy:cachepath pathid="slim.classpath" conf="slim"/>
-        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="slim.classpath" debug="true" source="1.6" target="1.6" includeantruntime="false">
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="slim.classpath" debug="true" source="${min.java.version}" target="${min.java.version}" includeantruntime="false">
             <include name="fitnesse/html/*.java"/>
             <include name="fitnesse/slim/**/*.java"/>
             <include name="fitnesse/socketservice/*.java"/>
@@ -171,7 +172,7 @@
     <target name="test-compile" depends="compile" description="compile the tests">
         <mkdir dir="${test.classes.dir}" />
         <ivy:cachepath pathid="test.classpath" conf="test"/>
-        <javac srcdir="${test.src.dir}" destdir="${test.classes.dir}" debug="true" source="1.6" target="1.6" includeantruntime="false" >
+        <javac srcdir="${test.src.dir}" destdir="${test.classes.dir}" debug="true" source="${min.java.version}" target="${min.java.version}" includeantruntime="false" >
             <classpath>
                 <path refid="test.classpath"/>
                 <pathelement location="${classes.dir}"/>
