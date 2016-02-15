@@ -2,13 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.*;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 
@@ -16,7 +11,6 @@ import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.plugins.PluginException;
 import fitnesse.testutil.FitNesseUtil;
 import org.junit.After;
 import org.junit.Before;
@@ -24,6 +18,10 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import util.FileUtil;
+
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class FitNesseMainTest {
 

@@ -2,10 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.BindException;
 import java.net.ServerSocket;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;

@@ -98,7 +98,6 @@ public class FitNesseMain {
 
   }
 
-
   private boolean establishRequiredDirectories(String rootPagePath) {
     return establishDirectory(new File(rootPagePath)) &&
             establishDirectory(new File(rootPagePath, "files"));
