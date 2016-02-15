@@ -10,8 +10,10 @@ import java.net.ServerSocket;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,7 +41,8 @@ public class FitNesse {
         LOG.log(Level.WARNING, "Could not handle request. Thread pool is exhausted.");
       }
     };
-    this.executorService = new ThreadPoolExecutor(5, 100, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(2), rejectionHandler);
+    this.executorService = new ThreadPoolExecutor(5, 100, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(2),
+            new DaemonThreadFactory(), rejectionHandler);
   }
 
   public FitNesse dontMakeDirs() {
@@ -80,10 +83,14 @@ public class FitNesse {
     return false;
   }
 
-  public void stop() throws IOException {
+  public synchronized void stop() throws IOException {
     if (theService != null) {
       theService.close();
       theService = null;
+    }
+    if (executorService != null) {
+      executorService.shutdown();
+      executorService = null;
     }
   }
 
@@ -102,4 +109,31 @@ public class FitNesse {
     MockResponseSender sender = new MockResponseSender(out);
     sender.doSending(response);
   }
+
+  /**
+   * The default thread factory - creates daemon threads
+   */
+  static class DaemonThreadFactory implements ThreadFactory {
+    private final ThreadGroup group;
+    private final AtomicInteger threadNumber = new AtomicInteger(1);
+    private final String namePrefix;
+
+    DaemonThreadFactory() {
+      SecurityManager s = System.getSecurityManager();
+      group = (s != null) ? s.getThreadGroup() :
+              Thread.currentThread().getThreadGroup();
+      namePrefix = "server-thread-";
+    }
+
+    public Thread newThread(Runnable r) {
+      Thread t = new Thread(group, r,
+              namePrefix + threadNumber.getAndIncrement(),
+              0);
+      t.setDaemon(true);
+      if (t.getPriority() != Thread.NORM_PRIORITY)
+        t.setPriority(Thread.NORM_PRIORITY);
+      return t;
+    }
+  }
+
 }
