@@ -48,7 +48,6 @@
     // alert(JSON.stringify(options));
     var minWidth =  $(this).data('minwidth') || options.minInputWidth || $(this).width(),
         maxWidth = $(this).data('maxwidth') || options.maxInputWidth || ($(this).closest('.tagsinput').width() - options.inputPadding),
-        val = '',
         input = $(this),
         testSubject = $('<tester/>').css({
             position: 'absolute',
