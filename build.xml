@@ -272,7 +272,7 @@
         </java>
     </target>
 
-    <target name="acceptance_tests" depends="standalone-jar">
+    <target name="acceptance_tests" depends="standalone-jar" description="Run the acceptance tests">
         <java jar="${dist.dir}/fitnesse-standalone.jar" failonerror="true" fork="true">
             <arg value="-c" />
             <arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=text" />
