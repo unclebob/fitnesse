@@ -6,7 +6,7 @@
 
     <property environment="env"/>
     <property name="env.FITNESSE_TEST_PORT" value="8080"/>
-    <property name="min.java.version" value="1.8"/>
+    <property name="min.java.version" value="1.7"/>
     <property name="src.dir" location="src"/>
     <property name="test.src.dir" location="test"/>
     <property name="classes.dir" location="classes"/>
