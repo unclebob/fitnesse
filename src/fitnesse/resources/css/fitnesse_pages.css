@@ -84,21 +84,16 @@ label {
 }
 
 
-/** Properties page / Search form / Directory page**/
-.propertiesPage .properties,
-.searchForm .properties {
+/** Properties page / Search form / Directory page **/
+.properties {
     margin-left: 145px;
 }
-.propertiesPage .properties fieldset,
-.searchForm .properties fieldset,
-.searchResults .properties fieldset {
+.properties fieldset {
     display: inline-block;
     vertical-align: top;
 	border: none;
 }
-.propertiesPage .properties label,
-.searchForm .properties label,
-.searchResults .properties label {
+.properties label {
 	display: block;
     text-align: left;
 }
@@ -112,7 +107,7 @@ label.checkbox {
 	width: auto;
     text-align: left;
 }
-#virtual-wiki-properties {
+.virtual-wiki-properties {
 	margin-top: 1em;
 }
 #create-dir {
@@ -230,7 +225,7 @@ span.error {
 	display: inline;
 }
 
-/** Suite overview */
+/** Suite overview **/
 .overview_results table {
     border: none;
 }
@@ -271,7 +266,7 @@ span.error {
 	background-repeat: no-repeat;
 }
 
-/** Test Execution report, backwards compatibility */
+/** Test Execution report, backwards compatibility **/
 .collapse_rim {
   background: #F9F9F9;
   border: 1px dotted #909090;
@@ -284,19 +279,22 @@ span.error {
   background: url(../images/collapsibleOpen.png) no-repeat scroll 0 2px transparent;
 }
 
-div.contents li > a.pruned {
+/** Table of Contents **/
+.contents a.pruned {
   text-decoration: line-through;
 }
-div.contents li > a.suite {
-  font-weight:bold;
+.contents a.suite {
+  font-weight: bold;
 }
-div.contents li > a.static {
-  font-style:italic;
+.contents a.static {
+  font-style: italic;
 }
+
 .CodeMirror {
   border: 1px solid #d7d7d7;
 }
 
+/** Modal dialog **/
 .modal-dialog:before{
     content: "";
     display: none;
@@ -324,6 +322,7 @@ div.contents li > a.static {
     top: 50%;
     -webkit-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
 }
 .modal-dialog:target > div {

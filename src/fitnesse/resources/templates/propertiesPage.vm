@@ -37,7 +37,7 @@
    </fieldset>
   </div>
 
-  <div id="virtual-wiki-properties">
+  <div class="virtual-wiki-properties">
    <fieldset>
     <label for="HelpText">Help text:</label>
     <input type="text" id="HelpText" name="HelpText"#value( "Help" ) size="70"/>
