@@ -31,7 +31,6 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   protected boolean fastTest = false;
   SlimTestSystem testSystem;
   private WikiPage page;
-  private PageData pageData;
   private FitNesseContext context;
   private Throwable slimException;
   private StringBuilder output;
@@ -54,8 +53,6 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
     WikiPagePath path = PathParser.parse(pageName);
     PageCrawler crawler = context.getRootPage().getPageCrawler();
     page = crawler.getPage(path);
-    if (page != null)
-      pageData = page.getData();
   }
 
   public FitNesseContext getContext() {
