@@ -163,6 +163,10 @@ public class SlimTableFactory {
       tableTypeArrays.put(fixture, makeTableType(tableSpecifier));
     }
   }
+  
+  public void addDefaultTableType(String fixture, String tableType) {
+      tableTypeArrays.put(fixture, tableType);
+  }
 
   private String makeTableType(String tableSpecifier) {
     tableSpecifier = tableSpecifier.replace(':', ' ');
