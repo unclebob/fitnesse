@@ -112,16 +112,16 @@ public class HtmlUtil {
   }
 
   private static String replaceStrings(String value, String[] originalStrings, String[] replacementStrings) {
-        String result = value;
-        for (int i = 0; i < originalStrings.length; i++)
-            if (result.contains(originalStrings[i]))
-                result = result.replace(originalStrings[i], replacementStrings[i]);
-        return result;
-    }
+    String result = value;
+    for (int i = 0; i < originalStrings.length; i++)
+      if (result.contains(originalStrings[i]))
+        result = result.replace(originalStrings[i], replacementStrings[i]);
+    return result;
+  }
 
   public static String unescapeHTML(String value) {
-        return replaceStrings(value, specialHtmlEscapes, specialHtmlChars);
-    }
+    return replaceStrings(value, specialHtmlEscapes, specialHtmlChars);
+  }
 
   public static String unescapeWiki(String value) {
       return replaceStrings(value, specialWikiEscapes, specialWikiChars);
