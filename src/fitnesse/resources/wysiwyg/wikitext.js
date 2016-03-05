@@ -418,7 +418,6 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
                 var tdNode = holder;
                 holder = holder.parentNode;
                 holder.removeChild(tdNode);
-                self.spanTableColumns(getSelfOrAncestor(holder, "table"));
             }
             var target = holder;
             target = getSelfOrAncestor(target, "div");
@@ -515,8 +514,6 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
     function closeTable() {
         if (inTable() || inHashTable()) {
             var target = getSelfOrAncestor(holder, "table");
-
-            self.spanTableColumns(target);
             holder = target.parentNode;
         }
     }
@@ -796,6 +793,9 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
     }
     closeToFragment();
 
+    $("table", fragment).each(function(i, t) {
+        self.spanTableColumns(t);
+    });
     return fragment;
 };
 
