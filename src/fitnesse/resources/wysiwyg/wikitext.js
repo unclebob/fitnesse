@@ -893,9 +893,8 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
         if (style.fontStyle === "italic") {
             return wikiOpenTokens.i;
         }
-        switch (style.textDecoration) {
-            case "line-through":
-                return wikiOpenTokens.del;
+        if (style.textDecoration === "line-through") {
+            return wikiOpenTokens.del;
         }
         return undefined;
     }
