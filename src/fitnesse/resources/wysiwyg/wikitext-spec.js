@@ -180,7 +180,7 @@ describe("parser and formatter", function () {
         doTreeWalk(expected, dom);
     });
 
-    it("test isLastChildInBlockNode (can get rid of)", function() {
+    it("test isBogusLineBreak (can get rid of)", function() {
         var dom = fragment(
             element("p", element("br")),
             element("p", "foobar", element("br"), "foobar"),
@@ -188,7 +188,7 @@ describe("parser and formatter", function () {
             element("p", element("b", "foobar"), element("br")),
             element("br"));
         function assert(expected, node) {
-            expect(editor.isLastChildInBlockNode(node)).toBe(expected); //, "#" + (count++));
+            expect(editor.isBogusLineBreak(node)).toBe(expected); //, "#" + (count++));
         }
         assert(true, dom.childNodes[0].childNodes[0]);
         assert(false, dom.childNodes[1].childNodes[0]);
