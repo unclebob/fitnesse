@@ -26,6 +26,10 @@ label {
 }
 
 /** Edit page **/
+.editPage {
+    padding-bottom: 0;
+}
+
 .editPage article {
     margin: 0;
 }
