@@ -6,6 +6,10 @@
  Wysiwyg editor for FitNesse, based on the Trac Wysiwyg editor written by
  OpenGroove and Ciklone, BSD licensed.
 
+ General rules are:
+  - text is rendered to a Fragment node
+  - div elements separate nested blocks e.g. collapsible sections
+
  ****/
 
 var Wysiwyg = function (textarea, options) {
@@ -2360,7 +2364,7 @@ Wysiwyg.getSelfOrAncestor = function (element, name, notName) {
             case 1: // element
                 if (target.tagName.toLowerCase() === name) {
                     return target;
-                } else if (target.tagName.toLowerCase() === notName) {
+                } else if (target.tagName.toLowerCase() === notName || target.tagName.toLowerCase() === "div") {
                     return null;
                 }
                 break;

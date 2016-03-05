@@ -444,9 +444,22 @@ describe("parser and formatter", function () {
         generateWikitext(dom, expectedWikitext);
     });
 
-    it("escape !( .. )! - nested ", function() {
-        var dom = element("p", "foo ", element("tt", {'class': 'nested'}, "bar"), " baz");
-        var wikitext = "foo !(bar)! baz";
+    it("table with nested table !( .. )!", function() {
+        var dom = element("table",
+            element("tbody",
+                element("tr",
+                    element("td", { colspan: 5 }, " table ")),
+                element("tr",
+                    element("td", " ", element("div", {'class': 'nested'},
+                        element("table",
+                            element("tbody",
+                                element("tr",
+                                    element("td", " foo "),
+                                    element("td", " bar ")),
+                                element("tr",
+                                    element("td", " baz "))))), " "),
+                    element("td", " quit "))));
+        var wikitext = "| table |\n| !(| foo | bar |\n| baz |)! | quit |";
         generate(dom, wikitext);
     });
 

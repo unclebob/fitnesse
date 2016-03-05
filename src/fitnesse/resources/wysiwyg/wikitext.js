@@ -13,15 +13,17 @@
     wikiInlineRules.push("--");                     // 4. strike
     wikiInlineRules.push("\\{\\{\\{");              // 5. code block (open)
     wikiInlineRules.push("\\}\\}\\}");              // 6. code block (close)
-    wikiInlineRules.push("![-<(\\[]");              // 7. escaped (open)
-    wikiInlineRules.push("[->)\\]]!");              // 8. escaped (close)
-    wikiInlineRules.push(_wikiTextLink);			// 9. Wiki link
-    wikiInlineRules.push(_wikiPageName);            // 10. WikiPage name
-    wikiInlineRules.push("\\${.+?}");               // 11. Variable
-    wikiInlineRules.push("!{");                     // 12. Hash table open
-    wikiInlineRules.push(":");                      // 13. Hash table key-value separator
-    wikiInlineRules.push(",");                      // 14. Hash table entry separator
-    wikiInlineRules.push("}");                      // 15. Hash table close
+    wikiInlineRules.push("!\\(");                   // 7. nested (open)
+    wikiInlineRules.push("\\)!");                   // 8. nested (close)
+    wikiInlineRules.push("![-<(\\[]");              // 9. escaped (open)
+    wikiInlineRules.push("[->)\\]]!");              // 10. escaped (close)
+    wikiInlineRules.push(_wikiTextLink);			// 11. Wiki link
+    wikiInlineRules.push(_wikiPageName);            // 12. WikiPage name
+    wikiInlineRules.push("\\${.+?}");               // 13. Variable
+    wikiInlineRules.push("!{");                     // 14. Hash table open
+    wikiInlineRules.push(":");                      // 15. Hash table key-value separator
+    wikiInlineRules.push(",");                      // 16. Hash table entry separator
+    wikiInlineRules.push("}");                      // 17. Hash table close
 
     var wikiRules = [];
     // -1. header
@@ -81,6 +83,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
     function inHashTable() { return $(holder).parents().andSelf().filter("table.hashtable").get(0); }
     function inTableRow() { return getSelfOrAncestor(holder, "tr", "tbody"); }
     function inAnchor() { return getSelfOrAncestor(holder, "a"); }
+    function inNestedText() { return getSelfOrAncestor(holder, "div"); }
     function inEscapedText() { return getSelfOrAncestor(holder, "tt"); }
     function inCodeBlock() { return getSelfOrAncestor(holder, "pre"); }
 
@@ -397,10 +400,39 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
         }
     }
 
+    function openNestedText(value) {
+        if (!inEscapedText()) {
+            var element = contentDocument.createElement("div");
+            element.setAttribute('class', 'nested');
+            holder.appendChild(element);
+            holder = element;
+        } else {
+            holder.appendChild(contentDocument.createTextNode(value));
+        }
+    }
+
+    function closeNestedText(value) {
+        if (inNestedText()) {
+            // Clean up last generated empty td node
+            if (holder.tagName.toLowerCase() === "td" && !Wysiwyg.getTextContent(holder)) {
+                var tdNode = holder;
+                holder = holder.parentNode;
+                holder.removeChild(tdNode);
+            }
+            var target = holder;
+            target = getSelfOrAncestor(target, "div");
+            if (target.getAttribute('class') === 'nested') {
+                holder = target.parentNode;
+                return;
+            }
+        }
+        holder.appendChild(contentDocument.createTextNode(value));
+    }
+
     function openEscapedText(value) {
         if (!inEscapedText()) {
             var element = contentDocument.createElement("tt");
-            element.setAttribute('class', { '!-': 'escape', '!<': 'htmlescape', '!(': 'nested', '![': 'plaintexttable' }[value]);
+            element.setAttribute('class', { '!-': 'escape', '!<': 'htmlescape', '![': 'plaintexttable' }[value]);
             holder.appendChild(element);
             holder = element;
         } else {
@@ -412,7 +444,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
         if (inEscapedText()) {
             var target = holder;
             target = getSelfOrAncestor(target, "tt");
-            if (target.getAttribute('class') === { '-!': 'escape', '>!': 'htmlescape', ')!': 'nested', ']!': 'plaintexttable' }[value]) {
+            if (target.getAttribute('class') === { '-!': 'escape', '>!': 'htmlescape', ']!': 'plaintexttable' }[value]) {
                 holder = target.parentNode;
                 return;
             }
@@ -617,37 +649,44 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
                     if (inEscapedTable() || inEscapedText()) { break; }
                     closeCodeBlock(matchText);
                     continue;
-                case 7:     // open escaped
+                case 7:     // open nested
+                    if (inEscapedText()) { break; }
+                    openNestedText(matchText);
+                    continue;
+                case 8:     // close nested
+                    closeNestedText(matchText);
+                    continue;
+                case 9:     // open escaped
                     if (inEscapedText()) { break; }
                     openEscapedText(matchText);
                     continue;
-                case 8:     // close escaped
+                case 10:     // close escaped
                     closeEscapedText(matchText);
                     continue;
-                case 9:		// Wiki link
+                case 11:    // Wiki link
                     if (inEscapedTable() || inEscapedText() || inCodeBlock()) { break; }
                     handleLinks(matchText);
                     continue;
-                case 10:		// WikiPage name
+                case 12:	// WikiPage name
                     if (inEscapedTable() || inEscapedText() || inCodeBlock()) { break; }
                     handleWikiPageName(matchText);
                     continue;
-                case 11:    // Variable
+                case 13:    // Variable
                     handleVariable(matchText);
                     continue;
-                case 12:    // Hash table open
+                case 14:    // Hash table open
                     if (inEscapedTable() || inEscapedText() || inCodeBlock()) { break; }
                     handleTableCell(1, "hashtable");
                     continue;
-                case 13:    // Hash table key-value separator ':'
+                case 15:    // Hash table key-value separator ':'
                     if (!inHashTable() || inEscapedTable() || inEscapedText() || inCodeBlock()) { break; }
                     handleTableCell(0);
                     continue;
-                case 14:    // Hash table entry separator ','
+                case 16:    // Hash table entry separator ','
                     if (!inHashTable() || inEscapedTable() || inEscapedText() || inCodeBlock()) { break; }
                     handleTableCell(1);
                     continue;
-                case 15:    // Hash table close
+                case 17:    // Hash table close
                     if (!inHashTable() || inEscapedTable() || inEscapedText() || inCodeBlock()) { break; }
                     closeTable();
                     continue;
@@ -1173,7 +1212,9 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                     }
                     break;
                 case "div":
-                    if ($(node).hasClass("collapsible")) {
+                    if ($(node).hasClass("nested")) {
+                        _texts.push("!(");
+                    } else if ($(node).hasClass("collapsible")) {
                         _texts.push("!***");
                         if ($(node).hasClass("closed")) {
                             _texts.push("> ");
@@ -1269,7 +1310,9 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
                     }
                     break;
                 case "div":
-                    if ($(node).hasClass("collapsible")) {
+                    if ($(node).hasClass("nested")) {
+                        _texts.push(")!");
+                    } else if ($(node).hasClass("collapsible")) {
                         _texts.push("*!\n");
                     }
                     break;
@@ -1332,7 +1375,7 @@ Wysiwyg.prototype.domToWikitext = function (root, options) {
     }
 
     this.treeWalk(root, iterator);
-    var wikiText = texts.join("").replace(/^(?: *\n)+/, "").replace(/(?: *\n)+$/, "\n");
+    var wikiText = texts.join("").replace(/^(?: *\n)+/, "").replace(/(?: *\n)+$/, "\n").replace(/\n+\)!/, ")!");
     if (window.WikiFormatter && Wysiwyg.getAutoformat()) {
         return new window.WikiFormatter().format(wikiText);
     } else {
