@@ -134,10 +134,28 @@ public class HtmlUtilTest {
   }
 
   @Test
-  public void shouldEscapeBackslashes() {
+  public void shouldEscapeBackslashesInMakeAppendElementScript() {
     String appendText = "<p>My string has escaped \\r \\n</p>";
-    HtmlTag scriptTag = HtmlUtil.makeAppendElementScript("element-name", appendText);
+    HtmlTag scriptTag = HtmlUtil.makeAppendElementScript("element\\r\\n\\", appendText);
+    assertSubString("element\\\\r\\\\n\\\\", scriptTag.html());
     assertSubString("My string has escaped \\\\r \\\\n", scriptTag.html());
+  }
+
+
+  @Test
+  public void shouldEscapeBackslashesInMakeReplaceElementScript() {
+    String appendText = "<p>My string has escaped \\r \\n</p>";
+    HtmlTag scriptTag = HtmlUtil.makeReplaceElementScript("element\\r\\n\\", appendText);
+    assertSubString("element\\\\r\\\\n\\\\", scriptTag.html());
+    assertSubString("My string has escaped \\\\r \\\\n", scriptTag.html());
+  }
+
+
+  @Test
+  public void shouldEscapeBackslashesInMakeToggleClassScript() {
+    String appendText = "classname";
+    HtmlTag scriptTag = HtmlUtil.makeToggleClassScript("element\\r\\n\\", appendText);
+    assertSubString("element\\\\r\\\\n\\\\", scriptTag.html());
   }
 
   @Test

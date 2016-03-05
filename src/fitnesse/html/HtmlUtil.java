@@ -65,31 +65,33 @@ public class HtmlUtil {
     return html;
   }
   
-  public static HtmlTag makeAppendElementScript(String idElementToAppend, String htmlToAppend) {
+  public static HtmlTag makeAppendElementScript(String idElement, String htmlToAppend) {
     HtmlTag scriptTag = new HtmlTag("script");
-    String getElement = "document.getElementById(\"" + idElementToAppend + "\")";
+    String escapedIdElement = escapeHtmlForJavaScript(idElement);
+    String getElement = "document.getElementById(\"" + escapedIdElement + "\")";
     String escapedHtml = escapeHtmlForJavaScript(htmlToAppend);
-    
-    StringBuilder script = new StringBuilder();
-    script.append("var existingContent = ").append(getElement).append(".innerHTML;");
-    script.append(HtmlTag.endl);
-    script.append(getElement).append(".innerHTML = existingContent + \"").append(escapedHtml).append("\";");
-    script.append(HtmlTag.endl);
-    scriptTag.add(script.toString());
+
+    String script = "var existingContent = " + getElement + ".innerHTML;" +
+            HtmlTag.endl +
+            getElement + ".innerHTML = existingContent + \"" + escapedHtml + "\";" +
+            HtmlTag.endl;
+    scriptTag.add(script);
     
     return scriptTag;
   }
   
   public static HtmlTag makeReplaceElementScript(String idElement, String newHtmlForElement) {
     HtmlTag scriptTag = new HtmlTag("script");
+    String escapedIdElement = escapeHtmlForJavaScript(idElement);
     String escapedHtml = escapeHtmlForJavaScript(newHtmlForElement);
-    scriptTag.add("document.getElementById(\"" + idElement + "\").innerHTML = \"" + escapedHtml + "\";");
+    scriptTag.add("document.getElementById(\"" + escapedIdElement + "\").innerHTML = \"" + escapedHtml + "\";");
     return scriptTag;
   }
   
   public static HtmlTag makeToggleClassScript(String idElement, String classToToggle) {
     HtmlTag scriptTag = new HtmlTag("script");
-    scriptTag.add("$(\"#" + idElement + "\").toggleClass(\"" + classToToggle + "\");");
+    String escapedIdElement = escapeHtmlForJavaScript(idElement);
+    scriptTag.add("$(\"#" + escapedIdElement + "\").toggleClass(\"" + classToToggle + "\");");
     return scriptTag;
   }
   
