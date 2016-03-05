@@ -418,6 +418,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
                 var tdNode = holder;
                 holder = holder.parentNode;
                 holder.removeChild(tdNode);
+                self.spanTableColumns(getSelfOrAncestor(holder, "table"));
             }
             var target = holder;
             target = getSelfOrAncestor(target, "div");

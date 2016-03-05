@@ -448,7 +448,7 @@ describe("parser and formatter", function () {
         var dom = element("table",
             element("tbody",
                 element("tr",
-                    element("td", { colspan: 5 }, " table ")),
+                    element("td", {colspan: 2}, " table ")),
                 element("tr",
                     element("td", " ", element("div", {'class': 'nested'},
                         element("table",
@@ -457,7 +457,7 @@ describe("parser and formatter", function () {
                                     element("td", " foo "),
                                     element("td", " bar ")),
                                 element("tr",
-                                    element("td", " baz "))))), " "),
+                                    element("td", {colspan: 2}, " baz "))))), " "),
                     element("td", " quit "))));
         var wikitext = "| table |\n| !(| foo | bar |\n| baz |)! | quit |";
         generate(dom, wikitext);

@@ -1300,12 +1300,12 @@ Wysiwyg.prototype.spanTableColumns = function (table) {
     // Spanning columns fitnesse style.
     var rows = $('> tbody > tr', table);
     var maxCells = Math.max.apply(Math, $.map(rows, function (e) {
-        var tds = $('td', e);
+        var tds = $('> td', e);
         tds.removeAttr('colspan');
         return tds.size();
     }));
     rows.each(function () {
-        var s = $('td', this).size();
+        var s = $('> td', this).size();
         if (s < maxCells) {
             $('td:last', this).attr('colspan', maxCells - s + 1);
         }
