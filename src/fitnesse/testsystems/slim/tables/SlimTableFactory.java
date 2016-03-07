@@ -165,7 +165,11 @@ public class SlimTableFactory {
   }
   
   public void addDefaultTableType(String fixture, String tableType) {
-      tableTypeArrays.put(fixture, tableType);
+	 tableTypeArrays.put(fixture, tableType);
+  }
+
+  public void addAlias(String alias, String fixture) {
+	  aliasArrays.put(alias, fixture);
   }
 
   private String makeTableType(String tableSpecifier) {
