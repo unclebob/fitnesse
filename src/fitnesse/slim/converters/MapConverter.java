@@ -14,9 +14,6 @@ import org.htmlparser.util.ParserException;
 
 public class MapConverter implements Converter<Map> {
 
-  private static final String[] specialHtmlChars = new String[] { "&", "<", ">" };
-  private static final String[] specialHtmlEscapes = new String[] { "&amp;", "&lt;", "&gt;" };
-
   private NodeList nodes;
 
   private NodeList tables;
@@ -27,12 +24,12 @@ public class MapConverter implements Converter<Map> {
       return NULL_VALUE;
     }
 
-    HtmlTag table = createTag(hash, 0);
+    HtmlTag table = createTag(hash);
 
     return table.html().trim();
   }
 
-  protected HtmlTag createTag(Map<?, ?> hash, int depth) {
+  protected HtmlTag createTag(Map<?, ?> hash) {
     // Use HtmlTag, same as we do for fitnesse.wikitext.parser.HashTable.
     HtmlTag table = new HtmlTag("table");
     table.addAttribute("class", "hash_table");
@@ -138,18 +135,6 @@ public class MapConverter implements Converter<Map> {
     } catch (ParserException e) {
       return null;
     }
-  }
-
-  public String escapeHTML(String value) {
-    return replaceStrings(value, specialHtmlChars, specialHtmlEscapes);
-  }
-
-  private String replaceStrings(String value, String[] originalStrings, String[] replacementStrings) {
-    String result = value;
-    for (int i = 0; i < originalStrings.length; i++)
-      if (result.contains(originalStrings[i]))
-        result = result.replace(originalStrings[i], replacementStrings[i]);
-    return result;
   }
 
 }
