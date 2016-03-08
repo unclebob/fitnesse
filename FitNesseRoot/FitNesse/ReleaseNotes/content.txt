@@ -1,4 +1,7 @@
 !2 ${FITNESSE_VERSION}
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=14&state=closed.
+
+!2 20151230
  * Documentation updates ([[843][https://github.com/unclebob/fitnesse/pull/843]], [[833][https://github.com/unclebob/fitnesse/pull/833]], [[825][https://github.com/unclebob/fitnesse/pull/825]], [[815][https://github.com/unclebob/fitnesse/pull/815]])
  * Slim runs completely in process in when run in debug mode ([[837][https://github.com/unclebob/fitnesse/pull/837]])
  * Detailed diff for failed Slim tests ([[824][https://github.com/unclebob/fitnesse/pull/824]])
@@ -17,7 +20,9 @@
    * Fix issues with parsing UTF-8 characters ([[791][https://github.com/unclebob/fitnesse/pull/791]])
    * JUnit formatter displays run time with 3 decimal precision ([[794][https://github.com/unclebob/fitnesse/issues/794]])
 
-!2 20150814
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=13&state=closed.
+
+!1 20150814
  * Syntax highlighting in plain text editor ([[631][https://github.com/unclebob/fitnesse/pull/631]])
  * Support generic behavior in Slim (Java) fixture via when fixtures implement [[!-InteractionAwareFixture-!][UserGuide.WritingAcceptanceTests.SliM.InteractionAwareFixture]] ([[724][https://github.com/unclebob/fitnesse/pull/724]])
  * Tag filtering is now all case insensitive ([[728][https://github.com/unclebob/fitnesse/pull/728]])
