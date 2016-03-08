@@ -7,6 +7,7 @@ import static util.RegexTestCase.assertSubString;
 
 import fitnesse.FitNesseContext;
 import fitnesse.html.template.HtmlPage;
+import fitnesse.reporting.JavascriptUtil;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.responders.WikiPageActions;
@@ -26,7 +27,10 @@ public class HtmlUtilTest {
   @Test
   public void testMakeDivTag() {
     String expected = "<div class=\"myClass\"></div>" + HtmlElement.endl;
-    assertEquals(expected, HtmlUtil.makeDivTag("myClass").html());
+    HtmlTag div = new HtmlTag("div");
+    div.addAttribute("class", "myClass");
+    div.add("");
+    assertEquals(expected, div.html());
   }
 
   @Test
@@ -100,22 +104,15 @@ public class HtmlUtilTest {
   @Test
   public void testMakeReplaceElementScript() {
     String newText = "<p>My string has \"quotes\" and \r \n</p>";
-    HtmlTag scriptTag = HtmlUtil.makeReplaceElementScript("element-name", newText);
+    HtmlTag scriptTag = JavascriptUtil.makeReplaceElementScript("element-name", newText);
     String expected = "<script>document.getElementById(\"element-name\").innerHTML = " +
     		"\"<p>My string has \\\"quotes\\\" and \\r \\n</p>\";</script>";
     assertSubString(expected, scriptTag.html());
   }
 
   @Test
-  public void testMakeToggleClassScript() {
-    HtmlTag scriptTag = HtmlUtil.makeToggleClassScript("some-id", "some-class");
-    String expected = "<script>$(\"#some-id\").toggleClass(\"some-class\");</script>";
-    assertSubString(expected, scriptTag.html());
-  }
-
-  @Test
   public void testMakeInitErrorMetadataScript() {
-    HtmlTag scriptTag = HtmlUtil.makeInitErrorMetadataScript();
+    HtmlTag scriptTag = JavascriptUtil.makeInitErrorMetadataScript();
     String expected = "<script>initErrorMetadata();</script>";
     assertSubString(expected, scriptTag.html());
   }
@@ -123,7 +120,7 @@ public class HtmlUtilTest {
   @Test
   public void testMakeAppendElementScript() {
     String appendText = "<p>My string has \"quotes\" and \r \n</p>";
-    HtmlTag scriptTag = HtmlUtil.makeAppendElementScript("element-name", appendText);
+    HtmlTag scriptTag = JavascriptUtil.makeAppendElementScript("element-name", appendText);
     String expected1 = "<script>var existingContent = document.getElementById(\"element-name\").innerHTML;"; 
     String expected2 = "document.getElementById(\"element-name\").innerHTML = " + 
       "existingContent + \"<p>My string has \\\"quotes\\\" and \\r \\n</p>\";";
@@ -136,7 +133,7 @@ public class HtmlUtilTest {
   @Test
   public void shouldEscapeBackslashesInMakeAppendElementScript() {
     String appendText = "<p>My string has escaped \\r \\n</p>";
-    HtmlTag scriptTag = HtmlUtil.makeAppendElementScript("element\\r\\n\\", appendText);
+    HtmlTag scriptTag = JavascriptUtil.makeAppendElementScript("element\\r\\n\\", appendText);
     assertSubString("element\\\\r\\\\n\\\\", scriptTag.html());
     assertSubString("My string has escaped \\\\r \\\\n", scriptTag.html());
   }
@@ -145,22 +142,14 @@ public class HtmlUtilTest {
   @Test
   public void shouldEscapeBackslashesInMakeReplaceElementScript() {
     String appendText = "<p>My string has escaped \\r \\n</p>";
-    HtmlTag scriptTag = HtmlUtil.makeReplaceElementScript("element\\r\\n\\", appendText);
+    HtmlTag scriptTag = JavascriptUtil.makeReplaceElementScript("element\\r\\n\\", appendText);
     assertSubString("element\\\\r\\\\n\\\\", scriptTag.html());
     assertSubString("My string has escaped \\\\r \\\\n", scriptTag.html());
   }
 
-
-  @Test
-  public void shouldEscapeBackslashesInMakeToggleClassScript() {
-    String appendText = "classname";
-    HtmlTag scriptTag = HtmlUtil.makeToggleClassScript("element\\r\\n\\", appendText);
-    assertSubString("element\\\\r\\\\n\\\\", scriptTag.html());
-  }
-
   @Test
   public void testMakeSilentLink() {
-    HtmlTag tag = HtmlUtil.makeSilentLink("test?responder", new RawHtml("string with \"quotes\""));
+    HtmlTag tag = JavascriptUtil.makeSilentLink("test?responder", new RawHtml("string with \"quotes\""));
     assertSubString("<a href=\"#\" onclick=\"doSilentRequest('test?responder')\">string with \"quotes\"</a>", tag.html());
   }
 }
