@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fitnesse.html.HtmlTag;
+import fitnesse.html.HtmlUtil;
 import fitnesse.slim.Converter;
 import org.htmlparser.Node;
 import org.htmlparser.Parser;
@@ -37,13 +38,14 @@ public class MapConverter implements Converter<Map> {
       HtmlTag row = new HtmlTag("tr");
       row.addAttribute("class", "hash_row");
       table.add(row);
+
       HtmlTag keyCell = new HtmlTag("td");
-      addCellContent(keyCell, entry.getKey());
+      addCellContent(keyCell, HtmlUtil.escapeHTML(entry.getKey().toString()));
       keyCell.addAttribute("class", "hash_key");
       row.add(keyCell);
 
       HtmlTag valueCell = new HtmlTag("td");
-      addCellContent(valueCell, entry.getValue());
+      addCellContent(valueCell, HtmlUtil.escapeHTML(entry.getValue() != null ? HtmlUtil.escapeHTML(entry.getValue().toString()) : ""));
       valueCell.addAttribute("class", "hash_value");
       row.add(valueCell);
     }
@@ -125,7 +127,7 @@ public class MapConverter implements Converter<Map> {
   }
 
   private String getText(Node compositeNode) {
-    return ((CompositeTag) compositeNode).getChildrenHTML();
+    return HtmlUtil.unescapeHTML(((CompositeTag) compositeNode).getChildrenHTML());
   }
 
   private NodeList parseHtml(String possibleTable) {
