@@ -40,12 +40,12 @@ public class MapConverter implements Converter<Map> {
       table.add(row);
 
       HtmlTag keyCell = new HtmlTag("td");
-      addCellContent(keyCell, HtmlUtil.escapeHTML(entry.getKey().toString()));
+      addCellContent(keyCell, entry.getKey());
       keyCell.addAttribute("class", "hash_key");
       row.add(keyCell);
 
       HtmlTag valueCell = new HtmlTag("td");
-      addCellContent(valueCell, HtmlUtil.escapeHTML(entry.getValue() != null ? HtmlUtil.escapeHTML(entry.getValue().toString()) : ""));
+      addCellContent(valueCell, entry.getValue());
       valueCell.addAttribute("class", "hash_value");
       row.add(valueCell);
     }
@@ -54,6 +54,9 @@ public class MapConverter implements Converter<Map> {
 
   protected void addCellContent(HtmlTag valueCell, Object cellValue) {
     String valueToAdd = ElementConverterHelper.elementToString(cellValue);
+    if (!tableIsValid(valueToAdd))
+      valueToAdd = HtmlUtil.escapeHTML(valueToAdd);
+
     valueCell.add(valueToAdd.trim());
   }
 
