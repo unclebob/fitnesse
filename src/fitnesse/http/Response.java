@@ -18,7 +18,7 @@ public abstract class Response {
     XML("text/xml"),
     HTML("text/html; charset=" + FileUtil.CHARENCODING),
     TEXT("text/text"),
-    JSON("text/json"),
+    JSON("application/json"),
     JUNIT("text/junit");
     
     private final String contentType;
