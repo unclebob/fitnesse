@@ -17,13 +17,12 @@ import org.junit.Test;
 
 public class MergeResponderTest {
   private FitNesseContext context;
-  private WikiPage source;
   private MockRequest request;
 
   @Before
   public void setUp() throws Exception {
     context = FitNesseUtil.makeTestContext();
-    source = context.getRootPage();
+    WikiPage source = context.getRootPage();
     WikiPageUtil.addPage(source, PathParser.parse("SimplePage"), "this is SimplePage");
     request = new MockRequest();
     request.setResource("SimplePage");

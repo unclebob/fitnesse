@@ -19,13 +19,11 @@ import fitnesse.wiki.WikiPageUtil;
 import org.junit.Test;
 
 public class RollbackResponderTest {
-  private WikiPage page;
-  private Response response;
 
   @Test
   public void testStuff() throws Exception {
     FitNesseContext context = FitNesseUtil.makeTestContext();
-    page = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("PageOne"), "original content");
+    WikiPage page = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("PageOne"), "original content");
     PageData data = page.getData();
     data.setContent("new stuff");
     data.setProperties(new WikiPageProperties());
@@ -37,7 +35,7 @@ public class RollbackResponderTest {
     request.addInput("version", commitRecord.getName());
 
     Responder responder = new RollbackResponder();
-    response = responder.makeResponse(context, request);
+    Response response = responder.makeResponse(context, request);
 
     assertEquals(303, response.getStatus());
     assertEquals("/PageOne", response.getHeader("Location"));

@@ -19,13 +19,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class VersionSelectionResponderTest {
-  private WikiPage page;
   private FitNesseContext context;
 
   @Before
   public void setUp() throws Exception {
     context = FitNesseUtil.makeTestContext();
-    page = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("PageOne"), "some content");
+    WikiPage page = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("PageOne"), "some content");
     PageData data = page.getData();
     WikiPageProperties properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "Page One tags");
