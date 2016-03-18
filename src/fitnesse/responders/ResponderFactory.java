@@ -123,7 +123,7 @@ public class ResponderFactory {
   public String getResponderKey(Request request) {
     String fullQuery;
     if (request.hasInput("responder"))
-      fullQuery = (String) request.getInput("responder");
+      fullQuery = request.getInput("responder");
     else
       fullQuery = request.getQueryString();
 

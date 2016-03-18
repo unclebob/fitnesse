@@ -162,7 +162,7 @@ public class HtmlTag extends HtmlElement implements Iterable<HtmlElement> {
     }
 
     private String makeChildFromTag(HtmlTag element) {
-      return (childShouldStartWithNewLine() ? endl : "") + ((HtmlTag) element).html(depth + 1);
+      return (childShouldStartWithNewLine() ? endl : "") + element.html(depth + 1);
     }
 
     private boolean childShouldStartWithNewLine() {

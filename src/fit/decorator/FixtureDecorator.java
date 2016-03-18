@@ -72,7 +72,7 @@ public abstract class FixtureDecorator extends Fixture {
       columnValue = escapeExpectedAndActualString(columnValue);
       argumentList.add(columnValue);
     }
-    args = (String[]) argumentList.toArray(new String[argumentList.size()]);
+    args = argumentList.toArray(new String[argumentList.size()]);
   }
 
   private String escapeExpectedAndActualString(String columnValue) {

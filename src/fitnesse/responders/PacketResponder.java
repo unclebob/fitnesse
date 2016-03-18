@@ -31,7 +31,7 @@ public class PacketResponder implements SecureResponder {
   @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     response = new SimpleResponse();
-    jsonpFunction = (String) request.getInput("jsonp");
+    jsonpFunction = request.getInput("jsonp");
     String pageName = request.getResource();
     PageCrawler pageCrawler = context.getRootPage().getPageCrawler();
     WikiPagePath resourcePath = PathParser.parse(pageName);

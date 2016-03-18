@@ -22,7 +22,7 @@ public class NameWikiPageResponder extends BasicResponder {
   protected String contentFrom(FitNesseContext context, Request request, WikiPage requestedPage) {
     List<String> lines = addLines(request, requestedPage, "");
 
-    String format = (String) request.getInput("format");
+    String format = request.getInput("format");
     if ("json".equalsIgnoreCase(format)) {
       JSONArray jsonPages = new JSONArray(lines);
       return jsonPages.toString();

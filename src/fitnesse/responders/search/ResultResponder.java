@@ -41,7 +41,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
   }
 
   protected WikiPage getSearchScope() {
-    String searchScope = (String) request.getInput("searchScope");
+    String searchScope = request.getInput("searchScope");
 
     if (searchScope == null || searchScope.isEmpty())
       return page;

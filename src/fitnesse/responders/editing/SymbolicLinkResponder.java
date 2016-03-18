@@ -68,7 +68,7 @@ public class SymbolicLinkResponder implements Responder {
   }
 
   private void removeSymbolicLink(Request request, WikiPage page) {
-    String linkToRemove = (String) request.getInput("removal");
+    String linkToRemove = request.getInput("removal");
 
     PageData data = page.getData();
     WikiPageProperties properties = data.getProperties();
@@ -81,8 +81,8 @@ public class SymbolicLinkResponder implements Responder {
   }
 
   private void  renameSymbolicLink(Request request, WikiPage page) {
-    String linkToRename = (String) request.getInput("rename"),
-    newName = (String) request.getInput("newname");
+    String linkToRename = request.getInput("rename"),
+    newName = request.getInput("newname");
 
     PageData data = page.getData();
     WikiPageProperties properties = data.getProperties();
@@ -98,8 +98,8 @@ public class SymbolicLinkResponder implements Responder {
   }
 
   private void addSymbolicLink(Request request, WikiPage page) throws IOException {
-    String linkName = StringUtils.trim((String) request.getInput("linkName"));
-    String linkPath = StringUtils.trim((String) request.getInput("linkPath"));
+    String linkName = StringUtils.trim(request.getInput("linkName"));
+    String linkPath = StringUtils.trim(request.getInput("linkPath"));
 
     PageData data = page.getData();
     WikiPageProperties properties = data.getProperties();

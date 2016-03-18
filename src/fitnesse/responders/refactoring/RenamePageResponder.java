@@ -21,7 +21,7 @@ public class RenamePageResponder extends PageMovementResponder {
 
   @Override
   protected boolean getAndValidateRefactoringParameters(Request request) {
-    newName = (String) request.getInput("newName");
+    newName = request.getInput("newName");
     return (newName != null && PathParser.isSingleWikiWord(newName) && !"FrontPage".equals(oldNameOfPageToBeMoved));
   }
 

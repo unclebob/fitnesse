@@ -67,14 +67,14 @@ public class SaveResponder implements SecureResponder {
   private long getTicketId(Request request) {
     if (!request.hasInput(EditResponder.TICKET_ID))
       return 0;
-    String ticketIdString = (String) request.getInput(EditResponder.TICKET_ID);
+    String ticketIdString = request.getInput(EditResponder.TICKET_ID);
     return Long.parseLong(ticketIdString);
   }
 
   private long getEditTime(Request request) {
     if (!request.hasInput(EditResponder.TIME_STAMP))
       return 0;
-    String editTimeStampString = (String) request.getInput(EditResponder.TIME_STAMP);
+    String editTimeStampString = request.getInput(EditResponder.TIME_STAMP);
     return Long.parseLong(editTimeStampString);
   }
 

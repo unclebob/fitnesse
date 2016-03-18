@@ -264,7 +264,7 @@ public class RequestTest {
     parseMessage();
 
     String expected = buffer.toString();
-    String actual = (String)request.getInput("content");
+    String actual = request.getInput("content");
     assertEquals(expected.length(), actual.length());
     assertEquals(expected, actual);
   }
