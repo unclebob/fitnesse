@@ -11,7 +11,9 @@ This strategy has a number of advantages:
 !3 Using the SLIM Test System
 If you want a test page to be run under SLIM, you simply set the TEST_SYSTEM variable to "slim" instead of "fit".
 
-{{{&bang;define TEST_SYSTEM {slim} }}}If this variable is set on your page, (as it is on this page!) or on any parent page, then your page will be run with Slim. That's all there is to it.!3 The Slim Tables
+{{{&bang;define TEST_SYSTEM {slim} }}}If this variable is set on your page, (as it is on this page!) or on any parent page, then your page will be run with Slim. That's all there is to it.
+
+!3 The Slim Tables
 The first cell of a slim table tells you what kind of table it is. Here are the table types so far:
 
 | [[Decision Table][>DecisionTable]] | Supplies the inputs and outputs for decisions. This is similar to the Fit Column Fixture |
