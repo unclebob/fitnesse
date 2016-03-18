@@ -45,12 +45,14 @@ public class ErrorResponder implements Responder {
   }
 
   public static String makeExceptionString(Throwable e) {
-    StringBuilder buffer = new StringBuilder();
-    buffer.append(e.toString()).append("\n");
+    StringBuilder builder = new StringBuilder();
+    builder.append(e.toString()).append("\n");
     for (StackTraceElement stackTraceElement : e.getStackTrace()) {
-      buffer.append("\t" + stackTraceElement).append("\n");
+      builder.append("\t")
+              .append(stackTraceElement)
+              .append("\n");
     }
 
-    return buffer.toString();
+    return builder.toString();
   }
 }
