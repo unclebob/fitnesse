@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import fitnesse.slim.SlimError;
 import fitnesse.slim.instructions.AssignInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.Assertion;
