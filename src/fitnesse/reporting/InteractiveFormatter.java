@@ -35,7 +35,7 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   }
 
   protected void updateSummaryDiv(String html) throws IOException {
-    writeData(HtmlUtil.makeReplaceElementScript("test-summary", html).html());
+    writeData(JavascriptUtil.makeReplaceElementScript("test-summary", html).html());
   }
 
   protected String getRelativeName() {
@@ -54,14 +54,14 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   protected void addStopLink(String stopResponderId) throws IOException {
     String link = "?responder=stoptest&id=" + stopResponderId;
 
-    HtmlTag status = HtmlUtil.makeSilentLink(link, new RawHtml("Stop Test"));
+    HtmlTag status = JavascriptUtil.makeSilentLink(link, new RawHtml("Stop Test"));
     status.addAttribute("class", "stop");
 
-    writeData(HtmlUtil.makeReplaceElementScript("test-action", status.html()).html());
+    writeData(JavascriptUtil.makeReplaceElementScript("test-action", status.html()).html());
   }
 
   protected void removeStopTestLink() throws IOException {
-    HtmlTag script = HtmlUtil.makeReplaceElementScript("test-action", "");
+    HtmlTag script = JavascriptUtil.makeReplaceElementScript("test-action", "");
     writeData(script.html());
   }
 
@@ -102,7 +102,7 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   public String testSummary() {
     String summaryContent = wasInterrupted ? TESTING_INTERRUPTED : "";
     summaryContent += makeSummaryContent();
-    HtmlTag script = HtmlUtil.makeReplaceElementScript("test-summary", summaryContent);
+    HtmlTag script = JavascriptUtil.makeReplaceElementScript("test-summary", summaryContent);
     script.add("document.getElementById(\"test-summary\").className = \""
       + (wasInterrupted ? ExecutionResult.ERROR : ExecutionResult.getExecutionResult(relativeName, getAssertionCounts())) + "\";");
     return script.html();
@@ -128,7 +128,7 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   }
 
   protected void AddLogLink() throws IOException {
-    writeData(HtmlUtil.makeReplaceElementScript("test-action", executionStatus()).html());
+    writeData(JavascriptUtil.makeReplaceElementScript("test-action", executionStatus()).html());
   }
 
   protected void maybeMakeErrorNavigatorVisible() throws IOException {
@@ -149,7 +149,7 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
   }
 
   private String initErroMetadata() {
-    HtmlTag init = HtmlUtil.makeInitErrorMetadataScript();
+    HtmlTag init = JavascriptUtil.makeInitErrorMetadataScript();
     return init.html();
   }
 

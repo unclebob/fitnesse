@@ -17,6 +17,7 @@ public class HashFixture {
   }
 
   public Object hashIs(String key) {
+    System.out.println(String.format("Hash %s is %s", key, hash.get(key)));
     return hash.get(key);
   }
 }

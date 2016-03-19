@@ -12,13 +12,6 @@ public class HtmlUtil {
   private static final String[] specialWikiChars = new String[]{"!", "|", "$"};
   private static final String[] specialWikiEscapes = new String[]{"&bang;", "&bar;", "&dollar;"};
 
-  public static HtmlTag makeDivTag(String divClass) {
-    HtmlTag div = new HtmlTag("div");
-    div.addAttribute("class", divClass);
-    div.add("");
-    return div;
-  }
-
   public static HtmlTag makeBold(String content) {
     HtmlTag bold = new HtmlTag("b");
     bold.add(content);
@@ -43,82 +36,8 @@ public class HtmlUtil {
     return link;
   }
 
-  public static String metaText(String text) {
-    return "<span class=\"meta\">" + text + "</span>";
-  }
-
-  public static HtmlTag makeJavascriptLink(String jsFile) {
-    HtmlTag scriptTag = new HtmlTag("script");
-    scriptTag.addAttribute("src", jsFile);
-    scriptTag.addAttribute("type", "text/javascript");
-    scriptTag.use("");
-    return scriptTag;
-  }
-  
-  public static String escapeHtmlForJavaScript(String html) {
-    html = html.replaceAll("\\\\", "\\\\\\\\"); // backslash
-    html = html.replaceAll("\"", "\\\\\""); //  quote
-    html = html.replaceAll("\t", "\\\\t"); // tab
-    html = html.replaceAll("\n", "\\\\n"); // newline
-    html = html.replaceAll("\r", "\\\\r"); // line feed
-    html = html.replaceAll(HtmlElement.endl, "\\\\n");
-    return html;
-  }
-  
-  public static HtmlTag makeAppendElementScript(String idElement, String htmlToAppend) {
-    HtmlTag scriptTag = new HtmlTag("script");
-    String escapedIdElement = escapeHtmlForJavaScript(idElement);
-    String getElement = "document.getElementById(\"" + escapedIdElement + "\")";
-    String escapedHtml = escapeHtmlForJavaScript(htmlToAppend);
-
-    String script = "var existingContent = " + getElement + ".innerHTML;" +
-            HtmlTag.endl +
-            getElement + ".innerHTML = existingContent + \"" + escapedHtml + "\";" +
-            HtmlTag.endl;
-    scriptTag.add(script);
-    
-    return scriptTag;
-  }
-  
-  public static HtmlTag makeReplaceElementScript(String idElement, String newHtmlForElement) {
-    HtmlTag scriptTag = new HtmlTag("script");
-    String escapedIdElement = escapeHtmlForJavaScript(idElement);
-    String escapedHtml = escapeHtmlForJavaScript(newHtmlForElement);
-    scriptTag.add("document.getElementById(\"" + escapedIdElement + "\").innerHTML = \"" + escapedHtml + "\";");
-    return scriptTag;
-  }
-  
-  public static HtmlTag makeToggleClassScript(String idElement, String classToToggle) {
-    HtmlTag scriptTag = new HtmlTag("script");
-    String escapedIdElement = escapeHtmlForJavaScript(idElement);
-    scriptTag.add("$(\"#" + escapedIdElement + "\").toggleClass(\"" + classToToggle + "\");");
-    return scriptTag;
-  }
-  
-  public static HtmlTag makeInitErrorMetadataScript() {
-    HtmlTag scriptTag = new HtmlTag("script");
-    scriptTag.add("initErrorMetadata();");
-    return scriptTag;
-  }
-  
-  public static HtmlTag makeSilentLink(String href, HtmlElement content) {
-    HtmlTag link = new HtmlTag("a");
-    link.addAttribute("href", "#");
-    link.addAttribute("onclick", "doSilentRequest('" + href + "')");
-    link.add(content);
-    return link;
-  }
-
   public static String escapeHTML(String value) {
       return replaceStrings(value, specialHtmlChars, specialHtmlEscapes);
-  }
-
-  private static String replaceStrings(String value, String[] originalStrings, String[] replacementStrings) {
-    String result = value;
-    for (int i = 0; i < originalStrings.length; i++)
-      if (result.contains(originalStrings[i]))
-        result = result.replace(originalStrings[i], replacementStrings[i]);
-    return result;
   }
 
   public static String unescapeHTML(String value) {
@@ -131,5 +50,13 @@ public class HtmlUtil {
 
   public static String escapeWiki(String value) {
       return replaceStrings(value, specialWikiChars, specialWikiEscapes);
+  }
+
+  private static String replaceStrings(String value, String[] originalStrings, String[] replacementStrings) {
+    String result = value;
+    for (int i = 0; i < originalStrings.length; i++)
+      if (result.contains(originalStrings[i]))
+        result = result.replace(originalStrings[i], replacementStrings[i]);
+    return result;
   }
 }

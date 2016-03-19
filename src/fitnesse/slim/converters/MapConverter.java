@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fitnesse.html.HtmlTag;
+import fitnesse.html.HtmlUtil;
 import fitnesse.slim.Converter;
 import org.htmlparser.Node;
 import org.htmlparser.Parser;
@@ -13,9 +14,6 @@ import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
 public class MapConverter implements Converter<Map> {
-
-  private static final String[] specialHtmlChars = new String[] { "&", "<", ">" };
-  private static final String[] specialHtmlEscapes = new String[] { "&amp;", "&lt;", "&gt;" };
 
   private NodeList nodes;
 
@@ -27,12 +25,12 @@ public class MapConverter implements Converter<Map> {
       return NULL_VALUE;
     }
 
-    HtmlTag table = createTag(hash, 0);
+    HtmlTag table = createTag(hash);
 
     return table.html().trim();
   }
 
-  protected HtmlTag createTag(Map<?, ?> hash, int depth) {
+  protected HtmlTag createTag(Map<?, ?> hash) {
     // Use HtmlTag, same as we do for fitnesse.wikitext.parser.HashTable.
     HtmlTag table = new HtmlTag("table");
     table.addAttribute("class", "hash_table");
@@ -40,6 +38,7 @@ public class MapConverter implements Converter<Map> {
       HtmlTag row = new HtmlTag("tr");
       row.addAttribute("class", "hash_row");
       table.add(row);
+
       HtmlTag keyCell = new HtmlTag("td");
       addCellContent(keyCell, entry.getKey());
       keyCell.addAttribute("class", "hash_key");
@@ -55,6 +54,9 @@ public class MapConverter implements Converter<Map> {
 
   protected void addCellContent(HtmlTag valueCell, Object cellValue) {
     String valueToAdd = ElementConverterHelper.elementToString(cellValue);
+    if (!tableIsValid(valueToAdd))
+      valueToAdd = HtmlUtil.escapeHTML(valueToAdd);
+
     valueCell.add(valueToAdd.trim());
   }
 
@@ -128,7 +130,7 @@ public class MapConverter implements Converter<Map> {
   }
 
   private String getText(Node compositeNode) {
-    return ((CompositeTag) compositeNode).getChildrenHTML();
+    return HtmlUtil.unescapeHTML(((CompositeTag) compositeNode).getChildrenHTML());
   }
 
   private NodeList parseHtml(String possibleTable) {
@@ -138,18 +140,6 @@ public class MapConverter implements Converter<Map> {
     } catch (ParserException e) {
       return null;
     }
-  }
-
-  public String escapeHTML(String value) {
-    return replaceStrings(value, specialHtmlChars, specialHtmlEscapes);
-  }
-
-  private String replaceStrings(String value, String[] originalStrings, String[] replacementStrings) {
-    String result = value;
-    for (int i = 0; i < originalStrings.length; i++)
-      if (result.contains(originalStrings[i]))
-        result = result.replace(originalStrings[i], replacementStrings[i]);
-    return result;
   }
 
 }

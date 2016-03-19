@@ -40,7 +40,8 @@ public class Contents extends SymbolType implements Rule, Translation {
     public String toTarget(Translator translator, Symbol symbol) {
         ContentsItemBuilder itemBuilder
                 = new ContentsItemBuilder(symbol, 1, translator.getPage());
-        HtmlTag contentsDiv = HtmlUtil.makeDivTag("contents");
+        HtmlTag contentsDiv = new HtmlTag("div");
+        contentsDiv.addAttribute("class", "contents");
         contentsDiv.add(HtmlUtil.makeBold("Contents:"));
         contentsDiv.add(itemBuilder.buildLevel(translator.getPage()));
         return contentsDiv.html();

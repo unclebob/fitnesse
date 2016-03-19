@@ -123,7 +123,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
     }
 
     pageCounts.add(getExecutionResult(relativeName, testSummary, wasInterrupted()));
-    HtmlTag insertScript = HtmlUtil.makeAppendElementScript(testSummariesId, tag.html());
+    HtmlTag insertScript = JavascriptUtil.makeAppendElementScript(testSummariesId, tag.html());
     writeData(insertScript.html());
   }
 
@@ -161,7 +161,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
     testSystemName = testSystem.getName();
     testSummariesId = "test-system-" + testSystemName;
     String tag = String.format("<h3>%s</h3>\n<ul id=\"%s\"></ul>", testSystemName, testSummariesId);
-    HtmlTag insertScript = HtmlUtil.makeAppendElementScript(TEST_SUMMARIES_ID, tag);
+    HtmlTag insertScript = JavascriptUtil.makeAppendElementScript(TEST_SUMMARIES_ID, tag);
     writeData(insertScript.html());
   }
 
