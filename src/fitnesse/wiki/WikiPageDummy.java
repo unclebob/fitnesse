@@ -42,7 +42,7 @@ public class WikiPageDummy extends BaseWikiPage {
 
   @Override
   public List<WikiPage> getChildren() {
-    return new ArrayList<WikiPage>();
+    return new ArrayList<>();
   }
 
   @Override
@@ -52,7 +52,7 @@ public class WikiPageDummy extends BaseWikiPage {
 
   @Override
   public String getHtml() {
-    return "";
+    return String.format("<em>%s</em>", pageData.getContent());
   }
 
   @Override

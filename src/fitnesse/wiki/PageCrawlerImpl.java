@@ -126,8 +126,6 @@ public class PageCrawlerImpl implements PageCrawler {
   }
 
   private void traverse(WikiPage page, TraversalListener<? super WikiPage> listener) {
-    if (page.getClass() == SymbolicPage.class)
-      return;
     listener.process(page);
     for (WikiPage wikiPage : page.getChildren()) {
       traverse(wikiPage, listener);
