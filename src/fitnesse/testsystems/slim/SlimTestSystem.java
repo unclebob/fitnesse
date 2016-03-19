@@ -126,7 +126,7 @@ public abstract class SlimTestSystem implements TestSystem {
   protected abstract void processAllTablesOnPage(TestPage testPage) throws IOException;
 
   protected void processTable(SlimTable table) throws IOException, SyntaxError {
-    List<SlimAssertion> assertions = createAssertions(table);
+    List<SlimAssertion> assertions = table.getAssertions();
     Map<String, Object> instructionResults;
     if (!stopTestCalled && !stopSuiteCalled) {
       // Okay, if this crashes, the test system is killed.
@@ -142,12 +142,6 @@ public abstract class SlimTestSystem implements TestSystem {
     }
 
     evaluateTables(assertions, instructionResults);
-  }
-
-  private List<SlimAssertion> createAssertions(SlimTable table) throws SyntaxError {
-    List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
-    assertions.addAll(table.getAssertions());
-    return assertions;
   }
 
   protected void evaluateTables(List<SlimAssertion> assertions, Map<String, Object> instructionResults) {
