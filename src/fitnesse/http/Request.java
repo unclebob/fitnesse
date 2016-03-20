@@ -33,7 +33,7 @@ public class Request {
   private String resource;
   protected String queryString;
   protected Map<String, String> inputs = new HashMap<String, String>();
-  protected Map<String, String> headers = new HashMap<String, String>();
+  protected Map<String, String> headers = new HashMap<>();
   protected Map<String, UploadedFile> uploadedFiles = new HashMap<String, UploadedFile>();
   protected String entityBody = "";
   protected String requestLine;

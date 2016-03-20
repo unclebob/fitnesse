@@ -60,11 +60,9 @@ public class FitNesseExpediter implements ResponseSender, Runnable {
       request = makeRequest();
       response = makeResponse(request);
       sendResponse(response);
-    }
-    catch (SocketException se) {
+    } catch (SocketException se) {
       // can be thrown by makeResponse or sendResponse.
-    }
-    catch (Throwable e) { // NOSONAR
+    } catch (Throwable e) { // NOSONAR
       // This catch is intentional, since it's the last point where we can catch exceptions that occur in this thread.
       LOG.log(Level.WARNING, "Unexpected exception", e);
     }
@@ -75,20 +73,20 @@ public class FitNesseExpediter implements ResponseSender, Runnable {
     try {
       output.write(bytes);
       output.flush();
-    }
-    catch (IOException e) {
-      LOG.log(Level.INFO, format("Output stream closed unexpectedly: %s (Stop button pressed?)", e.getMessage()));
+    } catch (IOException e) {
+      LOG.log(Level.FINE, format("Could not send data for URL %s: %s (Stop button pressed?)", (request != null ? request.getResource() : ""), e.toString()));
     }
   }
 
   @Override
   public void close() {
-    try {
-      log(socket, request, response);
-      socket.close();
-    }
-    catch (IOException e) {
-      LOG.log(Level.WARNING, "Error while closing socket", e);
+    log(socket, request, response);
+    if (!socket.isClosed()) {
+      try {
+        socket.close();
+      } catch (IOException e) {
+        LOG.log(Level.WARNING, "Error while closing socket", e);
+      }
     }
   }
 
