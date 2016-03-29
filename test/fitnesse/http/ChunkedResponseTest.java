@@ -10,6 +10,7 @@ import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertMatches;
 import static util.RegexTestCase.assertSubString;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import org.junit.After;
@@ -157,7 +158,7 @@ public class ChunkedResponseTest implements ResponseSender {
   }
 
   @Test
-  public void testTurnOffChunking() {
+  public void testTurnOffChunking() throws IOException {
     response.turnOffChunking();
 
     response.add("one");

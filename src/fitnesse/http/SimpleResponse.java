@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 public class SimpleResponse extends Response {
@@ -16,7 +17,7 @@ public class SimpleResponse extends Response {
   }
 
   @Override
-  public void sendTo(ResponseSender sender) {
+  public void sendTo(ResponseSender sender) throws IOException {
     try {
       sender.send(makeHttpHeaders().getBytes());
       sender.send(content);

@@ -3,13 +3,14 @@
 package util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
-public class StreamReader {
+public class StreamReader implements Closeable {
   private InputStream input;
   private State state;
 
@@ -37,6 +38,7 @@ public class StreamReader {
     this.input = input;
   }
 
+  @Override
   public void close() throws IOException {
     input.close();
   }
