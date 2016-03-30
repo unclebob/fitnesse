@@ -139,4 +139,14 @@ public class UploadResponderTest {
   }
 
 
+  @Test
+  public void canNotUploadInFilesFitNesseFolder() throws Exception {
+    request.addUploadedFile("file", new UploadedFile("sourceFilename.txt", "plain/text", testFile));
+    request.setResource("files/fitnesse/");
+
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+
+    assertTrue("Not the correct error message", response.getContent().contains("It is not allowed to upload files in the files/fitnesse section."));
+  }
+
 }

@@ -166,6 +166,11 @@ public class FileResponder implements SecureResponder {
             file.getCanonicalFile());
   }
 
+  public static boolean isInFilesFitNesseDirectory(File rootPath, File file) throws IOException {
+    return isInSubDirectory(new File(new File(rootPath, "files"), "fitnesse").getCanonicalFile(),
+            file.getCanonicalFile());
+  }
+
   private static boolean isInSubDirectory(File dir, File file) {
     return file != null && (file.equals(dir) || isInSubDirectory(dir, file.getParentFile()));
   }
