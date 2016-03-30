@@ -21,7 +21,7 @@ public class ChunkedResponse extends Response implements Closeable {
   }
 
   @Override
-  public void sendTo(ResponseSender sender) {
+  public void sendTo(ResponseSender sender) throws IOException {
     this.sender = sender;
     sender.send(makeHttpHeaders().getBytes());
     chunckedDataProvider.startSending();
@@ -78,13 +78,9 @@ public class ChunkedResponse extends Response implements Closeable {
 
   @Override
   public void close() throws IOException {
-    sender.close();
-  }
-
-  public void closeAll() throws IOException {
     closeChunks();
     closeTrailer();
-    close();
+    sender.close();
   }
 
   @Override

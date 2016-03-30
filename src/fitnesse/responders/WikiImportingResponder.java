@@ -45,7 +45,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
 
     htmlPage.render(response.getWriter());
 
-    response.closeAll();
+    response.close();
   }
 
   public WikiImportingTraverser initializeImporter() throws Exception {

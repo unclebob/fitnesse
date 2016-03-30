@@ -84,7 +84,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
 
     htmlPage.render(response.getWriter());
 
-    response.closeAll();
+    response.close();
   }
 
   @Override
