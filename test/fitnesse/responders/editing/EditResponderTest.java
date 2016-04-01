@@ -61,7 +61,7 @@ public class EditResponderTest {
     assertSubString("<label for=\"suites\">Tags:</label>", body);
   }
 
-  private SimpleResponse makeResponse() {
+  private SimpleResponse makeResponse() throws Exception {
     request.setResource("ChildPage");
     return (SimpleResponse) responder.makeResponse(context, request);
   }

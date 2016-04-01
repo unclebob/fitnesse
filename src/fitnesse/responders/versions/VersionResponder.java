@@ -32,7 +32,7 @@ public class VersionResponder implements SecureResponder {
   private String resource;
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception{
     resource = request.getResource();
     version = request.getInput("version");
     if (version == null)

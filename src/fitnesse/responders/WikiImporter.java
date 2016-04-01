@@ -55,7 +55,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
     localPath = new WikiPagePath();
   }
 
-  public void importWiki(WikiPage page) {
+  public void importWiki(WikiPage page) throws IOException {
     catalogLocalTree(page);
 
     Document remotePageTreeDocument;
@@ -106,7 +106,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
   }
 
   @Override
-  public void enterChildPage(WikiPage childPage, Date lastModified) {
+  public void enterChildPage(WikiPage childPage, Date lastModified) throws IOException {
     if (pageCatalog != null) {
       pageCatalog.remove(relativePath(childPage));
     }
@@ -149,7 +149,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
     return childPage.getPageCrawler().getFullPath().subtractFromFront(contextPath);
   }
 
-  protected void importRemotePageContent(WikiPage localPage) {
+  protected void importRemotePageContent(WikiPage localPage) throws IOException {
     try {
       Document doc = getXmlDocument("data");
       PageData remoteData = new PageXmlizer().deXmlizeData(doc);

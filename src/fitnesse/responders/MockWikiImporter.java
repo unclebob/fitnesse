@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.io.IOException;
+
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
@@ -10,7 +12,7 @@ public class MockWikiImporter extends WikiImporter {
   public boolean fail;
 
   @Override
-  protected void importRemotePageContent(WikiPage localPage) {
+  protected void importRemotePageContent(WikiPage localPage) throws IOException {
     if (fail)
       importerClient.pageImportError(localPage, new Exception("blah"));
     else

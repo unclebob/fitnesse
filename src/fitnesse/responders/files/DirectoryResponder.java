@@ -3,6 +3,7 @@
 package fitnesse.responders.files;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,7 +35,7 @@ class DirectoryResponder implements SecureResponder {
   }
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     this.context = context;
 
     if (!resource.endsWith("/")) {
@@ -52,7 +53,7 @@ class DirectoryResponder implements SecureResponder {
     return simpleResponse;
   }
 
-  private Response makeDirectoryListingPage() {
+  private Response makeDirectoryListingPage() throws UnsupportedEncodingException {
     HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Files: " + resource);
     //page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "/", "Files Section"));
@@ -64,7 +65,7 @@ class DirectoryResponder implements SecureResponder {
     return simpleResponse;
   }
 
-  private Response makeDirectoryListingJsonPage() {
+  private Response makeDirectoryListingJsonPage() throws UnsupportedEncodingException {
     JSONArray listing = new JSONArray();
     for (FileInfo fileInfo : makeFileInfo(FileUtil.getDirectoryListing(requestedDirectory))) {
       JSONObject fiObject = new JSONObject();

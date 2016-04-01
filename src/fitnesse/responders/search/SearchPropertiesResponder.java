@@ -4,13 +4,17 @@ import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTE;
 import static fitnesse.wiki.PageData.PropertySUITES;
 import static fitnesse.wiki.PageData.SECURITY_ATTRIBUTES;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
+import fitnesse.responders.run.SuiteResponder;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.search.AttributeWikiPageFinder;
 import fitnesse.wiki.search.PageFinder;
@@ -19,6 +23,8 @@ import fitnesse.http.Request;
 import fitnesse.wiki.PageType;
 
 public class SearchPropertiesResponder extends ResultResponder {
+
+  private static final Logger LOG = Logger.getLogger(SearchPropertiesResponder.class.getName());
 
   public static final String IGNORED = "Any";
   public static final String ACTION = "Action";
@@ -104,7 +110,11 @@ public class SearchPropertiesResponder extends ResultResponder {
     String suites = getSuitesFromInput(request);
 
     if (pageTypes == null && attributes.isEmpty() && suites == null) {
-      response.add("No search properties were specified.");
+      try {
+        response.add("No search properties were specified.");
+      } catch (IOException e) {
+        LOG.log(Level.WARNING, "Unable to send content to client", e);
+      }
       return null;
     }
 

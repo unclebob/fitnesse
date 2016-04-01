@@ -79,12 +79,12 @@ public class WikiImportingTraverser implements WikiImporterClient, Traverser<Obj
   }
 
   @Override
-  public void pageImported(WikiPage localPage) {
+  public void pageImported(WikiPage localPage) throws IOException {
     traversalListener.process(localPage);
   }
 
   @Override
-  public void pageImportError(WikiPage localPage, Exception e) {
+  public void pageImportError(WikiPage localPage, Exception e) throws IOException {
     traversalListener.process(new ImportError("PAGEERROR", e.getMessage(), e));
   }
 

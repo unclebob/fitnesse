@@ -1,5 +1,6 @@
 package fitnesse.responders.testHistory;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import fitnesse.FitNesseContext;
@@ -21,7 +22,7 @@ public class SuiteOverviewResponder implements Responder {
   private FitNesseContext context;
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws UnsupportedEncodingException {
     this.context = context;
     WikiPage root = context.getRootPage();
     WikiPage page = root.getPageCrawler().getPage(PathParser.parse(request.getResource()));
@@ -41,7 +42,7 @@ public class SuiteOverviewResponder implements Responder {
 
   }
 
-  private SimpleResponse makeResponse(SuiteOverviewTree treeview, WikiPagePath path, Request request) {
+  private SimpleResponse makeResponse(SuiteOverviewTree treeview, WikiPagePath path, Request request) throws UnsupportedEncodingException {
     SimpleResponse response = new SimpleResponse();
 
     HtmlPage page = context.pageFactory.newPage();

@@ -31,7 +31,7 @@ public abstract class ChunkingResponder implements Responder, ChunkedDataProvide
   private boolean dontChunk = false;
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     this.context = context;
     this.request = request;
     this.root = context.getRootPage(request.getMap());
@@ -60,7 +60,7 @@ public abstract class ChunkingResponder implements Responder, ChunkedDataProvide
     return root.getPageCrawler();
   }
 
-  private Response pageNotFoundResponse(FitNesseContext context, Request request) {
+  private Response pageNotFoundResponse(FitNesseContext context, Request request) throws Exception {
     return new NotFoundResponder().makeResponse(context, request);
   }
 

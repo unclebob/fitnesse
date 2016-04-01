@@ -24,7 +24,7 @@ public class SaveResponder implements SecureResponder {
   private long editTimeStamp;
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     editTimeStamp = getEditTime(request);
     ticketId = getTicketId(request);
     String resource = request.getResource();
@@ -74,7 +74,7 @@ public class SaveResponder implements SecureResponder {
   private long getEditTime(Request request) {
     if (!request.hasInput(EditResponder.TIME_STAMP))
       return 0;
-    String editTimeStampString = (String) request.getInput(EditResponder.TIME_STAMP);
+    String editTimeStampString = request.getInput(EditResponder.TIME_STAMP);
     return Long.parseLong(editTimeStampString);
   }
 

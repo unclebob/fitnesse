@@ -26,7 +26,7 @@ public class NewPageResponder implements Responder {
   public static final String PAGE_TYPES = "pageTypes";
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
 
     SimpleResponse response = new SimpleResponse();
     response.setContent(doMakeHtml(context, request));

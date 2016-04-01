@@ -13,7 +13,7 @@ import org.junit.Test;
 import util.FileUtil;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class ExecutionLogResponderTest {
 
@@ -53,7 +53,7 @@ public class ExecutionLogResponderTest {
   }
 
   @Test
-  public void provideMessageInAbsenceOfLogs() throws IOException {
+  public void provideMessageInAbsenceOfLogs() throws Exception {
     File pageDirectory = addPageDirectory("TestPage");
     addTestResult(pageDirectory, "20090418123103_1_2_3_4");
 

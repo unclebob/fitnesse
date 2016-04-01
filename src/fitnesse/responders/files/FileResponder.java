@@ -37,7 +37,7 @@ public class FileResponder implements SecureResponder {
   Date lastModifiedDate;
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) throws IOException {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     String rootPath = context.getRootPagePath();
     try {
       resource = URLDecoder.decode(request.getResource(), FileUtil.CHARENCODING);
@@ -66,7 +66,7 @@ public class FileResponder implements SecureResponder {
     return resource.startsWith("files/fitnesse/");
   }
 
-  private Response makeClasspathResponse(FitNesseContext context, Request request) throws IOException {
+  private Response makeClasspathResponse(FitNesseContext context, Request request) throws Exception {
 
     determineLastModifiedInfo(LAST_MODIFIED_FOR_RESOURCES);
 

@@ -22,7 +22,7 @@ public class UnauthorizedResponder implements Responder {
   }
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     SimpleResponse response = new SimpleResponse(401);
     response.addHeader("WWW-Authenticate", "Basic realm=\"" + realm + "\"");
 

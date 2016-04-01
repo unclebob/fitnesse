@@ -23,7 +23,7 @@ public class TestTextFormatter extends BaseFormatter implements Closeable {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem) {
+  public void testSystemStarted(TestSystem testSystem) throws IOException {
     response.add(String.format("\nStarting Test System: %s.\n", testSystem.getName()));
   }
 

@@ -21,7 +21,7 @@ public class DeleteFileResponder implements SecureResponder {
   public String resource;
 
   @Override
-  public Response makeResponse(FitNesseContext context, final Request request) throws IOException {
+  public Response makeResponse(FitNesseContext context, final Request request) throws Exception {
     Response response = new SimpleResponse();
     resource = request.getResource();
     String filename = (String) request.getInput("filename");

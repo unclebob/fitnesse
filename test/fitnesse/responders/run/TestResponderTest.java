@@ -192,7 +192,7 @@ public class TestResponderTest {
     return getExecutionLog();
   }
 
-  private String getExecutionLog() {
+  private String getExecutionLog() throws Exception {
     return ((SimpleResponse) new ExecutionLogResponder().makeResponse(context, request)).getContent();
   }
 

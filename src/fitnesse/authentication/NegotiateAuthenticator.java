@@ -111,7 +111,7 @@ public class NegotiateAuthenticator extends Authenticator {
     }
 
     @Override
-    public Response makeResponse(FitNesseContext context, Request request) {
+    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
       SimpleResponse response = new SimpleResponse(401);
       response.addHeader("WWW-Authenticate", token == null ? NEGOTIATE : NEGOTIATE + " " + token);
       HtmlPage html = context.pageFactory.newPage();

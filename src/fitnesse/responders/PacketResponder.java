@@ -18,6 +18,7 @@ import fitnesse.wiki.WikiPagePath;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class PacketResponder implements SecureResponder {
   private String jsonpFunction;
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     response = new SimpleResponse();
     jsonpFunction = (String) request.getInput("jsonp");
     String pageName = request.getResource();
@@ -46,7 +47,7 @@ public class PacketResponder implements SecureResponder {
     return response;
   }
 
-  private void buildPacket() {
+  private void buildPacket() throws UnsupportedEncodingException {
     packet = new JSONObject();
     String html = page.getHtml();
 
@@ -68,7 +69,7 @@ public class PacketResponder implements SecureResponder {
       Table t = scanner.getTable(i);
       addTableToPacket(t);
     }
-    packet.put("tables", tables);                                                             
+    packet.put("tables", tables);
   }
 
   private void addTableToPacket(Table t) throws JSONException {

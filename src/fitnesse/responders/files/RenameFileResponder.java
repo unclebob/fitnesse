@@ -20,7 +20,7 @@ import fitnesse.wiki.fs.FileVersion;
 public class RenameFileResponder implements SecureResponder {
 
   @Override
-  public Response makeResponse(FitNesseContext context, final Request request) throws IOException {
+  public Response makeResponse(FitNesseContext context, final Request request) throws Exception {
     Response response = new SimpleResponse();
     String resource = request.getResource();
     File rootPath = new File(context.getRootPagePath());

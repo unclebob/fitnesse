@@ -2,26 +2,35 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.html.HtmlUtil;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.html.template.HtmlPage;
-import fitnesse.html.template.PageTitle;
-import fitnesse.wiki.*;
+import fitnesse.wiki.MockingPageCrawler;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.SymbolicPage;
+import fitnesse.wiki.WikiImportProperty;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperty;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 import static fitnesse.wiki.PageData.*;
 import static fitnesse.wiki.PageType.SUITE;
@@ -36,7 +45,7 @@ public class PropertiesResponder implements SecureResponder {
   private HtmlPage html;
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     response = new SimpleResponse();
     resource = request.getResource();
     path = PathParser.parse(resource);
@@ -51,7 +60,7 @@ public class PropertiesResponder implements SecureResponder {
     return response;
   }
 
-  private void makeContent(FitNesseContext context, Request request) {
+  private void makeContent(FitNesseContext context, Request request) throws UnsupportedEncodingException {
     if ("json".equals(request.getInput("format"))) {
       JSONObject jsonObject = makeJson();
       try {
@@ -107,7 +116,7 @@ public class PropertiesResponder implements SecureResponder {
     
     String tags = "";
     if(pageData != null)  {
-      tags = pageData.getAttribute(PageData.PropertySUITES); 
+      tags = pageData.getAttribute(PageData.PropertySUITES);
     }
     
     html.setPageTitle(new PageTitle("Page Properties", path, tags));

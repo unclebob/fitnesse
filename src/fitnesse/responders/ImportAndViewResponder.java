@@ -2,6 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -9,11 +13,12 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.*;
-
-import java.net.MalformedURLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiImportProperty;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class ImportAndViewResponder implements SecureResponder, WikiImporterClient {
   private static final Logger LOG = Logger.getLogger(ImportAndViewResponder.class.getName());
@@ -21,7 +26,7 @@ public class ImportAndViewResponder implements SecureResponder, WikiImporterClie
   private WikiPage page;
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) throws MalformedURLException {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     String resource = request.getResource();
 
     if ("".equals(resource))
@@ -44,7 +49,7 @@ public class ImportAndViewResponder implements SecureResponder, WikiImporterClie
     page = crawler.getPage(path);
   }
 
-  protected void loadPageData() throws MalformedURLException {
+  protected void loadPageData() throws IOException {
     PageData pageData = page.getData();
 
     WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());

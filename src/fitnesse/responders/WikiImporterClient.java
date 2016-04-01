@@ -2,10 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.io.IOException;
+
 import fitnesse.wiki.WikiPage;
 
 public interface WikiImporterClient {
-  void pageImported(WikiPage localPage);
+  void pageImported(WikiPage localPage) throws IOException;
 
-  void pageImportError(WikiPage localPage, Exception e);
+  void pageImportError(WikiPage localPage, Exception e) throws IOException;
 }
