@@ -70,7 +70,7 @@ public class PropertiesResponder implements SecureResponder {
       }
     } else {
       String html = makeHtml(context, request);
-      
+
       response.setContent(html);
     }
   }
@@ -113,12 +113,12 @@ public class PropertiesResponder implements SecureResponder {
     html.setNavTemplate("viewNav");
     html.put("viewLocation", request.getResource());
     html.setTitle("Properties: " + resource);
-    
+
     String tags = "";
     if(pageData != null)  {
       tags = pageData.getAttribute(PageData.PropertySUITES);
     }
-    
+
     html.setPageTitle(new PageTitle("Page Properties", path, tags));
     html.put("pageData", pageData);
     html.setMainTemplate("propertiesPage");
@@ -254,7 +254,7 @@ public class PropertiesResponder implements SecureResponder {
     public String getLink() {
       return link;
     }
-    
+
     public String getPath() {
       return path;
     }

@@ -382,7 +382,7 @@ public class SuiteResponderTest {
     assertEquals("0",testResultsElement.getAttribute("failures"));
     assertEquals("0",testResultsElement.getAttribute("disabled"));
     assertEquals("0",testResultsElement.getAttribute("errors"));
-    
+
     NodeList resultList = testResultsElement.getElementsByTagName("testcase");
     assertEquals(2, resultList.getLength());
     Element testResult;

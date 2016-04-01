@@ -20,17 +20,17 @@ public abstract class Response {
     TEXT("text/text"),
     JSON("application/json"),
     JUNIT("text/junit");
-    
+
     private final String contentType;
-    
+
     private Format(String contentType) {
       this.contentType = contentType;
     }
-    
+
     public String getContentType() {
       return contentType;
     }
-    
+
   }
 
   protected static final String CRLF = "\r\n";
@@ -50,7 +50,7 @@ public abstract class Response {
 
   public Response(String formatString) {
     Format format;
-    
+
     if ("html".equalsIgnoreCase(formatString)) {
       format = Format.HTML;
     } else if ("xml".equalsIgnoreCase(formatString)) {
@@ -81,11 +81,11 @@ public abstract class Response {
   public boolean isTextFormat() {
     return Format.TEXT.contentType.equals(contentType);
   }
-  
+
   public boolean isJunitFormat() {
 	    return Format.JUNIT.contentType.equals(contentType);
   }
-	  
+
   public boolean hasContent() {
     return contentType != null;
   }

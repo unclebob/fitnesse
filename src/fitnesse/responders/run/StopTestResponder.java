@@ -14,15 +14,15 @@ import fitnesse.http.SimpleResponse;
 public class StopTestResponder implements SecureResponder {
 
   String testId = null;
-  
+
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     SimpleResponse response = new SimpleResponse();
-    
+
     if (request.hasInput("id")) {
       testId = request.getInput("id");
     }
-    
+
     response.setContent(html(context));
 
     return response;

@@ -130,7 +130,7 @@ public class NegotiateAuthenticator extends Authenticator {
     return new UnauthenticatedNegotiateResponder(request.getAuthorizationPassword());
   }
 
-  /* 
+  /*
   * If negotiation succeeds, sets the username field in the request.
   * Otherwise, stores the next token to send in the password field and sets request username to null.
   * XXX It would be better to allow associating generic authenticator data to each request.

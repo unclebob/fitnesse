@@ -15,7 +15,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public class RawContentResponder implements SecureResponder {
-  
+
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     String resource = request.getResource();

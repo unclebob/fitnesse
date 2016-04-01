@@ -113,7 +113,7 @@ public class VersionComparerResponder implements Responder {
     response.setContent(page.html());
     return response;
   }
-  
+
   private PageTitle makePageTitle(String resource) {
 
     String tags="";

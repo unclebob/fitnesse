@@ -69,14 +69,14 @@ public class WikiPageResponder implements SecureResponder {
     WikiPagePath fullPath = page.getPageCrawler().getFullPath();
     String fullPathName = PathParser.render(fullPath);
     PageTitle pt = new PageTitle(fullPath);
-    
+
     String tags = pageData.getAttribute(PageData.PropertySUITES);
 
     pt.setPageTags(tags);
-    
+
     html.setTitle(fullPathName);
     html.setPageTitle(pt.notLinked());
-    
+
     html.setNavTemplate("wikiNav.vm");
     html.put("actions", new WikiPageActions(page));
     html.put("helpText", pageData.getProperties().get(PageData.PropertyHELP));

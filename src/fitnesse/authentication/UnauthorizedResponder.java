@@ -11,7 +11,7 @@ import fitnesse.html.template.HtmlPage;
 
 public class UnauthorizedResponder implements Responder {
   private final String realm;
-  
+
   public UnauthorizedResponder(String realm) {
     super();
     this.realm = realm;

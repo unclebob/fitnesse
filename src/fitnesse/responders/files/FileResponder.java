@@ -60,7 +60,7 @@ public class FileResponder implements SecureResponder {
       return new NotFoundResponder().makeResponse(context, request);
     }
   }
-  
+
 
   private boolean canLoadFromClasspath() {
     return resource.startsWith("files/fitnesse/");
@@ -74,7 +74,7 @@ public class FileResponder implements SecureResponder {
       return createNotModifiedResponse();
 
     String classpathResource = "/fitnesse/resources/" + resource.substring("files/fitnesse/".length());
-    
+
     InputStream input = getClass().getResourceAsStream(classpathResource);
     if (input == null) {
       return new NotFoundResponder().makeResponse(context, request);

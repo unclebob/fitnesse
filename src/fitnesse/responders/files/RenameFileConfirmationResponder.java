@@ -18,7 +18,7 @@ public class RenameFileConfirmationResponder implements SecureResponder {
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     String resource = request.getResource();
     String filename = (String) request.getInput("filename");
-    
+
     HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Rename " + filename);
     page.setPageTitle(new PageTitle("Rename File", resource + filename, "/"));
