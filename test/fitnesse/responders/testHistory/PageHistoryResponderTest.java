@@ -44,7 +44,7 @@ public class PageHistoryResponderTest {
   private MockRequest request;
   private FitNesseContext context;
   private FitNesseVersion fitNesseVersion = new FitNesseVersion();
-  
+
   @Before
   public void setup() throws IOException {
     resultsDirectory = new File("testHistoryDirectory");
@@ -300,7 +300,7 @@ public class PageHistoryResponderTest {
     assertHasRegexp("99 ms", response.getContent());
     assertHasRegexp("wad of HTML content after control character", response.getContent());
   }
-  
+
   @Test
   public void canGetSuiteExecutionReport() throws Exception {
     File pageDirectory = addPageDirectory("SuitePage");

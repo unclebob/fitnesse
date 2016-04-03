@@ -122,7 +122,7 @@ public class HistoryComparerTest {
     assertTrue(comparer.allTablesMatch());
     comparer.firstTableResults.add("C");
     assertFalse(comparer.allTablesMatch());
-    
+
   }
 
 

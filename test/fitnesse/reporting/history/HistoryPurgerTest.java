@@ -100,9 +100,9 @@ public class HistoryPurgerTest {
     addTestResult(pageDirectory, "20090614000000_1_0_0_0");
     File svnDirectory = addSubDirectory(pageDirectory, ".svn");
     addTestResult(svnDirectory, "someFile");
-    
+
     historyPurger.deleteTestHistoryOlderThanDays();
-    
+
     String[] files = resultsDirectory.list();
     assertEquals(1, files.length);
 
@@ -116,9 +116,9 @@ public class HistoryPurgerTest {
     addTestResult(pageDirectory, "someFile");
     File svnDirectory = addSubDirectory(pageDirectory, ".svn");
     addTestResult(svnDirectory, "anotherfile");
-    
+
     historyPurger.deleteTestHistoryOlderThanDays();
-    
+
     List<String> files = Arrays.asList(new File(resultsDirectory, "SomePage").list());
     assertEquals(2, files.size());
     assertTrue(files.contains(".svn"));
