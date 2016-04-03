@@ -4,6 +4,7 @@ package util;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,9 +21,13 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 public class FileUtil {
+
+  private static final Logger LOG = Logger.getLogger(FileUtil.class.getName());
 
   public static final String CHARENCODING = "UTF-8";
 
@@ -120,8 +125,7 @@ public class FileUtil {
       stream = new FileInputStream(input);
       return new StreamReader(stream).readBytes((int) size);
     } finally {
-      if (stream != null)
-        stream.close();
+      close(stream);
     }
   }
 
@@ -133,7 +137,7 @@ public class FileUtil {
       while ((line = reader.readLine()) != null)
         lines.add(line);
     } finally {
-      reader.close();
+      close(reader);
     }
     return lines;
   }
@@ -184,42 +188,12 @@ public class FileUtil {
     return fileList.toArray(new File[fileList.size()]);
   }
 
-  public static void close(Writer writer) {
-    if (writer != null) {
+  public static void close(Closeable closeable) {
+    if (closeable != null) {
       try {
-        writer.close();
+        closeable.close();
       } catch (IOException e) {
-        throw new RuntimeException("Unable to close writer", e);
-      }
-    }
-  }
-
-  public static void close(OutputStream output) {
-    if (output != null) {
-      try {
-        output.close();
-      } catch (IOException e) {
-        throw new RuntimeException("Unable to close outputstream", e);
-      }
-    }
-  }
-
-  public static void close(InputStream input) {
-    if (input != null) {
-      try {
-        input.close();
-      } catch (IOException e) {
-        throw new RuntimeException("Unable to close inputstream", e);
-      }
-    }
-  }
-
-  public static void close(StreamReader reader) {
-    if (reader != null) {
-      try {
-        reader.close();
-      } catch (IOException e) {
-        throw new RuntimeException("Unable to close stream reader", e);
+        LOG.log(Level.INFO, "Unable to close " + closeable, e);
       }
     }
   }
