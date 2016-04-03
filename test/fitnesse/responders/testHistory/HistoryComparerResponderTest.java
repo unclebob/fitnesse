@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import static util.RegexTestCase.assertHasRegexp;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.After;
@@ -137,7 +138,7 @@ public class HistoryComparerResponderTest {
   }
 
   @After
-  public void tearDown() {
+  public void tearDown() throws IOException {
     FileUtil.deleteFileSystemDirectory("testRoot");
   }
 }

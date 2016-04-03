@@ -83,7 +83,7 @@ public class SimpleFileVersionsController implements VersionsController {
   }
 
   @Override
-  public void delete(FileVersion... files) {
+  public void delete(FileVersion... files) throws IOException {
     for (FileVersion fileVersion : files) {
       fileSystem.delete(fileVersion.getFile());
     }

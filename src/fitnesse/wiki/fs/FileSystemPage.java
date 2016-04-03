@@ -16,12 +16,14 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.util.Clock;
 import util.FileUtil;
 
 import static fitnesse.wiki.PageType.STATIC;
+import static java.lang.String.format;
 
 public class FileSystemPage extends BaseWikitextPage {
 
@@ -76,28 +78,32 @@ public class FileSystemPage extends BaseWikitextPage {
   public void removeChildPage(final String name) {
     final WikiPage childPage = getChildPage(name);
     if (childPage instanceof FileSystemPage) {
-      versionsController.delete(new FileVersion() {
-        @Override
-        public File getFile() {
-          return ((FileSystemPage) childPage).getFileSystemPath();
-        }
+      try {
+        versionsController.delete(new FileVersion() {
+          @Override
+          public File getFile() {
+            return ((FileSystemPage) childPage).getFileSystemPath();
+          }
 
-        @Override
-        public InputStream getContent() throws IOException {
-          return null;
-        }
+          @Override
+          public InputStream getContent() throws IOException {
+            return null;
+          }
 
-        @Override
-        public String getAuthor() {
-          // Who is deleting this page??
-          return "";
-        }
+          @Override
+          public String getAuthor() {
+            // Who is deleting this page??
+            return "";
+          }
 
-        @Override
-        public Date getLastModificationTime() {
-          return new Date();
-        }
-      });
+          @Override
+          public Date getLastModificationTime() {
+            return new Date();
+          }
+        });
+      } catch (IOException e) {
+        throw new RuntimeException(format("Could not remove page %s", new WikiPagePath(childPage).toString()), e);
+      }
     }
   }
 

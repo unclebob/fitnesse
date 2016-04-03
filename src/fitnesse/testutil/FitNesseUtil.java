@@ -115,11 +115,11 @@ public class FitNesseUtil {
     return createdFolder;
   }
 
-  public static void destroyTestContext(FitNesseContext context) {
+  public static void destroyTestContext(FitNesseContext context) throws IOException {
     FileUtil.deleteFileSystemDirectory(context.rootPath);
   }
 
-  public static void destroyTestContext() {
+  public static void destroyTestContext() throws IOException {
     FileUtil.deleteFileSystemDirectory(FitNesseUtil.base);
   }
 }

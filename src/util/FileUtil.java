@@ -26,11 +26,11 @@ public class FileUtil {
 
   public static final String CHARENCODING = "UTF-8";
 
-  public static File createFile(String path, String content) {
+  public static File createFile(String path, String content) throws IOException {
     return createFile(path, new ByteArrayInputStream(content.getBytes()));
   }
 
-  public static File createFile(String path, InputStream content) {
+  public static File createFile(String path, InputStream content) throws IOException {
     String[] names = path.replace("/", File.separator).split(Pattern.quote(File.separator));
     if (names.length == 1)
       return createFile(new File(path), content);
@@ -46,27 +46,20 @@ public class FileUtil {
     }
   }
 
-  public static File createFile(File file, String content) {
-    try {
-      return createFile(file, content.getBytes(CHARENCODING));
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
-    }
+  public static File createFile(File file, String content) throws IOException {
+    return createFile(file, content.getBytes(CHARENCODING));
   }
 
 
-  public static File createFile(File file, byte[] bytes) {
+  public static File createFile(File file, byte[] bytes) throws IOException {
     return createFile(file, new ByteArrayInputStream(bytes));
   }
 
-  public static File createFile(File file, InputStream content) {
+  public static File createFile(File file, InputStream content) throws IOException {
     FileOutputStream fileOutput = null;
     try {
       fileOutput = new FileOutputStream(file);
       FileUtil.copyBytes(content, fileOutput);
-    }
-    catch (IOException e) {
-      throw new RuntimeException(e);
     }
     finally {
       if (fileOutput != null)
@@ -83,11 +76,11 @@ public class FileUtil {
     return new File(path).mkdir();
   }
 
-  public static void deleteFileSystemDirectory(String dirPath) {
+  public static void deleteFileSystemDirectory(String dirPath) throws IOException {
     deleteFileSystemDirectory(new File(dirPath));
   }
 
-  public static void deleteFileSystemDirectory(File current) {
+  public static void deleteFileSystemDirectory(File current) throws IOException {
     File[] files = current.listFiles();
 
     for (int i = 0; files != null && i < files.length; i++) {
@@ -100,15 +93,15 @@ public class FileUtil {
     deleteFile(current);
   }
 
-  public static void deleteFile(String filename) {
+  public static void deleteFile(String filename) throws IOException {
     deleteFile(new File(filename));
   }
 
-  public static void deleteFile(File file) {
+  public static void deleteFile(File file) throws IOException{
     if (!file.exists())
       return;
     if (!file.delete())
-      throw new RuntimeException("Could not delete '" + file.getAbsolutePath() + "'");
+      throw new IOException("Could not delete '" + file.getAbsolutePath() + "'");
   }
 
   public static String getFileContent(String path) throws IOException {

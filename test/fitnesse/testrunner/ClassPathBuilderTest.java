@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testrunner;
 
+import java.io.IOException;
 import java.util.List;
 
 import fitnesse.testrunner.ClassPathBuilder;
@@ -165,7 +166,7 @@ public class ClassPathBuilderTest {
     assertEquals("/my/path.jar", paths.get(0));
   }
 
-  public static void makeSampleFiles() {
+  public static void makeSampleFiles() throws IOException {
     FileUtil.makeDir(TEST_DIR);
     FileUtil.createFile(TEST_DIR + "/one.jar", "");
     FileUtil.createFile(TEST_DIR + "/two.jar", "");
@@ -180,7 +181,7 @@ public class ClassPathBuilderTest {
     FileUtil.createFile(TEST_DIR + "/subdir/sub2.dll", "");
   }
 
-  public static void deleteSampleFiles() {
+  public static void deleteSampleFiles() throws IOException {
     FileUtil.deleteFileSystemDirectory(TEST_DIR);
   }
 }

@@ -3,6 +3,7 @@ package fitnesse.updates;
 import util.FileUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -26,7 +27,7 @@ public class UpdateFileList {
   private String outputDirectory = "";
   static UpdateFileList testUpdater = null;
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     UpdateFileList updater = testUpdater != null ? testUpdater : new UpdateFileList();
 
     updater.parseCommandLine(args);
@@ -94,7 +95,7 @@ public class UpdateFileList {
     return true;
   }
 
-  public File createUpdateList() {
+  public File createUpdateList() throws IOException {
     for (String dirName : mainDirectories)
       addFilePathsToList(dirName);
 
@@ -150,7 +151,7 @@ private void addFilePathToAppropriateList(String directoryPath, File childFile) 
     return doNotReplaceFiles.contains(name);
   }
 
-  public File createDoNotUpdateList() {
+  public File createDoNotUpdateList() throws IOException {
     if (updateDoNotCopyOverContent.equals(""))
       for (String dirName : mainDirectories)
         addFilePathsToList(dirName);

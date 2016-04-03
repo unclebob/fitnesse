@@ -46,7 +46,7 @@ public class PageHistoryResponderTest {
   private FitNesseVersion fitNesseVersion = new FitNesseVersion();
   
   @Before
-  public void setup() throws Exception {
+  public void setup() throws IOException {
     resultsDirectory = new File("testHistoryDirectory");
     removeResultsDirectory();
     resultsDirectory.mkdir();
@@ -57,7 +57,7 @@ public class PageHistoryResponderTest {
   }
 
   @After
-  public void teardown() {
+  public void teardown() throws IOException {
     removeResultsDirectory();
   }
 
@@ -67,7 +67,7 @@ public class PageHistoryResponderTest {
     response = (SimpleResponse) responder.makeResponse(context, request);
   }
 
-  private void removeResultsDirectory() {
+  private void removeResultsDirectory() throws IOException {
     if (resultsDirectory.exists())
       FileUtil.deleteFileSystemDirectory(resultsDirectory);
   }

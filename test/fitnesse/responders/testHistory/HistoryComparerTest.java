@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertSubString;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 
@@ -108,7 +109,7 @@ public class HistoryComparerTest {
 
   @Test
   public void shouldBeAbleToTellIfTableListsWereACompleteMatch() throws Exception {
-    assertFalse(comparer.allTablesMatch());    
+    assertFalse(comparer.allTablesMatch());
     comparer.firstTableResults.add("A");
     comparer.firstTableResults.add("B");
     comparer.secondTableResults.add("A");
@@ -298,7 +299,7 @@ public class HistoryComparerTest {
   }
 
   @After
-  public void tearDown() {
+  public void tearDown() throws IOException {
     FileUtil.deleteFileSystemDirectory("TestFolder");
   }
 }

@@ -21,7 +21,7 @@ public class ExecutionLogResponderTest {
   private File resultsDirectory;
 
   @Before
-  public void setUp() {
+  public void setUp() throws IOException {
     resultsDirectory = new File("testHistoryDirectory");
     removeResultsDirectory();
     resultsDirectory.mkdir();
@@ -30,11 +30,11 @@ public class ExecutionLogResponderTest {
   }
 
   @After
-  public void teardown() {
+  public void teardown() throws IOException {
     removeResultsDirectory();
   }
 
-  private void removeResultsDirectory() {
+  private void removeResultsDirectory() throws IOException {
     if (resultsDirectory.exists())
       FileUtil.deleteFileSystemDirectory(resultsDirectory);
   }

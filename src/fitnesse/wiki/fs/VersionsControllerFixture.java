@@ -5,6 +5,7 @@ import fitnesse.wiki.*;
 import util.FileUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -35,7 +36,7 @@ public class VersionsControllerFixture {
     return rootPage;
   }
 
-  public void cleanUp() {
+  public void cleanUp() throws IOException {
     FileUtil.deleteFileSystemDirectory(TEST_DIR);
   }
 

@@ -8,6 +8,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import util.FileUtil;
+
 /**
  * Parameters used to configure FitNesse.
  */
@@ -77,13 +79,7 @@ public enum ConfigurationParameter {
     } catch (IOException e) {
       LOG.log(Level.WARNING, String.format("Error reading configuration: %s", e.getMessage()));
     } finally {
-      try {
-        if (propertiesStream != null) {
-          propertiesStream.close();
-        }
-      } catch (IOException e) {
-        LOG.severe("Unable to close properties file.");
-      }
+      FileUtil.close(propertiesStream);
     }
 
     return properties;

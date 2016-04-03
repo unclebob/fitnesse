@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import fitnesse.util.StringUtils;
-
 import static java.lang.String.format;
 
 public class CompositeTestSystemListener implements TestSystemListener {
@@ -23,7 +21,7 @@ public class CompositeTestSystemListener implements TestSystemListener {
 
   @Override
   public void testSystemStarted(final TestSystem testSystem) throws IOException {
-    safeInvoke(new Handler() {
+    invokeListeners(new Handler() {
       @Override public void invoke(TestSystemListener listener) throws IOException {
         listener.testSystemStarted(testSystem);
       }
@@ -32,7 +30,7 @@ public class CompositeTestSystemListener implements TestSystemListener {
 
   @Override
   public void testOutputChunk(final String output) throws IOException {
-    safeInvoke(new Handler() {
+    invokeListeners(new Handler() {
       @Override public void invoke(TestSystemListener listener) throws IOException {
         listener.testOutputChunk(output);
       }
@@ -41,7 +39,7 @@ public class CompositeTestSystemListener implements TestSystemListener {
 
   @Override
   public void testStarted(final TestPage testPage) throws IOException {
-    safeInvoke(new Handler() {
+    invokeListeners(new Handler() {
       @Override public void invoke(TestSystemListener listener) throws IOException {
         listener.testStarted(testPage);
       }
@@ -50,7 +48,7 @@ public class CompositeTestSystemListener implements TestSystemListener {
 
   @Override
   public void testComplete(final TestPage testPage, final TestSummary testSummary) throws IOException {
-    safeInvoke(new Handler() {
+    invokeListeners(new Handler() {
       @Override public void invoke(TestSystemListener listener) throws IOException {
         listener.testComplete(testPage, testSummary);
       }
@@ -75,7 +73,7 @@ public class CompositeTestSystemListener implements TestSystemListener {
       listener.testExceptionOccurred(assertion, exceptionResult);
   }
 
-  protected void safeInvoke(Handler handler) throws IOException {
+  protected void invokeListeners(Handler handler) throws IOException {
     List<IOException> caughtExceptions = new ArrayList<>();
     for (TestSystemListener listener : listeners) {
       try {

@@ -16,7 +16,7 @@ public interface FileSystem {
 
   InputStream getInputStream(File file) throws IOException;
 
-  void delete(File path);
+  void delete(File path) throws IOException;
 
   long lastModified(File file);
 

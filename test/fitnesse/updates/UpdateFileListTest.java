@@ -141,7 +141,7 @@ public class UpdateFileListTest {
   }
 
   @After
-  public void tearDown() {
+  public void tearDown() throws IOException {
     FileUtil.deleteFileSystemDirectory("MasterFolder");
   }
 }

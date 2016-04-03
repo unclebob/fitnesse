@@ -24,7 +24,7 @@ public class HistoryPurgerTest {
   private HistoryPurger historyPurger;
 
   @Before
-  public void setUp() throws ParseException {
+  public void setUp() throws ParseException, IOException {
     resultsDirectory = new File("testHistoryDirectory");
     removeResultsDirectory();
     resultsDirectory.mkdir();
@@ -128,7 +128,7 @@ public class HistoryPurgerTest {
     assertEquals(1, svnFiles.length);
   }
 
-  private void removeResultsDirectory() {
+  private void removeResultsDirectory() throws IOException {
     if (resultsDirectory.exists())
       FileUtil.deleteFileSystemDirectory(resultsDirectory);
   }
