@@ -1,8 +1,13 @@
 package fitnesse.testsystems;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import fitnesse.util.StringUtils;
+
+import static java.lang.String.format;
 
 public class CompositeTestSystemListener implements TestSystemListener {
 
@@ -17,27 +22,39 @@ public class CompositeTestSystemListener implements TestSystemListener {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem) throws IOException {
-    for (TestSystemListener listener : listeners)
-      listener.testSystemStarted(testSystem);
+  public void testSystemStarted(final TestSystem testSystem) throws IOException {
+    safeInvoke(new Handler() {
+      @Override public void invoke(TestSystemListener listener) throws IOException {
+        listener.testSystemStarted(testSystem);
+      }
+    });
   }
 
   @Override
-  public void testOutputChunk(String output) throws IOException {
-    for (TestSystemListener listener : listeners)
-      listener.testOutputChunk(output);
+  public void testOutputChunk(final String output) throws IOException {
+    safeInvoke(new Handler() {
+      @Override public void invoke(TestSystemListener listener) throws IOException {
+        listener.testOutputChunk(output);
+      }
+    });
   }
 
   @Override
-  public void testStarted(TestPage testPage) throws IOException {
-    for (TestSystemListener listener : listeners)
-      listener.testStarted(testPage);
+  public void testStarted(final TestPage testPage) throws IOException {
+    safeInvoke(new Handler() {
+      @Override public void invoke(TestSystemListener listener) throws IOException {
+        listener.testStarted(testPage);
+      }
+    });
   }
 
   @Override
-  public void testComplete(TestPage testPage, TestSummary testSummary) throws IOException {
-    for (TestSystemListener listener : listeners)
-      listener.testComplete(testPage, testSummary);
+  public void testComplete(final TestPage testPage, final TestSummary testSummary) throws IOException {
+    safeInvoke(new Handler() {
+      @Override public void invoke(TestSystemListener listener) throws IOException {
+        listener.testComplete(testPage, testSummary);
+      }
+    });
   }
 
   @Override
@@ -56,5 +73,40 @@ public class CompositeTestSystemListener implements TestSystemListener {
   public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
     for (TestSystemListener listener : listeners)
       listener.testExceptionOccurred(assertion, exceptionResult);
+  }
+
+  protected void safeInvoke(Handler handler) throws IOException {
+    List<IOException> caughtExceptions = new ArrayList<>();
+    for (TestSystemListener listener : listeners) {
+      try {
+        handler.invoke(listener);
+      } catch (IOException e) {
+        caughtExceptions.add(e);
+      }
+    }
+
+    if (caughtExceptions.size() == 1) {
+      throw caughtExceptions.get(0);
+    } else if (!caughtExceptions.isEmpty()) {
+      throw new CompositeIOException(format("%s test system listeners threw exceptions", caughtExceptions.size()), caughtExceptions);
+    }
+  }
+
+  protected interface Handler {
+    void invoke(TestSystemListener listener) throws IOException;
+  }
+
+  public static class CompositeIOException extends IOException {
+
+    private final List<IOException> causes;
+
+    public CompositeIOException(String message, List<IOException> causes) {
+      super(message, causes.get(0));
+      this.causes = causes;
+    }
+
+    public List<IOException> getCauses() {
+      return causes;
+    }
   }
 }

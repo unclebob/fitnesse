@@ -66,8 +66,12 @@ public class MultipleTestsRunner implements Stoppable {
     }
   }
 
-  private void allTestingComplete() throws IOException {
-    formatters.close();
+  private void allTestingComplete() {
+    try {
+      formatters.close();
+    } catch (IOException e) {
+      LOG.log(Level.WARNING, "Closing formatters failed", e);
+    }
   }
 
   private void internalExecuteTestPages() throws IOException, InterruptedException {

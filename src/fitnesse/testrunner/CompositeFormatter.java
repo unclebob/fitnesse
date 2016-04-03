@@ -16,16 +16,22 @@ public class CompositeFormatter extends CompositeTestSystemListener implements T
   }
 
   @Override
-  public void unableToStartTestSystem(String testSystemName, Throwable cause) throws IOException {
-    for (TestSystemListener listener : listeners())
-      if (listener instanceof TestsRunnerListener)
-        ((TestsRunnerListener) listener).unableToStartTestSystem(testSystemName, cause);
+  public void unableToStartTestSystem(final String testSystemName, final Throwable cause) throws IOException {
+    safeInvoke(new Handler() {
+      @Override public void invoke(TestSystemListener listener) throws IOException {
+        if (listener instanceof TestsRunnerListener)
+          ((TestsRunnerListener) listener).unableToStartTestSystem(testSystemName, cause);
+      }
+    });
   }
 
   @Override
   public void close() throws IOException {
-    for (TestSystemListener listener : listeners())
-      if (listener instanceof Closeable)
-        ((Closeable) listener).close();
+    safeInvoke(new Handler() {
+      @Override public void invoke(TestSystemListener listener) throws IOException {
+        if (listener instanceof Closeable)
+          ((Closeable) listener).close();
+      }
+    });
   }
 }
