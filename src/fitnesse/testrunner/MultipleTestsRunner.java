@@ -20,6 +20,7 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.TestSystemListener;
+import util.FileUtil;
 
 public class MultipleTestsRunner implements Stoppable {
   private static final Logger LOG = Logger.getLogger(MultipleTestsRunner.class.getName());
@@ -67,11 +68,7 @@ public class MultipleTestsRunner implements Stoppable {
   }
 
   private void allTestingComplete() {
-    try {
-      formatters.close();
-    } catch (IOException e) {
-      LOG.log(Level.WARNING, "Closing formatters failed", e);
-    }
+    FileUtil.close(formatters);
   }
 
   private void internalExecuteTestPages() throws IOException, InterruptedException {
