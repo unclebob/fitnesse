@@ -5,8 +5,7 @@ import java.io.IOException;
 import fitnesse.testsystems.CompositeTestSystemListener.CompositeIOException;
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.anyString;
@@ -67,6 +66,27 @@ public class CompositeTestSystemListenerTest {
     verify(throwingListener).testOutputChunk("Chunk");
     verify(anotherThrowingListener).testOutputChunk("Chunk");
     verify(behavingListener).testOutputChunk("Chunk");
+  }
 
+  @Test
+  public void failingListsenersAreRemoved() throws IOException {
+    CompositeTestSystemListener compositeListener = new CompositeTestSystemListener();
+
+    TestSystemListener throwingListener = mock(TestSystemListener.class);
+    TestSystemListener behavingListener = mock(TestSystemListener.class);
+
+    doThrow(IOException.class).when(throwingListener).testOutputChunk(anyString());
+
+    compositeListener.addTestSystemListener(throwingListener);
+    compositeListener.addTestSystemListener(behavingListener);
+
+    try {
+      compositeListener.testOutputChunk("Chunk");
+      fail("An exception should have been raised");
+    } catch (IOException e) {
+    }
+
+    assertThat(compositeListener.listeners(), not(contains(throwingListener)));
+    assertThat(compositeListener.listeners(), contains(behavingListener));
   }
 }

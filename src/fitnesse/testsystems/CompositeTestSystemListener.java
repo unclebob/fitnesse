@@ -2,11 +2,16 @@ package fitnesse.testsystems;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import static java.lang.String.format;
 
+/**
+ * Send commands to a set of listeners.
+ * Misbehaving listeners (the ones that throw IOException's) are removed from the list of listeners.
+ */
 public class CompositeTestSystemListener implements TestSystemListener {
 
   private final List<TestSystemListener> listeners = new LinkedList<TestSystemListener>();
@@ -75,11 +80,13 @@ public class CompositeTestSystemListener implements TestSystemListener {
 
   protected void invokeListeners(Handler handler) throws IOException {
     List<IOException> caughtExceptions = new ArrayList<>();
-    for (TestSystemListener listener : listeners) {
+    for (Iterator<TestSystemListener> iter = listeners.iterator(); iter.hasNext(); ) {
+      TestSystemListener listener = iter.next();
       try {
         handler.invoke(listener);
       } catch (IOException e) {
         caughtExceptions.add(e);
+        iter.remove();
       }
     }
 
