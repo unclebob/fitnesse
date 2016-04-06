@@ -24,7 +24,7 @@ public class DeleteFileResponder implements SecureResponder {
   public Response makeResponse(FitNesseContext context, final Request request) throws IOException {
     Response response = new SimpleResponse();
     resource = request.getResource();
-    String filename = (String) request.getInput("filename");
+    String filename = request.getInput("filename");
 
     final File pathName = new File(new File(context.getRootPagePath(), resource), filename);
 

@@ -53,10 +53,10 @@ public class SavePropertiesResponder implements SecureResponder {
         data.removeAttribute(attribute);
     }
 
-    String suites = (String) request.getInput("Suites");
+    String suites = request.getInput("Suites");
     data.setOrRemoveAttribute(PageData.PropertySUITES, suites);
 
-    String helpText = (String) request.getInput("HelpText");
+    String helpText = request.getInput("HelpText");
     data.setOrRemoveAttribute(PageData.PropertyHELP, helpText);
   }
 
@@ -77,7 +77,7 @@ public class SavePropertiesResponder implements SecureResponder {
   }
 
   private String getPageType(Request request) {
-    return (String) request.getInput(PageData.PAGE_TYPE_ATTRIBUTE);
+    return request.getInput(PageData.PAGE_TYPE_ATTRIBUTE);
   }
 
   private boolean isChecked(Request request, String name) {

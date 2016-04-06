@@ -26,17 +26,16 @@ public class MultipleTestsRunnerTest {
   private FitNesseContext context;
 
   private TestSystemFactory testSystemFactory;
-  private TestSystem testSystem;
 
   @Before
   public void setUp() throws Exception {
     testSystemFactory = mock(TestSystemFactory.class);
-    testSystem = mock(TestSystem.class);
+    TestSystem testSystem = mock(TestSystem.class);
     when(testSystemFactory.create(any(Descriptor.class))).thenReturn(testSystem);
 
     context = FitNesseUtil.makeTestContext();
     suite = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("SuitePage"), "This is the test suite\n");
- }
+  }
 
   @Test
   public void shouldExecuteTestPagesGroupedByTestSystem() throws IOException, InterruptedException {

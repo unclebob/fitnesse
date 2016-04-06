@@ -22,10 +22,10 @@ public class SummaryFixture extends Fixture {
 
   protected Parse rows(Iterator<String> keys) {
     if (keys.hasNext()) {
-      Object key = keys.next();
+      String key = keys.next();
       Parse result =
         tr(
-          td(key.toString(),
+          td(key,
             td(summary.get(key).toString(),
               null)),
           rows(keys));

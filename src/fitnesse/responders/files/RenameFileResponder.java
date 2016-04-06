@@ -30,8 +30,8 @@ public class RenameFileResponder implements SecureResponder {
       return new ErrorResponder("Invalid path: " + resource).makeResponse(context, request);
     }
 
-    final String oldFileName = (String) request.getInput("filename");
-    final String newFileName = ((String) request.getInput("newName")).trim();
+    final String oldFileName = request.getInput("filename");
+    final String newFileName = request.getInput("newName").trim();
 
     final File oldFile = new File(pathName, oldFileName);
     final File newFile = new File(pathName, newFileName);

@@ -1,6 +1,5 @@
 package fitnesse.testsystems.slim;
 
-import java.io.File;
 import java.io.IOException;
 
 import fitnesse.testrunner.WikiPageDescriptor;

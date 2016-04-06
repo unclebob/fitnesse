@@ -25,7 +25,7 @@ public class UrlPathVariableSource implements VariableSource {
 
   public Maybe<String> findUrlVariable(String name) {
     if(urlParams != null && urlParams.containsKey(name)) {
-      return new Maybe<String>((String)urlParams.get(name));
+      return new Maybe<String>(urlParams.get(name));
     }
 
     return Maybe.noString;
