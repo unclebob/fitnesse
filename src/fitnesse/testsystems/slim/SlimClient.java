@@ -15,5 +15,5 @@ public interface SlimClient {
 
   void bye() throws IOException;
 
-  void kill() throws IOException;
+  void kill();
 }

@@ -46,7 +46,7 @@ public class SlimCoverageTestSystem extends HtmlSlimTestSystem {
             }
 
             @Override
-            public void kill() throws IOException {
+            public void kill() {
             }
         };
     }

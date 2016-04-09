@@ -143,7 +143,7 @@ public class TestXmlFormatter extends BaseFormatter implements ExecutionLogListe
   }
 
   @Override
-  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
+  public void testSystemStopped(TestSystem testSystem, Throwable cause) throws IOException {
     super.testSystemStopped(testSystem, cause);
     if (cause != null) {
       testResponse.tallyPageCounts(ExecutionResult.ERROR);

@@ -13,7 +13,7 @@ public interface TestSystemListener {
 
   void testComplete(TestPage testPage, TestSummary testSummary) throws IOException;
 
-  void testSystemStopped(TestSystem testSystem, Throwable cause /* may be null */);
+  void testSystemStopped(TestSystem testSystem, Throwable cause /* may be null */) throws IOException;
 
   void testAssertionVerified(Assertion assertion, TestResult testResult);
 

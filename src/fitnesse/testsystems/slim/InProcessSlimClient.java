@@ -114,7 +114,7 @@ public class InProcessSlimClient implements SlimClient {
   }
 
   @Override
-  public void kill() throws IOException {
+  public void kill() {
     slimServerThread.interrupt();
   }
 }

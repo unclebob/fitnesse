@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import fitnesse.slim.SlimError;
 import fitnesse.slim.instructions.AssignInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.Assertion;
@@ -76,22 +75,19 @@ public abstract class SlimTestSystem implements TestSystem {
   }
 
   @Override
-  public void kill() throws IOException {
-    // No need to send events here, since killing the process is typically done asynchronously.
+  public void kill() {
     slimClient.kill();
   }
 
   @Override
   public void bye() throws IOException {
+    if (testSystemIsStopped) return;
     try {
       slimClient.bye();
+      testSystemStopped(null);
     } catch (IOException e) {
       exceptionOccurred(e);
       throw e;
-    } catch (Exception e) {
-      exceptionOccurred(e);
-    } finally {
-      testSystemStopped(null);
     }
   }
 
@@ -129,14 +125,7 @@ public abstract class SlimTestSystem implements TestSystem {
     List<SlimAssertion> assertions = table.getAssertions();
     Map<String, Object> instructionResults;
     if (!stopTestCalled && !stopSuiteCalled) {
-      // Okay, if this crashes, the test system is killed.
-      // We're not gonna continue here, but instead declare our test system done.
-      try {
-        instructionResults = slimClient.invokeAndGetResponse(SlimAssertion.getInstructions(assertions));
-      } catch (IOException e) {
-        exceptionOccurred(e);
-        throw e;
-      }
+      instructionResults = slimClient.invokeAndGetResponse(SlimAssertion.getInstructions(assertions));
     } else {
       instructionResults = Collections.emptyMap();
     }
@@ -144,54 +133,45 @@ public abstract class SlimTestSystem implements TestSystem {
     evaluateTables(assertions, instructionResults);
   }
 
-  protected void evaluateTables(List<SlimAssertion> assertions, Map<String, Object> instructionResults) {
+  protected void evaluateTables(List<SlimAssertion> assertions, Map<String, Object> instructionResults) throws IOException {
     for (SlimAssertion a : assertions) {
-      try {
-        final String key = a.getInstruction().getId();
-        final Object returnValue = instructionResults.get(key);
-        //Exception management
-        if (returnValue != null && returnValue instanceof String && ((String)returnValue).startsWith(EXCEPTION_TAG)) {
-          SlimExceptionResult exceptionResult = makeExceptionResult(key, (String) returnValue);
-          if (exceptionResult.isStopTestException()) {
-            stopTestCalled = true;
-          }
-          if (exceptionResult.isStopSuiteException()) {
-            stopTestCalled = stopSuiteCalled = true;
-          }
-          exceptionResult = a.getExpectation().evaluateException(exceptionResult);
-          if (exceptionResult != null) {
-            testExceptionOccurred(a, exceptionResult);
-          }
-        } else {
-          //Normal results
-          TestResult testResult = a.getExpectation().evaluateExpectation(returnValue);
-          testAssertionVerified(a, testResult);
+      final String key = a.getInstruction().getId();
+      final Object returnValue = instructionResults.get(key);
+      //Exception management
+      if (returnValue != null && returnValue instanceof String && ((String) returnValue).startsWith(EXCEPTION_TAG)) {
+        SlimExceptionResult exceptionResult = new SlimExceptionResult(key, (String) returnValue);
+        if (exceptionResult.isStopTestException()) {
+          stopTestCalled = true;
+        }
+        if (exceptionResult.isStopSuiteException()) {
+          stopTestCalled = stopSuiteCalled = true;
+        }
+        exceptionResult = a.getExpectation().evaluateException(exceptionResult);
+        if (exceptionResult != null) {
+          testExceptionOccurred(a, exceptionResult);
+        }
+      } else {
+        //Normal results
+        TestResult testResult = a.getExpectation().evaluateExpectation(returnValue);
+        testAssertionVerified(a, testResult);
 
-          //Retrieve variables set during expectation step
-          if (testResult != null) {
-            Map<String, ?> variables = testResult.getVariablesToStore();
-            if (variables != null) {
-              List<Instruction> instructions = new ArrayList<Instruction>(variables.size());
-              int i = 0;
-              for (Entry<String, ?> variable : variables.entrySet()) {
-                instructions.add(new AssignInstruction("assign_" + i++, variable.getKey(), variable.getValue()));
-              }
-              //Store variables in context
-              if (i > 0) {
-                slimClient.invokeAndGetResponse(instructions);
-              }
+        //Retrieve variables set during expectation step
+        if (testResult != null) {
+          Map<String, ?> variables = testResult.getVariablesToStore();
+          if (variables != null) {
+            List<Instruction> instructions = new ArrayList<Instruction>(variables.size());
+            int i = 0;
+            for (Entry<String, ?> variable : variables.entrySet()) {
+              instructions.add(new AssignInstruction("assign_" + i++, variable.getKey(), variable.getValue()));
+            }
+            //Store variables in context
+            if (i > 0) {
+              slimClient.invokeAndGetResponse(instructions);
             }
           }
         }
-      } catch (Exception ex) {
-        exceptionOccurred(ex);
       }
     }
-  }
-
-  private SlimExceptionResult makeExceptionResult(String resultKey, String resultString) {
-    SlimExceptionResult exceptionResult = new SlimExceptionResult(resultKey, resultString);
-    return exceptionResult;
   }
 
   protected void testOutputChunk(String output) throws IOException {
@@ -206,12 +186,8 @@ public abstract class SlimTestSystem implements TestSystem {
     testSystemListener.testComplete(testPage, testSummary);
   }
 
-  protected void exceptionOccurred(Throwable e) {
-    try {
-      slimClient.kill();
-    } catch (IOException killException) {
-      LOG.log(Level.WARNING, "Failed to kill SLiM client", killException);
-    }
+  protected void exceptionOccurred(Throwable e) throws IOException {
+    slimClient.kill();
     testSystemStopped(e);
   }
 
@@ -224,7 +200,7 @@ public abstract class SlimTestSystem implements TestSystem {
   }
 
   // Ensure testSystemStopped is called only once per test system. First call counts.
-  protected void testSystemStopped(Throwable e) {
+  protected void testSystemStopped(Throwable e) throws IOException {
     if (testSystemIsStopped) return;
     testSystemIsStopped = true;
     testSystemListener.testSystemStopped(this, e);

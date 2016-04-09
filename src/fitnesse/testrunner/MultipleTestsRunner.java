@@ -62,6 +62,9 @@ public class MultipleTestsRunner implements Stoppable {
   public void executeTestPages() throws IOException, InterruptedException {
     try {
       internalExecuteTestPages();
+    } catch  (Exception e) {
+      executionLogListener.exceptionOccurred(e);
+      throw e;
     } finally {
       allTestingComplete();
     }
@@ -208,7 +211,7 @@ public class MultipleTestsRunner implements Stoppable {
     }
 
     @Override
-    public void testSystemStopped(TestSystem testSystem, Throwable cause) {
+    public void testSystemStopped(TestSystem testSystem, Throwable cause) throws IOException {
       formatters.testSystemStopped(testSystem, cause);
 
       if (cause != null) {
@@ -238,11 +241,7 @@ public class MultipleTestsRunner implements Stoppable {
     isStopped = true;
 
     if (wasNotStopped && testSystem != null) {
-      try {
-        testSystem.kill();
-      } catch (IOException e) {
-        LOG.log(Level.WARNING, "Unable to stop test systems", e);
-      }
+      testSystem.kill();
     }
   }
 }

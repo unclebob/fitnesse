@@ -46,10 +46,13 @@ public class EchoTestSystemFactory implements TestSystemFactory {
     }
 
     @Override
-    public void kill() throws IOException {
-
+    public void kill() {
       // We're really done
-      testSystemListener.testSystemStarted(this);
+      try {
+        testSystemListener.testSystemStarted(this);
+      } catch (IOException e) {
+        throw new RuntimeException("IO error while killing test system", e);
+      }
     }
 
     @Override

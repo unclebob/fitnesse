@@ -135,16 +135,12 @@ public class NegotiateAuthenticator extends Authenticator {
   * Otherwise, stores the next token to send in the password field and sets request username to null.
   * XXX It would be better to allow associating generic authenticator data to each request.
   */
-  protected void negotiateCredentials(Request request) {
+  protected void negotiateCredentials(Request request) throws UnsupportedEncodingException, GSSException {
     String authHeader = request.getHeader("Authorization");
     if (authHeader == null || !authHeader.toLowerCase().startsWith(NEGOTIATE.toLowerCase()))
       request.setCredentials(null, null);
     else {
-      try {
-        setCredentials(request, getToken(authHeader));
-      } catch (Exception e) {
-        throw new RuntimeException("Unable to negotiate credentials", e);
-      }
+      setCredentials(request, getToken(authHeader));
     }
   }
 
@@ -178,7 +174,7 @@ public class NegotiateAuthenticator extends Authenticator {
   }
 
   @Override
-  public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) {
+  public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) throws Exception {
     negotiateCredentials(request);
     return super.authenticate(context, request, privilegedResponder);
   }

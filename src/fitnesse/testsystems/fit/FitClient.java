@@ -30,7 +30,7 @@ public class FitClient implements SocketAccepter {
   private Thread fitListeningThread;
 
   public FitClient() {
-    this.listeners = new LinkedList<FitClientListener>();
+    this.listeners = new LinkedList<>();
   }
 
   public void addFitClientListener(FitClientListener listener) {
@@ -107,9 +107,13 @@ public class FitClient implements SocketAccepter {
     Thread.sleep(10);
   }
 
-  public void exceptionOccurred(Throwable e) {
+  public void exceptionOccurred(Throwable cause) {
     for (FitClientListener listener : listeners)
-      listener.exceptionOccurred(e);
+      try {
+        listener.exceptionOccurred(cause);
+      } catch (IOException e) {
+        LOG.log(Level.WARNING, "Could not process error", e);
+      }
   }
 
   private class FitListeningRunnable implements Runnable {
@@ -118,12 +122,11 @@ public class FitClient implements SocketAccepter {
       listenToFit();
     }
 
-
     private void listenToFit() {
       try {
         attemptToListenToFit();
       } catch (Exception e) {
-        exceptionOccurred(e);
+         exceptionOccurred(e);
       }
     }
 

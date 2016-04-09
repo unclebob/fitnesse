@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import fitnesse.testsystems.CompositeTestSystemListener;
 import fitnesse.testsystems.TestSystemListener;
+import util.FileUtil;
 
 public class CompositeFormatter extends CompositeTestSystemListener implements TestsRunnerListener, Closeable {
 
@@ -30,7 +31,7 @@ public class CompositeFormatter extends CompositeTestSystemListener implements T
     invokeListeners(new Handler() {
       @Override public void invoke(TestSystemListener listener) throws IOException {
         if (listener instanceof Closeable)
-          ((Closeable) listener).close();
+          FileUtil.close((Closeable) listener);
       }
     });
   }

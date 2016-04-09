@@ -142,7 +142,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     try {
       performExecution();
     } catch (Exception e) {
-      LOG.log(Level.WARNING, "error registered in test system", e);
+      LOG.log(Level.INFO, "Test system terminated with exception", e);
     }
 
     exitCode = mainFormatter.getErrorCount();

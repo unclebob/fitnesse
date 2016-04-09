@@ -27,9 +27,8 @@ public interface TestSystem {
 
   /**
    * Kill the test system. This is typically invoked asynchronously.
-   * @throws IOException throws IOException
    */
-  void kill() throws IOException;
+  void kill();
 
   /**
    * Run a collection of tests.

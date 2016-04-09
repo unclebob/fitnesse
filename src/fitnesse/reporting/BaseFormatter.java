@@ -55,7 +55,7 @@ public abstract class BaseFormatter implements Formatter {
   }
 
   @Override
-  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
+  public void testSystemStopped(TestSystem testSystem, Throwable cause) throws IOException {
   }
 }
 

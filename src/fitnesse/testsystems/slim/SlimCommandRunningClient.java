@@ -13,6 +13,7 @@ import fitnesse.socketservice.SocketFactory;
 import fitnesse.testsystems.CommandRunner;
 
 import fitnesse.util.Clock;
+import util.FileUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -70,15 +71,12 @@ public class SlimCommandRunningClient implements SlimClient {
   }
 
   @Override
-  public void kill() throws IOException {
+  public void kill() {
     if (slimRunner != null)
       slimRunner.kill();
-    if (reader != null)
-      reader.close();
-    if (writer != null)
-      writer.close();
-    if (client != null)
-      client.close();
+    FileUtil.close(reader);
+    FileUtil.close(writer);
+    FileUtil.close(client);
   }
 
   @Override
@@ -170,9 +168,6 @@ public class SlimCommandRunningClient implements SlimClient {
   @Override
   public void bye() throws IOException {
     SlimStreamReader.sendSlimMessage(writer, SlimVersion.BYEMESSAGE);
-    writer.close();
-    reader.close();
-    client.close();
     slimRunner.join();
     kill();
   }

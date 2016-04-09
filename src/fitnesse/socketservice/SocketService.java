@@ -71,7 +71,7 @@ public class SocketService {
       } catch (SocketException sox) {
         running = false; // do nothing
       } catch (IOException e) {
-        throw new RuntimeException(e);
+        LOG.log(Level.SEVERE, "I/O exception in service thread", e);
       }
     }
   }

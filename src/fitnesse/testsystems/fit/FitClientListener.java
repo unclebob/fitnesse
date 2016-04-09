@@ -9,5 +9,5 @@ public interface FitClientListener {
 
   void testComplete(TestSummary summary) throws IOException;
 
-  void exceptionOccurred(Throwable e);
+  void exceptionOccurred(Throwable e) throws IOException;
 }

@@ -78,17 +78,14 @@ public abstract class InteractiveFormatter extends BaseFormatter implements Test
     return wasInterrupted;
   }
 
-  private void errorOccurred(Throwable cause) {
+  private void errorOccurred(Throwable cause) throws IOException {
     wasInterrupted = true;
-    try {
-      writeData(String.format("<span class=\"error\">Could not complete testing: %s</span>", cause.toString()));
-    } catch (IOException e) {
-      throw new RuntimeException("Unable to write response to output: " + cause.toString(), e);
-    }
+
+    writeData(String.format("<span class=\"error\">Could not complete testing: %s</span>", cause.toString()));
   }
 
   @Override
-  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
+  public void testSystemStopped(TestSystem testSystem, Throwable cause) throws IOException {
     if (cause != null) {
       errorOccurred(cause);
     }

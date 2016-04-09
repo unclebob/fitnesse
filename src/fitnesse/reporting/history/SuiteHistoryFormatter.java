@@ -25,6 +25,7 @@ import org.apache.velocity.app.VelocityEngine;
 import fitnesse.util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.WikiPage;
+import util.FileUtil;
 
 public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLogListener, Closeable {
   private static final Logger LOG = Logger.getLogger(SuiteHistoryFormatter.class.getName());
@@ -52,17 +53,13 @@ public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLog
   }
 
   @Override
-  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
+  public void testSystemStopped(TestSystem testSystem, Throwable cause) throws IOException {
     super.testSystemStopped(testSystem, cause);
     if (cause != null) {
       suiteExecutionReport.tallyPageCounts(ExecutionResult.ERROR);
     }
     if (testHistoryFormatter != null) {
-      try {
-        testHistoryFormatter.close();
-      } catch (IOException e) {
-        LOG.log(Level.SEVERE, "Unable to close test history formatter", e);
-      }
+      FileUtil.close(testHistoryFormatter);
       testHistoryFormatter = null;
     }
   }
@@ -115,9 +112,8 @@ public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLog
     suiteExecutionReport.setTotalRunTimeInMillis(totalTimeMeasurement);
 
     if (testHistoryFormatter != null) {
-      testHistoryFormatter.close();
+      FileUtil.close(testHistoryFormatter);
     }
-
     if (PageType.fromWikiPage(getPage()) == PageType.SUITE) {
       Writer writer = writerFactory.getWriter(context, getPage(), getPageCounts(), suiteTime.startedAt());
       try {
@@ -127,7 +123,7 @@ public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLog
         Template template = velocityEngine.getTemplate("suiteHistoryXML.vm");
         template.merge(velocityContext, writer);
       } finally {
-        writer.close();
+        FileUtil.close(writer);
       }
     }
   }

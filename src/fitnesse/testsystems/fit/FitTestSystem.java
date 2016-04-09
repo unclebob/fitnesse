@@ -95,19 +95,16 @@ public class FitTestSystem implements TestSystem, FitClientListener {
   }
 
   @Override
-  public void exceptionOccurred(Throwable t) {
-    try {
-      client.kill();
-    } finally {
-      testSystemStopped(t);
-    }
+  public void exceptionOccurred(Throwable t) throws IOException {
+    client.kill();
+    testSystemStopped(t);
   }
 
   private void testSystemStarted(TestSystem testSystem) throws IOException {
     testSystemListener.testSystemStarted(testSystem);
   }
 
-  private void testSystemStopped(Throwable throwable) {
+  private void testSystemStopped(Throwable throwable) throws IOException {
     if (testSystemIsStopped) return;
     testSystemIsStopped = true;
     testSystemListener.testSystemStopped(this, throwable);

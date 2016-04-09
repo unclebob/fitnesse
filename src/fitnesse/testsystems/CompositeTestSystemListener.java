@@ -61,9 +61,13 @@ public class CompositeTestSystemListener implements TestSystemListener {
   }
 
   @Override
-  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
-    for (TestSystemListener listener : listeners)
-      listener.testSystemStopped(testSystem, cause);
+  public void testSystemStopped(final TestSystem testSystem, final Throwable cause) throws IOException {
+    invokeListeners(new Handler() {
+      @Override
+      public void invoke(TestSystemListener listener) throws IOException {
+        listener.testSystemStopped(testSystem, cause);
+      }
+    });
   }
 
   @Override
@@ -80,13 +84,11 @@ public class CompositeTestSystemListener implements TestSystemListener {
 
   protected void invokeListeners(Handler handler) throws IOException {
     List<IOException> caughtExceptions = new ArrayList<>();
-    for (Iterator<TestSystemListener> iter = listeners.iterator(); iter.hasNext(); ) {
-      TestSystemListener listener = iter.next();
+    for (TestSystemListener listener : listeners) {
       try {
         handler.invoke(listener);
       } catch (IOException e) {
         caughtExceptions.add(e);
-        iter.remove();
       }
     }
 
