@@ -58,6 +58,7 @@ public abstract class StatementExecutorTestBase {
   }
 
   abstract static class MySystemUnderTestBase implements Speak, Echo {
+
   }
 
   abstract static class MyAnnotatedSystemUnderTestFixture implements Echo,
@@ -87,6 +88,17 @@ public abstract class StatementExecutorTestBase {
     assertTrue(myInstance.echoCalled());
     assertFalse(myInstance.getSystemUnderTest().speakCalled());
   }
+
+  @Test
+  public void shouldCallMethodOnFieldAnnotatedWithSystemUnderTestWhenFixtureDoesNotHaveMethodAndMethodIsInSubclass() throws Exception {
+    MyAnnotatedSystemUnderTestFixture myFixture = createAnnotatedFixture();
+    executeShoutStatementAndVerifyResultIsVoid();
+    assertFalse(myFixture.echoCalled());
+    assertTrue((((StatementExecutorTest.MySystemUnderTestJava)myFixture.getSystemUnderTest())).shoutCalled());
+    assertFalse(myFixture.getSystemUnderTest().speakCalled());
+  }
+
+
 
   @Test
   public void shouldCallMethodOnFieldAnnotatedWithSystemUnderTestWhenFixtureDoesNotHaveMethod() throws Exception {
@@ -238,6 +250,11 @@ public abstract class StatementExecutorTestBase {
 
   protected void executeStatementAndVerifyResultIsVoid() throws Exception {
     Object result = statementExecutor.call(INSTANCE_NAME, "speak");
+    assertEquals(voidMessage(), result);
+  }
+
+  protected void executeShoutStatementAndVerifyResultIsVoid() throws Exception {
+    Object result = statementExecutor.call(INSTANCE_NAME, "shout");
     assertEquals(voidMessage(), result);
   }
 }

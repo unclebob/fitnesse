@@ -7,6 +7,7 @@ public class StatementExecutorTest extends StatementExecutorTestBase {
   public static class MySystemUnderTestJava extends MySystemUnderTestBase {
     private boolean echoCalled = false;
     private boolean speakCalled;
+    private boolean shoutCalled = false;
 
     @Override
     public void speak() {
@@ -27,6 +28,11 @@ public class StatementExecutorTest extends StatementExecutorTestBase {
     public boolean echoCalled() {
       return echoCalled;
     }
+
+    public void shout() {shoutCalled = true;}
+
+    public boolean shoutCalled() {return shoutCalled;}
+
   }
 
   public static class MyAnnotatedSystemUnderTestFixtureJava extends
