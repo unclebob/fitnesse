@@ -167,7 +167,8 @@ public class SlimTableFactory {
   }
 
   public void addAlias(String alias, String fixture) {
-	  aliasArrays.put(alias, fixture);
+    String disgracedAlias = Disgracer.disgraceClassName(alias);
+    aliasArrays.put(disgracedAlias, fixture);
   }
 
   private String makeTableType(String tableSpecifier) {
@@ -187,9 +188,8 @@ public class SlimTableFactory {
 	  private void parseDefineAliasRow(Table table, int rowIndex) {
 	    if (table.getColumnCountInRow(rowIndex) >= 2) {
 	      String fixtureName = table.getCellContents(0, rowIndex);
-	      String fixture = Disgracer.disgraceClassName(fixtureName);
 	      String tableSpecifier = table.getCellContents(1, rowIndex).trim();
-	      aliasArrays.put(fixture, tableSpecifier);
+        addAlias(fixtureName, tableSpecifier);
 	    }
 	  }
 
