@@ -79,9 +79,7 @@ public class LegacyPluginFeatureFactory extends PluginFeatureFactoryBase {
 
     try {
       method.invoke(plugin, registrar);
-    } catch (InvocationTargetException e) {
-      throw new PluginException("Unable to execute method " + methodName, e);
-    } catch (IllegalAccessException e) {
+    } catch (InvocationTargetException | IllegalAccessException e) {
       throw new PluginException("Unable to execute method " + methodName, e);
     }
     return true;
