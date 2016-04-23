@@ -16,21 +16,20 @@ public class WikiWordReference {
     }
 
     public WikiPage getReferencedPage() {
-        String theWord = expandPrefix(wikiWord);
+        String theWord = expandPrefix(currentPage, wikiWord);
         WikiPage parentPage = currentPage.getParent();
         return parentPage.getPageCrawler().getPage(PathParser.parse(theWord));
     }
-    
-    private String expandPrefix(String theWord) {
+
+  public static String expandPrefix(WikiPage wikiPage, String theWord) {
       if (theWord.charAt(0) == '^' || theWord.charAt(0) == '>') {
-        String prefix = currentPage.getName();
+        String prefix = wikiPage.getName();
         return String.format("%s.%s", prefix, theWord.substring(1));
       } else if (theWord.charAt(0) == '<') {
         String undecoratedPath = theWord.substring(1);
         String[] pathElements = undecoratedPath.split("\\.");
         String target = pathElements[0];
-        //todo rcm, this loop is duplicated in PageCrawlerImpl.getSiblingPage
-        for (WikiPage current = currentPage.getParent(); !current.isRoot(); current = current.getParent()) {
+        for (WikiPage current = wikiPage.getParent(); !current.isRoot(); current = current.getParent()) {
           if (current.getName().equals(target)) {
             pathElements[0] = PathParser.render(current.getPageCrawler().getFullPath());
             return "." + StringUtils.join(Arrays.asList(pathElements), ".");
@@ -62,7 +61,7 @@ public class WikiWordReference {
     }
 
     private String getQualifiedWikiWord(String wikiWordText) {
-      String pathName = expandPrefix(wikiWordText);
+      String pathName = expandPrefix(currentPage, wikiWordText);
       WikiPagePath expandedPath = PathParser.parse(pathName);
       if (expandedPath == null)
         return wikiWordText;

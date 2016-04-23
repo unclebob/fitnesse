@@ -7,9 +7,9 @@ import java.io.IOException;
 
 import fitnesse.html.HtmlUtil;
 import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.WikiWordReference;
 import fitnesse.wiki.fs.DiskFileSystem;
 import fitnesse.wiki.fs.FileSystem;
-import fitnesse.wikitext.parser.WikiWordBuilder;
 import fitnesse.wiki.VariableTool;
 import org.apache.commons.lang.StringUtils;
 import fitnesse.FitNesseContext;
@@ -162,7 +162,7 @@ public class SymbolicLinkResponder implements Responder {
   }
 
   private boolean isInternalPageThatDoesntExist(String linkPath) {
-    String expandedPath = WikiWordBuilder.expandPrefix(page, linkPath);
+    String expandedPath = WikiWordReference.expandPrefix(page, linkPath);
     WikiPagePath path = PathParser.parse(expandedPath);
     if (path == null) {
       return true;
