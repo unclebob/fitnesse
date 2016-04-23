@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.*;
 
 public class TestHistory {
-  final Map<String, File> pageDirectoryMap = new HashMap<String, File>();
+  final Map<String, File> pageDirectoryMap = new HashMap<>();
 
   public TestHistory(File historyDirectory) {
     readHistoryDirectory(historyDirectory);
@@ -29,7 +29,7 @@ public class TestHistory {
   }
 
   public Set<String> getPageNames() {
-    return new TreeSet<String>(pageDirectoryMap.keySet());
+    return new TreeSet<>(pageDirectoryMap.keySet());
   }
 
   public PageHistory getPageHistory(String pageName) {

@@ -128,7 +128,7 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
         return ((WikitextPage) parentPage).getParsingPage().findVariable(name);
       } else {
         String value = parentPage.getVariable(name);
-        return value != null ? new Maybe<String>(value) : Maybe.noString;
+        return value != null ? new Maybe<>(value) : Maybe.noString;
       }
     }
   }

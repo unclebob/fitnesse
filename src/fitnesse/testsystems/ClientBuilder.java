@@ -120,7 +120,7 @@ public abstract class ClientBuilder<T> {
   }
 
   protected String[] parseCommandLine(String commandLine) {
-		Collection<String> result = new ArrayList<String>();
+		Collection<String> result = new ArrayList<>();
 		Pattern p = Pattern.compile("\"([^\"]*)\"|[\\S]+");
 		Matcher m = p.matcher(commandLine);
 		while(m.find())

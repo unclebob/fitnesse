@@ -12,9 +12,9 @@ public class SplitFixture {
   }
 
   public List<Object> query() {
-    List<Object> table = new ArrayList<Object>();
+    List<Object> table = new ArrayList<>();
     for (String lineContent : lines) {
-      List<Object> line = new ArrayList<Object>();
+      List<Object> line = new ArrayList<>();
       String[] words = lineContent.split(",");
       for (int i = 0; i < words.length; i++) {
         String word = words[i];

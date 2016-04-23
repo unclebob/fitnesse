@@ -15,7 +15,7 @@ public class SymbolProvider {
             new AnchorName(), new Contents(), SymbolType.CenterLine, new Define(), new Help(),
             new Include(), SymbolType.Meta, SymbolType.NoteLine, Path.symbolType, new PlainTextTable(),
             See.symbolType, SymbolType.Style, new LastModified(), Image.symbolType,
-            new Today(), SymbolType.Delta, 
+            new Today(), SymbolType.Delta,
             new HorizontalRule(), SymbolType.CloseLiteral, SymbolType.Strike,
             Alias.symbolType, SymbolType.UnorderedList, SymbolType.OrderedList, Comment.symbolType, SymbolType.Whitespace, SymbolType.CloseCollapsible,
             SymbolType.Newline, SymbolType.Colon, SymbolType.Comma,
@@ -27,7 +27,7 @@ public class SymbolProvider {
     });
 
     public static final SymbolProvider tableParsingProvider = new SymbolProvider(wikiParsingProvider).add(SymbolType.EndCell);
-    
+
     public static final SymbolProvider aliasLinkProvider = new SymbolProvider(
             new SymbolType[] {SymbolType.CloseBracket, SymbolType.Whitespace, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
 
@@ -57,8 +57,8 @@ public class SymbolProvider {
     private SymbolProvider parent = null;
 
     public SymbolProvider(Iterable<SymbolType> types) {
-        symbolTypes = new ArrayList<SymbolType>();
-        currentDispatch = new HashMap<Character, ArrayList<Matchable>>();
+        symbolTypes = new ArrayList<>();
+        currentDispatch = new HashMap<>();
         currentDispatch.put(defaultMatch, new ArrayList<Matchable>());
         for (char c = 'a'; c <= 'z'; c++) currentDispatch.put(c, new ArrayList<Matchable>());
         for (char c = 'A'; c <= 'Z'; c++) currentDispatch.put(c, new ArrayList<Matchable>());
@@ -80,7 +80,7 @@ public class SymbolProvider {
             add(symbolType);
         }
     }
-    
+
     public SymbolProvider add(SymbolType symbolType) {
         if (matchesFor(symbolType)) return this;
         symbolTypes.add(symbolType);

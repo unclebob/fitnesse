@@ -16,7 +16,7 @@ public class SummaryFixture extends Fixture {
   @Override
   public void doTable(Parse table) {
     summary.put(countsKey, counts());
-    SortedSet<String> keys = new TreeSet<String>(summary.keySet());
+    SortedSet<String> keys = new TreeSet<>(summary.keySet());
     table.parts.more = rows(keys.iterator());
   }
 

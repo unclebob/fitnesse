@@ -27,7 +27,7 @@ public class ApplicationVariableSource implements VariableSource {
       } else {
         return Maybe.noString;
       }
-      return new Maybe<String>(value);
+      return new Maybe<>(value);
     }
     return Maybe.noString;
   }

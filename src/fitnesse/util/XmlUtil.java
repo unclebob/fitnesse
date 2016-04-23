@@ -23,7 +23,7 @@ import java.io.*;
 public class XmlUtil {
   private static final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
-  private static ThreadLocal<DocumentBuilder> documentBuilder = new ThreadLocal<DocumentBuilder>();
+  private static ThreadLocal<DocumentBuilder> documentBuilder = new ThreadLocal<>();
 
   private static DocumentBuilder getDocumentBuilder() {
     DocumentBuilder builder = documentBuilder.get();

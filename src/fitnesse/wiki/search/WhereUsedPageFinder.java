@@ -14,7 +14,7 @@ public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFin
   private TraversalListener<? super WikiPage> observer;
   private WikiPage currentPage;
 
-  private List<WikiPage> hits = new ArrayList<WikiPage>();
+  private List<WikiPage> hits = new ArrayList<>();
 
   public WhereUsedPageFinder(WikiPage subjectPage, TraversalListener<? super WikiPage> observer) {
     this.subjectPage = subjectPage;

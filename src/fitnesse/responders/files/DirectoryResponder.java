@@ -87,7 +87,7 @@ class DirectoryResponder implements SecureResponder {
   }
 
   private List<FileInfo> makeFileInfo(File[] files) {
-    List<FileInfo> fileInfo = new ArrayList<FileInfo>();
+    List<FileInfo> fileInfo = new ArrayList<>();
     for (File file : files) {
       fileInfo.add(new FileInfo(file));
     }

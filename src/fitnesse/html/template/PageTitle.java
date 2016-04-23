@@ -10,7 +10,7 @@ import java.util.Collections;
 public class PageTitle {
   private String title;
   private String link;
-  private List<BreadCrumb> breadCrumbs = new ArrayList<BreadCrumb>();
+  private List<BreadCrumb> breadCrumbs = new ArrayList<>();
   private String pageType;
   private String pageTags;
 
@@ -20,7 +20,7 @@ public class PageTitle {
     link = PathParser.render(pagePath);
     if (!names.isEmpty()) {
       title = names.get(names.size() - 1);
-      
+
       pagePath.removeNameFromEnd();
       while (!pagePath.getNames().isEmpty()) {
         names = pagePath.getNames();
@@ -79,12 +79,12 @@ public class PageTitle {
     this.setPageType(pageType);
     this.setPageTags(pageTags);
   }
-  
+
   public PageTitle notLinked() {
     link = null;
     return this;
   }
-  
+
   public String getTitle() {
     return title;
   }
@@ -104,15 +104,15 @@ public class PageTitle {
   public void setPageType(String pageType) {
     this.pageType = pageType;
   }
-  
+
   public String getPageTags() {
     return pageTags;
   }
-  
+
   public void setPageTags(String pageTags) {
     if(pageTags == null || "".equals(pageTags)) return;
     this.pageTags = pageTags;
-  }   
+  }
 
   public String[] getPageTagsArray() {
     return pageTags != null ? pageTags.trim().split("\\s*,\\s*") : new String[] {};

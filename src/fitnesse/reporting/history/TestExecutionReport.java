@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestExecutionReport extends ExecutionReport {
-  private List<TestResult> results = new ArrayList<TestResult>();
+  private List<TestResult> results = new ArrayList<>();
 
   public TestExecutionReport(FitNesseVersion version, String rootPath) {
     super(version, rootPath);
@@ -101,7 +101,7 @@ public class TestExecutionReport extends ExecutionReport {
   }
 
   public List<TestResult> getResults() {
-    return new ArrayList<TestResult>(results);
+    return new ArrayList<>(results);
   }
 
   public void addResult(TestResult currentResult) {
@@ -134,7 +134,7 @@ public class TestExecutionReport extends ExecutionReport {
     public String exceptions;
     public String content;
     public String relativePageName;
-    public List<InstructionResult> instructions = new ArrayList<InstructionResult>();
+    public List<InstructionResult> instructions = new ArrayList<>();
     public String tags;
     public String dateString;
     public long startTime;
@@ -205,7 +205,7 @@ public class TestExecutionReport extends ExecutionReport {
   public static class InstructionResult {
     public String instruction;
     public String slimResult;
-    private List<Expectation> expectations = new ArrayList<Expectation>();
+    private List<Expectation> expectations = new ArrayList<>();
 
     public void addExpectation(Expectation expectation) {
       expectations.add(expectation);

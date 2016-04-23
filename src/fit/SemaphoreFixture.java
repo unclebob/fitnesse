@@ -6,7 +6,7 @@ import java.util.Vector;
 
 public class SemaphoreFixture extends Fixture {
   private static final String SEMAPHORE_SUFFIX = ".semaphore";
-  private static final Vector<String> semaphores = new Vector<String>();
+  private static final Vector<String> semaphores = new Vector<>();
 
   @Override
   public void doTable(Parse table) {

@@ -11,16 +11,16 @@ import fitnesse.testsystems.slim.Table;
 
 public class SlimTableFactory {
   private static final Logger LOG = Logger.getLogger(SlimTableFactory.class.getName());
-  private static final Map<Class<? extends SlimTable>, Constructor<? extends SlimTable>> CONSTRUCTOR_MAP = new HashMap<Class<? extends SlimTable>, Constructor<? extends SlimTable>>();
+  private static final Map<Class<? extends SlimTable>, Constructor<? extends SlimTable>> CONSTRUCTOR_MAP = new HashMap<>();
 
   private final Map<String, Class<? extends SlimTable>> tableTypes;
   private final Map<String, String> tableTypeArrays;
   private final Map<String, String> aliasArrays;
 
   public  SlimTableFactory() {
-    tableTypes = new HashMap<String, Class<? extends SlimTable>>(16);
-    tableTypeArrays = new HashMap<String, String>();
-    aliasArrays = new HashMap<String, String>();
+    tableTypes = new HashMap<>(16);
+    tableTypeArrays = new HashMap<>();
+    aliasArrays = new HashMap<>();
     addTableType("dt", DecisionTable.class);
     addTableType("decision", DecisionTable.class);
     addTableType("ddt", DynamicDecisionTable.class);
@@ -54,7 +54,7 @@ public class SlimTableFactory {
     SlimTable newTable;
     String tableType = getFullTableName(table.getCellContents(0, 0));
     //table.substitute(0, 0, tableType);
-    
+
     // First the "exceptions to the rule"
     if ( tableType.equalsIgnoreCase("define alias")) {
       parseDefineAliasTable(table);
@@ -161,7 +161,7 @@ public class SlimTableFactory {
       tableTypeArrays.put(fixture, makeTableType(tableSpecifier));
     }
   }
-  
+
   public void addDefaultTableType(String fixture, String tableType) {
 	 tableTypeArrays.put(fixture, tableType);
   }

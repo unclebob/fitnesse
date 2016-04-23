@@ -41,10 +41,10 @@ public class Collapsible extends SymbolType implements Rule, Translation {
             parser.moveNext(1);
         }
 
-        return new Maybe<Symbol>(current
-                .putProperty(STATE, state)
-                .add(titleText)
-                .add(bodyText));
+        return new Maybe<>(current
+          .putProperty(STATE, state)
+          .add(titleText)
+          .add(bodyText));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class Collapsible extends SymbolType implements Rule, Translation {
     public static String generateHtml(String state, String titleText, String bodyText) {
         HtmlTag outerBlock = new HtmlTag("div");
         outerBlock.addAttribute("class", "collapsible" + state);
-        
+
         outerBlock.add(new RawHtml("<ul>" +
         		"<li><a href='#' class='expandall'>Expand</a></li>" +
         		"<li><a href='#' class='collapseall'>Collapse</a></li>" +
@@ -67,12 +67,12 @@ public class Collapsible extends SymbolType implements Rule, Translation {
       	HtmlTag title = new HtmlTag("p", titleText);
         title.addAttribute("class", "title");
         outerBlock.add(title);
-        
+
         HtmlTag body = new HtmlTag("div", bodyText);
         outerBlock.add(body);
-        
+
         return outerBlock.html();
     }
-    
+
 
 }

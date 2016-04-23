@@ -37,7 +37,7 @@ public class ListExecutor {
     public void prepareToExecute() { }
 
     public List<Object> executeStatements(List<Object> statements) {
-      List<Object> result = new ArrayList<Object>();
+      List<Object> result = new ArrayList<>();
       for (Object statement : statements)
         if (!executor.stopHasBeenRequested())
           result.add(executeStatement(statement));

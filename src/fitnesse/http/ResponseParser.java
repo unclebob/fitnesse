@@ -16,7 +16,7 @@ import util.StreamReader;
 public class ResponseParser {
   private int status;
   private String body;
-  private Map<String, String> headers = new HashMap<String, String>();
+  private Map<String, String> headers = new HashMap<>();
   private StreamReader input;
 
   private static final Pattern statusLinePattern = Pattern.compile("HTTP/\\d.\\d (\\d\\d\\d) ");

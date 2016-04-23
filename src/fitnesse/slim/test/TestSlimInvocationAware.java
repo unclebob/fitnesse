@@ -8,7 +8,7 @@ import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 import fitnesse.slim.fixtureInteraction.InteractionAwareFixture;
 
 public class TestSlimInvocationAware extends TestSlim implements InteractionAwareFixture {
-  private static final List<String> METHODS = new ArrayList<String>();
+  private static final List<String> METHODS = new ArrayList<>();
 
   @Override
   public Object aroundSlimInvoke(FixtureInteraction interaction, Method method, Object... arguments) throws Throwable {

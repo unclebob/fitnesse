@@ -13,7 +13,7 @@ public class FormatterFactory implements FormatterRegistry {
 
   public FormatterFactory(ComponentFactory componentFactory) {
     this.componentFactory = componentFactory;
-    formatters = new ArrayList<Class<? extends Formatter>>();
+    formatters = new ArrayList<>();
   }
 
   @Override

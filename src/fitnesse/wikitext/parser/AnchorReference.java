@@ -20,7 +20,7 @@ public class AnchorReference extends SymbolType implements Rule, Translation {
         String anchor = tokens.get(0).getContent();
         if (!ScanString.isWord(anchor)) return Symbol.nothing;
 
-        return new Maybe<Symbol>(current.add(tokens.get(0)));
+        return new Maybe<>(current.add(tokens.get(0)));
     }
 
     @Override

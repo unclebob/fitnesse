@@ -78,7 +78,7 @@ public class ExternalSuitePage extends BaseWikitextPage {
   }
 
   private List<WikiPage> findChildren() {
-    List<WikiPage> children = new ArrayList<WikiPage>();
+    List<WikiPage> children = new ArrayList<>();
     for (String child : fileSystem.list(path)) {
       File childPath = new File(path, child);
       if (child.endsWith(HTML)) {

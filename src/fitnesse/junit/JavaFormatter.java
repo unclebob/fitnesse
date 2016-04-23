@@ -137,8 +137,8 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
 
   private TestSummary totalSummary = new TestSummary();
 
-  private List<String> visitedTestPages = new ArrayList<String>();
-  private Map<String, TestSummary> testSummaries = new HashMap<String, TestSummary>();
+  private List<String> visitedTestPages = new ArrayList<>();
+  private Map<String, TestSummary> testSummaries = new HashMap<>();
 
   @Override
   public void testStarted(TestPage test) throws IOException {

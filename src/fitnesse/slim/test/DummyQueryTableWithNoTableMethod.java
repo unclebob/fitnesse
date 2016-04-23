@@ -5,6 +5,6 @@ import java.util.List;
 
 public class DummyQueryTableWithNoTableMethod {
   public List<Object> query() {
-    return new ArrayList<Object>();
+    return new ArrayList<>();
   }
 }

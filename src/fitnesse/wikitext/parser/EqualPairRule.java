@@ -7,6 +7,6 @@ public class EqualPairRule implements Rule {
         if (body.getChildren().isEmpty())  return Symbol.nothing;
         if (!parser.getCurrent().isType(current.getType())) return Symbol.nothing;
 
-        return new Maybe<Symbol>(current.add(body));
+        return new Maybe<>(current.add(body));
     }
 }

@@ -61,7 +61,7 @@ public class PropertiesResponder implements SecureResponder {
       }
     } else {
       String html = makeHtml(context, request);
-      
+
       response.setContent(html);
     }
   }
@@ -104,12 +104,12 @@ public class PropertiesResponder implements SecureResponder {
     html.setNavTemplate("viewNav");
     html.put("viewLocation", request.getResource());
     html.setTitle("Properties: " + resource);
-    
+
     String tags = "";
     if(pageData != null)  {
-      tags = pageData.getAttribute(PageData.PropertySUITES); 
+      tags = pageData.getAttribute(PageData.PropertySUITES);
     }
-    
+
     html.setPageTitle(new PageTitle("Page Properties", path, tags));
     html.put("pageData", pageData);
     html.setMainTemplate("propertiesPage");
@@ -181,7 +181,7 @@ public class PropertiesResponder implements SecureResponder {
         SymbolicPage.PROPERTY_NAME);
     if (symLinksProperty == null)
       return;
-    List<Symlink> symlinks = new ArrayList<Symlink>();
+    List<Symlink> symlinks = new ArrayList<>();
     Set<String> symbolicLinkNames = symLinksProperty.keySet();
     for (String name : symbolicLinkNames) {
       String link = symLinksProperty.get(name);
@@ -245,7 +245,7 @@ public class PropertiesResponder implements SecureResponder {
     public String getLink() {
       return link;
     }
-    
+
     public String getPath() {
       return path;
     }

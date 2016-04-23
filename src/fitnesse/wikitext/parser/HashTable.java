@@ -9,7 +9,7 @@ public class HashTable extends SymbolType implements Rule, Translation {
         super("HashTable");
         wikiMatcher(new Matcher().string("!{"));
         wikiRule(this);
-        htmlTranslation(this);        
+        htmlTranslation(this);
     }
     @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
@@ -23,7 +23,7 @@ public class HashTable extends SymbolType implements Rule, Translation {
             }
             if (parser.getCurrent().isType(SymbolType.CloseBrace)) break;
         }
-        return new Maybe<Symbol>(current);
+        return new Maybe<>(current);
     }
 
     private static final String[] cellClasses = {"hash_key", "hash_value"};

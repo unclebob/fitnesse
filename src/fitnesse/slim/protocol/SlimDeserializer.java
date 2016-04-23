@@ -64,7 +64,7 @@ public class SlimDeserializer {
   }
 
   private List<Object> deserializeList() {
-    result = new ArrayList<Object>();
+    result = new ArrayList<>();
 
     int itemCount = getLength();
     for (int i = 0; i < itemCount; i++)
@@ -108,7 +108,7 @@ public class SlimDeserializer {
   private void checkForColon(String itemType) {
     if (getChar() != ':')
       throw new SyntaxError(itemType + " in serialized list not terminated by colon.");
-    
+
   }
 
   private char getChar() {
@@ -145,5 +145,5 @@ public class SlimDeserializer {
     } else
       return null;
   }
- 
+
 }

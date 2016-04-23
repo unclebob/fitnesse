@@ -30,7 +30,7 @@ public class TestSlimWithConverter {
     }
 
     public ArrayList<String> getArrayList() {
-        return new ArrayList<String>(Arrays.asList("a", "b", "c"));
+        return new ArrayList<>(Arrays.asList("a", "b", "c"));
     }
 
     public boolean sameList(List otherList) {
@@ -40,7 +40,7 @@ public class TestSlimWithConverter {
     private class ListConverter implements Converter<List> {
         private GenericCollectionConverter<Object, List<Object>> converter;
         public ListConverter() {
-            converter = new GenericCollectionConverter<Object, List<Object>>(List.class, new DefaultConverter());
+            converter = new GenericCollectionConverter<>(List.class, new DefaultConverter());
         }
 
         @Override

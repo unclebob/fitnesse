@@ -30,7 +30,7 @@ public class FitClient implements SocketAccepter {
   private Thread fitListeningThread;
 
   public FitClient() {
-    this.listeners = new LinkedList<FitClientListener>();
+    this.listeners = new LinkedList<>();
   }
 
   public void addFitClientListener(FitClientListener listener) {

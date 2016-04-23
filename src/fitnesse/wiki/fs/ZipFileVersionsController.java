@@ -84,7 +84,7 @@ public class ZipFileVersionsController implements VersionsController {
 
   public Collection<ZipFileVersionInfo> history(final File dir) {
     final File[] files = dir.listFiles();
-    final Set<ZipFileVersionInfo> versions = new HashSet<ZipFileVersionInfo>();
+    final Set<ZipFileVersionInfo> versions = new HashSet<>();
     if (files != null) {
       for (final File file : files) {
         if (isVersionFile(file)) {
@@ -235,7 +235,7 @@ public class ZipFileVersionsController implements VersionsController {
   }
 
   private List<ZipFileVersionInfo> makeSortedVersionList(Collection<ZipFileVersionInfo> versions) {
-    List<ZipFileVersionInfo> versionsList = new ArrayList<ZipFileVersionInfo>(versions);
+    List<ZipFileVersionInfo> versionsList = new ArrayList<>(versions);
     Collections.sort(versionsList);
     return versionsList;
   }

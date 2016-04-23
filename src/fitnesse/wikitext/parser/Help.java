@@ -13,7 +13,7 @@ public class Help extends SymbolType implements Rule, Translation {
         wikiRule(this);
         htmlTranslation(this);
     }
-    
+
     @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         List<Symbol> lookAhead = parser.peek(new SymbolType[] {SymbolType.Whitespace, SymbolType.Text});
@@ -24,7 +24,7 @@ public class Help extends SymbolType implements Rule, Translation {
                 parser.moveNext(2);
             }
         }
-        return new Maybe<Symbol>(current);
+        return new Maybe<>(current);
     }
 
     @Override

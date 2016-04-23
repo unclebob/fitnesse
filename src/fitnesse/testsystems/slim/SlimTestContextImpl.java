@@ -12,8 +12,8 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.tables.ScenarioTable;
 
 public class SlimTestContextImpl implements SlimTestContext {
-  private final Map<String, String> symbols = new HashMap<String, String>();
-  private final Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
+  private final Map<String, String> symbols = new HashMap<>();
+  private final Map<String, ScenarioTable> scenarios = new HashMap<>();
   private final TestSummary testSummary = new TestSummary();
   private final TestPage pageToTest;
 

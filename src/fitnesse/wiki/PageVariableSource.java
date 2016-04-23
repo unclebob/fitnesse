@@ -21,6 +21,6 @@ public class PageVariableSource implements VariableSource {
     else
       return Maybe.noString;
 
-    return new Maybe<String>(value);
+    return new Maybe<>(value);
   }
 }

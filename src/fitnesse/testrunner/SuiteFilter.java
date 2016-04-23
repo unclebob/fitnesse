@@ -25,14 +25,14 @@ public class SuiteFilter {
   private final SuiteTagMatcher notMatchTags;
   private final SuiteTagMatcher matchTags;
   private final String startWithTest;
-  
+
   public static final SuiteFilter NO_MATCHING = new SuiteFilter(null, null, null, null) {
     @Override
     public boolean isMatchingTest(WikiPage testPage) {
       return false;
     }
   };
-  
+
   public static final SuiteFilter MATCH_ALL = new SuiteFilter(null, null, null, null);
 
   public SuiteFilter(String orTags, String mustNotMatchTags, String andTags, String startWithTest) {
@@ -56,10 +56,10 @@ public class SuiteFilter {
     boolean isTest = data.hasAttribute(PageType.TEST.toString());
     return isTest &&
            matchTags.matches(testPage) &&
-           !notMatchTags.matches(testPage) && 
+           !notMatchTags.matches(testPage) &&
            afterStartingTest(testPage);
   }
-  
+
   private boolean afterStartingTest(WikiPage testPage) {
     if (startWithTest == null) {
       return true;
@@ -78,19 +78,19 @@ public class SuiteFilter {
     if (pageData.hasAttribute(PageType.SUITE.toString()) && matchTags.isFiltering() && matchTags.matches(suitePage)) {
       return new SuiteFilter(null, notMatchTags.tagString, null, startWithTest).getFilterForTestsInSuite(suitePage);
     }
-    
+
     if (notMatchTags.matches(suitePage)) {
       return NO_MATCHING;
     }
 
     return this;
   }
-  
-  
+
+
   @Override
   public String toString() {
-    List<String> criterias = new LinkedList<String>();
-    
+    List<String> criterias = new LinkedList<>();
+
     if (matchTags.isFiltering()) {
       if(matchTags.andStrategy){
         criterias.add("matches all of '" + matchTags.tagString + "'");
@@ -109,7 +109,7 @@ public class SuiteFilter {
 
     return StringUtils.join(criterias, " & ");
   }
-  
+
   private class SuiteTagMatcher {
     private static final String LIST_SEPARATOR = "\\s*,\\s*";
     private final List<String> tags;
@@ -128,11 +128,11 @@ public class SuiteFilter {
       this.matchIfNoTags = matchIfNoTags;
       this.andStrategy = andStrategy;
     }
-    
+
     boolean isFiltering() {
       return (tags != null);
     }
-    
+
     boolean matches(WikiPage wikiPage) {
       return (tags == null) ? matchIfNoTags : testMatchesQuery(wikiPage);
     }
@@ -141,7 +141,7 @@ public class SuiteFilter {
       String testTagString = getTestTags(wikiPage);
       return (testTagString != null && testTagsMatchQueryTags(testTagString));
     }
-    
+
     private String getTestTags(WikiPage context) {
       try {
         return context.getData().getAttribute(PageData.PropertySUITES);

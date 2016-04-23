@@ -19,7 +19,7 @@ public class WikiPagePath implements Comparable<Object> {
     ABSOLUTE, SUB_PAGE, BACKWARD_SEARCH, RELATIVE
   }
 
-  private LinkedList<String> names = new LinkedList<String>();
+  private LinkedList<String> names = new LinkedList<>();
   private Mode mode = RELATIVE;
 
   public WikiPagePath() {
@@ -52,7 +52,7 @@ public class WikiPagePath implements Comparable<Object> {
   }
 
   private WikiPagePath(List<String> names) {
-    this.names = new LinkedList<String>(names);
+    this.names = new LinkedList<>(names);
   }
 
   public String getFirst() {

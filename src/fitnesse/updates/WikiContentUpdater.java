@@ -104,7 +104,7 @@ public class WikiContentUpdater implements Updater {
   }
 
   List<Update> makeAllUpdates() throws IOException {
-    List<Update> updates = new ArrayList<Update>();
+    List<Update> updates = new ArrayList<>();
     updates.addAll(addAllFilesToBeUpdated("updateList", new UpdateFactory() {
       @Override
       public Update create(String source, File destination) {
@@ -124,7 +124,7 @@ public class WikiContentUpdater implements Updater {
   private List<Update> addAllFilesToBeUpdated(String updateFile, UpdateFactory updateFactory) throws IOException {
     String updateFileResource = getCorrectPathFromJar(updateFile);
     String[] updateList = parseResource(updateFileResource);
-    List<Update> updates = new ArrayList<Update>();
+    List<Update> updates = new ArrayList<>();
     for (String updateableFile : updateList) {
       File path = getCorrectPathForTheDestination(updateableFile);
       String source = getCorrectPathFromJar(updateableFile);

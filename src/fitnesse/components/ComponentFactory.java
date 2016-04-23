@@ -28,7 +28,7 @@ public class ComponentFactory {
 
   public ComponentFactory(Properties properties) {
     this.properties = properties;
-    this.components = new HashMap<String, Object>();
+    this.components = new HashMap<>();
   }
 
   public <T> T createComponent(String componentType, Class<T> defaultComponent) throws ComponentInstantiationException {

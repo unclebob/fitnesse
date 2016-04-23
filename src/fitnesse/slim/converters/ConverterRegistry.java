@@ -9,7 +9,7 @@ import fitnesse.slim.Converter;
 
 public class ConverterRegistry {
 
-  private static final Map<Class<?>, Converter<?>> converters = new HashMap<Class<?>, Converter<?>>();
+  private static final Map<Class<?>, Converter<?>> converters = new HashMap<>();
   private static Converter<Object> defaultConverter = new DefaultConverter();
 
   static {
@@ -78,7 +78,7 @@ public class ConverterRegistry {
     PropertyEditor pe = PropertyEditorManager.findEditor(clazz);
     if (pe != null && !"EnumEditor".equals(pe.getClass().getSimpleName())) {
       // com.sun.beans.EnumEditor and sun.beans.EnumEditor seem to be used in different usages.
-      return new PropertyEditorConverter<T>(pe);
+      return new PropertyEditorConverter<>(pe);
     }
 
     //for enum, use generic enum converter
@@ -105,7 +105,7 @@ public class ConverterRegistry {
   }
 
   protected static <T> Converter<T> getConverterForInterface(Class<?> clazz) {
-    List<Class<?>> superInterfaces = new ArrayList<Class<?>>();
+    List<Class<?>> superInterfaces = new ArrayList<>();
     Converter<T> converterForInterface = null;
     Class<?>[] interfaces = clazz.getInterfaces();
     for (Class<?> interf : interfaces) {

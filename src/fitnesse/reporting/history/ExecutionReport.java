@@ -23,7 +23,7 @@ public abstract class ExecutionReport {
   private TestSummary finalCounts = new TestSummary(0, 0, 0, 0);
   public Date date;
   private long totalRunTimeInMillis = 0;
-  private List<ExecutionLogReport> executionLogs = new ArrayList<ExecutionLogReport>();
+  private List<ExecutionLogReport> executionLogs = new ArrayList<>();
 
   protected ExecutionReport() {
     version = new FitNesseVersion().toString();
@@ -159,7 +159,7 @@ public abstract class ExecutionReport {
   public long getTotalRunTimeInMillis() {
     return totalRunTimeInMillis;
   }
-  
+
   public void setTotalRunTimeInMillis(TimeMeasurement totalTimeMeasurement) {
     totalRunTimeInMillis = totalTimeMeasurement.elapsed();
   }
@@ -181,7 +181,7 @@ public abstract class ExecutionReport {
   }
 
   public List<ExecutionLogReport> getExecutionLogs() {
-    return new ArrayList<ExecutionLogReport>(executionLogs);
+    return new ArrayList<>(executionLogs);
   }
 
   public void addExecutionContext(String command, String testSystemName) {
@@ -221,7 +221,7 @@ public abstract class ExecutionReport {
     private StringBuffer stdOut = new StringBuffer();
     private StringBuffer stdErr = new StringBuffer();
     private int exitCode;
-    private List<Throwable> exceptions = new ArrayList<Throwable>();
+    private List<Throwable> exceptions = new ArrayList<>();
 
     public ExecutionLogReport(String command, String testSystemName) {
       this.command = command;
@@ -273,7 +273,7 @@ public abstract class ExecutionReport {
     }
 
     public List<Throwable> getExceptions() {
-      return new ArrayList<Throwable>(exceptions);
+      return new ArrayList<>(exceptions);
     }
   }
 }

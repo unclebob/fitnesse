@@ -14,7 +14,7 @@ import util.GracefulNamer;
 public class TemplateUtil {
 
   public static List<String> getTemplatesFromUncles(WikiPage page) {
-    final List<String> templatePaths = new ArrayList<String>();
+    final List<String> templatePaths = new ArrayList<>();
     page.getPageCrawler().traverseUncles("TemplateLibrary", new TraversalListener<WikiPage>() {
       @Override
       public void process(WikiPage uncle) {
@@ -45,7 +45,7 @@ public class TemplateUtil {
   }
 
   static Map<String, String> getPageNames(List<String> templatePaths) {
-    Map<String, String> pathsAndNames = new TreeMap<String, String>();
+    Map<String, String> pathsAndNames = new TreeMap<>();
     for(String path : templatePaths){
       final String pageName = getPageName(path);
       if (!pathsAndNames.containsKey(pageName)) {
@@ -60,7 +60,7 @@ public class TemplateUtil {
   }
 
   static Map<String, String> getShortTemplateNames(List<String> templatePaths) {
-    Map<String, String> pathsAndNames = new TreeMap<String, String>();
+    Map<String, String> pathsAndNames = new TreeMap<>();
     for(String path : templatePaths){
       pathsAndNames.put(getShortTemplateName(path), path);
     }

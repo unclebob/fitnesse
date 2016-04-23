@@ -106,7 +106,7 @@ public class CommandRunner {
     if (environmentVariables == null) {
       return Collections.emptyMap();
     }
-    Map<String, String> systemVariables = new HashMap<String, String>(System.getenv());
+    Map<String, String> systemVariables = new HashMap<>(System.getenv());
     systemVariables.putAll(environmentVariables);
     return systemVariables;
   }

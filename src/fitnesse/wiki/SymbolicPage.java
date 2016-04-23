@@ -56,7 +56,7 @@ public class SymbolicPage extends BaseWikitextPage {
   @Override
   public List<WikiPage> getChildren() {
     List<WikiPage> children = realPage.getChildren();
-    List<WikiPage> symChildren = new LinkedList<WikiPage>();
+    List<WikiPage> symChildren = new LinkedList<>();
     for (WikiPage child : children) {
       symChildren.add(createChildPage(child));
     }

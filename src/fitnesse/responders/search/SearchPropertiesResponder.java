@@ -36,7 +36,7 @@ public class SearchPropertiesResponder extends ResultResponder {
       return null;
     }
 
-    List<PageType> types = new ArrayList<PageType>();
+    List<PageType> types = new ArrayList<>();
 
     for (String type : requestedPageTypes.split(",")) {
       types.add(PageType.fromString(type));
@@ -56,7 +56,7 @@ public class SearchPropertiesResponder extends ResultResponder {
   }
 
   protected Map<String, Boolean> getAttributesFromInput(Request request) {
-    Map<String, Boolean> attributes = new LinkedHashMap<String, Boolean>();
+    Map<String, Boolean> attributes = new LinkedHashMap<>();
 
     getListboxAttributesFromRequest(request, ACTION, SEARCH_ACTION_ATTRIBUTES,
         attributes);

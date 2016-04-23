@@ -170,7 +170,7 @@ public abstract class SlimTestSystem implements TestSystem {
           if (testResult != null) {
             Map<String, ?> variables = testResult.getVariablesToStore();
             if (variables != null) {
-              List<Instruction> instructions = new ArrayList<Instruction>(variables.size());
+              List<Instruction> instructions = new ArrayList<>(variables.size());
               int i = 0;
               for (Entry<String, ?> variable : variables.entrySet()) {
                 instructions.add(new AssignInstruction("assign_" + i++, variable.getKey(), variable.getValue()));

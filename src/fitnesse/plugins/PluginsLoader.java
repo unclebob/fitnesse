@@ -34,7 +34,7 @@ public class PluginsLoader {
   }
 
   private Collection<PluginFeatureFactory> findPluginFeatureFactories() throws PluginException {
-    List<PluginFeatureFactory> factories = new ArrayList<PluginFeatureFactory>();
+    List<PluginFeatureFactory> factories = new ArrayList<>();
     factories.addAll(PropertyBasedPluginFeatureFactory.loadFromProperties(componentFactory));
 
     for (PluginFeatureFactory factory : ServiceLoader.load(PluginFeatureFactory.class)) {

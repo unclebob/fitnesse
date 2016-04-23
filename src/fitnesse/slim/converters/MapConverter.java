@@ -62,7 +62,7 @@ public class MapConverter implements Converter<Map> {
 
   @Override
   public Map<String, String> fromString(String possibleTable) {
-    Map<String, String> map = new HashMap<String, String>();
+    Map<String, String> map = new HashMap<>();
     if (tableIsValid(possibleTable))
       extractRowsIntoMap(map, tables);
 

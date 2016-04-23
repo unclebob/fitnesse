@@ -42,7 +42,7 @@ public class Scanner {
     public Maybe<String> stringFromStart(int start) {
         int end = getOffset() - getCurrent().getContent().length();
         return start <= end
-            ? new Maybe<String>(input.rawSubstring(start, end))
+            ? new Maybe<>(input.rawSubstring(start, end))
             : Maybe.noString;
     }
 
@@ -82,7 +82,7 @@ public class Scanner {
     }
 
     public List<Symbol> peek(int count, ParseSpecification specification) {
-        List<Symbol> result = new ArrayList<Symbol>(count);
+        List<Symbol> result = new ArrayList<>(count);
         int startPosition = next;
         for (int i = 0; i < count; i++) {
             Step step = makeNextStep(specification, startPosition);

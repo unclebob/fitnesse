@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class CustomComparatorRegistry {
 
-  final Map<String, CustomComparator> customComparators = new HashMap<String, CustomComparator>();
+  final Map<String, CustomComparator> customComparators = new HashMap<>();
 
   public CustomComparator getCustomComparatorForPrefix(String prefix) {
     if (customComparators.containsKey(prefix))

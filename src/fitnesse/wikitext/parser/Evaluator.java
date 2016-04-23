@@ -2,7 +2,7 @@ package fitnesse.wikitext.parser;
 
 public class Evaluator extends SymbolType implements Rule, Translation {
     public static final Evaluator symbolType = new Evaluator();
-    
+
     public Evaluator() {
         super("Evaluator");
         wikiMatcher(new Matcher().string("${="));
@@ -14,7 +14,7 @@ public class Evaluator extends SymbolType implements Rule, Translation {
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol body = parser.parseTo(SymbolType.CloseEvaluator);
         if (parser.atEnd()) return Symbol.nothing;
-        return new Maybe<Symbol>(current.add(body));
+        return new Maybe<>(current.add(body));
     }
 
     @Override

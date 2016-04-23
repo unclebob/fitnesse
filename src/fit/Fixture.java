@@ -24,7 +24,7 @@ import fit.exception.FitMatcherException;
 
 // TODO-RcM Figure out how to make me smaller.
 public class Fixture {
-  public Map<String, Object> summary = new HashMap<String, Object>();
+  public Map<String, Object> summary = new HashMap<>();
 
   public Counts counts = new Counts();
 
@@ -32,7 +32,7 @@ public class Fixture {
 
   protected String[] args;
 
-  private static final Map<String, Object> symbols = new HashMap<String, Object>();
+  private static final Map<String, Object> symbols = new HashMap<>();
   private static boolean forcedAbort = false;  //Semaphores
 
   public static void setForcedAbort(boolean state) {
@@ -143,7 +143,7 @@ public class Fixture {
   }
 
   public void getArgsForTable(Parse table) {
-    List<String> argumentList = new ArrayList<String>();
+    List<String> argumentList = new ArrayList<>();
     Parse parameters = table.parts.parts.more;
     for (; parameters != null; parameters = parameters.more) {
       argumentList.add(Parse.unescape(parameters.body));

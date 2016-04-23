@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class AddUpChange {
   private Integer totalCents = 0;
-  private static Map<String, Integer> COIN_VALUES = new HashMap<String, Integer>();
+  private static Map<String, Integer> COIN_VALUES = new HashMap<>();
   static {
     COIN_VALUES.put("1c", 1);
     COIN_VALUES.put("5c", 5);

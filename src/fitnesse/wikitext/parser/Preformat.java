@@ -14,6 +14,6 @@ public class Preformat extends SymbolType implements Rule {
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol content = parser.parseToWithSymbols(SymbolType.ClosePreformat, SymbolProvider.preformatProvider, 0);
         if (parser.atEnd())  return Symbol.nothing;
-        return new Maybe<Symbol>(current.add(content));
+        return new Maybe<>(current.add(content));
     }
 }

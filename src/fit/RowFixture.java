@@ -19,8 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class RowFixture extends ColumnFixture {
 
   public Object[] results;
-  public List<Object> missing = new LinkedList<Object>();
-  public List<Object> surplus = new LinkedList<Object>();
+  public List<Object> missing = new LinkedList<>();
+  public List<Object> surplus = new LinkedList<>();
 
   @Override
   public void doRows(Parse rows) {
@@ -69,7 +69,7 @@ public abstract class RowFixture extends ColumnFixture {
   }
 
   protected List<Parse> list(Parse rows) {
-    List<Parse> result = new LinkedList<Parse>();
+    List<Parse> result = new LinkedList<>();
     while (rows != null) {
       result.add(rows);
       rows = rows.more;
@@ -78,14 +78,14 @@ public abstract class RowFixture extends ColumnFixture {
   }
 
   protected List<Object> list(Object[] rows) {
-    List<Object> result = new LinkedList<Object>();
+    List<Object> result = new LinkedList<>();
     Collections.addAll(result, rows);
     return result;
   }
 
   protected Map<Object, Object> eSort(List<?> list, int col) {
     TypeAdapter a = columnBindings[col].adapter;
-    Map<Object, Object> result = new ConcurrentHashMap<Object, Object>(list.size());
+    Map<Object, Object> result = new ConcurrentHashMap<>(list.size());
     for (Object o : list) {
       Parse row = (Parse) o;
       Parse cell = row.parts.at(col);
@@ -105,7 +105,7 @@ public abstract class RowFixture extends ColumnFixture {
 
   protected Map<Object, Object> cSort(List<?> list, int col) {
     TypeAdapter a = columnBindings[col].adapter;
-    Map<Object, Object> result = new ConcurrentHashMap<Object, Object>(list.size());
+    Map<Object, Object> result = new ConcurrentHashMap<>(list.size());
     for (Object row : list) {
       try {
         a.target = row;
@@ -127,14 +127,14 @@ public abstract class RowFixture extends ColumnFixture {
     if (result.containsKey(key)) {
       ((List<Object>) result.get(key)).add(row);
     } else {
-      List<Object> list = new LinkedList<Object>();
+      List<Object> list = new LinkedList<>();
       list.add(row);
       result.put(key, list);
     }
   }
 
   protected Set<Object> union(Set<?> a, Set<?> b) {
-    Set<Object> result = new HashSet<Object>();
+    Set<Object> result = new HashSet<>();
     result.addAll(a);
     result.addAll(b);
     return result;

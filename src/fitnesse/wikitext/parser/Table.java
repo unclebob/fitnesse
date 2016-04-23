@@ -40,7 +40,7 @@ public class Table extends SymbolType implements Rule, Translation {
       row.setEndOffset(parser.getOffset());
       if (!startsRow(parser.getCurrent())) break;
     }
-    return new Maybe<Symbol>(current);
+    return new Maybe<>(current);
   }
 
   private Symbol parseCell(Parser parser, String content) {

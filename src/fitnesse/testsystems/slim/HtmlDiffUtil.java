@@ -134,7 +134,7 @@ public class HtmlDiffUtil {
       if (s == null || s.isEmpty()) {
         return Collections.<Character> emptyList();
       }
-      List<Character> characterList = new ArrayList<Character>(s.length());
+      List<Character> characterList = new ArrayList<>(s.length());
       for (char c : s.toCharArray()) {
         characterList.add(c);
       }

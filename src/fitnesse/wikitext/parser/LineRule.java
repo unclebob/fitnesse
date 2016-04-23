@@ -13,6 +13,6 @@ public class LineRule implements Rule {
 
         current.add(parser.parseToEnd(SymbolType.Newline));
         if (parser.peek().isType(SymbolType.Newline) && !parser.endsOn(SymbolType.Newline)) parser.moveNext(1);
-        return new Maybe<Symbol>(current);
+        return new Maybe<>(current);
     }
 }

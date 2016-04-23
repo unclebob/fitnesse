@@ -41,7 +41,7 @@ public class DefaultInteraction implements FixtureInteraction {
     if (k != null) {
       return k;
     }
-    List<String> reversedPaths = new ArrayList<String>(paths);
+    List<String> reversedPaths = new ArrayList<>(paths);
     Collections.reverse(reversedPaths);
     for (String path : reversedPaths) {
       k = getClass(path + "." + className);

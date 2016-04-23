@@ -19,7 +19,7 @@ public class PrimeFactorsFixture extends RowFixture {
   @Override
   public Object[] query() {
     int n = Integer.parseInt(args[0]);
-    Collection<Factor> factors = new ArrayList<Factor>();
+    Collection<Factor> factors = new ArrayList<>();
     int f = 2;
     while (n > 1) {
       while (n % f == 0) {

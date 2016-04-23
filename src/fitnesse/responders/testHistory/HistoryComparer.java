@@ -23,11 +23,11 @@ public class HistoryComparer {
   String firstFileContent = "";
   String secondFileContent = "";
 
-  List<String> firstTableResults = new ArrayList<String>();
-  List<String> secondTableResults = new ArrayList<String>();
+  List<String> firstTableResults = new ArrayList<>();
+  List<String> secondTableResults = new ArrayList<>();
 
-  List<MatchedPair> matchedTables = new ArrayList<HistoryComparer.MatchedPair>();
-  List<String> resultContent = new ArrayList<String>();
+  List<MatchedPair> matchedTables = new ArrayList<>();
+  List<String> resultContent = new ArrayList<>();
 
   public String getFileContent(String filePath) throws IOException, SAXException {
     return attemptGetFileContent(filePath);
@@ -106,8 +106,8 @@ public class HistoryComparer {
   }
 
   private void initializeComparerHelpers() {
-    matchedTables = new ArrayList<MatchedPair>();
-    resultContent = new ArrayList<String>();
+    matchedTables = new ArrayList<>();
+    resultContent = new ArrayList<>();
     firstScanner = new HtmlTableScanner(firstFileContent);
     secondScanner = new HtmlTableScanner(secondFileContent);
   }
@@ -227,8 +227,8 @@ public class HistoryComparer {
   }
 
   private void getTableTextFromScanners() {
-    firstTableResults = new ArrayList<String>();
-    secondTableResults = new ArrayList<String>();
+    firstTableResults = new ArrayList<>();
+    secondTableResults = new ArrayList<>();
     for (int i = 0; i < firstScanner.getTableCount(); i++)
       firstTableResults.add(firstScanner.getTable(i).toHtml());
 

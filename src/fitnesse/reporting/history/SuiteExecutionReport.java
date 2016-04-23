@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 public class SuiteExecutionReport extends ExecutionReport {
-  private List<PageHistoryReference> pageHistoryReferences = new ArrayList<PageHistoryReference>();
+  private List<PageHistoryReference> pageHistoryReferences = new ArrayList<>();
 
   public SuiteExecutionReport(Document xmlDocument) throws Exception {
     super();

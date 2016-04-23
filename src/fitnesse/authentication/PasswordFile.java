@@ -14,7 +14,7 @@ import util.FileUtil;
 
 public class PasswordFile {
   private final File passwordFile;
-  private Map<String, String> passwordMap = new HashMap<String, String>();
+  private Map<String, String> passwordMap = new HashMap<>();
   private PasswordCipher cipher = new TransparentCipher();
 
   public PasswordFile(String filename) throws IOException {
@@ -80,7 +80,7 @@ public class PasswordFile {
   }
 
   private void savePasswords() throws FileNotFoundException {
-    List<String> lines = new LinkedList<String>();
+    List<String> lines = new LinkedList<>();
     lines.add("!" + cipher.getClass().getName());
     for (Map.Entry<String, String> entry : passwordMap.entrySet()) {
       String user = entry.getKey();
@@ -91,7 +91,7 @@ public class PasswordFile {
   }
 
   private LinkedList<String> getPasswordFileLines() throws IOException {
-    LinkedList<String> lines = new LinkedList<String>();
+    LinkedList<String> lines = new LinkedList<>();
     if (passwordFile.exists())
       lines = FileUtil.getFileLines(passwordFile);
     return lines;

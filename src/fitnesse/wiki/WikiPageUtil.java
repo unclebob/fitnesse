@@ -88,7 +88,7 @@ public class WikiPageUtil {
 
   public static List<String> getXrefPages(WikiPage page) {
     if (page instanceof WikitextPage) {
-      final List<String> xrefPages = new ArrayList<String>();
+      final List<String> xrefPages = new ArrayList<>();
       ((WikitextPage) page).getSyntaxTree().walkPreOrder(new SymbolTreeWalker() {
         @Override
         public boolean visit(Symbol node) {

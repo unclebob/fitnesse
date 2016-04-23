@@ -12,8 +12,8 @@ import fitnesse.wiki.WikiPage;
 
 public class SaveRecorder {
   public static final Random ticketNumGen = new Random();
-  private static final Map<String, Long> ticketRegistry = new HashMap<String, Long>();
-  private static final Map<String, Long> saveTime = new HashMap<String, Long>();
+  private static final Map<String, Long> ticketRegistry = new HashMap<>();
+  private static final Map<String, Long> saveTime = new HashMap<>();
 
   public static long pageSaved(WikiPage page, long ticketNumber) {
     long timeStamp = timeStamp();

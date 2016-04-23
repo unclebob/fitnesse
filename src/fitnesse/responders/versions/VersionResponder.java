@@ -63,7 +63,7 @@ public class VersionResponder implements SecureResponder {
     html.put("rollbackVersion", version);
     html.put("localPath", name);
 
-    List<VersionInfo> versions = new ArrayList<VersionInfo>(page.getVersions());
+    List<VersionInfo> versions = new ArrayList<>(page.getVersions());
     Collections.sort(versions);
     Collections.reverse(versions);
     String nextVersion = selectNextVersion(versions, version);

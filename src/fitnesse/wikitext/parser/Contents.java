@@ -34,7 +34,7 @@ public class Contents extends SymbolType implements Rule, Translation {
                 new String[] {HELP_TOC, HELP_INSTEAD_OF_TITLE_TOC, REGRACE_TOC, PROPERTY_TOC, FILTER_TOC, MORE_SUFFIX_TOC, PROPERTY_CHARACTERS},
                 parser.getVariableSource());
 
-        return new Maybe<Symbol>(current);
+        return new Maybe<>(current);
     }
     @Override
     public String toTarget(Translator translator, Symbol symbol) {

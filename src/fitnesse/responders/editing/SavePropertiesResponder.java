@@ -41,7 +41,7 @@ public class SavePropertiesResponder implements SecureResponder {
   private void saveAttributes(Request request, PageData data) {
     setPageTypeAttribute(request, data);
 
-    List<String> attrs = new LinkedList<String>();
+    List<String> attrs = new LinkedList<>();
     attrs.addAll(Arrays.asList(PageData.NON_SECURITY_ATTRIBUTES));
     attrs.addAll(Arrays.asList(PageData.SECURITY_ATTRIBUTES));
     attrs.add(PageData.PropertyPRUNE);
@@ -66,7 +66,7 @@ public class SavePropertiesResponder implements SecureResponder {
     if (pageType == null)
       return;
 
-    List<String> types = new LinkedList<String>();
+    List<String> types = new LinkedList<>();
     types.addAll(Arrays.asList(PageData.PAGE_TYPE_ATTRIBUTES));
     data.setAttribute(pageType);
 

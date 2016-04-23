@@ -139,7 +139,7 @@ public class RssResponder implements SecureResponder {
     }
 
     public List<RecentChangesPageEntry> getLinesApplicableTo(String resource) throws Exception {
-      List<RecentChangesPageEntry> filteredLines = new ArrayList<RecentChangesPageEntry>();
+      List<RecentChangesPageEntry> filteredLines = new ArrayList<>();
       for (RecentChangesPageEntry line : getLines()) {
         if (line.relatesTo(resource))
           filteredLines.add(line);
@@ -148,7 +148,7 @@ public class RssResponder implements SecureResponder {
     }
 
     private List<RecentChangesPageEntry> getLines() throws Exception {
-      List<RecentChangesPageEntry> lines = new ArrayList<RecentChangesPageEntry>();
+      List<RecentChangesPageEntry> lines = new ArrayList<>();
       for (String lineString : getPageContentLines()) {
         lines.add(new RecentChangesPageEntry(lineString));
       }
@@ -171,7 +171,7 @@ public class RssResponder implements SecureResponder {
 
     public Map<String, String> getItemProperties() {
       String[] fields = convertTableLineToStrings();
-      Map<String, String> itemProperties = new HashMap<String, String>();
+      Map<String, String> itemProperties = new HashMap<>();
       itemProperties.put("path", fields[1]);
       itemProperties.put("author", fields[2]);
       itemProperties.put("pubDate", convertDateFormat(fields[3]));

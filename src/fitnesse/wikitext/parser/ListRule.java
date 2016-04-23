@@ -23,7 +23,7 @@ public class ListRule implements Rule {
             }
             nextSymbol = parser.peek();
         }
-        return new Maybe<Symbol>(list);
+        return new Maybe<>(list);
     }
 
     private static boolean isList(Symbol symbol) {

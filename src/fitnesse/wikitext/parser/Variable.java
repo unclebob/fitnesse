@@ -2,14 +2,14 @@ package fitnesse.wikitext.parser;
 
 public class Variable extends SymbolType implements Rule, Translation {
     public static final Variable symbolType = new Variable();
-    
+
     public Variable() {
         super("Variable");
         wikiMatcher(new Matcher().string("${"));
         wikiRule(this);
         htmlTranslation(this);
     }
-    
+
     @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Maybe<String> name = parser.parseToAsString(SymbolType.CloseBrace);
@@ -27,8 +27,8 @@ public class Variable extends SymbolType implements Rule, Translation {
             Symbol variableValueSymbol = parser.parseWithParent(variableValue.getValue(), null);
             current.add(variableValueSymbol);
         }
-        
-        return new Maybe<Symbol>(current);
+
+        return new Maybe<>(current);
     }
 
     @Override

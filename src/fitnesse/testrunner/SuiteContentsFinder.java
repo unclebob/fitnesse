@@ -20,7 +20,7 @@ public class SuiteContentsFinder {
     this.pageToRun = pageToRun;
     wikiRootPage = root;
     this.suiteFilter = (suiteFilter != null) ? suiteFilter : SuiteFilter.MATCH_ALL;
-    testPageList = new LinkedList<WikiPage>();
+    testPageList = new LinkedList<>();
   }
 
   public List<WikiPage> getAllPagesToRunForThisSuite() {
@@ -62,7 +62,7 @@ public class SuiteContentsFinder {
   }
 
   private List<WikiPage> addTestPagesToSuite(WikiPage page, SuiteFilter suiteFilter) {
-    List<WikiPage> testPages = new LinkedList<WikiPage>();
+    List<WikiPage> testPages = new LinkedList<>();
     boolean includePage = isTopPage(page) || !isPruned(page);
     if (suiteFilter.isMatchingTest(page) && includePage) {
       testPages.add(page);
@@ -86,13 +86,13 @@ public class SuiteContentsFinder {
   }
 
   private static List<WikiPage> getChildren(WikiPage page) {
-	    List<WikiPage> children = new ArrayList<WikiPage>();
+	    List<WikiPage> children = new ArrayList<>();
 	    children.addAll(page.getChildren());
 	    return children;
 	  }
 
   protected List<WikiPage> gatherCrossReferencedTestPages() {
-    List<WikiPage> pages = new LinkedList<WikiPage>();
+    List<WikiPage> pages = new LinkedList<>();
     addAllXRefs(pages, pageToRun);
     return pages;
   }

@@ -16,7 +16,7 @@ public class TableTableIncFirstCol implements StatementExecutorConsumer {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see
    * fitnesse.slim.StatementExecutorConsumer#setStatementExecutor(fitnesse.slim
    * .StatementExecutorInterface)
@@ -24,19 +24,19 @@ public class TableTableIncFirstCol implements StatementExecutorConsumer {
   @Override
   public void setStatementExecutor(StatementExecutorInterface statementExecutor) {
     this.context = statementExecutor;
-    
-    // Tell Slim Agent that the fixture takes care of symbol replacements in all "doTable" methods 
+
+    // Tell Slim Agent that the fixture takes care of symbol replacements in all "doTable" methods
     // IMPORTANT: Don't forget to set this back to null at the end of your fixture code
     this.context.assign(StatementExecutor.SLIM_AGENT_FIXTURE_HANDLES_SYMBOLS,"tableTable.*\\.doTable");
   }
 
   public List<List<String>> doTable(List<List<?>> table) {
-    List<List<String>> ret = new ArrayList<List<String>>();
+    List<List<String>> ret = new ArrayList<>();
     try {
 
 
       for (List<?> line : table) {
-        List<String> retLine = new ArrayList<String>();
+        List<String> retLine = new ArrayList<>();
         ret.add(retLine);
 
         retLine.add("no change");
@@ -47,7 +47,7 @@ public class TableTableIncFirstCol implements StatementExecutorConsumer {
       }
 
     } finally {
-      // IMPORTANT: Switch symbol replacement on again 
+      // IMPORTANT: Switch symbol replacement on again
       //            or you get bad surprises
       this.context.assign(StatementExecutor.SLIM_AGENT_FIXTURE_HANDLES_SYMBOLS, null);
 
@@ -93,4 +93,3 @@ public class TableTableIncFirstCol implements StatementExecutorConsumer {
   }
 
 }
-  

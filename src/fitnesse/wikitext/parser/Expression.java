@@ -196,7 +196,7 @@ public class Expression {
     isInvalid = false;
     s = x.intern();
     double last = add();
-    return isInvalid ? Maybe.noDouble : new Maybe<Double>(last);
+    return isInvalid ? Maybe.noDouble : new Maybe<>(last);
   }
 
   /*

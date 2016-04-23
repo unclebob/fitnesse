@@ -49,7 +49,7 @@ public class Today extends SymbolType implements Rule, Translation {
             current.putProperty(Increment, increment);
             parser.moveNext(2);
         }
-        return new Maybe<Symbol>(current);
+        return new Maybe<>(current);
     }
 
     private boolean isDateFormatOption(String option) {

@@ -18,7 +18,7 @@ public class FitTestSystem implements TestSystem, FitClientListener {
   private final CompositeTestSystemListener testSystemListener;
   private final String testSystemName;
   private final CommandRunningFitClient client;
-  private Deque<TestPage> processingQueue = new LinkedList<TestPage>();
+  private Deque<TestPage> processingQueue = new LinkedList<>();
   private TestPage currentTestPage;
   private boolean testSystemIsStopped;
 

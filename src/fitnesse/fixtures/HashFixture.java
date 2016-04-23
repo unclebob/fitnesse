@@ -13,7 +13,7 @@ public class HashFixture {
 
   public Map<String, Object> hash() {
     // Make result predictable (ordered)
-    return new TreeMap<String, Object>(hash);
+    return new TreeMap<>(hash);
   }
 
   public Object hashIs(String key) {

@@ -205,7 +205,7 @@ public class WikiTestPage implements TestPage {
   }
 
   private List<WikiPage> findScenarioLibraries() {
-    final LinkedList<WikiPage> uncles = new LinkedList<WikiPage>();
+    final LinkedList<WikiPage> uncles = new LinkedList<>();
     if (shouldIncludeScenarioLibraries()) {
       sourcePage.getPageCrawler().traverseUncles("ScenarioLibrary", new TraversalListener<WikiPage>() {
         @Override

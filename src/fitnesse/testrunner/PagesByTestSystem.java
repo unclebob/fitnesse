@@ -24,7 +24,7 @@ public class PagesByTestSystem {
   }
 
   private Map<WikiPageIdentity, List<WikiPage>> mapWithAllPagesButSuiteSetUpAndTearDown(List<WikiPage> pages) {
-    Map<WikiPageIdentity, List<WikiPage>> pagesByTestSystem = new HashMap<WikiPageIdentity, List<WikiPage>>(2);
+    Map<WikiPageIdentity, List<WikiPage>> pagesByTestSystem = new HashMap<>(2);
 
     for (WikiPage wikiPage : pages) {
       if (!SuiteContentsFinder.isSuiteSetupOrTearDown(wikiPage)) {
@@ -38,7 +38,7 @@ public class PagesByTestSystem {
   private List<WikiPage> getOrMakeListWithinMap(Map<WikiPageIdentity, List<WikiPage>> pagesByTestSystem, WikiPageIdentity descriptor) {
     List<WikiPage> pagesForTestSystem;
     if (!pagesByTestSystem.containsKey(descriptor)) {
-      pagesForTestSystem = new LinkedList<WikiPage>();
+      pagesForTestSystem = new LinkedList<>();
       pagesByTestSystem.put(descriptor, pagesForTestSystem);
     } else {
       pagesForTestSystem = pagesByTestSystem.get(descriptor);
@@ -47,7 +47,7 @@ public class PagesByTestSystem {
   }
 
   private Map<WikiPageIdentity, List<TestPage>> addSuiteSetUpAndTearDownToAllTestSystems(Map<WikiPageIdentity, List<WikiPage>> pagesByTestSystem) {
-    Map<WikiPageIdentity, List<TestPage>> orderedPagesByTestSystem = new HashMap<WikiPageIdentity, List<TestPage>>(pagesByTestSystem.size());
+    Map<WikiPageIdentity, List<TestPage>> orderedPagesByTestSystem = new HashMap<>(pagesByTestSystem.size());
 
     if (!pagesByTestSystem.isEmpty()) {
       PageListSetUpTearDownSurrounder surrounder = new PageListSetUpTearDownSurrounder(root);
@@ -59,7 +59,7 @@ public class PagesByTestSystem {
   }
 
   private List<TestPage> asTestPages(List<WikiPage> wikiPages) {
-    List<TestPage> testPages = new ArrayList<TestPage>(wikiPages.size());
+    List<TestPage> testPages = new ArrayList<>(wikiPages.size());
     for (WikiPage page : wikiPages) {
       // TODO: find the appropriate type of test page for this test system
       testPages.add(new WikiTestPage(page));

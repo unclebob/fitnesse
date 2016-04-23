@@ -43,7 +43,7 @@ public class HtmlTable implements Table {
   private static final Pattern SYMBOL_REPLACEMENT_PATTERN = Pattern.compile("^(" + SYMBOL_ASSIGNMENT + ")(.*)(" +
           SYMBOL_ASSIGNMENT_SUFFIX + ")$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
-  private List<Row> rows = new ArrayList<Row>();
+  private List<Row> rows = new ArrayList<>();
   private TableTag tableNode;
 
   public HtmlTable(TableTag tableNode) {
@@ -83,7 +83,7 @@ public class HtmlTable implements Table {
   }
 
   public List<List<String>> asList() {
-    List<List<String>> list = new ArrayList<List<String>>();
+    List<List<String>> list = new ArrayList<>();
     for (Row row : rows)
       list.add(row.asList());
     return list;
@@ -159,7 +159,7 @@ public class HtmlTable implements Table {
   private void insertRowAfter(Row existingRow, Row childRow) {
     NodeList rowNodes = tableNode.getChildren();
     int index = rowNodes.indexOf(existingRow.rowNode);
-    Stack<Node> tempStack = new Stack<Node>();
+    Stack<Node> tempStack = new Stack<>();
 
     while (rowNodes.size() - 1 > index) {
       tempStack.push(rowNodes.elementAt(tableNode.getChildren().size() - 1));
@@ -219,7 +219,7 @@ public class HtmlTable implements Table {
 
 
   class Row {
-    private List<Cell> cells = new ArrayList<Cell>();
+    private List<Cell> cells = new ArrayList<>();
     private CompositeTag rowNode;
 
     public Row(CompositeTag rowNode) {
@@ -263,7 +263,7 @@ public class HtmlTable implements Table {
     }
 
     private List<String> asList() {
-      List<String> list = new ArrayList<String>();
+      List<String> list = new ArrayList<>();
       for (Cell cell : cells) {
         // was "colorized"
         list.add(cell.getTestResult());
@@ -364,10 +364,10 @@ public class HtmlTable implements Table {
                 HtmlUtil.escapeHTML(actual[0]) +
                   HtmlDiffUtil.buildActual(actual[1], expected[1]) +
                   HtmlUtil.escapeHTML(actual[2]),
-                HtmlUtil.escapeHTML(expected[0]) + 
+                HtmlUtil.escapeHTML(expected[0]) +
                   new HtmlDiffUtil.ExpectedBuilder(testResult.getActual(), expected[1])
                     .setOpeningTag("</span><span class=\"diff\">")
-                    .setClosingTag("</span><span class=\"fail\">").build() + 
+                    .setClosingTag("</span><span class=\"fail\">").build() +
                   HtmlUtil.escapeHTML(expected[2]));
             }
           } else if ((testResult.hasActual() || testResult.hasExpected()) && testResult.hasMessage()) {
@@ -414,7 +414,7 @@ public class HtmlTable implements Table {
   static boolean qualifiesAsSymbolReplacement(String text) {
     return text.startsWith("$") && SYMBOL_REPLACEMENT_PATTERN.matcher(text).matches();
   }
-  
+
   private static String[] parseSymbol(String text) {
     Matcher matcher = SYMBOL_REPLACEMENT_PATTERN.matcher(text);
     String[] symbols = new String[] {"","",""};
