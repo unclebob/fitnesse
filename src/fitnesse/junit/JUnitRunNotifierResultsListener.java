@@ -51,13 +51,20 @@ public class JUnitRunNotifierResultsListener
     increaseCompletedTests();
     if (firstFailure != null) {
       notifier.fireTestFailure(new Failure(descriptionFor(test), firstFailure));
+      fireTestFinishedFor(test);
     } else if (testSummary.getExceptions() > 0) {
       notifier.fireTestFailure(new Failure(descriptionFor(test), new Exception("Exception occurred on page " + test.getFullPath())));
+      fireTestFinishedFor(test);
     } else if (testSummary.getWrong() > 0) {
       notifier.fireTestFailure(new Failure(descriptionFor(test), new AssertionError("Test failures occurred on page " + test.getFullPath())));
+      fireTestFinishedFor(test);
     } else {
-      notifier.fireTestFinished(descriptionFor(test));
+      fireTestFinishedFor(test);
     }
+  }
+
+  private void fireTestFinishedFor(TestPage test) {
+    notifier.fireTestFinished(descriptionFor(test));
   }
 
   @Override
