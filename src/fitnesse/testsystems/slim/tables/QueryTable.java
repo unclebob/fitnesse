@@ -105,17 +105,20 @@ public class QueryTable extends SlimTable {
     unmatchedTableRows.remove(Integer.valueOf(1));
     List<Integer> unmatchedResultRows = unmatchedRows(queryResults.getRows().size());
 
+    markMatchedRows(queryResults, potentialMatchesByScore, unmatchedTableRows, unmatchedResultRows);
+    markMissingRows(unmatchedTableRows);
+    markSurplusRows(queryResults, unmatchedResultRows);
+
+    return !unmatchedTableRows.isEmpty() || !unmatchedResultRows.isEmpty() ? ExecutionResult.FAIL : ExecutionResult.PASS;
+  }
+
+  protected void markMatchedRows(QueryResults queryResults, Iterable<MatchedResult> potentialMatchesByScore, List<Integer> unmatchedTableRows, List<Integer> unmatchedResultRows) {
     while (!isEmpty(potentialMatchesByScore)) {
       MatchedResult bestMatch = takeBestMatch(potentialMatchesByScore);
       markFieldsInMatchedRow(bestMatch.tableRow, bestMatch.resultRow, queryResults);
       unmatchedTableRows.remove(bestMatch.tableRow);
       unmatchedResultRows.remove(bestMatch.resultRow);
     }
-
-    markMissingRows(unmatchedTableRows);
-    markSurplusRows(queryResults, unmatchedResultRows);
-
-    return !unmatchedTableRows.isEmpty() || !unmatchedResultRows.isEmpty() ? ExecutionResult.FAIL : ExecutionResult.PASS;
   }
 
   protected MatchedResult takeBestMatch(Iterable<MatchedResult> potentialMatchesByScore) {

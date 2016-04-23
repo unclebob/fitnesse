@@ -19,14 +19,9 @@ public class SubsetQueryTable extends QueryTable {
     unmatchedTableRows.remove(Integer.valueOf(1));
     List<Integer> unmatchedResultRows = unmatchedRows(queryResults.getRows().size());
 
-    while (!isEmpty(potentialMatchesByScore)) {
-      MatchedResult bestMatch = takeBestMatch(potentialMatchesByScore);
-      markFieldsInMatchedRow(bestMatch.tableRow, bestMatch.resultRow, queryResults);
-      unmatchedTableRows.remove(bestMatch.tableRow);
-      unmatchedResultRows.remove(bestMatch.resultRow);
-    }
-
+    markMatchedRows(queryResults, potentialMatchesByScore, unmatchedTableRows, unmatchedResultRows);
     markMissingRows(unmatchedTableRows);
+
     return null;
   }
 }
