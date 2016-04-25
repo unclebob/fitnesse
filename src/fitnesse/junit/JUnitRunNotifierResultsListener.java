@@ -55,9 +55,12 @@ public class JUnitRunNotifierResultsListener
       notifier.fireTestFailure(new Failure(descriptionFor(test), new Exception("Exception occurred on page " + test.getFullPath())));
     } else if (testSummary.getWrong() > 0) {
       notifier.fireTestFailure(new Failure(descriptionFor(test), new AssertionError("Test failures occurred on page " + test.getFullPath())));
-    } else {
-      notifier.fireTestFinished(descriptionFor(test));
     }
+    fireTestFinishedFor(test);
+  }
+
+  private void fireTestFinishedFor(TestPage test) {
+    notifier.fireTestFinished(descriptionFor(test));
   }
 
   @Override
