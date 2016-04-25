@@ -49,7 +49,12 @@ function WikiFormatter()
       formatted += "|";
 
       for(var columnIndex = 0, numberOfColumns = row.length; columnIndex < numberOfColumns; columnIndex++) {
-        formatted += this.rightPad(row[columnIndex], widths[rowIndex][columnIndex]) + "|";
+        var cellValue = row[columnIndex];
+        if (cellValue === '!(') {
+            formatted += cellValue + "|";
+        } else {
+            formatted += this.rightPad(cellValue, widths[rowIndex][columnIndex]) + "|";
+        }
       }
 
       formatted += suffixes[rowIndex] + "\n";
@@ -306,7 +311,7 @@ function WikiFormatter()
     while(index < length && callback.call(context, array[index], index) !== false) {
       index++;
     }
-  },
+  };
 
   this.rightPad = function(value, length) {
     var padded = value;
