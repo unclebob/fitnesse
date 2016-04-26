@@ -8,6 +8,7 @@ antlib/*
 javadoc/*
 lib/*
 dependencies/*
+.gradle
 .classpath
 .project
 .settings
