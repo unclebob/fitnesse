@@ -170,7 +170,18 @@ publishing {
       groupId 'org.fitnesse'
       artifactId 'fitnesse'
       pom.withXml {
+        asNode().get('version') + { url('http://fitnesse.org') }
         asNode().appendNode('description', 'The fully integrated standalone wiki, and acceptance testing framework.')
+        asNode().append(pomLicenses())
+        asNode().append(pomScm())
+        asNode().append(pomDevelopers())
+
+        // Clean up scope entries added by the pom generator:
+        asNode().dependencies.'*'.findAll() {
+          if (it.scope.text() == 'runtime') {
+            it.remove(it.scope)
+          }
+        }
       }
     }
   }
@@ -203,4 +214,32 @@ bintray {
 
 wrapper {
   gradleVersion = '2.13'
+}
+
+def pomLicenses() {
+  new NodeBuilder().licenses {
+    license {
+      name 'Common Public License version 1.0'
+      url 'http://www.opensource.org/licenses/cpl1.0'
+      distribution 'repo'
+    }
+  }
+}
+
+def pomScm() {
+  new NodeBuilder().scm {
+    connection 'scm:git:git://github.com/unclebob/fitnesse.git'
+    developerConnection 'scm:git:git@github.com:unclebob/fitnesse.git'
+    url 'scm:git:http://github.com/unclebob/fitnesse'
+  }
+}
+
+def pomDevelopers() {
+  new NodeBuilder().developers {
+    developer {
+      id 'unclebob'
+      name 'Robert C. Martin'
+      email 'unclebob@cleancoder.com'
+    }
+  }
 }
