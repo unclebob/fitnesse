@@ -1,4 +1,210 @@
 
+/* Plan:
+ - Create multi-module repo:
+   - fit (deps: common)
+   - slim (deps: common, networking)
+   - common
+   - networking
+   - ant
+   - fitnesse, the wiki server
+ - Move file creation to plugin
+*/
+
+plugins {
+  id 'java' // or 'groovy' Must be explicitly applied
+  id 'maven'
+  id 'signing'
+  id 'com.github.johnrengelman.shadow' version '1.2.3'
+}
+
+project.version = new Date().format('yyyyMMdd')
+
+println "Building FitNesse v${version}..."
+
+repositories {
+  mavenCentral()
+}
+
+configurations {
+  lesscss
+}
+
+sourceSets {
+  main {
+    java.srcDir 'src'
+    resources.srcDir 'src'
+    output.classesDir 'classes'
+  }
+  test {
+    java.srcDir 'test'
+    output.classesDir 'test-classes'
+  }
+}
+
+sourceCompatibility = '1.7'
+targetCompatibility = '1.7'
+
+dependencies {
+  compile("org.htmlparser:htmlparser:2.1") {
+    exclude module: "tools"
+  }
+  compile "org.apache.velocity:velocity:1.7"
+  compile "commons-lang:commons-lang:2.6"
+  compile "commons-collections:commons-collections:3.2.2"
+  compile "org.json:json:20151123"
+  compile "com.googlecode.java-diff-utils:diffutils:1.3.0"
+  compile "org.apache.ant:ant:1.9.6"
+  compile "junit:junit:4.12"
+  testCompile "org.mockito:mockito-core:1.10.19"
+  testCompile "org.hamcrest:hamcrest-all:1.3"
+  testCompile "net.javacrumbs.json-unit:json-unit:1.1.6"
+
+  lesscss "org.mozilla:rhino:1.7.7.1"
+}
+
+task fitNesseVersion {
+  def versionFile = new File("classes/META-INF/FitNesseVersion.txt")
+  versionFile.parentFile.mkdirs()
+  versionFile.text="v${version}"
+}
+
+task compileBootstrap(type: JavaExec) {
+  new File("classes/fitnesse/resources/bootstrap/css").mkdirs()
+  classpath configurations.lesscss
+  main "org.mozilla.javascript.tools.shell.Main"
+  args "extra/lesscss/less-rhino-1.7.0.js", "src/fitnesse/resources/bootstrap/less/fitnesse-bootstrap.less"
+  standardOutput = new File("classes/fitnesse/resources/bootstrap/css/fitnesse-bootstrap.css").newOutputStream()
+}
+
+// TODO: convert this code to a plugin.
+task createUpdateLists(type: JavaExec) {
+  new File("classes/Resources").mkdirs()
+  classpath sourceSets.main.runtimeClasspath
+  main "fitnesse.updates.UpdateFileList"
+  args "-baseDirectory:.",
+    "-outputDirectory:classes/Resources",
+    "-doNotReplace:FitNesseRoot/FrontPage/content.txt",
+    "-doNotReplace:FitNesseRoot/FrontPage/properties.xml",
+    "-doNotReplace:FitNesseRoot/PageHeader/content.txt",
+    "-doNotReplace:FitNesseRoot/PageHeader/properties.xml",
+    "-doNotReplace:FitNesseRoot/PageFooter/content.txt",
+    "-doNotReplace:FitNesseRoot/PageFooter/properties.xml",
+    "-doNotReplace:FitNesseRoot/PageFooter/properties.xml",
+    "-doNotReplace:FitNesseRoot/TemplateLibrary/content.txt",
+    "-doNotReplace:FitNesseRoot/TemplateLibrary/properties.xml",
+    "-doNotReplace:FitNesseRoot/TemplateLibrary/StaticPage/content.txt",
+    "-doNotReplace:FitNesseRoot/TemplateLibrary/StaticPage/properties.xml",
+    "-doNotReplace:FitNesseRoot/TemplateLibrary/SuitePage/content.txt",
+    "-doNotReplace:FitNesseRoot/TemplateLibrary/SuitePage/properties.xml",
+    "-doNotReplace:FitNesseRoot/TemplateLibrary/TestPage/content.txt",
+    "-doNotReplace:FitNesseRoot/TemplateLibrary/TestPage/properties.xml",
+    "FitNesseRoot/FitNesse",
+    "FitNesseRoot/FrontPage",
+    "FitNesseRoot/PageFooter",
+    "FitNesseRoot/PageHeader",
+    "FitNesseRoot/TemplateLibrary"
+}
+
+processResources {
+  dependsOn "fitNesseVersion", "compileBootstrap"
+  from('src') {
+    include '**/*.properties'
+    include 'fitnesse/resources/**'
+  }
+  into "classes"
+}
+
+
+task run(type: JavaExec) {
+  dependsOn compileJava, processResources, "createUpdateLists"
+  classpath = sourceSets.main.runtimeClasspath
+  main "fitnesseMain.FitNesseMain"
+  args "-p", "8001", "-e", "0"
+}
+
+task intTest(type: JavaExec) {
+  dependsOn compileJava, processResources, "createUpdateLists"
+  classpath = sourceSets.main.runtimeClasspath
+  main "fitnesseMain.FitNesseMain"
+  args "-c", "FitNesse.SuiteAcceptanceTests?suite&format=text"
+}
+
+check.dependsOn intTest
+
+task javadocJar(type: Jar) {
+  classifier = 'javadoc'
+  from javadoc
+}
+
+task sourcesJar(type: Jar) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+shadowJar {
+  classifier = 'standalone'
+  dependencies {
+    include(dependency("org.apache.velocity:velocity:.*"))
+    include(dependency("commons-lang:commons-lang:.*"))
+    include(dependency("commons-collections:commons-collections:.*"))
+    include(dependency("org.json:json:.*"))
+    include(dependency("com.googlecode.java-diff-utils:diffutils:.*"))
+  }
+  exclude 'META-INF/**'
+}
+
+artifacts {
+  archives javadocJar, sourcesJar, shadowJar
+}
+
+signing {
+  sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+    authentication(userName: ossrhUsername, password: ossrhPassword)
+}
+snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+    authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'fitnesse-git-plugin'
+                packaging 'jar'
+                // optionally artifactId can be defined here
+                description 'Git version controller support for FitNesse'
+                url 'https://github.com/amolenaar/fitnesse-git-plugin'
+
+                scm {
+                    connection 'scm:git:git@github.com/amolenaar/fitnesse-git-plugin.git'
+                    developerConnection 'scm:git:git@github.com/amolenaar/fitnesse-git-plugin.git'
+                    url 'http://github.com/amolenaar/fitnesse-git-plugin'
+                }
+
+                licenses {
+                    license {
+                        name 'Common Public License version 1.0'
+                        url 'http://www.opensource.org/licenses/cpl1.0'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'amolenaar'
+                        name 'Arjan Molenaar'
+                        email 'gaphor@gmail.com'
+                    }
+                }
+            }
+        }
+    }
+}
+
 wrapper {
     version = '2.13'
 }

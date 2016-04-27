@@ -26,7 +26,7 @@
 		<artifact name="fitnesse" conf="maven" type="javadoc" ext="jar" e:classifier="javadoc" />
 		<artifact name="fitnesse" conf="maven" type="standalone" ext="jar" e:classifier="standalone" />
 	</publications>
- 
+
 	<dependencies>
 		<dependency org="org.htmlparser" name="htmlparser" rev="2.1" conf="default,slim,standalone,maven->default">
 			<exclude org="com.sun" module="tools" />
