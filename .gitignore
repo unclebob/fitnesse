@@ -2,6 +2,7 @@ test-results/*
 jsunit/*
 agitar/*
 dist/*
+build
 classes/*
 test-classes/*
 antlib/*
