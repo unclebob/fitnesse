@@ -85,36 +85,35 @@ task compileBootstrap(type: LessCompiler) {
 }
 
 // TODO: convert this code to a plugin.
-task createUpdateLists(type: JavaExec) {
-  new File("classes/Resources").mkdirs()
-  classpath sourceSets.main.runtimeClasspath
-  main "fitnesse.updates.UpdateFileList"
-  args "-baseDirectory:.",
-    "-outputDirectory:classes/Resources",
-    "-doNotReplace:FitNesseRoot/FrontPage/content.txt",
-    "-doNotReplace:FitNesseRoot/FrontPage/properties.xml",
-    "-doNotReplace:FitNesseRoot/PageHeader/content.txt",
-    "-doNotReplace:FitNesseRoot/PageHeader/properties.xml",
-    "-doNotReplace:FitNesseRoot/PageFooter/content.txt",
-    "-doNotReplace:FitNesseRoot/PageFooter/properties.xml",
-    "-doNotReplace:FitNesseRoot/PageFooter/properties.xml",
-    "-doNotReplace:FitNesseRoot/TemplateLibrary/content.txt",
-    "-doNotReplace:FitNesseRoot/TemplateLibrary/properties.xml",
-    "-doNotReplace:FitNesseRoot/TemplateLibrary/StaticPage/content.txt",
-    "-doNotReplace:FitNesseRoot/TemplateLibrary/StaticPage/properties.xml",
-    "-doNotReplace:FitNesseRoot/TemplateLibrary/SuitePage/content.txt",
-    "-doNotReplace:FitNesseRoot/TemplateLibrary/SuitePage/properties.xml",
-    "-doNotReplace:FitNesseRoot/TemplateLibrary/TestPage/content.txt",
-    "-doNotReplace:FitNesseRoot/TemplateLibrary/TestPage/properties.xml",
+task createUpdateLists(type: WikiFileListBuilder) {
+  baseDirectory = "./"
+  outputDirectory = "classes/Resources"
+  doNotReplaceFiles = [
+    "FitNesseRoot/FrontPage/content.txt",
+    "FitNesseRoot/FrontPage/properties.xml",
+    "FitNesseRoot/PageHeader/content.txt",
+    "FitNesseRoot/PageHeader/properties.xml",
+    "FitNesseRoot/PageFooter/content.txt",
+    "FitNesseRoot/PageFooter/properties.xml",
+    "FitNesseRoot/PageFooter/properties.xml",
+    "FitNesseRoot/TemplateLibrary/content.txt",
+    "FitNesseRoot/TemplateLibrary/properties.xml",
+    "FitNesseRoot/TemplateLibrary/StaticPage/content.txt",
+    "FitNesseRoot/TemplateLibrary/StaticPage/properties.xml",
+    "FitNesseRoot/TemplateLibrary/SuitePage/content.txt",
+    "FitNesseRoot/TemplateLibrary/SuitePage/properties.xml",
+    "FitNesseRoot/TemplateLibrary/TestPage/content.txt",
+    "FitNesseRoot/TemplateLibrary/TestPage/properties.xml" ]
+  mainDirectories = [
     "FitNesseRoot/FitNesse",
     "FitNesseRoot/FrontPage",
     "FitNesseRoot/PageFooter",
     "FitNesseRoot/PageHeader",
-    "FitNesseRoot/TemplateLibrary"
+    "FitNesseRoot/TemplateLibrary" ]
 }
 
 processResources {
-  dependsOn "fitNesseVersion", "compileBootstrap"
+  dependsOn "fitNesseVersion", "compileBootstrap", "createUpdateLists"
   from('src') {
     include '**/*.properties'
     include 'fitnesse/resources/**'
@@ -124,14 +123,14 @@ processResources {
 
 
 task run(type: JavaExec) {
-  dependsOn compileJava, processResources, "createUpdateLists"
+  dependsOn compileJava, processResources
   classpath = sourceSets.main.runtimeClasspath
   main "fitnesseMain.FitNesseMain"
   args "-p", "8001", "-e", "0"
 }
 
 task intTest(type: JavaExec) {
-  dependsOn compileJava, processResources, "createUpdateLists"
+  dependsOn compileJava, processResources
   mustRunAfter test
   classpath = sourceSets.main.runtimeClasspath
   main "fitnesseMain.FitNesseMain"

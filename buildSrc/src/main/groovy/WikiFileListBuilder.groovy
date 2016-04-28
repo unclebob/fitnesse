@@ -1,83 +1,61 @@
-package fitnesse.updates;
+import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.InputDirectory
+import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.TaskExecutionException
 
-import util.FileUtil;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
 
 /**
  * Little utility to assemble the updateLists, used from build script.
  */
-public class UpdateFileList {
-  private static final Logger LOG = Logger.getLogger(UpdateFileList.class.getName());
+public class WikiFileListBuilder extends DefaultTask {
+
+  private static final Logger LOG = Logger.getLogger(WikiFileListBuilder.class.getName());
 
   private static final List<String> VALID_FILE_NAMES = Arrays.asList("content.txt", "properties.xml", ".gitignore");
 
-  private List<String> mainDirectories;
-  private String updateListContent;
-  private String updateDoNotCopyOverContent;
-  private Set<String> doNotReplaceFiles = new HashSet<>();
-  private String baseDirectory = "";
-  private String outputDirectory = "";
-  static UpdateFileList testUpdater = null;
+  @InputDirectory
+  private List<String> mainDirectories
+  private Set<String> doNotReplaceFiles
+  private String baseDirectory
+  private String outputDirectory
 
-  public static void main(String[] args) {
-    UpdateFileList updater = testUpdater != null ? testUpdater : new UpdateFileList();
+  @OutputFile
+  File updateListFile
+  @OutputFile
+  File updateDoNotCopyOverListFile
 
-    updater.parseCommandLine(args);
-    if (updater.directoriesAreValid()) {
-      updater.createUpdateList();
-      updater.createDoNotUpdateList();
+  private String updateListContent = "";
+  private String updateDoNotCopyOverContent = "";
+
+  @TaskAction
+  public void createUpdateLists() {
+    if (directoriesAreValid()) {
+      new File(outputDirectory).mkdirs()
+      createUpdateList();
+      createDoNotUpdateList();
     } else {
-      LOG.severe("Some directories are invalid. Aborting.");
-      updater.exit();
+      throw new RuntimeException("Some directories are invalid. Aborting.");
     }
   }
 
-  void exit() {
-    System.exit(1);
+  public void setBaseDirectory(final String baseDirectory) {
+    this.baseDirectory = baseDirectory
   }
 
-  public UpdateFileList() {
-    mainDirectories = new ArrayList<>();
-    updateListContent = "";
-    updateDoNotCopyOverContent = "";
+  public void setDoNotReplaceFiles(final Set<String> doNotReplaceFiles) {
+    this.doNotReplaceFiles = doNotReplaceFiles
   }
 
-  public boolean parseCommandLine(String[] args) {
-    if (args.length == 0)
-      return false;
-    for (String arg : args)
-      parseArgument(arg);
-    return true;
+  public void setMainDirectories(final List<String> mainDirectories) {
+    this.mainDirectories = mainDirectories
   }
 
-  private void parseArgument(String arg) {
-    if (arg.startsWith("-doNotReplace:"))
-      addADoNotReplaceFileName(arg);
-    else if (arg.startsWith("-baseDirectory:"))
-        baseDirectory = parseDirectoryArgument(arg);
-    else if (arg.startsWith("-outputDirectory:"))
-        outputDirectory = parseDirectoryArgument(arg);
-    else
-      mainDirectories.add(baseDirectory + arg);
-  }
-
-  private void addADoNotReplaceFileName(String arg) {
-    String[] components = arg.split(":");
-    doNotReplaceFiles.add(components[1]);
-  }
-
-  private String parseDirectoryArgument(String arg) {
-    String dir = arg.substring(arg.indexOf(':')+1);
-    if (!dir.endsWith("/"))
-      dir += "/";
-    return dir;
+  public void setOutputDirectory(final String outputDirectory) {
+    this.outputDirectory = outputDirectory
+    this.updateListFile = new File(outputDirectory, "updateList")
+    this.updateDoNotCopyOverListFile = new File(outputDirectory, "updateDoNotCopyOverList")
   }
 
   public List<String> getDirectories() {
@@ -98,14 +76,15 @@ public class UpdateFileList {
     for (String dirName : mainDirectories)
       addFilePathsToList(dirName);
 
-    return FileUtil.createFile(new File(outputDirectory + "updateList"), updateListContent);
-
+    def f = updateListFile
+    f.text = updateListContent
+    f
   }
 
   private void addFilePathsToList(String path) {
     File f = new File(path);
     if (f.isDirectory()) {
-      File[] files = FileUtil.getDirectoryListing(f);
+      File[] files = f.listFiles()
       for (File childFile : files)
         if (isWikiFile(childFile))
           addFilePathToAppropriateList(path, childFile);
@@ -124,7 +103,7 @@ public class UpdateFileList {
     return childFile.isDirectory() || VALID_FILE_NAMES.contains(name);
   }
 
-private void addFilePathToAppropriateList(String directoryPath, File childFile) {
+  private void addFilePathToAppropriateList(String directoryPath, File childFile) {
     String childPath = directoryPath + "/" + childFile.getName();
     if (childFile.isDirectory())
       addFilePathsToList(childPath);
@@ -155,6 +134,10 @@ private void addFilePathToAppropriateList(String directoryPath, File childFile) 
       for (String dirName : mainDirectories)
         addFilePathsToList(dirName);
 
-    return FileUtil.createFile(new File(outputDirectory + "updateDoNotCopyOverList"), updateDoNotCopyOverContent);
+    def f = updateDoNotCopyOverListFile
+    f.text = updateDoNotCopyOverContent;
+    f
   }
+
+
 }
