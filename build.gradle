@@ -77,12 +77,11 @@ task fitNesseVersion {
   versionFile.text="v${version}"
 }
 
-task compileBootstrap(type: JavaExec) {
-  new File("classes/fitnesse/resources/bootstrap/css").mkdirs()
+task compileBootstrap(type: LessCompiler) {
+  inputDir file('src/fitnesse/resources/bootstrap/less')
+  mainLessFile = 'fitnesse-bootstrap.less'
+  cssFile file("classes/fitnesse/resources/bootstrap/css/fitnesse-bootstrap.css")
   classpath configurations.lesscss
-  main "org.mozilla.javascript.tools.shell.Main"
-  args "extra/lesscss/less-rhino-1.7.0.js", "src/fitnesse/resources/bootstrap/less/fitnesse-bootstrap.less"
-  standardOutput = new File("classes/fitnesse/resources/bootstrap/css/fitnesse-bootstrap.css").newOutputStream()
 }
 
 // TODO: convert this code to a plugin.
