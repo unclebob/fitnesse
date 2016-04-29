@@ -9,57 +9,40 @@ import java.util.logging.Logger;
 /**
  * Little utility to assemble the updateLists, used from build script.
  */
-public class WikiFileListBuilder extends DefaultTask {
+public class WikiFileListBuilder {
 
   private static final Logger LOG = Logger.getLogger(WikiFileListBuilder.class.getName());
 
   private static final List<String> VALID_FILE_NAMES = Arrays.asList("content.txt", "properties.xml", ".gitignore");
 
-  @InputDirectory
-  private List<String> mainDirectories
-  private Set<String> doNotReplaceFiles
-  private String baseDirectory
-  private String outputDirectory
+  private List<String> mainDirectories = []
+  private List<String> doNotReplaceFiles = []
 
-  @OutputFile
-  File updateListFile
-  @OutputFile
-  File updateDoNotCopyOverListFile
+  private File updateListFile
+  private File updateDoNotCopyOverListFile
 
   private String updateListContent = "";
   private String updateDoNotCopyOverContent = "";
 
-  @TaskAction
+  WikiFileListBuilder(List<String> mainDirectories, List<String> doNotReplaceFiles, File updateListFile, File updateDoNotCopyOverListFile) {
+    this.mainDirectories = mainDirectories
+    this.doNotReplaceFiles = doNotReplaceFiles
+    this.updateListFile = updateListFile
+    this.updateDoNotCopyOverListFile = updateDoNotCopyOverListFile
+  }
+
+  WikiFileListBuilder(List<String> mainDirectories) {
+    // for testing mainly
+    this.mainDirectories = mainDirectories
+  }
+
   public void createUpdateLists() {
     if (directoriesAreValid()) {
-      new File(outputDirectory).mkdirs()
       createUpdateList();
       createDoNotUpdateList();
     } else {
       throw new RuntimeException("Some directories are invalid. Aborting.");
     }
-  }
-
-  public void setBaseDirectory(final String baseDirectory) {
-    this.baseDirectory = baseDirectory
-  }
-
-  public void setDoNotReplaceFiles(final Set<String> doNotReplaceFiles) {
-    this.doNotReplaceFiles = doNotReplaceFiles
-  }
-
-  public void setMainDirectories(final List<String> mainDirectories) {
-    this.mainDirectories = mainDirectories
-  }
-
-  public void setOutputDirectory(final String outputDirectory) {
-    this.outputDirectory = outputDirectory
-    this.updateListFile = new File(outputDirectory, "updateList")
-    this.updateDoNotCopyOverListFile = new File(outputDirectory, "updateDoNotCopyOverList")
-  }
-
-  public List<String> getDirectories() {
-    return mainDirectories;
   }
 
   public boolean directoriesAreValid() {
@@ -76,9 +59,9 @@ public class WikiFileListBuilder extends DefaultTask {
     for (String dirName : mainDirectories)
       addFilePathsToList(dirName);
 
-    def f = updateListFile
-    f.text = updateListContent
-    f
+    updateListFile.parentFile.mkdirs()
+    updateListFile.text = updateListContent
+    updateListFile
   }
 
   private void addFilePathsToList(String path) {
@@ -114,8 +97,6 @@ public class WikiFileListBuilder extends DefaultTask {
   }
 
   private String makePathLine(String path) {
-    if (baseDirectory != null && !baseDirectory.isEmpty() && path.startsWith(baseDirectory))
-      path = path.replace(baseDirectory, "");
     if (path.startsWith("/"))
       path = path.substring(1);
     return path + "\n";
@@ -123,8 +104,6 @@ public class WikiFileListBuilder extends DefaultTask {
 
   private boolean isDoNotReplaceFile(File file) {
     String name = file.getPath();
-    String baseDirectoryOnOS = baseDirectory.replace( "/", File.separator);
-    name = name.replace(baseDirectoryOnOS, "");
     name = name.replace(File.separator, "/");
     return doNotReplaceFiles.contains(name);
   }
@@ -134,9 +113,9 @@ public class WikiFileListBuilder extends DefaultTask {
       for (String dirName : mainDirectories)
         addFilePathsToList(dirName);
 
-    def f = updateDoNotCopyOverListFile
-    f.text = updateDoNotCopyOverContent;
-    f
+    updateDoNotCopyOverListFile.parentFile.mkdirs()
+    updateDoNotCopyOverListFile.text = updateDoNotCopyOverContent;
+    updateDoNotCopyOverListFile
   }
 
 

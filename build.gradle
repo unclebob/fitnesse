@@ -85,8 +85,7 @@ task compileBootstrap(type: LessCompiler) {
 }
 
 // TODO: convert this code to a plugin.
-task createUpdateLists(type: WikiFileListBuilder) {
-  baseDirectory = "./"
+task createUpdateLists(type: WikiFileListBuilderTask) {
   outputDirectory = "classes/Resources"
   doNotReplaceFiles = [
     "FitNesseRoot/FrontPage/content.txt",
