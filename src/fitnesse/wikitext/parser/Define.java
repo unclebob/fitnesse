@@ -9,7 +9,7 @@ public class Define extends SymbolType implements Rule, Translation {
         wikiRule(this);
         htmlTranslation(this);
     }
-    
+
     @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         if (!parser.isMoveNext(SymbolType.Whitespace)) return Symbol.nothing;
@@ -27,7 +27,7 @@ public class Define extends SymbolType implements Rule, Translation {
 
         String variableValue = valueString.getValue();
         parser.getPage().putVariable(variableName, variableValue);
-        return new Maybe<Symbol>(current.add(variableName).add(variableValue));
+        return new Maybe<>(current.add(variableName).add(variableValue));
     }
 
     private Maybe<String> copyVariableValue(Parser parser, Symbol next) {

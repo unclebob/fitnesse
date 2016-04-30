@@ -24,7 +24,7 @@ import fitnesse.wikitext.parser.VariableSource;
 public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, WikiPageFactoryRegistry {
   private final FileSystem fileSystem;
   private final VersionsController versionsController;
-  private final List<WikiPageFactory> wikiPageFactories = new ArrayList<WikiPageFactory>();
+  private final List<WikiPageFactory> wikiPageFactories = new ArrayList<>();
 
   public FileSystemPageFactory() {
     fileSystem = new DiskFileSystem();
@@ -100,7 +100,7 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
 
     private List<WikiPage> getNormalChildren(FileSystemPage page) {
       final File thisDir = page.getFileSystemPath();
-      final List<WikiPage> children = new LinkedList<WikiPage>();
+      final List<WikiPage> children = new LinkedList<>();
       if (fileSystem.exists(thisDir)) {
         final String[] subFiles = fileSystem.list(thisDir);
         for (final String subFile : subFiles) {
@@ -113,7 +113,7 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
     }
 
     protected List<WikiPage> getSymlinkChildren(WikiPage page) {
-      List<WikiPage> children = new LinkedList<WikiPage>();
+      List<WikiPage> children = new LinkedList<>();
       WikiPageProperties props = page.getData().getProperties();
       WikiPageProperty symLinksProperty = props.getProperty(SymbolicPage.PROPERTY_NAME);
       if (symLinksProperty != null) {

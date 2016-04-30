@@ -16,16 +16,16 @@ public class UrlPathVariableSource implements VariableSource {
 
   @Override
   public Maybe<String> findVariable(String name) {
-    if(urlParams != null && urlParams.containsKey(name)) { 
-        return new Maybe<String>(urlParams.get(name));
+    if(urlParams != null && urlParams.containsKey(name)) {
+        return new Maybe<>(urlParams.get(name));
     }
-    
+
     return systemVariables.findVariable(name);
   }
 
   public Maybe<String> findUrlVariable(String name) {
     if(urlParams != null && urlParams.containsKey(name)) {
-      return new Maybe<String>((String)urlParams.get(name));
+      return new Maybe<>(urlParams.get(name));
     }
 
     return Maybe.noString;

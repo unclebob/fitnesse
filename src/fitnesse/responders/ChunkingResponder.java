@@ -14,6 +14,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
+import java.io.IOException;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,7 +69,7 @@ public abstract class ChunkingResponder implements Responder, ChunkedDataProvide
   }
 
   @Override
-  public void startSending() {
+  public void startSending() throws IOException {
     try {
       doSending();
     }
@@ -81,13 +82,9 @@ public abstract class ChunkingResponder implements Responder, ChunkedDataProvide
     }
   }
 
-  private void addExceptionAndCloseResponse(Exception e) {
-    try {
-      response.add(ErrorResponder.makeExceptionString(e));
-      response.closeAll();
-    }
-    catch (Exception e1) {
-    }
+  private void addExceptionAndCloseResponse(Exception e) throws IOException {
+    response.add(ErrorResponder.makeExceptionString(e));
+    response.close();
   }
 
   protected String getRenderedPath() {
@@ -104,7 +101,7 @@ public abstract class ChunkingResponder implements Responder, ChunkedDataProvide
 
   /**
    * Performs the actual chunk sending in a separate thread.
-   * 
+   *
    * @throws Exception exception thrown
    */
   protected abstract void doSending() throws Exception;

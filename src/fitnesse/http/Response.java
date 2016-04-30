@@ -18,19 +18,19 @@ public abstract class Response {
     XML("text/xml"),
     HTML("text/html; charset=" + FileUtil.CHARENCODING),
     TEXT("text/text"),
-    JSON("text/json"),
+    JSON("application/json"),
     JUNIT("text/junit");
-    
+
     private final String contentType;
-    
+
     private Format(String contentType) {
       this.contentType = contentType;
     }
-    
+
     public String getContentType() {
       return contentType;
     }
-    
+
   }
 
   protected static final String CRLF = "\r\n";
@@ -44,13 +44,13 @@ public abstract class Response {
   }
 
   private int status = 200;
-  private HashMap<String, String> headers = new HashMap<String, String>(17);
+  private HashMap<String, String> headers = new HashMap<>(17);
   private String contentType = Format.HTML.contentType;
   private boolean withHttpHeaders = true;
 
   public Response(String formatString) {
     Format format;
-    
+
     if ("html".equalsIgnoreCase(formatString)) {
       format = Format.HTML;
     } else if ("xml".equalsIgnoreCase(formatString)) {
@@ -81,11 +81,11 @@ public abstract class Response {
   public boolean isTextFormat() {
     return Format.TEXT.contentType.equals(contentType);
   }
-  
+
   public boolean isJunitFormat() {
 	    return Format.JUNIT.contentType.equals(contentType);
   }
-	  
+
   public boolean hasContent() {
     return contentType != null;
   }

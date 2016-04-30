@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
+import java.io.IOException;
+
 import static fitnesse.wiki.PageData.PropertyEDIT;
 import static fitnesse.wiki.PageData.PropertyFILES;
 import static fitnesse.wiki.PageData.PropertyPROPERTIES;
@@ -41,7 +43,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
   }
 
   protected WikiPage getSearchScope() {
-    String searchScope = (String) request.getInput("searchScope");
+    String searchScope = request.getInput("searchScope");
 
     if (searchScope == null || searchScope.isEmpty())
       return page;
@@ -53,15 +55,15 @@ public abstract class ResultResponder extends ChunkingResponder implements
     }
   }
 
-  
+
   @Override
-  protected void doSending() {
+  protected void doSending() throws IOException {
     if (page == null)
       page = root;
     String queryString = request.getQueryString() == null ? "" : request.getQueryString();
-    
+
     PageTitle pageTitle = new PageTitle(page.getPageCrawler().getFullPath() );
-    
+
     HtmlPage htmlPage = context.pageFactory.newPage();
     htmlPage.setTitle(getTitle());
     htmlPage.setPageTitle(pageTitle);
@@ -72,17 +74,17 @@ public abstract class ResultResponder extends ChunkingResponder implements
     htmlPage.put("viewLocation", request.getResource());
     htmlPage.setNavTemplate("viewNav");
     htmlPage.put("resultResponder", this);
-    
+
     htmlPage.put("pageTypeAttributes", PageType.valuesAsString());
     htmlPage.put("actionAttributes", SEARCH_ACTION_ATTRIBUTES);
     htmlPage.put("navigationAttributes", SEARCH_NAVIGATION_ATTRIBUTES);
     htmlPage.put("securityAttributes", SECURITY_ATTRIBUTES);
     htmlPage.put("specialAttributes", SPECIAL_ATTRIBUTES);
     htmlPage.put("request", request);
-    
+
     htmlPage.render(response.getWriter());
-    
-    response.closeAll();
+
+    response.close();
   }
 
   @Override
@@ -103,7 +105,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }
-  
+
 }
 
 

@@ -13,7 +13,7 @@ import fitnesse.wiki.WikiPage;
 public class SuiteSpecificationRunner implements TraversalListener<WikiPage> {
   public String titleRegEx;
   public String contentRegEx;
-  public LinkedList<WikiPage> testPageList = new LinkedList<WikiPage>();
+  public LinkedList<WikiPage> testPageList = new LinkedList<>();
   public WikiPage searchRoot;
   public PageCrawler crawler;
 
@@ -25,7 +25,7 @@ public class SuiteSpecificationRunner implements TraversalListener<WikiPage> {
     crawler = root.getPageCrawler();
   }
 
-                                                                                              
+
   public void findPageMatches() {
     SuiteSpecificationMatchFinder finder = new SuiteSpecificationMatchFinder(titleRegEx, contentRegEx, this);
     finder.search(searchRoot);

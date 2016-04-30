@@ -57,7 +57,7 @@ public class FitClientTest implements FitClientListener {
     assertFalse(exceptionOccurred);
     assertEquals(1, outputs.size());
     assertEquals(1, counts.size());
-    assertSubString("class", (String) outputs.get(0));
+    assertSubString("class", outputs.get(0));
     assertEquals(1, counts.get(0).getRight());
   }
 

@@ -10,7 +10,7 @@ import fit.Parse;
 
 public class LoopingActionFixture extends ActionFixture {
 
-  Stack<Parse> loopContexts = new Stack<Parse>();
+  Stack<Parse> loopContexts = new Stack<>();
   Parse rows;
 
   boolean isSpecialName(String name) {

@@ -51,7 +51,7 @@ public class ParsingPage implements VariableSource {
   }
 
   public void putVariable(String name, String value) {
-    cache.putVariable(name, new Maybe<String>(value));
+    cache.putVariable(name, new Maybe<>(value));
   }
 
   @Override
@@ -101,7 +101,7 @@ public class ParsingPage implements VariableSource {
       else
         return Maybe.noString;
 
-      return new Maybe<String>(value);
+      return new Maybe<>(value);
     }
   }
 }

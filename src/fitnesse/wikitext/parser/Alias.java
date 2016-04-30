@@ -22,7 +22,7 @@ public class Alias extends SymbolType implements Rule, Translation {
         Symbol link = parser.parseToIgnoreFirstWithSymbols(SymbolType.CloseBracket, SymbolProvider.aliasLinkProvider);
         if (!parser.isMoveNext(SymbolType.CloseBracket)) return Symbol.nothing;
 
-        return new Maybe<Symbol>(current.add(tag).add(link));
+        return new Maybe<>(current.add(tag).add(link));
     }
 
     @Override

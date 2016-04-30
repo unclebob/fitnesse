@@ -7,7 +7,7 @@ public class SymbolType implements Matchable {
     private static final Rule defaultRule = new Rule() {
         @Override
         public Maybe<Symbol> parse(Symbol current, Parser parser) {
-            return new Maybe<Symbol>(current);
+            return new Maybe<>(current);
         }
     };
 
@@ -103,7 +103,7 @@ public class SymbolType implements Matchable {
             .wikiMatcher(new Matcher().whitespace());
 
     private String name;
-    private List<Matcher> wikiMatchers =  new ArrayList<Matcher>(1);
+    private List<Matcher> wikiMatchers = new ArrayList<>(1);
     private Rule wikiRule = defaultRule;
     private Translation htmlTranslation = null;
     private final SymbolType closeType;

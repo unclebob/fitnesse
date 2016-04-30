@@ -105,7 +105,7 @@ public class ScriptTable extends SlimTable {
 
   @Override
   public List<SlimAssertion> getAssertions() throws SyntaxError {
-    List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+    List<SlimAssertion> assertions = new ArrayList<>();
     ScenarioTable.setDefaultChildClass(getClass());
     if (table.getCellContents(0, 0).toLowerCase().startsWith(getTableKeyword())) {
       List<SlimAssertion> createAssertions = startActor();
@@ -151,7 +151,7 @@ public class ScriptTable extends SlimTable {
   }
 
   protected List<SlimAssertion> actionAndAssign(String symbolName, int row) {
-    List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+    List<SlimAssertion> assertions = new ArrayList<>();
     int lastCol = table.getColumnCountInRow(row) - 1;
     String actionName = getActionNameStartingAt(1, lastCol, row);
     if (!actionName.equals("")) {
@@ -178,7 +178,7 @@ public class ScriptTable extends SlimTable {
     String actionName = getActionNameStartingAt(0, lastCol, row);
     ScenarioTable scenario = getTestContext().getScenario(Disgracer.disgraceClassName(
             actionName.replace(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX, "")));
-    List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+    List<SlimAssertion> assertions = new ArrayList<>();
     if (scenario != null) {
       scenario.setCustomComparatorRegistry(customComparatorRegistry);
       String[] args = getArgumentsStartingAt(1, lastCol, row, assertions);
@@ -199,7 +199,7 @@ public class ScriptTable extends SlimTable {
 
   private List<ScenarioTable> getScenariosWithMostArgumentsFirst() {
     Collection<ScenarioTable> scenarioMap = getTestContext().getScenarios();
-    List<ScenarioTable> scenarios = new ArrayList<ScenarioTable>(scenarioMap);
+    List<ScenarioTable> scenarios = new ArrayList<>(scenarioMap);
     Collections.sort(scenarios, new ScenarioTableLengthComparator());
     return scenarios;
   }
@@ -253,7 +253,7 @@ public class ScriptTable extends SlimTable {
 
   protected List<SlimAssertion> invokeAction(int startingCol, int endingCol, int row, SlimExpectation expectation) {
     String actionName = getActionNameStartingAt(startingCol, endingCol, row);
-    List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+    List<SlimAssertion> assertions = new ArrayList<>();
     String[] args = getArgumentsStartingAt(startingCol + 1, endingCol, row, assertions);
     assertions.add(makeAssertion(callFunction(getTableType() + "Actor", actionName, (Object[]) args),
             expectation));
@@ -306,7 +306,7 @@ public class ScriptTable extends SlimTable {
   }
 
   protected List<SlimAssertion> startActor(int row, String cellContents, int classNameColumn) {
-    List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+    List<SlimAssertion> assertions = new ArrayList<>();
     String className = Disgracer.disgraceClassName(cellContents);
     assertions.add(constructInstance(getTableType() + "Actor", className, classNameColumn, row));
     getArgumentsStartingAt(classNameColumn + 1, table.getColumnCountInRow(row) - 1, row, assertions);
@@ -318,7 +318,7 @@ public class ScriptTable extends SlimTable {
     private int endingCol;
     private int row;
 
-    private List<String> arguments = new ArrayList<String>();
+    private List<String> arguments = new ArrayList<>();
     private int increment = 2;
     private boolean sequentialArguments = false;
 

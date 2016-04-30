@@ -33,7 +33,7 @@ public abstract class SlimTable {
   private int instructionNumber = 0;
   private String fixtureName;
 
-  private List<SlimTable> children = new LinkedList<SlimTable>();
+  private List<SlimTable> children = new LinkedList<>();
   private SlimTable parent = null;
 
   private final SlimTestContext testContext;
@@ -42,7 +42,7 @@ public abstract class SlimTable {
   protected String id;
   protected CustomComparatorRegistry customComparatorRegistry;
 
-  private final Map<String, String> symbolsToStore = new HashMap<String, String>();
+  private final Map<String, String> symbolsToStore = new HashMap<>();
 
   public SlimTable(Table table, String id, SlimTestContext testContext) {
     this.id = id;
@@ -122,9 +122,9 @@ public abstract class SlimTable {
   public void setFixtureName(String name){
 	  fixtureName = name;
   }
-  
+
   protected String getFixtureName() {
-	if (fixtureName == null){  
+	if (fixtureName == null){
       String tableHeader = table.getCellContents(0, 0);
       fixtureName = getFixtureName(tableHeader);
 	}
@@ -149,7 +149,7 @@ public abstract class SlimTable {
 
   protected Object[] gatherConstructorArgumentsStartingAt(int startingColumn, int row) {
     int columnCount = table.getColumnCountInRow(row);
-    List<String> arguments = new ArrayList<String>();
+    List<String> arguments = new ArrayList<>();
     for (int col = startingColumn; col < columnCount; col++) {
       arguments.add(table.getCellContents(col, row));
     }
@@ -183,7 +183,7 @@ public abstract class SlimTable {
   }
 
   protected List<List<String>> tableAsList() {
-    List<List<String>> tableArgument = new ArrayList<List<String>>();
+    List<List<String>> tableArgument = new ArrayList<>();
     int rows = table.getRowCount();
     for (int row = 1; row < rows; row++)
       tableArgument.add(tableRowAsList(row));
@@ -191,7 +191,7 @@ public abstract class SlimTable {
   }
 
   private List<String> tableRowAsList(int row) {
-    List<String> rowList = new ArrayList<String>();
+    List<String> rowList = new ArrayList<>();
     int cols = table.getColumnCountInRow(row);
     for (int col = 0; col < cols; col++)
       rowList.add(table.getCellContents(col, row));
@@ -270,14 +270,14 @@ public abstract class SlimTable {
   }
 
   class SymbolReplacer extends SlimSymbol{
-    private String toReplace; 
+    private String toReplace;
     public SymbolReplacer(String s) {
       super();
       toReplace=s;
     }
 
     //TODO: This is only implemented in the SlimServer but not in the Slim Client so it can't work properly :(
-    // Should be removed. Would this breaks other SLIM Client implementations .Net ... ? 
+    // Should be removed. Would this breaks other SLIM Client implementations .Net ... ?
     @Override
     protected String getSymbolValue(String symbolName) {
       String value = getSymbol(symbolName);
@@ -297,12 +297,12 @@ public abstract class SlimTable {
 //    protected String getSymbolValue(String symbolName){
 //      return getSymbol(symbolName);
 //    }
-    
+
     public String replace(){
       return replace(toReplace);
     }
   }
-  
+
 
   class FullExpansionSymbolReplacer extends SymbolReplacer {
     FullExpansionSymbolReplacer(String s) {
@@ -430,10 +430,10 @@ public abstract class SlimTable {
         String value = getSymbol(this.symbolName);
 	      return super.evaluateExpectation(value);
 	    }
-	    
+
 	    @Override
 	    protected SlimTestResult createEvaluationMessage(String actual, String expected) {
-	      if (assignToName != null){	
+	      if (assignToName != null){
 	        setSymbol(assignToName, actual);
 	        return SlimTestResult.plain(String.format("$%s<-[%s]", assignToName, actual));
 	      }else{
@@ -441,7 +441,7 @@ public abstract class SlimTable {
 	      }
 	    }
   }
-  
+
   class RejectedValueExpectation extends ReturnedValueExpectation {
     public RejectedValueExpectation(int col, int row) {
       super(col, row);

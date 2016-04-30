@@ -11,16 +11,16 @@ import fitnesse.testsystems.slim.Table;
 
 public class SlimTableFactory {
   private static final Logger LOG = Logger.getLogger(SlimTableFactory.class.getName());
-  private static final Map<Class<? extends SlimTable>, Constructor<? extends SlimTable>> CONSTRUCTOR_MAP = new HashMap<Class<? extends SlimTable>, Constructor<? extends SlimTable>>();
+  private static final Map<Class<? extends SlimTable>, Constructor<? extends SlimTable>> CONSTRUCTOR_MAP = new HashMap<>();
 
   private final Map<String, Class<? extends SlimTable>> tableTypes;
   private final Map<String, String> tableTypeArrays;
   private final Map<String, String> aliasArrays;
 
   public  SlimTableFactory() {
-    tableTypes = new HashMap<String, Class<? extends SlimTable>>(16);
-    tableTypeArrays = new HashMap<String, String>();
-    aliasArrays = new HashMap<String, String>();
+    tableTypes = new HashMap<>(16);
+    tableTypeArrays = new HashMap<>();
+    aliasArrays = new HashMap<>();
     addTableType("dt", DecisionTable.class);
     addTableType("decision", DecisionTable.class);
     addTableType("ddt", DynamicDecisionTable.class);
@@ -54,7 +54,7 @@ public class SlimTableFactory {
     SlimTable newTable;
     String tableType = getFullTableName(table.getCellContents(0, 0));
     //table.substitute(0, 0, tableType);
-    
+
     // First the "exceptions to the rule"
     if ( tableType.equalsIgnoreCase("define alias")) {
       parseDefineAliasTable(table);
@@ -120,31 +120,29 @@ public class SlimTableFactory {
       constructor = tableClass.getConstructor(Table.class, String.class, SlimTestContext.class);
       CONSTRUCTOR_MAP.put(tableClass, constructor);
     }
-    return (T) constructor.newInstance(table, tableId, slimTestContext);
+    return (T) constructor.<T>newInstance(table, tableId, slimTestContext);
   }
 
   private String getFullTableName(String tableName) {
-	String fixtureName=tableName;
-	String tableType;
     String disgracedName = Disgracer.disgraceClassName(getRawFixtureName(tableName));
-	//check for an alias definition
+	  //check for an alias definition
     if (aliasArrays.containsKey(disgracedName)) {
-      fixtureName = aliasArrays.get(disgracedName);
-      tableType = getRawTableTypeName(tableName);
+      String fixtureName = aliasArrays.get(disgracedName);
+      String tableType = getRawTableTypeName(tableName);
       if (hasColon(fixtureName)){
       	tableType = getRawTableTypeName(fixtureName);
       	fixtureName = getRawFixtureName(fixtureName);
-    	if (tableType.isEmpty()) tableType = getRawTableTypeName(tableName);
-    	if (fixtureName.isEmpty()) fixtureName = getRawFixtureName(tableName);
+        if (tableType.isEmpty()) tableType = getRawTableTypeName(tableName);
+        if (fixtureName.isEmpty()) fixtureName = getRawFixtureName(tableName);
       }
       return tableType + ":" + fixtureName;
     }else if (hasColon(tableName)) {
     	// a table type definition exits in the table
-        return tableName;
+      return tableName;
     }
       //check for a table type defined in a table type definition
     else if (tableTypeArrays.containsKey(disgracedName)) {
-        return tableTypeArrays.get(disgracedName) + ":" + tableName;
+      return tableTypeArrays.get(disgracedName) + ":" + tableName;
     }
     return tableName;
   }
@@ -163,13 +161,14 @@ public class SlimTableFactory {
       tableTypeArrays.put(fixture, makeTableType(tableSpecifier));
     }
   }
-  
+
   public void addDefaultTableType(String fixture, String tableType) {
 	 tableTypeArrays.put(fixture, tableType);
   }
 
   public void addAlias(String alias, String fixture) {
-	  aliasArrays.put(alias, fixture);
+    String disgracedAlias = Disgracer.disgraceClassName(alias);
+    aliasArrays.put(disgracedAlias, fixture);
   }
 
   private String makeTableType(String tableSpecifier) {
@@ -189,15 +188,14 @@ public class SlimTableFactory {
 	  private void parseDefineAliasRow(Table table, int rowIndex) {
 	    if (table.getColumnCountInRow(rowIndex) >= 2) {
 	      String fixtureName = table.getCellContents(0, rowIndex);
-	      String fixture = Disgracer.disgraceClassName(fixtureName);
 	      String tableSpecifier = table.getCellContents(1, rowIndex).trim();
-	      aliasArrays.put(fixture, tableSpecifier);
+        addAlias(fixtureName, tableSpecifier);
 	    }
 	  }
 
   public SlimTableFactory copy() {
-    return new SlimTableFactory(new HashMap<String, Class<? extends SlimTable>>(tableTypes),
-            new HashMap<String, String>(tableTypeArrays),
-            new HashMap<String, String>(aliasArrays));
+    return new SlimTableFactory(new HashMap<>(tableTypes),
+            new HashMap<>(tableTypeArrays),
+            new HashMap<>(aliasArrays));
   }
 }

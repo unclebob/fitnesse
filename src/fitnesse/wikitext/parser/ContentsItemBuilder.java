@@ -49,7 +49,7 @@ public class ContentsItemBuilder {
     }
 
     private Collection<SourcePage> getSortedChildren(SourcePage parent) {
-        ArrayList<SourcePage> result = new ArrayList<SourcePage>(parent.getChildren());
+        ArrayList<SourcePage> result = new ArrayList<>(parent.getChildren());
         Collections.sort(result);
         return result;
     }
@@ -92,7 +92,7 @@ public class ContentsItemBuilder {
             String filters = page.getProperty(PageData.PropertySUITES);
             if (!filters.isEmpty()) itemText += " (" + filters + ")";
         }
-        
+
         return itemText;
     }
 
@@ -126,8 +126,8 @@ public class ContentsItemBuilder {
     private String getBooleanProperties(SourcePage sourcePage) {
         String propChars = contents.getVariable(Contents.PROPERTY_CHARACTERS,
                 Contents.PROPERTY_CHARACTERS_DEFAULT).trim();
-        if(propChars.length() != Contents.PROPERTY_CHARACTERS_DEFAULT.length() ){ 
-            propChars = Contents.PROPERTY_CHARACTERS_DEFAULT; 
+        if(propChars.length() != Contents.PROPERTY_CHARACTERS_DEFAULT.length() ){
+            propChars = Contents.PROPERTY_CHARACTERS_DEFAULT;
         }
 
         String result = "";

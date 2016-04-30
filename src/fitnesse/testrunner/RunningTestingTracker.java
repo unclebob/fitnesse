@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 public class RunningTestingTracker {
   private static final Logger LOG = Logger.getLogger(RunningTestingTracker.class.getName());
 
-  private Map<String, Stoppable> processes = new ConcurrentHashMap<String, Stoppable>();
+  private Map<String, Stoppable> processes = new ConcurrentHashMap<>();
   private int nextTicketNumber = 1;
 
   public String generateNextTicket() {

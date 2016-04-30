@@ -8,7 +8,7 @@ public class WikiBuilder implements Translation {
         void build(Translator translator, Symbol symbol, StringBuilder wikiString);
     }
 
-    private Collection<WikiStringBuilder> builders = new ArrayList<WikiStringBuilder>();
+    private Collection<WikiStringBuilder> builders = new ArrayList<>();
 
     public WikiBuilder content() {
         builders.add(new WikiStringBuilder() {

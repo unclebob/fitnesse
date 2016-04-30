@@ -29,7 +29,7 @@ public class ClassPath {
   }
 
   public ClassPath(List<ClassPath> paths) {
-    this.elements = new ArrayList<String>();
+    this.elements = new ArrayList<>();
     this.separator = paths.get(0).getSeparator();
 
     for (ClassPath path : paths) {
@@ -44,7 +44,7 @@ public class ClassPath {
   public ClassPath withLocationForClass(String testRunner) {
     String location = findLocationForClass(testRunner);
     if (location != null) {
-      List<String> newElements = new ArrayList<String>();
+      List<String> newElements = new ArrayList<>();
       newElements.add(location);
       newElements.addAll(elements);
       return new ClassPath(newElements, separator);

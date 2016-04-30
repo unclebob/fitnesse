@@ -21,7 +21,7 @@ public class RollbackResponder implements SecureResponder {
     SimpleResponse response = new SimpleResponse();
 
     String resource = request.getResource();
-    String version = (String) request.getInput("version");
+    String version = request.getInput("version");
     if (version == null)
       return new ErrorResponder("Missing version.").makeResponse(context, request);
 

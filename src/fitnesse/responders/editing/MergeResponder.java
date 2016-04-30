@@ -35,7 +35,7 @@ public class MergeResponder implements Responder {
     WikiPagePath path = PathParser.parse(resource);
     WikiPage page = context.getRootPage().getPageCrawler().getPage(path);
     existingContent = page.getData().getContent();
-    newContent = (String) this.request.getInput(EditResponder.CONTENT_INPUT_NAME);
+    newContent = this.request.getInput(EditResponder.CONTENT_INPUT_NAME);
 
     response.setContent(makePageHtml(context));
 
@@ -60,8 +60,8 @@ public class MergeResponder implements Responder {
     if (request.hasInput(PageData.PAGE_TYPE_ATTRIBUTE)) {
       page.put("pageType", request.getInput(PageData.PAGE_TYPE_ATTRIBUTE));
     }
-    
-    List<String> attributes = new ArrayList<String>();
+
+    List<String> attributes = new ArrayList<>();
     for (int i = 0; i < PageData.NON_SECURITY_ATTRIBUTES.length; i++) {
       String attribute = PageData.NON_SECURITY_ATTRIBUTES[i];
       if (request.hasInput(attribute))
@@ -69,7 +69,7 @@ public class MergeResponder implements Responder {
     }
     if (request.hasInput(PageData.PropertyPRUNE))
       attributes.add(PageData.PropertyPRUNE);
-    
+
     page.put("attributes", attributes);
   }
 }

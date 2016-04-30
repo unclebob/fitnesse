@@ -33,7 +33,7 @@ public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase 
   public static Collection<PluginFeatureFactory> loadFromProperties(ComponentFactory componentFactory) throws PluginException {
     PropertyBasedPluginFeatureFactory propBased = new PropertyBasedPluginFeatureFactory(componentFactory);
     Collection<PluginFeatureFactory> legacyWrappers = createWrappersForLegacyPlugins(componentFactory);
-    List<PluginFeatureFactory> all = new ArrayList<PluginFeatureFactory>(legacyWrappers.size() + 1);
+    List<PluginFeatureFactory> all = new ArrayList<>(legacyWrappers.size() + 1);
     all.add(propBased);
     all.addAll(legacyWrappers);
     return all;
@@ -182,7 +182,7 @@ public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase 
     if (pluginNames == null) {
       return Collections.emptyList();
     } else {
-      List<PluginFeatureFactory> providers = new ArrayList<PluginFeatureFactory>(pluginNames.length);
+      List<PluginFeatureFactory> providers = new ArrayList<>(pluginNames.length);
       for (String pluginName : pluginNames) {
         Class<?> pluginClass = forName(pluginName);
         Object plugin = componentFactory.createComponent(pluginClass);

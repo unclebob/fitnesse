@@ -16,6 +16,7 @@ public class InProcessSlimClientBuilder extends ClientBuilder<SlimClient> {
     super(descriptor);
   }
 
+  @Override
   public SlimClient build() throws IOException {
     SlimServer slimServer = createSlimServer(1000, isDebug());
     return new InProcessSlimClient(getTestSystemName(), slimServer, getExecutionLogListener());

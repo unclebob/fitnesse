@@ -10,6 +10,7 @@ import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertMatches;
 import static util.RegexTestCase.assertSubString;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import org.junit.After;
@@ -46,7 +47,7 @@ public class ChunkedResponseTest implements ResponseSender {
 
   @After
   public void tearDown() throws Exception {
-    response.closeAll();
+    response.close();
   }
 
   @Test
@@ -90,7 +91,7 @@ public class ChunkedResponseTest implements ResponseSender {
   public void testSimpleClosing() throws Exception {
     assertFalse(closed);
     buffer = new StringBuffer();
-    response.closeAll();
+    response.close();
     String text = buffer.toString();
     assertEquals("0\r\n\r\n", text);
     assertTrue(closed);
@@ -114,7 +115,7 @@ public class ChunkedResponseTest implements ResponseSender {
   @Test
   public void testContentSize() throws Exception {
     response.add("12345");
-    response.closeAll();
+    response.close();
     assertEquals(5, response.getContentSize());
   }
 
@@ -145,25 +146,25 @@ public class ChunkedResponseTest implements ResponseSender {
     int originalLength = buffer.length();
     response.add("");
     assertEquals(originalLength, buffer.length());
-    response.closeAll();
+    response.close();
   }
 
   @Test
   public void testUnicodeCharacters() throws Exception {
     response.add("\uba80\uba81\uba82\uba83");
-    response.closeAll();
+    response.close();
 
     assertSubString("\uba80\uba81\uba82\uba83", buffer.toString());
   }
 
   @Test
-  public void testTurnOffChunking() {
+  public void testTurnOffChunking() throws IOException {
     response.turnOffChunking();
 
     response.add("one");
     response.add("two");
 
-    response.closeAll();
+    response.close();
 
     assertMatches("onetwo$", buffer.toString());
   }

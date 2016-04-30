@@ -28,12 +28,12 @@ public class SlimListBuilder {
   }
 
   public List<Object> toList(List<Instruction> instructions) {
-    final List<Object> statementsAsList = new ArrayList<Object>(instructions.size());
+    final List<Object> statementsAsList = new ArrayList<>(instructions.size());
     for (final Instruction instruction : instructions) {
       ToListExecutor executor = new ToListExecutor() {
 
         private List<Object> mergeAsList(Object[] a, Object[] b) {
-          List<Object> l = new ArrayList<Object>(a.length + b.length);
+          List<Object> l = new ArrayList<>(a.length + b.length);
           l.addAll(asList(a));
           l.addAll(asList(b));
           return l;

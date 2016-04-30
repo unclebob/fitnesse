@@ -3,7 +3,6 @@ package fitnesse.testsystems;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -121,7 +120,7 @@ public abstract class ClientBuilder<T> {
   }
 
   protected String[] parseCommandLine(String commandLine) {
-		Collection<String> result = new ArrayList<String>();
+		Collection<String> result = new ArrayList<>();
 		Pattern p = Pattern.compile("\"([^\"]*)\"|[\\S]+");
 		Matcher m = p.matcher(commandLine);
 		while(m.find())

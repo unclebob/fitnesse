@@ -7,9 +7,9 @@ import java.io.IOException;
 
 import fitnesse.html.HtmlUtil;
 import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.WikiWordReference;
 import fitnesse.wiki.fs.DiskFileSystem;
 import fitnesse.wiki.fs.FileSystem;
-import fitnesse.wikitext.parser.WikiWordBuilder;
 import fitnesse.wiki.VariableTool;
 import org.apache.commons.lang.StringUtils;
 import fitnesse.FitNesseContext;
@@ -68,7 +68,7 @@ public class SymbolicLinkResponder implements Responder {
   }
 
   private void removeSymbolicLink(Request request, WikiPage page) {
-    String linkToRemove = (String) request.getInput("removal");
+    String linkToRemove = request.getInput("removal");
 
     PageData data = page.getData();
     WikiPageProperties properties = data.getProperties();
@@ -81,8 +81,8 @@ public class SymbolicLinkResponder implements Responder {
   }
 
   private void  renameSymbolicLink(Request request, WikiPage page) {
-    String linkToRename = (String) request.getInput("rename"),
-    newName = (String) request.getInput("newname");
+    String linkToRename = request.getInput("rename"),
+    newName = request.getInput("newname");
 
     PageData data = page.getData();
     WikiPageProperties properties = data.getProperties();
@@ -98,8 +98,8 @@ public class SymbolicLinkResponder implements Responder {
   }
 
   private void addSymbolicLink(Request request, WikiPage page) throws IOException {
-    String linkName = StringUtils.trim((String) request.getInput("linkName"));
-    String linkPath = StringUtils.trim((String) request.getInput("linkPath"));
+    String linkName = StringUtils.trim(request.getInput("linkName"));
+    String linkPath = StringUtils.trim(request.getInput("linkPath"));
 
     PageData data = page.getData();
     WikiPageProperties properties = data.getProperties();
@@ -162,7 +162,7 @@ public class SymbolicLinkResponder implements Responder {
   }
 
   private boolean isInternalPageThatDoesntExist(String linkPath) {
-    String expandedPath = WikiWordBuilder.expandPrefix(page, linkPath);
+    String expandedPath = WikiWordReference.expandPrefix(page, linkPath);
     WikiPagePath path = PathParser.parse(expandedPath);
     if (path == null) {
       return true;

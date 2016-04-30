@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class CommandLine extends Option {
   private static final Pattern optionPattern = Pattern.compile("\\[-(\\w+)((?: \\w+)*)\\]");
-  private Map<String, Option> possibleOptions = new ConcurrentHashMap<String, Option>();
+  private Map<String, Option> possibleOptions = new ConcurrentHashMap<>();
 
   public CommandLine(String optionDescriptor) {
     int optionEndIndex = 0;
@@ -110,7 +110,7 @@ class Option {
 
   protected String[] split(String value) {
     String[] tokens = value.split(" ");
-    List<String> usableTokens = new LinkedList<String>();
+    List<String> usableTokens = new LinkedList<>();
     for (String token : tokens) {
       if (!token.isEmpty())
         usableTokens.add(token);

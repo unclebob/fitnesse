@@ -13,7 +13,7 @@ public class StackTraceEnricher {
   private Map<String, ClassMetaInformation> elementInformation;
 
   public StackTraceEnricher() {
-    this.elementInformation = new HashMap<String, ClassMetaInformation>();
+    this.elementInformation = new HashMap<>();
   }
 
   public void printStackTrace(Throwable throwable) {

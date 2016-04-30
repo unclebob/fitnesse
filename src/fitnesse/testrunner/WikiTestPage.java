@@ -13,7 +13,6 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.WikitextPage;
 import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
@@ -206,7 +205,7 @@ public class WikiTestPage implements TestPage {
   }
 
   private List<WikiPage> findScenarioLibraries() {
-    final LinkedList<WikiPage> uncles = new LinkedList<WikiPage>();
+    final LinkedList<WikiPage> uncles = new LinkedList<>();
     if (shouldIncludeScenarioLibraries()) {
       sourcePage.getPageCrawler().traverseUncles("ScenarioLibrary", new TraversalListener<WikiPage>() {
         @Override

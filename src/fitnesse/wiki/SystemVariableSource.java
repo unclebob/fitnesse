@@ -20,7 +20,7 @@ public class SystemVariableSource implements VariableSource {
   public Maybe<String> findVariable(String name) {
     String result = getProperty(name);
     if (result == null) return Maybe.noString;
-    return new Maybe<String>(result);
+    return new Maybe<>(result);
   }
 
   public String getProperty(String name) {

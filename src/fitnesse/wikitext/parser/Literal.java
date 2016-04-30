@@ -8,12 +8,12 @@ public class Literal extends SymbolType implements Rule {
         wikiMatcher(new Matcher().string("!-"));
         wikiRule(this);
     }
-    
+
     @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         SymbolType type = current.getType();
         String literal = parser.parseLiteral(closeType());
         if (parser.atEnd())  return Symbol.nothing;
-        return new Maybe<Symbol>(new Symbol(type, literal));
+        return new Maybe<>(new Symbol(type, literal));
     }
 }

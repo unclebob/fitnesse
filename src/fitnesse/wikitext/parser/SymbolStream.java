@@ -4,11 +4,11 @@ import java.util.LinkedList;
 
 public class SymbolStream {
     public SymbolStream() {
-        symbols = new LinkedList<Symbol>();
+        symbols = new LinkedList<>();
     }
 
     public SymbolStream(SymbolStream other) {
-        symbols = new LinkedList<Symbol>(other.symbols);
+        symbols = new LinkedList<>(other.symbols);
     }
 
     public Symbol get(int position) {

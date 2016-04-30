@@ -149,7 +149,7 @@ public abstract class Binding {
       fields.addAll(asList(clazz.getDeclaredFields()));
       return fields;
     } else {
-      return new ArrayList<Field>(asList(clazz.getDeclaredFields()));
+      return new ArrayList<>(asList(clazz.getDeclaredFields()));
     }
   }
 

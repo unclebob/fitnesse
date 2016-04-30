@@ -56,7 +56,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
 
     public boolean value();
   }
-  
+
   /**
    * The <code>PreventSystemExit</code> annotation specifies whether the {@link SystemExitSecurityManager} must be to prevent {@link System#exit(int)} calls. Default is false
    */
@@ -66,7 +66,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
 
     public boolean value() default true;
   }
-  
+
   /**
    * The <code>SuiteFilter</code> annotation specifies the suite filter of the Fitnesse suite
    * to be run, e.g.: fasttests
@@ -304,7 +304,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     }
     return debugModeAnnotation.value();
   }
-  
+
   protected boolean shouldPreventSystemExit(Class<?> klass) throws Exception {
     PreventSystemExit preventSystemExitAnnotation = klass.getAnnotation(PreventSystemExit.class);
     if (null == preventSystemExitAnnotation) {
@@ -480,7 +480,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   }
 
   private List<WikiPage> listOf(WikiPage page) {
-    List<WikiPage> list = new ArrayList<WikiPage>(1);
+    List<WikiPage> list = new ArrayList<>(1);
     list.add(page);
     return list;
   }

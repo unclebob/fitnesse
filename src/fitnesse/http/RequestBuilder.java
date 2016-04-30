@@ -27,9 +27,9 @@ public class RequestBuilder {
 
   private String resource;
   private String method = "GET";
-  private List<InputStream> bodyParts = new LinkedList<InputStream>();
-  private HashMap<String, String> headers = new HashMap<String, String>();
-  private HashMap<String, Object> inputs = new HashMap<String, Object>();
+  private List<InputStream> bodyParts = new LinkedList<>();
+  private HashMap<String, String> headers = new HashMap<>();
+  private HashMap<String, Object> inputs = new HashMap<>();
   private String host;
   private int port;
   private String boundary;

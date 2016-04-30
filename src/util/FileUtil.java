@@ -133,7 +133,7 @@ public class FileUtil {
   }
 
   public static LinkedList<String> getFileLines(File file) throws IOException {
-    LinkedList<String> lines = new LinkedList<String>();
+    LinkedList<String> lines = new LinkedList<>();
     BufferedReader reader = new BufferedReader(new FileReader(file));
     String line;
     try {
@@ -174,8 +174,8 @@ public class FileUtil {
   }
 
   public static File[] getDirectoryListing(File dir) {
-    SortedSet<File> dirSet = new TreeSet<File>();
-    SortedSet<File> fileSet = new TreeSet<File>();
+    SortedSet<File> dirSet = new TreeSet<>();
+    SortedSet<File> fileSet = new TreeSet<>();
     File[] files = dir.listFiles();
     if (files == null)
       return new File[0];
@@ -185,7 +185,7 @@ public class FileUtil {
       else
         fileSet.add(file);
     }
-    List<File> fileList = new LinkedList<File>();
+    List<File> fileList = new LinkedList<>();
     fileList.addAll(dirSet);
     fileList.addAll(fileSet);
     return fileList.toArray(new File[fileList.size()]);

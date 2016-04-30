@@ -15,6 +15,8 @@ To set up debugging for your fixture code:
 
 The Tools menu contains a Remote Debug action that can be used to start a test run in debug mode.
 
+Alternatively, just drag the following link to the bookmark toolbar of your favourite browser: !-<a title="Debug FitNesse" id="debugfitnesse" href="javascript:(function(){var url = document.location.pathname + '?responder=test&remote_debug=true'; window.location = url;})();"><span>Debug FitNesse</span></a>-! (since the link contains javascript, this may not work for all browsers).
+
 !2 Alternative way to debug when using Slim
 For.NET it was found to be easier to debug starting the slim runner with the debugger attached and then getting fitnesse to connect to this started instance.  
 

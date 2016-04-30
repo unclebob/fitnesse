@@ -6,7 +6,7 @@ import java.util.List;
 
 public class CompositeTestSystemListener implements TestSystemListener {
 
-  private final List<TestSystemListener> listeners = new LinkedList<TestSystemListener>();
+  private final List<TestSystemListener> listeners = new LinkedList<>();
 
   public final void addTestSystemListener(TestSystemListener listener) {
     listeners.add(listener);

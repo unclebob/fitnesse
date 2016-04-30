@@ -34,7 +34,7 @@ public class FixtureName {
   }
 
   public List<String> getPotentialFixtureClassNames(Set<String> fixturePathElements) {
-    List<String> candidateClassNames = new ArrayList<String>();
+    List<String> candidateClassNames = new ArrayList<>();
 
     if (!isFullyQualified()) {
       for (String packageName : fixturePathElements) {

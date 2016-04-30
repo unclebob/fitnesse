@@ -1,4 +1,27 @@
 !2 ${FITNESSE_VERSION}
+ * FitNesse requires Java 7 now ([[#872][https://github.com/unclebob/fitnesse/issues/872]], [[#877][https://github.com/unclebob/fitnesse/issues/877]])
+ * New autocomplete feature for the "move page" page ([[#867][https://github.com/unclebob/fitnesse/issues/867]])
+ * Name the link to execution log simply "Execution Log" ([[#851][https://github.com/unclebob/fitnesse/issues/851]])
+ * Dynamically add fitnesse jartoclasspath ([[#862][https://github.com/unclebob/fitnesse/issues/862]], [[#866][https://github.com/unclebob/fitnesse/issues/866]])
+ * Searching for tags across Symbolic links ([[#488][https://github.com/unclebob/fitnesse/issues/488]], [[#888][https://github.com/unclebob/fitnesse/issues/888]])
+ * Add support for table-in-table editing in rich text editor ([[#669][https://github.com/unclebob/fitnesse/issues/669]], [[#885][https://github.com/unclebob/fitnesse/issues/885]])
+ * ''!-@SystemUnderTest-!'' now accepts method calls from subclasses ([[#907][https://github.com/unclebob/fitnesse/issues/907]])
+ * Disallow uploading to folder ''files/fitnesse'' ([[#889][https://github.com/unclebob/fitnesse/issues/889]])
+ * Avoid infinite cycles when using symlinks ([[#888][https://github.com/unclebob/fitnesse/issues/888]])
+ * (Slim) Deal with escaping content in hash table ([[#886][https://github.com/unclebob/fitnesse/issues/886]])
+ * Issues fixed:
+   * !-CompareVersions-! responder is not escaping output properly ([[#861][https://github.com/unclebob/fitnesse/issues/861]], [[#869][https://github.com/unclebob/fitnesse/issues/869]])
+   * Improve code by honoring ''InterruptedException'' ([[#874][https://github.com/unclebob/fitnesse/issues/874]])
+   * FitNesse stops again when calling /?shutdown ([[#875][https://github.com/unclebob/fitnesse/issues/875]])
+   * Fixed: Running suites does not show the tests summaries ([[#876][https://github.com/unclebob/fitnesse/issues/876]])
+   * Fix escaping of HTML in Slim hash tables ([[#878][https://github.com/unclebob/fitnesse/issues/878]])
+   * Fix class loading for FitNesse resources ([[#880][https://github.com/unclebob/fitnesse/issues/880]])
+   * Change json content type from ''text/json'' to ''applicatioin/json'' ([[#891][https://github.com/unclebob/fitnesse/issues/891]])
+   * JUnit runner now plays nice with Gradle ([[#909][https://github.com/unclebob/fitnesse/issues/909]])
+   
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=14&state=closed.
+
+!2 20151230
  * Documentation updates ([[843][https://github.com/unclebob/fitnesse/pull/843]], [[833][https://github.com/unclebob/fitnesse/pull/833]], [[825][https://github.com/unclebob/fitnesse/pull/825]], [[815][https://github.com/unclebob/fitnesse/pull/815]])
  * Slim runs completely in process in when run in debug mode ([[837][https://github.com/unclebob/fitnesse/pull/837]])
  * Detailed diff for failed Slim tests ([[824][https://github.com/unclebob/fitnesse/pull/824]])
@@ -9,7 +32,7 @@
  * FitNesse now uses java.util.concurrent thread pools instead of spawning unmanaged threads ([[830][https://github.com/unclebob/fitnesse/pull/830]])
  * Execution log information is displayed when executing suites and tests with format=xml ([[816][https://github.com/unclebob/fitnesse/issues/816]])
  * Many, many code consistency fixes thanks to @hansjoachim ([[807][https://github.com/unclebob/fitnesse/pull/807]], [[808][https://github.com/unclebob/fitnesse/pull/808]], [[810][https://github.com/unclebob/fitnesse/pull/810]], [[811][https://github.com/unclebob/fitnesse/pull/811]], [[812][https://github.com/unclebob/fitnesse/pull/812]], [[817][https://github.com/unclebob/fitnesse/pull/817]], [[818][https://github.com/unclebob/fitnesse/pull/818]], [[829][https://github.com/unclebob/fitnesse/pull/829]], [[836][https://github.com/unclebob/fitnesse/pull/836]], [[840][https://github.com/unclebob/fitnesse/pull/840]])
- * Under the hood: JQuery has been upgraded to 1.11.3 (was 1.7.2)
+ * Under the hood:JQueryhas been upgraded to 1.11.3 (was 1.7.2)
  * Issues fixed:
    * Class path issues (on windows and paths with spaces) ([[821][https://github.com/unclebob/fitnesse/pull/821]])
    * Fix issues with non-wiki words and symbolic links ([[820][https://github.com/unclebob/fitnesse/pull/820]])
@@ -17,17 +40,19 @@
    * Fix issues with parsing UTF-8 characters ([[791][https://github.com/unclebob/fitnesse/pull/791]])
    * JUnit formatter displays run time with 3 decimal precision ([[794][https://github.com/unclebob/fitnesse/issues/794]])
 
-!2 20150814
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=13&state=closed.
+
+!1 20150814
  * Syntax highlighting in plain text editor ([[631][https://github.com/unclebob/fitnesse/pull/631]])
  * Support generic behavior in Slim (Java) fixture via when fixtures implement [[!-InteractionAwareFixture-!][UserGuide.WritingAcceptanceTests.SliM.InteractionAwareFixture]] ([[724][https://github.com/unclebob/fitnesse/pull/724]])
  * Tag filtering is now all case insensitive ([[728][https://github.com/unclebob/fitnesse/pull/728]])
  * Improved slim hash table handling ([[739][https://github.com/unclebob/fitnesse/pull/739]])
- * Support custom formatters ([[764][https://github.com/unclebob/fitnesse/pull/764]])
- * Non wiki word page names are properly resolved when using !-!include-! statements
+ * Supportcustomformatters([[764][https://github.com/unclebob/fitnesse/pull/764]])
+ * Nonwikiwordpage names are properly resolved when using !-!include-! statements
  * Page-in-progress formatter has been removed ([[767][https://github.com/unclebob/fitnesse/pull/767]])
  * Issues fixed:
    * NPE in !-SuiteHistoryFormatter-! ([[736][https://github.com/unclebob/fitnesse/pull/736]])
-   * WYSIWYG (rich text) breaks inlinecode in table ([[756][https://github.com/unclebob/fitnesse/pull/756]])
+   * WYSIWYG (rich text)breaksinlinecodeintable ([[756][https://github.com/unclebob/fitnesse/pull/756]])
    * Rich text editor retains line breaks ([[756][https://github.com/unclebob/fitnesse/pull/756]], [[777][https://github.com/unclebob/fitnesse/pull/77]])
    * XML result files do no longer contain HTML output by default (as it was a few releases ago) ([[771][https://github.com/unclebob/fitnesse/pull/771]])
 
@@ -45,7 +70,7 @@ For a complete list of closed issues and merged pull requests see https://github
  * Improve messages when Slim server crashes ([[662][https://github.com/unclebob/fitnesse/pull/662]])
  * Make the "bootstrap" theme the default ([[679][https://github.com/unclebob/fitnesse/pull/679]])
  * Relaxed Test & Page History to require only secure-read permission ([[696][https://github.com/unclebob/fitnesse/pull/696]])
- * Slim converters produce user friendly errors ([[682][https://github.com/unclebob/fitnesse/pull/682]])
+ * Slim convertersproduceuserfriendlyerrors([[682][https://github.com/unclebob/fitnesse/pull/682]])
  * Documentation updates ([[668][https://github.com/unclebob/fitnesse/pull/668]], [[672][https://github.com/unclebob/fitnesse/pull/672]], [[681][https://github.com/unclebob/fitnesse/pull/681]])
  * Issues fixed:
    * Fixes in file paths ([[667][https://github.com/unclebob/fitnesse/pull/667]], [[692][https://github.com/unclebob/fitnesse/pull/692]])
@@ -63,14 +88,14 @@ For a complete list of closed issues and merged pull requests see https://github
  * Hash table editing support for rich text editor ([[622][https://github.com/unclebob/fitnesse/pull/622]])
  * Rich editor icons are now SVG images ([[568][https://github.com/unclebob/fitnesse/pull/568]])
  * Improved Slim Converters ([[613][https://github.com/unclebob/fitnesse/pull/613]])
- * Test execution log is stored in page history. It's no longer stored in !-ErrorLogs-! pages ([[627][https://github.com/unclebob/fitnesse/pull/627]])
+ * Test execution log is storedinpagehistory. It's no longer stored in !-ErrorLogs-! pages ([[627][https://github.com/unclebob/fitnesse/pull/627]])
  * ''?suite'' and ''?test'' responders can now automatically clean up the test history ([[636][https://github.com/unclebob/fitnesse/pull/636]])
  * Added JUnit output format for suite runs: ''?suite&format=junit'' ([[642][https://github.com/unclebob/fitnesse/pull/642]])
  * Issues fixed:
    * Fixed errors that occurred when a different XML !-TransformerFactory-! was loaded ([[598][https://github.com/unclebob/fitnesse/pull/598]])
    * Fixed failure navigator in test history pages ([[580][https://github.com/unclebob/fitnesse/pull/580]])
    * Empty ''suiteFilter'' argument on ''?suite'' responder will be ignored ([[625][https://github.com/unclebob/fitnesse/pull/625]])
-   * Test/Suite button is search results works from sub-wiki's
+   * Test/Suite button is search results worksfromsub-wiki's
    * Allow Symlink rename/replace on existing Symlink ([[610][https://github.com/unclebob/fitnesse/pull/610]])
    * Prevent port conflicts for Slim runner when run in-process ([[621][https://github.com/unclebob/fitnesse/pull/621]])
 
@@ -83,17 +108,17 @@ For a complete list of closed issues and merged pull requests see https://github
    * fitnesse.wikitext.Utils, use !-fitnesse.html.HtmlUtil-! instead.
    * !-fitnesse.FitFilter-!.
  * Page names do no longer have to follow !-WikiWord-! syntax ([[513][https://github.com/unclebob/fitnesse/pull/513]])
- * Implemented Slim !-StopSuiteException-! - stops whole suite from executing
+ * Implemented Slim !-StopSuiteException-! -stopswholesuitefrom executing
  * More flexible filter definitions for JUnit runner ([[555][https://github.com/unclebob/fitnesse/pull/555]])
  * Can customize property characters used in !-!contents-! ([[541][https://github.com/unclebob/fitnesse/pull/541]])
  * Deal more nicely with Slim scenario output parameters ([[536][https://github.com/unclebob/fitnesse/pull/536]])
- * Allow for url parameters as variables in wiki pages ([[531][https://github.com/unclebob/fitnesse/pull/531]])
+ * Allowforurlparametersas variables in wiki pages ([[531][https://github.com/unclebob/fitnesse/pull/531]])
  * Raise an error if a new page will override an existing page ([[459][https://github.com/unclebob/fitnesse/pull/459]])
  * Issues fixed:
    * Reverted old test behavior: only the current page will be tested (previously also test sub-pages were executed) ([[538][https://github.com/unclebob/fitnesse/pull/538]])
    * Fix !-SimpleFileVersionsController-! so it can be configured in ''plugins.properties''.
    * Remember Wrap and Auto-format options in Safari ([[521][https://github.com/unclebob/fitnesse/pull/521]])
-   * ?properties responder is now returning more properties when asked for json output ([[517][https://github.com/unclebob/fitnesse/pull/517]])
+   * ?properties responder is now returning more properties whenaskedforjsonoutput([[517][https://github.com/unclebob/fitnesse/pull/517]])
 
 For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=9&state=closed.
 
@@ -123,14 +148,14 @@ For a complete list of closed issues and merged pull requests see https://github
    * ''!-ErrorLog-!'' was not written if test execution was interrupted.
    * Include page header when executing test or suite.
    * Slow page tags again (bootstrap theme).
-   * ''SLIM_VERSION'' variable is back: allow older SLiM implementations to connect.
+   * ''SLIM_VERSION'' variable is back: allow olderSLiMimplementations to connect.
 
 For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=7&state=closed.
 
 !2 2014-06-23
  * Author information for !-GitVersionController-!.
  * ''?suite'' and ''?test'' are now the same responder.
- * More useful failure message for jUnit runner.
+ * More useful failure message forjUnitrunner.
  * Use String arrays for commands. This should avoid errors with spaces in path names.
  * Improved matching for query tables.
  * Plugins are now loaded relative to the FitNesse root path.
@@ -158,11 +183,11 @@ For a complete list of closed issues and merged pull requests see https://github
  * ''JAVA_HOME'' variable is now used, if set, to find the java executable for java subprocesses.
  * Properties ''slim.timeout'' and ''slim.debug.timeout'' can be used to configure timeouts (start up and finish) for SLIM test runs.
  * The rich text editor is now an in-page editor (does not use an iframe anymore).
- * Can auto-format on save when editing a page in plain text mode.
+ * Can auto-format on save when editing a page in plain textmode.
  * Issues fixed:
    * ''Add'' menu should only show templates ending on ''-Page.''
    * Missing stylesheets added to JUnit test results.
-   * Fix representation issue with ignored field in SLim !-TableTable.-!
+   * Fix representation issue with ignored field inSLim!-TableTable.-!
 
 For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=6&state=closed.
 
@@ -175,7 +200,7 @@ For a complete list of closed issues and merged pull requests see https://github
  * Support for more content types (in particular image types).
  * Cleanup: removed packages fitnesse.runner, fitnesse.schedule.
  * Refactoring: the code is a more modular than before. This makes it easier to integrate !-FitNesse-! components in other applications.
- * Make Fit test runner no longer dependent on the wiki running: now the Fit test system starts it's own "socket catcher".
+ * MakeFittestrunnerno longer dependent on the wiki running: now theFit testsystem starts it's own "socket catcher".
  * The jUnit test running is starting a test runner by itself. It's no longer using !-FitNesseMain-!.
  * Slim server can be kept running after test execution (-d option).
  * Issues fixed:
@@ -190,12 +215,12 @@ For a complete list of closed issues and merged pull requests see https://github
 
 !2 2013-11-10
  * CMSystem functionality is removed. Now only the !-VersionsController-! interface can be used.
- * Git version control and recent-changes support
- * Page caching is removed. Changes on the file system are now directly reflected in the wiki
+ * Git version control andrecent-changessupport
+ * Page caching is removed.Changesonthefilesystemarenowdirectly reflected in the wiki
  * Test and Page history can show/hide passed tests. This makes it easier to search for failed test runs.
  * The "names" responder has new options: "Recursive", "!-LeafOnly-!", and "!-ShowTags-!" (needs documentation update!)
- * Reduce space used by included pages on test page.
- * Test system, Fit server and wiki code has been cleaned up.
+ * Reduce space used by includedpagesontestpage.
+ * Testsystem, Fit server and wiki code has been cleaned up.
  * New command line option ''-f <config file>''. Loads a custom configuration properties file.
  * Code cleanup: test system, wiki and reporting (formatters)
  * Settings can be configured both on the command line and in the plugins.properties file
@@ -203,7 +228,7 @@ For a complete list of closed issues and merged pull requests see https://github
  * Issues fixed:
    * HTML content is table cells is passed to the SUT as-is
    * Sockets are not properly closed after Slim test execution
-   * !-StopTest-! behaviour changed in version 20130530. The old behaviour is in place again.
+   * !-StopTest-!behaviourchanged in version 20130530. Theoldbehaviourisin place again.
    * Fixed issue where stylesheets were not properly loaded in Chrome.
    * String arguments are not converted, even if a Converter is registered.
    * Rich text editor improvements
@@ -211,26 +236,26 @@ For a complete list of closed issues and merged pull requests see https://github
 !2 2013-05-30
  * Many improvements in the JUnit test runner
  * New: version comparator
- * Wiki: can set image width with -w option, border with -b and margin with -m: !-!img -b 2 -m 10 -w 600 http://files/someImage.png-!
+ * Wiki: can set image width with -w option, border with -b and margin with -m: !-!<g class="gr_ gr_1081 gr-alert gr_spell gr_disable_anim_appear undefined ContextualSpelling ins-del multiReplace" id="1081" data-gr-id="1081">img</g> -b 2 -m 10 -w 600 http://files/someImage.png-!
  * !-FitNesse-! loads well with both fitnesse.jar and fitnesse-standalone.jar
- * Virtual Wiki functionality has finally been removed
- * Big refactoring of SLiM test system. Output is now XML compliant,  introduction of domain classes and caching of set up/tear down pages
- * Many fixes in the rich text editor: full-screen editing, more lenient parsing of wiki text, improved cut-and-paste
- * Optimized wiki page parser performance
- * Fixed issue with setting/reading the same field multiple times in a SLiM decision table
- * Stack traces from SLiM server are enriched with class information
+   * Virtual Wiki functionality has finally been removed
+   * Big refactoring ofSLiMtestsystem. Output is now XML compliant, introduction of domain classes and cachingofsetup/tear down pages
+   * Many fixes in the rich text editor: full-screen editing, more lenient parsing of wiki text, improved cut-and-paste
+   * Optimized wiki page parser performance
+   * Fixed issue with setting/reading the same field multiple times in aSLiMdecision table
+   * Stack traces fromSLiMserver are enriched with class information
 
 !2 2012-11-16
- * Added new Failure Navigator.  Now possible to jump quickly to cells containing failures or exceptions.  Works on Tests and Suites.  Finds failures in collapsed sections or in scenario tables.
+ * Added new Failure Navigator. Now possible to jump quickly to cells containing failures or exceptions. Works on Tests and Suites. Finds failures in collapsed sections or in scenario tables.
 
 !2 2012-09-18
  * Added the concept of a !-TemplateLibrary-! and the ability to insert existing templates into the plain text editor.
 
 !2 2012-03-20
- * '''Note:''' This page has a layout that's not conform previous releases of !-FitNesse-!
+ * '''Note:''' This page has a layoutthat's not conformprevious releases of !-FitNesse-!
  * Introduced !-ReleaseNotes-! page
  * Moved a lot of presentation logic to template files
- * New style - The layout and style in the WIki text is changed as well, keep this in mind when comparing test output
+ * New style - The layout and style in theWIkitext is changed as well, keep this in mind when comparing test output
  * Wysiwyg editor
  * Parser fixes
  * [[Theming system][UserGuide.WikiTheming]]
@@ -244,11 +269,11 @@ maven pom.xml cleanups:
  * Remove unneeded default <groupId> tags.
  * Add plugin <version> tags.
  * Add explicit, platform independent UTF-8 file encoding via property: project.build.sourceEncoding
- * Remove dependency on obsolete fitlibrary (the required classes are already in the source tree).
+ * Remove dependencyonobsoletefitlibrary(the required classes are already in the source tree).
  * Replace <system> dependency on json with the latest published json artifact.
  * Remove unneeded ${basedir} from <sourceDirectory> tag value.
 
 !2 20081128 (UB)
- * Added &debug flag to TestResponder url.  This forces the test to run ''inside'' the fitnesse process.  If you are running fitnesse in a debugger, you can breakpoint your fixtures.
- * Symbols can be java properties or environment variables.  Symbols first, env variables second, java properties third.
- * If the first cell of a script table is a symbol assignment ($V=) then the rest must be a function call.  The symbol is assigned the return value of the function.
+ * Added &debug flag to TestResponderurl. This forces the test to run ''inside'' the fitnesse process. If you are running fitnesse in a debugger, you can breakpoint your fixtures.
+ * Symbols can be java properties or environment variables. Symbols first, env variables second, java properties third.
+ * If the first cell of a script table is a symbol assignment ($V=) then the rest must be a function call. The symbol is assigned the return value of the function.

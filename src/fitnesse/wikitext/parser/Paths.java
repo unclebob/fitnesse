@@ -17,7 +17,7 @@ public class Paths {
     }
 
     private class TreeWalker implements SymbolTreeWalker {
-        public List<String> result = new ArrayList<String>();
+        public List<String> result = new ArrayList<>();
 
         @Override
         public boolean visit(Symbol node) {

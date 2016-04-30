@@ -22,7 +22,7 @@ public class VersionComparer {
   }
 
   private List<String> contentToLines(String content) {
-    List<String> lines = new LinkedList<String>();
+    List<String> lines = new LinkedList<>();
     for(String line : content.split("\n"))
       lines.add(line);
     return lines;

@@ -1,6 +1,9 @@
-This section will contain the resources.
+This section will contain custom resources (css, templates).
 
-Users can override files in files/fitnesse or add their own (e.g. a custom
+NOTE: You can not upload files to files/fitnesse via FitNesse. Instead add
+files directly.
+
+You can override files in files/fitnesse or add your own (e.g. a custom
 theme). Both the render engine (Velocity) and the FileResponder check
 files/fitnesse and the fitnesse.resources package when looking for a particular
 file.

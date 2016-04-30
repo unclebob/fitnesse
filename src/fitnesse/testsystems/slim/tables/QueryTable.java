@@ -14,7 +14,7 @@ import fitnesse.util.StringUtils;
 
 public class QueryTable extends SlimTable {
   private static final String COMMENT_COLUMN_MARKER = "#";
-  protected List<String> fieldNames = new ArrayList<String>();
+  protected List<String> fieldNames = new ArrayList<>();
 
   public QueryTable(Table table, String id, SlimTestContext testContext) {
     super(table, id, testContext);
@@ -93,7 +93,7 @@ public class QueryTable extends SlimTable {
 
     Collection<MatchedResult> potentialMatches = queryResults.scorePotentialMatches();
 
-    List<MatchedResult> potentialMatchesByScore = new ArrayList<MatchedResult>(potentialMatches);
+    List<MatchedResult> potentialMatchesByScore = new ArrayList<>(potentialMatches);
     Collections.sort(potentialMatchesByScore, MatchedResult.compareByScore());
 
     return markRows(queryResults, potentialMatchesByScore);
@@ -105,17 +105,20 @@ public class QueryTable extends SlimTable {
     unmatchedTableRows.remove(Integer.valueOf(1));
     List<Integer> unmatchedResultRows = unmatchedRows(queryResults.getRows().size());
 
+    markMatchedRows(queryResults, potentialMatchesByScore, unmatchedTableRows, unmatchedResultRows);
+    markMissingRows(unmatchedTableRows);
+    markSurplusRows(queryResults, unmatchedResultRows);
+
+    return !unmatchedTableRows.isEmpty() || !unmatchedResultRows.isEmpty() ? ExecutionResult.FAIL : ExecutionResult.PASS;
+  }
+
+  protected void markMatchedRows(QueryResults queryResults, Iterable<MatchedResult> potentialMatchesByScore, List<Integer> unmatchedTableRows, List<Integer> unmatchedResultRows) {
     while (!isEmpty(potentialMatchesByScore)) {
       MatchedResult bestMatch = takeBestMatch(potentialMatchesByScore);
       markFieldsInMatchedRow(bestMatch.tableRow, bestMatch.resultRow, queryResults);
       unmatchedTableRows.remove(bestMatch.tableRow);
       unmatchedResultRows.remove(bestMatch.resultRow);
     }
-
-    markMissingRows(unmatchedTableRows);
-    markSurplusRows(queryResults, unmatchedResultRows);
-
-    return !unmatchedTableRows.isEmpty() || !unmatchedResultRows.isEmpty() ? ExecutionResult.FAIL : ExecutionResult.PASS;
   }
 
   protected MatchedResult takeBestMatch(Iterable<MatchedResult> potentialMatchesByScore) {
@@ -141,7 +144,7 @@ public class QueryTable extends SlimTable {
   }
 
   protected List<Integer> unmatchedRows(int rowCount) {
-    List<Integer> result = new ArrayList<Integer>(rowCount);
+    List<Integer> result = new ArrayList<>(rowCount);
 
     for (int i = 0; i < rowCount; i++) {
       result.add(i);
@@ -237,7 +240,7 @@ public class QueryTable extends SlimTable {
   }
 
   protected class QueryResults {
-    private List<QueryResultRow> rows = new ArrayList<QueryResultRow>();
+    private List<QueryResultRow> rows = new ArrayList<>();
 
     public QueryResults(List<List<List<Object>>> queryResultTable) {
       for (int i = 0; i < queryResultTable.size(); i++) {
@@ -248,7 +251,7 @@ public class QueryTable extends SlimTable {
     }
 
     public Collection<MatchedResult> scorePotentialMatches() {
-      Collection<MatchedResult> result = new ArrayList<MatchedResult>();
+      Collection<MatchedResult> result = new ArrayList<>();
 
       int rows = table.getRowCount();
       for (int tableRow = 2; tableRow < rows; tableRow++)
@@ -258,7 +261,7 @@ public class QueryTable extends SlimTable {
     }
 
     public List<String> getList(List<String> fieldNames, int row) {
-      List<String> result = new ArrayList<String>();
+      List<String> result = new ArrayList<>();
       for (String name : fieldNames)
         result.add(rows.get(row).get(name));
 
@@ -281,7 +284,7 @@ public class QueryTable extends SlimTable {
       }
 
       public Collection<MatchedResult> scoreMatches(int tableRow) {
-        Collection<MatchedResult> result = new ArrayList<MatchedResult>();
+        Collection<MatchedResult> result = new ArrayList<>();
 
         for (QueryResultRow row : rows) {
           MatchedResult match = scoreMatch(table, tableRow, row);
@@ -319,7 +322,7 @@ public class QueryTable extends SlimTable {
 
       public QueryResultRow(int index, List<List<Object>> values) {
         this.index = index;
-        Map<String, String> rowMap = new HashMap<String, String>();
+        Map<String, String> rowMap = new HashMap<>();
         for (List<Object> columnPair : values) {
           String fieldName = (String) columnPair.get(0);
           String fieldValue = (String) columnPair.get(1);

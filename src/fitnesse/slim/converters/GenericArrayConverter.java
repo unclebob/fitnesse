@@ -23,7 +23,7 @@ public class GenericArrayConverter<T> implements Converter<Object> {
       return NULL_VALUE;
 
     int size = Array.getLength(array);
-    List<String> ret = new ArrayList<String>(size);
+    List<String> ret = new ArrayList<>(size);
     for (int i = 0; i < size; i++) {
       ret.add(getElementString(array, i));
     }

@@ -99,7 +99,8 @@ public abstract class SlimMethodInvocationTestBase {
   @Test
   public void passOneDate() throws Exception {
     caller.call("testSlim", "oneDate", "5-May-2009");
-    assertEquals((Date) new DateConverter().fromString("5-May-2009"), testSlim.getDateArg());
+    Date expected = new DateConverter().fromString("5-May-2009");
+    assertEquals(expected, testSlim.getDateArg());
   }
 
   @Test

@@ -7,7 +7,7 @@ public class PlainTextTable extends SymbolType implements Rule {
         wikiRule(this);
         htmlTranslation(new Table());
     }
-    
+
     @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol table = parser.getCurrent();
@@ -37,12 +37,12 @@ public class PlainTextTable extends SymbolType implements Rule {
         if (parser.getCurrent().isType(SymbolType.Whitespace)) {
             table.putProperty("hideFirst", "");
         }
-        
+
         Symbol row = null;
         while (true) {
             Symbol line = parser.parseToWithSymbols(terminators, plainTextTableTypes, 0);
             if (parser.atEnd()) return Symbol.nothing;
-            if (parser.getCurrent().isType(SymbolType.ClosePlainTextTable)) return new Maybe<Symbol>(table);
+            if (parser.getCurrent().isType(SymbolType.ClosePlainTextTable)) return new Maybe<>(table);
             if (row == null) {
                 row = new Symbol(SymbolType.SymbolList);
                 table.add(row);

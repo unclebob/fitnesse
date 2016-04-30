@@ -1,0 +1,23 @@
+# For more information about the properties used in
+# this file, please see the EditorConfig documentation:
+# http://editorconfig.org/
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{html,vm}]
+indent_size = 1
+
+[*.{css,less}]
+indent_size = 2
+
+[*.js]
+indent_size = 4
+
+[*.java]
+indent_size = 2
+

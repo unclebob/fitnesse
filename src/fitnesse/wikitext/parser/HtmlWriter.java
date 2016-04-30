@@ -88,7 +88,7 @@ public class HtmlWriter {
     public String toHtml() { return html.toString(); }
 
     private class Tags {
-        private Stack<Tag> tags = new Stack<Tag>();
+        private Stack<Tag> tags = new Stack<>();
         private Tag top = new Tag(null, false);
         private boolean isEmpty = true;
 

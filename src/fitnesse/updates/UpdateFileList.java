@@ -21,7 +21,7 @@ public class UpdateFileList {
   private List<String> mainDirectories;
   private String updateListContent;
   private String updateDoNotCopyOverContent;
-  private Set<String> doNotReplaceFiles = new HashSet<String>();
+  private Set<String> doNotReplaceFiles = new HashSet<>();
   private String baseDirectory = "";
   private String outputDirectory = "";
   static UpdateFileList testUpdater = null;
@@ -44,7 +44,7 @@ public class UpdateFileList {
   }
 
   public UpdateFileList() {
-    mainDirectories = new ArrayList<String>();
+    mainDirectories = new ArrayList<>();
     updateListContent = "";
     updateDoNotCopyOverContent = "";
   }

@@ -34,13 +34,14 @@ public class Contents extends SymbolType implements Rule, Translation {
                 new String[] {HELP_TOC, HELP_INSTEAD_OF_TITLE_TOC, REGRACE_TOC, PROPERTY_TOC, FILTER_TOC, MORE_SUFFIX_TOC, PROPERTY_CHARACTERS},
                 parser.getVariableSource());
 
-        return new Maybe<Symbol>(current);
+        return new Maybe<>(current);
     }
     @Override
     public String toTarget(Translator translator, Symbol symbol) {
         ContentsItemBuilder itemBuilder
                 = new ContentsItemBuilder(symbol, 1, translator.getPage());
-        HtmlTag contentsDiv = HtmlUtil.makeDivTag("contents");
+        HtmlTag contentsDiv = new HtmlTag("div");
+        contentsDiv.addAttribute("class", "contents");
         contentsDiv.add(HtmlUtil.makeBold("Contents:"));
         contentsDiv.add(itemBuilder.buildLevel(translator.getPage()));
         return contentsDiv.html();

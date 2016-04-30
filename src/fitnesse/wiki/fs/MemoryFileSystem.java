@@ -17,7 +17,7 @@ import util.FileUtil;
 
 public class MemoryFileSystem implements FileSystem {
   public static final String DIRECTORY_PLACEHOLDER = "*This is a directory*";
-  private final Map<String, Payload> files = new LinkedHashMap<String, Payload>();
+  private final Map<String, Payload> files = new LinkedHashMap<>();
 
     @Override
     public void makeFile(File file, String content) {
@@ -54,7 +54,7 @@ public class MemoryFileSystem implements FileSystem {
     @Override
     public String[] list(File file) {
         String path = file.getPath();
-        Collection<String> result = new ArrayList<String>();
+        Collection<String> result = new ArrayList<>();
         for (String filePath: files.keySet()) {
             if (!filePath.startsWith(path)) continue;
             if (filePath.equals(path)) continue;

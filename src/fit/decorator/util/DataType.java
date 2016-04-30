@@ -109,8 +109,8 @@ public abstract class DataType {
     }
   };
 
-  private static final Map<String, DataType> predefinedTypes = new HashMap<String, DataType>();
-  private static final Map<String, DataType> userDefinedTypes = new HashMap<String, DataType>();
+  private static final Map<String, DataType> predefinedTypes = new HashMap<>();
+  private static final Map<String, DataType> userDefinedTypes = new HashMap<>();
 
   static {
     predefinedTypes.put(INT_TYPE, INTEGER);

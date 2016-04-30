@@ -20,6 +20,6 @@ public class AnchorName extends SymbolType implements Rule {
         if (!ScanString.isWord(anchor)) return Symbol.nothing;
 
         current.add(tokens.get(1));
-        return new Maybe<Symbol>(current);
+        return new Maybe<>(current);
     }
 }

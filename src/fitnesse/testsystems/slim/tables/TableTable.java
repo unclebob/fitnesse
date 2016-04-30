@@ -79,7 +79,7 @@ public class TableTable extends SlimTable {
 
   private void addNewRows(Table table, List<List<Object>> tableResults) {
     while (table.getRowCount() - 1 < tableResults.size()) {
-      List<String> l = new ArrayList<String>();
+      List<String> l = new ArrayList<>();
       for (Object s : tableResults.get(table.getRowCount() - 1))
         l.add((String) s);
       table.addRow(l);
@@ -142,7 +142,7 @@ public class TableTable extends SlimTable {
       return SlimTestResult.ignore(message);
     else if (code.equalsIgnoreCase("report"))
       return SlimTestResult.plain(message);
-    else //not managed code 
+    else //not managed code
       return SlimTestResult.fail(manageSymbolInContent(content, codeAndMessage));
   }
 

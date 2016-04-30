@@ -64,7 +64,7 @@ public abstract class FixtureDecorator extends Fixture {
   }
 
   void setAlternativeArgs(Parse table) {
-    List<String> argumentList = new ArrayList<String>();
+    List<String> argumentList = new ArrayList<>();
     Parse columns = table.parts.parts;
     int size = columns.size();
     for (int i = 0; i < size / 2; ++i) {
@@ -72,7 +72,7 @@ public abstract class FixtureDecorator extends Fixture {
       columnValue = escapeExpectedAndActualString(columnValue);
       argumentList.add(columnValue);
     }
-    args = (String[]) argumentList.toArray(new String[argumentList.size()]);
+    args = argumentList.toArray(new String[argumentList.size()]);
   }
 
   private String escapeExpectedAndActualString(String columnValue) {

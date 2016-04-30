@@ -24,7 +24,7 @@ public class ImportTable extends SlimTable {
   @Override
   public List<SlimAssertion> getAssertions() throws SyntaxError {
     int rows = table.getRowCount();
-    List<SlimAssertion> instructions = new ArrayList<SlimAssertion>(rows);
+    List<SlimAssertion> instructions = new ArrayList<>(rows);
     if (rows < 2)
       throw new SyntaxError("Import tables must have at least two rows.");
 

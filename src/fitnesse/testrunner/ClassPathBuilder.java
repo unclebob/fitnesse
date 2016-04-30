@@ -27,7 +27,7 @@ public class ClassPathBuilder {
   }
 
   private List<String> getInheritedPathElements(WikiPage page) {
-    final List<String> items = new ArrayList<String>();
+    final List<String> items = new ArrayList<>();
 
     page.getPageCrawler().traversePageAndAncestors(new TraversalListener<WikiPage>() {
       @Override
@@ -40,8 +40,8 @@ public class ClassPathBuilder {
 
   public List<String> createClassPath(List<String> paths) {
     paths = expandWildcards(paths);
-    Set<String> addedPaths = new HashSet<String>();
-    List<String> classPath = new ArrayList<String>();
+    Set<String> addedPaths = new HashSet<>();
+    List<String> classPath = new ArrayList<>();
 
     for (String path : paths) {
       if (!addedPaths.contains(path)) {
@@ -54,14 +54,14 @@ public class ClassPathBuilder {
   }
 
   private List<String> expandWildcards(List<String> paths) {
-    List<String> allPaths = new ArrayList<String>();
+    List<String> allPaths = new ArrayList<>();
     for (String path : paths)
       allPaths.addAll(expandWildcard(path));
     return allPaths;
   }
 
   private List<String> expandWildcard(String path) {
-    List<String> allPaths = new ArrayList<String>();
+    List<String> allPaths = new ArrayList<>();
     File file = new File(path);
     File dir = new File(file.getAbsolutePath()).getParentFile();
     if (isExpandableDoubleWildcard(path, dir))
@@ -102,7 +102,7 @@ public class ClassPathBuilder {
   private List<String> getMatchingFiles(String path, File dir) {
     String fileName = new File(path).getName();
     File[] files = dir.listFiles(new Wildcard(fileName));
-    List<String> allPaths = new ArrayList<String>();
+    List<String> allPaths = new ArrayList<>();
     for (File file : files) {
       allPaths.add(file.getPath());
     }
@@ -110,7 +110,7 @@ public class ClassPathBuilder {
   }
 
   private List<String> getMatchingSubfiles(String path, File dir) {
-    List<String> allPaths = new ArrayList<String>();
+    List<String> allPaths = new ArrayList<>();
     allPaths.addAll(getMatchingFiles(path, dir));
     for (File file : dir.listFiles()) {
       if (file.isDirectory())

@@ -14,7 +14,7 @@ public class TestQuery {
   }
 
   public List<Object> query() {
-    List<Object> table = new ArrayList<Object>();
+    List<Object> table = new ArrayList<>();
     for (int i = 1; i <= n; i++) {
       List<String> ncol = Arrays.asList("n", String.valueOf(i));
       List<String> n2col = Arrays.asList("2n", String.valueOf(2 * i));

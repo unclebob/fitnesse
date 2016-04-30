@@ -18,7 +18,7 @@ public class TableListComparer {
   public TableListComparer(HtmlTableScanner leftHandScanner, HtmlTableScanner rightHandScanner) {
     this.leftHandScanner = leftHandScanner;
     this.rightHandScanner = rightHandScanner;
-    tableMatches = new ArrayList<MatchedPair>();
+    tableMatches = new ArrayList<>();
   }
 
   public void compareAllTables() {

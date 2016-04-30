@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class VariableStore {
 
-  private Map<String, MethodExecutionResult> variables = new HashMap<String, MethodExecutionResult>();
+  private Map<String, MethodExecutionResult> variables = new HashMap<>();
 
   public void setSymbol(String name, MethodExecutionResult value) {
     variables.put(name, value);
@@ -42,7 +42,7 @@ public class VariableStore {
   }
 
   private List<Object> replaceSymbolsInList(List<Object> objects) {
-    List<Object> result = new ArrayList<Object>();
+    List<Object> result = new ArrayList<>();
     for (Object object : objects)
       result.add(replaceSymbol(object));
 

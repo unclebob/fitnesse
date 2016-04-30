@@ -38,7 +38,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
   protected WikiImporterClient importerClient;
   protected int importCount = 0;
   protected int unmodifiedCount = 0;
-  private List<WikiPagePath> orphans = new LinkedList<WikiPagePath>();
+  private List<WikiPagePath> orphans = new LinkedList<>();
   private HashSet<WikiPagePath> pageCatalog;
   private boolean shouldDeleteOrphans = true;
   private WikiPagePath contextPath;
@@ -99,7 +99,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
 
   private void catalogLocalTree(WikiPage page) {
     contextPath = page.getPageCrawler().getFullPath();
-    pageCatalog = new HashSet<WikiPagePath>();
+    pageCatalog = new HashSet<>();
     page.getPageCrawler().traverse(this);
     WikiPagePath relativePathOfContext = contextPath.subtractFromFront(contextPath);
     pageCatalog.remove(relativePathOfContext);

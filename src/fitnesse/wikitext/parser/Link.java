@@ -17,13 +17,13 @@ public class Link extends SymbolType implements Rule, Translation {
         wikiRule(this);
         htmlTranslation(this);
     }
-    
+
     @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol targetList = parser.parseToEnds(-1,
                 SymbolProvider.linkTargetProvider,
                 new SymbolType[] {SymbolType.Newline, SymbolType.Whitespace});
-        return new Maybe<Symbol>(current.add(targetList));
+        return new Maybe<>(current.add(targetList));
     }
     @Override
     public String toTarget(Translator translator, Symbol symbol) {

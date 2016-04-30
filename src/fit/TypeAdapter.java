@@ -23,7 +23,7 @@ public class TypeAdapter {
   public Method method;
   public Class<?> type;
   public boolean isRegex;
-  private static final Map<Class<?>, TypeAdapter> PARSE_DELEGATES = new HashMap<Class<?>, TypeAdapter>();
+  private static final Map<Class<?>, TypeAdapter> PARSE_DELEGATES = new HashMap<>();
   // Factory //////////////////////////////////
 
   public static TypeAdapter on(Fixture target, Class<?> type) {

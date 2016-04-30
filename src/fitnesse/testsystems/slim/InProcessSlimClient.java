@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.slim.SlimError;
 import fitnesse.slim.SlimServer;
 import fitnesse.slim.SlimStreamReader;
 import fitnesse.slim.SlimVersion;

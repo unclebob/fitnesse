@@ -18,23 +18,23 @@ public class SuiteOverviewTree {
   public SuiteOverviewTree(List<WikiPage> wikiPagelist) {
     makeTree(convertToPageList(wikiPagelist));
   }
-  
+
   private void makeTree(List<String> pageList) {
-    for (String pageName : pageList) 
+    for (String pageName : pageList)
     {
       String[] splits = pageName.split("\\.");
       treeRoot.addItem(splits, 0);
     }
     compactTree();
   }
-  
+
   public TreeItem getTreeRoot() {
     return treeRoot;
   }
 
   private static List<String> convertToPageList(List<WikiPage> wikiPagelist) {
-    List<String> allPages = new LinkedList<String>();
-    
+    List<String> allPages = new LinkedList<>();
+
     for (WikiPage aPage : wikiPagelist)  {
       try {
         allPages.add(aPage.getPageCrawler().getFullPath().toString());
@@ -44,14 +44,14 @@ public class SuiteOverviewTree {
     }
     return allPages;
   }
-  
+
   public void countResults() {
     RecursiveTreeMethod countResults = new RecursiveTreeMethod() {
       @Override
       public boolean shouldDoItemBeforeBranches() {
         return false;
       }
-      
+
       @Override
       public void doMethod(TreeItem item) {
         item.calculateResults();
@@ -73,7 +73,7 @@ public class SuiteOverviewTree {
     };
     treeRoot.doRecursive(findLatestResult, 0);
   }
-  
+
   private void compactTree() {
     RecursiveTreeMethod compactBranch = new RecursiveTreeMethod() {
       @Override
@@ -82,33 +82,33 @@ public class SuiteOverviewTree {
       }
     };
     treeRoot.doRecursive(compactBranch, 0);
-    
+
   }
-  
+
   private SimpleDateFormat dateFormatter = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
 
   public class TreeItem
   {
-    
+
     private String name;
     private String fullName;
     int testsPassed = 0;
     int testsUnrun = 0;
     int testsFailed = 0;
-    
-    List<TreeItem> branches = new LinkedList<TreeItem>();
+
+    List<TreeItem> branches = new LinkedList<>();
     TestResultRecord result = null;
-    
-    
-    
+
+
+
     public int getTestsPassed() {
       return testsPassed;
     }
-    
+
     public int getTestsUnrun() {
       return testsUnrun;
     }
-    
+
     public int getTestsFailed() {
       return testsFailed;
     }
@@ -125,15 +125,15 @@ public class SuiteOverviewTree {
       }
       return "";
     }
-        
+
     public String getPassedPercentString() {
       return makePercentageOfTotalString(testsPassed);
     }
-    
+
     public String getUnrunPercentString() {
       return makePercentageOfTotalString(testsUnrun);
     }
-    
+
     public String getFailedPercentString() {
       return makePercentageOfTotalString(testsFailed);
     }
@@ -141,16 +141,16 @@ public class SuiteOverviewTree {
     public double getPassedPercent() {
       return calcPercentOfTotalTests(testsPassed);
     }
-    
+
     public double getUnrunPercent() {
       return calcPercentOfTotalTests(testsUnrun);
     }
-    
+
     public double getFailedPercent() {
       return calcPercentOfTotalTests(testsFailed);
     }
 
-    
+
     public String getName() {
       return GracefulNamer.regrace(name);
     }
@@ -161,15 +161,15 @@ public class SuiteOverviewTree {
 
     public String getHistoryUrl() {
       String url = getFullName();
-      
+
       if (result != null) {
         url += "?pageHistory&resultDate=";
         url += dateFormatter.format(result.getDate());
       }
-      
+
       return url;
     }
-    
+
     public void compactWithChildIfOnlyOneChild() {
       if (branches.size() == 1) {
         TreeItem child = branches.get(0);
@@ -177,26 +177,26 @@ public class SuiteOverviewTree {
           name += "." + child.name;
           fullName += "." + child.name;
           branches = child.branches;
-          
+
           compactWithChildIfOnlyOneChild();
         }
       }
     }
-    
+
     TreeItem(String branchName, String branchFullName) {
       name = branchName;
       fullName = branchFullName;
     }
-    
+
     public List<TreeItem> getBranches() {
       return branches;
     }
-    
+
     public void calculateResults() {
       testsPassed = 0;
       testsUnrun = 0;
       testsFailed = 0;
-      
+
       if (isTest()) {
         if (result == null) {
           testsUnrun++;
@@ -221,7 +221,7 @@ public class SuiteOverviewTree {
     public String toString() {
       return name;
     }
-  
+
     void addItem(String[] itemPath, int currentIndex) {
       if (currentIndex < itemPath.length) {
         //special case for this tree only, that all the titles should be organised before we start.
@@ -242,11 +242,11 @@ public class SuiteOverviewTree {
     private boolean nameSameAsLastName(String currentName) {
       return !branches.isEmpty() && branches.get(branches.size() - 1).name.equals(currentName);
     }
-    
+
     public boolean isTest() {
       return (branches.isEmpty());
     }
-    
+
     public String getCssClass() {
       if (testsFailed != 0) {
         return "fail";
@@ -258,31 +258,31 @@ public class SuiteOverviewTree {
         return "done";
       }
     }
-    
+
     void doRecursive(RecursiveTreeMethod method, int level) {
       if (method.shouldDoItemBeforeBranches() && (level != 0)) {
         method.doMethod(this);
       }
-      
+
       for (TreeItem branch : branches)  {
         branch.doRecursive(method, level + 1);
       }
-      
+
       if (!method.shouldDoItemBeforeBranches() && (level != 0)) {
         method.doMethod(this);
       }
     }
   }
-  
+
   abstract class RecursiveTreeMethod
   {
     public boolean shouldDoItemBeforeBranches()
     {
       return true;
     }
-    
+
     public abstract void doMethod(TreeItem item);
- 
+
   }
 }
 

@@ -6,10 +6,10 @@ import java.util.List;
 public class TableTableIncFirstCol {
 
   public List<List<String>> doTable(List<List<?>> table) {
-    List<List<String>> ret = new ArrayList<List<String>>();
+    List<List<String>> ret = new ArrayList<>();
 
     for (List<?> line : table) {
-      List<String> retLine = new ArrayList<String>();
+      List<String> retLine = new ArrayList<>();
       ret.add(retLine);
 
       retLine.add("no change");

@@ -38,7 +38,7 @@ public class RecentChangesWikiPage implements RecentChanges {
   public List<String> getRecentChangesLines(PageData recentChangesdata) {
     String content = recentChangesdata.getContent();
     BufferedReader reader = null;
-    List<String> lines = new ArrayList<String>();
+    List<String> lines = new ArrayList<>();
     try {
       reader = new BufferedReader(new StringReader(content));
       String line = null;

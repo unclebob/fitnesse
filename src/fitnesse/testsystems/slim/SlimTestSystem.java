@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import fitnesse.slim.SlimError;
 import fitnesse.slim.instructions.AssignInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.Assertion;
@@ -126,7 +125,7 @@ public abstract class SlimTestSystem implements TestSystem {
   protected abstract void processAllTablesOnPage(TestPage testPage) throws IOException;
 
   protected void processTable(SlimTable table) throws IOException, SyntaxError {
-    List<SlimAssertion> assertions = createAssertions(table);
+    List<SlimAssertion> assertions = table.getAssertions();
     Map<String, Object> instructionResults;
     if (!stopTestCalled && !stopSuiteCalled) {
       // Okay, if this crashes, the test system is killed.
@@ -142,12 +141,6 @@ public abstract class SlimTestSystem implements TestSystem {
     }
 
     evaluateTables(assertions, instructionResults);
-  }
-
-  private List<SlimAssertion> createAssertions(SlimTable table) throws SyntaxError {
-    List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
-    assertions.addAll(table.getAssertions());
-    return assertions;
   }
 
   protected void evaluateTables(List<SlimAssertion> assertions, Map<String, Object> instructionResults) {
@@ -177,7 +170,7 @@ public abstract class SlimTestSystem implements TestSystem {
           if (testResult != null) {
             Map<String, ?> variables = testResult.getVariablesToStore();
             if (variables != null) {
-              List<Instruction> instructions = new ArrayList<Instruction>(variables.size());
+              List<Instruction> instructions = new ArrayList<>(variables.size());
               int i = 0;
               for (Entry<String, ?> variable : variables.entrySet()) {
                 instructions.add(new AssignInstruction("assign_" + i++, variable.getKey(), variable.getValue()));

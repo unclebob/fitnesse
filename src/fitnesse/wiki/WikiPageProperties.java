@@ -41,7 +41,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
 
   public WikiPageProperties(WikiPageProperties that) {
     if (that != null && that.children != null)
-      children = new TreeMap<String, WikiPageProperty>(that.children);
+      children = new TreeMap<>(that.children);
   }
 
   public void loadFromXmlStream(InputStream inputStream) {
@@ -102,7 +102,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
 
   public Element makeRootElement(Document document) {
     Element root = document.createElement("properties");
-    List<String> keys = new ArrayList<String>(keySet());
+    List<String> keys = new ArrayList<>(keySet());
     Collections.sort(keys);
 
     for (String key : keys) {

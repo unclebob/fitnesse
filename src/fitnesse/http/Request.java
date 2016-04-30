@@ -32,9 +32,9 @@ public class Request {
   protected String requestURI;
   private String resource;
   protected String queryString;
-  protected Map<String, String> inputs = new HashMap<String, String>();
-  protected Map<String, String> headers = new HashMap<String, String>();
-  protected Map<String, UploadedFile> uploadedFiles = new HashMap<String, UploadedFile>();
+  protected Map<String, String> inputs = new HashMap<>();
+  protected Map<String, String> headers = new HashMap<>();
+  protected Map<String, UploadedFile> uploadedFiles = new HashMap<>();
   protected String entityBody = "";
   protected String requestLine;
   protected String authorizationUsername;
@@ -48,7 +48,7 @@ public class Request {
   private String peerDn;
 
   public static Set<String> buildAllowedMethodList() {
-    Set<String> methods = new HashSet<String>(20);
+    Set<String> methods = new HashSet<>(20);
     methods.add("GET");
     methods.add("POST");
     return methods;
@@ -81,7 +81,7 @@ public class Request {
   }
 
   private Map<String, String> parseHeaders(StreamReader reader) throws IOException {
-    HashMap<String, String> headers = new HashMap<String, String>();
+    HashMap<String, String> headers = new HashMap<>();
     String line = reader.readLine();
     while (!"".equals(line)) {
       Matcher match = headerPattern.matcher(line);

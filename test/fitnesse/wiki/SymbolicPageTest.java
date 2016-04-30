@@ -119,6 +119,25 @@ public class SymbolicPageTest {
 
   @Test
   public void testCyclicSymbolicLinks() throws Exception {
+    createCycle();
+    PageCrawler pageCrawler = root.getPageCrawler();
+
+    WikiPage deepPage = pageCrawler.getPage(PathParser.parse(pageOnePath + ".SymOne.SymTwo.SymOne.SymTwo.SymOne"));
+    assertNull(deepPage);
+
+  }
+
+  @Test
+  public void cyclicSymbolicLinkDisplaysAMessage() {
+    createCycle();
+    PageCrawler pageCrawler = root.getPageCrawler();
+    WikiPage deepPage = pageCrawler.getPage(PathParser.parse(pageTwoPath + ".SymTwo.SymOne"));
+    List<WikiPage> children = deepPage.getChildren();
+    assertEquals(0, children.size());
+    assertEquals("<em>Short circuit! This page references PageTwo, which is already one of the parent pages of this page.</em>", deepPage.getHtml());
+  }
+
+  private void createCycle() {
     PageData data = pageOne.getData();
     data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymOne", pageTwoPath);
     pageOne.commit(data);
@@ -126,21 +145,13 @@ public class SymbolicPageTest {
     data = pageTwo.getData();
     data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymTwo", pageOnePath);
     pageTwo.commit(data);
-    PageCrawler pageCrawler = root.getPageCrawler();
-    WikiPage deepPage = pageCrawler.getPage(PathParser.parse(pageOnePath + ".SymOne.SymTwo.SymOne.SymTwo.SymOne"));
-    List<?> children = deepPage.getChildren();
-    assertEquals(1, children.size());
-
-    deepPage = pageCrawler.getPage(PathParser.parse(pageTwoPath + ".SymTwo.SymOne.SymTwo.SymOne.SymTwo"));
-    children = deepPage.getChildren();
-    assertEquals(1, children.size());
   }
 
   @Test
   public void nestedSymbolicLinksShouldKeepTheRightPath() {
     String pageThreePath = "PageThree";
     String pageThreeContent = "page three";
-    WikiPage pageThree = WikiPageUtil.addPage(root, PathParser.parse(pageThreePath), pageThreeContent);
+    WikiPageUtil.addPage(root, PathParser.parse(pageThreePath), pageThreeContent);
 
     PageData data = pageOne.getData();
     data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymOne", pageTwoPath);
@@ -158,7 +169,7 @@ public class SymbolicPageTest {
 
   @Test
   public void testSymbolicPageUsingExternalDirectory() throws Exception {
-    CreateExternalRoot();
+    createExternalRoot();
 
     assertEquals(2, symPage.getChildren().size());
 
@@ -175,7 +186,7 @@ public class SymbolicPageTest {
     assertEquals("external child", symChild.getData().getContent());
   }
 
-  private void CreateExternalRoot() throws Exception {
+  private void createExternalRoot() throws Exception {
     FileUtil.createDir("testDir");
     FileUtil.createDir("testDir/ExternalRoot");
     externalRoot = new FileSystemPageFactory().makePage(new File("testDir/ExternalRoot"), "ExternalRoot", null, new SystemVariableSource());
@@ -188,7 +199,7 @@ public class SymbolicPageTest {
 
   @Test
   public void testCommittingToExternalRoot() throws Exception {
-    CreateExternalRoot();
+    createExternalRoot();
 
     commitNewContent(symPage);
 

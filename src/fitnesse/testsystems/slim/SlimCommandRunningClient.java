@@ -178,7 +178,7 @@ public class SlimCommandRunningClient implements SlimClient {
   }
 
   public static Map<String, Object> resultToMap(List<?> slimResults) {
-    Map<String, Object> map = new HashMap<String, Object>();
+    Map<String, Object> map = new HashMap<>();
     for (Object aResult : slimResults) {
       @SuppressWarnings("unchecked")
       List<Object> resultList = (List<Object>) aResult;

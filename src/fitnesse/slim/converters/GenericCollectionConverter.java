@@ -15,7 +15,7 @@ import fitnesse.util.StringUtils;
 
 public class GenericCollectionConverter<T, C extends Collection<T>> implements Converter<C> {
 
-  public static final Map<Class<?>, Class<?>> DEFAULT_COLLECTION_IMPL = new HashMap<Class<?>, Class<?>>();
+  public static final Map<Class<?>, Class<?>> DEFAULT_COLLECTION_IMPL = new HashMap<>();
   static {
     DEFAULT_COLLECTION_IMPL.put(List.class, ArrayList.class);
     DEFAULT_COLLECTION_IMPL.put(Set.class, HashSet.class);
@@ -41,7 +41,7 @@ public class GenericCollectionConverter<T, C extends Collection<T>> implements C
       return NULL_VALUE;
 
     int size = collection.size();
-    List<String> ret = new ArrayList<String>(size);
+    List<String> ret = new ArrayList<>(size);
     for (T item : collection) {
       ret.add(getElementString(item));
     }

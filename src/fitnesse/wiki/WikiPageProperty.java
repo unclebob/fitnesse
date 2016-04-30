@@ -17,7 +17,7 @@ public class WikiPageProperty implements Serializable {
   private static final long serialVersionUID = 1L;
 
   private String value;
-  protected SortedMap<String, WikiPageProperty> children = new TreeMap<String, WikiPageProperty>();
+  protected SortedMap<String, WikiPageProperty> children = new TreeMap<>();
 
   public WikiPageProperty() {
   }
@@ -99,7 +99,7 @@ public class WikiPageProperty implements Serializable {
     return children != null && !children.isEmpty();
   }
 
-  private static ThreadLocal<DateFormat> timeFormat = new ThreadLocal<DateFormat>();
+  private static ThreadLocal<DateFormat> timeFormat = new ThreadLocal<>();
 
   public static DateFormat getTimeFormat() {
     DateFormat format = timeFormat.get();

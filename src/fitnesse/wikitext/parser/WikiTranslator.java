@@ -7,7 +7,7 @@ public class WikiTranslator extends Translator {
     private static final Map<SymbolType, Translation> translations;
 
     static {
-        translations = new HashMap<SymbolType, Translation>();
+        translations = new HashMap<>();
         addTranslation(Alias.symbolType, new WikiBuilder().text("[[").children("][").text("]]"));
         addTranslation(Link.symbolType, new WikiBuilder().property("image", "", " ")
                 .property("image", "left", " ").property("image", "right", " ").content().child(0));

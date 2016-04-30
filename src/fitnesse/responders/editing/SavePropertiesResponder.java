@@ -41,7 +41,7 @@ public class SavePropertiesResponder implements SecureResponder {
   private void saveAttributes(Request request, PageData data) {
     setPageTypeAttribute(request, data);
 
-    List<String> attrs = new LinkedList<String>();
+    List<String> attrs = new LinkedList<>();
     attrs.addAll(Arrays.asList(PageData.NON_SECURITY_ATTRIBUTES));
     attrs.addAll(Arrays.asList(PageData.SECURITY_ATTRIBUTES));
     attrs.add(PageData.PropertyPRUNE);
@@ -53,10 +53,10 @@ public class SavePropertiesResponder implements SecureResponder {
         data.removeAttribute(attribute);
     }
 
-    String suites = (String) request.getInput("Suites");
+    String suites = request.getInput("Suites");
     data.setOrRemoveAttribute(PageData.PropertySUITES, suites);
 
-    String helpText = (String) request.getInput("HelpText");
+    String helpText = request.getInput("HelpText");
     data.setOrRemoveAttribute(PageData.PropertyHELP, helpText);
   }
 
@@ -66,7 +66,7 @@ public class SavePropertiesResponder implements SecureResponder {
     if (pageType == null)
       return;
 
-    List<String> types = new LinkedList<String>();
+    List<String> types = new LinkedList<>();
     types.addAll(Arrays.asList(PageData.PAGE_TYPE_ATTRIBUTES));
     data.setAttribute(pageType);
 
@@ -77,7 +77,7 @@ public class SavePropertiesResponder implements SecureResponder {
   }
 
   private String getPageType(Request request) {
-    return (String) request.getInput(PageData.PAGE_TYPE_ATTRIBUTE);
+    return request.getInput(PageData.PAGE_TYPE_ATTRIBUTE);
   }
 
   private boolean isChecked(Request request, String name) {

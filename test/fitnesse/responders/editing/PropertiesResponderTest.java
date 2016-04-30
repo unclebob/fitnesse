@@ -103,7 +103,7 @@ public class PropertiesResponderTest {
 
     Responder responder = new PropertiesResponder();
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
-    assertEquals("text/json", response.getContentType());
+    assertEquals("application/json", response.getContentType());
     String jsonText = response.getContent();
     JSONObject jsonObject = new JSONObject(jsonText);
     assertTrue(jsonObject.getBoolean("Test"));
@@ -139,7 +139,7 @@ public class PropertiesResponderTest {
 
     Responder responder = new PropertiesResponder();
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
-    assertEquals("text/json", response.getContentType());
+    assertEquals("application/json", response.getContentType());
     String jsonText = response.getContent();
     JSONObject jsonObject = new JSONObject(jsonText);
 

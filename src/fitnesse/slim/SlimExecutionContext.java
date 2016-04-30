@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 public class SlimExecutionContext {
-    private Map<String, Object> instances = new HashMap<String, Object>();
-    private List<Library> libraries = new ArrayList<Library>();
+    private Map<String, Object> instances = new HashMap<>();
+    private List<Library> libraries = new ArrayList<>();
     private VariableStore variables = new VariableStore();
-    private List<String> paths = new ArrayList<String>();
+    private List<String> paths = new ArrayList<>();
 
     public SlimExecutionContext() {
     }
@@ -31,7 +31,7 @@ public class SlimExecutionContext {
     public MethodExecutionResult getVariable(String name) {
         return variables.getSymbol(name);
     }
-    
+
     public void setVariable(String name, Object value) {
         setVariable(name, new MethodExecutionResult(value, Object.class));
     }

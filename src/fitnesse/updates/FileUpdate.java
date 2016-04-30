@@ -56,7 +56,7 @@ public class FileUpdate implements Update {
   }
 
   protected URL getResource(String resource) {
-    return ClassLoader.getSystemResource(resource);
+    return getClass().getClassLoader().getResource(resource);
   }
 
   @Override

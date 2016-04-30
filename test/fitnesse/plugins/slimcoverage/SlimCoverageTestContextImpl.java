@@ -23,6 +23,7 @@ public class SlimCoverageTestContextImpl extends SlimTestContextImpl {
     super.addScenario(scenarioName, scenarioTable);
   }
 
+  @Override
   public ScenarioTable getScenario(String scenarioName) {
     ScenarioTable scenarioTable = super.getScenario(scenarioName);
     if (usage != null && scenarioTable != null) {

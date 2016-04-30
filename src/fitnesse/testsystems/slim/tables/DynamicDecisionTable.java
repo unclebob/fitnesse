@@ -33,7 +33,7 @@ public class DynamicDecisionTable extends SlimTable {
     }
 
     public List<SlimAssertion> call(String fixtureName) throws SyntaxError {
-      final List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+      final List<SlimAssertion> assertions = new ArrayList<>();
       assertions.add(constructFixture(fixtureName));
       assertions.add(makeAssertion(
               callFunction(getTableName(), "table", tableAsList()),
@@ -44,7 +44,7 @@ public class DynamicDecisionTable extends SlimTable {
     }
 
     private List<SlimAssertion> invokeRows() throws SyntaxError {
-      List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+      List<SlimAssertion> assertions = new ArrayList<>();
       assertions.add(callUnreportedFunction("beginTable", 0));
       gatherFunctionsAndVariablesFromColumnHeader();
       for (int row = 2; row < table.getRowCount(); row++)
@@ -54,7 +54,7 @@ public class DynamicDecisionTable extends SlimTable {
     }
 
     private List<SlimAssertion> invokeRow(int row) throws SyntaxError {
-      List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+      List<SlimAssertion> assertions = new ArrayList<>();
       checkRow(row);
       assertions.add(callUnreportedFunction("reset", row));
       assertions.addAll(callSetForVariables(row));
@@ -69,7 +69,7 @@ public class DynamicDecisionTable extends SlimTable {
     }
 
     private List<SlimAssertion> callGetForFunctions(int row) {
-      List<SlimAssertion> instructions = new ArrayList<SlimAssertion>();
+      List<SlimAssertion> instructions = new ArrayList<>();
       for (String functionName : funcStore.getLeftToRightAndResetColumnNumberIterator()) {
         instructions.add(callGetForFunctionInRow(functionName, row));
       }
@@ -91,7 +91,7 @@ public class DynamicDecisionTable extends SlimTable {
     }
 
     private List<SlimAssertion> callSetForVariables(int row) {
-      List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+      List<SlimAssertion> assertions = new ArrayList<>();
       for (String var : varStore.getLeftToRightAndResetColumnNumberIterator()) {
         int col = varStore.getColumnNumber(var);
         String valueToSet = table.getCellContents(col, row);
@@ -101,5 +101,5 @@ public class DynamicDecisionTable extends SlimTable {
       return assertions;
     }
   }
-  
+
 }

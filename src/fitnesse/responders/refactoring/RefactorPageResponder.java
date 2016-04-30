@@ -56,7 +56,7 @@ public class RefactorPageResponder implements SecureResponder {
   }
 
   List<String> collectPageNames(final WikiPage thisPage, WikiPage rootPage) {
-    final List<String> pageNames = new ArrayList<String>();
+    final List<String> pageNames = new ArrayList<>();
     if (thisPage != null) {
       final WikiPagePath thisPagePath = thisPage.getPageCrawler().getFullPath();
       rootPage.getPageCrawler().traverse(new TraversalListener<WikiPage>() {

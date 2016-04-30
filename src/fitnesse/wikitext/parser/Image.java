@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Image extends SymbolType implements Rule, Translation {
     public static final Image symbolType = new Image();
-    
+
     public Image() {
         super("Image");
         wikiMatcher(new Matcher().string("!img-l"));
@@ -26,8 +26,8 @@ public class Image extends SymbolType implements Rule, Translation {
         if (!parser.getCurrent().isType(SymbolType.Whitespace)) return Symbol.nothing;
 
         parser.moveNext(1);
-        
-        Map<String, String> options = new TreeMap<String, String>();
+
+        Map<String, String> options = new TreeMap<>();
         while (parser.getCurrent().isType(SymbolType.Text) && parser.getCurrent().getContent().startsWith("-")) {
             String option = parser.getCurrent().getContent();
             parser.moveNext(1);
@@ -68,7 +68,7 @@ public class Image extends SymbolType implements Rule, Translation {
 
     private Maybe<Symbol> makeImageLink(Symbol current, Symbol link, String imageProperty) {
         link.putProperty(Link.ImageProperty, imageProperty);
-        return new Maybe<Symbol>(current.add(link));
+        return new Maybe<>(current.add(link));
     }
 
     @Override

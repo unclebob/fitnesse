@@ -30,8 +30,8 @@ public class ScenarioTable extends SlimTable {
   private static final String underscorePattern = "\\W_(?=\\W|$)";
   private static Class<? extends ScriptTable> defaultChildClass = ScriptTable.class;
   private String name;
-  private List<String> inputs = new ArrayList<String>();
-  private Set<String> outputs = new HashSet<String>();
+  private List<String> inputs = new ArrayList<>();
+  private Set<String> outputs = new HashSet<>();
   private final int colsInHeader = table.getColumnCountInRow(0);
   private boolean parameterized = false;
 
@@ -155,11 +155,11 @@ private void splitInputAndOutputArguments(String argName) {
   }
 
   public Set<String> getInputs() {
-    return new HashSet<String>(inputs);
+    return new HashSet<>(inputs);
   }
 
   public Set<String> getOutputs() {
-    return new HashSet<String>(outputs);
+    return new HashSet<>(outputs);
   }
 
   public List<SlimAssertion> call(final Map<String, String> scenarioArguments,
@@ -220,7 +220,7 @@ private void splitInputAndOutputArguments(String argName) {
   }
 
   public List<SlimAssertion> call(String[] args, ScriptTable parentTable, int row) throws SyntaxError {
-    Map<String, String> scenarioArguments = new HashMap<String, String>();
+    Map<String, String> scenarioArguments = new HashMap<>();
 
     for (int i = 0; (i < inputs.size()) && (i < args.length); i++)
       scenarioArguments.put(inputs.get(i), args[i]);
@@ -299,7 +299,7 @@ private void splitInputAndOutputArguments(String argName) {
       SlimTable parent = scriptTable.getParent();
       ExecutionResult testStatus = ((ScenarioTestContext) scriptTable.getTestContext()).getExecutionResult();
       if (outputs.isEmpty() || testStatus != ExecutionResult.PASS){
-    	  // if the scenario has no output parameters 
+    	  // if the scenario has no output parameters
     	  // or the scenario failed
     	  // then the whole line should be flagged
     	  parent.getTable().updateContent(getRow(), new SlimTestResult(testStatus));

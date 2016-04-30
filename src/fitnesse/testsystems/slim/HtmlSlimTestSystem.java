@@ -81,7 +81,7 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
   }
 
   private List<SlimTable> createSlimTables(TableScanner<? extends Table> tableScanner) {
-    List<SlimTable> allTables = new LinkedList<SlimTable>();
+    List<SlimTable> allTables = new LinkedList<>();
     for (Table table : tableScanner)
       createSlimTable(allTables, table);
 

@@ -19,7 +19,7 @@ public class PagesRunInSuite {
   }
 
   private List<String> getPagesRunInSuite() throws Exception {
-    List<String> testPages = new ArrayList<String>();
+    List<String> testPages = new ArrayList<>();
 
     String content = FitnesseFixtureContext.sender.sentData();
     if (content.contains("Testing was interrupted and results are incomplete.")) {
@@ -50,9 +50,9 @@ public class PagesRunInSuite {
   }
 
   private List<Object> buildQueryResponse(List<String> testPages) {
-    List<Object> rows = new ArrayList<Object>();
+    List<Object> rows = new ArrayList<>();
     for (String testPage : testPages) {
-      List<Object> columns = new ArrayList<Object>();
+      List<Object> columns = new ArrayList<>();
       List<String> pageNameCell = Arrays.asList("page name", testPage);
       columns.add(pageNameCell);
       rows.add(columns);

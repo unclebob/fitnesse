@@ -13,7 +13,7 @@ public class Include extends SymbolType implements Rule, Translation {
         wikiRule(this);
         htmlTranslation(this);
     }
-    
+
     @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol next = parser.moveNext(1);
@@ -50,7 +50,7 @@ public class Include extends SymbolType implements Rule, Translation {
           current.add("").add(new Symbol(SymbolType.Style, "error").add(includedPage.because()));
         }
         else if (includeHelpOption.equals(option)) {
-        	String helpText = includedPage.getValue().getProperty(PageData.PropertyHELP);	
+        	String helpText = includedPage.getValue().getProperty(PageData.PropertyHELP);
         	current.add("").add(Parser.make(
         			parser.getPage(),helpText).parse());
         } else {
@@ -70,7 +70,7 @@ public class Include extends SymbolType implements Rule, Translation {
         parser.moveNext(1);
       }
 
-      return new Maybe<Symbol>(current);
+      return new Maybe<>(current);
     }
 
     @Override

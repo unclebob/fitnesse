@@ -44,7 +44,7 @@ public class VersionSelectionResponder implements SecureResponder {
   }
 
   public static List<VersionInfo> getVersionsList(WikiPage page) {
-    List<VersionInfo> list = new ArrayList<VersionInfo>(page.getVersions());
+    List<VersionInfo> list = new ArrayList<>(page.getVersions());
     Collections.sort(list);
     Collections.reverse(list);
     return list;

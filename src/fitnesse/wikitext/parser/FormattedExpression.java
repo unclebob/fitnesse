@@ -18,7 +18,7 @@ public class FormattedExpression {
 
     public Maybe<String> evaluate() {
         parseFormat();
-        return !expression.isEmpty() ? evaluateAndFormat() : new Maybe<String>("");
+        return !expression.isEmpty() ? evaluateAndFormat() : new Maybe<>("");
     }
 
     private void parseFormat() {
@@ -43,13 +43,13 @@ public class FormattedExpression {
         Long iResult = Math.round(result);
 
         if (format == null)
-            return new Maybe<String>(result.equals(iResult.doubleValue()) ? iResult.toString() : result.toString());
+            return new Maybe<>(result.equals(iResult.doubleValue()) ? iResult.toString() : result.toString());
 
         if ("aAdhHoOxX".indexOf(conversion) >= 0) //...use the integer
-            return new Maybe<String>(String.format(format, iResult));
+            return new Maybe<>(String.format(format, iResult));
 
         if ("bB".indexOf(conversion) >= 0) //...use boolean
-            return new Maybe<String>(result == 0.0 ? "false" : "true");
+            return new Maybe<>(result == 0.0 ? "false" : "true");
 
         if ("sScC".indexOf(conversion) >= 0) { //...string & character formatting; use the double
             String sString;
@@ -59,17 +59,17 @@ public class FormattedExpression {
             else
                 sString = String.format(format, result.toString());
 
-            return new Maybe<String>(sString.replaceAll(" ", HtmlUtil.NBSP.html()));
+            return new Maybe<>(sString.replaceAll(" ", HtmlUtil.NBSP.html()));
         }
 
         if ("tT".indexOf(conversion) >= 0) { //...date
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(iResult);
-            return new Maybe<String>(String.format(format, cal.getTime()));
+            return new Maybe<>(String.format(format, cal.getTime()));
         }
 
         if ("eEfgG".indexOf(conversion) >= 0)  //...use the double
-            return new Maybe<String>(String.format(format, result));
+            return new Maybe<>(String.format(format, result));
 
         return Maybe.nothingBecause("invalid format: " + format);
     }

@@ -15,7 +15,7 @@ public class Nesting extends SymbolType implements Rule, Translation{
         Symbol nesting = parser.parseTo(SymbolType.CloseNesting, ParseSpecification.nestingPriority);
         if (!parser.getCurrent().isType(SymbolType.CloseNesting)) return Symbol.nothing;
         current.add(nesting);
-        return new Maybe<Symbol>(current);
+        return new Maybe<>(current);
     }
 
     @Override

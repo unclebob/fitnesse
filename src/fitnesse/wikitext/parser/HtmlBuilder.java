@@ -11,7 +11,7 @@ public class HtmlBuilder implements Translation {
         void build(Translator translator, Symbol symbol, HtmlTag tag);
     }
 
-    private List<TagBuilder> builders = new ArrayList<TagBuilder>();
+    private List<TagBuilder> builders = new ArrayList<>();
     private String tagName;
     private boolean inline;
 
@@ -35,7 +35,7 @@ public class HtmlBuilder implements Translation {
     }
 
     public HtmlBuilder attribute(String name, int index) { return attribute(name, index, ""); }
-    
+
     public HtmlBuilder attribute(final String name, final int index, final String prefix) {
         builders.add(new TagBuilder() {
             @Override
