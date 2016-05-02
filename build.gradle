@@ -13,7 +13,6 @@
 plugins {
   id 'java' // or 'groovy' Must be explicitly applied
   id "maven-publish"
-  id 'com.github.johnrengelman.shadow' version '1.2.3'
   id "com.jfrog.bintray" version "1.6"
 }
 
@@ -134,9 +133,21 @@ jar {
   dependsOn createUpdateLists
   into('Resources') {
     from('.') {
-      include 'FitNesseRoot/**/content.txt'
-      include 'FitNesseRoot/**/properties.txt'
+      include 'FitNesseRoot/FitNesse/**/content.txt'
+      include 'FitNesseRoot/FitNesse/**/properties.xml'
+      include 'FitNesseRoot/FrontPage/**/content.txt'
+      include 'FitNesseRoot/FrontPage/**/properties.xml'
+      include 'FitNesseRoot/PageFooter/**/content.txt'
+      include 'FitNesseRoot/PageFooter/**/properties.xml'
+      include 'FitNesseRoot/PageHeader/**/content.txt'
+      include 'FitNesseRoot/PageHeader/**/properties.xml'
+      include 'FitNesseRoot/TemplateLibrary/**/content.txt'
+      include 'FitNesseRoot/TemplateLibrary/**/properties.xml'
     }
+  }
+  manifest {
+    attributes("Main-Class": "fitnesseMain.FitNesseMain",
+        "Implementation-Version": version)
   }
 }
 
@@ -150,13 +161,23 @@ task sourcesJar(type: Jar) {
   from sourceSets.main.allSource
 }
 
-shadowJar {
+task standaloneJar(type: Jar, dependsOn: jar) {
+  baseName = 'fitnesse'
   classifier = 'standalone'
-  exclude 'META-INF/**'
+  from (configurations.compile.files.collect { zipTree(it) }) {
+    exclude 'META-INF/**'
+  }
+  from jar.outputs.files.collect {
+    zipTree(it)
+  }
+  manifest {
+    attributes("Main-Class": "fitnesseMain.FitNesseMain",
+        "Implementation-Version": version)
+  }
 }
 
 artifacts {
-  archives javadocJar, sourcesJar, shadowJar
+  archives javadocJar, sourcesJar, standaloneJar
 }
 
 clean{
@@ -169,7 +190,7 @@ publishing {
       from components.java
       artifact sourcesJar
       artifact javadocJar
-      artifact shadowJar
+      artifact standaloneJar
       groupId 'org.fitnesse'
       artifactId 'fitnesse'
       pom.withXml {
