@@ -39,8 +39,9 @@ configurations {
 sourceSets {
   main {
     java.srcDir 'src'
-    resources.srcDir 'src'
     output.classesDir 'classes'
+    resources.srcDir 'src'
+    output.resourcesDir 'classes'
     compileClasspath += configurations.optional
   }
   test {
@@ -111,15 +112,7 @@ task createUpdateLists(type: WikiFileListBuilderTask) {
     "FitNesseRoot/TemplateLibrary" ]
 }
 
-processResources {
-  dependsOn "fitNesseVersion", "compileBootstrap", "createUpdateLists"
-  from('src') {
-    include '**/*.properties'
-    include 'fitnesse/resources/**'
-  }
-  into "classes"
-}
-
+processResources.dependsOn "fitNesseVersion", "compileBootstrap", "createUpdateLists"
 
 task run(type: JavaExec) {
   dependsOn compileJava, processResources
@@ -137,6 +130,13 @@ task intTest(type: JavaExec) {
 }
 
 check.dependsOn intTest
+
+jar {
+  from('.') {
+    include 'FitNesseRoot/**/content.txt'
+    include 'FitNesseRoot/**/properties.xml'
+  }
+}
 
 task javadocJar(type: Jar) {
   classifier = 'javadoc'
