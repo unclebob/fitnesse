@@ -57,14 +57,14 @@ public class SslSlimClientBuilderTest {
   }
 
   public void executeAndCheck(String agentName, String agentParameters, String clientName, String clientParameters) throws Exception {
-	    WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), 
+	    WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
 	    		"!define TEST_SYSTEM {slim}\n" +
 	    		"!define SLIM_SSL {"+ agentParameters +"}\n" +
 	    		"!define slim.timeout {10}\n" +
 	    		"!define slim.pool.size {1}\n" +
 	    		"!define wiki.protocol.ssl.parameter.class {"+ clientParameters + "}\n"
     );
-	    WikiPageDescriptor descriptor = new WikiPageDescriptor(testPage, false, false, "test-classes", "classes");	    descriptor.getExecutionLogListener().addExecutionLogListener(new ConsoleExecutionLogListener());
+	    WikiPageDescriptor descriptor = new WikiPageDescriptor(testPage, false, false, "build/classes/test", "classes");	    descriptor.getExecutionLogListener().addExecutionLogListener(new ConsoleExecutionLogListener());
 	    System.out.print("----------------------------------------------------\n");
 	    System.out.print("SLIM_SSL: " + descriptor.getVariable("SLIM_SSL") + "\n");
 	    System.out.print("slim.timeout: " + descriptor.getVariable("slim.timeout") + "\n");
@@ -73,15 +73,15 @@ public class SslSlimClientBuilderTest {
 	    SlimClientBuilder clientBuilder = new SlimClientBuilder(descriptor);
 	    String testSystemName = clientBuilder.getTestSystemName();
 	    assertEquals("slim:" + "fitnesse.slim.SlimService", testSystemName);
-	    
+
 	    SlimCommandRunningClient client = clientBuilder.build();
-	    
+
 	    boolean isConnected;
 	    String myName;
 	    String peerName;
 
 	    client.start();
-	 
+
 	    try{
 	    	isConnected = client.isConnected();
 	    	myName = client.getMyName();
@@ -90,7 +90,7 @@ public class SslSlimClientBuilderTest {
 	        client.bye();
 	        client.kill();
 	  	}
-	    
+
 	    assertTrue("Got connected to client:", isConnected);
 	    System.out.print("My   Name is: " + myName +"\n");
 	    System.out.print("Peer Name is: " + peerName+"\n");
@@ -99,5 +99,5 @@ public class SslSlimClientBuilderTest {
 
 	  }
 }
-  
+
 

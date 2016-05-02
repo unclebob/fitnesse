@@ -46,7 +46,6 @@ sourceSets {
   }
   test {
     java.srcDir 'test'
-    output.classesDir 'test-classes'
   }
 }
 
@@ -132,9 +131,12 @@ task intTest(type: JavaExec) {
 check.dependsOn intTest
 
 jar {
-  from('.') {
-    include 'FitNesseRoot/**/content.txt'
-    include 'FitNesseRoot/**/properties.xml'
+  dependsOn createUpdateLists
+  into('Resources') {
+    from('.') {
+      include 'FitNesseRoot/**/content.txt'
+      include 'FitNesseRoot/**/properties.txt'
+    }
   }
 }
 
@@ -155,6 +157,10 @@ shadowJar {
 
 artifacts {
   archives javadocJar, sourcesJar, shadowJar
+}
+
+clean{
+  delete "classes"
 }
 
 publishing {
