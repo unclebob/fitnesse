@@ -166,14 +166,15 @@ task standaloneJar(type: Jar, dependsOn: jar) {
   }
 }
 
-task intTest(type: JavaExec) {
+task acceptanceTest(type: JavaExec) {
   mustRunAfter test
+  onlyIf { dependsOnTaskDidWork() }
   classpath = standaloneJar.outputs.files
   main "fitnesseMain.FitNesseMain"
   args "-c", "FitNesse.SuiteAcceptanceTests?suite&format=text"
 }
 
-check.dependsOn intTest
+check.dependsOn acceptanceTest
 
 javadoc {
   classpath += configurations.optional
@@ -189,10 +190,6 @@ task sourcesJar(type: Jar) {
   mustRunAfter check
   classifier = 'sources'
   from sourceSets.main.allSource
-}
-
-artifacts {
-  archives javadocJar, sourcesJar, standaloneJar
 }
 
 clean{
