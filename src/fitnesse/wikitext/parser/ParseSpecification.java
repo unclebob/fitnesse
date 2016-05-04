@@ -98,8 +98,8 @@ public class ParseSpecification {
 
     /**
      *
-     * @param parser
-     * @param scanner
+     * @param parser parser
+     * @param scanner scanner
      * @return a possible value if parser should stop.
      */
     public Maybe<Symbol> parseSymbol(Parser parser, Scanner scanner) {

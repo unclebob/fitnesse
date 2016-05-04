@@ -13,12 +13,12 @@ import fitnesse.html.HtmlUtil;
 public class HtmlDiffUtil {
 
   public abstract static class Builder {
-    protected List<Character> text;
-    protected final Patch<Character> patch;
-    protected final StringBuilder stringBuilder = new StringBuilder();
-    protected boolean isInDiffArea = false;
-    protected String openingTag = "<span class=\"diff\">";
-    protected String closingTag = "</span>";
+    List<Character> text;
+    final Patch<Character> patch;
+    final StringBuilder stringBuilder = new StringBuilder();
+    boolean isInDiffArea = false;
+    String openingTag = "<span class=\"diff\">";
+    String closingTag = "</span>";
 
     protected Builder(final String actual, final String expected) {
       this.patch = DiffUtils.diff(stringToCharacterList(actual),
@@ -171,24 +171,10 @@ public class HtmlDiffUtil {
 
   }
 
-  /**
-   * Conveniencemethod.
-   *
-   * @param actual
-   * @param expected
-   * @return
-   */
   public static String buildActual(final String actual, final String expected) {
     return new ActualBuilder(actual, expected).build();
   }
 
-  /**
-   * Conveniencemethod.
-   *
-   * @param actual
-   * @param expected
-   * @return
-   */
   public static String buildExpected(final String actual,
       final String expected) {
     return new ExpectedBuilder(actual, expected).build();

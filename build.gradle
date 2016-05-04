@@ -117,7 +117,10 @@ task copyRuntimeLibs(type: Copy) {
   from configurations.runtime
 }
 
-test.dependsOn copyRuntimeLibs
+test {
+  dependsOn copyRuntimeLibs
+  maxParallelForks 1
+}
 
 task run(type: JavaExec) {
   dependsOn classes, copyRuntimeLibs
@@ -171,6 +174,10 @@ task intTest(type: JavaExec) {
 }
 
 check.dependsOn intTest
+
+javadoc {
+  classpath += configurations.optional
+}
 
 task javadocJar(type: Jar) {
   mustRunAfter check
