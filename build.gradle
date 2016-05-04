@@ -11,7 +11,7 @@
 */
 
 plugins {
-  id 'java' // or 'groovy' Must be explicitly applied
+  id 'java'
   id "maven-publish"
   id "com.jfrog.bintray" version "1.6"
 }
@@ -112,22 +112,19 @@ task createUpdateLists(type: WikiFileListBuilderTask) {
 
 processResources.dependsOn "fitNesseVersion", "compileBootstrap", "createUpdateLists"
 
+task copyRuntimeLibs(type: Copy) {
+  into "lib"
+  from configurations.runtime
+}
+
+test.dependsOn copyRuntimeLibs
+
 task run(type: JavaExec) {
-  dependsOn compileJava, processResources
+  dependsOn classes, copyRuntimeLibs
   classpath = sourceSets.main.runtimeClasspath
   main "fitnesseMain.FitNesseMain"
   args "-p", "8001", "-e", "0"
 }
-
-task intTest(type: JavaExec) {
-  dependsOn compileJava, processResources
-  mustRunAfter test
-  classpath = sourceSets.main.runtimeClasspath
-  main "fitnesseMain.FitNesseMain"
-  args "-c", "FitNesse.SuiteAcceptanceTests?suite&format=text"
-}
-
-check.dependsOn intTest
 
 jar {
   dependsOn createUpdateLists
@@ -151,16 +148,6 @@ jar {
   }
 }
 
-task javadocJar(type: Jar) {
-  classifier = 'javadoc'
-  from javadoc
-}
-
-task sourcesJar(type: Jar) {
-  classifier = 'sources'
-  from sourceSets.main.allSource
-}
-
 task standaloneJar(type: Jar, dependsOn: jar) {
   baseName = 'fitnesse'
   classifier = 'standalone'
@@ -176,12 +163,34 @@ task standaloneJar(type: Jar, dependsOn: jar) {
   }
 }
 
+task intTest(type: JavaExec) {
+  mustRunAfter test
+  classpath = standaloneJar.outputs.files
+  main "fitnesseMain.FitNesseMain"
+  args "-c", "FitNesse.SuiteAcceptanceTests?suite&format=text"
+}
+
+check.dependsOn intTest
+
+task javadocJar(type: Jar) {
+  mustRunAfter check
+  classifier = 'javadoc'
+  from javadoc
+}
+
+task sourcesJar(type: Jar) {
+  mustRunAfter check
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
 artifacts {
   archives javadocJar, sourcesJar, standaloneJar
 }
 
 clean{
   delete "classes"
+  delete "lib"
 }
 
 publishing {
