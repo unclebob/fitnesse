@@ -9,6 +9,6 @@ public abstract class MethodExecutor {
 
   protected MethodExecutionResult findAndInvoke(String methodName, Object[] args, Object instance) throws Throwable {
    FixtureInteraction interaction = SlimService.getInteraction();
-   return interaction.methodInvoke(methodName, instance, args);
+   return interaction.findAndInvoke(methodName, instance, args);
   }
 }

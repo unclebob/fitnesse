@@ -12,5 +12,7 @@ public interface FixtureInteraction {
           throws IllegalArgumentException, InstantiationException,
           IllegalAccessException, InvocationTargetException;
 
-  MethodExecutionResult methodInvoke(String method, Object instance, Object... args) throws Throwable;
+  MethodExecutionResult findAndInvoke(String method, Object instance, Object... args) throws Throwable;
+  
+  Object methodInvoke(Method method, Object instance, Object... args) throws Throwable;
 }
