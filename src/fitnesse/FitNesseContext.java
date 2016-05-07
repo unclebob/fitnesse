@@ -50,8 +50,11 @@ public class FitNesseContext {
   public final RecentChanges recentChanges;
   public final Logger logger;
   public final Authenticator authenticator;
+  @Deprecated // ("Change to SocketFactory instead")
   public final boolean useHTTPS;
+  @Deprecated // ("Change to SocketFactory instead")
   public String sslParameterClassName;
+  @Deprecated // ("Change to SocketFactory instead")
   public final boolean sslClientAuth;
   private final Properties properties;
 

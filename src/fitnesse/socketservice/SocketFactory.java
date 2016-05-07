@@ -19,6 +19,7 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
 
+@Deprecated // Change to proper class / interface
 public final class SocketFactory {
   private static final Logger LOG = Logger.getLogger(SocketFactory.class.getName());
 
@@ -33,6 +34,7 @@ public final class SocketFactory {
     return new ServerSocket(port);
   }
 
+  @Deprecated
   public static ServerSocket createSslServerSocket(int port, boolean needClientAuth, String sslParameterClassName) throws IOException {
     ServerSocket socket;
     LOG.log(Level.FINER, "Creating SSL socket on port: " + port);
