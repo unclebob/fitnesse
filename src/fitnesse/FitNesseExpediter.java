@@ -23,7 +23,6 @@ import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
-import fitnesse.socketservice.SocketFactory;
 import org.apache.commons.lang.StringUtils;
 
 import static java.lang.String.format;
@@ -92,7 +91,6 @@ public class FitNesseExpediter implements ResponseSender, Runnable {
 
   private Request makeRequest() {
     Request request = new Request(input);
-    request.setPeerDn(SocketFactory.peerDn(socket));
     request.setContextRoot(context.contextRoot);
     return request;
   }

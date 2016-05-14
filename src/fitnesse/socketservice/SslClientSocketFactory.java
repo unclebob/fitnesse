@@ -2,7 +2,6 @@ package fitnesse.socketservice;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
@@ -12,56 +11,32 @@ import javax.naming.InvalidNameException;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 import javax.net.ssl.SSLPeerUnverifiedException;
-import javax.net.ssl.SSLServerSocket;
-import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
+public class SslClientSocketFactory implements ClientSocketFactory {
+  private static final Logger LOG = Logger.getLogger(SslClientSocketFactory.class.getName());
+  private static final String COMMONNAME = "CN";
 
-@Deprecated // Change to proper class / interface
-public final class SocketFactory {
-  private static final Logger LOG = Logger.getLogger(SocketFactory.class.getName());
+  private final String sslParameterClassName;
 
-  public static final String COMMONNAME = "CN";
-
-  private SocketFactory() {
-
+  public SslClientSocketFactory(final String sslParameterClassName) {
+    this.sslParameterClassName = sslParameterClassName;
   }
 
-  public static ServerSocket createServerSocket(int port) throws IOException {
-    LOG.log(Level.FINER, "Creating plain socket on port: " + port);
-    return new ServerSocket(port);
-  }
+  @Override
+  public Socket createSocket(final String hostName, final int port) throws IOException {
+    LOG.log(Level.FINER, "Creating SSL client: " + hostName + ":" + port);
+    SSLSocketFactory ssf = SslParameters.setSslParameters(sslParameterClassName).createSSLSocketFactory();
+    SSLSocket socket = (SSLSocket) ssf.createSocket(hostName, port);
+    LOG.log(Level.FINER, "Starting SSL Handshake.");
+    //socket.setSoTimeout(1000);
+    socket.startHandshake();
+    printSocketInfo(socket);
 
-  @Deprecated
-  public static ServerSocket createSslServerSocket(int port, boolean needClientAuth, String sslParameterClassName) throws IOException {
-    ServerSocket socket;
-    LOG.log(Level.FINER, "Creating SSL socket on port: " + port);
-
-    SSLServerSocketFactory ssf = SslParameters.setSslParameters(sslParameterClassName).createSSLServerSocketFactory();
-    socket = ssf.createServerSocket(port);
-    if (needClientAuth) {
-      ((SSLServerSocket) socket).setNeedClientAuth(true);
-    }
     return socket;
-  }
 
-  public static Socket createClientSocket(String hostName, int port, boolean useSSL, String sslParameterClassName) throws IOException {
-    if (!useSSL) {
-      LOG.log(Level.FINER, "Creating plain client: " + hostName + ":" + port);
-      return new Socket(hostName, port);
-    } else {
-      LOG.log(Level.FINER, "Creating SSL client: " + hostName + ":" + port);
-      SSLSocketFactory ssf = SslParameters.setSslParameters(sslParameterClassName).createSSLSocketFactory();
-      SSLSocket socket = (SSLSocket) ssf.createSocket(hostName, port);
-      LOG.log(Level.FINER, "Starting SSL Handshake.");
-      //socket.setSoTimeout(1000);
-      socket.startHandshake();
-      printSocketInfo(socket);
-
-      return socket;
-    }
   }
 
 
@@ -75,6 +50,17 @@ public final class SocketFactory {
       return null;
     } else {
       return getRdnByNameFromDn(peerDn, COMMONNAME);
+    }
+  }
+
+  public static String myName(Socket theSocket) {
+    if (isSSLSocket(theSocket)) {
+      SSLSession ss = ((SSLSocket) theSocket).getSession();
+
+      String dn = ss.getLocalPrincipal().getName();
+      return getRdnByNameFromDn(dn, COMMONNAME);
+    } else {
+      return null;
     }
   }
 
@@ -92,16 +78,6 @@ public final class SocketFactory {
     }
   }
 
-  public static String myName(Socket theSocket) {
-    if (isSSLSocket(theSocket)) {
-      SSLSession ss = ((SSLSocket) theSocket).getSession();
-
-      String dn = ss.getLocalPrincipal().getName();
-      return getRdnByNameFromDn(dn, COMMONNAME);
-    } else {
-      return null;
-    }
-  }
 
   public static String getRdnByNameFromDn(String dn, String rdnType) {
     if (dn == null) {
@@ -120,7 +96,6 @@ public final class SocketFactory {
       }
     }
   }
-
 
   public static void printSocketInfo(Socket theSocket) {
 
@@ -181,4 +156,5 @@ public final class SocketFactory {
       }
     }
   }
+
 }

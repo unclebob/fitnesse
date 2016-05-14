@@ -59,10 +59,6 @@ public class SocketService {
     while (running) {
       try {
         Socket s = serverSocket.accept();
-        if (!everRan){
-          // Print information about the first connection done
-          SocketFactory.printSocketInfo(s);
-        }
         everRan = true;
         server.serve(s);
       } catch (java.lang.OutOfMemoryError e) {
