@@ -22,9 +22,6 @@ import static fitnesse.slim.JavaSlimFactory.createJavaSlimFactory;
 public class SlimService {
   private static final String OPTION_DESCRIPTOR = "[-v] [-i interactionClass] [-s statementTimeout] [-d] [-ssl parameterClass] port";
 
-  // TODO: This should not be static, instead, move to SlimExecutoinContext
-  static FixtureInteraction interaction = getInteraction(null);
-
   public static class Options {
     final boolean verbose;
     final int port;
@@ -78,7 +75,7 @@ public class SlimService {
   public static void startWithFactory(SlimFactory slimFactory, Options options) throws IOException {
     ServerSocketFactory serverSocketFactory = options.useSSL ? new SslServerSocketFactory(true, options.sslParameterClassName) : new PlainServerSocketFactory();
     try {
-      SlimService slimservice = new SlimService(slimFactory.getSlimServer(), serverSocketFactory.createServerSocket(options.port), options.interaction, options.daemon);
+      SlimService slimservice = new SlimService(slimFactory.getSlimServer(), serverSocketFactory.createServerSocket(options.port), options.daemon);
       slimservice.accept();
     } catch (java.lang.OutOfMemoryError e) {
       System.err.println("Out of Memory. Aborting.");
@@ -104,13 +101,12 @@ public class SlimService {
       boolean daemon = commandLine.hasOption("d");
       String sslParameterClassName = commandLine.getOptionArgument("ssl", "parameterClass");
       boolean useSSL = commandLine.hasOption("ssl");
-      return new Options(verbose, port, getInteraction(interactionClassName), daemon, statementTimeout, useSSL, sslParameterClassName);
+      return new Options(verbose, port, createInteraction(interactionClassName), daemon, statementTimeout, useSSL, sslParameterClassName);
     }
     return null;
   }
 
-  public SlimService(SlimServer slimServer, ServerSocket serverSocket, FixtureInteraction interaction, boolean daemon) throws IOException {
-    SlimService.interaction = interaction;
+  public SlimService(SlimServer slimServer, ServerSocket serverSocket, boolean daemon) throws IOException {
     this.daemon = daemon;
     this.slimServer = slimServer;
     this.serverSocket = serverSocket;
@@ -168,7 +164,7 @@ public class SlimService {
   }
 
   @SuppressWarnings("unchecked")
-  private static FixtureInteraction getInteraction(String interactionClassName) {
+  private static FixtureInteraction createInteraction(String interactionClassName) {
     if (interactionClassName == null) {
       return new DefaultInteraction();
     }
@@ -177,9 +173,5 @@ public class SlimService {
     } catch (Exception e) {
       throw new SlimError(e);
     }
-  }
-
-  public static FixtureInteraction getInteraction() {
-    return interaction;
   }
 }

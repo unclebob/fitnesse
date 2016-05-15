@@ -4,10 +4,8 @@ import java.lang.reflect.Field;
 
 public class SystemUnderTestMethodExecutor extends MethodExecutor {
 
-  private final SlimExecutionContext context;
-
   public SystemUnderTestMethodExecutor(SlimExecutionContext context) {
-    this.context = context;
+    super(context);
   }
 
   @Override

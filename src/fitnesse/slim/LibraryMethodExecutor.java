@@ -4,10 +4,8 @@ import java.util.List;
 
 public class LibraryMethodExecutor extends MethodExecutor {
 
-  private final SlimExecutionContext context;
-
   public LibraryMethodExecutor(SlimExecutionContext context) {
-    this.context = context;
+    super(context);
   }
 
   @Override
