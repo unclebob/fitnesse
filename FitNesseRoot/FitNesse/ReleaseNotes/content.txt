@@ -9,6 +9,7 @@
  * Disallow uploading to folder ''files/fitnesse'' ([[#889][https://github.com/unclebob/fitnesse/issues/889]])
  * Avoid infinite cycles when using symlinks ([[#888][https://github.com/unclebob/fitnesse/issues/888]])
  * (Slim) Deal with escaping content in hash table ([[#886][https://github.com/unclebob/fitnesse/issues/886]])
+ * Properly handle symbol assignment in first column of a query table ([[#914][https://github.com/unclebob/fitnesse/issues/914]])
  * Issues fixed:
    * !-CompareVersions-! responder is not escaping output properly ([[#861][https://github.com/unclebob/fitnesse/issues/861]], [[#869][https://github.com/unclebob/fitnesse/issues/869]])
    * Improve code by honoring ''InterruptedException'' ([[#874][https://github.com/unclebob/fitnesse/issues/874]])
