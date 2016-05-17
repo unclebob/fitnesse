@@ -37,7 +37,7 @@ public class ContentsItemBuilder {
 
     private HtmlTag buildListItem(SourcePage child) {
         HtmlTag listItem = buildItem(child);
-        if (child.getChildren().size() > 0) {
+        if (!child.getChildren().isEmpty()) {
             if (level < getRecursionLimit()) {
                 listItem.add(new ContentsItemBuilder(contents, level + 1, child).buildLevel(child));
             }
@@ -49,7 +49,7 @@ public class ContentsItemBuilder {
     }
 
     private Collection<SourcePage> getSortedChildren(SourcePage parent) {
-        ArrayList<SourcePage> result = new ArrayList<SourcePage>(parent.getChildren());
+        ArrayList<SourcePage> result = new ArrayList<>(parent.getChildren());
         Collections.sort(result);
         return result;
     }
@@ -61,9 +61,12 @@ public class ContentsItemBuilder {
         link.addAttribute("class", getBooleanPropertiesClasses(page));
         listItem.add(link);
         String help = page.getProperty(PageData.PropertyHELP);
-        if (help.length() > 0) {
+        if (!help.isEmpty()) {
             if (hasOption("-h", Contents.HELP_TOC)) {
                 listItem.add(HtmlUtil.makeSpanTag("pageHelp", ": " + help));
+            }
+            else if (hasOption("-H", Contents.HELP_INSTEAD_OF_TITLE_TOC)) {
+                link.use(help);
             }
             else {
                 link.addAttribute("title", help);
@@ -82,14 +85,14 @@ public class ContentsItemBuilder {
 
         if (hasOption("-p", Contents.PROPERTY_TOC)) {
             String properties = getBooleanProperties(page);
-            if (properties.length() > 0) itemText += " " + properties;
+            if (!properties.isEmpty()) itemText += " " + properties;
         }
 
         if (hasOption("-f", Contents.FILTER_TOC)) {
             String filters = page.getProperty(PageData.PropertySUITES);
-            if (filters.length() > 0) itemText += " (" + filters + ")";
+            if (!filters.isEmpty()) itemText += " (" + filters + ")";
         }
-        
+
         return itemText;
     }
 
@@ -101,7 +104,7 @@ public class ContentsItemBuilder {
         for (Symbol child: contents.getChildren()) {
             if (!child.getContent().startsWith("-R")) continue;
             String level = child.getContent().substring(2);
-            if (level.length() == 0) return Integer.MAX_VALUE;
+            if (level.isEmpty()) return Integer.MAX_VALUE;
             try {
               return Integer.parseInt(level);
             }
@@ -116,15 +119,15 @@ public class ContentsItemBuilder {
         for (Symbol child: contents.getChildren()) {
            if (child.getContent().equals(option)) return true;
         }
-        return variableName.length() > 0
+        return !variableName.isEmpty()
                 && contents.getVariable(variableName, "").equals("true");
     }
 
     private String getBooleanProperties(SourcePage sourcePage) {
         String propChars = contents.getVariable(Contents.PROPERTY_CHARACTERS,
                 Contents.PROPERTY_CHARACTERS_DEFAULT).trim();
-        if(propChars.length() != Contents.PROPERTY_CHARACTERS_DEFAULT.length() ){ 
-            propChars = Contents.PROPERTY_CHARACTERS_DEFAULT; 
+        if(propChars.length() != Contents.PROPERTY_CHARACTERS_DEFAULT.length() ){
+            propChars = Contents.PROPERTY_CHARACTERS_DEFAULT;
         }
 
         String result = "";

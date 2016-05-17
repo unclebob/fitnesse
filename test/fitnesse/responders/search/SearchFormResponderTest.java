@@ -4,29 +4,34 @@ package fitnesse.responders.search;
 
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
-import static fitnesse.responders.search.SearchFormResponder.*;
+import static fitnesse.responders.search.SearchResponder.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.InMemoryPage;
-import fitnesse.wiki.WikiPage;
 import fitnesse.http.MockRequest;
-import fitnesse.http.SimpleResponse;
+import fitnesse.http.MockResponseSender;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
 
 public class SearchFormResponderTest {
   private String content;
-
+ 
   @Before
   public void setUp() throws Exception {
     FitNesseContext context = FitNesseUtil.makeTestContext();
-    SearchFormResponder responder = new SearchFormResponder();
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
-    content = response.getContent();
-  }
+    SearchResponder responder = new SearchResponder();
+    MockRequest request = new MockRequest();
+    request.addInput(Request.NOCHUNK, "");
+    Response response =  responder.makeResponse(context, request);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    content = sender.sentData();
 
+  }
+     
   public void testFocusOnSearchBox() throws Exception {
     assertSubString("onload=\"document.forms[0].searchString.focus()\"", content);
   }
@@ -51,7 +56,7 @@ public class SearchFormResponderTest {
   @Test
   public void propertiesForm() throws Exception {
     assertHasRegexp("<input.*value=\"Search Properties\".*>", content);
-    assertHasRegexp("<input.*name=\"responder\".*value=\"executeSearchProperties\"", content);
+    assertHasRegexp("<input.*name=\"responder\".*value=\"searchProperties\"", content);
 
     for (String attributeName : SEARCH_ACTION_ATTRIBUTES) {
       assertSubString(attributeName, content);

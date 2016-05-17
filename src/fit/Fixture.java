@@ -24,7 +24,7 @@ import fit.exception.FitMatcherException;
 
 // TODO-RcM Figure out how to make me smaller.
 public class Fixture {
-  public Map<String, Object> summary = new HashMap<String, Object>();
+  public Map<String, Object> summary = new HashMap<>();
 
   public Counts counts = new Counts();
 
@@ -32,7 +32,7 @@ public class Fixture {
 
   protected String[] args;
 
-  private static final Map<String, Object> symbols = new HashMap<String, Object>();
+  private static final Map<String, Object> symbols = new HashMap<>();
   private static boolean forcedAbort = false;  //Semaphores
 
   public static void setForcedAbort(boolean state) {
@@ -48,6 +48,7 @@ public class Fixture {
 
     long elapsed = 0;
 
+    @Override
     public String toString() {
       elapsed = System.currentTimeMillis() - start;
       if (elapsed > 600000) {
@@ -78,7 +79,7 @@ public class Fixture {
           Fixture fixture = getLinkedFixtureWithArgs(tables);
           fixture.listener = listener;
           fixture.interpretTables(tables);
-        } catch (Throwable e) {
+        } catch (Throwable e) { // NOSONAR
           exception(heading, e);
           interpretFollowingTables(tables);
         }
@@ -118,7 +119,7 @@ public class Fixture {
         try {
           Fixture fixture = getLinkedFixtureWithArgs(tables);
           fixture.doTable(tables);
-        } catch (Throwable e) {
+        } catch (Throwable e) { // NOSONAR
           exception(heading, e);
         }
       }
@@ -142,7 +143,7 @@ public class Fixture {
   }
 
   public void getArgsForTable(Parse table) {
-    List<String> argumentList = new ArrayList<String>();
+    List<String> argumentList = new ArrayList<>();
     Parse parameters = table.parts.parts.more;
     for (; parameters != null; parameters = parameters.more) {
       argumentList.add(Parse.unescape(parameters.body));
@@ -256,7 +257,7 @@ public class Fixture {
   }
 
   public static String camel(String name) {
-    StringBuffer b = new StringBuffer(name.length());
+    StringBuilder b = new StringBuilder(name.length());
     StringTokenizer t = new StringTokenizer(name);
     b.append(t.nextToken());
     while (t.hasMoreTokens()) {
@@ -270,9 +271,9 @@ public class Fixture {
 
   public Object parse(String s, Class<?> type) throws Exception {
     if (type.equals(String.class)) {
-      if (s.toLowerCase().equals("null"))
+      if ("null".equalsIgnoreCase(s))
         return null;
-      else if (s.toLowerCase().equals("blank"))
+      else if ("blank".equalsIgnoreCase(s))
         return "";
       else
         return s;

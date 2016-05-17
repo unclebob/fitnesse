@@ -2,7 +2,6 @@ package fitnesse.components;
 
 import java.util.Properties;
 
-import fitnesse.ConfigurationParameter;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

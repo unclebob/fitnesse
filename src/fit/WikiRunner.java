@@ -9,13 +9,14 @@ package fit;
 
 public class WikiRunner extends FileRunner {
 
-  public static void main(String argv[]) {
+  public static void main(String[] argv) {
     new WikiRunner().run(argv);
   }
 
+  @Override
   public void process() {
+    String[] tags = {"wiki", "table", "tr", "td"};
     try {
-      String tags[] = {"wiki", "table", "tr", "td"};
       tables = new Parse(input, tags);    // look for wiki tag enclosing tables
       fixture.doTables(tables.parts);     // only do tables within that tag
     } catch (Exception e) {

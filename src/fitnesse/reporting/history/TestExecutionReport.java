@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestExecutionReport extends ExecutionReport {
-  private List<TestResult> results = new ArrayList<TestResult>();
+  private List<TestResult> results = new ArrayList<>();
 
   public TestExecutionReport(FitNesseVersion version, String rootPath) {
     super(version, rootPath);
@@ -41,6 +41,7 @@ public class TestExecutionReport extends ExecutionReport {
     unpackXml(xmlDocument);
   }
 
+  @Override
   protected void unpackResults(Element testResults) {
     NodeList xmlResults = testResults.getElementsByTagName("result");
     for (int resultIndex = 0; resultIndex < xmlResults.getLength(); resultIndex++) {
@@ -58,13 +59,14 @@ public class TestExecutionReport extends ExecutionReport {
     result.exceptions = XmlUtil.getTextValue(xmlResult, "exceptions");
     result.relativePageName = XmlUtil.getTextValue(xmlResult, "relativePageName");
     result.tags = XmlUtil.getTextValue(xmlResult, "tags");
+    result.dateString = XmlUtil.getTextValue(xmlResult, "date");
     result.runTimeInMillis = XmlUtil.getTextValue(xmlResult, "runTimeInMillis");
-    addResult(result);
 
     Element xmlInstructions = XmlUtil.getElementByTagName(xmlResult, "instructions");
     if (xmlInstructions != null) {
       unpackInstructions(result, xmlInstructions);
     }
+    addResult(result);
   }
 
   private void unpackInstructions(TestResult result, Element xmlInstructions) {
@@ -99,7 +101,7 @@ public class TestExecutionReport extends ExecutionReport {
   }
 
   public List<TestResult> getResults() {
-    return results;
+    return new ArrayList<>(results);
   }
 
   public void addResult(TestResult currentResult) {
@@ -132,8 +134,9 @@ public class TestExecutionReport extends ExecutionReport {
     public String exceptions;
     public String content;
     public String relativePageName;
-    public List<InstructionResult> instructions = new ArrayList<InstructionResult>();
+    public List<InstructionResult> instructions = new ArrayList<>();
     public String tags;
+    public String dateString;
     public long startTime;
     public String runTimeInMillis;
 
@@ -152,7 +155,11 @@ public class TestExecutionReport extends ExecutionReport {
     public String getExceptions() {
       return exceptions;
     }
-    
+
+    public String getDateString() {
+      return dateString;
+    }
+
     public String getRunTimeInMillis() {
       return runTimeInMillis;
     }
@@ -178,19 +185,27 @@ public class TestExecutionReport extends ExecutionReport {
     }
 
     public TestSummary getTestSummary() {
-      return new TestSummary(
-        Integer.parseInt(right),
-        Integer.parseInt(wrong),
-        Integer.parseInt(ignores),
-        Integer.parseInt(exceptions)
-      );
+      try {
+        return new TestSummary(
+                Integer.parseInt(right),
+                Integer.parseInt(wrong),
+                Integer.parseInt(ignores),
+                Integer.parseInt(exceptions)
+        );
+      } catch (NumberFormatException e) {
+        return new TestSummary();
+      }
+    }
+
+    public void addInstruction(InstructionResult instructionResult) {
+      instructions.add(instructionResult);
     }
   }
 
   public static class InstructionResult {
     public String instruction;
     public String slimResult;
-    private List<Expectation> expectations = new ArrayList<Expectation>();
+    private List<Expectation> expectations = new ArrayList<>();
 
     public void addExpectation(Expectation expectation) {
       expectations.add(expectation);

@@ -16,10 +16,12 @@ public class CopyAndAppendLastRowTest extends FixtureDecoratorTestCase {
   private static final int COUNTER = 5;
   private FixtureDecorator decorator = new CopyAndAppendLastRow();
 
+  @Override
   protected String geDecoratorHTMLRow() {
     return FIRST_HTML_ROW;
   }
 
+  @Override
   protected int numberOfAssertionsOnDecorator() {
     return 0;
   }

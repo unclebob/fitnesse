@@ -10,7 +10,7 @@ public class FileSection {
   private static File fileSection;
 
   public FileSection(String type) throws Exception {
-    if ("setup".equals(type.toLowerCase())) {
+    if ("setup".equalsIgnoreCase(type)) {
       File dir = new File(FitnesseFixtureContext.context.getRootPagePath());
       dir.mkdir();
       fileSection = new File(dir, "files");

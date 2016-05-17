@@ -2,13 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class VersionInfo implements Comparable<VersionInfo>, Serializable {
-  private static final long serialVersionUID = 1L;
-
+public class VersionInfo implements Comparable<VersionInfo> {
   private String name;
   private String author;
   private Date creationTime;
@@ -72,14 +69,17 @@ public class VersionInfo implements Comparable<VersionInfo>, Serializable {
     return age;
   }
 
+  @Override
   public int compareTo(VersionInfo otherVersion) {
       return getCreationTime().compareTo(otherVersion.getCreationTime());
   }
 
+  @Override
   public String toString() {
     return getName();
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o != null && o instanceof VersionInfo) {
       VersionInfo otherVersion = (VersionInfo) o;
@@ -88,6 +88,7 @@ public class VersionInfo implements Comparable<VersionInfo>, Serializable {
       return false;
   }
 
+  @Override
   public int hashCode() {
     return getName().hashCode();
   }

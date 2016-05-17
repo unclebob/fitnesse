@@ -14,9 +14,9 @@
   <input type="submit" name="replace" value="Replace!"/>
   <a class="button" href="$viewLocation">Cancel</a>
  </fieldset>
- 
+
  <p><strong>Search &amp; Replace: </strong>
- Please note that this feature is experimental! It uses java-based regular expressions. For an introduction, take a look <a href="http://java.sun.com/javase/6/docs/api/java/util/regex/Pattern.html" target="_new">here</a> (new window).  
+ Please note that this feature is experimental! It uses java-based regular expressions. For an introduction, take a look <a href="http://java.sun.com/javase/6/docs/api/java/util/regex/Pattern.html" target="_new">here</a> (new window).
 </form>
 #end
 
@@ -56,7 +56,12 @@
  <input type="hidden" name="responder" value="movePage"/>
  <fieldset>
   <label for="newLocation">New Location:</label>
-  <input type="text" name="newLocation" value="" size="80" class="wikipath" />
+  <input type="text" name="newLocation" value="" size="80" class="wikipath" list="suites" placeholder="enter first two chars of suite name here" autocomplete="off" />
+  <datalist id="suites">
+    #foreach ($suiteEntry in $suiteMap)
+        <option value="#escape($suiteEntry)"/>
+    #end
+  </datalist>
  </fieldset>
  <fieldset>
   <label class="checkbox" for="refactorReferences_move"><input type="checkbox" id="refactorReferences_move" name="refactorReferences"/>Find all references to this page and change them accordingly (May take several minutes)</label>

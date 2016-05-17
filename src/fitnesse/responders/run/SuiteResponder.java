@@ -22,11 +22,13 @@ import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.reporting.BaseFormatter;
-import fitnesse.reporting.CompositeExecutionLog;
+import fitnesse.reporting.Formatter;
 import fitnesse.reporting.InteractiveFormatter;
-import fitnesse.reporting.PageInProgressFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
 import fitnesse.reporting.TestTextFormatter;
+import fitnesse.reporting.history.HistoryPurger;
+import fitnesse.reporting.history.JunitReFormatter;
+import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.history.SuiteHistoryFormatter;
 import fitnesse.reporting.history.SuiteXmlReformatter;
 import fitnesse.reporting.history.TestXmlFormatter;
@@ -34,31 +36,32 @@ import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.WikiImporter;
 import fitnesse.responders.WikiImportingResponder;
 import fitnesse.responders.WikiImportingTraverser;
+import fitnesse.responders.WikiPageActions;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.RunningTestingTracker;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testrunner.SuiteFilter;
+import fitnesse.testsystems.ConsoleExecutionLogListener;
+import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.UrlPathVariableSource;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
-import fitnesse.responders.WikiPageActions;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
+import org.apache.commons.lang.StringUtils;
+import util.FileUtil;
 
 import static fitnesse.responders.WikiImportingTraverser.ImportError;
 import static fitnesse.wiki.WikiImportProperty.isAutoUpdated;
 
 public class SuiteResponder extends ChunkingResponder implements SecureResponder {
-  private final Logger LOG = Logger.getLogger(SuiteResponder.class.getName());
+  private static final Logger LOG = Logger.getLogger(SuiteResponder.class.getName());
 
-  public static final String TEST_RESULT_FILE_DATE_PATTERN = "yyyyMMddHHmmss";
   private static final String NOT_FILTER_ARG = "excludeSuiteFilter";
   private static final String AND_FILTER_ARG = "runTestsMatchingAllTags";
   private static final String OR_FILTER_ARG_1 = "runTestsMatchingAnyTag";
@@ -76,10 +79,8 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   private boolean debug = false;
   private boolean remoteDebug = false;
-  private boolean includeHtml = true;
+  protected boolean includeHtml = false;
   int exitCode;
-  private CompositeExecutionLog log;
-
 
   public SuiteResponder() {
     this(new WikiImporter());
@@ -96,18 +97,21 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) {
-    super.makeResponse(context, request);
+    Response result = super.makeResponse(context, request);
+    if (result != response){
+        return result;
+    }
     testRunId = runningTestingTracker.generateNextTicket();
     response.addHeader("X-FitNesse-Test-Id", testRunId);
     return response;
   }
 
+  @Override
   protected void doSending() throws Exception {
     debug |= request.hasInput("debug");
     remoteDebug |= request.hasInput("remote_debug");
     includeHtml |= request.hasInput("includehtml");
     data = page.getData();
-    log = new CompositeExecutionLog(page);
 
     createMainFormatter();
 
@@ -118,6 +122,16 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     }
 
     closeHtmlResponse(exitCode);
+
+    cleanHistoryForSuite();
+  }
+
+  private void cleanHistoryForSuite() {
+    String testHistoryDays = context.getProperty("test.history.days");
+    if (withSuiteHistoryFormatter() && StringUtils.isNumeric(testHistoryDays)) {
+      new HistoryPurger(context.getTestHistoryDirectory(), Integer.parseInt(testHistoryDays))
+              .deleteTestHistoryOlderThanDays(path);
+    }
   }
 
   public void doExecuteTests() {
@@ -128,8 +142,6 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     try {
       performExecution();
     } catch (Exception e) {
-      // Is this necessary? Or is the exception already handled by stopTestSystem?
-      mainFormatter.errorOccurred(e);
       LOG.log(Level.WARNING, "error registered in test system", e);
     }
 
@@ -219,13 +231,30 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   protected void addFormatters(MultipleTestsRunner runner) {
     runner.addTestSystemListener(mainFormatter);
-    if (!request.hasInput("nohistory")) {
-      runner.addTestSystemListener(getSuiteHistoryFormatter());
+    if (withSuiteHistoryFormatter()) {
+      addHistoryFormatter(runner);
+    } else {
+      runner.addExecutionLogListener(new ConsoleExecutionLogListener());
     }
-    runner.addTestSystemListener(newTestInProgressFormatter());
+    if (mainFormatter instanceof ExecutionLogListener) {
+      runner.addExecutionLogListener((ExecutionLogListener) mainFormatter);
+    }
+    for (Formatter formatter : context.formatterFactory.createFormatters()) {
+      runner.addTestSystemListener(formatter);
+    }
     if (context.testSystemListener != null) {
       runner.addTestSystemListener(context.testSystemListener);
     }
+  }
+
+  private boolean withSuiteHistoryFormatter() {
+    return !request.hasInput("nohistory");
+  }
+
+  protected void addHistoryFormatter(MultipleTestsRunner runner) {
+    SuiteHistoryFormatter historyFormatter = getSuiteHistoryFormatter();
+    runner.addTestSystemListener(historyFormatter);
+    runner.addExecutionLogListener(historyFormatter);
   }
 
   private void createMainFormatter() {
@@ -233,6 +262,8 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
       mainFormatter = newXmlFormatter();
     } else if (response.isTextFormat()) {
       mainFormatter = newTextFormatter();
+    } else if (response.isJunitFormat()) {
+      mainFormatter = newJunitFormatter();
     } else {
       mainFormatter = newHtmlFormatter();
     }
@@ -246,7 +277,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     return "testPage";
   }
 
-  BaseFormatter newXmlFormatter() {
+  protected BaseFormatter newXmlFormatter() {
     SuiteXmlReformatter xmlFormatter = new SuiteXmlReformatter(context, page, response.getWriter(), getSuiteHistoryFormatter());
     if (includeHtml)
       xmlFormatter.includeHtml();
@@ -255,21 +286,17 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     return xmlFormatter;
   }
 
-  BaseFormatter newTextFormatter() {
+  protected BaseFormatter newTextFormatter() {
     return new TestTextFormatter(response);
   }
 
-  BaseFormatter newHtmlFormatter() {
-    return new SuiteHtmlFormatter(context, page, log) {
-      @Override
-      protected void writeData(String output) {
-        addToResponse(output);
-      }
-    };
+  protected BaseFormatter newJunitFormatter() {
+	  JunitReFormatter xmlFormatter = new JunitReFormatter(context, page, response.getWriter(), getSuiteHistoryFormatter());
+	  return xmlFormatter;
   }
 
-  protected TestSystemListener newTestInProgressFormatter() {
-    return new PageInProgressFormatter(context);
+  protected BaseFormatter newHtmlFormatter() {
+    return new SuiteHtmlFormatter(page, response.getWriter());
   }
 
   protected void performExecution() throws IOException, InterruptedException {
@@ -282,7 +309,6 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
       runner.executeTestPages();
     } finally {
       runningTestingTracker.removeEndedProcess(testRunId);
-      log.publish(context.pageFactory);
     }
   }
 
@@ -299,12 +325,12 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.testSystemFactory);
     runner.setRunInProcess(debug);
     runner.setEnableRemoteDebug(remoteDebug);
-    runner.addExecutionLogListener(log);
     addFormatters(runner);
 
     return runner;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureTestOperation();
   }
@@ -323,7 +349,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     isClosed = true;
   }
 
-  void closeHtmlResponse(int exitCode) {
+  void closeHtmlResponse(int exitCode) throws IOException {
     if (!isClosed()) {
       setClosed();
       response.closeChunks();
@@ -353,26 +379,26 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     //request already confirmed not-null
     String orFilterString = null;
     if(request.getInput(OR_FILTER_ARG_1) != null){
-      orFilterString = (String) request.getInput(OR_FILTER_ARG_1);
+      orFilterString = request.getInput(OR_FILTER_ARG_1);
     } else {
-      orFilterString = (String) request.getInput(OR_FILTER_ARG_2);
+      orFilterString = request.getInput(OR_FILTER_ARG_2);
     }
     return orFilterString;
   }
 
   private static String getNotSuiteFilter(Request request) {
-    return request != null ? (String) request.getInput(NOT_FILTER_ARG) : null;
+    return request != null ? request.getInput(NOT_FILTER_ARG) : null;
   }
 
   private static String getAndTagFilters(Request request) {
-    return request != null ? (String) request.getInput(AND_FILTER_ARG) : null;
+    return request != null ? request.getInput(AND_FILTER_ARG) : null;
   }
 
 
   private static String getSuiteFirstTest(Request request, String suiteName) {
     String startTest = null;
     if (request != null) {
-      startTest = (String) request.getInput("firstTest");
+      startTest = request.getInput("firstTest");
     }
 
     if (startTest != null) {
@@ -387,6 +413,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   public static class HistoryWriterFactory implements TestXmlFormatter.WriterFactory {
 
+    @Override
     public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
       File resultPath = new File(makePageHistoryFileName(context, page, counts, time));
       File resultDirectory = new File(resultPath.getParent());
@@ -394,7 +421,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
         resultDirectory.mkdirs();
       }
       File resultFile = new File(resultDirectory, resultPath.getName());
-      return new PrintWriter(resultFile, "UTF-8");
+      return new PrintWriter(resultFile, FileUtil.CHARENCODING);
     }
   }
 
@@ -406,13 +433,12 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   }
 
   public static String makeResultFileName(TestSummary summary, long time) {
-    SimpleDateFormat format = new SimpleDateFormat(TEST_RESULT_FILE_DATE_PATTERN);
+    SimpleDateFormat format = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
     String datePart = format.format(new Date(time));
     return String.format("%s_%d_%d_%d_%d.xml", datePart, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions());
   }
 
-
-  public SuiteHistoryFormatter getSuiteHistoryFormatter() {
+  private SuiteHistoryFormatter getSuiteHistoryFormatter() {
     if (suiteHistoryFormatter == null) {
       HistoryWriterFactory source = new HistoryWriterFactory();
       suiteHistoryFormatter = new SuiteHistoryFormatter(context, page, source);

@@ -19,9 +19,9 @@ import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
 
 import static java.util.Arrays.asList;
+import static util.FileUtil.CHARENCODING;
 
 public class CommandRunner {
-  private static final String DEFAULT_CHARSET_NAME = "UTF-8";
   private static final Logger LOG = Logger.getLogger(CommandRunner.class.getName());
 
   private Process process;
@@ -31,12 +31,14 @@ public class CommandRunner {
   private Map<String, String> environmentVariables;
   private final int timeout;
   private final ExecutionLogListener executionLogListener;
+  private String commandErrorMessage = "";
 
   /**
    *
-   * @param command
-   * @param input
-   * @param environmentVariables
+   * @param command Commands to run
+   * @param input INput
+   * @param environmentVariables Map of environment variables
+   * @param executionLogListener Execution Log Listener
    * @param timeout Time-out in seconds.
    */
   public CommandRunner(String[] command, String input, Map<String, String> environmentVariables, ExecutionLogListener executionLogListener, int timeout) {
@@ -78,6 +80,7 @@ public class CommandRunner {
       @Override
       public void write(String output) {
         executionLogListener.stdErr(output);
+        commandErrorMessage = output;
       }
     }), "CommandRunner stdErr").start();
 
@@ -103,7 +106,7 @@ public class CommandRunner {
     if (environmentVariables == null) {
       return Collections.emptyMap();
     }
-    Map<String, String> systemVariables = new HashMap<String, String>(System.getenv());
+    Map<String, String> systemVariables = new HashMap<>(System.getenv());
     systemVariables.putAll(environmentVariables);
     return systemVariables;
   }
@@ -130,7 +133,8 @@ public class CommandRunner {
         Thread.sleep(timeStep);
       }
     } catch (InterruptedException e) {
-      LOG.log(Level.FINE, "Wait for death of process " + process + " interrupted", e);
+      LOG.log(Level.WARNING, "Wait for death of process " + process + " interrupted", e);
+      Thread.currentThread().interrupt();
     }
     LOG.warning("Could not detect death of command line test runner.");
   }
@@ -142,6 +146,12 @@ public class CommandRunner {
     } catch (IllegalThreadStateException e) {
       return false;
     }
+  }
+
+  public boolean isDead() {
+	  if (process !=null) return isDead(process);
+	  //if there is or was never a process due to a remote / manual start then it is alive!
+	  return false;
   }
 
   public void kill() {
@@ -179,7 +189,7 @@ public class CommandRunner {
 
   protected void sendInput(OutputStream stdin) throws IOException {
     try {
-      stdin.write(input.getBytes(DEFAULT_CHARSET_NAME));
+      stdin.write(input.getBytes(CHARENCODING));
       stdin.flush();
     } finally {
       try {
@@ -196,7 +206,7 @@ public class CommandRunner {
 
     public OutputReadingRunnable(InputStream input, OutputWriter writer) {
       try {
-        reader = new BufferedReader(new InputStreamReader(input, DEFAULT_CHARSET_NAME));
+        reader = new BufferedReader(new InputStreamReader(input, CHARENCODING));
       } catch (UnsupportedEncodingException e) {
         exceptionOccurred(e);
       }
@@ -223,5 +233,9 @@ public class CommandRunner {
 
   private interface OutputWriter {
     void write(String output);
+  }
+
+  public String getCommandErrorMessage() {
+	return commandErrorMessage;
   }
 }

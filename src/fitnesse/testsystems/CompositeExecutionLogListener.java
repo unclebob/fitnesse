@@ -5,7 +5,7 @@ import java.util.List;
 
 public class CompositeExecutionLogListener implements ExecutionLogListener {
 
-  private final List<ExecutionLogListener> listeners = new LinkedList<ExecutionLogListener>();
+  private final List<ExecutionLogListener> listeners = new LinkedList<>();
 
   public final void addExecutionLogListener(ExecutionLogListener listener) {
     listeners.add(listener);

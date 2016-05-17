@@ -1,4 +1,4 @@
-This page requires that 3 varaibles be defined before it is included.
+This page requires that 3 variables be defined before it is included.
  * NUMERATOR
  * DENOMINATOR
  * QUOTIENT

@@ -21,13 +21,20 @@ public class ScriptTable extends SlimTable {
   public ScriptTable(Table table, String tableId, SlimTestContext context) {
     super(table, tableId, context);
   }
-
+  /**
+   * Template method to provide the keyword that identifies the table type.
+   *
+   * @return table type
+   */
+  @Override
   protected String getTableType() {
     return "scriptTable";
   }
 
   /**
    * Template method to provide the keyword that identifies the table type.
+   *
+   * @return keyword for script table
    */
   protected String getTableKeyword() {
     return "script";
@@ -35,6 +42,8 @@ public class ScriptTable extends SlimTable {
 
   /**
    * Template method to provide the keyword for the {@code start} action.
+   *
+   * @return keyword for {@code start} action
    */
   protected String getStartKeyword() {
     return "start";
@@ -42,6 +51,8 @@ public class ScriptTable extends SlimTable {
 
   /**
    * Template method to provide the keyword for the {@code check} action.
+   *
+   * @return keyword for {@code check} action
    */
   protected String getCheckKeyword() {
     return "check";
@@ -49,6 +60,8 @@ public class ScriptTable extends SlimTable {
 
   /**
    * Template method to provide the keyword for the {@code checkNot} action.
+   *
+   * @return keyword for {@code checkNot} action
    */
   protected String getCheckNotKeyword() {
     return "check not";
@@ -56,6 +69,8 @@ public class ScriptTable extends SlimTable {
 
   /**
    * Template method to provide the keyword for the {@code reject} action.
+   *
+   * @return keyword for {@code reject} action
    */
   protected String getRejectKeyword() {
     return "reject";
@@ -63,6 +78,8 @@ public class ScriptTable extends SlimTable {
 
   /**
    * Template method to provide the keyword for the {@code ensure} action.
+   *
+   * @return keyword for {@code ensure} action
    */
   protected String getEnsureKeyword() {
     return "ensure";
@@ -70,6 +87,8 @@ public class ScriptTable extends SlimTable {
 
   /**
    * Template method to provide the keyword for the {@code show} action.
+   *
+   * @return keyword for {@code show} action
    */
   protected String getShowKeyword() {
     return "show";
@@ -77,13 +96,17 @@ public class ScriptTable extends SlimTable {
 
   /**
    * Template method to provide the keyword for the {@code note} action.
+   *
+   * @return keyword for {@code note} action
    */
   protected String getNoteKeyword() {
     return "note";
   }
 
+  @Override
   public List<SlimAssertion> getAssertions() throws SyntaxError {
-    List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+    List<SlimAssertion> assertions = new ArrayList<>();
+    ScenarioTable.setDefaultChildClass(getClass());
     if (table.getCellContents(0, 0).toLowerCase().startsWith(getTableKeyword())) {
       List<SlimAssertion> createAssertions = startActor();
       if (createAssertions != null) {
@@ -116,7 +139,7 @@ public class ScriptTable extends SlimTable {
       assertions = note(row);
     else if ((match = ifSymbolAssignment(0, row)) != null)
       assertions = actionAndAssign(match, row);
-    else if (firstCell.length() == 0)
+    else if (firstCell.isEmpty())
       assertions = note(row);
     else if (firstCell.trim().startsWith("#") || firstCell.trim().startsWith("*"))
       assertions = note(row);
@@ -128,7 +151,7 @@ public class ScriptTable extends SlimTable {
   }
 
   protected List<SlimAssertion> actionAndAssign(String symbolName, int row) {
-    List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+    List<SlimAssertion> assertions = new ArrayList<>();
     int lastCol = table.getColumnCountInRow(row) - 1;
     String actionName = getActionNameStartingAt(1, lastCol, row);
     if (!actionName.equals("")) {
@@ -155,7 +178,7 @@ public class ScriptTable extends SlimTable {
     String actionName = getActionNameStartingAt(0, lastCol, row);
     ScenarioTable scenario = getTestContext().getScenario(Disgracer.disgraceClassName(
             actionName.replace(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX, "")));
-    List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+    List<SlimAssertion> assertions = new ArrayList<>();
     if (scenario != null) {
       scenario.setCustomComparatorRegistry(customComparatorRegistry);
       String[] args = getArgumentsStartingAt(1, lastCol, row, assertions);
@@ -176,12 +199,13 @@ public class ScriptTable extends SlimTable {
 
   private List<ScenarioTable> getScenariosWithMostArgumentsFirst() {
     Collection<ScenarioTable> scenarioMap = getTestContext().getScenarios();
-    List<ScenarioTable> scenarios = new ArrayList<ScenarioTable>(scenarioMap);
+    List<ScenarioTable> scenarios = new ArrayList<>(scenarioMap);
     Collections.sort(scenarios, new ScenarioTableLengthComparator());
     return scenarios;
   }
 
   private static class ScenarioTableLengthComparator implements java.util.Comparator<ScenarioTable> {
+    @Override
     public int compare(ScenarioTable st1, ScenarioTable st2) {
       int size1 = st1.getInputs().size();
       int size2 = st2.getInputs().size();
@@ -229,7 +253,7 @@ public class ScriptTable extends SlimTable {
 
   protected List<SlimAssertion> invokeAction(int startingCol, int endingCol, int row, SlimExpectation expectation) {
     String actionName = getActionNameStartingAt(startingCol, endingCol, row);
-    List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+    List<SlimAssertion> assertions = new ArrayList<>();
     String[] args = getArgumentsStartingAt(startingCol + 1, endingCol, row, assertions);
     assertions.add(makeAssertion(callFunction(getTableType() + "Actor", actionName, (Object[]) args),
             expectation));
@@ -237,7 +261,7 @@ public class ScriptTable extends SlimTable {
   }
 
   protected String getActionNameStartingAt(int startingCol, int endingCol, int row) {
-    StringBuffer actionName = new StringBuffer();
+    StringBuilder actionName = new StringBuilder();
     actionName.append(table.getCellContents(startingCol, row));
     int actionNameCol = startingCol + 2;
     while (actionNameCol <= endingCol &&
@@ -282,7 +306,7 @@ public class ScriptTable extends SlimTable {
   }
 
   protected List<SlimAssertion> startActor(int row, String cellContents, int classNameColumn) {
-    List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+    List<SlimAssertion> assertions = new ArrayList<>();
     String className = Disgracer.disgraceClassName(cellContents);
     assertions.add(constructInstance(getTableType() + "Actor", className, classNameColumn, row));
     getArgumentsStartingAt(classNameColumn + 1, table.getColumnCountInRow(row) - 1, row, assertions);
@@ -294,7 +318,7 @@ public class ScriptTable extends SlimTable {
     private int endingCol;
     private int row;
 
-    private List<String> arguments = new ArrayList<String>();
+    private List<String> arguments = new ArrayList<>();
     private int increment = 2;
     private boolean sequentialArguments = false;
 
@@ -377,7 +401,7 @@ public class ScriptTable extends SlimTable {
     protected SlimTestResult createEvaluationMessage(String actual, String expected) {
       try {
         table.addColumnToRow(getRow(), actual);
-      } catch (Throwable e) {
+      } catch (Exception e) {
         return SlimTestResult.fail(actual, e.getMessage());
       }
       return SlimTestResult.plain();

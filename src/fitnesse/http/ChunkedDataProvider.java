@@ -1,7 +1,9 @@
 package fitnesse.http;
 
+import java.io.IOException;
+
 public interface ChunkedDataProvider {
 
-  void startSending();
+  void startSending() throws IOException;
 
 }

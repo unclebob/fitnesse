@@ -12,7 +12,6 @@ import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.VariableSource;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,7 +31,7 @@ public class WikiTestPageTest {
     WikiPage subPage = WikiPageUtil.addPage(wikiPage, PathParser.parse("SubPage"), "sub page");
     WikiPageUtil.addPage(wikiPage, PathParser.parse("ScenarioLibrary"), "scenario library 2");
 
-    WikiPage subTestPage = WikiPageUtil.addPage(subPage, PathParser.parse("TestSubPage"), "sub test page");
+    WikiPageUtil.addPage(subPage, PathParser.parse("TestSubPage"), "sub test page");
     WikiPageUtil.addPage(subPage, PathParser.parse("ScenarioLibrary"), "scenario library 3");
   }
 
@@ -107,6 +106,14 @@ public class WikiTestPageTest {
     TestPage testPage = new WikiTestPage(slimTestPage);
     String html = testPage.getHtml();
     assertNotSubString("Scenario Libraries", html);
+  }
+
+  @Test
+  public void shouldReturnDecoratedContentForWikitextPages() throws Exception {
+    WikiPage slimTestPage = addPage("SlimTest", "!define TEST_SYSTEM {slim}\n");
+    TestPage testPage = new WikiTestPage(slimTestPage);
+    String content = testPage.getContent();
+    assertSubString("!define TEST_SYSTEM {slim}\n", content);
   }
 
 

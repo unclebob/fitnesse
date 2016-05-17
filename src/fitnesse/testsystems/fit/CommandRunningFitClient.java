@@ -4,12 +4,14 @@ package fitnesse.testsystems.fit;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import fitnesse.socketservice.SocketFactory;
 import fitnesse.socketservice.SocketService;
 import fitnesse.testsystems.CommandRunner;
 import fitnesse.testsystems.ExecutionLogListener;
@@ -36,8 +38,9 @@ public class CommandRunningFitClient extends FitClient {
   }
 
   public void start() throws IOException {
-    server = new SocketService(0, new SocketCatcher(this, ticketNumber), true);
-    int port = server.getPort();
+    ServerSocket serverSocket = SocketFactory.createServerSocket(0);
+    server = new SocketService(new SocketCatcher(this, ticketNumber), true, serverSocket);
+    int port = serverSocket.getLocalPort();
     try {
       commandRunningStrategy.start(this, port, ticketNumber);
       waitForConnection();
@@ -66,6 +69,7 @@ public class CommandRunningFitClient extends FitClient {
     return connectionEstablished;
   }
 
+  @Override
   public void join() {
     try {
       commandRunningStrategy.join();
@@ -85,6 +89,7 @@ public class CommandRunningFitClient extends FitClient {
     }
   }
 
+  @Override
   public void kill() {
     super.kill();
     commandRunningStrategy.kill();
@@ -157,6 +162,7 @@ public class CommandRunningFitClient extends FitClient {
         this.fitClient = fitClient;
       }
 
+      @Override
       public void run() {
         try {
           Thread.sleep(TIMEOUT);
@@ -182,6 +188,7 @@ public class CommandRunningFitClient extends FitClient {
         this.commandRunner = commandRunner;
       }
 
+      @Override
       public void run() {
         try {
           Thread.sleep(1000); // next waitFor() can finish too quickly on Linux!
@@ -240,6 +247,7 @@ public class CommandRunningFitClient extends FitClient {
     protected Thread createTestRunnerThread(final String testRunner, final String[] args) {
       final Method testRunnerMethod = getTestRunnerMethod(testRunner);
       Runnable fastFitServerRunnable = new Runnable() {
+        @Override
         public void run() {
           tryCreateTestRunner(testRunnerMethod, args);
         }

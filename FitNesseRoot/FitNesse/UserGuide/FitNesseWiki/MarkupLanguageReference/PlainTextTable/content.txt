@@ -12,6 +12,16 @@ simple plain
 text pasted
 from somewhere
 ]!
+One note on editing plain text tables with the rich text editor: the content is displayed as
+{{{
+<plaintexttable>
+simple plain
+text pasted
+from somewhere
+</plaintexttable>
+}}}
+In order to add extra lines, use <Shift>-<Enter> to add lines when editing the plain text table. It is not possible to create plain text tables from the rich text editor.
+
 ----
 These are ''literalized'' tables, so most wiki markup does not work inside them.
 

@@ -9,7 +9,6 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -69,7 +68,7 @@ public class VersionComparerResponderTest {
     response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(400, response.getStatus());
     assertHasRegexp(
-        "Compare Failed because no Input Files were given. Select one or two please.",
+        "Compare failed because no input files were given. Select one or two please.",
         response.getContent());
 
   }

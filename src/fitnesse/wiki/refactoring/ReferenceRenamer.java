@@ -19,6 +19,7 @@ public abstract class ReferenceRenamer implements TraversalListener<WikiPage>, S
     root.getPageCrawler().traverse(this);
   }
 
+  @Override
   public void process(WikiPage currentPage) {
     PageData data = currentPage.getData();
     String content = data.getContent();

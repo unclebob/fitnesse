@@ -25,12 +25,13 @@ public class PacketResponder implements SecureResponder {
   private SimpleResponse response;
   private WikiPage page;
   private JSONObject packet;
-  List<JSONObject> tables = new ArrayList<JSONObject>();
+  List<JSONObject> tables = new ArrayList<>();
   private String jsonpFunction;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     response = new SimpleResponse();
-    jsonpFunction = (String) request.getInput("jsonp");
+    jsonpFunction = request.getInput("jsonp");
     String pageName = request.getResource();
     PageCrawler pageCrawler = context.getRootPage().getPageCrawler();
     WikiPagePath resourcePath = PathParser.parse(pageName);
@@ -67,12 +68,12 @@ public class PacketResponder implements SecureResponder {
       Table t = scanner.getTable(i);
       addTableToPacket(t);
     }
-    packet.put("tables", tables);                                                             
+    packet.put("tables", tables);
   }
 
   private void addTableToPacket(Table t) throws JSONException {
     JSONObject table = new JSONObject();
-    JSONObject parents[] = new JSONObject[10];
+    JSONObject[] parents = new JSONObject[10];
     parents[0] = table;
     for (int row = 0; row < t.getRowCount(); row++) {
       List<String> rowList = getRowFromTable(t, row);
@@ -101,12 +102,13 @@ public class PacketResponder implements SecureResponder {
   }
 
   private List<String> getRowFromTable(Table t, int row) {
-    List<String> rowList = new ArrayList<String>();
+    List<String> rowList = new ArrayList<>();
     for (int col = 0; col < t.getColumnCountInRow(row); col++)
       rowList.add(t.getCellContents(col, row));
     return rowList;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }

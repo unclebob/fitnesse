@@ -144,4 +144,27 @@ describe("WikiFormatter", function () {
         expect(formatter.format(original)).toBe(expected);
     });
 
+    it("format table with nested table", function () {
+        var original = "| Key | Nested Data |\n"
+            + "| Test  | !(| Key2 | Example   |)! |";
+
+        var expected =
+            "|Key |Nested Data       |\n"
+          + "|Test|!(|Key2|Example|)!|";
+
+        expect(formatter.format(original)).toBe(expected);
+    });
+
+    it("format table with nested table", function () {
+        var original = "| Key | Nested Data |\n"
+            + "| Test  | !(| Key2 | Example   |\n"
+            + "|             1    | Number 1  |)! |";
+
+        var expected =
+              "|Key |Nested Data          |\n"
+            + "|Test|!(|Key2|Example|\n"
+            + "|1   |Number 1|)!          |";
+
+        expect(formatter.format(original)).toBe(expected);
+    });
 });

@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import fitnesse.slim.SlimError;
 import fitnesse.slim.instructions.AssignInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.Assertion;
@@ -61,17 +60,18 @@ public abstract class SlimTestSystem implements TestSystem {
 
   @Override
   public boolean isSuccessfullyStarted() {
-    return true;
+    return !testSystemIsStopped;
   }
 
   @Override
   public void start() throws IOException {
     try {
       slimClient.start();
-      testSystemListener.testSystemStarted(this);
-    } catch (SlimError e) {
-      exceptionOccurred(e);
+    } catch (SlimVersionMismatch slimVersionMismatch) {
+      exceptionOccurred(slimVersionMismatch);
+      return;
     }
+    testSystemListener.testSystemStarted(this);
   }
 
   @Override
@@ -84,22 +84,28 @@ public abstract class SlimTestSystem implements TestSystem {
   public void bye() throws IOException {
     try {
       slimClient.bye();
-      testSystemStopped(null);
     } catch (IOException e) {
       exceptionOccurred(e);
       throw e;
     } catch (Exception e) {
       exceptionOccurred(e);
+    } finally {
+      testSystemStopped(null);
     }
   }
 
   @Override
   public void runTests(TestPage pageToTest) throws IOException {
-    initializeTest();
+    initializeTest(pageToTest);
 
     testStarted(pageToTest);
-    processAllTablesOnPage(pageToTest);
-    testComplete(pageToTest, testContext.getTestSummary());
+    try {
+      processAllTablesOnPage(pageToTest);
+      testComplete(pageToTest, testContext.getTestSummary());
+    } catch (IOException e) {
+      exceptionOccurred(e);
+      throw e;
+    }
   }
 
   @Override
@@ -107,15 +113,19 @@ public abstract class SlimTestSystem implements TestSystem {
     testSystemListener.addTestSystemListener(listener);
   }
 
-  private void initializeTest() {
-    testContext = new SlimTestContextImpl();
+  private void initializeTest(TestPage testPage) {
+    testContext = createTestContext(testPage);
     stopTestCalled = false;
+  }
+
+  protected SlimTestContextImpl createTestContext(TestPage testPage) {
+    return new SlimTestContextImpl(testPage);
   }
 
   protected abstract void processAllTablesOnPage(TestPage testPage) throws IOException;
 
   protected void processTable(SlimTable table) throws IOException, SyntaxError {
-    List<SlimAssertion> assertions = createAssertions(table);
+    List<SlimAssertion> assertions = table.getAssertions();
     Map<String, Object> instructionResults;
     if (!stopTestCalled && !stopSuiteCalled) {
       // Okay, if this crashes, the test system is killed.
@@ -131,12 +141,6 @@ public abstract class SlimTestSystem implements TestSystem {
     }
 
     evaluateTables(assertions, instructionResults);
-  }
-
-  private List<SlimAssertion> createAssertions(SlimTable table) throws SyntaxError {
-    List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
-    assertions.addAll(table.getAssertions());
-    return assertions;
   }
 
   protected void evaluateTables(List<SlimAssertion> assertions, Map<String, Object> instructionResults) {
@@ -166,7 +170,7 @@ public abstract class SlimTestSystem implements TestSystem {
           if (testResult != null) {
             Map<String, ?> variables = testResult.getVariablesToStore();
             if (variables != null) {
-              List<Instruction> instructions = new ArrayList<Instruction>(variables.size());
+              List<Instruction> instructions = new ArrayList<>(variables.size());
               int i = 0;
               for (Entry<String, ?> variable : variables.entrySet()) {
                 instructions.add(new AssignInstruction("assign_" + i++, variable.getKey(), variable.getValue()));
@@ -178,7 +182,7 @@ public abstract class SlimTestSystem implements TestSystem {
             }
           }
         }
-      } catch (Throwable ex) {
+      } catch (Exception ex) {
         exceptionOccurred(ex);
       }
     }
@@ -204,8 +208,8 @@ public abstract class SlimTestSystem implements TestSystem {
   protected void exceptionOccurred(Throwable e) {
     try {
       slimClient.kill();
-    } catch (IOException e1) {
-      LOG.log(Level.WARNING, "Failed to kill SLiM client", e);
+    } catch (IOException killException) {
+      LOG.log(Level.WARNING, "Failed to kill SLiM client", killException);
     }
     testSystemStopped(e);
   }

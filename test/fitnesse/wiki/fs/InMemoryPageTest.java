@@ -6,7 +6,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -19,13 +18,11 @@ import org.junit.Test;
 
 public class InMemoryPageTest {
   private WikiPage page1;
-  private WikiPage page2;
 
   @Before
   public void setUp() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     page1 = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "page one");
-    page2 = WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "page two");
   }
 
   @Test
@@ -36,7 +33,6 @@ public class InMemoryPageTest {
     data.setContent("version 2");
     page1.commit(data);
 
-    data = page1.getData();
     Collection<VersionInfo> versions = page1.getVersions();
 
     assertEquals(3, versions.size());
@@ -46,8 +42,7 @@ public class InMemoryPageTest {
   public void testVersionAuthor() throws Exception {
     PageData data = page1.getData();
     Collection<VersionInfo> versions = page1.getVersions();
-    for (Iterator<VersionInfo> iterator = versions.iterator(); iterator.hasNext();) {
-      VersionInfo versionInfo = iterator.next();
+    for (VersionInfo versionInfo : versions) {
       assertEquals("", versionInfo.getAuthor());
     }
 
@@ -55,11 +50,9 @@ public class InMemoryPageTest {
     page1.commit(data);
     page1.commit(data);
 
-    data = page1.getData();
     versions = page1.getVersions();
     boolean joeFound = false;
-    for (Iterator<VersionInfo> iterator = versions.iterator(); iterator.hasNext();) {
-      VersionInfo versionInfo = iterator.next();
+    for (VersionInfo versionInfo : versions) {
       if ("Joe".equals(versionInfo.getAuthor()))
         joeFound = true;
     }

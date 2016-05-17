@@ -14,13 +14,14 @@ import fitnesse.testsystems.fit.InProcessFitClientBuilder;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.InProcessSlimClientBuilder;
+import fitnesse.testsystems.slim.SlimClient;
 import fitnesse.testsystems.slim.SlimClientBuilder;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 
 public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemFactoryRegistry {
-  private final Map<String, TestSystemFactory> testSystemFactories = new HashMap<String, TestSystemFactory>(4);
-  private final Map<String, TestSystemFactory> inProcessTestSystemFactories = new HashMap<String, TestSystemFactory>(4);
+  private final Map<String, TestSystemFactory> testSystemFactories = new HashMap<>(4);
+  private final Map<String, TestSystemFactory> inProcessTestSystemFactories = new HashMap<>(4);
 
   public MultipleTestSystemFactory(SlimTableFactory slimTableFactory, CustomComparatorRegistry customComparatorRegistry) {
     registerTestSystemFactory("slim", new HtmlSlimTestSystemFactory(slimTableFactory, customComparatorRegistry));
@@ -40,6 +41,7 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
     inProcessTestSystemFactories.put(name, testSystemFactory);
   }
 
+  @Override
   public TestSystem create(Descriptor descriptor) throws IOException {
     TestSystemFactory factory = null;
     if (descriptor.runInProcess()) {
@@ -88,7 +90,7 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
     @Override
     public TestSystem create(Descriptor descriptor) throws IOException {
       InProcessSlimClientBuilder clientBuilder = new InProcessSlimClientBuilder(descriptor);
-      SlimCommandRunningClient slimClient = clientBuilder.build();
+      SlimClient slimClient = clientBuilder.build();
       HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(clientBuilder.getTestSystemName(), slimClient,
               slimTableFactory.copy(), customComparatorRegistry);
 

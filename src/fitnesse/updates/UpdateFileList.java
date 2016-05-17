@@ -4,17 +4,24 @@ import util.FileUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
+/**
+ * Little utility to assemble the updateLists, used from build script.
+ */
 public class UpdateFileList {
   private static final Logger LOG = Logger.getLogger(UpdateFileList.class.getName());
+
+  private static final List<String> VALID_FILE_NAMES = Arrays.asList("content.txt", "properties.xml", ".gitignore");
 
   private List<String> mainDirectories;
   private String updateListContent;
   private String updateDoNotCopyOverContent;
-  private HashSet<String> doNotReplaceFiles = new HashSet<String>();
+  private Set<String> doNotReplaceFiles = new HashSet<>();
   private String baseDirectory = "";
   private String outputDirectory = "";
   static UpdateFileList testUpdater = null;
@@ -37,7 +44,7 @@ public class UpdateFileList {
   }
 
   public UpdateFileList() {
-    mainDirectories = new ArrayList<String>();
+    mainDirectories = new ArrayList<>();
     updateListContent = "";
     updateDoNotCopyOverContent = "";
   }
@@ -100,20 +107,21 @@ public class UpdateFileList {
     if (f.isDirectory()) {
       File[] files = FileUtil.getDirectoryListing(f);
       for (File childFile : files)
-        if (!isBackupFile(childFile))
+        if (isWikiFile(childFile))
           addFilePathToAppropriateList(path, childFile);
     } else if (f.isFile()) {
       String parent = "";
       int index = path.lastIndexOf('/');
       if (index >= 0)
         parent = path.substring(0, index);
-      if (!isBackupFile(f))
+      if (isWikiFile(f))
         addFilePathToAppropriateList(parent, f);
     }
   }
 
-  private boolean isBackupFile(File childFile) {
-	return childFile.getName().endsWith(".zip");
+  private boolean isWikiFile(File childFile) {
+    String name = childFile.getName();
+    return childFile.isDirectory() || VALID_FILE_NAMES.contains(name);
   }
 
 private void addFilePathToAppropriateList(String directoryPath, File childFile) {
@@ -127,7 +135,7 @@ private void addFilePathToAppropriateList(String directoryPath, File childFile) 
   }
 
   private String makePathLine(String path) {
-    if (baseDirectory != null && baseDirectory.length() > 0 && path.startsWith(baseDirectory))
+    if (baseDirectory != null && !baseDirectory.isEmpty() && path.startsWith(baseDirectory))
       path = path.replace(baseDirectory, "");
     if (path.startsWith("/"))
       path = path.substring(1);

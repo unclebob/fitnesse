@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import fitnesse.wikitext.parser.Alias;
 import fitnesse.wikitext.parser.See;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolTreeWalker;
@@ -60,16 +61,13 @@ public class WikiPageUtil {
       current = context.addChildPage(first);
     } else
       current = context.getChildPage(first);
-    if (rest.size() == 0)
+    if (rest.isEmpty())
       return current;
     return getOrMakePage(current, rest);
   }
 
   public static String makePageHtml(WikiPage page) {
-    StringBuffer buffer = new StringBuffer();
-    buffer.append(getHeaderPageHtml(page));
-    buffer.append(page.getHtml());
-    return buffer.toString();
+    return getHeaderPageHtml(page) + page.getHtml();
   }
 
   public static File resolveFileUri(String fullPageURI, File rootPath) {
@@ -90,11 +88,17 @@ public class WikiPageUtil {
 
   public static List<String> getXrefPages(WikiPage page) {
     if (page instanceof WikitextPage) {
-      final ArrayList<String> xrefPages = new ArrayList<String>();
+      final List<String> xrefPages = new ArrayList<>();
       ((WikitextPage) page).getSyntaxTree().walkPreOrder(new SymbolTreeWalker() {
         @Override
         public boolean visit(Symbol node) {
-          if (node.isType(See.symbolType)) xrefPages.add(node.childAt(0).getContent());
+          if (node.isType(See.symbolType)) {
+            if(node.childAt(0).isType(Alias.symbolType)) {
+              xrefPages.add(node.childAt(0).lastChild().childAt(0).getContent());
+            } else {
+              xrefPages.add(node.childAt(0).getContent());
+            }
+          }
           return true;
         }
 
@@ -106,5 +110,9 @@ public class WikiPageUtil {
       return xrefPages;
     }
     return Collections.emptyList();
+  }
+
+  public static boolean isTestPage(WikiPage page) {
+    return page.getData().hasAttribute("Test");
   }
 }

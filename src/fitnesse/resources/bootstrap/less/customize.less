@@ -1,17 +1,21 @@
 body {
   padding-top: 100px;
+  padding-bottom: 100px;
 }
 
 header,
-article,
-footer {
-  margin: 0 40px;
+article {
+  margin: 0 @page-margin-horizontal;
 }
 
 footer {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  .well;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 15px @page-margin-horizontal;
+  background-color: @navbar-default-bg;
+  min-height: @navbar-height;
+  border-top: 1px solid @navbar-default-border;
 }
 
 table {
@@ -50,6 +54,13 @@ label {
   margin-right: 25px;
 }
 
+a[name] {
+  position: relative;
+  display: inline-block;
+  top: -120px;
+  visibility: hidden;
+}
+
 #add > ul {
   max-height: 300px;
   overflow-x: hidden;
@@ -58,7 +69,7 @@ label {
 .page-actions {
   display: none;
   float: right;
-  padding: 8px 40px;
+  padding: 8px @page-margin-horizontal;
   li {
     display: inline;
     .btn;
@@ -68,7 +79,7 @@ label {
 }
 
 .breadcrumb {
-  padding: 8px 40px;
+  padding: 8px @page-margin-horizontal;
   margin: 0;
   #gradient > .vertical-three-colors(#ffffff, #ffffff, 80%, rgba(255, 255, 255, 0.0));
   background-color: transparent;
@@ -82,13 +93,12 @@ button,
 a.button,
 input[type="button"] {
   .btn;
-  margin-bottom: 9px;
+  .btn-default;
 }
 
 input[type="submit"] {
   .btn;
   .btn-primary;
-  margin-bottom: 9px;
 }
 
 input[type="radio"],
@@ -348,14 +358,19 @@ span.ignore * {
   .well-sm;
 }
 
+
 fieldset {
   margin: 0 0 0.5em 0;
+}
+
+.nav-tabs {
+  margin-bottom: 12px;
 }
 
 // Specific pages:
 
 .editPage #editor {
-  margin: 0 40px;
+  margin: 0 @page-margin-horizontal;
 }
 
 .editPage .textarea-toolbar,
@@ -384,7 +399,7 @@ fieldset {
 }
 
 .editPage #save_buttons {
-  margin: 0 40px;
+  margin: 8px @page-margin-horizontal;
 }
 
 #tt-wrap-text {

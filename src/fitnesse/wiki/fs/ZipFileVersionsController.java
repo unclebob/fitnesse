@@ -84,7 +84,7 @@ public class ZipFileVersionsController implements VersionsController {
 
   public Collection<ZipFileVersionInfo> history(final File dir) {
     final File[] files = dir.listFiles();
-    final Set<ZipFileVersionInfo> versions = new HashSet<ZipFileVersionInfo>();
+    final Set<ZipFileVersionInfo> versions = new HashSet<>();
     if (files != null) {
       for (final File file : files) {
         if (isVersionFile(file)) {
@@ -121,7 +121,6 @@ public class ZipFileVersionsController implements VersionsController {
       return;
     }
 
-    // if (isFileInFilesSection()) return version;
     ZipOutputStream zos = null;
     File commonBaseDir = commonBaseDir(fileVersions);
     try {
@@ -168,14 +167,23 @@ public class ZipFileVersionsController implements VersionsController {
   }
 
   private void addToZip(final File file, final ZipOutputStream zos) throws IOException {
-    final ZipEntry entry = new ZipEntry(file.getName());
-    zos.putNextEntry(entry);
-    final FileInputStream is = new FileInputStream(file);
-    final int size = (int) file.length();
-    final byte[] bytes = new byte[size];
-    is.read(bytes);
-    is.close();
-    zos.write(bytes, 0, size);
+    final FileInputStream is;
+    try {
+      is = new FileInputStream(file);
+    } catch (FileNotFoundException e) {
+      LOG.warning("File " + file.getAbsolutePath() + " not found. It can not be saved in this version.");
+      return;
+    }
+    try {
+      final ZipEntry entry = new ZipEntry(file.getName());
+      zos.putNextEntry(entry);
+      final int size = (int) file.length();
+      final byte[] bytes = new byte[size];
+      is.read(bytes);
+      zos.write(bytes, 0, size);
+    } finally {
+      is.close();
+    }
   }
 
   private boolean isVersionFile(final File file) {
@@ -215,7 +223,7 @@ public class ZipFileVersionsController implements VersionsController {
 
   private void pruneVersions(Collection<ZipFileVersionInfo> versions) {
     List<ZipFileVersionInfo> versionsList = makeSortedVersionList(versions);
-    if (versions.size() > 0) {
+    if (!versions.isEmpty()) {
       VersionInfo lastVersion = versionsList.get(versionsList.size() - 1);
       Date expirationDate = makeVersionExpirationDate(lastVersion);
       for (ZipFileVersionInfo version : versionsList) {
@@ -227,7 +235,7 @@ public class ZipFileVersionsController implements VersionsController {
   }
 
   private List<ZipFileVersionInfo> makeSortedVersionList(Collection<ZipFileVersionInfo> versions) {
-    List<ZipFileVersionInfo> versionsList = new ArrayList<ZipFileVersionInfo>(versions);
+    List<ZipFileVersionInfo> versionsList = new ArrayList<>(versions);
     Collections.sort(versionsList);
     return versionsList;
   }
@@ -263,7 +271,7 @@ public class ZipFileVersionsController implements VersionsController {
 
     @Override
     public InputStream getContent() throws IOException {
-      return new ByteArrayInputStream(content.getBytes("UTF-8"));
+      return new ByteArrayInputStream(content.getBytes(FileUtil.CHARENCODING));
     }
 
     @Override

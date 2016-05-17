@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -14,8 +13,8 @@ import java.util.Map;
 import util.FileUtil;
 
 public class PasswordFile {
-  private File passwordFile;
-  private Map<String, String> passwordMap = new HashMap<String, String>();
+  private final File passwordFile;
+  private Map<String, String> passwordMap = new HashMap<>();
   private PasswordCipher cipher = new TransparentCipher();
 
   public PasswordFile(String filename) throws IOException {
@@ -52,8 +51,7 @@ public class PasswordFile {
   }
 
   private void loadPasswords(LinkedList<String> lines) {
-    for (Iterator<String> iterator = lines.iterator(); iterator.hasNext();) {
-      String line = iterator.next();
+    for (String line : lines) {
       if (!"".equals(line)) {
         String[] tokens = line.split(":");
         passwordMap.put(tokens[0], tokens[1]);
@@ -62,8 +60,8 @@ public class PasswordFile {
   }
 
   private void loadCipher(LinkedList<String> lines) {
-    if (lines.size() > 0) {
-      String firstLine = lines.getFirst().toString();
+    if (!lines.isEmpty()) {
+      String firstLine = lines.getFirst();
       if (firstLine.startsWith("!")) {
         String cipherClassName = firstLine.substring(1);
         try {
@@ -82,18 +80,18 @@ public class PasswordFile {
   }
 
   private void savePasswords() throws FileNotFoundException {
-    List<String> lines = new LinkedList<String>();
+    List<String> lines = new LinkedList<>();
     lines.add("!" + cipher.getClass().getName());
-    for (Iterator<String> iterator = passwordMap.keySet().iterator(); iterator.hasNext();) {
-      Object user = iterator.next();
-      Object password = passwordMap.get(user);
+    for (Map.Entry<String, String> entry : passwordMap.entrySet()) {
+      String user = entry.getKey();
+      String password = entry.getValue();
       lines.add(user + ":" + password);
     }
     FileUtil.writeLinesToFile(passwordFile, lines);
   }
 
   private LinkedList<String> getPasswordFileLines() throws IOException {
-    LinkedList<String> lines = new LinkedList<String>();
+    LinkedList<String> lines = new LinkedList<>();
     if (passwordFile.exists())
       lines = FileUtil.getFileLines(passwordFile);
     return lines;

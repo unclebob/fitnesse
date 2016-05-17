@@ -7,9 +7,10 @@ import fitnesse.FitNesseContext;
 import fitnesse.Updater;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.reporting.ExitCodeListener;
-import fitnesse.updates.UpdaterImplementation;
+import fitnesse.updates.WikiContentUpdater;
 
 import java.io.*;
+import java.net.BindException;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -29,7 +30,13 @@ public class FitNesseMain {
       Arguments.printUsage();
       exit(1);
     }
-    Integer exitCode = new FitNesseMain().launchFitNesse(arguments);
+    Integer exitCode = 0;
+    try {
+        exitCode = new FitNesseMain().launchFitNesse(arguments);
+    } catch (Exception e){
+      LOG.log(Level.SEVERE, "Error while starting the FitNesse", e);
+      exitCode = 1;
+    }
     if (exitCode != null) {
       exit(exitCode);
     }
@@ -58,20 +65,51 @@ public class FitNesseMain {
 
     FitNesseContext context = contextConfigurator.makeFitNesseContext();
 
+    if (!establishRequiredDirectories(context.getRootPagePath())) {
+      LOG.severe("FitNesse cannot be started...");
+      LOG.severe("Unable to create FitNesse root directory in " + context.getRootPagePath());
+      LOG.severe("Ensure you have sufficient permissions to create this folder.");
+      return 1;
+    }
+
     logStartupInfo(context);
 
-    update(context);
+    if (update(context)) {
+      LOG.info("**********************************************************");
+      LOG.info("Files have been updated to a new version.");
+      LOG.info("Please read the release notes on ");
+      LOG.info("http://localhost:" + context.port + "/FitNesse.ReleaseNotes");
+      LOG.info("to find out about the new features and fixes.");
+      LOG.info("**********************************************************");
+    }
 
     if ("true".equalsIgnoreCase(contextConfigurator.get(INSTALL_ONLY))) {
       return null;
     }
 
-    return launch(context);
+    try {
+      return launch(context);
+    } catch (BindException e) {
+      LOG.severe("FitNesse cannot be started...");
+      LOG.severe("Port " + context.port + " is already in use.");
+      LOG.severe("Use the -p <port#> command line argument to use a different port.");
+      return 1;
+    }
+
+  }
+
+  private boolean establishRequiredDirectories(String rootPagePath) {
+    return establishDirectory(new File(rootPagePath)) &&
+            establishDirectory(new File(rootPagePath, "files"));
+  }
+
+  private static boolean establishDirectory(File path) {
+    return path.exists() || path.mkdir();
   }
 
   private boolean update(FitNesseContext context) throws IOException {
     if (!"true".equalsIgnoreCase(context.getProperty(OMITTING_UPDATES.getKey()))) {
-      Updater updater = new UpdaterImplementation(context);
+      Updater updater = new WikiContentUpdater(context);
       return updater.update();
     }
     return false;
@@ -90,6 +128,7 @@ public class FitNesseMain {
 
         return exitCodeListener.getFailCount();
       } else {
+        LOG.info("Starting FitNesse on port: " + context.port);
         context.fitNesse.start();
       }
     }
@@ -105,10 +144,9 @@ public class FitNesseMain {
     boolean outputRedirectedToFile = outputFile != null;
 
     if (outputRedirectedToFile) {
-      LOG.info("-----Command Output redirected to " + outputFile + "-----");
+      LOG.info("Command Output redirected to: " + outputFile);
       os = new FileOutputStream(outputFile);
     } else {
-      LOG.info("-----Command Output-----");
       os = System.out;
     }
 
@@ -117,8 +155,6 @@ public class FitNesseMain {
 
     if (outputRedirectedToFile) {
       os.close();
-    } else {
-      LOG.info("-----Command Complete-----");
     }
   }
 
@@ -132,7 +168,6 @@ public class FitNesseMain {
     LOG.info("authenticator: " + context.authenticator);
     LOG.info("page factory: " + context.pageFactory);
     LOG.info("page theme: " + context.pageFactory.getTheme());
-    LOG.info("Starting FitNesse on port: " + context.port);
   }
 
   public void configureLogging(boolean verbose) {

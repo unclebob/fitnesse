@@ -36,6 +36,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     }
   }
 
+  @Override
   protected void doSending() throws Exception {
     data = page.getData();
 
@@ -44,11 +45,11 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
 
     htmlPage.render(response.getWriter());
 
-    response.closeAll();
+    response.close();
   }
 
   public WikiImportingTraverser initializeImporter() throws Exception {
-    String remoteUrl = (String) request.getInput("remoteUrl");
+    String remoteUrl = request.getInput("remoteUrl");
     setRemoteUserCredentialsOnImporter(importer);
     importer.setAutoUpdateSetting(request.hasInput("autoUpdate"));
     return new WikiImportingTraverser(importer, page, remoteUrl);
@@ -56,9 +57,9 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
 
   private void setRemoteUserCredentialsOnImporter(WikiImporter importer) {
     if (request.hasInput("remoteUsername"))
-      importer.setRemoteUsername((String) request.getInput("remoteUsername"));
+      importer.setRemoteUsername(request.getInput("remoteUsername"));
     if (request.hasInput("remotePassword"))
-      importer.setRemotePassword((String) request.getInput("remotePassword"));
+      importer.setRemotePassword(request.getInput("remotePassword"));
   }
 
   private HtmlPage makeHtml() throws Exception {
@@ -80,6 +81,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     return html;
   }
 
+  @Override
   protected PageCrawler getPageCrawler() {
     return root.getPageCrawler();
   }

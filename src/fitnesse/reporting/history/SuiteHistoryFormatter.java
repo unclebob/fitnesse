@@ -4,12 +4,16 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fitnesse.reporting.BaseFormatter;
-import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testrunner.WikiTestPageUtil;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
@@ -22,7 +26,9 @@ import fitnesse.util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.WikiPage;
 
-public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
+public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLogListener, Closeable {
+  private static final Logger LOG = Logger.getLogger(SuiteHistoryFormatter.class.getName());
+
   private final SuiteExecutionReport suiteExecutionReport;
   private final TimeMeasurement totalTimeMeasurement;
   private final FitNesseContext context;
@@ -48,12 +54,23 @@ public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
   @Override
   public void testSystemStopped(TestSystem testSystem, Throwable cause) {
     super.testSystemStopped(testSystem, cause);
+    if (cause != null) {
+      suiteExecutionReport.tallyPageCounts(ExecutionResult.ERROR);
+    }
+    if (testHistoryFormatter != null) {
+      try {
+        testHistoryFormatter.close();
+      } catch (IOException e) {
+        LOG.log(Level.SEVERE, "Unable to close test history formatter", e);
+      }
+      testHistoryFormatter = null;
+    }
   }
 
   @Override
-  public void testStarted(WikiTestPage test) {
+  public void testStarted(TestPage test) {
     String pageName = test.getFullPath();
-    testHistoryFormatter = new TestXmlFormatter(context, test.getSourcePage(), writerFactory);
+    testHistoryFormatter = new TestXmlFormatter(context, WikiTestPageUtil.getSourcePage(test), writerFactory);
     testHistoryFormatter.testStarted(test);
     referenceToCurrentTest = new SuiteExecutionReport.PageHistoryReference(pageName, testHistoryFormatter.startedAt());
   }
@@ -66,7 +83,7 @@ public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
   }
 
   @Override
-  public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
+  public void testComplete(TestPage test, TestSummary testSummary) throws IOException {
     testHistoryFormatter.testComplete(test, testSummary);
     testHistoryFormatter.close();
     referenceToCurrentTest.setTestSummary(testSummary);
@@ -87,14 +104,6 @@ public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
   public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
     testHistoryFormatter.testExceptionOccurred(assertion, exceptionResult);
     super.testExceptionOccurred(assertion, exceptionResult);
-  }
-
-  @Override
-  public void errorOccurred(Throwable cause) {
-    if (testHistoryFormatter != null) {
-      testHistoryFormatter.errorOccurred(cause);
-    }
-    super.errorOccurred(cause);
   }
 
   @Override
@@ -138,5 +147,45 @@ public class SuiteHistoryFormatter extends BaseFormatter implements Closeable {
 
   public SuiteExecutionReport getSuiteExecutionReport() {
     return suiteExecutionReport;
+  }
+
+  @Override
+  public void commandStarted(ExecutionContext context) {
+    suiteExecutionReport.addExecutionContext(context.getCommand(), context.getTestSystemName());
+    if (testHistoryFormatter != null) {
+      testHistoryFormatter.commandStarted(context);
+    }
+  }
+
+  @Override
+  public void stdOut(String output) {
+    suiteExecutionReport.addStdOut(output);
+    if (testHistoryFormatter != null) {
+      testHistoryFormatter.stdOut(output);
+    }
+  }
+
+  @Override
+  public void stdErr(String output) {
+    suiteExecutionReport.addStdErr(output);
+    if (testHistoryFormatter != null) {
+      testHistoryFormatter.stdErr(output);
+    }
+  }
+
+  @Override
+  public void exitCode(int exitCode) {
+    suiteExecutionReport.exitCode(exitCode);
+    if (testHistoryFormatter != null) {
+      testHistoryFormatter.exitCode(exitCode);
+    }
+  }
+
+  @Override
+  public void exceptionOccurred(Throwable e) {
+    suiteExecutionReport.exceptionOccurred(e);
+    if (testHistoryFormatter != null) {
+      testHistoryFormatter.exceptionOccurred(e);
+    }
   }
 }

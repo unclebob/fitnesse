@@ -23,10 +23,12 @@ public class AddChildPageResponder implements SecureResponder {
   private String user;
 
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureWriteOperation();
   }
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     parseRequest(context, request);
     if (currentPage == null)
@@ -41,20 +43,20 @@ public class AddChildPageResponder implements SecureResponder {
 
   private void parseRequest(FitNesseContext context, Request request) {
 	  user = request.getAuthorizationUsername();
-    childName = (String) request.getInput(EditResponder.PAGE_NAME);
+    childName = request.getInput(EditResponder.PAGE_NAME);
     childName = childName == null ? "null" : childName;
     childPath = PathParser.parse(childName);
     WikiPagePath currentPagePath = PathParser.parse(request.getResource());
     PageCrawler pageCrawler = context.getRootPage().getPageCrawler();
     currentPage = pageCrawler.getPage(currentPagePath);
     if (request.hasInput(NewPageResponder.PAGE_TEMPLATE)) {
-      pageTemplate = pageCrawler.getPage(PathParser.parse((String) request.getInput(NewPageResponder.PAGE_TEMPLATE)));
+      pageTemplate = pageCrawler.getPage(PathParser.parse(request.getInput(NewPageResponder.PAGE_TEMPLATE)));
     } else {
-      pageType = (String) request.getInput(EditResponder.PAGE_TYPE);
+      pageType = request.getInput(EditResponder.PAGE_TYPE);
     }
-    childContent = (String) request.getInput(EditResponder.CONTENT_INPUT_NAME);
-    helpText = (String) request.getInput(EditResponder.HELP_TEXT);
-    suites = (String) request.getInput(EditResponder.SUITES);
+    childContent = request.getInput(EditResponder.CONTENT_INPUT_NAME);
+    helpText = request.getInput(EditResponder.HELP_TEXT);
+    suites = request.getInput(EditResponder.SUITES);
     if (childContent == null)
       childContent = "!contents\n";
     if (pageTemplate == null && pageType == null)

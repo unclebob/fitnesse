@@ -7,8 +7,8 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.Socket;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +18,7 @@ public class SimpleResponseTest implements ResponseSender {
   private String text;
   private boolean closed = false;
 
+  @Override
   public void send(byte[] bytes) {
     try {
       buffer.append(new String(bytes, "UTF-8"));
@@ -32,11 +33,6 @@ public class SimpleResponseTest implements ResponseSender {
     closed = true;
   }
 
-  @Override
-  public Socket getSocket() {
-    return null;
-  }
-
   @Before
   public void setUp() throws Exception {
     buffer = new StringBuffer();
@@ -44,7 +40,7 @@ public class SimpleResponseTest implements ResponseSender {
   }
 
   @Test
-  public void testSimpleResponse() {
+  public void testSimpleResponse() throws IOException {
     SimpleResponse response = new SimpleResponse();
     response.setContent("some content");
     response.sendTo(this);
@@ -56,14 +52,14 @@ public class SimpleResponseTest implements ResponseSender {
   }
 
   @Test
-  public void testPageNotFound() throws Exception {
+  public void testPageNotFound() throws IOException {
     SimpleResponse response = new SimpleResponse(404);
     response.sendTo(this);
     assertHasRegexp("404 Not Found", text);
   }
 
   @Test
-  public void testRedirect() throws Exception {
+  public void testRedirect() throws IOException {
     SimpleResponse response = new SimpleResponse();
     response.redirect("", "some url");
     response.sendTo(this);
@@ -72,7 +68,7 @@ public class SimpleResponseTest implements ResponseSender {
   }
 
   @Test
-  public void testRedirectWithContextRoot() throws Exception {
+  public void testRedirectWithContextRoot() throws IOException {
     SimpleResponse response = new SimpleResponse();
     response.redirect("/contextroot/", "some url");
     response.sendTo(this);
@@ -81,7 +77,7 @@ public class SimpleResponseTest implements ResponseSender {
   }
 
   @Test
-  public void testUnicodeCharacters() {
+  public void testUnicodeCharacters() throws IOException {
     SimpleResponse response = new SimpleResponse();
     response.setContent("\uba80\uba81\uba82\uba83");
     response.sendTo(this);

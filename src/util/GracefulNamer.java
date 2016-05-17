@@ -39,7 +39,7 @@ public class GracefulNamer {
     final char separator = '.';
     char c = '?';
     GracefulNamer namer = new GracefulNamer();
-    if (disgracefulName.length() > 0)
+    if (!disgracefulName.isEmpty())
       namer.finalName.append(c = disgracefulName.charAt(0));
 
     boolean isGrabbingDigits = false;
@@ -69,11 +69,11 @@ public class GracefulNamer {
   }
 
   private interface GracefulNameState {
-    public void letter(char c);
+    void letter(char c);
 
-    public void digit(char c);
+    void digit(char c);
 
-    public void other(char c);
+    void other(char c);
   }
 
   private class InWordState implements GracefulNameState {

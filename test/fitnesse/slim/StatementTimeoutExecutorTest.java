@@ -19,16 +19,10 @@ public class StatementTimeoutExecutorTest {
   private static final String INSTANCE_NAME = "instanceName";
   private static final String CLASS_NAME = "className";
   private static final String ARG = "arg";
-  private static final int TIMEOUT = 4000;
-  private static final String CREATE_TIMEOUT_MESSAGE = "timed out creating instance, instanceName : "
-    + INSTANCE_NAME + ", classname : " + CLASS_NAME + ", statementTimeout : " + TIMEOUT + " seconds";
   private static final String SYMBOL_NAME = "symbol";
   private static final String METHOD_NAME = "method name";
-  private static final String CALL_AND_ASSIGN_TIMEOUT_MESSAGE = "timed out in callAndAssign, symbolName : "
-    + SYMBOL_NAME + ", instanceName : " + INSTANCE_NAME + ", methodsName : " + METHOD_NAME + ", statementTimeout : "
-    + TIMEOUT + " seconds";
-  private static final String CALL_TIMEOUT_MESSAGE = "timed out in call, instanceName : " + INSTANCE_NAME
-    + ", methodName : " + METHOD_NAME + ", statementTimeout : " + TIMEOUT + " seconds";
+  private static final int TIMEOUT = 4000;
+
   @Mock
   private StatementExecutorInterface inner;
   @Mock
@@ -111,7 +105,7 @@ public class StatementTimeoutExecutorTest {
     givenTimeoutExceptionThrownOnFutureGet();
     Exception actual = createExpectingException();
     assertNotNull(actual);
-    assertEquals(CREATE_TIMEOUT_MESSAGE, actual.getMessage());
+    assertEquals("4000", actual.getMessage());
   }
 
   @Test
@@ -119,7 +113,7 @@ public class StatementTimeoutExecutorTest {
     givenTimeoutExceptionThrownOnFutureGet();
     Exception actual = callAndAssignExpectingException();
     assertNotNull(actual);
-    assertEquals(CALL_AND_ASSIGN_TIMEOUT_MESSAGE, actual.getMessage());
+    assertEquals("4000", actual.getMessage());
   }
 
   @Test
@@ -127,7 +121,7 @@ public class StatementTimeoutExecutorTest {
     givenTimeoutExceptionThrownOnFutureGet();
     Exception actual = callExpectingException();
     assertNotNull(actual);
-    assertEquals(CALL_TIMEOUT_MESSAGE, actual.getMessage());
+    assertEquals("4000", actual.getMessage());
   }
 
   private Exception createExpectingException() {

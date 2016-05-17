@@ -16,11 +16,12 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public class RollbackResponder implements SecureResponder {
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
 
     String resource = request.getResource();
-    String version = (String) request.getInput("version");
+    String version = request.getInput("version");
     if (version == null)
       return new ErrorResponder("Missing version.").makeResponse(context, request);
 
@@ -38,6 +39,7 @@ public class RollbackResponder implements SecureResponder {
     return response;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureWriteOperation();
   }

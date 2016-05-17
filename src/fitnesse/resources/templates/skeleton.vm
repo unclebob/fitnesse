@@ -18,13 +18,12 @@
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/fitnesse_pages.css" />
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/${theme}.css" />
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/wysiwyg/wysiwyg.css" media="screen"/>
-  <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/question.mark/question.mark.css" />
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/fitnesse_print.css" media="print" />
   <link rel="wysiwyg.base" href="${contextRoot}" />
   <link rel="wysiwyg.stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/fitnesse.css" media="screen" />
   <link rel="wysiwyg.stylesheet" type="text/css" href="${contextRoot}files/fitnesse/wysiwyg/editor.css" media="screen" />
   <link rel="shortcut icon" type="image/png" href="${contextRoot}files/fitnesse/images/favicon.png" />
-  <script src="${contextRoot}files/fitnesse/javascript/jquery-1.7.2.min.js" type="text/javascript"></script>
+  <script src="${contextRoot}files/fitnesse/javascript/jquery-1.11.3.min.js" type="text/javascript"></script>
   <script src="${contextRoot}files/fitnesse/javascript/fitnesse.js" type="text/javascript"></script>
   <script src="${contextRoot}files/fitnesse/javascript/${theme}.js" type="text/javascript"></script>
  </head>

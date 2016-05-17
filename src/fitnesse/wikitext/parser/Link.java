@@ -17,13 +17,15 @@ public class Link extends SymbolType implements Rule, Translation {
         wikiRule(this);
         htmlTranslation(this);
     }
-    
+
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol targetList = parser.parseToEnds(-1,
                 SymbolProvider.linkTargetProvider,
                 new SymbolType[] {SymbolType.Newline, SymbolType.Whitespace});
-        return new Maybe<Symbol>(current.add(targetList));
+        return new Maybe<>(current.add(targetList));
     }
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         String target = symbol.getContent() + translator.translate(symbol.childAt(0));
         return buildLink(translator, target, symbol);
@@ -37,11 +39,11 @@ public class Link extends SymbolType implements Rule, Translation {
             tag = new HtmlTag("img");
             tag.addAttribute("src", reference.makeUrl(prefix));
             String imageClass = link.getProperty(Link.ImageProperty);
-            if (imageClass.length() > 0) tag.addAttribute("class", imageClass);
+            if (!imageClass.isEmpty()) tag.addAttribute("class", imageClass);
             String width = link.getProperty(Link.WidthProperty);
-            if (width.length() > 0) tag.addAttribute("width", width);
+            if (!width.isEmpty()) tag.addAttribute("width", width);
             String style = link.getProperty(Link.StyleProperty);
-            if (style.length() > 0) tag.addAttribute("style", style);
+            if (!style.isEmpty()) tag.addAttribute("style", style);
         }
         else {
             tag = new HtmlTag("a", body);

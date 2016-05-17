@@ -18,53 +18,62 @@ public abstract class DataType {
   private static final String DATE_TYPE = "date";
 
   protected static final DataType INTEGER = new DataType() {
+    @Override
     protected Object valueOf(String value) throws Exception {
       return Integer.valueOf(value);
     }
 
+    @Override
     protected String addTo(String originalValue, Object value, int numberofTime) {
       int intValue = ((Integer) value).intValue() * numberofTime;
       return String.valueOf(Integer.parseInt(originalValue) + intValue);
     }
 
+    @Override
     public String toString() {
       return "DataType = '" + INT_TYPE + "'";
     }
   };
 
   protected static final DataType DOUBLE = new DataType() {
+    @Override
     protected Object valueOf(String value) throws Exception {
       return Double.valueOf(value);
     }
 
+    @Override
     protected String addTo(String originalValue, Object value, int numberofTime) {
       double doubleValue = ((Double) value).doubleValue() * numberofTime;
       double results = Double.parseDouble(originalValue) + doubleValue;
       return String.valueOf(new Double(results).floatValue());
     }
 
+    @Override
     public String toString() {
       return "DataType = '" + DOUBLE_TYPE + "'";
     }
   };
 
   protected static final DataType STRING = new DataType() {
+    @Override
     protected Object valueOf(String value) throws Exception {
       return value;
     }
 
+    @Override
     protected String addTo(String originalValue, Object value, int numberofTime) {
       return originalValue + multiply(value.toString(), numberofTime);
     }
 
     private String multiply(String value, int numberofTime) {
-      StringBuffer result = new StringBuffer();
+      StringBuilder result = new StringBuilder();
       for (int i = 0; i < numberofTime; ++i) {
         result.append(value);
       }
       return result.toString();
     }
 
+    @Override
     public String toString() {
       return "DataType = '" + STRING_TYPE + "'";
     }
@@ -73,6 +82,7 @@ public abstract class DataType {
   protected static final DataType DATE = new DataType() {
     private SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
+    @Override
     protected String addTo(String originalValue, Object value, int numberofTime) {
       GregorianCalendar gc = new GregorianCalendar();
       Date originalDate;
@@ -88,17 +98,19 @@ public abstract class DataType {
       return dateFormat.format(gc.getTime());
     }
 
+    @Override
     protected Object valueOf(String value) throws Exception {
       return Integer.valueOf(value);
     }
 
+    @Override
     public String toString() {
       return "DataType = '" + DATE_TYPE + "'";
     }
   };
 
-  private static final Map<String, DataType> predefinedTypes = new HashMap<String, DataType>();
-  private static final Map<String, DataType> userDefinedTypes = new HashMap<String, DataType>();
+  private static final Map<String, DataType> predefinedTypes = new HashMap<>();
+  private static final Map<String, DataType> userDefinedTypes = new HashMap<>();
 
   static {
     predefinedTypes.put(INT_TYPE, INTEGER);

@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.reporting;
 
+import java.io.StringWriter;
 import java.util.Date;
 
 import static fitnesse.reporting.DecimalSeparatorUtil.getDecimalSeparator;
@@ -11,39 +12,29 @@ import static org.mockito.Mockito.when;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
 
-import fitnesse.FitNesseContext;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.fs.InMemoryPage;
-import fitnesse.wikitext.parser.VariableSource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import fitnesse.util.Clock;
 import fitnesse.util.DateAlteringClock;
-import fitnesse.util.TimeMeasurement;
 
 public class SuiteHtmlFormatterTest {
   private SuiteHtmlFormatter formatter;
-  private StringBuffer pageBuffer = new StringBuffer();
+  private StringWriter pageBuffer = new StringWriter();
   private DateAlteringClock clock;
 
   @Before
   public void setUp() throws Exception {
     clock = new DateAlteringClock(new Date()).freeze();
-    FitNesseContext context = FitNesseUtil.makeTestContext();
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    CompositeExecutionLog log = new CompositeExecutionLog(root);
-    formatter = new SuiteHtmlFormatter(context, root, log) {
-      @Override
-      protected void writeData(String output) {
-        pageBuffer.append(output);
-      }
-    };
+    pageBuffer = new StringWriter();
+    formatter = new SuiteHtmlFormatter(root, pageBuffer);
   }
 
   @After
@@ -101,13 +92,15 @@ public class SuiteHtmlFormatterTest {
   }
 
   @Test
-  public void testCountsHtml() throws Exception {
+  public void testCountsRightHtml() throws Exception {
     formatter.processTestResults("RelativePageName", new TestSummary(1, 0, 0, 0));
 
     assertSubString("<span class=\\\"results pass\\\">1 right, 0 wrong, 0 ignored, 0 exceptions</span>", pageBuffer.toString());
     assertSubString("<a href=\\\"#RelativePageName0\\\" class=\\\"link\\\">RelativePageName</a>", pageBuffer.toString());
+  }
 
-    pageBuffer.setLength(0);
+  @Test
+  public void testCountsWrongHtml() throws Exception {
     formatter.processTestResults("AnotherPageName", new TestSummary(0, 1, 0, 0));
 
     assertSubString("<span class=\\\"results fail\\\">0 right, 1 wrong, 0 ignored, 0 exceptions</span>", pageBuffer.toString());
@@ -138,11 +131,11 @@ public class SuiteHtmlFormatterTest {
 
     assertSubString("<h2>Test System: Slim:very.slim</h2>", results);
 
-    assertSubString("<div class=\"test_output_name\">", results);
-    assertSubString("<a href=\"FullName\" id=\"RelativeName1\" class=\"test_name\">RelativeName</a>", results);
+    assertSubString("<a href=\"FullName\" class=\"test_name\">RelativeName</a>", results);
+    assertSubString("<a name=\"RelativeName1\"/>", results);
     assertSubString("<div class=\"alternating_block\">starting output</div>", results);
 
-    assertSubString("<a href=\"NewFullName\" id=\"NewRelativeName2\" class=\"test_name\">NewRelativeName</a>", results);
+    assertSubString("<a href=\"NewFullName\" class=\"test_name\">NewRelativeName</a>", results);
     assertSubString("<div class=\"alternating_block\">second test</div>", results);
   }
 
@@ -158,7 +151,7 @@ public class SuiteHtmlFormatterTest {
     assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =" +
     		" \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:0.0%\\\">", pageBuffer.toString());
     assertSubString("Running&nbsp;tests&nbsp;...&nbsp;(1/20)", pageBuffer.toString());
-    pageBuffer.setLength(0);
+    pageBuffer.getBuffer().setLength(0);
 
     formatter.processTestResults("RelativeName", new TestSummary(1, 0, 0, 0));
     formatter.announceStartNewTest("RelativeName", "FullName");
@@ -166,7 +159,7 @@ public class SuiteHtmlFormatterTest {
     assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =" +
         " \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:5.0%\\\">", pageBuffer.toString());
     assertSubString("(2/20)", pageBuffer.toString());
-    pageBuffer.setLength(0);
+    pageBuffer.getBuffer().setLength(0);
 
 
     formatter.processTestResults("RelativeName", new TestSummary(1, 0, 0, 0));
@@ -190,7 +183,6 @@ public class SuiteHtmlFormatterTest {
 
   @Test
   public void testIndividualTestTimingsShouldAppearInSummary() throws Exception {
-    TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(900).start();
     formatter.announceNumberTestsToRun(2);
     WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content", null));
     WikiTestPage secondPage = new WikiTestPage(new WikiPageDummy("page2", "content", null));
@@ -205,12 +197,4 @@ public class SuiteHtmlFormatterTest {
     assertHasRegexp("<li.*\\(page2\\).*<span.*>\\(0(" + getDecimalSeparatorForRegExp() + "){1}890 seconds\\)</span>.*</li>", pageBuffer.toString());
   }
 
-  private TimeMeasurement newConstantElapsedTimeMeasurement(final long theElapsedTime) {
-    return new TimeMeasurement() {
-      @Override
-      public long elapsed() {
-        return theElapsedTime;
-      }
-    };
-  }
 }

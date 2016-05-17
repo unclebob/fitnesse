@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 
 public class LoggingInteraction extends DefaultInteraction {
   @Override
-  public Object methodInvoke(Method method, Object instance, Object... convertedArgs) throws InvocationTargetException, IllegalAccessException {
+  public Object methodInvoke(Method method, Object instance, Object... convertedArgs) throws Throwable {
     long startTime = System.nanoTime();
     Object o = super.methodInvoke(method, instance, convertedArgs);
     System.out.println("methodInvoke : " + method.getName() + " = " + (System.nanoTime() - startTime));

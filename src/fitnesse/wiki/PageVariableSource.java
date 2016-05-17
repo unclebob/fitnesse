@@ -11,6 +11,7 @@ public class PageVariableSource implements VariableSource {
     this.page = page;
   }
 
+  @Override
   public Maybe<String> findVariable(String key) {
     String value;
     if (key.equals("RUNNING_PAGE_NAME"))
@@ -20,6 +21,6 @@ public class PageVariableSource implements VariableSource {
     else
       return Maybe.noString;
 
-    return new Maybe<String>(value);
+    return new Maybe<>(value);
   }
 }

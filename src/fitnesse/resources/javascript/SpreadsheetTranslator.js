@@ -33,6 +33,16 @@ function SpreadsheetTranslator()
     return (rows[index][0] == "!");
   }
 
+  this.isHiddenTableStart = function(rows, index)
+  {
+    return (rows[index][0] == "-");
+  }
+
+  this.isHiddenExplicitTableStart = function(rows, index)
+  {
+    return (rows[index][0] == "-!");
+  }
+
   this.isNotTableLine = function(currentLine, columnsToSkip)
   {
     var row = this.rows[currentLine];
@@ -87,17 +97,25 @@ function SpreadsheetTranslator()
     {
       if (this.isExplicitTableStart(this.rows, this.currentLine))
       {
-        this.processTable(1);
+        this.processTable(1, "!");
+      }
+      else if (this.isHiddenExplicitTableStart(this.rows, this.currentLine))
+      {
+        this.processTable(1, "-!");
+      }
+      else if (this.isHiddenTableStart(this.rows, this.currentLine))
+      {
+        this.processTable(1, "-");
       }
       else if (this.isImplicitTableStart(this.currentLine))
       {
         if (this.rows[this.currentLine][0] == '')
         {
-          this.processTable(1);
+          this.processTable(1, "");
         }
         else
         {
-          this.processTable(0);
+          this.processTable(0, "");
         }
       }
       else
@@ -110,7 +128,7 @@ function SpreadsheetTranslator()
   }
 
 
-  this.processTable = function(columnsToSkip)
+  this.processTable = function(columnsToSkip, tablePrefix)
   {
     var tableFirstLine = this.currentLine;
     var tableSize;
@@ -128,7 +146,7 @@ function SpreadsheetTranslator()
       var lineSize = 0;
       if (this.currentLine == tableFirstLine)
       {
-        this.fitNesseTables += "!";
+        this.fitNesseTables += tablePrefix;
         lineSize = this.lineSize(row);
       }
       else if (this.currentLine == tableFirstLine + 1)

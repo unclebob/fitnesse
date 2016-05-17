@@ -10,7 +10,7 @@ import fitnesse.testutil.FitNesseUtil;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertSame;
+import static org.junit.Assert.assertSame;
 
 public class FilterResponderFactoryTest {
   private ResponderFactory factory;

@@ -89,7 +89,7 @@ public class InstructionFactory {
   }
 
   private static String wordsToString(List<Object> words) {
-    StringBuffer result = new StringBuffer();
+    StringBuilder result = new StringBuilder();
     result.append("[");
     for (Object word : words) {
       result.append(word);

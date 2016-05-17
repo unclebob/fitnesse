@@ -3,16 +3,16 @@ package fitnesse.slim;
 public class SlimException extends Exception {
   private static final String PRETTY_PRINT_TAG_START = "message:<<";
   private static final String PRETTY_PRINT_TAG_END = ">>";
-  private String tag;
-  private boolean prettyPrint;
+
+  private final String tag;
+  private final boolean prettyPrint;
 
   public SlimException(String message) {
-    this(message, false);
+    this(message, "", false);
   }
 
   public SlimException(String message, boolean prettyPrint) {
-    super(message);
-    this.prettyPrint = prettyPrint;
+    this(message, "", prettyPrint);
   }
 
   public SlimException(String message, String tag) {
@@ -26,12 +26,11 @@ public class SlimException extends Exception {
   }
 
   public SlimException(Throwable cause) {
-    this(cause, false);
+    this(cause, "", false);
   }
 
   public SlimException(Throwable cause, boolean prettyPrint) {
-    super(cause);
-    this.prettyPrint = prettyPrint;
+    this(cause, "", prettyPrint);
   }
 
   public SlimException(Throwable cause, String tag) {
@@ -49,8 +48,7 @@ public class SlimException extends Exception {
   }
 
   public SlimException(String message, Throwable cause, boolean prettyPrint) {
-    super(message, cause);
-    this.prettyPrint = prettyPrint;
+    this(message, cause, "", prettyPrint);
   }
 
   public SlimException(String message, Throwable cause, String tag) {
@@ -76,7 +74,7 @@ public class SlimException extends Exception {
    */
   @Override
   public String toString() {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
 
     if (isStopTestException(getCause())) {
       sb.append(SlimServer.EXCEPTION_STOP_TEST_TAG);
@@ -89,12 +87,12 @@ public class SlimException extends Exception {
       sb.append(PRETTY_PRINT_TAG_START);
     }
 
-    if (tag != null && tag.length() > 0) {
+    if (tag != null && !tag.isEmpty()) {
       sb.append(tag).append(" ");
     }
 
     String msg = getMessage();
-    if (msg != null && msg.length() > 0) {
+    if (msg != null && !msg.isEmpty()) {
       sb.append(msg);
     }
     if (this.prettyPrint) {
@@ -119,6 +117,6 @@ public class SlimException extends Exception {
   }
 
   public static boolean isStopSuiteException(Throwable t) {
-    return t != null && t.getClass().toString().contains("StopSuite");
+    return t != null && t.getClass().toString().contains("StopSuite") || t instanceof InterruptedException;
   }
 }

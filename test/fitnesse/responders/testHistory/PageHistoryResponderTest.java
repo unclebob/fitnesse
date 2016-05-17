@@ -12,11 +12,11 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 import java.util.SortedSet;
 
 import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.history.TestHistory;
-import fitnesse.responders.run.SuiteResponder;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.junit.After;
@@ -35,13 +35,10 @@ import fitnesse.reporting.history.SuiteExecutionReport;
 import fitnesse.reporting.history.TestExecutionReport;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.InMemoryPage;
-import fitnesse.wiki.WikiPage;
 
 public class PageHistoryResponderTest {
   private File resultsDirectory;
-  private TestHistory history;
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormat = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
   private PageHistoryResponder responder;
   private SimpleResponse response;
   private MockRequest request;
@@ -53,10 +50,10 @@ public class PageHistoryResponderTest {
     resultsDirectory = new File("testHistoryDirectory");
     removeResultsDirectory();
     resultsDirectory.mkdir();
-    history = new TestHistory();
     responder = new PageHistoryResponder();
-    responder.setResultsDirectory(resultsDirectory);
-    context = FitNesseUtil.makeTestContext();
+    Properties properties = new Properties();
+    properties.setProperty("test.history.path", resultsDirectory.getPath());
+    context = FitNesseUtil.makeTestContext(properties);
   }
 
   @After
@@ -105,7 +102,7 @@ public class PageHistoryResponderTest {
     File pageDirectory = addPageDirectory("TestPage");
     addTestResult(pageDirectory, "20090418123103_1_2_3_4");
 
-    history.readHistoryDirectory(resultsDirectory);
+    TestHistory history = new TestHistory(resultsDirectory);
     PageHistory pageHistory = history.getPageHistory("TestPage");
     assertEquals(1, pageHistory.size());
     assertEquals(7, pageHistory.maxAssertions());
@@ -127,7 +124,7 @@ public class PageHistoryResponderTest {
     addTestResult(pageDirectory, "20090503110451_6_5_3_1");
     addTestResult(pageDirectory, "20090418123103_1_2_3_4");
 
-    history.readHistoryDirectory(resultsDirectory);
+    TestHistory history = new TestHistory(resultsDirectory);
     PageHistory pageHistory = history.getPageHistory("TestPage");
     assertEquals(2, pageHistory.size());
     assertEquals(12, pageHistory.maxAssertions());
@@ -174,7 +171,7 @@ public class PageHistoryResponderTest {
   private PageHistory.PassFailBar computePassFailBarFor(int right, int wrong, int ignores, int exceptions) throws IOException, ParseException {
     File pageDirectory = addPageDirectory("TestPage");
     addTestResult(pageDirectory, String.format("20090503110451_%d_%d_%d_%d", right, wrong, ignores, exceptions));
-    history.readHistoryDirectory(resultsDirectory);
+    TestHistory history = new TestHistory(resultsDirectory);
     PageHistory pageHistory = history.getPageHistory("TestPage");
     Date date = dateFormat.parse("20090503110451");
     PageHistory.PassFailBar passFailBar = pageHistory.getPassFailBar(date, 50);
@@ -394,6 +391,7 @@ public class PageHistoryResponderTest {
     result.exceptions = "44";
     result.relativePageName = "relativePageName";
     result.content = "wad of HTML content\u001B after control character";
+    result.dateString = "2015-07-03T12:56:57+00:00";
     result.runTimeInMillis = "99";
     return testResponse;
   }
@@ -404,7 +402,7 @@ public class PageHistoryResponderTest {
     addTestResult(pageDirectory, "bad_File_name");
     addTestResult(pageDirectory, "20090418123103_1_2_3_4");
 
-    history.readHistoryDirectory(resultsDirectory);
+    TestHistory history = new TestHistory(resultsDirectory);
     PageHistory pageHistory = history.getPageHistory("TestPage");
     assertEquals(1, pageHistory.size());
   }
@@ -453,21 +451,6 @@ public class PageHistoryResponderTest {
 
   private void addBadDummyTestResult(File resultFile) throws Exception {
     FileUtil.createFile(resultFile, "JUNK");
-  }
-
-
-  private TestExecutionReport makeBadDummyTestResponse() {
-    TestExecutionReport testResponse = new TestExecutionReport(fitNesseVersion, "rootPath");
-    testResponse.getFinalCounts().add(new TestSummary(1, 2, 3, 4));
-    TestExecutionReport.TestResult result = new TestExecutionReport.TestResult();
-    testResponse.addResult(result);
-    result.right = "xx";
-    result.wrong = "22";
-    result.ignores = "33";
-    result.exceptions = "44";
-    result.relativePageName = "relativePageName";
-    result.content = "wad of HTML content";
-    return testResponse;
   }
 
 }

@@ -1,6 +1,6 @@
 // Modified or written by Object Mentor, Inc. for inclusion with FitNesse.
 // Copyright (c) 2002 Cunningham & Cunningham, Inc.
-// Released under the terms of the GNU General Public License version 2 or later.package fit;
+// Released under the terms of the GNU General Public License version 2 or later.
 
 package fit;
 
@@ -11,12 +11,14 @@ import fit.exception.FitFailureException;
 import fit.exception.NoSuchMethodFitFailureException;
 
 public class ActionFixture extends Fixture {
+  protected static final Class<?> empty[] = {}; //NOSONAR
+
   protected Parse cells;
   private Fixture actor;
-  protected static final Class<?> empty[] = {};
 
   // Traversal ////////////////////////////////
 
+  @Override
   public void doCells(Parse cells) {
     this.cells = cells;
     try {
@@ -69,7 +71,7 @@ public class ActionFixture extends Fixture {
     try {
       adapter = TypeAdapter.on(actor, theMethod);
     }
-    catch (Throwable e) {
+    catch (Throwable e) { // NOSONAR
       throw new FitFailureException("Can not parse return type: " + type.getName());
     }
     Parse checkValueCell = cells.more.more;
@@ -91,10 +93,9 @@ public class ActionFixture extends Fixture {
   protected Method method(String test, int args) throws NoSuchMethodException {
     if (actor == null)
       throw new FitFailureException("You must start a fixture using the 'start' keyword.");
-    Method methods[] = actor.getClass().getMethods();
+    Method[] methods = actor.getClass().getMethods();
     Method result = null;
-    for (int i = 0; i < methods.length; i++) {
-      Method m = methods[i];
+    for (Method m : methods) {
       if (m.getName().equals(test) && m.getParameterTypes().length == args) {
         if (result == null) {
           result = m;

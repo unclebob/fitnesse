@@ -28,6 +28,13 @@ public class AliasTest {
     ParserTestHelper.assertTranslatesTo(page, "[[tag][PageOne?edit]]", link("tag", "PageOne?edit"));
     ParserTestHelper.assertTranslatesTo(page, "[[tag][http://files/myfile]]", link("tag", "files/myfile"));
     ParserTestHelper.assertTranslatesTo(page, "[[tag][http://example.com/myfile]]", link("tag", "http://example.com/myfile"));
+    ParserTestHelper.assertTranslatesTo(page, "[[tag][https://example.com/myfile]]", link("tag", "https://example.com/myfile"));
+  }
+
+  @Test
+  public void translateNonHttpLinks() {
+    TestSourcePage page = new TestSourcePage().withTarget("PageOne");
+    ParserTestHelper.assertTranslatesTo(page, "[[tag][notes://example.com/myfile]]", link("tag", "notes://example.com/myfile"));
   }
 
   @Test

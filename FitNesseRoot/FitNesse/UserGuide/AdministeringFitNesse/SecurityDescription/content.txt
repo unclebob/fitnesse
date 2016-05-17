@@ -15,12 +15,12 @@ Pages inherit their security from their parent pages.  If a parent page has ''se
 
 !3 Details
  * If a unauthenticated user attempts to display a page that has ''secure-read'' set, he will be prompted for his username and password.  If he survives this authentication then he will be redirected to the requested page.
- * If an unauthenticated user attemptes to write a page that has ''secure-write'' set, he will be authenticated before the write is allowed to take place.
- * If an unauthenticated user attemptes to test a page that has ''secure-test'' set, he will be authenticated before the test is allowed to take place.  This works the same for both tests and suites.
+ * If an unauthenticated user attempts to write a page that has ''secure-write'' set, he will be authenticated before the write is allowed to take place.
+ * If an unauthenticated user attempts to test a page that has ''secure-test'' set, he will be authenticated before the test is allowed to take place.  This works the same for both tests and suites.
  * A user must be authenticated to do any kind of refactoring.
  * A user must be authenticated to change the properties of a page.
  * A user must be authenticated to inspect or change the /files directory structure.  However, unauthenticated readers can read files from the /files directory.
- * Searching, WhereUsed, Sisterhood, and other queries of that kind are not secure and do not require authentication.
+ * Searching, [[!-WhereUsed-!][<UserGuide.FitNesseWiki.WhereUsed]], Sisterhood, and other queries of that kind are not secure and do not require authentication.
 
 !3 Authentication
 The users and their passwords are supplied to FitNesse by using the -a as one of the CommandLineArguments.

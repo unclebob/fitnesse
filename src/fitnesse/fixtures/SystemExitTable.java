@@ -1,6 +1,8 @@
 package fitnesse.fixtures;
 
-public class SystemExitTable {
+import fit.ColumnFixture;
+
+public class SystemExitTable  extends ColumnFixture {
 
   private int exitCode;
   
@@ -9,15 +11,23 @@ public class SystemExitTable {
   public void setSystemExitCode(int exitCode) {
     this.exitCode = exitCode;
   }
-  
+
+  // slim:
+  @Override
   public void execute() {
     try {
       System.exit(exitCode);
-    } catch (Throwable e) {
+    } catch (Throwable e) { // NOSONAR
       exception = e;
     }
   }
-  
+
+  // fit:
+  public boolean valid() throws Exception {
+    exitSystem(exitCode);
+    return true;
+  }
+
   public String exceptionMessage() {
     return exception.getMessage();
   }

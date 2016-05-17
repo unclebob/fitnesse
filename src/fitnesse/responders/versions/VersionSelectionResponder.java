@@ -18,6 +18,7 @@ import java.util.*;
 
 public class VersionSelectionResponder implements SecureResponder {
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
     String resource = request.getResource();
@@ -43,12 +44,13 @@ public class VersionSelectionResponder implements SecureResponder {
   }
 
   public static List<VersionInfo> getVersionsList(WikiPage page) {
-    List<VersionInfo> list = new ArrayList<VersionInfo>(page.getVersions());
+    List<VersionInfo> list = new ArrayList<>(page.getVersions());
     Collections.sort(list);
     Collections.reverse(list);
     return list;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }

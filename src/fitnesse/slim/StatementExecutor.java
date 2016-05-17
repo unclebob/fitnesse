@@ -2,13 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import fitnesse.slim.converters.MapEditor;
-
-import java.beans.PropertyEditorManager;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.regex.Pattern;
 
 import static fitnesse.slim.SlimException.isStopSuiteException;
 import static fitnesse.slim.SlimException.isStopTestException;
@@ -20,18 +17,18 @@ import static java.lang.String.format;
 
 public class StatementExecutor implements StatementExecutorInterface {
   private static final String SLIM_HELPER_LIBRARY_INSTANCE_NAME = "SlimHelperLibrary";
+  public static final String SLIM_AGENT_FIXTURE_HANDLES_SYMBOLS = "SLIM_AGENT_FIXTURE_HANDLES_SYMBOLS";
 
   private boolean stopRequested = false;
   private SlimExecutionContext context;
-  private List<MethodExecutor> executorChain = new ArrayList<MethodExecutor>();
+  private List<MethodExecutor> executorChain = new ArrayList<>();
+  private Pattern patternOfFixturesHandlingSymbols = null;
 
   public StatementExecutor() {
     this(null);
   }
 
   public StatementExecutor(SlimExecutionContext context) {
-    PropertyEditorManager.registerEditor(Map.class, MapEditor.class);
-
     if (context == null) {
       this.context = new SlimExecutionContext();
     } else {
@@ -69,6 +66,16 @@ public class StatementExecutor implements StatementExecutorInterface {
   @Override
   public void assign(String name, Object value) {
     context.setVariable(name, value);
+    checkForPatternOfFixturesHandlingSymbols(name);
+  }
+
+  @Override
+  public Object getSymbol(String symbolName) {
+    MethodExecutionResult result = context.getVariable(symbolName);
+    if (result == null) {
+      return null;
+    }
+    return result.returnValue();
   }
 
   @Override
@@ -89,7 +96,7 @@ public class StatementExecutor implements StatementExecutorInterface {
     } catch (InvocationTargetException e) {
       checkExceptionForStop(e.getTargetException());
       throw new SlimException(e.getTargetException(), true);
-    } catch (Throwable e) {
+    } catch (Throwable e) { // NOSONAR
       checkExceptionForStop(e);
       throw new SlimException(e);
     }
@@ -99,7 +106,7 @@ public class StatementExecutor implements StatementExecutorInterface {
   public Object call(String instanceName, String methodName, Object... args) throws SlimException {
     try {
       return getMethodExecutionResult(instanceName, methodName, args).returnValue();
-    } catch (Throwable e) {
+    } catch (Throwable e) { // NOSONAR
       checkExceptionForStop(e);
       throw new SlimException(e);
     }
@@ -110,8 +117,9 @@ public class StatementExecutor implements StatementExecutorInterface {
     try {
       MethodExecutionResult result = getMethodExecutionResult(instanceName, methodName, args);
       context.setVariable(variable, result);
+      checkForPatternOfFixturesHandlingSymbols(variable);
       return result.returnValue();
-    } catch (Throwable e) {
+    } catch (Throwable e) { // NOSONAR
       checkExceptionForStop(e);
       throw new SlimException(e);
     }
@@ -119,8 +127,12 @@ public class StatementExecutor implements StatementExecutorInterface {
 
   private MethodExecutionResult getMethodExecutionResult(String instanceName, String methodName, Object... args) throws Throwable {
     MethodExecutionResults results = new MethodExecutionResults();
-    for (int i = 0; i < executorChain.size(); i++) {
-      MethodExecutionResult result = executorChain.get(i).execute(instanceName, methodName, context.replaceSymbols(args));
+    Boolean ignoreSymbols = ignoreSymbols( instanceName,  methodName);
+	if (!ignoreSymbols){
+		args = context.replaceSymbols(args);
+	}
+    for (MethodExecutor anExecutorChain : executorChain) {
+      MethodExecutionResult result = anExecutorChain.execute(instanceName, methodName, args);
       if (result.hasResult()) {
         return result;
       }
@@ -128,6 +140,51 @@ public class StatementExecutor implements StatementExecutorInterface {
     }
     return results.getFirstResult();
   }
+
+  /**
+   *
+   * @return true is the fixture will handles symbols assignments and lookups itself.
+   *         This should be a rare exception and is not recommended
+   *
+   *  Would be nice to use the classname but we don't know it at this point.
+   *
+   */
+
+  private Boolean ignoreSymbols(String instanceName, String methodName){
+	  try{
+
+	    if (this.patternOfFixturesHandlingSymbols == null) return false;
+	    return patternOfFixturesHandlingSymbols.matcher(instanceName + "." + methodName).matches();
+
+	  }catch (Exception e){
+		  return false;
+	  }
+  }
+
+  private void checkForPatternOfFixturesHandlingSymbols(String symbolName){
+    if(!SLIM_AGENT_FIXTURE_HANDLES_SYMBOLS.equals(symbolName)) return;
+    // Special Symbol Name need to update
+    try{
+      MethodExecutionResult mer = context.getVariable(SLIM_AGENT_FIXTURE_HANDLES_SYMBOLS);
+      if (mer == null) return;
+
+      try{
+        if(mer.returnValue() == null){
+          patternOfFixturesHandlingSymbols = null;
+        }else{
+          patternOfFixturesHandlingSymbols = Pattern.compile(mer.returnValue().toString());
+        }
+      }catch (Exception e){
+        patternOfFixturesHandlingSymbols = null;
+      }
+
+    }catch (Exception e){
+      return;
+    }
+
+
+  }
+
 
   private void checkExceptionForStop(Throwable exception) {
     if (isStopTestException(exception) || isStopSuiteException(exception)) {

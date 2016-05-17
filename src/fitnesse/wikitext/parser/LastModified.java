@@ -15,18 +15,19 @@ public class LastModified extends SymbolType implements Translation {
         htmlTranslation(this);
     }
     
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         String user = translator.getPage().getProperty(PageData.LAST_MODIFYING_USER);
         String date = translator.getPage().getProperty(PageData.PropertyLAST_MODIFIED);
         return translator.formatMessage(
                 "Last modified " +
-                (user.length() > 0 ? "by " + user : "anonymously") +
+                (!user.isEmpty() ? "by " + user : "anonymously") +
                 " on " + formatDate(date));
     }
 
     private String formatDate(String dateString) {
         Date date;
-        if (dateString.length() == 0) date = Clock.currentDate();
+        if (dateString.isEmpty()) date = Clock.currentDate();
         else {
             try {
                 date = WikiPageProperties.getTimeFormat().parse(dateString);

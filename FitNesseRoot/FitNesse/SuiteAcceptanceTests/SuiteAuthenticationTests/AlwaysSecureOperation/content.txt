@@ -5,8 +5,6 @@
 !|operation is authenticated|
 |operation|
 |purgeHistory|
-|testHistory|
-|pageHistory|
 |shutdown|
 |renamePage|
 |deletePage|

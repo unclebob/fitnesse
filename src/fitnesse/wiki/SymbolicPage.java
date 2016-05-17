@@ -3,28 +3,30 @@
 package fitnesse.wiki;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.Symbol;
 
-public class SymbolicPage extends BaseWikiPage {
-  private static final long serialVersionUID = 1L;
+public class SymbolicPage extends BaseWikitextPage {
 
   public static final String PROPERTY_NAME = "SymbolicLinks";
+  public static final String SHORT_CIRCUIT_BREAK_MESSAGE = "Short circuit! This page references %s, which is already one of the parent pages of this page.";
 
   private final WikiPage realPage;
 
   public SymbolicPage(String name, WikiPage realPage, WikiPage parent) {
     super(name, parent);
     this.realPage = realPage;
-    // Perform a cyclic dependency check
   }
 
   public WikiPage getRealPage() {
     return realPage;
+  }
+
+  private boolean containsWikitext() {
+    return containsWikitext(realPage);
   }
 
   @Override
@@ -41,9 +43,8 @@ public class SymbolicPage extends BaseWikiPage {
   public WikiPage getChildPage(String name) {
     WikiPage childPage = realPage.getChildPage(name);
     if (childPage != null) {
-      childPage = new SymbolicPage(name, childPage, this);
+      childPage = createChildPage(childPage);
     }
-
     return childPage;
   }
 
@@ -55,13 +56,29 @@ public class SymbolicPage extends BaseWikiPage {
   @Override
   public List<WikiPage> getChildren() {
     List<WikiPage> children = realPage.getChildren();
-    List<WikiPage> symChildren = new LinkedList<WikiPage>();
-    //TODO: -AcD- we need a better cyclic infinite recursion algorithm here.
-    for (Iterator<WikiPage> iterator = children.iterator(); iterator.hasNext();) {
-      WikiPage child = iterator.next();
-      symChildren.add(new SymbolicPage(child.getName(), child, this));
+    List<WikiPage> symChildren = new LinkedList<>();
+    for (WikiPage child : children) {
+      symChildren.add(createChildPage(child));
     }
     return symChildren;
+  }
+
+  private WikiPage createChildPage(WikiPage child) {
+    WikiPage cyclicReference = findCyclicReference(child);
+    if (cyclicReference != null) {
+      return new WikiPageDummy(child.getName(), String.format(SHORT_CIRCUIT_BREAK_MESSAGE, cyclicReference.getPageCrawler().getFullPath().toString()), this);
+    } else {
+      return new SymbolicPage(child.getName(), child, this);
+    }
+  }
+
+  private WikiPage findCyclicReference(WikiPage childPage) {
+    for (WikiPage parentPage = getParent(); !parentPage.isRoot(); parentPage = parentPage.getParent()) {
+      if (childPage.equals(parentPage)) {
+        return parentPage;
+      }
+    }
+    return null;
   }
 
   @Override
@@ -86,15 +103,16 @@ public class SymbolicPage extends BaseWikiPage {
 
   @Override
   public String getVariable(String name) {
-    if (realPage instanceof WikitextPage) {
+    if (containsWikitext()) {
       return super.getVariable(name);
     }
-    return realPage.getVariable(name);
+    String value = realPage.getVariable(name);
+    return (value == null && !isRoot()) ? getParent().getVariable(name) : value;
   }
 
   @Override
   public String getHtml() {
-    if (realPage instanceof WikitextPage) {
+    if (containsWikitext()) {
       return super.getHtml();
     }
     return realPage.getHtml();
@@ -102,7 +120,7 @@ public class SymbolicPage extends BaseWikiPage {
 
   @Override
   public ParsingPage getParsingPage() {
-    if (realPage instanceof WikitextPage) {
+    if (containsWikitext()) {
       return super.getParsingPage();
     }
     return null;
@@ -110,9 +128,29 @@ public class SymbolicPage extends BaseWikiPage {
 
   @Override
   public Symbol getSyntaxTree() {
-    if (realPage instanceof WikitextPage) {
+    if (containsWikitext()) {
       return super.getSyntaxTree();
     }
     return Symbol.emptySymbol;
   }
+
+  @Override
+  @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+  public boolean equals(Object other) {
+    return realPage.equals(other);
+  }
+
+  @Override
+  public int hashCode() {
+    return realPage.hashCode();
+  }
+
+  public static boolean containsWikitext(WikiPage wikiPage) {
+    if (wikiPage instanceof SymbolicPage) {
+      return containsWikitext(((SymbolicPage) wikiPage).realPage);
+    } else {
+      return wikiPage instanceof WikitextPage;
+    }
+  }
+
 }

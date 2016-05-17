@@ -16,19 +16,21 @@ public class ImportTable extends SlimTable {
     super(table, id, testContext);
   }
 
+  @Override
   protected String getTableType() {
     return "import";
   }
 
+  @Override
   public List<SlimAssertion> getAssertions() throws SyntaxError {
     int rows = table.getRowCount();
-    List<SlimAssertion> instructions = new ArrayList<SlimAssertion>(rows);
+    List<SlimAssertion> instructions = new ArrayList<>(rows);
     if (rows < 2)
       throw new SyntaxError("Import tables must have at least two rows.");
 
     for (int row = 1; row < rows; row++) {
       String importString = table.getCellContents(0, row);
-      if (importString.length() > 0) {
+      if (!importString.isEmpty()) {
         Instruction importInstruction = new ImportInstruction(makeInstructionTag(), importString);
         instructions.add(makeAssertion(importInstruction, new ImportExpectation(0, row)));
       }

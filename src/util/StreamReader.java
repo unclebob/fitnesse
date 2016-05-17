@@ -3,12 +3,14 @@
 package util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
-public class StreamReader {
+public class StreamReader implements Closeable {
   private InputStream input;
   private State state;
 
@@ -18,7 +20,12 @@ public class StreamReader {
   private int readGoal;
   private int readStatus;
 
+  // timeout limit in milli seconds
+  // 0 = wait forever, never timeout
+  private int timeoutLimit = 0;
+
   private boolean eof = false;
+  private boolean isTimeout = false;
 
   private byte[] boundary;
   private int boundaryLength;
@@ -31,8 +38,21 @@ public class StreamReader {
     this.input = input;
   }
 
+  @Override
   public void close() throws IOException {
     input.close();
+  }
+
+  public void setTimeoutLimit(int timeout) {
+    timeoutLimit = timeout;
+  }
+
+  public int timeoutLimit() {
+    return timeoutLimit;
+  }
+
+  public boolean isTimeout() {
+    return isTimeout;
   }
 
   public String readLine() throws IOException {
@@ -104,8 +124,33 @@ public class StreamReader {
   }
 
   private void readUntilFinished() throws IOException {
+    int retryCounter = 0;
+    int sleepStep = 10;
+    isTimeout = false;
+
+    if (timeoutLimit > 0) {
+      retryCounter = timeoutLimit / sleepStep;
+    } else {
+      retryCounter = 0;
+    }
     while (!state.finished())
-      state.read(input);
+      //TODO remove the true or make it used only for non SSL streams
+      // Note: SSL sockets don't support the input.available() function :(
+      if (timeoutLimit == 0 || input.available() != 0) {
+        state.read(input);
+
+      } else {
+        try {
+          Thread.sleep(sleepStep);
+        } catch (InterruptedException e) {
+          throw new InterruptedIOException("Interrupted while awaiting data: " + e.getMessage());
+        }
+        retryCounter--;
+        if (retryCounter <= 0) {
+          isTimeout = true;
+          changeState(FINAL_STATE);
+        }
+      }
   }
 
   private void clearBuffer() {
@@ -121,7 +166,7 @@ public class StreamReader {
   }
 
   private String bytesToString(byte[] bytes) throws UnsupportedEncodingException {
-    return new String(bytes, "UTF-8");
+    return new String(bytes, FileUtil.CHARENCODING);
   }
 
   private void changeState(State state) {
@@ -140,7 +185,7 @@ public class StreamReader {
     bytesConsumed = 0;
   }
 
-  private static abstract class State {
+  private abstract static class State {
     public void read(InputStream input) throws IOException {
     }
 
@@ -150,6 +195,7 @@ public class StreamReader {
   }
 
   private final State READLINE_STATE = new State() {
+    @Override
     public void read(InputStream input) throws IOException {
       int b = input.read();
       if (b == -1) {
@@ -166,6 +212,7 @@ public class StreamReader {
   };
 
   private final State READCOUNT_STATE = new State() {
+    @Override
     public void read(InputStream input) throws IOException {
       byte[] bytes = new byte[readGoal - readStatus];
       int bytesRead = input.read(bytes);
@@ -180,12 +227,14 @@ public class StreamReader {
       }
     }
 
+    @Override
     public boolean finished() {
       return readStatus >= readGoal;
     }
   };
 
   private final State READUPTO_STATE = new State() {
+    @Override
     public void read(InputStream input) throws IOException {
       int b = input.read();
       if (b == -1) {
@@ -212,8 +261,10 @@ public class StreamReader {
   };
 
   private final State FINAL_STATE = new State() {
+    @Override
     public boolean finished() {
       return true;
     }
   };
+
 }

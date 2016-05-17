@@ -37,5 +37,5 @@ Precede the first row with a '-'. This also works for literal tables.
 |1|2|3|
 
 !2 Plain Text Tables
-!see <UserGuide.PlainTextTable
 
+!see [[!-PlainTextTable-!][<UserGuide.FitNesseWiki.MarkupLanguageReference.PlainTextTable]]

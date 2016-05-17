@@ -20,7 +20,7 @@ public class ContentFilterResponder implements Responder {
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     String resource = request.getResource();
-    String content = (String) request.getInput(EditResponder.CONTENT_INPUT_NAME);
+    String content = request.getInput(EditResponder.CONTENT_INPUT_NAME);
 
     if (!contentFilter.isContentAcceptable(content, resource))
       return makeBannedContentResponse(context, resource);

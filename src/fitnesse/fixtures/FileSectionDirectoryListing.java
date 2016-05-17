@@ -11,10 +11,10 @@ public class FileSectionDirectoryListing {
 
   public List<Object> query() throws Exception {
     File[] files = FileSection.getFileSection().listFiles();
-    List<Object> rows = new ArrayList<Object>();
+    List<Object> rows = new ArrayList<>();
     for (File file : files) {
       if (!file.getName().equals("testProgress")) {
-        List<Object> row = new ArrayList<Object>();
+        List<Object> row = new ArrayList<>();
         int substringLength = FileSection.getFileSection().getPath().length();
         row.add(Arrays.asList("path", file.getPath().substring(substringLength +1)));
         rows.add(row);

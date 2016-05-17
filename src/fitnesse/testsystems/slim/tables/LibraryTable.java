@@ -16,10 +16,10 @@ public class LibraryTable extends SlimTable {
 
   @Override
   public List<SlimAssertion> getAssertions() {
-    List<SlimAssertion> instructions = new ArrayList<SlimAssertion>();
+    List<SlimAssertion> instructions = new ArrayList<>();
     for (int row = 1; row < table.getRowCount(); row++) {
       String disgracedClassName = Disgracer.disgraceClassName(table.getCellContents(0, row));
-      if (disgracedClassName.length() > 0) {
+      if (!disgracedClassName.isEmpty()) {
         instructions.add(constructInstance("library" + row, disgracedClassName, 0, row));
       }
     }

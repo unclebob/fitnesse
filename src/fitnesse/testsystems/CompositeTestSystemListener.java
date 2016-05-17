@@ -6,7 +6,7 @@ import java.util.List;
 
 public class CompositeTestSystemListener implements TestSystemListener {
 
-  private final List<TestSystemListener> listeners = new LinkedList<TestSystemListener>();
+  private final List<TestSystemListener> listeners = new LinkedList<>();
 
   public final void addTestSystemListener(TestSystemListener listener) {
     listeners.add(listener);
@@ -17,7 +17,7 @@ public class CompositeTestSystemListener implements TestSystemListener {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem) {
+  public void testSystemStarted(TestSystem testSystem) throws IOException {
     for (TestSystemListener listener : listeners)
       listener.testSystemStarted(testSystem);
   }

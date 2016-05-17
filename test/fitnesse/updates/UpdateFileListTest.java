@@ -1,8 +1,7 @@
 package fitnesse.updates;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+
 import org.junit.After;
 
 import static org.junit.Assert.*;
@@ -54,46 +53,45 @@ public class UpdateFileListTest {
   }
 
   @Test
-  public void shouldCreateAFileWithTheListOfFileNames() throws Exception {
+  public void shouldMakeUpdateListWithMultiLevelFolders() throws Exception {
     String content = runCreateFileAndGetContent(new String[]{"MasterFolder"});
-    assertSubString("MasterFolder/MasterFile\n", content);
+    assertSubString("MasterFolder/content.txt\n", content);
+    assertSubString("MasterFolder/TestFolder/content.txt\n", content);
   }
 
   @Test
-  public void shouldMakeUpdateListWithMultiLevelFolders() throws Exception {
+  public void shouldNotAddBackupAndMetadataFiles() throws Exception {
     String content = runCreateFileAndGetContent(new String[]{"MasterFolder"});
-    assertSubString("MasterFolder/MasterFile\n", content);
-    assertSubString("MasterFolder/TestFolder/TestFile\n", content);
+    assertDoesntHaveRegexp("MasterFolder/TestFolder/backup.zip", content);
+    assertDoesntHaveRegexp("MasterFolder/TestFolder/.DS_Store", content);
   }
 
   @Test
   public void shouldKnowWhichSpecialFilesNotToInclude() throws Exception {
-    String arg1 = "-doNotReplace:MasterFolder/TestFolder/fitnesse.css";
-    String arg2 = "-doNotReplace:MasterFolder/TestFolder/fitnesse_print.css";
+    String arg1 = "-doNotReplace:MasterFolder/TestFolder/content.txt";
+    String arg2 = "-doNotReplace:MasterFolder/TestFolder/properties.xml";
     String content = runCreateFileAndGetContent(new String[]{arg1, arg2, "MasterFolder/TestFolder"});
-    assertSubString("TestFolder/TestFile", content);
-    assertDoesntHaveRegexp("TestFolder/fitnesse.css", content);
-    assertDoesntHaveRegexp("TestFolder/fitnesse_print.css", content);
+    assertDoesntHaveRegexp("TestFolder/content.txt", content);
+    assertDoesntHaveRegexp("TestFolder/properties.xml", content);
   }
 
   @Test
   public void shouldPutSpecialFilesInDifferentList() throws Exception {
-    String arg1 = "-doNotReplace:MasterFolder/TestFolder/fitnesse.css";
-    String arg2 = "-doNotReplace:MasterFolder/TestFolder/fitnesse_print.css";
+    String arg1 = "-doNotReplace:MasterFolder/TestFolder/content.txt";
+    String arg2 = "-doNotReplace:MasterFolder/TestFolder/properties.xml";
     updater.parseCommandLine(new String[]{arg1, arg2, "MasterFolder/TestFolder"});
     File doNotUpdateFile = updater.createDoNotUpdateList();
     String doNotUpdateContent = FileUtil.getFileContent(doNotUpdateFile);
     FileUtil.deleteFile(doNotUpdateFile);
-    assertSubString("TestFolder/fitnesse.css", doNotUpdateContent);
-    assertSubString("TestFolder/fitnesse_print.css", doNotUpdateContent);
-    assertDoesntHaveRegexp("TestFolder/TestFile", doNotUpdateContent);
+    assertSubString("TestFolder/content.txt", doNotUpdateContent);
+    assertSubString("TestFolder/properties.xml", doNotUpdateContent);
   }
 
   @Test
   public void shouldPrunePrefixes() throws Exception {
     String content = runCreateFileAndGetContent(new String[]{"-baseDirectory:MasterFolder/TestFolder", ""});
-    assertSubString("TestFile\n", content);
-    assertDoesntHaveRegexp("TestFolder/TestFile", content);
+    assertSubString("content.txt\n", content);
+    assertDoesntHaveRegexp("TestFolder/content.txt", content);
   }
 
   @Test
@@ -135,10 +133,11 @@ public class UpdateFileListTest {
   }
 
   private void createMultiLevelDirectory() throws IOException {
-    FileUtil.createFile("MasterFolder/MasterFile", "");
-    FileUtil.createFile("MasterFolder/TestFolder/TestFile", "");
-    FileUtil.createFile("MasterFolder/TestFolder/fitnesse.css", "");
-    FileUtil.createFile("MasterFolder/TestFolder/fitnesse_print.css", "");
+    FileUtil.createFile("MasterFolder/content.txt", "");
+    FileUtil.createFile("MasterFolder/TestFolder/content.txt", "");
+    FileUtil.createFile("MasterFolder/TestFolder/properties.xml", "");
+    FileUtil.createFile("MasterFolder/TestFolder/backup.zip", "");
+    FileUtil.createFile("MasterFolder/TestFolder/.DS_Store", "");
   }
 
   @After

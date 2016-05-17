@@ -9,9 +9,9 @@ public class ParseSpecification {
     public static final int normalPriority = 0;
 
     private SymbolProvider provider = SymbolProvider.wikiParsingProvider;
-    private ArrayList<SymbolType> terminators = new ArrayList<SymbolType>();
-    private ArrayList<SymbolType> ignoresFirst = new ArrayList<SymbolType>();
-    private ArrayList<SymbolType> ends = new ArrayList<SymbolType>();
+    private ArrayList<SymbolType> terminators = new ArrayList<>();
+    private ArrayList<SymbolType> ignoresFirst = new ArrayList<>();
+    private ArrayList<SymbolType> ends = new ArrayList<>();
     private int priority = 0;
 
     public ParseSpecification provider(SymbolProvider provider) {
@@ -62,6 +62,7 @@ public class ParseSpecification {
 
     public SymbolMatch findMatch(final ScanString input, final int startPosition, final SymbolStream symbols) {
         return provider.findMatch(input.charAt(0), new SymbolMatcher() {
+            @Override
             public SymbolMatch makeMatch(Matchable candidate) {
                 if (input.getOffset() != startPosition || !ignores(candidate)) {
                     SymbolMatch match = candidate.makeMatch(input, symbols);
@@ -82,28 +83,48 @@ public class ParseSpecification {
 
     public Symbol parse(Parser parser, Scanner scanner) {
         Symbol result = new Symbol(SymbolType.SymbolList);
+        result.setStartOffset(scanner.getOffset());
+        while (true) {
+            Maybe<Symbol> parsedSymbol = parseSymbol(parser, scanner);
+            if (parsedSymbol.isNothing()) {
+                break;
+            } else {
+                result.add(parsedSymbol.getValue());
+            }
+        }
+        result.setEndOffset(scanner.getOffset());
+        return result;
+    }
+
+    /**
+     *
+     * @param parser
+     * @param scanner
+     * @return a possible value if parser should stop.
+     */
+    public Maybe<Symbol> parseSymbol(Parser parser, Scanner scanner) {
         while (true) {
             Scanner backup = new Scanner(scanner);
             scanner.moveNextIgnoreFirst(this);
-            if (scanner.isEnd()) break;
+            if (scanner.isEnd()) return Maybe.nothingBecause("scanner is at end of buffer");
             Symbol currentToken = scanner.getCurrent();
+            int startOffset = currentToken.getStartOffset();
             if (endsOn(currentToken.getType()) || parser.parentOwns(currentToken.getType(), this)) {
                 scanner.copy(backup);
-                break;
+                return Maybe.nothingBecause("At termination symbol or parent owns symbol");
             }
-            if (terminatesOn(currentToken.getType())) break;
+            if (terminatesOn(currentToken.getType())) return Maybe.nothingBecause("At termination symbol");
             Rule currentRule = currentToken.getType().getWikiRule();
             Maybe<Symbol> parsedSymbol = currentRule.parse(currentToken, parser);
             if (parsedSymbol.isNothing()) {
                 ignoreFirst(currentToken.getType());
                 scanner.copy(backup);
-            }
-            else {
-                result.add(parsedSymbol.getValue());
+            } else {
+                parsedSymbol.getValue().setStartOffset(startOffset).setEndOffset(scanner.getOffset());
                 clearIgnoresFirst();
+                return parsedSymbol;
             }
         }
-        return result;
     }
 
     private boolean terminatesOn(SymbolType symbolType) {

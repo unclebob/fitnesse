@@ -11,9 +11,9 @@ import fitnesse.testsystems.slim.Table;
 
 public class DecisionTableCaller {
   protected class ColumnHeaderStore {
-    private Map<String, List<Integer>> columnNumbers = new HashMap<String, List<Integer>>();
+    private Map<String, List<Integer>> columnNumbers = new HashMap<>();
     private Map<String, Iterator<Integer>> columnNumberIterator;
-    private List<String> leftToRight = new ArrayList<String>();
+    private List<String> leftToRight = new ArrayList<>();
 
     public void add(String header, int columnNumber) {
       leftToRight.add(header);
@@ -37,9 +37,9 @@ public class DecisionTableCaller {
     }
 
     private void resetColumnNumberIterator() {
-      columnNumberIterator = new HashMap<String, Iterator<Integer>>();
-      for (String header : columnNumbers.keySet()) {
-        columnNumberIterator.put(header, columnNumbers.get(header).iterator());
+      columnNumberIterator = new HashMap<>();
+      for (Map.Entry<String, List<Integer>> entry : columnNumbers.entrySet()) {
+        columnNumberIterator.put(entry.getKey(), entry.getValue().iterator());
       }
     }
   }
@@ -61,8 +61,8 @@ public class DecisionTableCaller {
 	        cell = table.getCellContents(col-1, 0);
 	        constructorParameterStore.add(cell, col);
 	    }
-  } 
-  
+  }
+
   protected void gatherFunctionsAndVariablesFromColumnHeader() {
     columnHeaders = table.getColumnCountInRow(1);
     for (int col = 0; col < columnHeaders; col++)

@@ -118,7 +118,6 @@ nav a, nav a:link, nav a:active, nav a:visited {
 
 nav ul ul {
  background: #4A4A44; /* Adding a background makes the dropdown work properly in IE7+. */
- -moz-box-shadow: 0 3px 10px #4A4A44;
  position: absolute;
  display: none;
  z-index: 999;

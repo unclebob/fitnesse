@@ -1,10 +1,11 @@
 See also: >TestPage.
 
-!| script |
-|given page|TestPage|with content|${SUT_PATH} !-
+!define TestPageName {Testpage}
 
-!define TEST_SYSTEM {slim}
-
+!| script                          |
+|given test page|${TestPageName}|
+|and Test System setup is|!define TEST_SYSTEM {slim}${SUT_PATH}|
+|and Setup content is|!-
 !|import|
 |fitnesse.slim.test|
 
@@ -14,17 +15,20 @@ See also: >TestPage.
 !|Scenario|Not Executed|MESSAGE |
 |check|echo|@MESSAGE|cannot fail @MESSAGE|
 
+-!|
+|and Test content is                    |!-
 !|Script|
 |Stop Test|
 |Not Executed and should be ignored|
-
 !|Script|
 |Not Executed and should be ignored as well|
 -!|
-|test results for page|TestPage|should contain|Test not run|
-
-!|Response Examiner. |
-|type |pattern |matches?|
-|contents|class="ignore"\W+Test not run|true |
-|contents|class="pass">Not Executed |false |
-|contents|class="ignore">Not Executed |true |
+|when page|${TestPageName}| is tested and HTML is extracted|
+|then |\d | assertions pass, | 0| fail, | 0| are ignored | 1 | exceptions thrown|
+|and cell |Stop Test| has result | error|
+|and cell |Not Executed and should be ignored | has result | ignore|
+|and cell |Not Executed and should be ignored as well| has result | ignore|
+|and cell |Test not run | has result | ignore|
+|show Symbol |$HTML_Input|
+|show Symbol |$HTML_Result|
+|get collapsed executon log for page|${TestPageName}|

@@ -63,9 +63,10 @@ public class RecentChangesWikiPageTest {
   @Test
   public void testMaxSize() throws Exception {
     for (int i = 0; i < 101; i++) {
-      StringBuffer b = new StringBuffer("LotsOfAs");
-      for (int j = 0; j < i; j++)
+      StringBuilder b = new StringBuilder("LotsOfAs");
+      for (int j = 0; j < i; j++) {
         b.append("a");
+      }
       WikiPage page = rootPage.addChildPage(b.toString());
       recentChangesWikiPage.updateRecentChanges(page);
     }
@@ -80,7 +81,7 @@ public class RecentChangesWikiPageTest {
     recentChangesWikiPage.updateRecentChanges(page1);
     WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
     List<String> lines = recentChangesWikiPage.getRecentChangesLines(recentChanges.getData());
-    String line = lines.get(0).toString();
+    String line = lines.get(0);
     assertSubString("|PageOne||", line);
   }
 
@@ -93,7 +94,7 @@ public class RecentChangesWikiPageTest {
     recentChangesWikiPage.updateRecentChanges(page1);
     WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
     List<String> lines = recentChangesWikiPage.getRecentChangesLines(recentChanges.getData());
-    String line = lines.get(0).toString();
+    String line = lines.get(0);
     assertSubString("|PageOne|Aladdin|", line);
   }
 }

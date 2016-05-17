@@ -75,11 +75,13 @@ public class RowFixtureTest extends TestCase {
   }
 
   private class SimpleRowFixture extends RowFixture {
+    @Override
     public Class<?> getTargetClass()             // get expected type of row
     {
       return SimpleBusinessObject.class;
     }
 
+    @Override
     public Object[] query() throws Exception  // get rows to be compared
     {
       return new Object[0];
@@ -93,11 +95,13 @@ public class RowFixtureTest extends TestCase {
   }
 
   private class TestRowFixture extends RowFixture {
+    @Override
     public Object[] query() throws Exception  // get rows to be compared
     {
       return new Object[0];
     }
 
+    @Override
     public Class<?> getTargetClass()             // get expected type of row
     {
       return BusinessObject.class;

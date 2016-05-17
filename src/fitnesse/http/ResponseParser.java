@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,7 +16,7 @@ import util.StreamReader;
 public class ResponseParser {
   private int status;
   private String body;
-  private HashMap<String, String> headers = new HashMap<String, String>();
+  private Map<String, String> headers = new HashMap<>();
   private StreamReader input;
 
   private static final Pattern statusLinePattern = Pattern.compile("HTTP/\\d.\\d (\\d\\d\\d) ");
@@ -35,7 +35,7 @@ public class ResponseParser {
 
   private boolean isChuncked() {
     String encoding = getHeader("Transfer-Encoding");
-    return encoding != null && "chunked".equals(encoding.toLowerCase());
+    return "chunked".equalsIgnoreCase(encoding);
   }
 
   private void parseStatusLine() throws IOException {
@@ -70,7 +70,7 @@ public class ResponseParser {
   }
 
   private void parseChunks() throws IOException {
-    StringBuffer bodyBuffer = new StringBuffer();
+    StringBuilder bodyBuffer = new StringBuilder();
     int chunkSize = readChunkSize();
     while (chunkSize != 0) {
       bodyBuffer.append(input.read(chunkSize));
@@ -99,21 +99,22 @@ public class ResponseParser {
   }
 
   public String getHeader(String key) {
-    return (String) headers.get(key);
+    return headers.get(key);
   }
 
   public boolean hasHeader(String key) {
     return headers.containsKey(key);
   }
 
+  @Override
   public String toString() {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     buffer.append("Status: ").append(status).append("\n");
     buffer.append("Headers: ").append("\n");
-    for (Iterator<String> iterator = headers.keySet().iterator(); iterator.hasNext();) {
-      String key = (String) iterator.next();
-      buffer.append("\t").append(key).append(": ").append(headers.get(key)).append("\n");
-
+    for (Map.Entry<String, String> entry : headers.entrySet()) {
+      String key = entry.getKey();
+      String value = entry.getValue();
+      buffer.append("\t").append(key).append(": ").append(value).append("\n");
     }
     buffer.append("Body: ").append("\n");
     buffer.append(body);

@@ -2,18 +2,15 @@ package fitnesse.reporting;
 
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
-public abstract class BaseFormatter implements TestSystemListener<WikiTestPage> {
-  protected final Logger LOG = Logger.getLogger(getClass().getName());
+public abstract class BaseFormatter implements Formatter {
 
   private final WikiPage page;
 
@@ -29,15 +26,12 @@ public abstract class BaseFormatter implements TestSystemListener<WikiTestPage> 
     return page;
   }
 
-  public void errorOccurred(Throwable cause) {
+  @Override
+  public void testSystemStarted(TestSystem testSystem) throws IOException {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem) {
-  }
-
-  @Override
-  public void testStarted(WikiTestPage testPage) throws IOException {
+  public void testStarted(TestPage testPage) throws IOException {
   }
 
   @Override
@@ -45,7 +39,7 @@ public abstract class BaseFormatter implements TestSystemListener<WikiTestPage> 
   }
 
   @Override
-  public void testComplete(WikiTestPage test, TestSummary summary) throws IOException {
+  public void testComplete(TestPage test, TestSummary summary) throws IOException {
   }
 
   public int getErrorCount() {
@@ -62,10 +56,6 @@ public abstract class BaseFormatter implements TestSystemListener<WikiTestPage> 
 
   @Override
   public void testSystemStopped(TestSystem testSystem, Throwable cause) {
-    if (cause != null) {
-      errorOccurred(cause);
-    }
   }
-
 }
 

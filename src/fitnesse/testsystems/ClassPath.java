@@ -1,12 +1,20 @@
 package fitnesse.testsystems;
 
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
 
 public class ClassPath {
+
+  private static final Logger LOG = Logger.getLogger(ClassPath.class.getName());
 
   private final List<String> elements;
   private final String separator;
@@ -17,11 +25,11 @@ public class ClassPath {
   }
 
   public ClassPath(String defaultPath, String pathSeparator) {
-    this(Arrays.asList(defaultPath), pathSeparator);
+    this(Collections.singletonList(defaultPath), pathSeparator);
   }
 
   public ClassPath(List<ClassPath> paths) {
-    this.elements = new ArrayList<String>();
+    this.elements = new ArrayList<>();
     this.separator = paths.get(0).getSeparator();
 
     for (ClassPath path : paths) {
@@ -31,6 +39,17 @@ public class ClassPath {
         }
       }
     }
+  }
+
+  public ClassPath withLocationForClass(String testRunner) {
+    String location = findLocationForClass(testRunner);
+    if (location != null) {
+      List<String> newElements = new ArrayList<>();
+      newElements.add(location);
+      newElements.addAll(elements);
+      return new ClassPath(newElements, separator);
+    }
+    return this;
   }
 
   public List<String> getElements() {
@@ -46,11 +65,34 @@ public class ClassPath {
     if (elements.isEmpty()) {
       return "defaultPath";
     } else {
-      String result = StringUtils.join(elements, separator);
-      if (result.contains(" ") && !(result.startsWith("\"") && result.endsWith("\""))) {
-    	 result = "\""+result +"\"";
+      return StringUtils.join(elements, separator);
+    }
+  }
+
+  private String findLocationForClass(String mainClass) {
+    String mainClassFile = mainClass.replaceAll("\\.", "/") + ".class";
+    URL url = getClass().getClassLoader().getResource(mainClassFile);
+    if (url == null) return null;
+
+    if ("file".equals(url.getProtocol())) {
+      URI uri = toUri(url);
+      if (uri != null) {
+        String path = uri.getPath();
+        return new File(path.substring(0, path.length() - mainClassFile.length())).getAbsolutePath();
       }
-      return result;
+    } else if ("jar".equals(url.getProtocol())) {
+      String path = url.getPath();
+      return new File(URI.create(path.substring(0, path.indexOf("!/")))).getAbsolutePath();
+    }
+    return null;
+  }
+
+  private URI toUri(URL url) {
+    try {
+      return url.toURI();
+    } catch (URISyntaxException e) {
+      LOG.log(Level.SEVERE, "Could not convert URL '" + url + "' to URI. Ignoring it for now.", e);
+      return null;
     }
   }
 }

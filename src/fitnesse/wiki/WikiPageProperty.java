@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
 import java.util.SortedMap;
@@ -18,7 +17,7 @@ public class WikiPageProperty implements Serializable {
   private static final long serialVersionUID = 1L;
 
   private String value;
-  protected SortedMap<String, WikiPageProperty> children = new TreeMap<String, WikiPageProperty>();
+  protected SortedMap<String, WikiPageProperty> children = new TreeMap<>();
 
   public WikiPageProperty() {
   }
@@ -73,12 +72,13 @@ public class WikiPageProperty implements Serializable {
     return children == null ? Collections.<String>emptySet() : children.keySet();
   }
 
+  @Override
   public String toString() {
     return toString("WikiPageProperty root", 0);
   }
 
   protected String toString(String key, int depth) {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
 
     for (int i = 0; i < depth; i++)
       buffer.append("\t");
@@ -87,8 +87,7 @@ public class WikiPageProperty implements Serializable {
       buffer.append(" = ").append(getValue());
     buffer.append("\n");
 
-    for (Iterator<?> iterator = keySet().iterator(); iterator.hasNext();) {
-      String childKey = (String) iterator.next();
+    for (String childKey : keySet()) {
       WikiPageProperty value = getProperty(childKey);
       if (value != null)
         buffer.append(value.toString(childKey, depth + 1));
@@ -97,10 +96,10 @@ public class WikiPageProperty implements Serializable {
   }
 
   public boolean hasChildren() {
-    return children != null && children.size() > 0;
+    return children != null && !children.isEmpty();
   }
 
-  private static ThreadLocal<DateFormat> timeFormat = new ThreadLocal<DateFormat>();
+  private static ThreadLocal<DateFormat> timeFormat = new ThreadLocal<>();
 
   public static DateFormat getTimeFormat() {
     DateFormat format = timeFormat.get();

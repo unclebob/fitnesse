@@ -26,7 +26,6 @@ import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -63,13 +62,13 @@ public class WikiPageResponderTest {
     assertSubString("child content", body);
     assertSubString("href=\"ChildPage?whereUsed\"", body);
     assertSubString("Cache-Control: max-age=0", response.makeHttpHeaders());
-    assertSubString("<h5> Wiki Page tags</h5>", body);
+    assertSubString("<span class=\"tag\">Wiki Page tags</span>", body);
   }
 
   @Test
   public void testResponseWithNonWikiWordChildPage() throws Exception {
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("page"), "content");
-    WikiPage childPage = WikiPageUtil.addPage(page, PathParser.parse("child_page"), "child content");
+    WikiPageUtil.addPage(page, PathParser.parse("child_page"), "child content");
 
     final MockRequest request = new MockRequest();
     request.setResource("page.child_page");
@@ -190,12 +189,12 @@ public class WikiPageResponderTest {
       return requestPage(name, new HashMap<String,String>());
   }
 
-  private SimpleResponse requestPage(String name, Map<String,String> inputs) throws Exception {
+  private SimpleResponse requestPage(String name, Map<String, String> inputs) throws Exception {
     final MockRequest request = new MockRequest();
     request.setResource(name);
 
-    for(String input: inputs.keySet()){
-        request.addInput(input, inputs.get(input));
+    for(Map.Entry<String, String> entry : inputs.entrySet()){
+        request.addInput(entry.getKey(), entry.getValue());
     }
     final Responder responder = new WikiPageResponder();
     return (SimpleResponse) responder.makeResponse(context, request);

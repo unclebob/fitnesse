@@ -146,112 +146,116 @@ public class ExecuteFitnesseTestsTask extends Task {
   }
 
   /**
-   * Host address on which Fitnesse is running. Defaults to 'localhost'.
+   * Set host address on which Fitnesse is running. Defaults to 'localhost'.
    *
-   * @param fitnesseHost
+   * @param fitnesseHost host address on which Fitnesse is running
    */
   public void setFitnesseHost(String fitnesseHost) {
     this.fitnesseHost = fitnesseHost;
   }
 
   /**
-   * Classpath of the TestRunner class. <b>MUST SET</b>
+   * Set Classpath of the TestRunner class. <b>MUST SET</b>
    *
-   * @param classpath
+   * @param classpath Classpath of the TestRunner class
    */
   public void setClasspath(Path classpath) {
     this.classpath = classpath;
   }
 
   /**
-   * Name of the filter to be passed to TestRunner to specify a subset of tests to run.
+   * Set name of the filter to be passed to TestRunner to specify a subset of tests to run.
    *
-   * @param suiteFilter
+   * @param suiteFilter name of the filter to be passed to TestRunner for filtering
    */
   public void setSuiteFilter(String suiteFilter) {
     this.suiteFilter = suiteFilter;
   }
 
   /**
-   * Debug mode. Defaults to 'true'.
+   * Set debug mode. Defaults to 'true'.
    *
-   * @param debug
+   * @param debug enable or disable debug mode
    */
   public void setDebug(boolean debug) {
     this.debug = debug;
   }
 
   /**
-   * Will fail the build if any Fitnesse tests fail. Defaults to 'true'.
+   * Enable or disable to fail the build if any Fitnesse tests fail. Defaults to 'true'.
    *
-   * @param failOnError
+   * @param failOnError Enable or disable to fail the build if any Fitnesse tests fail
    */
   public void setFailOnError(boolean failOnError) {
     this.failOnError = failOnError;
   }
 
   /**
-   * Port on which fitnesse would run. <b>MUST SET.</b>.
+   * Set port on which fitnesse would run. <b>MUST SET.</b>.
    *
-   * @param fitnessePort
+   * @param fitnessePort port on which fitnesse would run
    */
   public void setFitnessePort(int fitnessePort) {
     this.fitnessePort = fitnessePort;
   }
 
   /**
-   * Name of the property which will store the test results. Only valid if failOnError attribute is set to false.
+   * Set name of the property which will store the test results. Only valid if failOnError attribute is set to false.
    *
-   * @param resultProperty
+   * @param resultProperty name of the property which will store the test results
    */
   public void setResultProperty(String resultProperty) {
     this.resultProperty = resultProperty;
   }
 
   /**
-   * Path to the folder that will contain the fitnesse results page after execution. Only valid if resultsHTMLPage or
+   * Set the path to the folder that will contain the fitnesse results page after execution. Only valid if resultsHTMLPage or
    * resultsXMLPage attributes are set. Defaults to current directory.
    *
-   * @param resultsDir
+   * @param resultsDir path to the folder that will contain the fitnesse results page after execution.
    */
   public void setResultsDir(String resultsDir) {
     this.resultsDir = resultsDir;
   }
 
   /**
+   * Set the filename for storing the results in HTML format
+   *
    * If set, stores the fitnesse results in HTML format under the resultsdir folder with the given name. The file name
    * must have a '.html' extension.
    *
-   * @param resultsHTMLPage
+   * @param resultsHTMLPage set the filename for storing the results in HTML format
    */
   public void setResultsHTMLPage(String resultsHTMLPage) {
     this.resultsHTMLPage = resultsHTMLPage;
   }
 
   /**
+   * Set the filename for storing the results in XML format
+   *
    * If set, stores the fitnesse results in XML format under the resultsdir folder with the given name. The file name
    * must have a '.xml' extension.
    *
-   * @param resultsXMLPage
+   * @param resultsXMLPage set the filename for storing the results in XML format
    */
   public void setResultsXMLPage(String resultsXMLPage) {
     this.resultsXMLPage = resultsXMLPage;
   }
 
   /**
-   * Fully qualifies class name of the fitnesse testrunner class. Defaults to 'fitnesse.runner.TestRunner'.
+   * Set the fully qualifies class name of the fitnesse testrunner class. Defaults to 'fitnesse.runner.TestRunner'.
    *
-   * @param runnerClass
+   * @param runnerClass Fully qualifies class name of the fitnesse testrunner class
    */
   public void setTestRunnerClass(String runnerClass) {
     testRunnerClass = runnerClass;
   }
 
   /**
-   * Partial URL of the wiki page which is declared as a Suite. Ex: FrontPage.SmokeTest,
+   * Set the partial URL of the wiki page which is declared as a Suite. Ex: FrontPage.SmokeTest,
    * FitNesse.SuiteAcceptanceTests, or FitNesse.AcceptanceTestsSuite. <b>MUST SET.</b>
    *
-   * @param suitePage
+   * @param suitePage  partial URL of the wiki page which is declared as a Suite
    */
   public void setSuitePage(String suitePage) {
     this.suitePage = suitePage;
@@ -260,7 +264,7 @@ public class ExecuteFitnesseTestsTask extends Task {
   /**
    * Set verbose mode. Defaults to 'true'.
    *
-   * @param verbose
+   * @param verbose verbose mode
    */
   public void setVerbose(boolean verbose) {
     this.verbose = verbose;

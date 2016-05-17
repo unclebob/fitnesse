@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Parser {
-    private static final ArrayList<Symbol> emptySymbols = new ArrayList<Symbol>();
+    private static final ArrayList<Symbol> emptySymbols = new ArrayList<>();
 
-    public static Parser make(ParsingPage currentPage, String input) {
+    public static Parser make(ParsingPage currentPage, CharSequence input) {
         return make(currentPage, input, SymbolProvider.wikiParsingProvider);
     }
 
-    public static Parser make(ParsingPage currentPage, String input, SymbolProvider provider) {
+    public static Parser make(ParsingPage currentPage, CharSequence input, SymbolProvider provider) {
         ParseSpecification specification = new ParseSpecification().provider(provider);
         return new Parser(null, currentPage, new Scanner(new TextMaker(currentPage, currentPage.getNamedPage()), input), specification);
     }
@@ -41,10 +41,10 @@ public class Parser {
     }
 
     public List<Symbol> moveNext(SymbolType[] symbolTypes) {
-        ArrayList<Symbol> tokens = new ArrayList<Symbol>();
+        ArrayList<Symbol> tokens = new ArrayList<>();
         for (SymbolType type: symbolTypes) {
             Symbol current = moveNext(1);
-            if (!current.isType(type)) return new ArrayList<Symbol>();
+            if (!current.isType(type)) return new ArrayList<>();
             tokens.add(current);
         }
         return tokens;
@@ -71,7 +71,7 @@ public class Parser {
         int start = scanner.getOffset();
         scanner.markStart();
         parseTo(terminator);
-        if (atEnd() || !getCurrent().isType(terminator)) return Maybe.noString;
+        if (!atEnd() && !getCurrent().isType(terminator)) return Maybe.noString;
         return scanner.stringFromStart(start);
     }
 
@@ -103,7 +103,7 @@ public class Parser {
     public Symbol parseToIgnoreFirstWithSymbols(SymbolType ignore, SymbolProvider provider) {
         return parse(new ParseSpecification().ignoreFirst(ignore).terminator(ignore).provider(provider));
     }
-    
+
     public Symbol parseTo(SymbolType terminator) {
         return parseTo(terminator, ParseSpecification.normalPriority);
     }

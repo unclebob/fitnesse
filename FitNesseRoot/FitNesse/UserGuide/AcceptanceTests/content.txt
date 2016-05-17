@@ -21,7 +21,7 @@ If a team using [[JUnit][http://www.junit.org]] or [[NUnit][http://www.nunit.org
 !-FitNesse-! automated tests are about building the right code in the first place: the code with the most business value. While programmers may be involved in writing such tests, they are not just for programmers. !-FitNesse-! tests are especially for customers, business analysts, testing professionals, support staff, management, and all other stakeholders who need evidence that the project is producing solid return on investment.
 
 !3 "Running, Tested Features"
-Ron Jeffries articulates the idea that the ultimate software project metric, the one closest to ROI, is '''[[Running, Tested Features][http://www.xprogramming.com/xpmag/jatRtsMetric.htm]]'''. You can read about it [[here][http://www.xprogramming.com/xpmag/jatRtsMetric.htm]]. How many RTF did we deliver last iteration, or last month, or last release? '''Only a tool like '''!-FitNesse-!''' can answer these questions.'''
+Ron Jeffries articulates the idea that the ultimate software project metric, the one closest to ROI, is '''[[Running, Tested Features][http://ronjeffries.com/xprog/articles/jatrtsmetric/]]'''. How many RTF did we deliver last iteration, or last month, or last release? '''Only a tool like '''!-FitNesse-!''' can answer these questions.'''
 
 Without a solid tool for automated acceptance tests, you cannot know how many RTF you produce per unit time, so perhaps you cannot easily determine what your project ROI is. Perhaps your team is headed for ProjectDeathByRequirements.
 

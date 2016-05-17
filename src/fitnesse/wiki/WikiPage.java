@@ -3,13 +3,10 @@
 
 package fitnesse.wiki;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
-public interface WikiPage extends Serializable, Comparable<Object> {
-
-  public static final String ErrorLogName = "ErrorLogs";
+public interface WikiPage extends Comparable<WikiPage> {
 
   WikiPage getParent();
 
@@ -25,6 +22,7 @@ public interface WikiPage extends Serializable, Comparable<Object> {
 
   /**
    * Get child pages for this wiki page
+   *
    * @return children, an empty list if there are none.
    */
   List<WikiPage> getChildren();
@@ -35,6 +33,7 @@ public interface WikiPage extends Serializable, Comparable<Object> {
 
   /**
    * Get a list/set of version info
+   *
    * @return a collection, never null.
    */
   Collection<VersionInfo> getVersions();
@@ -45,7 +44,8 @@ public interface WikiPage extends Serializable, Comparable<Object> {
 
   /**
    * Commit new content
-   * @param data
+   *
+   * @param data PageData to commit
    * @return version information about this new data version, may be null.
    */
   VersionInfo commit(PageData data);

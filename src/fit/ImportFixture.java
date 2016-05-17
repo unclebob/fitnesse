@@ -4,6 +4,7 @@
 package fit;
 
 public class ImportFixture extends Fixture {
+  @Override
   public void doRow(Parse row) {
     String packageName = row.parts.text();
     FixtureLoader.instance().addPackageToPath(packageName);

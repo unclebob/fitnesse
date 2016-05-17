@@ -1,5 +1,5 @@
 <h1>Unauthorized</h1>
 <p>The requested resource: <b>$resource</b> is restricted.</p>
-<p> Either your credientials were not supplied or they didn't match the criteria to access this resource.</p>
+<p> Either your credentials were not supplied or they didn't match the criteria to access this resource.</p>
 <hr/>
 <address>FitNesse</address>

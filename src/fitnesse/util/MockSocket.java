@@ -5,7 +5,6 @@ package fitnesse.util;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
@@ -19,16 +18,14 @@ import java.util.logging.Logger;
 public class MockSocket extends Socket {
   private static final Logger LOG = Logger.getLogger(MockSocket.class.getName());
 
-  InputStream input;
-  OutputStream output;
+  private final InputStream input;
+  private final OutputStream output;
   private String host;
   private boolean closed;
 
   public MockSocket() {
     try {
       PipedInputStream serverInput = new PipedInputStream();
-      @SuppressWarnings("unused")
-      PipedOutputStream clientOutput = new PipedOutputStream(serverInput);
       PipedInputStream clientInput = new PipedInputStream();
       PipedOutputStream serverOutput = new PipedOutputStream(clientInput);
       input = serverInput;
@@ -48,14 +45,17 @@ public class MockSocket extends Socket {
     this.output = output;
   }
 
+  @Override
   public synchronized InputStream getInputStream() {
     return input;
   }
 
+  @Override
   public synchronized OutputStream getOutputStream() {
     return output;
   }
 
+  @Override
   public void close() {
     closed = true;
     try {
@@ -67,26 +67,24 @@ public class MockSocket extends Socket {
     }
   }
 
+  @Override
   public boolean isClosed() {
     return closed;
-  }
-
-  public String getOutput() {
-    if (output instanceof ByteArrayOutputStream) {
-      try {
-        return ((ByteArrayOutputStream) output).toString("UTF-8");
-      } catch (UnsupportedEncodingException e) {
-        throw new RuntimeException(e);
-      }
-    } else
-      return "";
   }
 
   public void setHost(String host) {
     this.host = host;
   }
 
+  @Override
   public SocketAddress getRemoteSocketAddress() {
-    return new InetSocketAddress(host, 123);
+    // Mock a socket address, to keep the logging happy.
+    return new InetSocketAddress(host != null ? host : "internal", 123);
+  }
+
+  @Override
+  public SocketAddress getLocalSocketAddress() {
+    // Mock a socket address, to keep the logging happy.
+    return new InetSocketAddress(host != null ? host : "internal", 123);
   }
 }

@@ -7,7 +7,9 @@ package fitnesse.slim;
  * strings.  Each derivative of this interface corresponds to a particular type.
  */
 public interface Converter<T> {
-    public String toString(T o);
+  final String NULL_VALUE = null;
 
-    T fromString(String arg);
+  String toString(T o);
+
+  T fromString(String arg);
 }

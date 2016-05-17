@@ -13,13 +13,12 @@ import java.net.URLDecoder;
 import java.text.ParseException;
 import java.util.Date;
 
-import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.util.Clock;
+import util.FileUtil;
 import util.StreamReader;
 import fitnesse.FitNesseContext;
-import fitnesse.Responder;
 import fitnesse.http.InputStreamResponse;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
@@ -29,9 +28,9 @@ import fitnesse.responders.NotFoundResponder;
 
 public class FileResponder implements SecureResponder {
   // 1000-trick: remove milliseconds.
-  private final static Date LAST_MODIFIED_FOR_RESOURCES = new Date((System.currentTimeMillis() / 1000) * 1000 );
+  private static final Date LAST_MODIFIED_FOR_RESOURCES = new Date((Clock.currentTimeInMillis() / 1000) * 1000 );
 
-  private static final int RESOURCE_SIZE_LIMIT = 262144;
+  private static final int RESOURCE_SIZE_LIMIT = 262144*2;
   private static final FileNameMap fileNameMap = URLConnection.getFileNameMap();
   String resource;
   File requestedFile;
@@ -41,7 +40,7 @@ public class FileResponder implements SecureResponder {
   public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     String rootPath = context.getRootPagePath();
     try {
-      resource = URLDecoder.decode(request.getResource(), "UTF-8");
+      resource = URLDecoder.decode(request.getResource(), FileUtil.CHARENCODING);
     } catch (UnsupportedEncodingException e) {
       return new ErrorResponder(e).makeResponse(context, request);
     }
@@ -167,6 +166,11 @@ public class FileResponder implements SecureResponder {
             file.getCanonicalFile());
   }
 
+  public static boolean isInFilesFitNesseDirectory(File rootPath, File file) throws IOException {
+    return isInSubDirectory(new File(new File(rootPath, "files"), "fitnesse").getCanonicalFile(),
+            file.getCanonicalFile());
+  }
+
   private static boolean isInSubDirectory(File dir, File file) {
     return file != null && (file.equals(dir) || isInSubDirectory(dir, file.getParentFile()));
   }
@@ -177,12 +181,10 @@ public class FileResponder implements SecureResponder {
       @Override
       public boolean shouldAuthenticate(FitNesseContext context, Request request) {
         try {
-          return new File(context.getRootPagePath(), URLDecoder.decode(request.getResource(), "UTF-8")).isDirectory();
+          return new File(context.getRootPagePath(), URLDecoder.decode(request.getResource(), FileUtil.CHARENCODING)).isDirectory();
         } catch (UnsupportedEncodingException e) {
           throw new RuntimeException("Invalid URL encoding", e);
         }
-
-
       }
     };
   }

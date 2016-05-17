@@ -3,6 +3,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -145,14 +146,14 @@ public class FixtureTest {
   public void testFixtureArgumentsWithEscapedSymbols() throws Exception {
     // "<", ">" are usually escaped (unless surrounded by !- .. -!)
     String[] args = getArgsForTableWith("<td>a &lt; 3 and b &gt; 1</td>");
-    assertEquals(new String[] {"a < 3 and b > 1"}, args);
+    assertArrayEquals(new String[]{"a < 3 and b > 1"}, args);
   }
 
   @Test
   public void testFixtureArgumentsWithSpecialSymbols() throws Exception {
     // "<", ">" are usually escaped but may come in plan text from !- .. -!
     String[] args = getArgsForTableWith("<td>a < 3 and b > 1</td>");
-    assertEquals(new String[] {"a < 3 and b > 1"}, args);
+    assertArrayEquals(new String[] {"a < 3 and b > 1"}, args);
   }
 
   @Test
@@ -173,6 +174,7 @@ public class FixtureTest {
   @Test
   public void testCanChangeFriendlyExceptions() throws Exception {
     Fixture fixture = new Fixture() {
+      @Override
       public boolean isFriendlyException(Throwable exception) {
         return true;
       }
@@ -194,13 +196,11 @@ public class FixtureTest {
   }
 
   private static String makeFixtureTable(String table[][]) {
-    StringBuffer buf = new StringBuffer();
+    StringBuilder buf = new StringBuilder();
     buf.append("<table>\n");
-    for (int ri = 0; ri < table.length; ri++) {
+    for (String[] row : table) {
       buf.append("  <tr>");
-      String[] row = table[ri];
-      for (int ci = 0; ci < row.length; ci++) {
-        String cell = row[ci];
+      for (String cell : row) {
         buf.append("<td>").append(cell).append("</td>");
       }
       buf.append("</tr>\n");

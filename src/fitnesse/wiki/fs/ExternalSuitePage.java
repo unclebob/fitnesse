@@ -1,5 +1,6 @@
 package fitnesse.wiki.fs;
 
+import fitnesse.wiki.BaseWikitextPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wikitext.parser.VariableSource;
 
@@ -9,21 +10,19 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import fitnesse.wiki.BaseWikiPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.util.Clock;
 
-public class ExternalSuitePage extends BaseWikiPage {
-  private static final long serialVersionUID = 1L;
+public class ExternalSuitePage extends BaseWikitextPage {
   public static final String HTML = ".html";
 
   private File path;
   private FileSystem fileSystem;
 
-  public ExternalSuitePage(File path, String name, BaseWikiPage parent, FileSystem fileSystem, VariableSource variableSource) {
+  public ExternalSuitePage(File path, String name, WikiPage parent, FileSystem fileSystem, VariableSource variableSource) {
     super(name, parent, variableSource);
     this.path = path;
     this.fileSystem = fileSystem;
@@ -79,7 +78,7 @@ public class ExternalSuitePage extends BaseWikiPage {
   }
 
   private List<WikiPage> findChildren() {
-    List<WikiPage> children = new ArrayList<WikiPage>();
+    List<WikiPage> children = new ArrayList<>();
     for (String child : fileSystem.list(path)) {
       File childPath = new File(path, child);
       if (child.endsWith(HTML)) {

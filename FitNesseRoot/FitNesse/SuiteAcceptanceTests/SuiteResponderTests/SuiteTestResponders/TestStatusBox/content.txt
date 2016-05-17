@@ -21,6 +21,6 @@ Now run the test page.
 
 Check to make sure the box exists.
 
-|Response Examiner.|
-|type  |pattern|matches?|
-|contents|<li id="test-action">|true|
+|Response Examiner.                       |
+|type    |pattern                |matches?|
+|contents|<span id="test-action">|true    |

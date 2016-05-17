@@ -7,9 +7,9 @@ import java.io.IOException;
 
 import fitnesse.html.HtmlUtil;
 import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.WikiWordReference;
 import fitnesse.wiki.fs.DiskFileSystem;
 import fitnesse.wiki.fs.FileSystem;
-import fitnesse.wikitext.parser.WikiWordBuilder;
 import fitnesse.wiki.VariableTool;
 import org.apache.commons.lang.StringUtils;
 import fitnesse.FitNesseContext;
@@ -43,6 +43,7 @@ public class SymbolicLinkResponder implements Responder {
     this(new DiskFileSystem());
   }
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     resource = request.getResource();
     this.context = context;
@@ -67,26 +68,27 @@ public class SymbolicLinkResponder implements Responder {
   }
 
   private void removeSymbolicLink(Request request, WikiPage page) {
-    String linkToRemove = (String) request.getInput("removal");
+    String linkToRemove = request.getInput("removal");
 
     PageData data = page.getData();
     WikiPageProperties properties = data.getProperties();
     WikiPageProperty symLinks = getSymLinkProperty(properties);
     symLinks.remove(linkToRemove);
-    if (symLinks.keySet().size() == 0)
+    if (symLinks.keySet().isEmpty())
       properties.remove(SymbolicPage.PROPERTY_NAME);
     page.commit(data);
     setRedirect(resource);
   }
 
   private void  renameSymbolicLink(Request request, WikiPage page) {
-    String linkToRename = (String) request.getInput("rename"),
-    newName = (String) request.getInput("newname");
+    String linkToRename = request.getInput("rename"),
+    newName = request.getInput("newname");
 
-    if (isValidWikiPageName(newName)) {
-      PageData data = page.getData();
-      WikiPageProperties properties = data.getProperties();
-      WikiPageProperty symLinks = getSymLinkProperty(properties);
+    PageData data = page.getData();
+    WikiPageProperties properties = data.getProperties();
+    WikiPageProperty symLinks = getSymLinkProperty(properties);
+
+    if (isValidWikiPageName(newName, symLinks)) {
       String currentPath = symLinks.get(linkToRename);
       symLinks.remove(linkToRename);
       symLinks.set(newName, currentPath);
@@ -96,21 +98,21 @@ public class SymbolicLinkResponder implements Responder {
   }
 
   private void addSymbolicLink(Request request, WikiPage page) throws IOException {
-    String linkName = StringUtils.trim((String) request.getInput("linkName"));
-    String linkPath = StringUtils.trim((String) request.getInput("linkPath"));
+    String linkName = StringUtils.trim(request.getInput("linkName"));
+    String linkPath = StringUtils.trim(request.getInput("linkPath"));
 
-    if (isValidLinkPathName(linkPath) && isValidWikiPageName(linkName)) {
-      PageData data = page.getData();
-      WikiPageProperties properties = data.getProperties();
-      WikiPageProperty symLinks = getSymLinkProperty(properties);
+    PageData data = page.getData();
+    WikiPageProperties properties = data.getProperties();
+    WikiPageProperty symLinks = getSymLinkProperty(properties);
+    if (isValidLinkPathName(linkPath) && isValidWikiPageName(linkName, symLinks)) {
       symLinks.set(linkName, linkPath);
       page.commit(data);
       setRedirect(resource);
     }
   }
 
-  private boolean isValidWikiPageName(String linkName) {
-    if (page.hasChildPage(linkName)) {
+  private boolean isValidWikiPageName(String linkName, WikiPageProperty symLinks) {
+    if (page.hasChildPage(linkName) && !symLinks.has(linkName)) {
       response = new ErrorResponder(resource + " already has a child named " + linkName + ".").makeResponse(context, null);
       response.setStatus(412);
       return false;
@@ -160,7 +162,7 @@ public class SymbolicLinkResponder implements Responder {
   }
 
   private boolean isInternalPageThatDoesntExist(String linkPath) {
-    String expandedPath = WikiWordBuilder.expandPrefix(page, linkPath);
+    String expandedPath = WikiWordReference.expandPrefix(page, linkPath);
     WikiPagePath path = PathParser.parse(expandedPath);
     if (path == null) {
       return true;

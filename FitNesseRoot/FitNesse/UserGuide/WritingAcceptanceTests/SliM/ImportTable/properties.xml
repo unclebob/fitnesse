@@ -1,13 +1,14 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <properties>
-	<Edit>true</Edit>
-	<Files>true</Files>
-	<Properties>true</Properties>
-	<RecentChanges>true</RecentChanges>
-	<Refactor>true</Refactor>
-	<Search>true</Search>
-	<Versions>true</Versions>
-	<WhereUsed>true</WhereUsed>
-	<saveId>1225490313404</saveId>
-	<ticketId>-3711766748557255495</ticketId>
+<Edit/>
+<Files/>
+<Properties/>
+<RecentChanges/>
+<Refactor/>
+<Search/>
+<Test/>
+<Versions/>
+<WhereUsed/>
+<saveId>1225490313404</saveId>
+<ticketId>-3711766748557255495</ticketId>
 </properties>

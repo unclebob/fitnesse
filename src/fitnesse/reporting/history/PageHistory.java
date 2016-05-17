@@ -5,10 +5,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import fitnesse.responders.run.SuiteResponder;
 import fitnesse.testsystems.ExecutionResult;
 
 public class PageHistory extends PageHistoryReader{
+  public static final String TEST_RESULT_FILE_DATE_PATTERN = "yyyyMMddHHmmss";
+
   private int failures = 0;
   private int passes = 0;
   private Date minDate = null;
@@ -16,8 +17,8 @@ public class PageHistory extends PageHistoryReader{
   private int maxAssertions = 0;
   private BarGraph barGraph;
   private String fullPageName;
-  private final HashMap<Date, TestResultRecord> testResultMap = new HashMap<Date, TestResultRecord>();
-  private HashMap<Date, File> pageFiles = new HashMap<Date,File>();
+  private final Map<Date, TestResultRecord> testResultMap = new HashMap<>();
+  private Map<Date, File> pageFiles = new HashMap<>();
 
   public PageHistory(File pageDirectory) {
     fullPageName = pageDirectory.getName();
@@ -30,7 +31,7 @@ public class PageHistory extends PageHistoryReader{
   }
 
   private void compileBarGraph() {
-    List<Date> dates = new ArrayList<Date>(testResultMap.keySet());
+    List<Date> dates = new ArrayList<>(testResultMap.keySet());
     Collections.sort(dates, reverseChronologicalDateComparator());
     barGraph = new BarGraph();
     for (int i = 0; i < dates.size() && i < 20; i++) {
@@ -41,6 +42,7 @@ public class PageHistory extends PageHistoryReader{
 
   private Comparator<Date> reverseChronologicalDateComparator() {
     return new Comparator<Date>() {
+      @Override
       public int compare(Date d1, Date d2) {
         long diff = d2.getTime() - d1.getTime();
         if (diff < 0)
@@ -52,6 +54,7 @@ public class PageHistory extends PageHistoryReader{
     };
   }
 
+  @Override
   void processTestFile(TestResultRecord record) throws ParseException {
     Date date = record.getDate();
     addTestResult(record, date);
@@ -62,8 +65,6 @@ public class PageHistory extends PageHistoryReader{
   }
 
   private void addTestResult(TestResultRecord record, Date date) {
-    Date keyDate = trimMilliseconds(date);
-
     testResultMap.put(date, record);
   }
 
@@ -74,17 +75,16 @@ public class PageHistory extends PageHistoryReader{
   }
 
   public String getPageFileName(Date date){
-    if(pageFiles.get(date) != null)
-    return pageFiles.get(date).getName();
+    if (pageFiles.get(date) != null) {
+      return pageFiles.get(date).getName();
+    }
     return null;
   }
-
 
   private void setMaxAssertions(TestResultRecord summary) {
     int assertions = summary.getRight() + summary.getWrong() + summary.getExceptions();
     maxAssertions = Math.max(maxAssertions, assertions);
   }
-
 
   private void setMinMaxDate(Date date) {
     if (minDate == null)
@@ -96,7 +96,7 @@ public class PageHistory extends PageHistoryReader{
   }
 
   private void countResult(TestResultRecord summary) {
-    ExecutionResult result = ExecutionResult.getExecutionResult(summary.getWikiPageName(), summary);
+    ExecutionResult result = ExecutionResult.getExecutionResult(summary.getWikiPageName(), summary.toTestSummary());
     if (result == ExecutionResult.FAIL || result == ExecutionResult.ERROR)
       failures++;
     else
@@ -137,7 +137,7 @@ public class PageHistory extends PageHistoryReader{
 
   public SortedSet<Date> datesInChronologicalOrder() {
     Set<Date> dates = testResultMap.keySet();
-    SortedSet<Date> sortedDates = new TreeSet<Date>(Collections.reverseOrder());
+    SortedSet<Date> sortedDates = new TreeSet<>(Collections.reverseOrder());
     sortedDates.addAll(dates);
     return sortedDates;
   }
@@ -162,7 +162,7 @@ public class PageHistory extends PageHistoryReader{
 
   public Date getLatestDate() {
     Set<Date> dateSet = testResultMap.keySet();
-    List<Date> dates = new ArrayList<Date>(dateSet);
+    List<Date> dates = new ArrayList<>(dateSet);
     Collections.sort(dates);
     return dates.get(dates.size()-1);
   }
@@ -177,7 +177,7 @@ public class PageHistory extends PageHistoryReader{
     private ExecutionResult result;
 
     public PassFailReport(Date date, ExecutionResult result) {
-      SimpleDateFormat dateFormat = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
+      SimpleDateFormat dateFormat = new SimpleDateFormat(TEST_RESULT_FILE_DATE_PATTERN);
       this.date = dateFormat.format(date);
       this.result = result;
     }
@@ -198,7 +198,7 @@ public class PageHistory extends PageHistoryReader{
   public static class BarGraph {
     private Date startingDate;
     private Date endingDate;
-    private List<PassFailReport> passFailList = new ArrayList<PassFailReport>();
+    private List<PassFailReport> passFailList = new ArrayList<>();
 
     public Date getStartingDate() {
       return new Date(startingDate.getTime());
@@ -219,7 +219,7 @@ public class PageHistory extends PageHistoryReader{
     public void addSummary(Date date, TestResultRecord summary) {
       minMaxDate(summary);
 
-      ExecutionResult result = ExecutionResult.getExecutionResult(summary.getWikiPageName(), summary);
+      ExecutionResult result = ExecutionResult.getExecutionResult(summary.getWikiPageName(), summary.toTestSummary());
 
       passFailList.add(new PassFailReport(date, result));
     }

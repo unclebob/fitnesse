@@ -6,10 +6,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.text.ParseException;
+import java.util.LinkedList;
 
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.ExecutionLogListener;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.util.XmlUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,14 +31,19 @@ import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 public class TestXmlFormatterTest {
   private static final String TEST_TIME = "4/13/2009 15:21:43";
   private DateAlteringClock clock;
-  
+  private FitNesseContext context;
+
   @Before
   public void setUp() throws ParseException {
     clock = new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).freeze();
+    context = FitNesseUtil.makeTestContext();
   }
 
   @After
@@ -43,13 +55,13 @@ public class TestXmlFormatterTest {
   public void makeFileName() throws Exception {
     TestSummary summary = new TestSummary(1, 2, 3, 4);
     assertEquals(
-      "20090413152143_1_2_3_4.xml", 
-      SuiteResponder.makeResultFileName(summary, clock.currentClockTimeInMillis()));
+            "20090413152143_1_2_3_4.xml",
+            SuiteResponder.makeResultFileName(summary, clock.currentClockTimeInMillis()));
   }
   
   @Test
   public void processTestResultsShouldBuildUpCurrentResultAndFinalSummary() throws Exception {
-    FitNesseContext context = mock(FitNesseContext.class);
+    FitNesseContext context = FitNesseUtil.makeTestContext();
     WikiTestPage page = new WikiTestPage(new WikiPageDummy("name", "content", null));
     page.getData().setAttribute(PageData.PropertySUITES, "tag1");
     WriterFactory writerFactory = mock(WriterFactory.class);
@@ -58,6 +70,10 @@ public class TestXmlFormatterTest {
       @Override
       protected TestResult newTestResult() {
         return testResult;
+      }
+
+      @Override
+      protected void writeResults() throws IOException {
       }
     };
     final long startTime = clock.currentClockTimeInMillis();
@@ -70,7 +86,9 @@ public class TestXmlFormatterTest {
 
     TestSummary summary = new TestSummary(9,8,7,6);
     formatter.testComplete(page, summary);
-    assertThat(formatter.testResponse.getFinalCounts(), equalTo(new TestSummary(0,1,0,0)));
+    formatter.close();
+
+    assertThat(formatter.testResponse.getFinalCounts(), equalTo(new TestSummary(0, 1, 0, 0)));
     assertThat(formatter.testResponse.getResults().size(), is(1));
     assertThat(formatter.testResponse.getResults().get(0), is(testResult));
     assertThat(testResult.startTime, is(startTime));
@@ -95,8 +113,112 @@ public class TestXmlFormatterTest {
       }
     };
 
+    formatter.testStarted(new WikiTestPage(page));
     clock.elapse(77L);
     formatter.close();
     assertThat(formatter.testResponse.getTotalRunTimeInMillis(), is(77L));
   }
+
+  @Test
+  public void allExecutionOutputShouldBeAddedToHistory() throws IOException, SAXException {
+    FitNesseContext context = FitNesseUtil.makeTestContext();
+    WikiPage page = new WikiPageDummy("name", "content", null);
+    final LinkedList<StringWriter> writers = new LinkedList<StringWriter>();
+    TestXmlFormatter formatter = new TestXmlFormatter(context, page, new WriterFactory() {
+      @Override
+      public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
+        StringWriter w = new StringWriter();
+        writers.add(w);
+        return w;
+      }
+    });
+
+    WikiTestPage testPage = new WikiTestPage(page);
+
+    formatter.commandStarted(new ExecutionLogListener.ExecutionContext() {
+      @Override
+      public String getCommand() {
+        return "commandLine";
+      }
+
+      @Override
+      public String getTestSystemName() {
+        return "testSystem";
+      }
+    });
+    formatter.stdOut("Command started");
+    formatter.testStarted(testPage);
+    formatter.stdOut("After started");
+    clock.elapse(77L);
+    formatter.testComplete(testPage, new TestSummary(1, 2, 3, 4));
+    formatter.exitCode(0);
+    formatter.close();
+
+    String output = writers.get(0).toString();
+    Document document = XmlUtil.newDocument(output);
+    Element testResultsElement = document.getDocumentElement();
+    assertEquals("testResults", testResultsElement.getNodeName());
+    Element executionLog = XmlUtil.getElementByTagName(testResultsElement, "executionLog");
+    Element command = XmlUtil.getElementByTagName(executionLog, "command");
+    Element stdOut = XmlUtil.getElementByTagName(executionLog, "stdOut");
+    Element exitCode = XmlUtil.getElementByTagName(executionLog, "exitCode");
+
+    assertEquals(output, "commandLine", command.getTextContent());
+    assertEquals(output, "Command started\nAfter started\n", stdOut.getTextContent());
+    assertEquals(output, "0", exitCode.getTextContent());
+  }
+
+  @Test
+  public void executionReportExceptionsAreThreadSafe() throws IOException {
+    final TestXmlFormatter formatter = getTestXmlFormatterWithDummyWriter();
+    testThreadSaveOperation(formatter, new Runnable() {
+      @Override
+      public void run() {
+        formatter.exceptionOccurred(new Exception("foo"));
+      }
+    });
+  }
+
+  @Test
+  public void executionReportResultsAreThreadSafe() throws IOException {
+    final TestXmlFormatter formatter = getTestXmlFormatterWithDummyWriter();
+    testThreadSaveOperation(formatter, new Runnable() {
+      @Override
+      public void run() {
+        formatter.testStarted(new WikiTestPage(new WikiPageDummy("name", "content", null)));
+      }
+    });
+  }
+
+  private void testThreadSaveOperation(TestXmlFormatter formatter, final Runnable target) throws IOException {
+    final boolean[] sentinel = { true };
+    Thread dataInjector = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        while (sentinel[0]) {
+          target.run();
+          Thread.yield();
+        }
+      }
+    });
+
+    dataInjector.setDaemon(true);
+    dataInjector.start();
+    try {
+      Thread.yield();
+      formatter.close();
+    } finally {
+      sentinel[0] = false;
+    }
+  }
+
+  private TestXmlFormatter getTestXmlFormatterWithDummyWriter() {
+    return new TestXmlFormatter(context, new WikiPageDummy("name", "content", null), new WriterFactory() {
+      @Override
+      public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
+        return new StringWriter();
+      }
+    });
+  }
+
 }

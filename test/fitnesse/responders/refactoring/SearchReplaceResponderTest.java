@@ -6,20 +6,17 @@ import static org.hamcrest.Matchers.*;
 import fitnesse.Responder;
 import fitnesse.responders.ResponderTestCase;
 import fitnesse.wiki.*;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
-import fitnesse.FitNesseContext;
-import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
-import fitnesse.testutil.FitNesseUtil;
 
 public class SearchReplaceResponderTest extends ResponderTestCase {
   private WikiPagePath pagePath;
   private WikiPage somePage;
 
+  @Override
   @Before
   public void setUp() throws Exception {
     super.setUp();

@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import fitnesse.html.HtmlElement;
-import fitnesse.wiki.BaseWikiPage;
+import fitnesse.wiki.BaseWikitextPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 
@@ -39,7 +39,7 @@ public class ParserTestHelper {
       String name = current.getType().toString();
       result.append(name);
       String content = current.getContent();
-      if (content.length() > 0) result.append("=").append(content);
+      if (!content.isEmpty()) result.append("=").append(content);
     }
     assertEquals(expected, result.toString());
   }
@@ -75,7 +75,7 @@ public class ParserTestHelper {
 
   public static String translateTo(WikiPage page, String input) {
     ParsingPage.Cache cache = new ParsingPage.Cache();
-    VariableSource variableSource = new CompositeVariableSource(cache, new BaseWikiPage.ParentPageVariableSource(page));
+    VariableSource variableSource = new CompositeVariableSource(cache, new BaseWikitextPage.ParentPageVariableSource(page));
     Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page), variableSource, cache), input).parse();
     return new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page))).translateTree(list);
   }
@@ -116,6 +116,12 @@ public class ParserTestHelper {
     assertEquals(expected, serialize(result));
   }
 
+  public static void assertParsesWithOffset(String input, String expected) {
+    WikiPage page = new TestRoot().makePage("TestPage", input);
+    Symbol result = parse(page, input);
+    assertEquals(expected, serializeWithOffset(result));
+  }
+
   public static Symbol parse(WikiPage page) {
     return Parser.make(new ParsingPage(new WikiSourcePage(page)), page.getData().getContent()).parse();
   }
@@ -131,6 +137,20 @@ public class ParserTestHelper {
     for (Symbol child : symbol.getChildren()) {
       result.append(i == 0 ? "[" : ", ");
       result.append(serialize(child));
+      i++;
+    }
+    if (i > 0) result.append("]");
+    return result.toString();
+  }
+
+  public static String serializeWithOffset(Symbol symbol) {
+    StringBuilder result = new StringBuilder();
+    result.append(symbol.getType() != null ? symbol.getType().toString() : "?no type?")
+            .append("<").append(symbol.getStartOffset()).append("..").append(symbol.getEndOffset()).append(">");
+    int i = 0;
+    for (Symbol child : symbol.getChildren()) {
+      result.append(i == 0 ? "[" : ", ");
+      result.append(serializeWithOffset(child));
       i++;
     }
     if (i > 0) result.append("]");

@@ -3,6 +3,7 @@ package fitnesse.responders.testHistory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.xml.sax.SAXException;
 
@@ -13,7 +14,6 @@ public class HistoryComparer {
   // min for match is .8 content score + .2 topology bonus.
   static final double MIN_MATCH_SCORE = .8;
   static final double MAX_MATCH_SCORE = 1.2;
-  static ArrayList<String> resultContent;
 
   private static final String blankTable = "<table><tr><td></td></tr></table>";
 
@@ -23,10 +23,11 @@ public class HistoryComparer {
   String firstFileContent = "";
   String secondFileContent = "";
 
-  ArrayList<String> firstTableResults;
-  ArrayList<String> secondTableResults;
+  List<String> firstTableResults = new ArrayList<>();
+  List<String> secondTableResults = new ArrayList<>();
 
-  ArrayList<MatchedPair> matchedTables;
+  List<MatchedPair> matchedTables = new ArrayList<>();
+  List<String> resultContent = new ArrayList<>();
 
   public String getFileContent(String filePath) throws IOException, SAXException {
     return attemptGetFileContent(filePath);
@@ -72,7 +73,7 @@ public class HistoryComparer {
   }
 
   private boolean thereAreEnoughMatches() {
-    return matchedTables.size() != 0 && matchedTables.size() == firstTableResults.size();
+    return !matchedTables.isEmpty() && matchedTables.size() == firstTableResults.size();
   }
 
   private boolean allMatchScoresAreHigh() {
@@ -105,8 +106,8 @@ public class HistoryComparer {
   }
 
   private void initializeComparerHelpers() {
-    matchedTables = new ArrayList<MatchedPair>();
-    resultContent = new ArrayList<String>();
+    matchedTables = new ArrayList<>();
+    resultContent = new ArrayList<>();
     firstScanner = new HtmlTableScanner(firstFileContent);
     secondScanner = new HtmlTableScanner(secondFileContent);
   }
@@ -146,15 +147,18 @@ public class HistoryComparer {
   }
 
   private class FirstResultAdjustmentStrategy implements ResultAdjustmentStrategy {
+    @Override
     public boolean matchIsNotLinedUp(int matchIndex) {
       MatchedPair matchedPair = matchedTables.get(matchIndex);
       return matchedPair.first < matchedPair.second;
     }
 
+    @Override
     public void insertBlankTableBefore(int matchIndex) {
       firstTableResults.add(matchedTables.get(matchIndex).first, blankTable);
     }
 
+    @Override
     public MatchedPair getAdjustedMatch(int matchIndex) {
       MatchedPair matchedPair = matchedTables.get(matchIndex);
       return new MatchedPair(matchedPair.first + 1, matchedPair.second, matchedPair.matchScore);
@@ -163,15 +167,18 @@ public class HistoryComparer {
   }
 
   private class SecondResultAdjustmentStrategy implements ResultAdjustmentStrategy {
+    @Override
     public boolean matchIsNotLinedUp(int matchIndex) {
       MatchedPair matchedPair = matchedTables.get(matchIndex);
       return matchedPair.first > matchedPair.second;
     }
 
+    @Override
     public void insertBlankTableBefore(int matchIndex) {
       secondTableResults.add(matchedTables.get(matchIndex).second, blankTable);
     }
 
+    @Override
     public MatchedPair getAdjustedMatch(int matchIndex) {
       MatchedPair matchedPair = matchedTables.get(matchIndex);
       return new MatchedPair(matchedPair.first, matchedPair.second + 1, matchedPair.matchScore);
@@ -220,8 +227,8 @@ public class HistoryComparer {
   }
 
   private void getTableTextFromScanners() {
-    firstTableResults = new ArrayList<String>();
-    secondTableResults = new ArrayList<String>();
+    firstTableResults = new ArrayList<>();
+    secondTableResults = new ArrayList<>();
     for (int i = 0; i < firstScanner.getTableCount(); i++)
       firstTableResults.add(firstScanner.getTable(i).toHtml());
 
@@ -247,7 +254,7 @@ public class HistoryComparer {
     secondFileContent = content == null ? "" : content;
   }
 
-  public ArrayList<String> getResultContent() {
+  public List<String> getResultContent() {
     return resultContent;
   }
 
@@ -262,10 +269,12 @@ public class HistoryComparer {
       this.matchScore = matchScore;
     }
 
+    @Override
     public String toString() {
       return "[first: " + first + ", second: " + second + ", matchScore: " + matchScore + "]";
     }
 
+    @Override
     public int hashCode() {
       return this.first + this.second;
     }
@@ -274,10 +283,7 @@ public class HistoryComparer {
     public boolean equals(Object obj) {
       if (obj == null) return false;
       if (getClass() != obj.getClass()) return false;
-      return this.equals((MatchedPair) (obj));
-    }
-
-    public boolean equals(MatchedPair match) {
+      MatchedPair match = (MatchedPair) obj;
       return (this.first == match.first && this.second == match.second);
     }
   }

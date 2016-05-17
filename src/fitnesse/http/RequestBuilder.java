@@ -11,13 +11,15 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import util.StreamReader;
 import fitnesse.util.Base64;
+
+import static util.FileUtil.CHARENCODING;
 
 public class RequestBuilder {
   private static final byte[] ENDL = "\r\n".getBytes();
@@ -25,9 +27,9 @@ public class RequestBuilder {
 
   private String resource;
   private String method = "GET";
-  private List<InputStream> bodyParts = new LinkedList<InputStream>();
-  private HashMap<String, String> headers = new HashMap<String, String>();
-  private HashMap<String, Object> inputs = new HashMap<String, Object>();
+  private List<InputStream> bodyParts = new LinkedList<>();
+  private HashMap<String, String> headers = new HashMap<>();
+  private HashMap<String, Object> inputs = new HashMap<>();
   private String host;
   private int port;
   private String boundary;
@@ -53,11 +55,11 @@ public class RequestBuilder {
   }
 
   private String buildRequestLine() throws UnsupportedEncodingException {
-    StringBuffer text = new StringBuffer();
+    StringBuilder text = new StringBuilder();
     text.append(method).append(" ").append(resource);
     if (isGet()) {
       String inputString = inputString();
-      if (inputString.length() > 0)
+      if (!inputString.isEmpty())
         text.append("?").append(inputString);
     }
     text.append(" HTTP/1.1");
@@ -69,7 +71,7 @@ public class RequestBuilder {
   }
 
   public void send(OutputStream output) throws IOException {
-    output.write(buildRequestLine().getBytes("UTF-8"));
+    output.write(buildRequestLine().getBytes(CHARENCODING));
     output.write(ENDL);
     buildBody();
     sendHeaders(output);
@@ -79,23 +81,22 @@ public class RequestBuilder {
 
   private void sendHeaders(OutputStream output) throws IOException {
     addHostHeader();
-    for (Iterator<String> iterator = headers.keySet().iterator(); iterator.hasNext();) {
-      String key = iterator.next();
-      output.write((key + ": " + headers.get(key)).getBytes("UTF-8"));
+    for (Map.Entry<String, String> entry : headers.entrySet()) {
+      output.write((entry.getKey() + ": " + entry.getValue()).getBytes(CHARENCODING));
       output.write(ENDL);
     }
   }
 
   private void buildBody() throws IOException {
     if (!isMultipart) {
-      byte[] bytes = inputString().getBytes("UTF-8");
+      byte[] bytes = inputString().getBytes(CHARENCODING);
       bodyParts.add(new ByteArrayInputStream(bytes));
       bodyLength += bytes.length;
     } else {
-      for (Iterator<String> iterator = inputs.keySet().iterator(); iterator.hasNext();) {
-        String name = iterator.next();
-        Object value = inputs.get(name);
-        StringBuffer partBuffer = new StringBuffer();
+      for (Map.Entry<String, Object> entry : inputs.entrySet()) {
+        String name = entry.getKey();
+        Object value = entry.getValue();
+        StringBuilder partBuffer = new StringBuilder();
         partBuffer.append("--").append(getBoundary()).append("\r\n");
         partBuffer.append("Content-Disposition: form-data; name=\"").append(name).append("\"").append("\r\n");
         if (value instanceof InputStreamPart) {
@@ -114,23 +115,20 @@ public class RequestBuilder {
           addBodyPart(partBuffer.toString());
         }
       }
-      StringBuffer tail = new StringBuffer();
-      tail.append("--").append(getBoundary()).append("--").append("\r\n");
-      addBodyPart(tail.toString());
+      String tail = "--" + getBoundary() + "--" + "\r\n";
+      addBodyPart(tail);
     }
     addHeader("Content-Length", bodyLength + "");
   }
 
   private void addBodyPart(String input) throws UnsupportedEncodingException {
-    byte[] bytes = input.toString().getBytes("UTF-8");
+    byte[] bytes = input.getBytes(CHARENCODING);
     bodyParts.add(new ByteArrayInputStream(bytes));
     bodyLength += bytes.length;
   }
 
   private void sendBody(OutputStream output) throws IOException {
-    for (Iterator<InputStream> iterator = bodyParts.iterator(); iterator.hasNext();) {
-      InputStream input = iterator.next();
-
+    for (InputStream input : bodyParts) {
       StreamReader reader = new StreamReader(input);
       while (!reader.isEof()) {
         byte[] bytes = reader.readBytes(1000);
@@ -151,14 +149,14 @@ public class RequestBuilder {
   }
 
   public String inputString() throws UnsupportedEncodingException {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     boolean first = true;
-    for (Iterator<String> iterator = inputs.keySet().iterator(); iterator.hasNext();) {
-      String key = iterator.next();
-      String value = (String) inputs.get(key);
+    for (Map.Entry<String, Object> entry : inputs.entrySet()) {
+      String value = (String) entry.getValue();
       if (!first)
         buffer.append("&");
-      buffer.append(key).append("=").append(URLEncoder.encode(value, "UTF-8"));
+      String key = entry.getKey();
+      buffer.append(key).append("=").append(URLEncoder.encode(value, CHARENCODING));
       first = false;
     }
     return buffer.toString();

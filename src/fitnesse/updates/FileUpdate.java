@@ -12,26 +12,25 @@ import java.net.URL;
 
 public class FileUpdate implements Update {
 
-  protected final String destination;
+  protected final File destination;
   protected final String source;
-  protected final File destinationDir;
   protected final String filename;
 
-  public FileUpdate(String source, String destination) {
+  public FileUpdate(String source, File destination) {
     this.destination = destination;
     this.source = source;
-    destinationDir = new File(destination);
 
     filename = new File(source).getName();
   }
 
+  @Override
   public void doUpdate() throws IOException {
     makeSureDirectoriesExist();
     copyResource();
   }
 
   private void makeSureDirectoriesExist() {
-    destinationDir.mkdirs();
+    destination.mkdirs();
   }
 
   private void copyResource() throws IOException {
@@ -57,21 +56,24 @@ public class FileUpdate implements Update {
   }
 
   protected URL getResource(String resource) {
-    return ClassLoader.getSystemResource(resource);
+    return getClass().getClassLoader().getResource(resource);
   }
 
+  @Override
   public String getMessage() {
     return ".";
   }
 
   protected File destinationFile() {
-    return new File(destinationDir, filename);
+    return new File(destination, filename);
   }
 
+  @Override
   public String getName() {
     return "FileUpdate(" + filename + ")";
   }
 
+  @Override
   public boolean shouldBeApplied() throws IOException {
     return !destinationFile().exists();
   }

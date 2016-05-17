@@ -27,7 +27,6 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -74,7 +73,7 @@ public class PropertiesResponderTest {
     assertHasRegexp("<input.*value=\"Save Properties\".*>", content);
 
     assertHasRegexp("<input.*value=\"saveProperties\"", content);
-    assertSubString("<h5> Page Tags</h5>", content);
+    assertSubString(" value=\"Page Tags\" ", content);
     for (String attribute : new String[]{"Search", "Edit", "Properties", "Versions", "Refactor", "WhereUsed", "RecentChanges"})
       assertCheckboxChecked(attribute, content);
 
@@ -104,7 +103,7 @@ public class PropertiesResponderTest {
 
     Responder responder = new PropertiesResponder();
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
-    assertEquals("text/json", response.getContentType());
+    assertEquals("application/json", response.getContentType());
     String jsonText = response.getContent();
     JSONObject jsonObject = new JSONObject(jsonText);
     assertTrue(jsonObject.getBoolean("Test"));
@@ -140,7 +139,7 @@ public class PropertiesResponderTest {
 
     Responder responder = new PropertiesResponder();
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
-    assertEquals("text/json", response.getContentType());
+    assertEquals("application/json", response.getContentType());
     String jsonText = response.getContent();
     JSONObject jsonObject = new JSONObject(jsonText);
 
@@ -412,6 +411,6 @@ public class PropertiesResponderTest {
 
     assertSubString("Suites", content);
     assertSubString("<input type=\"text\" id=\"Suites\" title=\"Separate tags by a comma\" name=\"Suites\" value=\"smoke\"", content);
-    assertSubString("<h5> smoke</h5>", content);
+    assertSubString(" value=\"smoke\" ", content);
   }
 }

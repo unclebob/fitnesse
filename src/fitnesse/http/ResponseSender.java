@@ -2,12 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import java.net.Socket;
+import java.io.Closeable;
 
-public interface ResponseSender {
-  public void send(byte[] bytes);
-
-  public void close();
-
-  public Socket getSocket(); //TODO-MdM maybe get rid of this method.
+public interface ResponseSender extends Closeable {
+  void send(byte[] bytes);
 }

@@ -1,5 +1,5 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
-// Released under the terms of the CPL Common Public License versionName 1.0.
+// Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki.fs;
 
 import java.io.ByteArrayInputStream;
@@ -11,10 +11,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import fitnesse.wiki.BaseWikiPage;
+import fitnesse.wiki.BaseWikitextPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
-import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
@@ -24,8 +23,7 @@ import util.FileUtil;
 
 import static fitnesse.wiki.PageType.STATIC;
 
-public class FileSystemPage extends BaseWikiPage {
-  private static final long serialVersionUID = 1L;
+public class FileSystemPage extends BaseWikitextPage {
 
   static final String contentFilename = "content.txt";
   static final String propertiesFilename = "properties.xml";
@@ -181,20 +179,15 @@ public class FileSystemPage extends BaseWikiPage {
 
   public WikiPageProperties defaultPageProperties() {
     WikiPageProperties properties = new WikiPageProperties();
-    if (!isErrorLogsPage()) {
-      properties.set(PageData.PropertyEDIT);
-      properties.set(PageData.PropertyPROPERTIES);
-      properties.set(PageData.PropertyREFACTOR);
-    }
+    properties.set(PageData.PropertyEDIT);
+    properties.set(PageData.PropertyPROPERTIES);
+    properties.set(PageData.PropertyREFACTOR);
     properties.set(PageData.PropertyWHERE_USED);
     properties.set(PageData.PropertyRECENT_CHANGES);
     properties.set(PageData.PropertyFILES);
     properties.set(PageData.PropertyVERSIONS);
     properties.set(PageData.PropertySEARCH);
     properties.setLastModificationTime(Clock.currentDate());
-
-    if (isErrorLogsPage())
-      return properties;
 
     PageType pageType = PageType.getPageTypeForPageName(getName());
 
@@ -203,11 +196,6 @@ public class FileSystemPage extends BaseWikiPage {
 
     properties.set(pageType.toString());
     return properties;
-  }
-
-  private boolean isErrorLogsPage() {
-    WikiPagePath pagePath = getPageCrawler().getFullPath();
-    return ErrorLogName.equals(pagePath.getFirst());
   }
 
   @Override
@@ -256,11 +244,11 @@ public class FileSystemPage extends BaseWikiPage {
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof FileSystemPage)) return false;
+  public boolean equals(Object other) {
+    if (this == other) return true;
+    if (!(other instanceof FileSystemPage)) return false;
 
-    FileSystemPage that = (FileSystemPage) o;
+    FileSystemPage that = (FileSystemPage) other;
 
     if (versionName != null ? !versionName.equals(that.versionName) : that.versionName != null) return false;
     return super.equals(that);
@@ -306,7 +294,7 @@ public class FileSystemPage extends BaseWikiPage {
       //a strange behavior on windows.
       content = content.replaceAll("\n", separator);
 
-      return new ByteArrayInputStream(content.getBytes("UTF-8"));
+      return new ByteArrayInputStream(content.getBytes(FileUtil.CHARENCODING));
     }
 
     @Override
@@ -339,7 +327,7 @@ public class FileSystemPage extends BaseWikiPage {
     public InputStream getContent() throws IOException {
       WikiPageProperties propertiesToSave = new WikiPageProperties(data.getProperties());
       removeAlwaysChangingProperties(propertiesToSave);
-      return new ByteArrayInputStream(propertiesToSave.toXml().getBytes("UTF-8"));
+      return new ByteArrayInputStream(propertiesToSave.toXml().getBytes(FileUtil.CHARENCODING));
     }
 
     @Override

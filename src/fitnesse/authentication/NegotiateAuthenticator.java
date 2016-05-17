@@ -9,23 +9,20 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.html.template.HtmlPage;
 
 import org.ietf.jgss.*;
+import util.FileUtil;
 
 import java.util.Properties;
 import java.io.UnsupportedEncodingException;
 
 /**
- * HTTP SPNEGO (GSSAPI Negotiate) authenticator.
- * <p>
- * <strong>How to enable for Kerberos/Active Directory</strong>
- * <p>
- * Enable this plugin by editing plugins.properties and adding the line:
- * <p>
+ * <p>HTTP SPNEGO (GSSAPI Negotiate) authenticator.</p>
+ * <p><strong>How to enable for Kerberos/Active Directory</strong></p>
+ * <p>Enable this plugin by editing plugins.properties and adding the line:</p>
  * <pre>
  * Authenticator = fitnesse.authentication.NegotiateAuthenticator
  * </pre>
- * <p>
- * If using Kerberos on Unix, create a jaas-krb5.conf file with these contents:
- * <p>
+ *
+ * <p>If using Kerberos on Unix, create a jaas-krb5.conf file with these contents:</p>
  * <pre>
  * com.sun.security.jgss.accept  {
  *       com.sun.security.auth.module.Krb5LoginModule required
@@ -37,16 +34,15 @@ import java.io.UnsupportedEncodingException;
  *       ;
  *    };
  * </pre>
- * <p>
- * Next, define these system properties when running the FitNesse server:
- * <p>
+ *
+ * <p>Next, define these system properties when running the FitNesse server:</p>
  * <pre>
  * -Djavax.security.auth.useSubjectCredsOnly=false
  * -Djava.security.auth.login.config=/path/to/jaas-krb5.conf
  * -Dsun.security.krb5.debug=true
  * </pre>
- * <p>
- * You can remove the krb5.debug property later, when you know it's working.
+ *
+ * <p>You can remove the krb5.debug property later, when you know it's working.</p>
  *
  * @author David Leonard Released into the Public domain, 2009. No warranty:
  *         Provided as-is.
@@ -107,13 +103,14 @@ public class NegotiateAuthenticator extends Authenticator {
   }
 
   // Responder used when negotiation has not started or completed
-  static protected class UnauthenticatedNegotiateResponder implements Responder {
+  protected static class UnauthenticatedNegotiateResponder implements Responder {
     private String token;
 
     public UnauthenticatedNegotiateResponder(final String token) {
       this.token = token;
     }
 
+    @Override
     public Response makeResponse(FitNesseContext context, Request request) {
       SimpleResponse response = new SimpleResponse(401);
       response.addHeader("WWW-Authenticate", token == null ? NEGOTIATE : NEGOTIATE + " " + token);
@@ -152,7 +149,7 @@ public class NegotiateAuthenticator extends Authenticator {
   }
 
   static byte[] getToken(String authHeader) throws UnsupportedEncodingException {
-    byte[] inputTokenEncoded = authHeader.substring(NEGOTIATE.length()).trim().getBytes("UTF-8");
+    byte[] inputTokenEncoded = authHeader.substring(NEGOTIATE.length()).trim().getBytes(FileUtil.CHARENCODING);
     byte[] inputToken = Base64.decode(inputTokenEncoded);
     return inputToken;
   }
@@ -164,7 +161,7 @@ public class NegotiateAuthenticator extends Authenticator {
   */
     GSSContext gssContext = manager.createContext(serverCreds);
     byte[] replyTokenBytes = gssContext.acceptSecContext(inputToken, 0, inputToken.length);
-    String replyToken = replyTokenBytes == null ? null : new String(Base64.encode(replyTokenBytes), "UTF-8");
+    String replyToken = replyTokenBytes == null ? null : new String(Base64.encode(replyTokenBytes), FileUtil.CHARENCODING);
     if (!gssContext.isEstablished())
       request.setCredentials(null, replyToken);
     else {
@@ -186,6 +183,7 @@ public class NegotiateAuthenticator extends Authenticator {
     return super.authenticate(context, request, privilegedResponder);
   }
 
+  @Override
   public boolean isAuthenticated(String username, String password) {
     return username != null;
   }

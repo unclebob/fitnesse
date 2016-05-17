@@ -11,9 +11,9 @@ public enum ExecutionResult {
   public String toString() {
 	  return this.name().toLowerCase();
   }
-	  
+
   public static ExecutionResult getExecutionResult(String relativeName, TestSummary testSummary) {
-	  return getExecutionResult(relativeName, testSummary, false);
+    return getExecutionResult(relativeName, testSummary, false);
   }
   
   public static ExecutionResult getExecutionResult(String relativeName, TestSummary testSummary, boolean wasInterrupted) {
@@ -22,9 +22,9 @@ public enum ExecutionResult {
     } else if (testSummary.getExceptions() > 0) {
       return ERROR;
     } else if (((isSuiteMetaPage(relativeName) && testSummary.getIgnores() > 0)
-    		|| (!isSuiteMetaPage(relativeName) && testSummary.getIgnores() >= 0)) && testSummary.getRight() == 0) {
+            || (!isSuiteMetaPage(relativeName) && testSummary.getIgnores() >= 0)) && testSummary.getRight() == 0) {
       return IGNORE;
-	  }
+    }
     return PASS;
   }
   

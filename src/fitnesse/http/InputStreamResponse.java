@@ -18,6 +18,7 @@ public class InputStreamResponse extends Response {
     super("html");
   }
 
+  @Override
   public void sendTo(ResponseSender sender) throws IOException {
     try {
       sender.send(makeHttpHeaders().getBytes());
@@ -35,6 +36,7 @@ public class InputStreamResponse extends Response {
     addHeader("Content-Length", getContentSize() + "");
   }
 
+  @Override
   public int getContentSize() {
     return contentSize;
   }

@@ -11,6 +11,7 @@ public class OneUserAuthenticator extends Authenticator {
     this.thePassword = thePassword;
   }
 
+  @Override
   public boolean isAuthenticated(String username, String password) {
     return (theUsername.equals(username) && thePassword.equals(password));
   }

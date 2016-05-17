@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
 
 public class Include extends SymbolType implements Rule, Translation {
     private static final String[] setUpSymbols = new String[] {"COLLAPSE_SETUP"};
@@ -12,11 +13,12 @@ public class Include extends SymbolType implements Rule, Translation {
         wikiRule(this);
         htmlTranslation(this);
     }
-    
+
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol next = parser.moveNext(1);
         if (!next.isType(SymbolType.Whitespace)) return Symbol.nothing;
-        
+
         next = parser.moveNext(1);
         String option = "";
         if ((next.isType(SymbolType.Text) && next.getContent().startsWith("-")) || next.isType(SymbolType.DateFormatOption)) {
@@ -25,16 +27,30 @@ public class Include extends SymbolType implements Rule, Translation {
             if (!next.isType(SymbolType.Whitespace)) return Symbol.nothing;
             next = parser.moveNext(1);
         }
+        current.add(option);
         if (!next.isType(SymbolType.Text) && !next.isType(WikiWord.symbolType)) return Symbol.nothing;
 
-        current.add(option).add(next);
+        String includedPageName = next.getContent();
+        while (parser.peek().isType(SymbolType.Text) || parser.peek().isType(WikiWord.symbolType)) {
+          Symbol remainderOfPageName = parser.moveNext(1);
+          includedPageName += remainderOfPageName.getContent();
+        }
 
-        Maybe<SourcePage> includedPage = parser.getPage().getNamedPage().findIncludedPage(next.getContent());
+        SourcePage sourcePage = parser.getPage().getNamedPage();
+
+        // Record the page name anyway, since we might want to show an error if it's invalid
+        if (PathParser.isWikiPath(includedPageName)) {
+          current.add(new Symbol(new WikiWord(sourcePage), includedPageName));
+        } else {
+          current.add(includedPageName);
+        }
+
+        Maybe<SourcePage> includedPage = sourcePage.findIncludedPage(includedPageName);
         if (includedPage.isNothing()) {
           current.add("").add(new Symbol(SymbolType.Style, "error").add(includedPage.because()));
         }
         else if (includeHelpOption.equals(option)) {
-        	String helpText = includedPage.getValue().getProperty(PageData.PropertyHELP);	
+        	String helpText = includedPage.getValue().getProperty(PageData.PropertyHELP);
         	current.add("").add(Parser.make(
         			parser.getPage(),helpText).parse());
         } else {
@@ -54,9 +70,10 @@ public class Include extends SymbolType implements Rule, Translation {
         parser.moveNext(1);
       }
 
-      return new Maybe<Symbol>(current);
+      return new Maybe<>(current);
     }
 
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         if (symbol.getChildren().size() < 4) {
             return translator.translate(symbol.childAt(2));

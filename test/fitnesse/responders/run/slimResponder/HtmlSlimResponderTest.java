@@ -9,11 +9,9 @@ import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.testsystems.slim.*;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,7 +26,7 @@ public class HtmlSlimResponderTest {
 
   private void assertTestResultsContain(String fragment) {
     String unescapedResults = unescape(testResults);
-    assertTrue(unescapedResults, unescapedResults.contains(fragment));
+    assertTrue("'" + fragment + "' not found in: " +unescapedResults, unescapedResults.contains(fragment));
   }
 
   private void assertTestResultsDoNotContain(String fragment) {

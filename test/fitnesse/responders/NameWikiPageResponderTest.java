@@ -8,7 +8,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
-import fitnesse.wiki.fs.InMemoryPage;
+
 import static org.junit.Assert.assertEquals;
 import org.json.JSONArray;
 import org.junit.Before;
@@ -129,12 +129,12 @@ public class NameWikiPageResponderTest {
     assertHasRegexp("FrontPage 2", response.getContent());
   }
 
-  static private int CountLines(String s) {
+  private static int CountLines(String s) {
     if(s == null) { return 0; }
     return s.split("\r\n|\r|\n").length;
   }
   
-  private WikiPage createTestPageTree() throws Exception {
+  private void createTestPageTree() throws Exception {
 	// FrontPage
 	// + PageOne
 	// | + PageTwo (hello)
@@ -156,8 +156,6 @@ public class NameWikiPageResponderTest {
     assertEquals(helloTag,    pageTwo.getData().getAttribute(PageData.PropertySUITES));
     assertEquals(worldTag,    pageThree.getData().getAttribute(PageData.PropertySUITES));
     assertEquals(fitnesseTag, pageFive.getData().getAttribute(PageData.PropertySUITES));
-
-    return frontPage;
   }
 
   private void setTag(WikiPage page, String tag) {
@@ -168,7 +166,7 @@ public class NameWikiPageResponderTest {
 
   @Test
   public void canBeUsedRecursively() throws Exception {
-    WikiPage frontPage = createTestPageTree();
+    createTestPageTree();
 	
     request.setResource(frontPageName);
     request.addInput("Recursive", "");
@@ -185,7 +183,7 @@ public class NameWikiPageResponderTest {
  
   @Test
   public void canReportOnlyLeaves() throws Exception {
-    WikiPage frontPage = createTestPageTree();
+    createTestPageTree();
 	
     request.setResource(frontPageName);
     request.addInput("Recursive", "");
@@ -197,7 +195,7 @@ public class NameWikiPageResponderTest {
 
   @Test
   public void canShowTags() throws Exception {
-    WikiPage frontPage = createTestPageTree();
+    createTestPageTree();
 	
     request.setResource(frontPageName);
     request.addInput("Recursive", "");

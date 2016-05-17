@@ -3,7 +3,7 @@
 package fitnesse.responders.run.slimResponder;
 
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
-import fitnesse.testsystems.slim.SlimCommandRunningClient;
+import fitnesse.testsystems.slim.SlimClient;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.InProcessSlimClientBuilder;
 import fitnesse.testsystems.slim.SlimClientBuilder;
@@ -19,9 +19,10 @@ public class HtmlSlimResponder extends SlimResponder {
     this.customComparatorRegistry = customComparatorRegistry;
   }
 
+  @Override
   protected SlimTestSystem getTestSystem() throws IOException {
 
-    SlimCommandRunningClient slimClient;
+    SlimClient slimClient;
     if (fastTest) {
       slimClient = new InProcessSlimClientBuilder(getDescriptor()).build();
     } else {

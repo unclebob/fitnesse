@@ -7,9 +7,17 @@ import java.io.File;
 import java.util.*;
 
 public class TestHistory {
-  Map<String, File> pageDirectoryMap = new HashMap<String, File>();
+  final Map<String, File> pageDirectoryMap = new HashMap<>();
 
-  public void readHistoryDirectory(File historyDirectory) {
+  public TestHistory(File historyDirectory) {
+    readHistoryDirectory(historyDirectory);
+  }
+
+  public TestHistory(File historyDirectory, String pageName) {
+    readPageHistoryDirectory(historyDirectory, pageName);
+  }
+
+  private void readHistoryDirectory(File historyDirectory) {
     File[] pageDirectories = FileUtil.getDirectoryListing(historyDirectory);
     for (File file : pageDirectories)
       if (isValidFile(file))
@@ -21,7 +29,7 @@ public class TestHistory {
   }
 
   public Set<String> getPageNames() {
-    return new TreeSet<String>(pageDirectoryMap.keySet());
+    return new TreeSet<>(pageDirectoryMap.keySet());
   }
 
   public PageHistory getPageHistory(String pageName) {
@@ -37,7 +45,7 @@ public class TestHistory {
     }
   }
 
-  public void readPageHistoryDirectory(File historyDirectory, String pageName) {
+  private void readPageHistoryDirectory(File historyDirectory, String pageName) {
     File[] pageDirectories = FileUtil.getDirectoryListing(historyDirectory);
     for (File file : pageDirectories)
       if ((isValidFile(file)) && file.getName().startsWith(pageName))

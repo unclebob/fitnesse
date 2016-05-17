@@ -45,6 +45,7 @@ public class TestTextFormatterTest {
     formatter.testStarted(page);
     clock.elapse(9800);
     formatter.testComplete(page, summary);
+    formatter.close();
     verify(response).add("F " + START_TIME + " R:1    W:2    I:3    E:4    page\t()\t9" + getDecimalSeparator() + "800 seconds\n");
   }
   

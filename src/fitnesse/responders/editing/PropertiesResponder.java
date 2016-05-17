@@ -35,6 +35,7 @@ public class PropertiesResponder implements SecureResponder {
   private SimpleResponse response;
   private HtmlPage html;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     response = new SimpleResponse();
     resource = request.getResource();
@@ -60,7 +61,7 @@ public class PropertiesResponder implements SecureResponder {
       }
     } else {
       String html = makeHtml(context, request);
-      
+
       response.setContent(html);
     }
   }
@@ -68,7 +69,7 @@ public class PropertiesResponder implements SecureResponder {
   private JSONObject makeJson() {
     response.setContentType(Response.Format.JSON);
     JSONObject jsonObject = new JSONObject();
-    String attributes[] = new String[] { TEST.toString(), PropertySEARCH,
+    String[] attributes = { TEST.toString(), PropertySEARCH,
         PropertyEDIT, PropertyPROPERTIES, PropertyVERSIONS, PropertyREFACTOR,
         PropertyWHERE_USED, PropertyRECENT_CHANGES, SUITE.toString(),
         PropertyPRUNE, PropertySECURE_READ, PropertySECURE_WRITE,
@@ -103,12 +104,12 @@ public class PropertiesResponder implements SecureResponder {
     html.setNavTemplate("viewNav");
     html.put("viewLocation", request.getResource());
     html.setTitle("Properties: " + resource);
-    
+
     String tags = "";
     if(pageData != null)  {
-      tags = pageData.getAttribute(PageData.PropertySUITES); 
+      tags = pageData.getAttribute(PageData.PropertySUITES);
     }
-    
+
     html.setPageTitle(new PageTitle("Page Properties", path, tags));
     html.put("pageData", pageData);
     html.setMainTemplate("propertiesPage");
@@ -180,7 +181,7 @@ public class PropertiesResponder implements SecureResponder {
         SymbolicPage.PROPERTY_NAME);
     if (symLinksProperty == null)
       return;
-    List<Symlink> symlinks = new ArrayList<Symlink>();
+    List<Symlink> symlinks = new ArrayList<>();
     Set<String> symbolicLinkNames = symLinksProperty.keySet();
     for (String name : symbolicLinkNames) {
       String link = symLinksProperty.get(name);
@@ -209,6 +210,7 @@ public class PropertiesResponder implements SecureResponder {
     return null;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }
@@ -243,7 +245,7 @@ public class PropertiesResponder implements SecureResponder {
     public String getLink() {
       return link;
     }
-    
+
     public String getPath() {
       return path;
     }

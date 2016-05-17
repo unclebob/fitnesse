@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
+import fitnesse.responders.testHistory.ExecutionLogResponder;
 import fitnesse.wiki.PathParser;
 import org.apache.commons.lang.StringUtils;
 import fitnesse.Responder;
@@ -46,7 +47,7 @@ import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
 
 public class ResponderFactory {
-  private final static Logger LOG = Logger.getLogger(ResponderFactory.class.getName());
+  private static final Logger LOG = Logger.getLogger(ResponderFactory.class.getName());
 
   private final String rootPath;
   private final Map<String, Class<? extends Responder>> responderMap;
@@ -54,12 +55,12 @@ public class ResponderFactory {
 
   public ResponderFactory(String rootPath) {
     this.rootPath = rootPath;
-    responderMap = new HashMap<String, Class<? extends Responder>>();
+    responderMap = new HashMap<>();
     addResponder("new", NewPageResponder.class);
     addResponder("edit", EditResponder.class);
     addResponder("saveData", SaveResponder.class);
     addResponder("search", SearchResponder.class);
-    addResponder("searchForm", SearchFormResponder.class);
+    addResponder("searchForm", SearchResponder.class);
     addResponder("stoptest", StopTestResponder.class);
     addResponder("test", TestResponder.class);
     addResponder("suite", SuiteResponder.class);
@@ -70,7 +71,9 @@ public class ResponderFactory {
     addResponder("names", NameWikiPageResponder.class);
     addResponder("properties", PropertiesResponder.class);
     addResponder("saveProperties", SavePropertiesResponder.class);
-    addResponder("executeSearchProperties", ExecuteSearchPropertiesResponder.class);
+    addResponder("searchProperties", SearchPropertiesResponder.class);
+    // Deprecated:
+    addResponder("executeSearchProperties", SearchPropertiesResponder.class);
     addResponder("whereUsed", WhereUsedResponder.class);
     addResponder("refactor", RefactorPageResponder.class);
     addResponder("deletePage", DeletePageResponder.class);
@@ -94,13 +97,14 @@ public class ResponderFactory {
     addResponder("packet", PacketResponder.class);
     addResponder("testHistory", TestHistoryResponder.class);
     addResponder("pageHistory", PageHistoryResponder.class);
+    addResponder("executionLog", ExecutionLogResponder.class);
     addResponder("addChild", AddChildPageResponder.class);
     addResponder("purgeHistory", PurgeHistoryResponder.class);
     addResponder("compareHistory", HistoryComparerResponder.class);
     addResponder("replace", SearchReplaceResponder.class);
     addResponder("overview", SuiteOverviewResponder.class);
     addResponder("compareVersions", VersionComparerResponder.class);
-    filterMap = new HashMap<String, List<Responder>>();
+    filterMap = new HashMap<>();
   }
 
   public final void addResponder(String key, Class<? extends Responder> responderClass) {
@@ -110,7 +114,7 @@ public class ResponderFactory {
   public void addFilter(String key, Responder filterClass) {
     List<Responder> filters = filterMap.get(key);
     if (filters == null) {
-      filters = new LinkedList<Responder>();
+      filters = new LinkedList<>();
       filterMap.put(key, filters);
     }
     filters.add(filterClass);
@@ -119,7 +123,7 @@ public class ResponderFactory {
   public String getResponderKey(Request request) {
     String fullQuery;
     if (request.hasInput("responder"))
-      fullQuery = (String) request.getInput("responder");
+      fullQuery = request.getInput("responder");
     else
       fullQuery = request.getQueryString();
 

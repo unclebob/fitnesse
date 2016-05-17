@@ -2,17 +2,18 @@ package fitnesse.wikitext.parser;
 
 public class Variable extends SymbolType implements Rule, Translation {
     public static final Variable symbolType = new Variable();
-    
+
     public Variable() {
         super("Variable");
         wikiMatcher(new Matcher().string("${"));
         wikiRule(this);
         htmlTranslation(this);
     }
-    
+
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Maybe<String> name = parser.parseToAsString(SymbolType.CloseBrace);
-        if (name.isNothing() || name.getValue().length() == 0) return Symbol.nothing;
+        if (name.isNothing() || name.getValue().isEmpty()) return Symbol.nothing;
         String variableName = name.getValue();
         if (!ScanString.isVariableName(variableName)) return Symbol.nothing;
 
@@ -26,10 +27,11 @@ public class Variable extends SymbolType implements Rule, Translation {
             Symbol variableValueSymbol = parser.parseWithParent(variableValue.getValue(), null);
             current.add(variableValueSymbol);
         }
-        
-        return new Maybe<Symbol>(current);
+
+        return new Maybe<>(current);
     }
 
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         return translator.translate(symbol.childAt(1));
     }

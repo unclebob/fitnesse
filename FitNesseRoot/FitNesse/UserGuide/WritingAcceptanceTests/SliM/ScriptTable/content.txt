@@ -58,14 +58,14 @@ Most instructions involve some kind of function call.  By default, the name of t
 -| comment |
 | login with username and password; | Bob | xyzzy |
 
- * A function alone in a row will turn red or green if it returns a boolean.  Otherwise it will simply remain uncolored.
- * If the word ''check'' is in the first cell of a row, then a function call follows it.  The last cell of the table is the expression we expect to be matched by what the function actually returns.
- * If the word ''check not'' is in the first cell of a row, then a function call follows it.  The last cell of the table is the expression we expect !style_red(''not'') to be matched by what the function actually returns.
- * If the word ''ensure'' is in the first cell, then it should be followed by a function that should return a boolean true for green and false for red.
- * If the word ''reject'' is in the first cell, then it should be followed by a function that should return a boolean false for green and true for red.
- * If the word ''note'' is in the first cell, all other cells in that row will be ignored.
+ * A function alone in a row will turn !style_red(red) or !style_green(green) if it returns a boolean.  Otherwise it will simply remain uncolored.
+ * If [[a symbol assignment][SymbolsInTables]] is in the first cell, then it should be followed by a function.  The symbol is assigned the value returned by that function.
+ * If the word '''''check''''' is in the first cell of a row, then a function call follows it.  The last cell of the table is the expression we expect to be matched by what the function actually returns.
+ * If the word '''''check not''''' is in the first cell of a row, then a function call follows it.  The last cell of the table is the expression we expect ''not'' to be matched by what the function actually returns.
+ * If the word '''''ensure''''' is in the first cell, then it should be followed by a function that should return a boolean ''true'' for !style_green(green) and ''false'' for !style_red(red).
+ * If the word '''''reject''''' is in the first cell, then it should be followed by a function that should return a boolean ''false'' for !style_green(green) and ''true'' for !style_red(red).
+ * If the word '''''note''''' is in the first cell, all other cells in that row will be ignored.
    * Or if the first cell is blank.
    * Or if the first cell begins with # or *.
- * If the word ''show'' is in the first cell, then it should be followed by a function.  A new cell will be added when the test is run, and it will contain the return value of the function.
- * If a symbol assignment is in the first cell, then it should be followed by a functions.  The symbol is assigned the value returned by that function.
- * If the word ''start'' appears in the first cell, then the rest of the row is the name and constructor arguments for a new actor, which replaces the existing actor.
+ * If the word '''''show''''' is in the first cell, then it should be followed by a function.  A new cell will be added when the test is run, and it will contain the return value of the function.
+ * If the word '''''start''''' appears in the first cell, then the rest of the row is the name and constructor arguments for a new actor, which replaces the existing actor.

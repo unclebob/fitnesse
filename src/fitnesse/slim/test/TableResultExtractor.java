@@ -6,9 +6,9 @@ public class TableResultExtractor {
 
   public Object getValueFromQueryResultSymbol(List<List<List<Object>>> queryResult, int rowNo, String columnName ){
     List<List<Object>> row =  queryResult.get(rowNo);
-    for(int i=0; i< row.size(); i++){
-      if(columnName.compareTo( (String) (row.get(i).get(0))) == 0){
-        return row.get(i).get(1);
+    for (List<Object> aRow : row) {
+      if (columnName.compareTo((String) (aRow.get(0))) == 0) {
+        return aRow.get(1);
       }
     }
     throw new RuntimeException("No column with name '" + columnName + "' found in row " + rowNo);

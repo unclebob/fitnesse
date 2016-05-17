@@ -22,7 +22,6 @@ import fitnesse.testrunner.WikiTestPageUtil;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.UrlPathVariableSource;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -32,6 +31,7 @@ public class VersionResponder implements SecureResponder {
   private String version;
   private String resource;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     resource = request.getResource();
     version = request.getInput("version");
@@ -63,7 +63,7 @@ public class VersionResponder implements SecureResponder {
     html.put("rollbackVersion", version);
     html.put("localPath", name);
 
-    List<VersionInfo> versions = new ArrayList<VersionInfo>(page.getVersions());
+    List<VersionInfo> versions = new ArrayList<>(page.getVersions());
     Collections.sort(versions);
     Collections.reverse(versions);
     String nextVersion = selectNextVersion(versions, version);
@@ -96,6 +96,7 @@ public class VersionResponder implements SecureResponder {
     return versions.get(i-1).getName();
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }
@@ -109,7 +110,7 @@ public class VersionResponder implements SecureResponder {
     }
 
     public String render() {
-      if (WikiTestPage.isTestPage(page)) {
+      if (WikiPageUtil.isTestPage(page)) {
         WikiTestPage testPage = new WikiTestPage(page);
         return WikiTestPageUtil.makePageHtml(testPage);
       } else {

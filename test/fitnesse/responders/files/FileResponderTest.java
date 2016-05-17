@@ -15,13 +15,11 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import fitnesse.FitNesseContext;
-import fitnesse.Responder;
 import fitnesse.http.InputStreamResponse;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.ErrorResponder;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.SampleFileUtility;
 import org.junit.After;
@@ -170,7 +168,7 @@ public class FileResponderTest {
     response = responder.makeResponse(context, request);
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
-    assertSubString("<a href=\"/FrontPage\" id=\"art_niche\"", sender.sentData());
+    assertSubString("href=\"/FrontPage\"", sender.sentData());
   }
 
   @Test

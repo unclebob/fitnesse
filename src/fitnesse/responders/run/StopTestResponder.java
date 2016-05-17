@@ -15,11 +15,12 @@ public class StopTestResponder implements SecureResponder {
 
   String testId = null;
   
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
     
     if (request.hasInput("id")) {
-      testId = request.getInput("id").toString();
+      testId = request.getInput("id");
     }
     
     response.setContent(html(context));
@@ -36,6 +37,7 @@ public class StopTestResponder implements SecureResponder {
     return page.html();
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureTestOperation();
   }

@@ -4,7 +4,6 @@ package fitnesse.responders;
 
 import static org.junit.Assert.assertEquals;
 
-import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;

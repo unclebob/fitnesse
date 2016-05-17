@@ -9,6 +9,7 @@ public class TestVariableSource implements VariableSource {
         this.value = value;
     }
 
+    @Override
     public Maybe<String> findVariable(String requestedName) {
         return requestedName.equals(name) ? new Maybe<String>(value) : Maybe.noString;
     }

@@ -128,6 +128,14 @@ public class PathParserTest {
     assertWikiPath(">SomePage.someotherpage");
   }
 
+  @Test
+  public void absoluteWikiPathWithNonWikiWords() {
+    assertWikiPath(".FrontPage.Environments.Env1.TestSuites.SuiteSetUp");
+    path = PathParser.parse(".FrontPage.Environments.Env1.TestSuites.SuiteSetUp");
+
+    assertFalse(path == null);
+  }
+
   private void assertWikiPath(String path) {
     assertTrue(path, PathParser.isWikiPath(path));
   }

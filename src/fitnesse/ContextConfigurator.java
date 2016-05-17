@@ -1,12 +1,14 @@
 package fitnesse;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
 import fitnesse.authentication.Authenticator;
 import fitnesse.components.ComponentFactory;
 import fitnesse.components.Logger;
+import fitnesse.plugins.PluginException;
+import fitnesse.plugins.PluginsLoader;
+import fitnesse.reporting.FormatterFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.ContentFilterResponder;
 import fitnesse.testrunner.MultipleTestSystemFactory;
@@ -15,8 +17,6 @@ import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.RecentChangesWikiPage;
-import fitnesse.wiki.SystemVariableSource;
-import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.WikiPageFactoryRegistry;
 import fitnesse.wiki.fs.FileSystemPageFactory;
@@ -32,6 +32,7 @@ import static fitnesse.ConfigurationParameter.*;
  * Please call this only once: some features are registered on (static) factories.
  */
 public class ContextConfigurator {
+  private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(ContextConfigurator.class.getName());
 
   private static final String DEFAULT_PATH = ".";
   public static final String DEFAULT_ROOT = "FitNesseRoot";
@@ -78,7 +79,6 @@ public class ContextConfigurator {
     return this;
   }
 
-
   public ContextConfigurator withTestSystemListener(TestSystemListener testSystemListener) {
     this.testSystemListener = testSystemListener;
     return this;
@@ -120,6 +120,8 @@ public class ContextConfigurator {
 
     MultipleTestSystemFactory testSystemFactory = new MultipleTestSystemFactory(slimTableFactory, customComparatorRegistry);
 
+    FormatterFactory formatterFactory = new FormatterFactory(componentFactory);
+
     FitNesseContext context = new FitNesseContext(version,
           wikiPageFactory,
           rootPath,
@@ -132,15 +134,20 @@ public class ContextConfigurator {
           logger,
           testSystemFactory,
           testSystemListener,
+          formatterFactory,
           properties);
 
     SymbolProvider symbolProvider = SymbolProvider.wikiParsingProvider;
 
-    WikiPageFactoryRegistry wikiPageFactoryRegistry = (WikiPageFactoryRegistry) wikiPageFactory;
-    pluginsLoader.loadPlugins(context.responderFactory, symbolProvider, wikiPageFactoryRegistry, testSystemFactory, slimTableFactory, customComparatorRegistry);
     pluginsLoader.loadResponders(context.responderFactory);
-    pluginsLoader.loadWikiPageFactories(wikiPageFactory);
+
+    if (wikiPageFactory instanceof WikiPageFactoryRegistry) {
+      pluginsLoader.loadWikiPageFactories((WikiPageFactoryRegistry) wikiPageFactory);
+    } else {
+      LOG.warning("Wiki page factory does not implement interface WikiPageFactoryRegistrar, configured factories can not be loaded.");
+    }
     pluginsLoader.loadTestSystems(testSystemFactory);
+    pluginsLoader.loadFormatters(formatterFactory);
     pluginsLoader.loadSymbolTypes(symbolProvider);
     pluginsLoader.loadSlimTables(slimTableFactory);
     pluginsLoader.loadCustomComparators(customComparatorRegistry);

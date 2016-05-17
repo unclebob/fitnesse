@@ -93,7 +93,6 @@ nav li a:hover {
 
 nav ul ul {
  background: #eee; /* Adding a background makes the dropdown work properly in IE7+. */
- -moz-box-shadow: 0 3px 10px #4A4A44;
  position: absolute;
  display: none;
  z-index: 999;

@@ -17,6 +17,8 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
+import fitnesse.http.SimpleResponse;
+import fitnesse.responders.testHistory.ExecutionLogResponder;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
@@ -25,7 +27,6 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +57,6 @@ public class TestResponderTest {
   private MockResponseSender sender;
   private WikiPage testPage;
   private String results;
-  private WikiPage errorLogsParentPage;
   private File xmlResultsFile;
   private XmlChecker xmlChecker = new XmlChecker();
   private boolean debug;
@@ -69,7 +69,6 @@ public class TestResponderTest {
     Properties properties = new Properties();
     context = FitNesseUtil.makeTestContext();
     root = context.getRootPage();
-    errorLogsParentPage = WikiPageUtil.addPage(root, PathParser.parse("ErrorLogs"));
     request = new MockRequest();
     responder = new TestResponder();
     properties.setProperty("FITNESSE_PORT", String.valueOf(context.port));
@@ -146,10 +145,9 @@ public class TestResponderTest {
     sender.doSending(response);
     sender.sentData();
 
-    WikiPagePath errorLogPath = PathParser.parse("ErrorLogs.EmptyTestPage");
-    WikiPage errorLogPage = root.getPageCrawler().getPage(errorLogPath);
-    String errorLogContent = errorLogPage.getData().getContent();
+    String errorLogContent = getExecutionLog();
     assertNotSubString("Exception", errorLogContent);
+    assertSubString("No execution log available.", errorLogContent);
   }
 
   @Test
@@ -189,10 +187,13 @@ public class TestResponderTest {
     sender.doSending(response);
     String results = sender.sentData();
 
-    assertHasRegexp("ErrorLog", results);
+    assertHasRegexp("\\?executionLog", results);
 
-    WikiPage errorLog = errorLogsParentPage.getChildPage(testPage.getName());
-    return errorLog.getData().getContent();
+    return getExecutionLog();
+  }
+
+  private String getExecutionLog() {
+    return ((SimpleResponse) new ExecutionLogResponder().makeResponse(context, request)).getContent();
   }
 
   @Test
@@ -245,13 +246,13 @@ public class TestResponderTest {
     sender.doSending(response);
 
     String results = sender.sentData();
-    assertSubString("ErrorLog", results);
+    assertSubString("?executionLog", results);
   }
 
   @Test
   public void testResultsIncludeActions() throws Exception {
     doSimpleRun(passFixtureTable());
-    assertSubString("<nav>", results);
+    assertSubString("<nav", results);
   }
 
   @Test
@@ -264,9 +265,9 @@ public class TestResponderTest {
   }
 
   @Test
-  public void testExecutionStatusAppears() throws Exception {
+  public void testExecutionLogLinkAppears() throws Exception {
     doSimpleRun(passFixtureTable());
-    assertHasRegexp("Tests Executed OK", results);
+    assertHasRegexp("class=\\\\\"ok\\\\\">Execution Log", results);
   }
 
   @Test
@@ -336,7 +337,7 @@ public class TestResponderTest {
   public void slimScenarioXmlFormat() throws Exception {
     responder.turnOffChunking();
     request.addInput("format", "xml");
-    doSimpleRun(XmlChecker.slimScenarioTable);
+    doSimpleRun(XmlChecker.SLIM_SCENARIO_TABLE);
     xmlChecker.assertXmlReportOfSlimScenarioTableIsCorrect();
   }
 
@@ -373,7 +374,7 @@ public class TestResponderTest {
   @Test
   public void testExecutionStatusOk() throws Exception {
     doSimpleRun(passFixtureTable());
-    assertTrue(results.contains(">Tests Executed OK<"));
+    assertTrue(results.contains(">Execution Log<"));
     assertTrue(results.contains("\\\"ok\\\""));
   }
 
@@ -381,24 +382,16 @@ public class TestResponderTest {
   public void debugTest() throws Exception {
     request.addInput("debug", "");
     doSimpleRun(passFixtureTable());
-    assertTrue(results.contains(">Tests Executed OK<"));
+    assertTrue(results.contains(">Execution Log<"));
     assertTrue(results.contains("\\\"ok\\\""));
     assertTrue("should be fast test", responder.isDebug());
-  }
-
-  @Test
-  public void testExecutionStatusOutputCaptured() throws Exception {
-    debug = false;
-    doSimpleRun(outputWritingTable("blah"));
-    assertTrue(results.contains(">Output Captured<"));
-    assertTrue(results.contains("\\\"output\\\""));
   }
 
   @Test
   public void testExecutionStatusError() throws Exception {
     debug = false;
     doSimpleRun(crashFixtureTable());
-    assertTrue(results.contains(">Errors Occurred<"));
+    assertTrue(results.contains(">Execution Log<"));
     assertTrue(results.contains("\\\"error\\\""));
   }
 
@@ -406,7 +399,7 @@ public class TestResponderTest {
   public void testExecutionStatusErrorHasPriority() throws Exception {
     debug = false;
     doSimpleRun(errorWritingTable("blah") + crashFixtureTable());
-    assertTrue(results.contains(">Errors Occurred<"));
+    assertTrue(results.contains("class=\\\"error\\\">Execution Log<"));
   }
 
   @Test
@@ -437,7 +430,7 @@ public class TestResponderTest {
     if (semaphore.exists())
       semaphore.delete();
 
-    new Thread(makeStopTestsRunnable(semaphore)).start();
+    new Thread(new WaitForSemaphoreThenStopProcesses(semaphore)).start();
 
     doSimpleRun(createAndWaitFixture(semaphoreName));
     assertHasRegexp("Testing was interrupted", results);
@@ -449,10 +442,6 @@ public class TestResponderTest {
       "!|fitnesse.testutil.CreateFileAndWaitFixture|" + semaphoreName + "|\n";
   }
 
-  private Runnable makeStopTestsRunnable(File semaphore) {
-    return new WaitForSemaphoreThenStopProcesses(semaphore);
-  }
-
   private class WaitForSemaphoreThenStopProcesses implements Runnable {
     private File semaphore;
 
@@ -460,6 +449,7 @@ public class TestResponderTest {
       this.semaphore = semaphore;
     }
 
+    @Override
     public void run() {
       waitForSemaphore();
       SuiteResponder.runningTestingTracker.stopAllProcesses();
@@ -507,12 +497,11 @@ public class TestResponderTest {
     sender.doSending(response);
     results = sender.sentData();
 
-    assertTrue(results.contains(">Output Captured<"));
-    assertHasRegexp("ErrorLog", results);
+    assertTrue(results.contains(">Execution Log<"));
+    assertHasRegexp("\\?executionLog", results);
     assertSubString("Test Page tags", results);
 
-    WikiPage errorLog = errorLogsParentPage.getPageCrawler().getPage(testPagePath);
-    String errorLogContent = errorLog.getData().getContent();
+    String errorLogContent = getExecutionLog();
     assertHasRegexp("Output of SuiteSetUp", errorLogContent);
     assertHasRegexp("Output of TestPage", errorLogContent);
     assertHasRegexp("Output of SuiteTearDown", errorLogContent);
@@ -534,8 +523,7 @@ public class TestResponderTest {
     sender.doSending(response);
     results = sender.sentData();
 
-    WikiPage errorLog = errorLogsParentPage.getPageCrawler().getPage(testPagePath);
-    String errorLogContent = errorLog.getData().getContent();
+    String errorLogContent = getExecutionLog();
     assertMessagesOccurInOrder(errorLogContent, "Output of SuiteSetUp", "Output of SetUp", "Output of TestPage");
     assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of SetUp");
   }
@@ -556,8 +544,7 @@ public class TestResponderTest {
     sender.doSending(response);
     results = sender.sentData();
 
-    WikiPage errorLog = errorLogsParentPage.getPageCrawler().getPage(testPagePath);
-    String errorLogContent = errorLog.getData().getContent();
+    String errorLogContent = getExecutionLog();
     assertMessagesOccurInOrder(errorLogContent, "Output of TestPage", "Output of TearDown", "Output of SuiteTearDown");
     assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of TearDown");
   }
@@ -580,8 +567,7 @@ public class TestResponderTest {
     sender.doSending(response);
     results = sender.sentData();
 
-    WikiPage errorLog = errorLogsParentPage.getPageCrawler().getPage(testPagePath);
-    String errorLogContent = errorLog.getData().getContent();
+    String errorLogContent = getExecutionLog();
     assertMessagesOccurInOrder(errorLogContent, "Output of SuiteSetUp", "Output of SetUp", "Output of TestPage", "Output of TearDown", "Output of SuiteTearDown");
     assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of SetUp");
   }
@@ -621,6 +607,28 @@ public class TestResponderTest {
     assertHasRegexp("<td><span class=\"pass\">wow</span></td>", HtmlUtil.unescapeHTML(results));
   }
 
+  @Test
+  public void xmlFormatterShouldContainExecutionLog() throws Exception {
+    WikiPage suitePage = WikiPageUtil.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
+    WikiPage testPage = WikiPageUtil.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
+
+    WikiPagePath testPagePath = testPage.getPageCrawler().getFullPath();
+    String resource = PathParser.render(testPagePath);
+    request.setResource(resource);
+    request.addInput("format", "xml");
+    request.addInput("nochunk", "nochunk");
+
+    Response response = responder.makeResponse(context, request);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    results = sender.sentData();
+
+    assertHasRegexp("<executionLog>", results);
+    assertHasRegexp("<testSystem>fit:fit.FitServer</testSystem>", results);
+    assertHasRegexp("<exitCode>0</exitCode>", results);
+    assertHasRegexp("<stdOut>Output of TestPage.*</stdOut>", results);
+    assertHasRegexp("<stdErr></stdErr>", results);
+  }
 
   private String errorWritingTable(String message) {
     return "\n|!-fitnesse.testutil.ErrorWritingFixture-!|\n" +
@@ -714,7 +722,7 @@ public class TestResponderTest {
       checkExpectation(instructionList, 4, "decisionTable_0_10", "1", "3", "pass", "ReturnedValueExpectation", null, null, "wow");
     }
 
-    public final static String slimScenarioTable =
+    private static final String SLIM_SCENARIO_TABLE =
       "!define TEST_SYSTEM {slim}\n" +
         "\n" +
         "!|scenario|f|a|\n" +
@@ -737,7 +745,6 @@ public class TestResponderTest {
       String runTimeInMillis = XmlUtil.getTextValue(result, "runTimeInMillis");
       assertThat(Long.parseLong(runTimeInMillis), is(not(0L)));
 
-      assertTablesInSlimScenarioAreCorrect(result);
       assertInstructionsOfSlimScenarioTableAreCorrect(result);
     }
 
@@ -773,49 +780,6 @@ public class TestResponderTest {
         Element instructionElement = (Element) instructionList.item(i);
         assertInstructionHas(instructionElement, instructionContents[i]);
       }
-    }
-
-    private void assertTablesInSlimScenarioAreCorrect(Element result) throws Exception {
-//      Element tables = getElementByTagName(result, "tables");
-//      NodeList tableList = tables.getElementsByTagName("table");
-//      assertEquals(5, tableList.getLength());
-//
-//      String tableNames[] = {"scenarioTable_0", "scriptTable_1", "decisionTable_2", "decisionTable_2_0/scriptTable_0", "decisionTable_2_1/scriptTable_0"};
-//      String tableValues[][][] = {
-//        {
-//          {"scenario", "f", "a"},
-//          {"check", "echo int", "@a", "@a"}
-//        },
-//        {
-//          {"script", "pass(fitnesse.slim.test.TestSlim)"}
-//        },
-//        {
-//          {"f"},
-//          {"a"},
-//          {"1", "pass(scenario:decisionTable_2_0/scriptTable_0)"},
-//          {"2", "pass(scenario:decisionTable_2_1/scriptTable_0)"}
-//        },
-//        {
-//          {"scenario", "f", "a"},
-//          {"check", "echo int", "1", "pass(1)"}
-//        },
-//        {
-//          {"scenario", "f", "a"},
-//          {"check", "echo int", "2", "pass(2)"}
-//        }
-//      };
-//
-//      for (int tableIndex = 0; tableIndex < tableList.getLength(); tableIndex++) {
-//        assertEquals(tableNames[tableIndex], XmlUtil.getTextValue((Element) tableList.item(tableIndex), "name"));
-//
-//        Element tableElement = (Element) tableList.item(tableIndex);
-//        NodeList rowList = tableElement.getElementsByTagName("row");
-//        for (int rowIndex = 0; rowIndex < rowList.getLength(); rowIndex++) {
-//          NodeList colList = ((Element) rowList.item(rowIndex)).getElementsByTagName("col");
-//          for (int colIndex = 0; colIndex < colList.getLength(); colIndex++)
-//            assertEquals(tableValues[tableIndex][rowIndex][colIndex], XmlUtil.getElementText((Element) colList.item(colIndex)));
-//        }
-//      }
     }
 
     private void checkExpectation(NodeList instructionList, int index, String id, String col, String row, String status, String type, String actual, String expected, String message) throws Exception {
@@ -864,6 +828,16 @@ public class TestResponderTest {
       assertEquals(wrong, XmlUtil.getTextValue(counts, "wrong"));
       assertEquals(ignores, XmlUtil.getTextValue(counts, "ignores"));
       assertEquals(exceptions, XmlUtil.getTextValue(counts, "exceptions"));
+    }
+  }
+  public static class JunitTestUtilities {
+      public static Document getXmlDocumentFromResults(String results) throws Exception {
+        String endOfXml = "</testsuite>";
+        String startOfXml = "<?xml";
+        int xmlStartIndex = results.indexOf(startOfXml);
+        int xmlEndIndex = results.indexOf(endOfXml) + endOfXml.length();
+        String xmlString = results.substring(xmlStartIndex, xmlEndIndex);
+        return XmlUtil.newDocument(xmlString);
     }
   }
 }

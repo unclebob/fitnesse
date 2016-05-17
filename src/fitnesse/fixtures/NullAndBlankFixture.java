@@ -21,6 +21,6 @@ public class NullAndBlankFixture extends ColumnFixture {
   }
 
   public boolean isBlank() {
-    return blankString.length() == 0;
+    return blankString.isEmpty();
   }
 }

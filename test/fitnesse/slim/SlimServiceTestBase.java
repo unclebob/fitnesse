@@ -2,6 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.ImportInstruction;
 import fitnesse.slim.instructions.Instruction;
@@ -14,19 +19,43 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import static org.junit.Assert.*;
 
 // Extracted Test class to be implemented by all Java based Slim ports
 // The tests for PhpSlim and JsSlim implement this class
 
 public abstract class SlimServiceTestBase {
+  static Thread service;
   protected List<Instruction> statements;
   protected SlimCommandRunningClient slimClient;
+
+  public static synchronized void startWithFactoryAsync(SlimFactory slimFactory, SlimService.Options options) throws IOException {
+    if (service != null && service.isAlive()) {
+      service.interrupt();
+      throw new SlimError("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
+    }
+    final SlimService slimservice = new SlimService(slimFactory.getSlimServer(), options.port, options.interaction, options.daemon, options.useSSL, options.sslParameterClassName);
+    service = new Thread() {
+      @Override
+      public void run() {
+        try {
+          slimservice.accept();
+        } catch (IOException e) {
+          throw new SlimError(e);
+        }
+      }
+    };
+    service.start();
+  }
+
+  public static void waitForServiceToStopAsync() throws InterruptedException {
+    // wait for service to close.
+    for (int i = 0; i < 1000; i++) {
+      if (!service.isAlive())
+        break;
+      Thread.sleep(50);
+    }
+  }
 
   protected abstract void startSlimService() throws Exception;
 
@@ -41,7 +70,7 @@ public abstract class SlimServiceTestBase {
   @Before
   public void setUp() throws InterruptedException, IOException {
     createSlimService();
-    slimClient = new SlimCommandRunningClient(new MockCommandRunner(new CompositeExecutionLogListener()), "localhost", 8099, 10, SlimCommandRunningClient.MINIMUM_REQUIRED_SLIM_VERSION);
+    slimClient = new SlimCommandRunningClient(new MockCommandRunner(new CompositeExecutionLogListener()), "localhost", 8099, 10, SlimCommandRunningClient.MINIMUM_REQUIRED_SLIM_VERSION, false, null);
     statements = new ArrayList<Instruction>();
     slimClient.connect();
   }
@@ -215,7 +244,7 @@ public abstract class SlimServiceTestBase {
   @Test
   public void canSpecifyAnInteractionClass() {
     SlimService.parseCommandLine(new String[]{"-i", "fitnesse.slim.fixtureInteraction.DefaultInteraction"});
-    assertEquals("fitnesse.slim.fixtureInteraction.DefaultInteraction", SlimService.getInteractionClass().getName());
+    assertEquals("fitnesse.slim.fixtureInteraction.DefaultInteraction", SlimService.getInteraction().getClass().getName());
   }
 
   @Test
@@ -225,7 +254,7 @@ public abstract class SlimServiceTestBase {
 
     SlimService.Options options = SlimService.parseCommandLine(args);
     assertNotNull("should parse correctly", options);
-    assertEquals("should have interaction class set", "fitnesse.slim.fixtureInteraction.DefaultInteraction", SlimService.getInteractionClass().getName());
+    assertEquals("should have interaction class set", "fitnesse.slim.fixtureInteraction.DefaultInteraction", SlimService.getInteraction().getClass().getName());
     assertTrue("should be verbose", options.verbose);
     assertEquals("should have set port", 7890, options.port);
   }
@@ -237,7 +266,7 @@ public abstract class SlimServiceTestBase {
 
     SlimService.Options options = SlimService.parseCommandLine(args);
     assertNotNull("should parse correctly", options);
-    assertEquals("should have interaction class set", "fitnesse.slim.fixtureInteraction.DefaultInteraction", SlimService.getInteractionClass().getName());
+    assertEquals("should have interaction class set", "fitnesse.slim.fixtureInteraction.DefaultInteraction", SlimService.getInteraction().getClass().getName());
     assertTrue("should be verbose", options.verbose);
     assertEquals("should have set port", 7890, options.port);
   }

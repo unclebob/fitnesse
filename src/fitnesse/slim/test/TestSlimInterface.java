@@ -5,24 +5,24 @@ import java.util.List;
 
 public interface TestSlimInterface {
 
-  public abstract boolean niladWasCalled();
+  boolean niladWasCalled();
 
-  public abstract String getStringArg();
+  String getStringArg();
 
-  public abstract int getIntArg();
+  int getIntArg();
 
-  public abstract double getDoubleArg();
+  double getDoubleArg();
 
-  public abstract List<Object> getListArg();
+  List<Object> getListArg();
 
-  public abstract Date getDateArg();
+  Date getDateArg();
 
-  public abstract Zork getZork();
+  Zork getZork();
 
-  public abstract Integer getIntegerObjectArg();
+  Integer getIntegerObjectArg();
 
-  public abstract double getDoubleObjectArg();
+  double getDoubleObjectArg();
 
-  public abstract char getCharArg();
+  char getCharArg();
 
 }

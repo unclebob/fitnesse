@@ -13,7 +13,6 @@ import fit.Fixture;
 import fitnesse.authentication.Authenticator;
 import fitnesse.responders.editing.SaveRecorder;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 
 public class SetUp extends Fixture {
   public SetUp() throws Exception {
@@ -35,7 +34,6 @@ public class SetUp extends Fixture {
         return true;
       }
     }, properties);
-    context.fitNesse.dontMakeDirs();
     File historyDirectory = context.getTestHistoryDirectory();
     if (historyDirectory.exists())
       FileUtil.deleteFileSystemDirectory(historyDirectory);
@@ -46,7 +44,7 @@ public class SetUp extends Fixture {
 
   private static Properties asProperties(String configuration) throws Exception {
     Properties properties = new Properties();
-    properties.load(new ByteArrayInputStream(configuration.getBytes("utf-8")));
+    properties.load(new ByteArrayInputStream(configuration.getBytes(FileUtil.CHARENCODING)));
     return properties;
   }
 }

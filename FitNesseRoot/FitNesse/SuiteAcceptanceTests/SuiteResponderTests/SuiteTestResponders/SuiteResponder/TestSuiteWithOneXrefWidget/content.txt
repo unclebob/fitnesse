@@ -9,7 +9,7 @@ Create a simple test page
 |line|!-|!-fitnesse.testutil.PassFixture-!-!!-|-!|
 |page|!-TestPage-!|
 
-Create a Suite page that mentions the test page in a !-!test-! widget
+Create a Suite page that mentions the test page in a !-!see-! widget
 
 |script|Page Builder|
 |line|!-!see TestPage-!|
@@ -44,7 +44,7 @@ The error log page should not have any errors
 
 |Response Requester.|
 |uri   |valid?|
-|!-ErrorLogs.SuitePage-!|true|
+|!-SuitePage?executionLog-!|true|
 
 |Response Examiner.|
 |contents?|

@@ -8,17 +8,19 @@ import fitnesse.http.ChunkedDataProvider;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
+import fitnesse.util.Clock;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
+import java.io.IOException;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class ChunkingResponder implements Responder, ChunkedDataProvider {
-  private final Logger LOG = Logger.getLogger(ChunkingResponder.class.getName());
+  private static final Logger LOG = Logger.getLogger(ChunkingResponder.class.getName());
 
   protected WikiPage root;
   public WikiPage page;
@@ -28,6 +30,7 @@ public abstract class ChunkingResponder implements Responder, ChunkedDataProvide
   protected FitNesseContext context;
   private boolean dontChunk = false;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
     this.request = request;
@@ -65,12 +68,13 @@ public abstract class ChunkingResponder implements Responder, ChunkedDataProvide
     return true;
   }
 
-  public void startSending() {
+  @Override
+  public void startSending() throws IOException {
     try {
       doSending();
     }
     catch (SocketException e) {
-      LOG.log(Level.WARNING, "Socket Exception at: " + System.currentTimeMillis(), e);
+      LOG.log(Level.WARNING, "Socket Exception at: " + Clock.currentTimeInMillis(), e);
       // normal. someone stopped the request.
     }
     catch (Exception e) {
@@ -78,13 +82,9 @@ public abstract class ChunkingResponder implements Responder, ChunkedDataProvide
     }
   }
 
-  private void addExceptionAndCloseResponse(Exception e) {
-    try {
-      response.add(ErrorResponder.makeExceptionString(e));
-      response.closeAll();
-    }
-    catch (Exception e1) {
-    }
+  private void addExceptionAndCloseResponse(Exception e) throws IOException {
+    response.add(ErrorResponder.makeExceptionString(e));
+    response.close();
   }
 
   protected String getRenderedPath() {
@@ -101,8 +101,8 @@ public abstract class ChunkingResponder implements Responder, ChunkedDataProvide
 
   /**
    * Performs the actual chunk sending in a separate thread.
-   * 
-   * @throws Exception
+   *
+   * @throws Exception exception thrown
    */
   protected abstract void doSending() throws Exception;
 }

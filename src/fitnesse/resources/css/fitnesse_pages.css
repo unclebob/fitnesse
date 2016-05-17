@@ -26,6 +26,10 @@ label {
 }
 
 /** Edit page **/
+.editPage {
+    padding-bottom: 0;
+}
+
 .editPage article {
     margin: 0;
 }
@@ -84,19 +88,16 @@ label {
 }
 
 
-/** Properties page / Search form / Directory page**/
-.propertiesPage .properties,
-.searchForm .properties {
+/** Properties page / Search form / Directory page **/
+.properties {
     margin-left: 145px;
 }
-.propertiesPage .properties fieldset,
-.searchForm .properties fieldset {
+.properties fieldset {
     display: inline-block;
     vertical-align: top;
 	border: none;
 }
-.propertiesPage .properties label,
-.searchForm .properties label {
+.properties label {
 	display: block;
     text-align: left;
 }
@@ -110,11 +111,11 @@ label.checkbox {
 	width: auto;
     text-align: left;
 }
-#virtual-wiki-properties {
+.virtual-wiki-properties {
 	margin-top: 1em;
 }
 #create-dir {
-	width: 140PX;
+	width: 140px;
 }
 
 /** Merge page **/
@@ -223,11 +224,12 @@ span.error {
 #test-action .error {
 	background-color: red;
 }
+/* Keep around for old pages: */
 .test_output_name h3 {
 	display: inline;
 }
 
-/** Suite overview */
+/** Suite overview **/
 .overview_results table {
     border: none;
 }
@@ -268,7 +270,7 @@ span.error {
 	background-repeat: no-repeat;
 }
 
-/** Test Execution report, backwards compatibility */
+/** Test Execution report, backwards compatibility **/
 .collapse_rim {
   background: #F9F9F9;
   border: 1px dotted #909090;
@@ -281,12 +283,58 @@ span.error {
   background: url(../images/collapsibleOpen.png) no-repeat scroll 0 2px transparent;
 }
 
-div.contents li > a.pruned {
+/** Table of Contents **/
+.contents a.pruned {
   text-decoration: line-through;
 }
-div.contents li > a.suite {
-  font-weight:bold;
+.contents a.suite {
+  font-weight: bold;
 }
-div.contents li > a.static {
-  font-style:italic;
+.contents a.static {
+  font-style: italic;
+}
+
+.CodeMirror {
+  border: 1px solid #d7d7d7;
+}
+
+/** Modal dialog **/
+.modal-dialog:before{
+    content: "";
+    display: none;
+    background: rgba(0,0,0,.2);
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 2000;
+}
+
+.modal-dialog:target:before {
+    display: block;
+}
+
+.modal-dialog > div {
+    display: none;
+    position: fixed;
+    background-color: white;
+    border: 1px solid #a6a6a6;
+    padding: 8px 16px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    margin: auto;
+    margin-left: 50%;
+    z-index: 2001;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+.modal-dialog:target > div {
+    display: block;
+}
+
+.help-list {
+    list-style: none;
+    display: inline-block;
+    padding: 0;
 }

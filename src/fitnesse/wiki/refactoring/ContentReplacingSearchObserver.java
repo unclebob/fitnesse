@@ -17,6 +17,7 @@ public class ContentReplacingSearchObserver implements TraversalListener<WikiPag
     this.replacement = replacement;
   }
 
+  @Override
   public void process(WikiPage page) {
     PageData pageData = page.getData();
     String replacedContent = searchPattern.matcher(pageData.getContent()).replaceAll(replacement);

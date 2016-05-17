@@ -1,13 +1,12 @@
 #if($suiteExecutionReport)
 <script src="${contextRoot}files/fitnesse/javascript/clientSideHitePassed.js" type="text/javascript"></script>
-<h1>$suiteExecutionReport.getRootPath()</h1>
 <table>
   <tr>
     <td>$suiteExecutionReport.getDate()</td>
     <td class="meta">FitNesse Version: $suiteExecutionReport.Version</td>
+    <td><a href="?executionLog&resultDate=$resultDate">Execution Log</a></td>
   </tr>
 </table>
-<hr/>
 #set($finalCounts = $suiteExecutionReport.finalCounts)
 #if($finalCounts)
 <div id="test-summary" class="$ExecutionResult.getExecutionResult($suiteExecutionReport.getRootPath(), $finalCounts)">

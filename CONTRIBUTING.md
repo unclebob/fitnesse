@@ -1,4 +1,12 @@
-# Bylaws for the committers of FitNesse.
+# Contributing to FitNesse
+
+This document describes some general guidelines for contributing to FitNesse. By respecting those guidelines you'll help improve FitNesse.
+
+## Submitting issues
+
+The [GitHub issues](https://github.com/unclebob/fitnesse/issues) section is only for bugs and feature requests. Please refer to [the mailing list](https://groups.yahoo.com/groups/fitnesse/) or [Stack Overflow](http://stackoverflow.com/search?q=fitnesse) for general advice. Even for possible bugs it's appreciated that they are discussed on those channels before submitting them as issues in the bug tracking system.
+
+## Bylaws for the committers of FitNesse
 
 1.  Use the FitNesse coding style.
 
@@ -23,8 +31,7 @@
 3.  Please don't rush.  You are never in a hurry with FitNesse.  There are no deadlines.  Keep this code as clean
     as you can.  Maintain the highest pride in your workmanship.  Don't make messes.  See the "Clean Code" book for more.
 
-4.  Whenever you make a change, add a few sentences to the changeLog.txt file describing your changes.  We used this file
-    to build the release notes.
+4.  Whenever you make a change, submit is as a pull request on https://github.com/unclebob/fitnesse. Pull requests will get a milestone "Next release" associated to them when they are merged. This milestone is used to compose the release notes.
 
 5.  If you have any questions, ask [Uncle Bob](https://github.com/unclebob).
 

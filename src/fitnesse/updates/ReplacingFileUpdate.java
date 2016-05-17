@@ -2,22 +2,25 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
 public class ReplacingFileUpdate extends FileUpdate {
-  public ReplacingFileUpdate(String source, String destination) {
+  public ReplacingFileUpdate(String source, File destination) {
     super(source, destination);
   }
 
+  @Override
   public void doUpdate() throws IOException {
     if (destinationFile().exists())
       destinationFile().delete();
     super.doUpdate();
   }
 
+  @Override
   public boolean shouldBeApplied() throws IOException {
     if (super.shouldBeApplied())
       return true;

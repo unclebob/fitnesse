@@ -28,6 +28,7 @@ public class ErrorResponder implements Responder {
     this.statusCode = statusCode;
   }
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse(statusCode);
     HtmlPage html = context.pageFactory.newPage();
@@ -44,12 +45,14 @@ public class ErrorResponder implements Responder {
   }
 
   public static String makeExceptionString(Throwable e) {
-    StringBuffer buffer = new StringBuffer();
-    buffer.append(e.toString()).append("\n");
-    StackTraceElement[] stackTreace = e.getStackTrace();
-    for (int i = 0; i < stackTreace.length; i++)
-      buffer.append("\t" + stackTreace[i]).append("\n");
+    StringBuilder builder = new StringBuilder();
+    builder.append(e.toString()).append("\n");
+    for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+      builder.append("\t")
+              .append(stackTraceElement)
+              .append("\n");
+    }
 
-    return buffer.toString();
+    return builder.toString();
   }
 }

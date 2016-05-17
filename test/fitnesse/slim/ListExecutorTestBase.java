@@ -68,8 +68,7 @@ public abstract class ListExecutorTestBase {
   private void assertExceptionReturned(String message, String returnTag) {
     Map<String, Object> results = SlimCommandRunningClient.resultToMap(executor.execute(statements));
     SlimException result = (SlimException) results.get(returnTag);
-    assertTrue(result.getMessage(), result.toString().contains(SlimServer.EXCEPTION_TAG) && result.toString().indexOf
-        (message) != -1);
+    assertTrue(result.getMessage(), result.toString().contains(SlimServer.EXCEPTION_TAG) && result.toString().contains(message));
   }
 
   @Test
@@ -139,7 +138,7 @@ public abstract class ListExecutorTestBase {
   @Test
   public void oneFunctionCallWithBlankArgument() throws Exception {
     statements.add(Arrays.asList("id", "call", "testSlim", "echoString", ""));
-    respondsWith(Arrays.asList(Arrays.asList("id", (Object) "")));
+    respondsWith(Arrays.asList(Arrays.asList("id", "")));
   }
 
   @Test
@@ -147,7 +146,7 @@ public abstract class ListExecutorTestBase {
     statements.add(0, Arrays.asList("i2", "import", getTestClassPath() + ".testSlimInThisPackageShouldNotBeTheOneUsed"));
     statements.add(Arrays.asList("id", "call", "testSlim", "returnString"));
     expectedResults.add(0, Arrays.asList("i2", "OK"));
-    respondsWith(Arrays.asList(Arrays.asList("id", (Object) "string")));
+    respondsWith(Arrays.asList(Arrays.asList("id", "string")));
   }
 
   @Test

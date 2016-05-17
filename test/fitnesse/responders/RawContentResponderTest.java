@@ -12,6 +12,7 @@ import fitnesse.wiki.WikiPageUtil;
 import org.junit.Test;
 
 public class RawContentResponderTest extends ResponderTestCase {
+  @Override
   protected Responder responderInstance() {
     return new RawContentResponder();
   }

@@ -23,7 +23,7 @@ Both scripts run java with a class to stop FitNesse. You can invoke this class d
 Alternatively you may manually type a URL to shutdown a server. http://hostname:port/?responder=shutdown
 
 !2 Running from JUnit
-see RunningFromJunit
+see [[!-RunningFromJunit-!][<UserGuide.WritingAcceptanceTests.RunningFromJunit]]
 
 !2 Running from Maven
-see RunningFromMaven
+see [[!-RunningFromMaven-!][<UserGuide.WritingAcceptanceTests.RunningFromMaven]]

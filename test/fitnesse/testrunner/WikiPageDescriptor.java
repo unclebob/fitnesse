@@ -1,9 +1,11 @@
 package fitnesse.testrunner;
 
+import java.io.File;
+import java.util.Arrays;
+
 import fitnesse.testsystems.ClassPath;
 import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.Descriptor;
-import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.wiki.WikiPage;
 
 /**
@@ -15,13 +17,15 @@ public class WikiPageDescriptor implements Descriptor {
   private final boolean inProcess;
   private final boolean remoteDebug;
   private final ClassPath classPath;
+  private final CompositeExecutionLogListener executionLogListener;
 
-  public WikiPageDescriptor(WikiPage data, boolean inProcess, boolean remoteDebug, String classPath) {
+  public WikiPageDescriptor(WikiPage data, boolean inProcess, boolean remoteDebug, String... classPath) {
     this.page = data;
     this.inProcess = inProcess;
     // Debug property should move to ClientBuilder
     this.remoteDebug = remoteDebug;
-    this.classPath = new ClassPath(classPath, ",");
+    this.classPath = new ClassPath(Arrays.asList(classPath), File.pathSeparator);
+    this.executionLogListener = new CompositeExecutionLogListener();
   }
 
   @Override
@@ -59,8 +63,8 @@ public class WikiPageDescriptor implements Descriptor {
   }
 
   @Override
-  public ExecutionLogListener getExecutionLogListener() {
-    return new CompositeExecutionLogListener();
+  public CompositeExecutionLogListener getExecutionLogListener() {
+    return executionLogListener;
   }
 
 }

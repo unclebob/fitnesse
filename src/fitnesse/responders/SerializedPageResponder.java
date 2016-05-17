@@ -25,11 +25,13 @@ import fitnesse.wiki.XmlizePageCondition;
 
 public class SerializedPageResponder implements SecureResponder {
   private XmlizePageCondition xmlizePageCondition = new XmlizePageCondition() {
+    @Override
     public boolean canBeXmlized(WikiPage page) {
       return !(page instanceof SymbolicPage);
     }
   };
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     WikiPage page = getRequestedPage(request, context);
     if (page == null)
@@ -68,7 +70,7 @@ public class SerializedPageResponder implements SecureResponder {
     } else if ("meat".equals(request.getInput("type"))) {
       WikiPage originalPage = page;
       if (request.hasInput("version"))
-        originalPage = page.getVersion((String) request.getInput("version"));
+        originalPage = page.getVersion(request.getInput("version"));
       object = originalPage.getData();
     } else
       throw new RuntimeException("Improper use of proxy retrieval");
@@ -98,6 +100,7 @@ public class SerializedPageResponder implements SecureResponder {
     return bytes;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }

@@ -35,16 +35,18 @@ public class StartFitnesseTask extends Task {
   }
 
   /**
-   * Port on which fitnesse would run. Defaults to <b>8082</b>.
+   * Set port on which fitnesse would run. Defaults to <b>8082</b>.
+   *
+   * @param fitnessePort port on which fitnesse would run
    */
   public void setFitnessePort(int fitnessePort) {
     this.fitnessePort = fitnessePort;
   }
 
   /**
-   * Path to the FitnesseRoot filder which contains all the wiki pages. <b>MUST SET</b>.
+   * Set the path to the FitnesseRoot filder which contains all the wiki pages. <b>MUST SET</b>.
    *
-   * @param wikiDirectoryRootPath
+   * @param wikiDirectoryRootPath path to the FitnesseRoot filder which contains all the wiki pages
    */
   public void setWikiDirectoryRootPath(String wikiDirectoryRootPath) {
     this.wikiDirectoryRootPath = wikiDirectoryRootPath;

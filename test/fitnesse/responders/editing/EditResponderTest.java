@@ -17,7 +17,6 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -59,7 +58,7 @@ public class EditResponderTest {
     
     assertSubString("type=\"submit\"", body);
     assertSubString("textarea", body);
-    assertSubString("<h5> Edit Page tags</h5>", body);
+    assertSubString("<label for=\"suites\">Tags:</label>", body);
   }
 
   private SimpleResponse makeResponse() {

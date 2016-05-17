@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import fitnesse.FitNesseContext;
 import fitnesse.socketservice.SocketFactory;
-
 import fitnesse.testsystems.ClientBuilder;
 import fitnesse.testsystems.CommandRunner;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.MockCommandRunner;
+
 import org.apache.commons.lang.ArrayUtils;
 
 public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
@@ -18,10 +19,12 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   public static final String SLIM_FLAGS = "SLIM_FLAGS";
   private static final String SLIM_VERSION = "SLIM_VERSION";
   public static final String MANUALLY_START_TEST_RUNNER_ON_DEBUG = "MANUALLY_START_TEST_RUNNER_ON_DEBUG";
-
+  public static final String SLIM_SSL = "SLIM_SSL";
+  
   private static final AtomicInteger slimPortOffset = new AtomicInteger(0);
 
-  private final int slimPort;
+
+  private int slimPort;
 
   public SlimClientBuilder(Descriptor descriptor) {
     super(descriptor);
@@ -38,7 +41,24 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
       commandRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(getClassPath()), getExecutionLogListener(), determineTimeout());
     }
 
-    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort(), determineTimeout(), getSlimVersion());
+    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort(), determineTimeout(), getSlimVersion(), determineSSL(), determineHostSSLParameterClass());
+  }
+
+  protected String determineClientSSLParameterClass() {
+      String sslParameterClassName = getVariable("slim.ssl");
+      if (sslParameterClassName == null) {
+    	  sslParameterClassName = getVariable(SLIM_SSL);
+      }
+      if (sslParameterClassName != null && sslParameterClassName.equalsIgnoreCase("false")) sslParameterClassName=null;
+      return sslParameterClassName;
+  }
+
+  protected boolean determineSSL() {
+      return (determineClientSSLParameterClass() != null );
+  }
+
+  protected String determineHostSSLParameterClass() {
+      return getVariable(FitNesseContext.SSL_PARAMETER_CLASS_PROPERTY);
   }
 
   public double getSlimVersion() {
@@ -66,21 +86,34 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   }
 
   protected String[] buildArguments() {
-    int slimSocket = getSlimPort();
-    String slimFlags = getSlimFlags();
-    if ("".equals(slimFlags))
-      return new String[] { Integer.toString(slimSocket) };
-    return new String[] { slimFlags, Integer.toString(slimSocket) };
+    Object[] arguments = new String[] {};
+    String useSSL =  determineClientSSLParameterClass();
+    if (useSSL != null){
+    	arguments = ArrayUtils.add(arguments, "-ssl");
+    	arguments = ArrayUtils.add(arguments, useSSL);
+    }    	
+    String[] slimFlags = getSlimFlags();
+    if (slimFlags != null)
+    	for (String flag : slimFlags)
+    		arguments = ArrayUtils.add(arguments, flag);
+    
+	arguments = ArrayUtils.add(arguments, Integer.toString(getSlimPort()));
+
+    return (String[]) arguments;
   }
 
   public int getSlimPort() {
     return slimPort;
   }
 
+  protected void setSlimPort(int slimPort) {
+    this.slimPort = slimPort;
+  }
+
   private int findFreePort() {
     int port;
     try {
-      ServerSocket socket = SocketFactory.tryCreateServerSocket(0);
+      ServerSocket socket = SocketFactory.createServerSocket(0);
       port = socket.getLocalPort();
       socket.close();
     } catch (Exception e) {
@@ -89,7 +122,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     return port;
   }
 
-  private int getNextSlimPort() {
+  protected int getNextSlimPort() {
     final int base = getSlimPortBase();
     final int poolSize = getSlimPortPoolSize();
 
@@ -147,12 +180,12 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     return slimHost == null ? "localhost" : slimHost;
   }
 
-  protected String getSlimFlags() {
+  protected String[] getSlimFlags() {
     String slimFlags = getVariable("slim.flags");
     if (slimFlags == null) {
       slimFlags = getVariable(SLIM_FLAGS);
     }
-    return slimFlags == null ? "" : slimFlags;
+    return slimFlags == null ? new String[] {} : parseCommandLine(slimFlags);
   }
 
   protected int determineTimeout() {
@@ -183,7 +216,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
       if (useManualStart == null) {
         useManualStart = getVariable(MANUALLY_START_TEST_RUNNER_ON_DEBUG);
       }
-      return (useManualStart != null && useManualStart.toLowerCase().equals("true"));
+      return "true".equalsIgnoreCase(useManualStart);
     }
     return false;
   }

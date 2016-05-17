@@ -7,8 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class HtmlTag extends HtmlElement implements Iterable<HtmlElement> {
-  private final LinkedList<HtmlElement> childTags = new LinkedList<HtmlElement>();
-  private final List<Attribute> attributes = new LinkedList<Attribute>();
+  private final LinkedList<HtmlElement> childTags = new LinkedList<>();
+  private final List<Attribute> attributes = new LinkedList<>();
   private final String tagName;
   private boolean isInline;
 
@@ -30,6 +30,7 @@ public class HtmlTag extends HtmlElement implements Iterable<HtmlElement> {
     return tagName;
   }
 
+  @Override
   public String html() {
     return html(0);
   }
@@ -44,7 +45,7 @@ public class HtmlTag extends HtmlElement implements Iterable<HtmlElement> {
   }
 
   private boolean hasChildren() {
-    return childTags.size() > 0;
+    return !childTags.isEmpty();
   }
 
   public void add(String s) {
@@ -161,7 +162,7 @@ public class HtmlTag extends HtmlElement implements Iterable<HtmlElement> {
     }
 
     private String makeChildFromTag(HtmlTag element) {
-      return (childShouldStartWithNewLine() ? endl : "") + ((HtmlTag) element).html(depth + 1);
+      return (childShouldStartWithNewLine() ? endl : "") + element.html(depth + 1);
     }
 
     private boolean childShouldStartWithNewLine() {

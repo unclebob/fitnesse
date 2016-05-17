@@ -36,14 +36,14 @@ public class FitServer {
   public FitServer() {
   }
 
-  public static void main(String argv[]) throws Exception {
+  public static void main(String[] argv) throws Exception {
     FitServer fitServer = new FitServer();
     fitServer.run(argv);
     if (!fitServer.noExit)
       System.exit(fitServer.exitCode());
   }
 
-  public void run(String argv[]) throws Exception {
+  public void run(String[] argv) throws Exception {
     args(argv);
     File sentinelFile = null;
     if (sentinel) {
@@ -150,7 +150,7 @@ public class FitServer {
     socket = new Socket(host, port);
     socketOutput = socket.getOutputStream();
     socketReader = new StreamReader(socket.getInputStream());
-    byte[] bytes = httpRequest.getBytes("UTF-8");
+    byte[] bytes = httpRequest.getBytes(FileUtil.CHARENCODING);
     socketOutput.write(bytes);
     socketOutput.flush();
     print("http request sent" + "\n");
@@ -185,7 +185,7 @@ public class FitServer {
 
   public static byte[] readTable(Parse table) throws Exception {
     ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-    OutputStreamWriter streamWriter = new OutputStreamWriter(byteBuffer, "UTF-8");
+    OutputStreamWriter streamWriter = new OutputStreamWriter(byteBuffer, FileUtil.CHARENCODING);
     PrintWriter writer = new PrintWriter(streamWriter);
     Parse more = table.more;
     table.more = null;
@@ -203,6 +203,7 @@ public class FitServer {
   }
 
   class TablePrintingFixtureListener implements FixtureListener {
+    @Override
     public void tableFinished(Parse table) {
       try {
         byte[] bytes = readTable(table);
@@ -214,6 +215,7 @@ public class FitServer {
       }
     }
 
+    @Override
     public void tablesFinished(Counts count) {
       try {
         FitProtocol.writeCounts(count, socketOutput);

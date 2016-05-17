@@ -19,8 +19,8 @@ import static fitnesse.util.HtmlParserTools.*;
 
 public class HtmlTableScanner implements TableScanner<HtmlTable> {
 
-  private List<HtmlTable> tables = new ArrayList<HtmlTable>(16);
-  private List<Node> nodes = new ArrayList<Node>(512);
+  private List<HtmlTable> tables = new ArrayList<>(16);
+  private List<Node> nodes = new ArrayList<>(512);
 
   public HtmlTableScanner(String page) {
     if (page == null || page.equals(""))
@@ -65,14 +65,17 @@ public class HtmlTableScanner implements TableScanner<HtmlTable> {
     }
   }
 
+  @Override
   public int getTableCount() {
     return tables.size();
   }
 
+  @Override
   public HtmlTable getTable(int i) {
     return tables.get(i);
   }
 
+  @Override
   public Iterator<HtmlTable> iterator() {
     return tables.iterator();
   }

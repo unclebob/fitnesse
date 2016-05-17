@@ -19,11 +19,11 @@ public class SocketServiceTest {
   private int connections = 0;
   private SocketServer connectionCounter;
   private SocketService ss;
-  private final static int portNumber = 1999;
-
+  private static final int PORT_NUMBER = 1999;
 
   public SocketServiceTest() {
     connectionCounter = new SocketServer() {
+      @Override
       public void serve(Socket s) {
         connections++;
       }
@@ -37,32 +37,37 @@ public class SocketServiceTest {
 
   @Test
   public void testNoConnections() throws Exception {
-    ss = new SocketService(portNumber, connectionCounter);
+    SocketServer connectionCounter1 = this.connectionCounter;
+    ss = createSocketService(connectionCounter1);
     ss.close();
     assertEquals(0, connections);
   }
 
+  public SocketService createSocketService(SocketServer socketServer) throws IOException {
+    return new SocketService(socketServer, false, SocketFactory.createServerSocket(PORT_NUMBER));
+  }
+
   @Test
   public void testOneConnection() throws Exception {
-    ss = new SocketService(portNumber, connectionCounter);
-    connect(portNumber);
+    ss = createSocketService(connectionCounter);
+    connect(PORT_NUMBER);
     ss.close();
     assertEquals(1, connections);
   }
 
   @Test
   public void testManyConnections() throws Exception {
-    ss = new SocketService(portNumber, connectionCounter);
+    ss = createSocketService(connectionCounter);
     for (int i = 0; i < 10; i++)
-      connect(portNumber);
+      connect(PORT_NUMBER);
     ss.close();
     assertEquals(10, connections);
   }
 
   @Test
   public void testSendMessage() throws Exception {
-    ss = new SocketService(portNumber, new HelloService());
-    Socket s = new Socket("localhost", portNumber);
+    ss = createSocketService(new HelloService());
+    Socket s = new Socket("localhost", PORT_NUMBER);
     BufferedReader br = GetBufferedReader(s);
     String answer = br.readLine();
     s.close();
@@ -72,8 +77,8 @@ public class SocketServiceTest {
 
   @Test
   public void testReceiveMessage() throws Exception {
-    ss = new SocketService(portNumber, new EchoService());
-    Socket s = new Socket("localhost", portNumber);
+    ss = createSocketService(new EchoService());
+    Socket s = new Socket("localhost", PORT_NUMBER);
     BufferedReader br = GetBufferedReader(s);
     PrintStream ps = GetPrintStream(s);
     ps.println("MyMessage");
@@ -81,30 +86,6 @@ public class SocketServiceTest {
     s.close();
     ss.close();
     assertEquals("MyMessage", answer);
-  }
-
-  @Test
-  public void testMultiThreaded() throws Exception {
-    ss = new SocketService(portNumber, new EchoService());
-    Socket s = new Socket("localhost", portNumber);
-    BufferedReader br = GetBufferedReader(s);
-    PrintStream ps = GetPrintStream(s);
-
-    Socket s2 = new Socket("localhost", portNumber);
-    BufferedReader br2 = GetBufferedReader(s2);
-    PrintStream ps2 = GetPrintStream(s2);
-
-    ps2.println("MyMessage2");
-    String answer2 = br2.readLine();
-    s2.close();
-
-    ps.println("MyMessage1");
-    String answer = br.readLine();
-    s.close();
-
-    ss.close();
-    assertEquals("MyMessage2", answer2);
-    assertEquals("MyMessage1", answer);
   }
 
   private void connect(int port) {
@@ -128,6 +109,7 @@ public class SocketServiceTest {
 }
 
 class HelloService implements SocketServer {
+  @Override
   public void serve(Socket s) {
     try {
       PrintStream ps = GetPrintStream(s);
@@ -139,6 +121,7 @@ class HelloService implements SocketServer {
 }
 
 class EchoService implements SocketServer {
+  @Override
   public void serve(Socket s) {
     try {
       PrintStream ps = GetPrintStream(s);

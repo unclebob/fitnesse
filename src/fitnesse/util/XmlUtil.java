@@ -6,6 +6,7 @@ import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+import util.FileUtil;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,7 +23,7 @@ import java.io.*;
 public class XmlUtil {
   private static final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
-  private static ThreadLocal<DocumentBuilder> documentBuilder = new ThreadLocal<DocumentBuilder>();
+  private static ThreadLocal<DocumentBuilder> documentBuilder = new ThreadLocal<>();
 
   private static DocumentBuilder getDocumentBuilder() {
     DocumentBuilder builder = documentBuilder.get();
@@ -55,7 +56,7 @@ public class XmlUtil {
 
   public static Document newDocument(File input) throws IOException, SAXException {
     try {
-      return getDocumentBuilder().parse(new InputSource(new InputStreamReader(new FileInputStream(input), "UTF-8")));
+      return getDocumentBuilder().parse(new InputSource(new InputStreamReader(new FileInputStream(input), FileUtil.CHARENCODING)));
     } catch (SAXParseException e) {
       throw new SAXException(String.format("SAXParseException at %s:%d,%d: %s", input.getCanonicalPath(), e.getLineNumber(), e.getColumnNumber(), e.getMessage()));
     }
@@ -98,7 +99,7 @@ public class XmlUtil {
       return null;
     }
     String text = namedElement.getTextContent();
-    return (text.length() == 0) ? null : text;
+    return (text.isEmpty()) ? null : text;
   }
 
   public static void addTextNode(Element element, String tagName, String value) {
@@ -124,7 +125,7 @@ public class XmlUtil {
     StringWriter sw = new StringWriter();
     try {
       Transformer transformer = transformerFactory.newTransformer();
-      transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+      transformer.setOutputProperty(OutputKeys.ENCODING, FileUtil.CHARENCODING);
       transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
       transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 

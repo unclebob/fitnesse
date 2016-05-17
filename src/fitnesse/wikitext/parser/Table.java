@@ -3,6 +3,9 @@ package fitnesse.wikitext.parser;
 public class Table extends SymbolType implements Rule, Translation {
   public static final Table symbolType = new Table();
 
+  public static final SymbolType tableRow = new SymbolType("TableRow");
+  public static final SymbolType tableCell = new SymbolType("TableCell");
+
   public Table() {
     super("Table");
     wikiMatcher(new Matcher().startLine().string("|"));
@@ -13,12 +16,14 @@ public class Table extends SymbolType implements Rule, Translation {
     htmlTranslation(this);
   }
 
+  @Override
   public Maybe<Symbol> parse(Symbol current, Parser parser) {
     String content = current.getContent();
     if (content.charAt(0) == '-') current.putProperty("hideFirst", "");
     boolean endOfTable = false;
     while (!endOfTable) {
-      Symbol row = new Symbol(SymbolType.SymbolList);
+      Symbol row = new Symbol(tableRow);
+      row.setStartOffset(parser.getOffset());
       current.add(row);
       while (true) {
         int offset = parser.getOffset();
@@ -32,15 +37,18 @@ public class Table extends SymbolType implements Rule, Translation {
         row.add(cell);
         if (endsRow(parser.getCurrent())) break;
       }
+      row.setEndOffset(parser.getOffset());
       if (!startsRow(parser.getCurrent())) break;
     }
-    return new Maybe<Symbol>(current);
+    return new Maybe<>(current);
   }
 
   private Symbol parseCell(Parser parser, String content) {
-    return (content.contains("!"))
-      ? parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider, ParseSpecification.tablePriority)
-      : parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.tableParsingProvider, ParseSpecification.tablePriority);
+    Symbol cell = (content.contains("!"))
+            ? parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider, ParseSpecification.tablePriority)
+            : parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.tableParsingProvider, ParseSpecification.tablePriority);
+    cell.setType(tableCell);
+    return cell;
   }
 
   private boolean containsNewLine(Symbol cell) {
@@ -58,6 +66,7 @@ public class Table extends SymbolType implements Rule, Translation {
     return symbol.getContent().contains("\n|");
   }
 
+  @Override
   public String toTarget(Translator translator, Symbol symbol) {
       HtmlWriter writer = new HtmlWriter();
       writer.startTag("table");
@@ -92,6 +101,7 @@ public class Table extends SymbolType implements Rule, Translation {
   protected String translateCellBody(Translator translator, Symbol cell) {
     final String literalDelimiter = new String(new char[]{255, 1, 255});
     cell.walkPreOrder(new SymbolTreeWalker() {
+      @Override
       public boolean visit(Symbol node) {
         if (node.isType(Literal.symbolType)) {
           node.setContent(literalDelimiter + node.getContent() + literalDelimiter);
@@ -99,6 +109,7 @@ public class Table extends SymbolType implements Rule, Translation {
         return true;
       }
 
+      @Override
       public boolean visitChildren(Symbol node) {
         return true;
       }

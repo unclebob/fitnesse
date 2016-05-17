@@ -22,7 +22,7 @@ public class PluginsClassLoader {
   }
 
   public static void addItemsToClasspath(String classpathItems) throws Exception {
-    final String separator = System.getProperty("path.separator");
+    final String separator = File.pathSeparator;
     String currentClassPath = System.getProperty("java.class.path");
     System.setProperty("java.class.path", currentClassPath + separator + classpathItems);
     String[] items = classpathItems.split(separator);

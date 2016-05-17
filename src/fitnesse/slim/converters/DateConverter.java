@@ -9,19 +9,24 @@ import java.util.Locale;
 
 import fitnesse.slim.Converter;
 import fitnesse.slim.SlimError;
+import fitnesse.util.StringUtils;
 
 public class DateConverter implements Converter<Date> {
-  public final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
+  public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
 
+  @Override
   public String toString(Date o) {
-    return dateFormat.format(o);
+    return o != null ? DATE_FORMAT.format(o) : NULL_VALUE;
   }
 
+  @Override
   public Date fromString(String arg) {
+    if (StringUtils.isBlank(arg))
+      return null;
     try {
-      return dateFormat.parse(arg);
+      return DATE_FORMAT.parse(arg);
     } catch (ParseException e) {
-      throw new SlimError("Can't parse date " + arg, e);
+      throw new SlimError(String.format("message:<<Can't convert %s to date.>>", arg), e);
     }
   }
 }

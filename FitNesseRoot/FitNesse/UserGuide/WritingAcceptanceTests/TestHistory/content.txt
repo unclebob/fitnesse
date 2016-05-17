@@ -4,15 +4,17 @@ When you click on !style_code(Test History) you will be shown the directory of a
 
 The detailed ''page history'' shows you a directory of all the test results for that test or suite.  The bar chart shows how how the number of tests (for suites) or assertions (for tests) has grown over time, and the pass/fail ratio.  Clicking on an entry takes you to that specific test result.
 
-!4 Details.
+!4 Details
 The ''test history database'' is kept in !style_code(!-FitNesseRoot/files/testResults-!).  Beneath this directory there is a subdirectory for each test or suite.  These directories contain the ''page history'' and are named for the page that contains the test or suite.  Beneath the page history directory is a file for each test result.
 
 The test result files are named using the following scheme !style_code(YYYYMMDDHHMMSS_R_W_I_E.xml)  where YYYYMMDDHHMMSS is the date and time of the test run, and R, W, I, and E are integers representing the number of Right, Wrong, Ignored, and Exception counts for the test or suite.  For tests they are assertion counts.  For suites they are test counts.  (Example: !style_code(20090513134259_12_20_4_2.xml))
 
 The test files contain the XML that describes the test run.  The format of this XML is identical to the XML packet returned by the format=xml flag when you run a test.  (See <UserGuide.RestfulTests).
 
-!4 Purging.
-There are buttons at the top of the ''Test History'' page that allow you to purge old history files.  You have your choice of ''all'', ''>7 days'', or ''>30 days''.  If you want to purge a different number of days, you can use the RESTful URL form.  (See RestfulServices).
+!4 Purging
+There are buttons at the top of the ''Test History'' page that allow you to purge old history files.  You have your choice of ''all'', ''>7 days'', or ''>30 days''.  If you want to purge a different number of days, you can use the RESTful URL form.  (See [[!-RestfulServices-!][<UserGuide.AdministeringFitNesse.RestfulServices]]).
+
+You can also clean up the test history right after a test execution. To do so, configure a property ''test.history.days'' in the [[configuration file][<UserGuide.AdministeringFitNesse.ConfigurationFile]] or as a [[page variable][<UserGuide.FitNesseWiki.MarkupLanguageReference.MarkupVariables]] and assign it the number of days you want to keep history.
 
 !4 Comparing History
 When viewing the history for a page, you can select any two test results by clicking in their checkboxes.  Then, if you click the ''Compare'' button, you will be shown the two test results side-by-side along with an indicator that tells you if the results are identical or not.

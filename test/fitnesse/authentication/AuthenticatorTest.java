@@ -11,7 +11,6 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.SimpleAuthenticator;
-import fitnesse.wiki.fs.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
@@ -26,10 +25,12 @@ public class AuthenticatorTest {
 
   class DummySecureResponder implements SecureResponder {
 
+    @Override
     public SecureOperation getSecureOperation() {
       return new AlwaysSecureOperation();
     }
 
+    @Override
     public Response makeResponse(FitNesseContext context, Request request) {
       return null;
     }

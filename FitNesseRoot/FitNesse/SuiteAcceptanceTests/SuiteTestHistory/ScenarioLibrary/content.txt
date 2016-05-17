@@ -17,8 +17,8 @@
 !|scenario|the page title should be|title|
 |ensure|content contains|<h1>@title</h1>|
 
-!|scenario|the page title should be a link to|page|with value|value|
-|ensure|content contains|<h1><a href="/@page">@value</a></h1>|
+!|scenario|the page title should be a link to|page            |with value            |value           |
+|ensure   |content contains                  |<${TITLE_TAG}><a href="/@page">@value</a></${TITLE_TAG}>|
 
 
 !|scenario|the bread crumb|crumb|should be a link to|page|

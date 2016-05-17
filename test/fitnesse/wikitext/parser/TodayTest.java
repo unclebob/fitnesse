@@ -27,9 +27,10 @@ public class TodayTest {
         ParserTestHelper.assertTranslatesTo("!today -xml", "2002-03-04T15:06:07");
         ParserTestHelper.assertTranslatesTo("!today (MMM)", "Mar");
         ParserTestHelper.assertTranslatesTo("!today (dd MMM)", "04 Mar");
-        ParserTestHelper.assertTranslatesTo("!today (dd MMM", "!today (dd MMM");
+        ParserTestHelper.assertTranslatesTo("!today (dd MMM" /* eof */, "04 Mar");
         ParserTestHelper.assertTranslatesTo("!today -t.", "04 Mar, 2002 15:06.");
         ParserTestHelper.assertTranslatesTo("!today -xml.", "2002-03-04T15:06:07.");
+        ParserTestHelper.assertTranslatesTo("!today (MMM" /* eof */, "Mar");
     }
 
     @Test

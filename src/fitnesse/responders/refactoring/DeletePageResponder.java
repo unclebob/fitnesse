@@ -25,6 +25,7 @@ public class DeletePageResponder implements SecureResponder {
   private WikiPagePath path;
   private FitNesseContext context;
 
+  @Override
   public Response makeResponse(final FitNesseContext context, final Request request) {
     this.context = context;
     intializeResponse(request);
@@ -38,7 +39,7 @@ public class DeletePageResponder implements SecureResponder {
   }
 
   private void tryToDeletePage(Request request) {
-    String confirmedString = (String) request.getInput("confirmed");
+    String confirmedString = request.getInput("confirmed");
     if (!"yes".equalsIgnoreCase(confirmedString)) {
       response.setContent(buildConfirmationHtml(context.getRootPage(), qualifiedPageName, context));
     } else {
@@ -64,7 +65,7 @@ public class DeletePageResponder implements SecureResponder {
 
   private void redirect(final WikiPagePath path, final SimpleResponse response) {
     String location = PathParser.render(path);
-    if (location == null || location.length() == 0) {
+    if (location == null || location.isEmpty()) {
       response.redirect(context.contextRoot, "root");
     } else {
       response.redirect(context.contextRoot, location);
@@ -75,16 +76,15 @@ public class DeletePageResponder implements SecureResponder {
     HtmlPage html = context.pageFactory.newPage();
     
     String tags = "";
-    if(root!=null){
-      WikiPagePath path = PathParser.parse(qualifiedPageName);
-      PageCrawler crawler = root.getPageCrawler();
-      WikiPage wikiPage = crawler.getPage(path);
-      if(wikiPage != null) {
-        PageData pageData = wikiPage.getData();
-        tags = pageData.getAttribute(PageData.PropertySUITES);
-      }
+
+    WikiPagePath path = PathParser.parse(qualifiedPageName);
+    PageCrawler crawler = root.getPageCrawler();
+    WikiPage wikiPage = crawler.getPage(path);
+    if(wikiPage != null) {
+      PageData pageData = wikiPage.getData();
+      tags = pageData.getAttribute(PageData.PropertySUITES);
     }
-      
+
     html.setTitle("Delete Confirmation");
     html.setPageTitle(new PageTitle("Confirm Deletion", PathParser.parse(qualifiedPageName), tags));
 
@@ -102,6 +102,7 @@ public class DeletePageResponder implements SecureResponder {
     html.put("pageName", qualifiedPageName);
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();
   }

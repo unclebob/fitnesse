@@ -28,6 +28,7 @@ public class UploadedFile {
     return file;
   }
 
+  @Override
   public String toString() {
     try {
       return "name : " + getName() + "; type : " + getType() + "; content : " + FileUtil.getFileContent(file);
@@ -38,7 +39,7 @@ public class UploadedFile {
   }
 
   public boolean isUsable() {
-    return (name != null && name.length() > 0);
+    return (name != null && !name.isEmpty());
   }
 
   public void delete() {

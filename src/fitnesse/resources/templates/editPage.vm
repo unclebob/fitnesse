@@ -1,8 +1,17 @@
-<script src="${contextRoot}files/fitnesse/javascript/textinputs_jquery.js" type="text/javascript"></script>
 <script src="${contextRoot}files/fitnesse/javascript/SpreadsheetTranslator.js" type="text/javascript"></script>
 <script src="${contextRoot}files/fitnesse/javascript/WikiFormatter.js" type="text/javascript"></script>
 <script src="${contextRoot}files/fitnesse/javascript/TemplateInserter.js" type="text/javascript"></script>
 <script src="${contextRoot}files/fitnesse/javascript/mousetrap.min.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/codemirror/codemirror.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/codemirror/addon/foldcode.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/codemirror/addon/simple.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/codemirror/addon/foldgutter.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/codemirror/fitnesse/fitnesse.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/codemirror/addon/foldgutter.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/codemirror/codemirror.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/codemirror/addon/hint/show-hint.css">
+<script src="${contextRoot}files/fitnesse/codemirror/addon/hint/show-hint.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/codemirror/addon/hint/fitnesse_anyword-hint.js" type="text/javascript"></script>
 
 <form method="post" action="$resource" name="f" class="mousetrap">
 #if($!editTime)
@@ -62,16 +71,16 @@
   <a class="button" href="#if($!redirect)$redirect#else$resource#end">Cancel</a>
  </fieldset>
 </form>
+
 <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/wysiwyg/editor.css" media="screen" />
 <script src="${contextRoot}files/fitnesse/wysiwyg/wysiwyg.js" type="text/javascript"></script>
+<script src="${contextRoot}files/fitnesse/wysiwyg/wikitext.js" type="text/javascript"></script>
 <script src="${contextRoot}files/fitnesse/javascript/jquery.tagsinput.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(function () {
 
-  var editors = Wysiwyg.initialize();
-  if (editors) {
-    var editor = editors[0];
-
+  var editor = Wysiwyg.initialize(document.getElementById('pageContent'));
+  if (editor) {
     // On cancel button:
     
     function fieldValues () {
@@ -93,21 +102,23 @@ $(function () {
 
       if (editor.activeEditor() === "wysiwyg") {
         editor.loadWikiText();
+      } else {
+        editor.codeMirrorEditor.save();
       }
 
       if (fieldValues().join('$$') !== originalFieldValues.join('$$')) {
         return "The page content has been changed.\nDo you really want to leave this page?";
       }
     };
-  }
 
-  var rte = $('#editor .wysiwyg');
-  var textarea = $('#editor textarea');
-  $(window).resize(function () {
-    var h = $('#save_buttons').position().top;
-    rte.height(h - rte.position().top - 6);
-    textarea.height(h - textarea.position().top - 6);
-  }).resize();
+    var rte = $(editor.frame);
+    var wrappedElement = $(editor.codeMirrorEditor.getWrapperElement());
+    $(window).resize(function () {
+      var h = $('#save_buttons').position().top;
+      rte.height(h - rte.position().top - 6);
+      wrappedElement.height(h - wrappedElement.position().top - 6);
+    }).resize();
+  }
 
   /* Tags */
   $('#suites').tagsInput();
@@ -138,13 +149,13 @@ $(function () {
   <fieldset>
   <p>1. From the files section: <a href="/files" class="button" target="_blank">Manage</a></p>
   <pre></pre>
-  <ul></ul>
+  <ul class="select-box"></ul>
   </fieldset>
   <fieldset>
   <p>2. Provide a URL:</p>
-  <input class="url" type="text" value=""></input><br/>
-  <button value="Add">Add</button>
+  <input class="image-url" type="text" value=""></input><br/>
   </fieldset>
+  <button class="btn-primary" value="Add">Add</button>
   <a href="#" class="button">Cancel</a>
  </div>
 </div>

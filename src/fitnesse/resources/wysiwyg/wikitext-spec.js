@@ -9,7 +9,7 @@ describe("parser and formatter", function () {
 
         Wysiwyg.editorMode = 'wysiwyg';
         var options = Wysiwyg.getOptions();
-        editor = new Wysiwyg(document.getElementById("pageContent"), options);
+        editor = Wysiwyg.newInstance(document.getElementById("pageContent"), options);
         jasmine.Clock.tick(1000);
 
         contentDocument = editor.contentDocument;
@@ -180,7 +180,7 @@ describe("parser and formatter", function () {
         doTreeWalk(expected, dom);
     });
 
-    it("test isLastChildInBlockNode (can get rid of)", function() {
+    it("test isBogusLineBreak (can get rid of)", function() {
         var dom = fragment(
             element("p", element("br")),
             element("p", "foobar", element("br"), "foobar"),
@@ -188,7 +188,7 @@ describe("parser and formatter", function () {
             element("p", element("b", "foobar"), element("br")),
             element("br"));
         function assert(expected, node) {
-            expect(editor.isLastChildInBlockNode(node)).toBe(expected); //, "#" + (count++));
+            expect(editor.isBogusLineBreak(node)).toBe(expected); //, "#" + (count++));
         }
         assert(true, dom.childNodes[0].childNodes[0]);
         assert(false, dom.childNodes[1].childNodes[0]);
@@ -216,8 +216,8 @@ describe("parser and formatter", function () {
 
     it("should ignore nested code blocks", function() {
         var dom = fragment(
-            element("p", element("pre", br(), "#!python", br(), "= level 1", br(), "{{{", br(), "= level 2", br()), " = level 1}}}"));
-        var wikitext = [
+            element("p", element("pre", br(), "#!python", br(), "= level 1", br(), "{{{", br(), "= level 2", br()), br(), "= level 1}}}"));
+        generateFragment(dom, [
             "{{{",
             "#!python",
             "= level 1",
@@ -225,15 +225,15 @@ describe("parser and formatter", function () {
             "= level 2",
             "}}}",
             "= level 1",
-            "}}}" ].join("\n");
-        generateFragment(dom, wikitext);
+            "}}}" ].join("\n"));
         generateWikitext(dom, [
             "{{{",
             "#!python",
             "= level 1",
             "{{{",
             "= level 2",
-            "}}}= level 1}}}" ].join("\n"));
+            "}}}",
+            "= level 1}}}" ].join("\n"));
     });
 
 
@@ -251,19 +251,14 @@ describe("parser and formatter", function () {
 
     it("paragraph", function() {
         var dom = fragment(
-            element("p", "Paragraph continued..."),
-            element("p", "Second paragraph continued..."));
-        generateFragment(dom, [
+            element("p", "Paragraph", br(), "continued..."),
+            element("p", "Second paragraph", br(), "continued..."));
+        generate(dom, [
             "Paragraph",
             "continued...",
             "",
             "Second paragraph",
-            "continued...",
-            "" ].join("\n"));
-        generate(dom, [
-            "Paragraph continued...",
-            "",
-            "Second paragraph continued..." ].join("\n"));
+            "continued..." ].join("\n"));
     });
 
     it("link", function() {
@@ -341,42 +336,136 @@ describe("parser and formatter", function () {
         generate(dom, wikitext);
     });
 
-    it("escape !{ .. } - hashtable", function() {
-        var dom = element("p", "foo ", element("tt", {'class': 'hashtable'}, "bar: val"), " baz");
-        var wikitext = "foo !{bar: val} baz";
+    it("hash table", function() {
+        var dom = element("p",
+            element("table", {'class': 'hashtable'},
+                element("tbody",
+                    element("tr",
+                        element("td", "bar"),
+                        element("td", "val")))));
+
+        var wikitext = "!{bar:val}";
         generate(dom, wikitext);
     });
 
-    it("escape !( .. )! - nested ", function() {
-        var dom = element("p", "foo ", element("tt", {'class': 'nested'}, "bar"), " baz");
-        var wikitext = "foo !(bar)! baz";
+    it("hash table, empty entries should be skipped", function() {
+        var dom = element("p",
+            element("table", {'class': 'hashtable'},
+                element("tbody",
+                    element("tr",
+                        element("td", ""),
+                        element("td", "")),
+                element("tr",
+                    element("td", "bar"),
+                    element("td", "val")))));
+
+        var wikitext = "!{bar:val}";
+        generateWikitext(dom, wikitext);
+    });
+
+    it("hash table with escaped multi-line value", function() {
+        var dom = element("p",
+            element("table", {'class': 'hashtable'},
+                element("tbody",
+                    element("tr",
+                        element("td", "a"),
+                        element("td", element("tt", { "class": "escape"}, "bc", br(), "def"))))));
+
+        var wikitext = "!{a:!-bc\ndef-!}";
+        generate(dom, wikitext);
+    });
+
+    it("hash table with multi-line value", function() {
+        var dom = element("p",
+            element("table", {'class': 'hashtable'},
+                element("tbody",
+                    element("tr",
+                        element("td", "a"),
+                        element("td", "bc", br(), "def")))));
+
+        var wikitext = "!{a:bc\ndef}";
+        var expectedWikitext = "!{a:bc!-\n-!def}";
+        generateFragment(dom, wikitext);
+        generateWikitext(dom, expectedWikitext);
+    });
+
+    it("hash table in table", function() {
+        var dom = element("table",
+            element("tbody",
+                element("tr",
+                    element("td", " test "),
+                    element("td", " text", element("table", {'class': 'hashtable'},
+                        element("tbody",
+                            element("tr",
+                                element("td", "$contactId1"),
+                                element("td", "id1")),
+                            element("tr",
+                                element("td", "$contactId2"),
+                                element("td", "id2")))), "trailer "))));
+
+        var wikitext = "| test | text!{$contactId1:id1,$contactId2:id2}trailer |";
+        generate(dom, wikitext);
+    });
+
+    it("hash table with variable in table", function() {
+        var dom = element("table",
+            element("tbody",
+                element("tr",
+                    element("td", " test "),
+                    element("td", " ", element("table", {'class': 'hashtable'},
+                        element("tbody",
+                            element("tr",
+                                element("td", "$contactId1"),
+                                element("td", "${ID1}")),
+                            element("tr",
+                                element("td", "$contactId2"),
+                                element("td", "id2")))), " "))));
+        var wikitext = "| test | !{$contactId1:${ID1},$contactId2:id2} |";
+        generate(dom, wikitext);
+    });
+
+    it("hash table with multi-line content in table", function() {
+        var dom = element("table",
+            element("tbody",
+                element("tr",
+                    element("td", " test "),
+                    element("td", " text", element("table", {'class': 'hashtable'},
+                        element("tbody",
+                            element("tr",
+                                element("td", "$contactId1"),
+                                element("td", element("tt", {"class": "escape"}, "id", br(), "1"))),
+                            element("tr",
+                                element("td", "$contactId2"),
+                                element("td", "id", br(), "2")))), "trailer "))));
+
+        var wikitext = "| test | text!{$contactId1:!-id\n1-!,$contactId2:id\n2}trailer |";
+        var expectedWikitext = "| test | text!{$contactId1:!-id\n1-!,$contactId2:id!-\n-!2}trailer |";
+        generateFragment(dom, wikitext);
+        generateWikitext(dom, expectedWikitext);
+    });
+
+    it("table with nested table !( .. )!", function() {
+        var dom = element("table",
+            element("tbody",
+                element("tr",
+                    element("td", {colspan: 2}, " table ")),
+                element("tr",
+                    element("td", " ", element("div", {'class': 'nested'},
+                        element("table",
+                            element("tbody",
+                                element("tr",
+                                    element("td", " foo "),
+                                    element("td", " bar ")),
+                                element("tr",
+                                    element("td", {colspan: 2}, " baz "))))), " "),
+                    element("td", " quit "))));
+        var wikitext = "| table |\n| !(| foo | bar |\n| baz |)! | quit |";
         generate(dom, wikitext);
     });
 
     it("escape ![ .. ]! - plain text table", function() {
         var dom = element("p", "foo ", element("tt", {'class': 'plaintexttable'}, "bar", br(), "baz"), " bee");
         var wikitext = "foo ![bar\nbaz]! bee";
-        generate(dom, wikitext);
-    });
-
-    it("hashtable in table", function() {
-        var dom = element("table",
-            element("tbody",
-                element("tr",
-                    element("td", " test "),
-                    element("td", " ", element("tt", { class: "hashtable" }, "$contactId1:id1,$contactId2:id2"), " "))));
-
-        var wikitext = "| test | !{$contactId1:id1,$contactId2:id2} |";
-        generate(dom, wikitext);
-    });
-    it("hashtable with variable", function() {
-        var dom = element("table",
-            element("tbody",
-                element("tr",
-                    element("td", " test "),
-                    element("td", " ", element("tt", { class: "hashtable" }, "$contactId1:${ID1},$contactId2:id2"), " "))));
-
-        var wikitext = "| test | !{$contactId1:${ID1},$contactId2:id2} |";
         generate(dom, wikitext);
     });
 
@@ -736,7 +825,7 @@ describe("parser and formatter", function () {
                 element("ul",
                     element("li", "sub 2.1"),
                     element("li", "sub 2.2"))),
-            element("p", "a. item A b. item B Paragraph"));
+            element("p", "a. item A", br(), "b. item B", br(), "Paragraph"));
         generateFragment(dom, [
             "- item 1",
             "- item 2",
@@ -751,7 +840,9 @@ describe("parser and formatter", function () {
             "   * sub 2.1",
             "   * sub 2.2",
             "",
-            "a. item A b. item B Paragraph" ].join("\n"));
+            "a. item A",
+            "b. item B",
+            "Paragraph" ].join("\n"));
     });
 
     it("list + code block", function() {
@@ -1159,20 +1250,28 @@ describe("parser and formatter", function () {
                         element("th", "cell", br(), "2")))));
         var wikitext = editor.domToWikitext(dom, { formatCodeBlock: true });
         expect(wikitext).toBe([
-            "!1 Heading 1",
-            "!2 Heading 2",
-            "!3 Heading 3",
-            "!4 Heading 4",
-            "!5 Heading 5",
-            "!6 Heading 6",
+            "!1 Heading",
+            "1",
+            "!2 Heading",
+            "2",
+            "!3 Heading",
+            "3",
+            "!4 Heading",
+            "4",
+            "!5 Heading",
+            "5",
+            "!6 Heading",
+            "6",
             "var Wysiwyg = function(textarea) { ... }",
             "",
             "> citation continued",
             "",
             "quote continued",
             "",
-            " * item 1 continued",
-            "   1 item 1.1",
+            " * item 1",
+            "continued",
+            "   1 item",
+            "1.1",
             "",
             "!define def {dt dd}",
             "| cell!-",
@@ -1458,6 +1557,30 @@ describe("parser and formatter", function () {
             "-!}}}|",
             ""].join("\n"));
     });
+
+    it("table with code block", function() {
+        var dom = fragment(
+            element("table",
+                element("tbody",
+                    element("tr",
+                        element("td", " table "),
+                        element("td", " ",
+                            element("pre", "<root>", br(),
+                                "<a />", br(),
+                                "<b>test</b>", br(),
+                                "</root>"), " "
+                        )
+                    )
+                )
+            ));
+        generateFragment(dom, [
+            "| table | {{{<root>",
+            "<a />",
+            "<b>test</b>",
+            "</root>}}} |",
+            ""].join("\n"));
+    });
+
 
     it("renders images", function () {
         var dom = fragment(

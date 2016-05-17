@@ -37,7 +37,7 @@ public class ListExecutor {
     public void prepareToExecute() { }
 
     public List<Object> executeStatements(List<Object> statements) {
-      List<Object> result = new ArrayList<Object>();
+      List<Object> result = new ArrayList<>();
       for (Object statement : statements)
         if (!executor.stopHasBeenRequested())
           result.add(executeStatement(statement));
@@ -63,10 +63,12 @@ public class ListExecutor {
   }
 
   private class LoggingExecutive extends Executive {
+    @Override
     public void prepareToExecute() {
       verboseMessage("!1 Instructions");
     }
 
+    @Override
     public Object executeStatement(Object statement) {
       List<Object> statementList = asStatementList(statement);
       verboseMessage(statementList + "\n");

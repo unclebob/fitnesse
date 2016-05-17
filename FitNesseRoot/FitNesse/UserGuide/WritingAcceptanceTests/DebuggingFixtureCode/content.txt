@@ -1,6 +1,8 @@
 !2 Debugging with a local wiki site
 
-To debug fixture execution when wiki pages are accessible over a local file system, see RunningFromJunit 
+To debug fixture execution when wiki pages are accessible over a local file system, see RunningFromJunit.
+
+Debugging is also possible with the ''FitNesse'' language plugin for !-IntelliJ-! IDEA.
  
 !2 Debugging with a remote wiki site
 
@@ -11,9 +13,9 @@ To set up debugging for your fixture code:
  2 When you want to debug a test, start by adding '''?responder=test&remote_debug=true''' to the url for the test.
  3 After starting the test in FitNesse, start a remote debugging process in your debugging tool which should connect to slim/fit server.  Remember to make sure you are using the right port.  (Port 8000 if you are using the default settings for java)
 
-!2 Set up a remote debug bookmark in your browser. 
- 1 Just drag the link below to bookmark toolbar of your favourite browser.  !-<a title="Debug FitNesse" id="debugfitnessetest" href="javascript:(function(){var url = document.location.pathname + '?responder=test&remote_debug=true'; window.location = url;})();"><div id="Debug fitnesse">Debug FitNesse</div></a>-!
- 2 Then to use it just go to the page you which to debug and click on the link. 
+The Tools menu contains a Remote Debug action that can be used to start a test run in debug mode.
+
+Alternatively, just drag the following link to the bookmark toolbar of your favourite browser: !-<a title="Debug FitNesse" id="debugfitnesse" href="javascript:(function(){var url = document.location.pathname + '?responder=test&remote_debug=true'; window.location = url;})();"><span>Debug FitNesse</span></a>-! (since the link contains javascript, this may not work for all browsers).
 
 !2 Alternative way to debug when using Slim
 For.NET it was found to be easier to debug starting the slim runner with the debugger attached and then getting fitnesse to connect to this started instance.  

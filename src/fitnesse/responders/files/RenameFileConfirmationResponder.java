@@ -14,9 +14,10 @@ import fitnesse.html.template.PageTitle;
 
 public class RenameFileConfirmationResponder implements SecureResponder {
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     String resource = request.getResource();
-    String filename = (String) request.getInput("filename");
+    String filename = request.getInput("filename");
     
     HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Rename " + filename);
@@ -30,6 +31,7 @@ public class RenameFileConfirmationResponder implements SecureResponder {
     return response;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();
   }

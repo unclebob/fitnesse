@@ -16,8 +16,9 @@ import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 
 public class ShutdownResponder implements SecureResponder {
-  private final static Logger LOG = Logger.getLogger(ShutdownResponder.class.getName());
+  private static final Logger LOG = Logger.getLogger(ShutdownResponder.class.getName());
 
+  @Override
   public Response makeResponse(final FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
 
@@ -29,6 +30,7 @@ public class ShutdownResponder implements SecureResponder {
     response.setContent(html.html());
 
     Thread shutdownThread = new Thread() {
+      @Override
       public void run() {
         try {
           context.fitNesse.stop();
@@ -43,6 +45,7 @@ public class ShutdownResponder implements SecureResponder {
     return response;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();
   }

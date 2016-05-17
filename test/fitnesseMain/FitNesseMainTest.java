@@ -2,13 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.*;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 
@@ -16,7 +11,6 @@ import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.PluginException;
 import fitnesse.testutil.FitNesseUtil;
 import org.junit.After;
 import org.junit.Before;
@@ -24,6 +18,10 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import util.FileUtil;
+
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class FitNesseMainTest {
 
@@ -61,7 +59,6 @@ public class FitNesseMainTest {
     context.withParameter(ConfigurationParameter.COMMAND, "command");
 
     FitNesse fitNesse = mock(FitNesse.class);
-    when(fitNesse.start()).thenReturn(true);
 
     context = spy(context);
     doAnswer(fitNesseContextWith(fitNesse)).when(context).makeFitNesseContext();
@@ -74,22 +71,17 @@ public class FitNesseMainTest {
   }
 
   @Test
-  public void testDirCreations() throws IOException, PluginException {
-    FitNesse fitnesse = context.makeFitNesseContext().fitNesse;
-    fitnesse.start();
+  public void testDirCreations() throws Exception {
+    runFitnesseMainWith("-o", "-c", "/root", "-r", "testFitnesseRoot");
 
-    try {
-      assertTrue(new File("testFitnesseRoot").exists());
-      assertTrue(new File("testFitnesseRoot/files").exists());
-    } finally {
-      fitnesse.stop();
-    }
+    assertTrue(new File("testFitnesseRoot").exists());
+    assertTrue(new File("testFitnesseRoot/files").exists());
   }
 
   @Test
   public void testIsRunning() throws Exception {
     FitNesseContext context = FitNesseUtil.makeTestContext();
-    FitNesse fitnesse = context.fitNesse.dontMakeDirs();
+    FitNesse fitnesse = context.fitNesse;
 
     assertFalse(fitnesse.isRunning());
 
@@ -103,13 +95,26 @@ public class FitNesseMainTest {
   @Test
   public void canRunSingleCommand() throws Exception {
     String response = runFitnesseMainWith("-o",  "-c", "/root");
-    assertThat(response, containsString("Command Output"));
+    assertThat(response, containsString("Executing command:"));
+    assertThat(response, not(containsString("Starting FitNesse on port:")));
   }
 
   @Test
   public void canRunSingleCommandWithAuthentication() throws Exception {
     String output = runFitnesseMainWith("-o", "-a", "user:pwd", "-c", "user:pwd:/FitNesse.ReadProtectedPage");
     assertThat(output, containsString("fitnesse.authentication.OneUserAuthenticator"));
+  }
+
+  @Test(expected = Exception.class)
+  public void runningCommandWithNonExistentAddressResultsInError() throws Exception {
+    String[] args = {"-o", "-a", "user:pwd", "-c", "user:pwd:/FitNesse.NonExistentTestCase?test"};
+    Arguments arguments = new Arguments(args);
+    try {
+        Integer exitCode = new FitNesseMain().launchFitNesse(arguments);
+    } catch (Exception e){
+        assertEquals("error loading page: 404", e.getMessage());
+        throw e;
+    }
   }
 
   @Test
@@ -140,8 +145,8 @@ public class FitNesseMainTest {
     return response;
   }
 
-  private Answer fitNesseContextWith(final FitNesse fitNesse) {
-    return new Answer() {
+  private Answer<FitNesseContext> fitNesseContextWith(final FitNesse fitNesse) {
+    return new Answer<FitNesseContext>() {
       @Override
       public FitNesseContext answer(InvocationOnMock invocation) throws Throwable {
         FitNesseContext fitNesseContext = (FitNesseContext) invocation.callRealMethod();

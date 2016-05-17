@@ -21,10 +21,12 @@ public class TableTable extends SlimTable {
     super(table, tableId, slimTestContext);
   }
 
+  @Override
   protected String getTableType() {
     return ("tableTable");
   }
 
+  @Override
   public List<SlimAssertion> getAssertions() {
     SlimAssertion make = constructFixture(getFixtureName());
     Instruction doTable = callFunction(getTableName(), "doTable", tableAsList());
@@ -77,7 +79,7 @@ public class TableTable extends SlimTable {
 
   private void addNewRows(Table table, List<List<Object>> tableResults) {
     while (table.getRowCount() - 1 < tableResults.size()) {
-      List<String> l = new ArrayList<String>();
+      List<String> l = new ArrayList<>();
       for (Object s : tableResults.get(table.getRowCount() - 1))
         l.add((String) s);
       table.addRow(l);
@@ -108,7 +110,7 @@ public class TableTable extends SlimTable {
 
   private SlimTestResult getTestResult(String message, String content) {
     SlimTestResult result;
-    if (message.equalsIgnoreCase("no change") || message.length() == 0)
+    if (message.equalsIgnoreCase("no change") || message.isEmpty())
       result = SlimTestResult.plain(content);
     else if (message.equalsIgnoreCase("pass"))
       result = SlimTestResult.pass(content);
@@ -140,7 +142,7 @@ public class TableTable extends SlimTable {
       return SlimTestResult.ignore(message);
     else if (code.equalsIgnoreCase("report"))
       return SlimTestResult.plain(message);
-    else //not managed code 
+    else //not managed code
       return SlimTestResult.fail(manageSymbolInContent(content, codeAndMessage));
   }
 

@@ -12,7 +12,6 @@ import java.util.List;
 import fitnesse.Responder;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ResponderTestCase;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -29,10 +28,12 @@ public class MovePageResponderTest extends ResponderTestCase {
   private MovePageResponder moveResponder;
   private PageCrawler crawler;
 
+  @Override
   protected Responder responderInstance() {
     return new MovePageResponder();
   }
 
+  @Override
   @Before
   public void setUp() throws Exception {
     super.setUp();

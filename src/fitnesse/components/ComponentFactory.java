@@ -28,7 +28,7 @@ public class ComponentFactory {
 
   public ComponentFactory(Properties properties) {
     this.properties = properties;
-    this.components = new HashMap<String, Object>();
+    this.components = new HashMap<>();
   }
 
   public <T> T createComponent(String componentType, Class<T> defaultComponent) throws ComponentInstantiationException {
@@ -44,7 +44,7 @@ public class ComponentFactory {
       else
         componentClass = defaultComponent;
     } catch (Exception e) {
-      throw new ComponentInstantiationException("Unable to look up component for type " + componentType, e);
+      throw new ComponentInstantiationException("Unable to look up component for type '" + componentType + "' with classname '" + componentClassName + "'", e);
     }
 
     if (componentClass != null) {

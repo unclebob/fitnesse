@@ -2,34 +2,37 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import org.junit.Test;
-
 import java.io.IOException;
 
-import static junit.framework.Assert.assertNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class SlimServiceTest extends SlimServiceTestBase {
 
+  @Override
   protected String getImport() {
     return "fitnesse.slim.test";
   }
 
+  @Override
   protected void startSlimService() throws IOException {
     SlimService.Options options = SlimService.parseCommandLine(new String[]{"8099"});
-    SlimService.startWithFactoryAsync(JavaSlimFactory.createJavaSlimFactory(options), options);
+    startWithFactoryAsync(JavaSlimFactory.createJavaSlimFactory(options), options);
   }
 
+  @Override
   protected void closeSlimService() throws InterruptedException {
-    SlimService.waitForServiceToStopAsync();
-    assertFalse(SlimService.service.isAlive());
+    waitForServiceToStopAsync();
+    assertFalse(service.isAlive());
   }
 
+  @Override
   protected String expectedExceptionMessage() {
     return "java.lang.Exception: This is my exception";
   }
 
+  @Override
   protected String expectedStopTestExceptionMessage() {
     return "ABORT_SLIM_TEST:fitnesse.slim.test.TestSlim$StopTestException: This is a stop test exception";
   }
@@ -37,13 +40,13 @@ public class SlimServiceTest extends SlimServiceTestBase {
   @Test
   public void nullInteractionService_returnsDefaultClass() {
     SlimService.Options options = SlimService.parseCommandLine(new String[]{"8099"});
-    assertEquals("fitnesse.slim.fixtureInteraction.DefaultInteraction", options.interactionClass.getName());
+    assertEquals("fitnesse.slim.fixtureInteraction.DefaultInteraction", options.interaction.getClass().getName());
   }
 
   @Test
   public void definedInteractionService_returnsCorrectClass() {
     SlimService.Options options = SlimService.parseCommandLine(new String[]{"-i", "fitnesse.slim.fixtureInteraction.InteractionDemo", "8099"});
-    assertEquals("fitnesse.slim.fixtureInteraction.InteractionDemo", options.interactionClass.getName());
+    assertEquals("fitnesse.slim.fixtureInteraction.InteractionDemo", options.interaction.getClass().getName());
   }
 
   @Test

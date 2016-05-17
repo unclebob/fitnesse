@@ -1,7 +1,6 @@
 package fitnesse.reporting.history;
 
 import fitnesse.FitNesseVersion;
-import fitnesse.responders.run.SuiteResponder;
 import fitnesse.testsystems.TestSummary;
 
 import fitnesse.wiki.PathParser;
@@ -22,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 public class SuiteExecutionReport extends ExecutionReport {
-  private List<PageHistoryReference> pageHistoryReferences = new ArrayList<PageHistoryReference>();
+  private List<PageHistoryReference> pageHistoryReferences = new ArrayList<>();
 
   public SuiteExecutionReport(Document xmlDocument) throws Exception {
     super();
@@ -67,7 +66,7 @@ public class SuiteExecutionReport extends ExecutionReport {
 
   private String pageHistoryReferencesToString() {
     StringBuilder builder = new StringBuilder();
-    if (pageHistoryReferences.size() > 0) {
+    if (!pageHistoryReferences.isEmpty()) {
       for (PageHistoryReference reference : pageHistoryReferences) {
         builder.append(reference.toString());
         builder.append(",");
@@ -84,6 +83,7 @@ public class SuiteExecutionReport extends ExecutionReport {
     template.merge(velocityContext, writer);
   }
 
+  @Override
   protected void unpackResults(Element testResults) {
     NodeList references = testResults.getElementsByTagName("pageHistoryReference");
     for (int referenceIndex = 0;referenceIndex < references.getLength();referenceIndex++){
@@ -178,7 +178,7 @@ public class SuiteExecutionReport extends ExecutionReport {
     }
 
     public String getResultDate() {
-      SimpleDateFormat pageHistoryFormatter = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
+      SimpleDateFormat pageHistoryFormatter = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
       return pageHistoryFormatter.format(new Date(time));
     }
 

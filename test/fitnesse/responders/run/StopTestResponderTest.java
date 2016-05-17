@@ -14,7 +14,6 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 
 
 public class StopTestResponderTest {
@@ -85,6 +84,7 @@ public class StopTestResponderTest {
   class StoppedRecorder implements Stoppable {
     private boolean wasStopped = false;
 
+    @Override
     public synchronized void stop() {
       wasStopped = true;
     }

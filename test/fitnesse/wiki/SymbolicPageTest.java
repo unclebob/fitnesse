@@ -2,10 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-
 import java.io.File;
 import java.util.List;
 
@@ -16,9 +12,12 @@ import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+
 public class SymbolicPageTest {
   private WikiPage root;
-  private BaseWikiPage pageOne;
+  private WikiPage pageOne;
   private WikiPage pageTwo;
   private SymbolicPage symPage;
   private String pageOnePath = "PageOne";
@@ -30,7 +29,7 @@ public class SymbolicPageTest {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     String pageOneContent = "page one";
-    pageOne = (BaseWikiPage) WikiPageUtil.addPage(root, PathParser.parse(pageOnePath), pageOneContent);
+    pageOne = WikiPageUtil.addPage(root, PathParser.parse(pageOnePath), pageOneContent);
     pageTwo = WikiPageUtil.addPage(root, PathParser.parse(pageTwoPath), pageTwoContent);
     symPage = new SymbolicPage("SymPage", pageTwo, pageOne);
   }
@@ -78,6 +77,20 @@ public class SymbolicPageTest {
   }
 
   @Test
+  public void canDetermineIfOriginalPageIsWikiTextPage() throws Exception {
+    WikiPage symSymPage = new SymbolicPage("SymSymPage", symPage, pageOne);
+    assertTrue(SymbolicPage.containsWikitext(symSymPage));
+  }
+
+  @Test
+  public void canDetermineIfOriginalPageIsNotWikiTextPage() throws Exception {
+    WikiPage wikiPage = mock(WikiPage.class);
+    WikiPage symPage = new SymbolicPage("SymPage", wikiPage, pageOne);
+    WikiPage symSymPage = new SymbolicPage("SymSymPage", symPage, pageOne);
+    assertFalse(SymbolicPage.containsWikitext(symSymPage));
+  }
+
+  @Test
   public void testGetChildren() throws Exception {
     WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildOne"), "child one");
     WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildTwo"), "child two");
@@ -88,7 +101,43 @@ public class SymbolicPageTest {
   }
 
   @Test
+  public void wikitextPageShouldReadParentVariable() {
+    WikiPage pageWithVariable = WikiPageUtil.addPage(root, PathParser.parse("ChildOne"), "!define Variable {my variable}");
+    WikiPage symPage = new SymbolicPage("SymPage", pageOne, pageWithVariable);
+
+    assertEquals("my variable", symPage.getVariable("Variable"));
+  }
+
+  @Test
+  public void nonWikitextPageShouldReadParentVariable() {
+    WikiPage pageWithVariable = WikiPageUtil.addPage(root, PathParser.parse("ChildOne"), "!define Variable {my variable}");
+    WikiPage realPage = mock(WikiPage.class);
+    WikiPage symPage = new SymbolicPage("SymPage", realPage, pageWithVariable);
+
+    assertEquals("my variable", symPage.getVariable("Variable"));
+  }
+
+  @Test
   public void testCyclicSymbolicLinks() throws Exception {
+    createCycle();
+    PageCrawler pageCrawler = root.getPageCrawler();
+
+    WikiPage deepPage = pageCrawler.getPage(PathParser.parse(pageOnePath + ".SymOne.SymTwo.SymOne.SymTwo.SymOne"));
+    assertNull(deepPage);
+
+  }
+
+  @Test
+  public void cyclicSymbolicLinkDisplaysAMessage() {
+    createCycle();
+    PageCrawler pageCrawler = root.getPageCrawler();
+    WikiPage deepPage = pageCrawler.getPage(PathParser.parse(pageTwoPath + ".SymTwo.SymOne"));
+    List<WikiPage> children = deepPage.getChildren();
+    assertEquals(0, children.size());
+    assertEquals("<em>Short circuit! This page references PageTwo, which is already one of the parent pages of this page.</em>", deepPage.getHtml());
+  }
+
+  private void createCycle() {
     PageData data = pageOne.getData();
     data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymOne", pageTwoPath);
     pageOne.commit(data);
@@ -96,21 +145,13 @@ public class SymbolicPageTest {
     data = pageTwo.getData();
     data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymTwo", pageOnePath);
     pageTwo.commit(data);
-    PageCrawler pageCrawler = root.getPageCrawler();
-    WikiPage deepPage = pageCrawler.getPage(PathParser.parse(pageOnePath + ".SymOne.SymTwo.SymOne.SymTwo.SymOne"));
-    List<?> children = deepPage.getChildren();
-    assertEquals(1, children.size());
-
-    deepPage = pageCrawler.getPage(PathParser.parse(pageTwoPath + ".SymTwo.SymOne.SymTwo.SymOne.SymTwo"));
-    children = deepPage.getChildren();
-    assertEquals(1, children.size());
   }
 
   @Test
   public void nestedSymbolicLinksShouldKeepTheRightPath() {
     String pageThreePath = "PageThree";
     String pageThreeContent = "page three";
-    WikiPage pageThree = WikiPageUtil.addPage(root, PathParser.parse(pageThreePath), pageThreeContent);
+    WikiPageUtil.addPage(root, PathParser.parse(pageThreePath), pageThreeContent);
 
     PageData data = pageOne.getData();
     data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymOne", pageTwoPath);
@@ -128,7 +169,7 @@ public class SymbolicPageTest {
 
   @Test
   public void testSymbolicPageUsingExternalDirectory() throws Exception {
-    CreateExternalRoot();
+    createExternalRoot();
 
     assertEquals(2, symPage.getChildren().size());
 
@@ -145,7 +186,7 @@ public class SymbolicPageTest {
     assertEquals("external child", symChild.getData().getContent());
   }
 
-  private void CreateExternalRoot() throws Exception {
+  private void createExternalRoot() throws Exception {
     FileUtil.createDir("testDir");
     FileUtil.createDir("testDir/ExternalRoot");
     externalRoot = new FileSystemPageFactory().makePage(new File("testDir/ExternalRoot"), "ExternalRoot", null, new SystemVariableSource());
@@ -158,7 +199,7 @@ public class SymbolicPageTest {
 
   @Test
   public void testCommittingToExternalRoot() throws Exception {
-    CreateExternalRoot();
+    createExternalRoot();
 
     commitNewContent(symPage);
 

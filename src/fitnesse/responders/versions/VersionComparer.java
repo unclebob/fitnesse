@@ -9,9 +9,9 @@ import difflib.Patch;
 public class VersionComparer {
 
   private List<String> differences;
-  
+
   public boolean compare(String originalVersion, String originalContent, String revisedVersion, String revisedContent) {
-    Patch patch = DiffUtils.diff(contentToLines(originalContent), contentToLines(revisedContent));
+    Patch<String> patch = DiffUtils.diff(contentToLines(originalContent), contentToLines(revisedContent));
     differences = DiffUtils.generateUnifiedDiff(originalVersion, revisedVersion,
         contentToLines(originalContent), patch, 5);
     return true;
@@ -20,9 +20,9 @@ public class VersionComparer {
   public List<String> getDifferences() {
     return differences;
   }
-  
+
   private List<String> contentToLines(String content) {
-    List<String> lines = new LinkedList<String>();
+    List<String> lines = new LinkedList<>();
     for(String line : content.split("\n"))
       lines.add(line);
     return lines;

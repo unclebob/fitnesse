@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -16,7 +17,7 @@ import util.FileUtil;
 
 public class MemoryFileSystem implements FileSystem {
   public static final String DIRECTORY_PLACEHOLDER = "*This is a directory*";
-  private final Map<String, Payload> files = new LinkedHashMap<String, Payload>();
+  private final Map<String, Payload> files = new LinkedHashMap<>();
 
     @Override
     public void makeFile(File file, String content) {
@@ -27,7 +28,7 @@ public class MemoryFileSystem implements FileSystem {
     public void makeFile(File file, InputStream content) throws IOException {
       ByteArrayOutputStream buf = new ByteArrayOutputStream();
       FileUtil.copyBytes(content, buf);
-      makeFile(file, buf.toString("UTF-8"));
+      makeFile(file, buf.toString(FileUtil.CHARENCODING));
     }
 
     @Override
@@ -53,7 +54,7 @@ public class MemoryFileSystem implements FileSystem {
     @Override
     public String[] list(File file) {
         String path = file.getPath();
-        ArrayList<String> result = new ArrayList<String>();
+        Collection<String> result = new ArrayList<>();
         for (String filePath: files.keySet()) {
             if (!filePath.startsWith(path)) continue;
             if (filePath.equals(path)) continue;
@@ -73,7 +74,7 @@ public class MemoryFileSystem implements FileSystem {
 
   @Override
   public InputStream getInputStream(File file) throws IOException {
-    return new ByteArrayInputStream(files.get(file.getPath()).payload.getBytes("UTF-8"));
+    return new ByteArrayInputStream(files.get(file.getPath()).payload.getBytes(FileUtil.CHARENCODING));
   }
 
   @Override

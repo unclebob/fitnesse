@@ -20,6 +20,7 @@ public class SuiteOverviewResponder implements Responder {
 
   private FitNesseContext context;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
     WikiPage root = context.getRootPage();

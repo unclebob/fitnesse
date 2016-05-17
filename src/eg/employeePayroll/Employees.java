@@ -10,6 +10,7 @@ public class Employees extends RowEntryFixture {
   public String address;
   public double salary;
 
+  @Override
   public void enterRow() throws Exception {
 
   }

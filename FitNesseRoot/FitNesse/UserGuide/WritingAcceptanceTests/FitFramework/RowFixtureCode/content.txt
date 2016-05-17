@@ -86,7 +86,7 @@ When you write application code in order to get tests like the above to pass, yo
 
 !2 Learning More
 To learn more about the RowFixture style of test table, see RowFixture.
-To learn more about how FitNesse fixture code works in general, check out FixtureCode.
+To learn more about how FitNesse fixture code works in general, check out [[!-FixtureCode-!][<UserGuide.WritingAcceptanceTests.FixtureCode]].
 Also check out the other TestTableStyles.
 
 

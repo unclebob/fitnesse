@@ -22,8 +22,6 @@ import fitnesse.util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.InMemoryPage;
-import fitnesse.wiki.WikiPage;
 
 public class ExecutionReportTest {
   private FitNesseContext context;
@@ -98,7 +96,36 @@ public class ExecutionReportTest {
     assertTrue(executionReportWithVersion("v20100607").hasRunTimes());
     assertTrue(executionReportWithVersion("v20100608").hasRunTimes());
   }
-  
+
+  @Test
+  public void readsExecutionLog() throws Exception {
+    TestExecutionReport original = new TestExecutionReport(new FitNesseVersion("version"), "rootPath");
+    original.setTotalRunTimeInMillis(totalTimeMeasurementWithElapsedMillis(42));
+    original.addExecutionContext("command line", "test system");
+    original.addStdOut("std out");
+    original.addStdErr("std err");
+    original.exitCode(1);
+    original.exceptionOccurred(new Exception("Fancy exception"));
+    StringWriter writer = new StringWriter();
+    original.toXml(writer, context.pageFactory.getVelocityEngine());
+    ExecutionReport report = ExecutionReport.makeReport(writer.toString());
+    assertTrue(report instanceof TestExecutionReport);
+    assertEquals(1, report.getExecutionLogs().size());
+    ExecutionReport.ExecutionLogReport log = report.getExecutionLogs().get(0);
+    assertEquals("command line", log.getCommand());
+    assertEquals("test system", log.getTestSystemName());
+    assertEquals("std out\n", log.getStdOut());
+    assertEquals("std err\n", log.getStdErr());
+    assertEquals("Fancy exception", log.getExceptions().get(0).getMessage());
+  }
+
+  @Test
+  public void testHashCode() {
+    TestExecutionReport original = new TestExecutionReport(new FitNesseVersion("version"), "rootPath");
+
+    assertEquals(-836274316, original.hashCode());
+  }
+
   private ExecutionReport executionReportWithVersion(final String theVersion) {
     return new ExecutionReport() {
       @Override

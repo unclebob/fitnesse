@@ -17,7 +17,7 @@ In the first two weeks of the project, before any requirements meetings or docum
 The Product Manager brings these other 4 people together in a small meeting room containing some Actual Food in the form of pizza and drinks. The senior developer agrees to create test tables in FitNesse on te fly on his laptop. Yes! Test tables on the fly! Can that possibly work? Absolutely.
 !3 A Few First Test Tables
 This team uses pizza, white boards, paper, Excel, FitNesse, and animated discussion to create only two first FitNesse tables. Each table has 6 or 8 rows, and 5 or 6 columns. Both tables concern a single requirement (at least that's what everybody currently believes), and fit on a single test page. The test page contains only the two tables and a first stab at some explanatory prose. The meeting breaks up, after scheduling another similar meeting the next day.
-!3 "Wait. You Meant ''That''?
+!3 "Wait. You Meant ''That''?"
 Test tables describe requirements differently than prose (as we discuss in AcceptanceTests). The exercise of defining test tables for a requirement is a bracing and enlightening one.
 
 Even when a team thinks they have a set of requirements nailed down in prose, using traditional requirements analysis and documents, they will often find that they learn useful things by trying to express those requirements in terms of executable sets of inputs and expected outputs.
@@ -31,13 +31,13 @@ What can our team show for these first couple of hours of work? Well, they all a
  * The programmers have a very good idea what it means to write the code to get those two test tables to pass.
  * Once those two test tables both run green, '''that requirement will be done''', and they can move on to another requirement.
  * The Product Manager, tester, and inventory expert all agree that they may be able to refine the two test tables to describe a few ''unhappy path'' scenarios that they did not identify in the meeting.
-!3 "Successive Refinement: Let's Talk About the Tests
+!3 Successive Refinement: Let's Talk About the Tests
 As the days and weeks go by, the team creates and publishes more test pages containing more test tables and prose. They organize these into a Test Suite. As the weeks pass, tables and test pages get split, combined, moved a round, and otherwise refined.
 
 Within the first couple of weeks, the programmers get those first two test tables for that first requirement to turn from red to green. They send out a triumphant email. But instead of getting back a congratulatory email from the Product Manager, they get back an email saying "You know what? It turns out that that work is not ''exactly'' what we needed..." So the Development Manager and the Product Manager get together and '''refine those first two tables''' so that they ''do'' describe exactly what was needed.  Over the next couple of weeks, the programmers refine their work to get these new test tables to pass. And then they do in fact receive their congratulatory email.
 
 The point of this is that when it comes to addressing any ambiguities or misunderstandings in requirements, '''test tables are the perfect thing to talk about'''. By refining the test tables, and organizing the requirements discussion around them, the team successively refines the system itself. (They may also successively refine their ability to deliver the system iteratively and incrementally, but that's another story!)
 !2 Learning More
-If you haven't already done so, check out the [[One Minute Description][<FitNesse.UserGuide.OneMinuteDescription]] and the [[Two Minute Example][<FitNesse.UserGuide.TwoMinuteExample]]. Otherwise, you should also check out AcceptanceTests.
+If you haven't already done so, check out the [[Two Minute Example][<FitNesse.UserGuide.TwoMinuteExample]]. You should also check out AcceptanceTests.
 
 

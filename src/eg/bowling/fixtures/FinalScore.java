@@ -9,6 +9,7 @@ import fitnesse.fixtures.TableFixture;
 public class FinalScore extends TableFixture {
   private Bowling game;
 
+  @Override
   protected void doStaticTable(int rows) {
     game = new BowlingGame();
     doRolls();

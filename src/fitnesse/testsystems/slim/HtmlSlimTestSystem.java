@@ -35,7 +35,7 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
   protected void processAllTablesOnPage(TestPage pageToTest) throws IOException {
     List<SlimTable> allTables = createSlimTables(pageToTest);
 
-    if (allTables.size() == 0) {
+    if (allTables.isEmpty()) {
       String html = createHtmlResults(START_OF_TEST, END_OF_TEST);
       testOutputChunk(html);
     } else {
@@ -81,7 +81,7 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
   }
 
   private List<SlimTable> createSlimTables(TableScanner<? extends Table> tableScanner) {
-    List<SlimTable> allTables = new LinkedList<SlimTable>();
+    List<SlimTable> allTables = new LinkedList<>();
     for (Table table : tableScanner)
       createSlimTable(allTables, table);
 

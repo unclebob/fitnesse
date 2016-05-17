@@ -4,7 +4,6 @@ import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertNotSubString;
 import static util.RegexTestCase.assertSubString;
 
-import fitnesse.FitNesseContext;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockChunkedDataProvider;

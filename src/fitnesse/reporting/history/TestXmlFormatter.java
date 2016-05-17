@@ -4,15 +4,19 @@ package fitnesse.reporting.history;
 
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.BaseFormatter;
+import fitnesse.testrunner.WikiTestPageUtil;
+import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.Instruction;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.Expectation;
 import fitnesse.testsystems.TableCell;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.TestSystem;
+import fitnesse.util.DateTimeUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
@@ -23,18 +27,20 @@ import fitnesse.util.TimeMeasurement;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class TestXmlFormatter extends BaseFormatter implements Closeable {
+public class TestXmlFormatter extends BaseFormatter implements ExecutionLogListener, Closeable {
+  private static final Logger LOG = Logger.getLogger(TestXmlFormatter.class.getName());
+
   private final FitNesseContext context;
   private final WriterFactory writerFactory;
   private TimeMeasurement currentTestStartTime;
   private TimeMeasurement totalTimeMeasurement;
   private StringBuilder outputBuffer;
   protected final TestExecutionReport testResponse;
-  public List<TestExecutionReport.InstructionResult> instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
+  private TestExecutionReport.TestResult currentResult;
 
   public TestXmlFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) {
     super(page);
@@ -54,9 +60,14 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
   }
 
   @Override
-  public void testStarted(WikiTestPage test) {
+  public void testStarted(TestPage testPage) {
     resetTimer();
     appendHtmlToBuffer(WikiPageUtil.getHeaderPageHtml(getPage()));
+    currentResult = newTestResult();
+    currentResult.dateString = DateTimeUtil.formatDate(new Date());
+    currentResult.relativePageName = testPage.getName();
+    currentResult.tags = WikiTestPageUtil.getSourcePage(testPage).getData().getAttribute(PageData.PropertySUITES);
+    testResponse.addResult(currentResult);
   }
 
   @Override
@@ -72,7 +83,7 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
     Instruction instruction = assertion.getInstruction();
     Expectation expectation = assertion.getExpectation();
     TestExecutionReport.InstructionResult instructionResult = new TestExecutionReport.InstructionResult();
-    instructionResults.add(instructionResult);
+    currentResult.addInstruction(instructionResult);
 
     String id = instruction.getId();
 
@@ -104,7 +115,7 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
     Instruction instruction = assertion.getInstruction();
     Expectation expectation = assertion.getExpectation();
     TestExecutionReport.InstructionResult instructionResult = new TestExecutionReport.InstructionResult();
-    instructionResults.add(instructionResult);
+    currentResult.addInstruction(instructionResult);
 
     String id = instruction.getId();
 
@@ -122,26 +133,21 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
   }
 
   @Override
-  public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
+  public void testComplete(TestPage test, TestSummary testSummary) throws IOException {
     currentTestStartTime.stop();
     super.testComplete(test, testSummary);
-    processTestResults(test, testSummary);
+    currentResult.startTime = currentTestStartTime.startedAt();
+    addCountsToResult(currentResult, testSummary);
+    currentResult.runTimeInMillis = String.valueOf(currentTestStartTime.elapsed());
     testResponse.tallyPageCounts(ExecutionResult.getExecutionResult(test.getName(), testSummary));
   }
 
-  public void processTestResults(final WikiTestPage testPage, TestSummary testSummary) {
-    TestExecutionReport.TestResult currentResult = newTestResult();
-    testResponse.addResult(currentResult);
-    currentResult.startTime = currentTestStartTime.startedAt();
-    currentResult.content = outputBuffer == null ? null : outputBuffer.toString();
-    outputBuffer = null;
-    addCountsToResult(currentResult, testSummary);
-    currentResult.runTimeInMillis = String.valueOf(currentTestStartTime.elapsed());
-    currentResult.relativePageName = testPage.getName();
-    currentResult.tags = testPage.getData().getAttribute(PageData.PropertySUITES);
-    currentResult.getInstructions().addAll(instructionResults);
-    instructionResults = new ArrayList<TestExecutionReport.InstructionResult>();
-
+  @Override
+  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
+    super.testSystemStopped(testSystem, cause);
+    if (cause != null) {
+      testResponse.tallyPageCounts(ExecutionResult.ERROR);
+    }
   }
 
   protected TestExecutionReport.TestResult newTestResult() {
@@ -151,6 +157,11 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
   @Override
   public void close() throws IOException {
     setTotalRunTimeOnReport(totalTimeMeasurement);
+
+    if (currentResult != null) {
+      currentResult.content = outputBuffer == null ? null : outputBuffer.toString();
+      outputBuffer = null;
+    }
     writeResults();
   }
 
@@ -191,9 +202,35 @@ public class TestXmlFormatter extends BaseFormatter implements Closeable {
   }
 
   private void appendHtmlToBuffer(String output) {
-    if (outputBuffer == null)
+    if (outputBuffer == null) {
       outputBuffer = new StringBuilder();
+    }
     outputBuffer.append(output);
+  }
+
+  @Override
+  public void commandStarted(ExecutionContext context) {
+    testResponse.addExecutionContext(context.getCommand(), context.getTestSystemName());
+  }
+
+  @Override
+  public void stdOut(String output) {
+    testResponse.addStdOut(output);
+  }
+
+  @Override
+  public void stdErr(String output) {
+    testResponse.addStdErr(output);
+  }
+
+  @Override
+  public void exitCode(int exitCode) {
+    testResponse.exitCode(exitCode);
+  }
+
+  @Override
+  public void exceptionOccurred(Throwable e) {
+    testResponse.exceptionOccurred(e);
   }
 
   public interface WriterFactory {

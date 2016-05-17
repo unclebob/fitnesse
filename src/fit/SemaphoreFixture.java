@@ -1,12 +1,12 @@
 package fit;
 
 import java.io.File;
-import java.util.Iterator;
+import java.io.IOException;
 import java.util.Vector;
 
 public class SemaphoreFixture extends Fixture {
   private static final String SEMAPHORE_SUFFIX = ".semaphore";
-  private static final Vector<String> semaphores = new Vector<String>();
+  private static final Vector<String> semaphores = new Vector<>();
 
   @Override
   public void doTable(Parse table) {
@@ -71,8 +71,7 @@ public class SemaphoreFixture extends Fixture {
     File semFile = new File(makeSemaphoreName(name));
     try {
       isLocked = semFile.createNewFile();
-    }
-    catch (Exception e) {
+    } catch (IOException e) {
       isLocked = false;
     }
 
@@ -88,7 +87,8 @@ public class SemaphoreFixture extends Fixture {
   }
 
   public static void ClearSemaphores() {
-    for (Iterator<String> iter = semaphores.iterator(); iter.hasNext();)
-      unlockSemaphore(iter.next());
+    for (String semaphore : semaphores) {
+      unlockSemaphore(semaphore);
+    }
   }
 }

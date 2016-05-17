@@ -16,6 +16,7 @@ public class SuiteSpecificationMatchFinder extends WikiPageFinder {
     this.contentRegEx = contentRegEx;
   }
 
+  @Override
   protected boolean pageMatches(WikiPage page) {
     if(!nullOrEmpty(titleRegEx) && !nullOrEmpty(contentRegEx))
        return patternMatches(titleRegEx, page.getName()) && patternMatches(contentRegEx,page.getData().getContent());

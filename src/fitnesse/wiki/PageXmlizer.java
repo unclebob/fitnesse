@@ -6,7 +6,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,7 +17,7 @@ import org.w3c.dom.NodeList;
 
 public class PageXmlizer {
   private final DateFormat dateFormat = WikiPageProperty.getTimeFormat();
-  private LinkedList<XmlizePageCondition> pageConditions = new LinkedList<XmlizePageCondition>();
+  private LinkedList<XmlizePageCondition> pageConditions = new LinkedList<>();
 
   public Document xmlize(WikiPage page) {
     Document document = XmlUtil.newDocument();
@@ -68,8 +67,7 @@ public class PageXmlizer {
   }
 
   private boolean pageMeetsConditions(WikiPage page) {
-    for (Iterator<XmlizePageCondition> iterator = pageConditions.iterator(); iterator.hasNext();) {
-      XmlizePageCondition xmlizePageCondition = iterator.next();
+    for (XmlizePageCondition xmlizePageCondition : pageConditions) {
       if (!xmlizePageCondition.canBeXmlized(page))
         return false;
     }
@@ -97,8 +95,7 @@ public class PageXmlizer {
     List<WikiPage> children = page.getChildren();
     Collections.sort(children);
 
-    for (Iterator<WikiPage> iterator = children.iterator(); iterator.hasNext();) {
-      WikiPage child = iterator.next();
+    for (WikiPage child : children) {
       addPageXmlToElement(childrenElement, child);
     }
     pageElement.appendChild(childrenElement);

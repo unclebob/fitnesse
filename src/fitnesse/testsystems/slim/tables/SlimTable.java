@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import fitnesse.slim.SlimSymbol;
 import fitnesse.slim.instructions.AssignInstruction;
 import fitnesse.slim.instructions.CallAndAssignInstruction;
 import fitnesse.slim.instructions.CallInstruction;
@@ -24,20 +25,15 @@ import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
-
-import static fitnesse.slim.VariableStore.SYMBOL_PATTERN;
-
 import static fitnesse.testsystems.slim.tables.ComparatorUtil.approximatelyEqual;
-import static java.lang.Character.isLetterOrDigit;
-import static java.lang.Character.toUpperCase;
 
 public abstract class SlimTable {
-  private static final Pattern SYMBOL_ASSIGNMENT_PATTERN = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
 
   private String tableName;
   private int instructionNumber = 0;
+  private String fixtureName;
 
-  private List<SlimTable> children = new LinkedList<SlimTable>();
+  private List<SlimTable> children = new LinkedList<>();
   private SlimTable parent = null;
 
   private final SlimTestContext testContext;
@@ -46,7 +42,7 @@ public abstract class SlimTable {
   protected String id;
   protected CustomComparatorRegistry customComparatorRegistry;
 
-  private final Map<String, String> symbolsToStore = new HashMap<String, String>();
+  private final Map<String, String> symbolsToStore = new HashMap<>();
 
   public SlimTable(Table table, String id, SlimTestContext testContext) {
     this.id = id;
@@ -123,9 +119,15 @@ public abstract class SlimTable {
     return constructInstance(getTableName(), fixtureName, 0, 0);
   }
 
+  public void setFixtureName(String name){
+	  fixtureName = name;
+  }
+
   protected String getFixtureName() {
-    String tableHeader = table.getCellContents(0, 0);
-    String fixtureName = getFixtureName(tableHeader);
+	if (fixtureName == null){
+      String tableHeader = table.getCellContents(0, 0);
+      fixtureName = getFixtureName(tableHeader);
+	}
     return Disgracer.disgraceClassName(fixtureName);
   }
 
@@ -147,7 +149,7 @@ public abstract class SlimTable {
 
   protected Object[] gatherConstructorArgumentsStartingAt(int startingColumn, int row) {
     int columnCount = table.getColumnCountInRow(row);
-    List<String> arguments = new ArrayList<String>();
+    List<String> arguments = new ArrayList<>();
     for (int col = startingColumn; col < columnCount; col++) {
       arguments.add(table.getCellContents(col, row));
     }
@@ -173,8 +175,7 @@ public abstract class SlimTable {
   }
 
   protected String ifSymbolAssignment(String expected) {
-    Matcher matcher = SYMBOL_ASSIGNMENT_PATTERN.matcher(expected);
-    return matcher.find() ? matcher.group(1) : null;
+	return SlimSymbol.isSymbolAssignment(expected);
   }
 
   public SlimTestContext getTestContext() {
@@ -182,7 +183,7 @@ public abstract class SlimTable {
   }
 
   protected List<List<String>> tableAsList() {
-    List<List<String>> tableArgument = new ArrayList<List<String>>();
+    List<List<String>> tableArgument = new ArrayList<>();
     int rows = table.getRowCount();
     for (int row = 1; row < rows; row++)
       tableArgument.add(tableRowAsList(row));
@@ -190,7 +191,7 @@ public abstract class SlimTable {
   }
 
   private List<String> tableRowAsList(int row) {
-    List<String> rowList = new ArrayList<String>();
+    List<String> rowList = new ArrayList<>();
     int cols = table.getColumnCountInRow(row);
     for (int col = 0; col < cols; col++)
       rowList.add(table.getCellContents(col, row));
@@ -203,95 +204,6 @@ public abstract class SlimTable {
 
   public void setCustomComparatorRegistry(CustomComparatorRegistry customComparatorRegistry) {
     this.customComparatorRegistry = customComparatorRegistry;
-  }
-
-  static class Disgracer {
-    public boolean capitalizeNextWord;
-    public StringBuffer disgracedName;
-    private String name;
-
-    public Disgracer(String name) {
-      this.name = name;
-    }
-
-    public static String disgraceClassName(String name) {
-      return new Disgracer(name).disgraceClassNameIfNecessary();
-    }
-
-    public static String disgraceMethodName(String name) {
-      return new Disgracer(name).disgraceMethodNameIfNecessary();
-    }
-
-    private String disgraceMethodNameIfNecessary() {
-      if (isGraceful()) {
-        return disgraceMethodName();
-      } else {
-        return name;
-      }
-    }
-
-    private String disgraceMethodName() {
-      capitalizeNextWord = false;
-      return disgraceName();
-    }
-
-    private String disgraceClassNameIfNecessary() {
-      if (nameHasDotsBeforeEnd() || nameHasDollars())
-        return name;
-      else if (isGraceful()) {
-        return disgraceClassName();
-      } else {
-        return name;
-      }
-    }
-
-    private boolean nameHasDollars() {
-      return name.indexOf("$") != -1;
-    }
-
-    private String disgraceClassName() {
-      capitalizeNextWord = true;
-      return disgraceName();
-    }
-
-    private boolean nameHasDotsBeforeEnd() {
-      int dotIndex = name.indexOf(".");
-      return dotIndex != -1 && dotIndex != name.length() - 1;
-    }
-
-    private String disgraceName() {
-      disgracedName = new StringBuffer();
-      for (char c : name.toCharArray())
-        appendCharInProperCase(c);
-
-      return disgracedName.toString();
-    }
-
-    private void appendCharInProperCase(char c) {
-      if (isGraceful(c)) {
-        capitalizeNextWord = true;
-      } else {
-        appendProperlyCapitalized(c);
-      }
-    }
-
-    private void appendProperlyCapitalized(char c) {
-      disgracedName.append(capitalizeNextWord ? toUpperCase(c) : c);
-      capitalizeNextWord = false;
-    }
-
-    private boolean isGraceful() {
-      boolean isGraceful = false;
-      for (char c : name.toCharArray()) {
-        if (isGraceful(c))
-          isGraceful = true;
-      }
-      return isGraceful;
-    }
-
-    private boolean isGraceful(char c) {
-      return !(isLetterOrDigit(c) || c == '_');
-    }
   }
 
   /** SlimExpectation base class for row based expectations. */
@@ -341,10 +253,12 @@ public abstract class SlimTable {
       return exceptionResult;
     }
 
+    @Override
     public int getCol() {
       return col;
     }
 
+    @Override
     public int getRow() {
       return row;
     }
@@ -355,61 +269,40 @@ public abstract class SlimTable {
     }
   }
 
-  class SymbolReplacer {
-    protected String replacedString;
-    private Matcher symbolMatcher;
-    private int startingPosition;
-
-    SymbolReplacer(String s) {
-      this.replacedString = s;
-      symbolMatcher = SYMBOL_PATTERN.matcher(s);
+  class SymbolReplacer extends SlimSymbol{
+    private String toReplace;
+    public SymbolReplacer(String s) {
+      super();
+      toReplace=s;
     }
 
-    String replace() {
-      replaceAllSymbols();
-      return replacedString;
-    }
-
-    private void replaceAllSymbols() {
-      startingPosition = 0;
-      while (symbolFound())
-        replaceSymbol();
-    }
-
-    private void replaceSymbol() {
-      String symbolName = symbolMatcher.group(1);
-      String value = formatSymbol(symbolName);
-      String prefix = replacedString.substring(0, symbolMatcher.start());
-      String suffix = replacedString.substring(symbolMatcher.end());
-      replacedString = prefix + value + suffix;
-      int replacementEnd = symbolMatcher.start() + value.length();
-      startingPosition = Math.min(replacementEnd, replacedString.length());
-    }
-
-    private String formatSymbol(String symbolName) {
+    //TODO: This is only implemented in the SlimServer but not in the Slim Client so it can't work properly :(
+    // Should be removed. Would this breaks other SLIM Client implementations .Net ... ?
+    @Override
+    protected String getSymbolValue(String symbolName) {
       String value = getSymbol(symbolName);
       if (value == null) {
         for (int i = symbolName.length() - 1; i > 0; i--) {
           String str = symbolName.substring(0, i);
           if ((value = getSymbol(str)) != null)
-            return formatSymbolValue(str, value) + symbolName.substring(i, symbolName.length());
+          return value + symbolName.substring(i, symbolName.length());
         }
 
-        return "$" + symbolName;
+        return null;
       } else
-        return formatSymbolValue(symbolName, value);
+        return value;
     }
 
+//    @Override
+//    protected String getSymbolValue(String symbolName){
+//      return getSymbol(symbolName);
+//    }
 
-    private boolean symbolFound() {
-      symbolMatcher = SYMBOL_PATTERN.matcher(replacedString);
-      return symbolMatcher.find(startingPosition);
-    }
-
-    protected String formatSymbolValue(String name, String value) {
-      return value;
+    public String replace(){
+      return replace(toReplace);
     }
   }
+
 
   class FullExpansionSymbolReplacer extends SymbolReplacer {
     FullExpansionSymbolReplacer(String s) {
@@ -502,7 +395,7 @@ public abstract class SlimTable {
         testResult = SlimTestResult.fail("null", replacedExpected); //todo can't be right message.
       else if (actual.equals(replacedExpected))
         testResult = SlimTestResult.pass(announceBlank(replaceSymbolsWithFullExpansion(expected)));
-      else if (replacedExpected.length() == 0)
+      else if (replacedExpected.isEmpty())
         testResult = SlimTestResult.ignore(actual);
       else {
         testResult = new Comparator(replacedExpected, actual, expected).evaluate();
@@ -514,7 +407,7 @@ public abstract class SlimTable {
     }
 
     private String announceBlank(String originalValue) {
-      return originalValue.length() == 0 ? "BLANK" : originalValue;
+      return originalValue.isEmpty() ? "BLANK" : originalValue;
     }
 
   }
@@ -534,13 +427,13 @@ public abstract class SlimTable {
 
 	    @Override
 	    public TestResult evaluateExpectation(Object returnValue) {
-		  returnValue = getSymbol(this.symbolName);
-	      return super.evaluateExpectation(returnValue);
+        String value = getSymbol(this.symbolName);
+	      return super.evaluateExpectation(value);
 	    }
-	    
+
 	    @Override
 	    protected SlimTestResult createEvaluationMessage(String actual, String expected) {
-	      if (assignToName != null){	
+	      if (assignToName != null){
 	        setSymbol(assignToName, actual);
 	        return SlimTestResult.plain(String.format("$%s<-[%s]", assignToName, actual));
 	      }else{
@@ -548,7 +441,7 @@ public abstract class SlimTable {
 	      }
 	    }
   }
-  
+
   class RejectedValueExpectation extends ReturnedValueExpectation {
     public RejectedValueExpectation(int col, int row) {
       super(col, row);
@@ -636,8 +529,8 @@ public abstract class SlimTable {
             } else {
               message = SlimTestResult.fail(expectedString + " doesn't match " + actual);
             }
-          } catch (Throwable t) {
-            message = SlimTestResult.fail(expectedString + " doesn't match " + actual + ":\n" + t.getMessage());
+          } catch (Exception e) {
+            message = SlimTestResult.fail(expectedString + " doesn't match " + actual + ":\n" + e.getMessage());
           }
         }
       }

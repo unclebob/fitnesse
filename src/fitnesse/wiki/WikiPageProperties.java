@@ -9,13 +9,11 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
-import fitnesse.html.HtmlUtil;
 import fitnesse.util.XmlUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -43,7 +41,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
 
   public WikiPageProperties(WikiPageProperties that) {
     if (that != null && that.children != null)
-      children = new TreeMap<String, WikiPageProperty>(that.children);
+      children = new TreeMap<>(that.children);
   }
 
   public void loadFromXmlStream(InputStream inputStream) {
@@ -104,11 +102,10 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
 
   public Element makeRootElement(Document document) {
     Element root = document.createElement("properties");
-    List<String> keys = new ArrayList<String>(keySet());
+    List<String> keys = new ArrayList<>(keySet());
     Collections.sort(keys);
 
-    for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
-      String key = iterator.next();
+    for (String key : keys) {
       WikiPageProperty childProperty = getProperty(key);
       toXml(childProperty, key, document, root);
     }
@@ -125,13 +122,13 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
         element.setAttribute("value", value);
 
       Set<?> childKeys = context.keySet();
-      for (Iterator<?> iterator = childKeys.iterator(); iterator.hasNext();) {
-        String childKey = (String) iterator.next();
-        WikiPageProperty child = context.getProperty(childKey);
+      for (Object childKey : childKeys) {
+        String childKeyAsString = (String) childKey;
+        WikiPageProperty child = context.getProperty(childKeyAsString);
         if (child == null) {
-          LOG.warning("Property key \"" + childKey + "\" has null value for {" + context + "}");
+          LOG.warning("Property key \"" + childKeyAsString + "\" has null value for {" + context + "}");
         } else {
-          toXml(child, childKey, document, element);
+          toXml(child, childKeyAsString, document, element);
         }
       }
     } else if (value != null)
@@ -140,10 +137,9 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
     parent.appendChild(element);
   }
 
+  @Override
   public String toString() {
-    StringBuffer s = new StringBuffer();
-    s.append(super.toString("WikiPageProperties", 0));
-    return s.toString();
+    return super.toString("WikiPageProperties", 0);
   }
 
   public Date getLastModificationTime() {

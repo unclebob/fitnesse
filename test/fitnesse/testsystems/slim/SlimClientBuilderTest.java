@@ -1,10 +1,5 @@
 package fitnesse.testsystems.slim;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-
-import fitnesse.socketservice.SocketFactory;
-
 import fitnesse.testsystems.Descriptor;
 import org.junit.Before;
 import org.junit.Test;
@@ -93,20 +88,6 @@ public class SlimClientBuilderTest {
     when(descriptor.getVariable("slim.host")).thenReturn("somehost");
     when(descriptor.getVariable("SLIM_HOST")).thenReturn("notThisHost");
     assertEquals("somehost", new SlimClientBuilder(descriptor).determineSlimHost());
-  }
-
-  @Test(expected = IOException.class)
-  public void createSlimServiceFailsFastWhenSlimPortIsNotAvailable() throws Exception {
-    final int slimServerPort = 10258;
-    Descriptor descriptor = mock(Descriptor.class);
-    ServerSocket slimSocket = SocketFactory.tryCreateServerSocket(slimServerPort);
-    try {
-      InProcessSlimClientBuilder sys = new InProcessSlimClientBuilder(descriptor);
-      String[] slimArguments = new String[] { Integer.toString(slimServerPort) };
-      sys.createSlimService(slimArguments);
-    } finally {
-      slimSocket.close();
-    }
   }
 
   @Test

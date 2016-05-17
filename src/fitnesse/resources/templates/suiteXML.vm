@@ -10,7 +10,8 @@
       <ignores>$reference.testSummary.ignores</ignores>
       <exceptions>$reference.testSummary.exceptions</exceptions>
     </counts>
-    <runTimeInMillis>$reference.RunTimeInMillis</runTimeInMillis>
+    <date>$reference.dateString</date>
+    <runTimeInMillis>$reference.runTimeInMillis</runTimeInMillis>
     <relativePageName>#escape($reference.relativePageName)</relativePageName>
     <pageHistoryLink>$reference.pageName?pageHistory&amp;resultDate=$reference.resultDate</pageHistoryLink>
     #set($testResult = $formatter.getTestResult($reference))
@@ -55,6 +56,22 @@
     </instructions>
     #end
   </result>
+  #end
+  #foreach ($log in $suiteExecutionReport.executionLogs)
+   <executionLog>
+    <testSystem>#escape($log.testSystemName)</testSystem>
+    <command>#escape($log.command)</command>
+    <exitCode>#escape($log.exitCode)</exitCode>
+     #if( $log.stdOut )
+      <stdOut>#escape($log.stdOut)</stdOut>
+     #end
+     #if( $log.stdOut )
+      <stdErr>#escape($log.stdErr)</stdErr>
+     #end
+     #foreach( $exception in $log.exceptions)
+      <exception>#escape($exception.message)</exception>
+     #end
+   </executionLog>
   #end
   <finalCounts>
     <right>$suiteExecutionReport.finalCounts.right</right>

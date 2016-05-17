@@ -136,6 +136,7 @@ public class SuiteResponderWikiImportingTest {
       response = new ChunkedResponse("html", new MockChunkedDataProvider());
     }
 
+    @Override
     public void addToResponse(String output) {
       AddMessage(output);
     }

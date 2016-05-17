@@ -34,6 +34,7 @@ public class Table {
     return firstRow;
   }
 
+  @Override
   public String toString() {
     return toSimpleText(table, new StringBuffer());
   }
@@ -105,7 +106,9 @@ public class Table {
       currentRow = nextRow;
       nextRow = nextRow.more;
     }
-    currentRow.more = null;
+    if (currentRow != null) {
+      currentRow.more = null;
+    }
     return currentRow;
   }
 

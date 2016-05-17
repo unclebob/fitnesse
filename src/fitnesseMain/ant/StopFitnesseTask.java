@@ -36,9 +36,9 @@ public class StopFitnesseTask extends Task {
   }
 
   /**
-   * Port on which fitnesse would run. Defaults to <b>8082</b>.
+   * Set the port on which fitnesse would run. Defaults to <b>8082</b>.
    *
-   * @param fitnessePort
+   * @param fitnessePort port on which fitnesse would run
    */
   public void setFitnessePort(int fitnessePort) {
     this.fitnessePort = fitnessePort;

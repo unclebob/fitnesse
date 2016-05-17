@@ -6,10 +6,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Runs a separate service (thread) to handle new connections.
+ */
 public class SocketService {
   private static final Logger LOG = Logger.getLogger(SocketService.class.getName());
 
@@ -17,18 +19,15 @@ public class SocketService {
   private final Thread serviceThread;
   private volatile boolean running = false;
   private final SocketServer server;
-  private final LinkedList<Thread> threads = new LinkedList<Thread>();
+
   private volatile boolean everRan = false;
 
-  public SocketService(int port, SocketServer server) throws IOException {
-    this(port, server, false);
-  }
-
-  public SocketService(int port, SocketServer server, boolean daemon) throws IOException {
+  public SocketService(SocketServer server, boolean daemon, ServerSocket serverSocket) throws IOException {
     this.server = server;
-    serverSocket = SocketFactory.tryCreateServerSocket(port);
+    this.serverSocket = serverSocket;
     serviceThread = new Thread(
       new Runnable() {
+        @Override
         public void run() {
           serviceThread();
         }
@@ -38,19 +37,15 @@ public class SocketService {
     serviceThread.start();
   }
 
-  public int getPort() {
-    return serverSocket.getLocalPort();
-  }
-
   public void close() throws IOException {
     waitForServiceThreadToStart();
     running = false;
     serverSocket.close();
     try {
       serviceThread.join();
-      waitForServerThreads();
     } catch (InterruptedException e) {
-      LOG.log(Level.WARNING, "Thread joining interrupted", e);
+      LOG.log(Level.WARNING, "Thread joining interrupted");
+      Thread.currentThread().interrupt();
     }
   }
 
@@ -61,58 +56,23 @@ public class SocketService {
 
   private void serviceThread() {
     running = true;
-    everRan = true;
     while (running) {
       try {
         Socket s = serverSocket.accept();
-        startServerThread(s);
+        if (!everRan){
+          // Print information about the first connection done
+          SocketFactory.printSocketInfo(s);
+        }
+        everRan = true;
+        server.serve(s);
       } catch (java.lang.OutOfMemoryError e) {
         LOG.log(Level.SEVERE, "Can't create new thread.  Out of Memory.  Aborting.", e);
         System.exit(99);
       } catch (SocketException sox) {
-        running = false;// do nothing
+        running = false; // do nothing
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
     }
   }
-
-  private void startServerThread(Socket s) {
-    Thread serverThread = new Thread(new ServerRunner(s));
-    synchronized (threads) {
-      threads.add(serverThread);
-    }
-    serverThread.start();
-  }
-
-  private void waitForServerThreads() throws InterruptedException {
-    while (threads.size() > 0) {
-      Thread t;
-      synchronized (threads) {
-        if (threads.size() < 1)
-          return;
-        t = threads.getFirst();
-      }
-      t.join();
-    }
-  }
-
-  private class ServerRunner implements Runnable {
-    private Socket socket;
-
-    ServerRunner(Socket s) {
-      socket = s;
-    }
-
-    public void run() {
-      try {
-        server.serve(socket);
-        synchronized (threads) {
-          threads.remove(Thread.currentThread());
-        }
-      } catch (Exception e) {
-      }
-    }
-  }
-
 }

@@ -9,7 +9,6 @@ import fitnesse.wiki.*;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 

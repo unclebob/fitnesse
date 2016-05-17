@@ -1,4 +1,12 @@
-!include -c <SuiteAcceptanceTests.SetUp
+!|Import|
+|fitnesse.fixtures|
+
+!define TEST_HISTORY_DAYS {15}
+!| SetUp | test.history.days=${TEST_HISTORY_DAYS} |
+
+|Library|
+|page driver|
+|echo fixture|
 
 !|Library|
 |page driver|

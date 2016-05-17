@@ -25,6 +25,7 @@ public class RegularExpressionWikiPageFinderTest implements TraversalListener<Wi
   List<WikiPage> foundPages = new ArrayList<WikiPage>();
   private WikiPageFinder pageFinder;
 
+  @Override
   public void process(WikiPage page) {
     foundPages.add(page);
   }
@@ -125,6 +126,7 @@ public class RegularExpressionWikiPageFinderTest implements TraversalListener<Wi
   private Matcher<List<WikiPage>> found(final WikiPage... pages) {
     return new TypeSafeMatcher<List<WikiPage>>() {
 
+      @Override
       public boolean matchesSafely(List<WikiPage> foundPages) {
         if (foundPages.size() != pages.length) return false;
 
@@ -134,6 +136,7 @@ public class RegularExpressionWikiPageFinderTest implements TraversalListener<Wi
         return true;
       }
 
+      @Override
       public void describeTo(Description description) {
         description.appendText("a list containing ").appendValue(pages);
       }
@@ -145,10 +148,12 @@ public class RegularExpressionWikiPageFinderTest implements TraversalListener<Wi
   }
 
   private static class EmptyListMatcher extends TypeSafeMatcher<List<WikiPage>> {
+    @Override
     public boolean matchesSafely(List<WikiPage> pages) {
       return pages.isEmpty();
     }
 
+    @Override
     public void describeTo(Description description) {
       description.appendText("an empty list");
     }

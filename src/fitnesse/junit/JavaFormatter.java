@@ -13,13 +13,14 @@ import java.util.List;
 import java.util.Map;
 
 import fitnesse.reporting.BaseFormatter;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testrunner.WikiTestPage;
+import util.FileUtil;
 
 /**
  * Used to run tests from a JUnit test suite.
  *
- * @see {@link fitnesse.junit.FitNesseSuite}
+ * @see fitnesse.junit.FitNesseSuite
  */
 public class JavaFormatter extends BaseFormatter implements Closeable {
 
@@ -37,16 +38,21 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
 
   public static class FileCopier {
     public static void copy(String src, File dst) throws IOException {
-      InputStream in = FileCopier.class.getResourceAsStream(src);
-      OutputStream out = new FileOutputStream(dst);
-      // Transfer bytes from in to out
-      byte[] buf = new byte[1024];
-      int len;
-      while ((len = in.read(buf)) > 0) {
-        out.write(buf, 0, len);
+      InputStream in = null;
+      OutputStream out = null;
+      try {
+        in = FileCopier.class.getResourceAsStream(src);
+        out = new FileOutputStream(dst);
+        // Transfer bytes from in to out
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+          out.write(buf, 0, len);
+        }
+      } finally {
+        if (in != null) in.close();
+        if (out != null) out.close();
       }
-      in.close();
-      out.close();
     }
   }
 
@@ -55,7 +61,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
 
     public TestResultPage(String outputPath, String testName) throws IOException {
       File outputFile = new File(outputPath, testName + ".html");
-      currentWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8");
+      currentWriter = new OutputStreamWriter(new FileOutputStream(outputFile), FileUtil.CHARENCODING);
       writeHeaderFor(testName);
     }
 
@@ -67,9 +73,9 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
       currentWriter.write("<html><head><title>");
       currentWriter.write(testName);
       currentWriter
-        .write("</title><meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>"
+        .write("</title><meta http-equiv='Content-Type' content='text/html;charset=" + FileUtil.CHARENCODING + "'/>"
           + "<link rel='stylesheet' type='text/css' href='css/fitnesse.css'/>"
-          + "<script src='javascript/jquery-1.7.2.min.js' type='text/javascript'></script>"
+          + "<script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script>"
           + "<script src='javascript/fitnesse.js' type='text/javascript'></script>" + "</head><body><header><h2>");
       currentWriter.write(testName);
       currentWriter.write("</h2></header><article>");
@@ -121,7 +127,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
       addFile(cssDir + "fitnesse_pages.css", "css/fitnesse_pages.css");
       addFile(cssDir + "fitnesse_straight.css", "css/fitnesse_straight.css");
       String javascriptDir = base + "javascript/";
-      addFile(javascriptDir + "jquery-1.7.2.min.js", "javascript/jquery-1.7.2.min.js");
+      addFile(javascriptDir + "jquery-1.11.3.min.js", "javascript/jquery-1.11.3.min.js");
       addFile(javascriptDir + "fitnesse.js", "javascript/fitnesse.js");
       String imagesDir = base + "images/";
       addFile(imagesDir + "collapsibleOpen.png", "images/collapsibleOpen.png");
@@ -131,16 +137,16 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
 
   private TestSummary totalSummary = new TestSummary();
 
-  private List<String> visitedTestPages = new ArrayList<String>();
-  private Map<String, TestSummary> testSummaries = new HashMap<String, TestSummary>();
+  private List<String> visitedTestPages = new ArrayList<>();
+  private Map<String, TestSummary> testSummaries = new HashMap<>();
 
   @Override
-  public void testStarted(WikiTestPage test) throws IOException {
+  public void testStarted(TestPage test) throws IOException {
     resultsRepository.open(test.getFullPath());
   }
 
   @Override
-  public void testComplete(WikiTestPage test, TestSummary testSummary) throws IOException {
+  public void testComplete(TestPage test, TestSummary testSummary) throws IOException {
     String fullPath = test.getFullPath();
     visitedTestPages.add(fullPath);
     totalSummary.add(testSummary);
@@ -202,7 +208,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
 
     @Override
     public String toString() {
-      StringBuffer sb = new StringBuffer();
+      StringBuilder sb = new StringBuilder();
       sb.append("<tr class=\"").append(getCssClass(testSummary)).append("\"><td>").append(
               "<a href=\"").append(testName).append(".html\">").append(testName).append("</a>").append(
               "</td><td>").append(testSummary.getRight()).append("</td><td>").append(testSummary.getWrong())
@@ -238,7 +244,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
 
     @Override
     public String toString() {
-      StringBuffer sb = new StringBuffer();
+      StringBuilder sb = new StringBuilder();
       sb.append(SUMMARY_HEADER);
       for (String s : visitedTestPages) {
         sb.append(summaryRow(s, testSummaries.get(s)));

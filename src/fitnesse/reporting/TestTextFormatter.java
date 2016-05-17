@@ -4,7 +4,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
-import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.TestPage;
 import fitnesse.util.TimeMeasurement;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.testsystems.TestSummary;
@@ -28,7 +28,7 @@ public class TestTextFormatter extends BaseFormatter implements Closeable {
   }
 
   @Override
-  public void testStarted(WikiTestPage page) {
+  public void testStarted(TestPage page) {
     timeMeasurement = new TimeMeasurement().start();
   }
 
@@ -37,7 +37,7 @@ public class TestTextFormatter extends BaseFormatter implements Closeable {
   }
 
   @Override
-  public void testComplete(WikiTestPage page, TestSummary summary) throws IOException {
+  public void testComplete(TestPage page, TestSummary summary) throws IOException {
     timeMeasurement.stop();
     updateCounters(summary);
     String timeString = new SimpleDateFormat("HH:mm:ss").format(timeMeasurement.startedAtDate());

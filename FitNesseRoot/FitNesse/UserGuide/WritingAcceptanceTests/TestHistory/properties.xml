@@ -1,12 +1,8 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <properties>
-	<Edit>true</Edit>
-	<Files>true</Files>
-	<Properties>true</Properties>
-	<RecentChanges>true</RecentChanges>
-	<Refactor>true</Refactor>
-	<Search>true</Search>
-	<Test>true</Test>
-	<Versions>true</Versions>
-	<WhereUsed>true</WhereUsed>
+<Files/>
+<RecentChanges/>
+<Search/>
+<Static/>
+<WhereUsed/>
 </properties>

@@ -5,11 +5,14 @@ package fitnesse.testsystems.slim.tables;
 import java.util.Collections;
 import java.util.List;
 
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
+import fitnesse.wiki.WikiPageDummy;
+
 import org.junit.Test;
 
-import static fitnesse.testsystems.slim.tables.SlimTable.Disgracer.disgraceClassName;
-import static fitnesse.testsystems.slim.tables.SlimTable.Disgracer.disgraceMethodName;
+import static fitnesse.testsystems.slim.tables.Disgracer.disgraceClassName;
+import static fitnesse.testsystems.slim.tables.Disgracer.disgraceMethodName;
 import static org.junit.Assert.assertEquals;
 
 public class SlimTableTest {
@@ -113,21 +116,23 @@ public class SlimTableTest {
   public void replaceSymbols_ShouldReplaceConcutenatedSymbols() throws Exception {
     SlimTable table = new MockTable();
     table.setSymbol("x", "1");
-    table.setSymbol("y", "1");
-    assertEquals("this is $x->[1]1 and $y->[1]1", table.replaceSymbolsWithFullExpansion("this is $x1 and $y1"));
+    table.setSymbol("y", "a");
+    assertEquals("this is $x1->[11] and $yb->[ab]", table.replaceSymbolsWithFullExpansion("this is $x1 and $yb"));
   }
 
 
 
   private static class MockTable extends SlimTable {
     public MockTable() {
-      super(null, null, new SlimTestContextImpl());
+      super(null, null, new SlimTestContextImpl(new WikiTestPage(new WikiPageDummy())));
     }
 
+    @Override
     protected String getTableType() {
       return null;
     }
 
+    @Override
     public List<SlimAssertion> getAssertions() {
       return Collections.emptyList();
     }

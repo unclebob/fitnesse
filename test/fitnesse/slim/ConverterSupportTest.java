@@ -1,83 +1,107 @@
 package fitnesse.slim;
 
-import static org.junit.Assert.*;
-import fitnesse.slim.converters.ConverterRegistry;
-import fitnesse.slim.converters.StringConverter;
-
+import java.lang.reflect.Type;
 import java.util.Date;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
+import fitnesse.slim.converters.ConverterRegistry;
+import fitnesse.slim.converters.StringConverter;
+import static org.junit.Assert.*;
 
 public class ConverterSupportTest {
 
-	private Converter<String> stringConverter;
-	private static final String INPUT_STRING = "input string";
-	private static final String CONVERTED_STRING = "converted string";
+  @Test
+  public void convertArgs_should_return_null_when_value_is_null() {
+    String value = null;
+    Class<?> clazz = String.class;
 
-	@Before
-	public void backupStringConverter() {
-		stringConverter = ConverterRegistry.getConverterForClass(String.class);
-	}
-	
-	@After
-	public void restoreStringConverter() {
-		ConverterRegistry.addConverter(String.class, stringConverter);
-	}
-	
-	@Test
-	public void testConvertArgs_NullValue() throws Exception {
-		Object[] convertedArgs = convertSingleValue(null, String.class);
-		assertEquals(1, convertedArgs.length);
-		assertEquals(null, convertedArgs[0]);
-	}
+    Object current = convertSingleValue(value, clazz);
 
-	@Test
-	public void testConvertArgs_PassedThroughIfMatchingType() throws Exception {
-		Date date = new Date();
-		Object[] convertedArgs = convertSingleValue(date, Date.class);
-		assertSame(date, convertedArgs[0]);
-	}
-	
-	@Test
-	public void testConvertArgs_ConvertedToDateIfStringIsPassedIn() throws Exception {
-		String value = "27-FEB-2012";
-		Date expectedDate = ConverterRegistry.getConverterForClass(Date.class).fromString(value);
+    assertNull(current);
+  }
 
-		Object[] convertedArgs = convertSingleValue(value, Date.class);
-		assertEquals(expectedDate, convertedArgs[0]);
-	}
-	
-	@Test
-	public void testConvertArgs_StringConverterApplies() throws Exception {
-		Converter<String> myStringConverter = new MyStringConverter();
-		ConverterRegistry.addConverter(String.class, myStringConverter );
-		Object[] convertedArgs = convertSingleValue(INPUT_STRING, String.class);
-		assertSame(CONVERTED_STRING, convertedArgs[0]);
-	}
-	
-	@Test
-	public void testConvertArgs_PassesThroughStringWithoutCustomConverter() throws Exception {
-		Object[] convertedArgs = convertSingleValue(INPUT_STRING, String.class);
-		assertSame(INPUT_STRING, convertedArgs[0]);
-	}
-	
-	private Object[] convertSingleValue(Object value, Class<?> type) {
-		Object[] args = new Object[1];
-		args[0] = value;
-		Class<?>[] argumentTypes = new Class<?>[1];
-		argumentTypes[0] = type;
-		return ConverterSupport.convertArgs(args, argumentTypes );
-	}
+  @Test
+  public void convertArgs_should_return_the_same_object_when_value_is_instance_of_target_type() {
+    Date value = new Date();
+    Class<?> clazz = Date.class;
 
-	private class MyStringConverter extends StringConverter {
-		@Override
-		public String fromString(String o) {
-			return CONVERTED_STRING;
-		}
-	}
-	
+    Object current = convertSingleValue(value, clazz);
+
+    assertSame(value, current);
+  }
+
+
+  @Test(expected = fitnesse.slim.SlimError.class)
+  public void convertArgs_should_throw_an_exception_when_target_type_has_no_converter() {
+    String value = "";
+    Class<?> clazz = StringBuffer.class;
+
+    convertSingleValue(value, clazz);
+
+    fail();
+  }
+
+  @Test
+  public void convertArgs_should_return_a_converted_object_when_converter_exists() {
+    String value = "1";
+    Class<?> clazz = Integer.class;
+
+    Object current = convertSingleValue(value, clazz);
+
+    assertEquals(Integer.valueOf(1), current);
+  }
+
+  @Test
+  public void convertArgs_should_return_a_converted_object_when_value_is_a_string() {
+    String value = "";
+    Class<?> clazz = String.class;
+
+    Object current = convertSingleValue(value, clazz);
+
+    assertEquals(value, current);
+  }
+
+  @Test
+  public void convertArgs_should_return_a_converted_object_when_converter_is_overridden() {
+    Converter<String> stringConverter = ConverterRegistry.getConverterForClass(String.class);
+    try {
+      ConverterRegistry.addConverter(String.class, new MyStringConverter());
+
+      Object current = convertSingleValue("input string", String.class);
+
+      assertSame(MyStringConverter.CONVERTED_STRING, current);
+    } finally {
+      ConverterRegistry.addConverter(String.class, stringConverter);
+    }
+  }
+
+  @Test
+  public void should_throw_SlimError_if_value_cannot_be_converted() {
+    String errorMessage = "no error";
+    try {
+      ConverterSupport.convertArgs(new Object[]{"val"}, new Type[]{ Runnable.class });
+    } catch (SlimError e) {
+      errorMessage = e.getMessage();
+    }
+    assertEquals("message:<<NO_CONVERTER_FOR_ARGUMENT_NUMBER java.lang.Runnable.>>", errorMessage);
+  }
+
+  /*
+   * PRIVATE
+   */
+  private static Object convertSingleValue(Object value, Class<?> type) {
+    Object[] convertedArgs = ConverterSupport.convertArgs(new Object[] { value }, new Type[] { type });
+    assertEquals(1, convertedArgs.length);
+    return convertedArgs[0];
+  }
+
+  private static class MyStringConverter extends StringConverter {
+    public static final String CONVERTED_STRING = "converted string";
+
+    @Override
+    public String fromString(String o) {
+      return CONVERTED_STRING;
+    }
+  }
 }
-

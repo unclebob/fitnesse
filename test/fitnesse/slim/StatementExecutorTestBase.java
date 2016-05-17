@@ -35,46 +35,47 @@ public abstract class StatementExecutorTestBase {
 
   protected int library = 0;
 
-  public interface Echo {
-    public void echo();
+  interface Echo {
+    void echo();
 
-    public boolean echoCalled();
+    boolean echoCalled();
   }
 
-  public interface Speak {
-    public void speak();
+  interface Speak {
+    void speak();
 
-    public boolean speakCalled();
+    boolean speakCalled();
   }
 
-  public interface Delete {
-    public void delete(String fileName);
+  interface Delete {
+    void delete(String fileName);
 
-    public boolean deleteCalled();
+    boolean deleteCalled();
   }
 
-  public interface SystemUnderTestFixture {
-    public MySystemUnderTestBase getSystemUnderTest();
+  interface SystemUnderTestFixture {
+    MySystemUnderTestBase getSystemUnderTest();
   }
 
-  public abstract static class MySystemUnderTestBase implements Speak, Echo {
+  abstract static class MySystemUnderTestBase implements Speak, Echo {
+
   }
 
-  public static abstract class MyAnnotatedSystemUnderTestFixture implements Echo,
+  abstract static class MyAnnotatedSystemUnderTestFixture implements Echo,
       SystemUnderTestFixture {
   }
 
-  public static abstract class FixtureWithNamedSystemUnderTestBase implements Echo,
+  abstract static class FixtureWithNamedSystemUnderTestBase implements Echo,
       SystemUnderTestFixture {
   }
 
-  public static abstract class SimpleFixture implements Echo {
+  abstract static class SimpleFixture implements Echo {
   }
 
-  public static abstract class EchoSupport implements Echo, Speak {
+  abstract static class EchoSupport implements Echo, Speak {
   }
 
-  public static abstract class FileSupport implements Delete {
+  abstract static class FileSupport implements Delete {
   }
 
   public abstract void init() throws Exception;
@@ -87,6 +88,17 @@ public abstract class StatementExecutorTestBase {
     assertTrue(myInstance.echoCalled());
     assertFalse(myInstance.getSystemUnderTest().speakCalled());
   }
+
+  @Test
+  public void shouldCallMethodOnFieldAnnotatedWithSystemUnderTestWhenFixtureDoesNotHaveMethodAndMethodIsInSubclass() throws Exception {
+    MyAnnotatedSystemUnderTestFixture myFixture = createAnnotatedFixture();
+    executeShoutStatementAndVerifyResultIsVoid();
+    assertFalse(myFixture.echoCalled());
+    assertTrue((((StatementExecutorTest.MySystemUnderTestJava)myFixture.getSystemUnderTest())).shoutCalled());
+    assertFalse(myFixture.getSystemUnderTest().speakCalled());
+  }
+
+
 
   @Test
   public void shouldCallMethodOnFieldAnnotatedWithSystemUnderTestWhenFixtureDoesNotHaveMethod() throws Exception {
@@ -107,9 +119,9 @@ public abstract class StatementExecutorTestBase {
   @Test
   public void shouldReportMissingMethodOnFixtureClassWhenMethodCanNotBeFoundOnBothFixtureAndSystemUnderTest()
       throws Exception {
+    createAnnotatedFixture();
     try {
-      createAnnotatedFixture();
-      String result = (String) statementExecutor.call(INSTANCE_NAME, "noSuchMethod");
+      statementExecutor.call(INSTANCE_NAME, "noSuchMethod");
       fail("Executed non-existing method.");
     } catch (SlimException e) {
       String expectedErrorMessage = String.format(MESSAGE_NO_METHOD_IN_CLASS, "noSuchMethod", 0,
@@ -238,6 +250,11 @@ public abstract class StatementExecutorTestBase {
 
   protected void executeStatementAndVerifyResultIsVoid() throws Exception {
     Object result = statementExecutor.call(INSTANCE_NAME, "speak");
+    assertEquals(voidMessage(), result);
+  }
+
+  protected void executeShoutStatementAndVerifyResultIsVoid() throws Exception {
+    Object result = statementExecutor.call(INSTANCE_NAME, "shout");
     assertEquals(voidMessage(), result);
   }
 }

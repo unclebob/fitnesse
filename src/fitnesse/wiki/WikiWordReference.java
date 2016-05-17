@@ -16,22 +16,20 @@ public class WikiWordReference {
     }
 
     public WikiPage getReferencedPage() {
-        String theWord = expandPrefix(wikiWord);
+        String theWord = expandPrefix(currentPage, wikiWord);
         WikiPage parentPage = currentPage.getParent();
         return parentPage.getPageCrawler().getPage(PathParser.parse(theWord));
     }
-    
-    private String expandPrefix(String theWord) {
-      PageCrawler crawler = currentPage.getPageCrawler();
+
+  public static String expandPrefix(WikiPage wikiPage, String theWord) {
       if (theWord.charAt(0) == '^' || theWord.charAt(0) == '>') {
-        String prefix = currentPage.getName();
+        String prefix = wikiPage.getName();
         return String.format("%s.%s", prefix, theWord.substring(1));
       } else if (theWord.charAt(0) == '<') {
         String undecoratedPath = theWord.substring(1);
         String[] pathElements = undecoratedPath.split("\\.");
         String target = pathElements[0];
-        //todo rcm, this loop is duplicated in PageCrawlerImpl.getSiblingPage
-        for (WikiPage current = currentPage.getParent(); !current.isRoot(); current = current.getParent()) {
+        for (WikiPage current = wikiPage.getParent(); !current.isRoot(); current = current.getParent()) {
           if (current.getName().equals(target)) {
             pathElements[0] = PathParser.render(current.getPageCrawler().getFullPath());
             return "." + StringUtils.join(Arrays.asList(pathElements), ".");
@@ -45,12 +43,12 @@ public class WikiWordReference {
     public void wikiWordRenameMovedPageIfReferenced(Symbol wikiWord, WikiPage pageToBeMoved, String newParentName) {
       WikiPagePath pathOfPageToBeMoved = pageToBeMoved.getPageCrawler().getFullPath();
       pathOfPageToBeMoved.makeAbsolute();
-      String QualifiedNameOfPageToBeMoved = PathParser.render(pathOfPageToBeMoved);
+      String qualifiedNameOfPageToBeMoved = PathParser.render(pathOfPageToBeMoved);
       String reference = getQualifiedWikiWord(wikiWord.getContent());
-      if (refersTo(reference, QualifiedNameOfPageToBeMoved)) {
-        String referenceTail = reference.substring(QualifiedNameOfPageToBeMoved.length());
+      if (refersTo(reference, qualifiedNameOfPageToBeMoved)) {
+        String referenceTail = reference.substring(qualifiedNameOfPageToBeMoved.length());
         String childPortionOfReference = pageToBeMoved.getName();
-        if (referenceTail.length() > 0)
+        if (!referenceTail.isEmpty())
           childPortionOfReference += referenceTail;
         String newQualifiedName;
         if ("".equals(newParentName))
@@ -63,7 +61,7 @@ public class WikiWordReference {
     }
 
     private String getQualifiedWikiWord(String wikiWordText) {
-      String pathName = expandPrefix(wikiWordText);
+      String pathName = expandPrefix(currentPage, wikiWordText);
       WikiPagePath expandedPath = PathParser.parse(pathName);
       if (expandedPath == null)
         return wikiWordText;

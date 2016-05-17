@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems;
 
-
 public class TestSummary {
   private int right = 0;
   private int wrong = 0;
@@ -47,23 +46,7 @@ public class TestSummary {
     assert false : "hashCode not designed";
     return 42;
   }
-
-  public void tallyPageCounts(ExecutionResult result) {
-	switch (result) {
-	case ERROR:
-		exceptions += 1;
-		break;
-	case FAIL:
-		wrong += 1;
-		break;
-	case IGNORE:
-		ignores += 1;
-		break;
-	case PASS:
-		right += 1;
-	}
-  }
-
+  
   public void add(TestSummary testSummary) {
     right = getRight() + testSummary.getRight();
     wrong = getWrong() + testSummary.getWrong();

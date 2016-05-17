@@ -22,17 +22,19 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.http.UploadedFile;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.wiki.fs.FileVersion;
+import util.FileUtil;
 
 public class UploadResponder implements SecureResponder {
   private static final Pattern filenamePattern = Pattern.compile("([^/\\\\]*[/\\\\])*([^/\\\\]*)");
 
   private String rootPath;
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     rootPath = context.getRootPagePath();
     SimpleResponse response = new SimpleResponse();
 
-    String resource = URLDecoder.decode(request.getResource(), "UTF-8");
+    String resource = URLDecoder.decode(request.getResource(), FileUtil.CHARENCODING);
     final UploadedFile uploadedFile = request.getUploadedFile("file");
     final String user = request.getAuthorizationUsername();
 
@@ -42,6 +44,9 @@ public class UploadResponder implements SecureResponder {
 
       if (!FileResponder.isInFilesDirectory(new File(rootPath), file)) {
         return new ErrorResponder("Invalid path: " + uploadedFile.getName()).makeResponse(context, request);
+      }
+      if (FileResponder.isInFilesFitNesseDirectory(new File(rootPath), file)) {
+        return new ErrorResponder("It is not allowed to upload files in the files/fitnesse section.").makeResponse(context, request);
       }
 
       context.versionsController.makeVersion(new FileVersion() {
@@ -106,6 +111,7 @@ public class UploadResponder implements SecureResponder {
     return "copy_" + copyId + "_of_" + filename;
   }
 
+  @Override
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();
   }

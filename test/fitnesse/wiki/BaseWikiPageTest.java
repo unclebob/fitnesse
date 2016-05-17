@@ -20,13 +20,13 @@ import util.FileUtil;
 
 public class BaseWikiPageTest {
   private WikiPage linkingPage;
-  private BaseWikiPage root;
+  private WikiPage root;
   private MemoryFileSystem fileSystem;
 
   @Before
   public void setUp() throws Exception {
     fileSystem = new MemoryFileSystem();
-    root = (BaseWikiPage) InMemoryPage.makeRoot("RooT", fileSystem);
+    root = InMemoryPage.makeRoot("RooT", fileSystem);
     WikiPageUtil.addPage(root, PathParser.parse("LinkedPage"), "");
     linkingPage = WikiPageUtil.addPage(root, PathParser.parse("LinkingPage"), "");
     WikiPageUtil.addPage(linkingPage, PathParser.parse("ChildPage"), "");

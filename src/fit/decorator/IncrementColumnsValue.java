@@ -13,6 +13,7 @@ public class IncrementColumnsValue extends FixtureDecorator {
   private String columnName;
   private Delta delta;
 
+  @Override
   protected void setupDecorator(String[] arguments) throws InvalidInputException {
     if (arguments.length != 3) {
       throw new InvalidInputException("Column name, Data type and Delta Value must be specified");
@@ -23,6 +24,7 @@ public class IncrementColumnsValue extends FixtureDecorator {
     summary.put(DELTA, delta);
   }
 
+  @Override
   protected void run(Fixture fixture, Parse table) {
     Table t = new Table(table);
     try {
@@ -33,6 +35,7 @@ public class IncrementColumnsValue extends FixtureDecorator {
     super.run(fixture, table);
   }
 
+  @Override
   protected void updateColumnsBasedOnResults(Parse table) {
     // nothing to do
   }

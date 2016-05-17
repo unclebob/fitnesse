@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-import fitnesse.responders.run.SuiteResponder;
+import fitnesse.reporting.history.PageHistory;
 import org.xml.sax.SAXException;
 
 import fitnesse.FitNesseContext;
@@ -28,7 +28,7 @@ import fitnesse.wiki.WikiPagePath;
 public class HistoryComparerResponder implements Responder {
   public HistoryComparer comparer;
   private SimpleDateFormat dateFormat = new SimpleDateFormat(
-      SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
+      PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
   private String firstFileName = "";
   private String secondFileName = "";
   private String firstFilePath;
@@ -45,6 +45,7 @@ public class HistoryComparerResponder implements Responder {
     comparer = new HistoryComparer();
   }
 
+  @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     this.context = context;
     initializeReponseComponents();
@@ -67,8 +68,8 @@ public class HistoryComparerResponder implements Responder {
     if (comparer.compare(firstFilePath, secondFilePath))
       return makeValidResponse(request);
     else {
-      String message = String.format("These files could not be compared."
-          + "  They might be suites, or something else might be wrong.");
+      String message = "These files could not be compared."
+          + "  They might be suites, or something else might be wrong.";
       return makeErrorResponse(context, request, message);
     }
   }

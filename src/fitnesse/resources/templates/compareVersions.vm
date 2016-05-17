@@ -13,7 +13,7 @@
    #set($class = "${class} diff_chunk_header")
   #end
   <tr>
-   <td class="$class">$line</td>
+   <td class="$class">#escape($line)</td>
   </tr>
  #end
 </table>

@@ -1,8 +1,8 @@
 |DT:some decision table|
-|input|output?|
-|3|$V=|
-|$V|8|
-|9|$V|
+|input     |output?    |
+|3         |$V=        |
+|$V        |8          |
+|9         |$V         |
 
 
 If a $''<symbolName>'' appears in an output cell (whether in a Decision Table, Script Table, or any other kind of table that can call functions) then that symbol will be loaded with that output.  Both the slim server running in the SUT and !-FitNesse-! will remember that symbol.
@@ -15,6 +15,6 @@ You can combine symbols as follows:
 
 The symbols V and X will be replaced with their values...  
 
------
-!4 $$ (Slim v0.2)
-If you want to pass a $ from FitNesse into a slim fixture you can use $$ to do it.  For example $$bob will get be interpreted as $bob and _not_ replaced with the symbol value of bob.
+!3 Read also:
+
+.FitNesse.SuiteAcceptanceTests.SuiteSlimTests.SlimSymbols

@@ -3,26 +3,26 @@
 package fitnesse.testsystems.slim;
 
 import fitnesse.slim.SlimError;
-import fitnesse.slim.SlimException;
+import fitnesse.slim.SlimStreamReader;
+import fitnesse.slim.SlimVersion;
 import fitnesse.slim.instructions.*;
 import fitnesse.slim.protocol.SlimDeserializer;
+import fitnesse.slim.protocol.SlimListBuilder;
 import fitnesse.slim.protocol.SlimSerializer;
+import fitnesse.socketservice.SocketFactory;
 import fitnesse.testsystems.CommandRunner;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
-import util.StreamReader;
 
-import java.io.BufferedWriter;
+import fitnesse.util.Clock;
+
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.OutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.net.SocketTimeoutException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import static java.util.Arrays.asList;
 
 public class SlimCommandRunningClient implements SlimClient {
   private static final Logger LOG = Logger.getLogger(SlimCommandRunningClient.class.getName());
@@ -34,35 +34,38 @@ public class SlimCommandRunningClient implements SlimClient {
   private final int connectionTimeout;
   private final double requiredSlimVersion;
   private Socket client;
-  private StreamReader reader;
-  private BufferedWriter writer;
+  private SlimStreamReader reader;
+  private OutputStream writer;
   private String slimServerVersionMessage;
   private double slimServerVersion;
   private String hostName;
   private int port;
+  private boolean useSSL;
+  private String sslParameterClassName;
 
-  public SlimCommandRunningClient(CommandRunner slimRunner, String hostName, int port, int connectionTimeout, double requiredSlimVersion) {
+  public SlimCommandRunningClient(CommandRunner slimRunner, String hostName, int port, int connectionTimeout, double requiredSlimVersion, boolean useSSL, String sslParameterClassName) {
     this.slimRunner = slimRunner;
     this.hostName = hostName;
     this.port = port;
     this.connectionTimeout = connectionTimeout;
     this.requiredSlimVersion = requiredSlimVersion;
+    this.useSSL = useSSL;
+    this.sslParameterClassName = sslParameterClassName;
   }
 
   @Override
-  public void start() throws IOException {
+  public void start() throws IOException, SlimVersionMismatch {
     slimRunner.asynchronousStart();
     connect();
     checkForVersionMismatch();
   }
 
-  private void checkForVersionMismatch() {
+  private void checkForVersionMismatch() throws SlimVersionMismatch {
     double serverVersionNumber = getServerVersion();
     if (serverVersionNumber == NO_SLIM_SERVER_CONNECTION_FLAG) {
-      throw new SlimError("Slim Protocol Version Error: Server did not respond with a valid version number.");
-    }
-    else if (serverVersionNumber < requiredSlimVersion) {
-      throw new SlimError(String.format("Slim Protocol Version Error: Expected V%s but was V%s", requiredSlimVersion, serverVersionNumber));
+      throw new SlimVersionMismatch("Slim Protocol Version Error: Server did not respond with a valid version number.");
+    } else if (serverVersionNumber < requiredSlimVersion) {
+      throw new SlimVersionMismatch(String.format("Slim Protocol Version Error: Expected V%s but was V%s", requiredSlimVersion, serverVersionNumber));
     }
   }
 
@@ -80,144 +83,104 @@ public class SlimCommandRunningClient implements SlimClient {
 
   @Override
   public void connect() throws IOException {
-    int maxTries = connectionTimeout * 20; // wait time is 50 ms
+    final int sleepStep = 50; // milliseconds
+    long timeOut = Clock.currentTimeInMillis() + connectionTimeout * 1000;
+    LOG.finest("Trying to connect to host: " + hostName + " on port: " + port + " SSL=" + useSSL + " timeout setting: " + connectionTimeout);
     while (client == null) {
-      client = tryConnect(maxTries--);
+      if (slimRunner != null && slimRunner.isDead()) {
+      	final String slimErrorMessage = "Error SLiM server died before a connection could be established. "+slimRunner.getCommandErrorMessage();
+      	throw new SlimError(slimErrorMessage);
+      }
+      try {
+        client = SocketFactory.createClientSocket(hostName, port, useSSL, sslParameterClassName);
+      } catch (IOException e) {
+        if (Clock.currentTimeInMillis() > timeOut) {
+          throw new SlimError("Error connecting to SLiM server on " + hostName + ":" + port, e);
+        } else {
+          try {
+            Thread.sleep(sleepStep);
+          } catch (InterruptedException e1) {
+            Thread.currentThread().interrupt();
+          }
+        }
+      }
     }
-    reader = new StreamReader(client.getInputStream());
-    writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream(), "UTF-8"));
-    slimServerVersionMessage = reader.readLine();
+    LOG.fine("Connected to host: " + hostName + " on port: " + port + " SSL=" + useSSL + " timeout setting: " + connectionTimeout);
+
+    reader = SlimStreamReader.getReader(client);
+    writer = SlimStreamReader.getByteWriter(client);
     validateConnection();
   }
 
-  private void validateConnection() {
-    if (isConnected()) {
-      slimServerVersion = Double.parseDouble(slimServerVersionMessage.replace("Slim -- V", ""));
+  private void validateConnection() throws IOException {
+    // Convert seconds to milliseconds
+    int waittime = connectionTimeout * 1000;
+    int oldTimeout = client.getSoTimeout();
+    client.setSoTimeout(waittime);
+    try{
+    	slimServerVersionMessage = reader.readLine();
+    }catch (SocketTimeoutException e){
+    	throw new SlimError("Timeout while reading slim header from client. Check that you are connecting to the right port and that the slim client is running. You can increase the timeout limit by setting 'slim.timeout' in the fitnesse properties file.");
+    }finally{
+    	// restore previous value
+    	client.setSoTimeout(oldTimeout);
     }
-    else {
-      slimServerVersion =  NO_SLIM_SERVER_CONNECTION_FLAG;
-      LOG.warning("Error reading Slim Version. Read the following: " + slimServerVersionMessage);
+    LOG.finest("Read Slim Header: >" + slimServerVersionMessage + "<");
+    if (!isConnected()) {
+      throw new SlimError("Got invalid slim header from client. Read the following: " + slimServerVersionMessage);
     }
+    try {
+      slimServerVersion = Double.parseDouble(slimServerVersionMessage.replace(SlimVersion.SLIM_HEADER, ""));
+    } catch (Exception e) {
+      slimServerVersion = NO_SLIM_SERVER_CONNECTION_FLAG;
+      throw new SlimError("Got invalid slim version from Client. Read the following: " + slimServerVersionMessage);
+    }
+    LOG.fine("Got Slim Header: " + slimServerVersionMessage + ", and Version " + slimServerVersion);
   }
 
-  private Socket tryConnect(int maxTries) throws IOException {
-    try {
-      return new Socket(hostName, port);
-    } catch (IOException e) {
-      if (maxTries <= 1) {
-        throw new SlimError("Error connecting to SLiM server on " + hostName + ":" + port, e);
-      } else {
-        try {
-          Thread.sleep(50);
-        } catch (InterruptedException i) {
-          throw new SlimError("Wait for connection interrupted.");
-        }
-        return null;
-      }
-    }
-  }
 
   public double getServerVersion() {
     return slimServerVersion;
   }
 
   public boolean isConnected() {
-    return slimServerVersionMessage.startsWith("Slim -- V");
+    return slimServerVersionMessage.startsWith(SlimVersion.SLIM_HEADER);
   }
+
+  public String getPeerName() {
+    return SocketFactory.peerName(client);
+  }
+
+  public String getMyName() {
+    return SocketFactory.myName(client);
+  }
+
 
   @Override
   public Map<String, Object> invokeAndGetResponse(List<Instruction> statements) throws IOException {
-    if (statements.size() == 0)
-      return new HashMap<String, Object>();
-    String instructions = SlimSerializer.serialize(toList(statements));
-    writeString(instructions);
-    int resultLength = getLengthToRead();
-    String results = reader.read(resultLength);
-    // resultList is a list: [tag, resultValue]
+    if (statements.isEmpty())
+      return Collections.emptyMap();
+    String instructions = SlimSerializer.serialize(new SlimListBuilder(slimServerVersion).toList(statements));
+    SlimStreamReader.sendSlimMessage(writer, instructions);
+    String results = reader.getSlimMessage();
     List<Object> resultList = SlimDeserializer.deserialize(results);
     return resultToMap(resultList);
   }
 
-  private interface ToListExecutor extends InstructionExecutor {
-
-  }
-
-  private List<Object> toList(List<Instruction> instructions) {
-    final List<Object> statementsAsList = new ArrayList<Object>(instructions.size());
-    for (final Instruction instruction: instructions) {
-      ToListExecutor executor = new ToListExecutor() {
-        @Override
-        public void addPath(String path) throws SlimException {
-          statementsAsList.add(asList(instruction.getId(), ImportInstruction.INSTRUCTION, path));
-        }
-
-        @Override
-        public Object callAndAssign(String symbolName, String instanceName, String methodsName, Object... arguments) throws SlimException {
-          Object[] list = new Object[] { instruction.getId(), CallAndAssignInstruction.INSTRUCTION, symbolName, instanceName, methodsName };
-          statementsAsList.add(asList(ArrayUtils.addAll(list, arguments)));
-          return null;
-        }
-
-        @Override
-        public Object call(String instanceName, String methodName, Object... arguments) throws SlimException {
-          Object[] list = new Object[] { instruction.getId(), CallInstruction.INSTRUCTION, instanceName, methodName };
-          statementsAsList.add(asList(ArrayUtils.addAll(list, arguments)));
-          return null;
-        }
-
-        @Override
-        public void create(String instanceName, String className, Object... constructorArgs) throws SlimException {
-          Object[] list = new Object[] { instruction.getId(), MakeInstruction.INSTRUCTION, instanceName, className };
-          statementsAsList.add(asList(ArrayUtils.addAll(list, constructorArgs)));
-        }
-
-        @Override
-        public void assign(String symbolName, Object value) {
-          if (slimServerVersion < 0.4) {
-            throw new SlimError("The assign instruction is available as of SLIM protocol version 0.4");
-          }
-          Object[] list = new Object[] { instruction.getId(), AssignInstruction.INSTRUCTION, symbolName, value };
-          statementsAsList.add(asList(list));
-        }
-      };
-
-      instruction.execute(executor);
-    }
-    return statementsAsList;
-  }
-
-  private int getLengthToRead() throws IOException  {
-    String length = reader.read(6);
-    try {
-      Integer resultLength = Integer.parseInt(length);
-
-      String next;
-      while (StringUtils.isNumeric(next = reader.read(1)))
-        resultLength = resultLength * 10 + Integer.valueOf(next);
-
-      return resultLength;
-    }
-    catch (NumberFormatException e){
-      throw new IOException("Stream Read Failure. Can't read length of message from the server.  Possibly test aborted.  Last thing read: " + length);
-    }
-  }
-
-  protected void writeString(String string) throws IOException {
-    String packet = String.format("%06d:%s", string.getBytes("UTF-8").length, string);
-    writer.write(packet);
-    writer.flush();
-  }
-
   @Override
   public void bye() throws IOException {
-    writeString("bye");
+    SlimStreamReader.sendSlimMessage(writer, SlimVersion.BYEMESSAGE);
+    writer.close();
+    reader.close();
+    client.close();
     slimRunner.join();
     kill();
   }
 
   public static Map<String, Object> resultToMap(List<?> slimResults) {
-    Map<String, Object> map = new HashMap<String, Object>();
+    Map<String, Object> map = new HashMap<>();
     for (Object aResult : slimResults) {
+      @SuppressWarnings("unchecked")
       List<Object> resultList = (List<Object>) aResult;
       map.put((String) resultList.get(0), resultList.get(1));
     }

@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
 public class ListRule implements Rule {
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         return populateList(parser, current);
     }
@@ -22,7 +23,7 @@ public class ListRule implements Rule {
             }
             nextSymbol = parser.peek();
         }
-        return new Maybe<Symbol>(list);
+        return new Maybe<>(list);
     }
 
     private static boolean isList(Symbol symbol) {
@@ -30,7 +31,7 @@ public class ListRule implements Rule {
     }
 
     private Symbol makeListBody(Parser parser) {
-        while (parser.peek(new SymbolType[] {SymbolType.Whitespace}).size() > 0) {
+        while (!parser.peek(new SymbolType[]{SymbolType.Whitespace}).isEmpty()) {
             parser.moveNext(1);
         }
         return parser.parseTo(SymbolType.Newline, 1);

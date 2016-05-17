@@ -4,6 +4,7 @@ package fitnesse.http;
 
 import fitnesse.ContextConfigurator;
 import fitnesse.util.Base64;
+import util.FileUtil;
 import util.StreamReader;
 
 import java.io.*;
@@ -31,9 +32,9 @@ public class Request {
   protected String requestURI;
   private String resource;
   protected String queryString;
-  protected Map<String, String> inputs = new HashMap<String, String>();
-  protected Map<String, String> headers = new HashMap<String, String>();
-  protected Map<String, UploadedFile> uploadedFiles = new HashMap<String, UploadedFile>();
+  protected Map<String, String> inputs = new HashMap<>();
+  protected Map<String, String> headers = new HashMap<>();
+  protected Map<String, UploadedFile> uploadedFiles = new HashMap<>();
   protected String entityBody = "";
   protected String requestLine;
   protected String authorizationUsername;
@@ -41,8 +42,13 @@ public class Request {
   private volatile boolean hasBeenParsed;
   private long bytesParsed = 0;
 
+  /**
+   * If SSL is being used the DN of the peer certificate, otherwise null.
+   */
+  private String peerDn;
+
   public static Set<String> buildAllowedMethodList() {
-    Set<String> methods = new HashSet<String>(20);
+    Set<String> methods = new HashSet<>(20);
     methods.add("GET");
     methods.add("POST");
     return methods;
@@ -75,7 +81,7 @@ public class Request {
   }
 
   private Map<String, String> parseHeaders(StreamReader reader) throws IOException {
-    HashMap<String, String> headers = new HashMap<String, String>();
+    HashMap<String, String> headers = new HashMap<>();
     String line = reader.readLine();
     while (!"".equals(line)) {
       Matcher match = headerPattern.matcher(line);
@@ -187,11 +193,7 @@ public class Request {
   }
 
   private String concatenateItems(String existingItem, String value) {
-    StringBuffer buffer = new StringBuffer();
-    buffer.append(existingItem);
-    buffer.append(',');
-    buffer.append(value);
-    return buffer.toString();
+    return existingItem + ',' + value;
   }
 
   private boolean itemExistAndMismatches(Object existingItem, String value) {
@@ -256,8 +258,9 @@ public class Request {
     return url;
   }
 
+  @Override
   public String toString() {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     buffer.append("--- Request Start ---\n");
     buffer.append("Request URI:  ").append(requestURI).append('\n');
     buffer.append("Resource:     ").append(resource).append('\n');
@@ -273,13 +276,17 @@ public class Request {
     return buffer.toString();
   }
 
-  private void addMap(Map<String, String> map, StringBuffer buffer) {
+  private void addMap(Map<String, String> map, StringBuilder buffer) {
     if (map.isEmpty()) {
       buffer.append("\tempty");
     }
     for (Entry<String, String> entry: map.entrySet()) {
-      String value = entry.getValue() == null ? null : escape(entry.getValue().toString());
-      buffer.append("\t" + escape(entry.getKey()) + " \t-->\t " + value + "\n");
+      String value = entry.getValue() == null ? null : escape(entry.getValue());
+      buffer.append("\t")
+              .append(escape(entry.getKey()))
+              .append(" \t-->\t ")
+              .append(value)
+              .append("\n");
     }
   }
 
@@ -289,7 +296,7 @@ public class Request {
 
   public static String decodeContent(String content) {
     try {
-      return URLDecoder.decode(content, "UTF-8");
+      return URLDecoder.decode(content, FileUtil.CHARENCODING);
     } catch (UnsupportedEncodingException e) {
       return "URLDecoder Error";
     }
@@ -328,6 +335,14 @@ public class Request {
 
   public String getAuthorizationPassword() {
     return authorizationPassword;
+  }
+
+  public String getPeerDn() {
+    return peerDn;
+  }
+
+  public void setPeerDn(String peerDn) {
+    this.peerDn = peerDn;
   }
 
   public long numberOfBytesParsed() {

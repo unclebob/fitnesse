@@ -19,7 +19,7 @@ Let's imagine that we are building a trivia game. The overall design of our triv
 For now let's imagine that we are addressing a specific first requirement or user story (call it what you like):
 
 !3 "You can add players to the game, and you can ask the game how many players are playing."
-Sounds pretty straightforward. Let's first set up a ClassPath that points to where our trivia game project is. Without the ClassPath, FitNesse would not be able to find our fixture code:
+Sounds pretty straightforward. Let's first set up a [[!-ClassPath-!][<UserGuide.WritingAcceptanceTests.ClassPath]] that points to where our trivia game project is. Without the [[!-ClassPath-!][<UserGuide.WritingAcceptanceTests.ClassPath]], FitNesse would not be able to find our fixture code:
 
 How about this for a test table for this requirement?
 
@@ -51,7 +51,7 @@ Finally, we'll try to remove a player from the game, and this too should fail:
 | playerName | removePlayer? | countPlayers? |
 | Al | false | 2 |
 
-This shows how you can use a sequence of tables to verify a requirement by setting up and testing different states in your application code. This table sequence also illustrates one of the common AcceptanceTestPatterns: BuildOperateCheck.
+This shows how you can use a sequence of tables to verify a requirement by setting up and testing different states in your application code. This table sequence also illustrates one of the common [[!-AcceptanceTestPatterns-!][<UserGuide.WritingAcceptanceTests.AcceptanceTestPatterns]]: [[!-BuildOperateCheck-!][<UserGuide.WritingAcceptanceTests.AcceptanceTestPatterns.BuildOperateCheck]].
 
 For a description of the fixture code for the trivia Game example, see ColumnFixtureCode.
 

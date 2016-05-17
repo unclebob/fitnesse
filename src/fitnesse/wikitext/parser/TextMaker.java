@@ -13,19 +13,19 @@ public class TextMaker {
     this.sourcePage = sourcePage;
   }
 
-  public SymbolMatch make(ParseSpecification specification, String text) {
+  public SymbolMatch make(ParseSpecification specification, int offset, String text) {
     if (specification.matchesFor(WikiWord.symbolType)) {
       int length = findWikiWordLength(text);
       if (length > 0) {
-        Symbol wikiWord = new Symbol(new WikiWord(sourcePage), text.substring(0, length));
+        Symbol wikiWord = new Symbol(new WikiWord(sourcePage), text.substring(0, length), offset);
         wikiWord.evaluateVariables(new String[]{WikiWord.REGRACE_LINK}, variableSource);
-        return new SymbolMatch(wikiWord, length);
+        return new SymbolMatch(wikiWord, offset, length);
       }
     }
     if (specification.matchesFor(SymbolType.EMail) && isEmailAddress(text)) {
-      return new SymbolMatch(SymbolType.EMail, text);
+      return new SymbolMatch(SymbolType.EMail, text, offset);
     }
-    return new SymbolMatch(SymbolType.Text, text);
+    return new SymbolMatch(SymbolType.Text, text, offset);
   }
 
   private boolean isEmailAddress(String text) {

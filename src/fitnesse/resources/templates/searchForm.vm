@@ -1,30 +1,51 @@
-<form>
- <input type="hidden" name="responder" value="search"/>
- <fieldset>
-  <label for="searchString">Search:</label>
-  <input type="text" id="searchString" name="searchString" value="#if ($request.hasInput("searchString"))#escape($request.getInput("searchString"))#end"/>
- </fieldset>
- <fieldset class="buttons">
-  <input type="submit" name="searchType" value="Search Titles"/>
-  <input type="submit" name="searchType" value="Search Content"/>
-  <a class="button" href="$viewLocation">Cancel</a>
- </fieldset>
- <p><strong>Search Titles</strong>: Searches in page titles only.  Will run fairly quickly.</p>
- <p><strong>Search Content</strong>: Searches in the content of every page.  Don't hold your breath.</p>
-</form>
-
-<h2>Search Properties</h2>
-<form>
-#macro( anychecked $type )#if( !$request.hasInput($type) || $request.getInput($type).contains("Any") ) checked="checked"#end#end
 #macro( checked $type $attr )#if( $request.getInput($type).contains($attr) ) checked="checked"#end#end
 
- <input type="hidden" name="responder" value="executeSearchProperties"/>
+#set( $focusPropertiesTab = $request.getInput("responder").contains("Properties"))
+#set ($focusTextTab = !$focusPropertiesTab )
 
+<ul class="nav nav-tabs">
+ <li#if( $focusTextTab ) class="active"#end><a href="#text" data-toggle="tab">Text search</a></li>
+ <li#if( $focusPropertiesTab ) class="active"#end><a href="#properties" data-toggle="tab">Properties search</a></li>
+</ul>
+
+<div class="tab-content">
+<form id="text" class="tab-pane#if( $focusTextTab ) active#end">
+ <input type="hidden" name="responder" value="search"/>
  <fieldset>
-  <label>Tags:</label>
-  <input type="text" class="searchForm" name="Suites"#if ($request.hasInput("Suite")) value="$request.getInput("Suite")"#end />
+  <label for="searchString">Text:</label>
+  <input type="text" id="searchString" name="searchString" value="#if ($request.hasInput("searchString"))#escape($request.getInput("searchString"))#end" placeholder="Enter search text"/>
  </fieldset>
- 
+  <fieldset>
+   <label for="searchScope">Scope:</label>
+   <input type="radio" id="root" name="searchScope" value="root" #checked( "searchScope" "root")/>All
+   #foreach( $breadCrumb in $pageTitle.BreadCrumbs )
+	<input type="radio" id="$breadCrumb" name="searchScope" value="$breadCrumb.Name" #checked( "searchScope" $breadCrumb.Name)/>$breadCrumb.Name
+   #end
+   <input type="radio" id="leaf" name="searchScope" value="" #if( !$request.hasInput("searchScope") || $request.getInput("searchScope").equals("") ) checked="checked"#end#/>$page.getName()
+  </fieldset>
+ <fieldset class="buttons">
+	  <input type="submit" name="searchType" value="Search Titles" data-toggle="tooltip" data-placement="bottom" title="Searches in page titles only. Will run fairly quickly."/>
+	  <input type="submit" name="searchType" value="Search Content" data-toggle="tooltip" data-placement="bottom" title="Searches in the content of every page. Don't hold your breath."/>
+	<a class="button" href="$viewLocation">Back</a>
+ </fieldset>
+</form>
+
+<form id="properties" class="tab-pane#if( $focusPropertiesTab ) active#end">
+ <input type="hidden" name="responder" value="searchProperties"/>
+ <fieldset>
+  <label for="Suites">Tags:</label>
+  <input type="text"  name="Suites"#if ($request.hasInput("Suites")) value="$request.getInput("Suites")"#end placeholder="Enter search Tags, separated with comma"/>
+ </fieldset>
+
+  <fieldset>
+   <label for="searchScope">Scope:</label>
+   <input type="radio" id="root" name="searchScope" value="root" #checked( "searchScope" "root")/>All
+   #foreach( $breadCrumb in $pageTitle.BreadCrumbs )
+	<input type="radio" id="$breadCrumb" name="searchScope" value="$breadCrumb.Name" #checked( "searchScope" $breadCrumb.Name)/>$breadCrumb.Name
+   #end
+   <input type="radio" id="leaf" name="searchScope" value="" #if( !$request.hasInput("searchScope") || $request.getInput("searchScope").equals("") ) checked="checked"#end#/>$page.getName()
+  </fieldset>
+
  <div class="properties">
   <fieldset>
    <legend>Page type:</legend>
@@ -32,9 +53,9 @@
    <label for="$pageType"><input type="checkbox" id="$pageType" name="PageType" value="$pageType"#checked( "PageType" $pageType)/>$pageType</label>
    #end
 
-   <label for="Prune"><input type="checkbox" id="Prune" name="Prune"#checked( "Prune" )/>Skip</label>
+   <label for="Prune"><input type="checkbox" id="Prune" name="Prune"#if( $request.hasInput("Prune")) checked="checked"#end/>Skip</label>
   </fieldset>
-     
+
   <fieldset>
    <legend>Actions:</legend>
    #foreach( $action in $actionAttributes )
@@ -48,7 +69,7 @@
    <label for="$navigation"><input type="checkbox" id="$navigation" name="Action" value="$navigation"#checked( "Action" $navigation )/>$navigation</label>
    #end
   </fieldset>
-    
+
   <fieldset>
    <legend>Security:</legend>
    #foreach( $security in $securityAttributes )
@@ -64,10 +85,20 @@
   </fieldset>
  </div>
  <fieldset class="buttons">
-  <input type="submit" name="Search" value="Search Properties"/>
+  <input type="submit" name="searchType" value="Search Properties"/>
  </fieldset>
 </form>
+</div>
 
 <script type="text/javascript">
- document.forms[0].searchString.focus();
+#if ( $focusTextTab )
+	document.forms[0].searchString.focus();
+#else
+	document.forms[1].Suites.focus();
+#end
+ $('input').tooltip();
 </script>
+
+#if( $request.hasInput("searchType") || $focusPropertiesTab )
+ #parse("searchResults.vm")
+#end

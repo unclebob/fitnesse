@@ -7,7 +7,6 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.InMemoryPage;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,7 +29,7 @@ public class WikiPageDescriptorTest {
                     "!define TEST_RUNNER {runner}\n");
     WikiPageDescriptor wikiPageDescriptor = new WikiPageDescriptor(testPage, true, false, "");
     String testSystemType = wikiPageDescriptor.getTestSystemType();
-    Assert.assertEquals("system", testSystemType);
+    assertEquals("system", testSystemType);
   }
 
   @Test
@@ -40,7 +39,7 @@ public class WikiPageDescriptorTest {
                     "!define TEST_RUNNER {runner}\n");
     WikiPageDescriptor wikiPageDescriptor = new WikiPageDescriptor(testPage, true, false, "");
     String testSystemType = wikiPageDescriptor.getTestSystemType();
-    Assert.assertEquals("system", testSystemType);
+    assertEquals("system", testSystemType);
   }
 
 
@@ -49,7 +48,7 @@ public class WikiPageDescriptorTest {
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), "");
     WikiPageDescriptor wikiPageDescriptor = new WikiPageDescriptor(testPage, false, false, "");
     String testSystemType = wikiPageDescriptor.getTestSystemType();
-    Assert.assertEquals("fit", testSystemType);
+    assertEquals("fit", testSystemType);
   }
 
   private WikiPage makeTestPage(String pageText) {

@@ -4,22 +4,24 @@ package fitnesse.util;
 
 import java.io.UnsupportedEncodingException;
 
+import util.FileUtil;
+
 public class Base64 {
   private static final byte[] base64Alphabet =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".getBytes();
   private static final byte pad = '=';
   private static final int[] base64Value;
   static {{
-	base64Value = new int[0xff+1];
-	for (int i = 0; i <= 0xff; i++)
-	  base64Value[i] = -1;
-	for (int v = 0; v <= 0x3f; v++)
-	  base64Value[base64Alphabet[v]] = v;
-	base64Value[pad] = 0;
+    base64Value = new int[0xff+1];
+    for (int i = 0; i <= 0xff; i++)
+      base64Value[i] = -1;
+    for (int v = 0; v <= 0x3f; v++)
+      base64Value[base64Alphabet[v]] = v;
+    base64Value[pad] = 0;
   }}
 
   public static String decode(String value) throws UnsupportedEncodingException {
-    return new String(decode(value.getBytes("UTF-8")));
+    return new String(decode(value.getBytes(FileUtil.CHARENCODING)));
   }
 
   public static byte[] decode(byte[] bytes) {
@@ -39,7 +41,7 @@ public class Base64 {
 
       decoding[decodingIndex++] = (byte)c1;
       if (bytes[index + 2] != pad)
-    	  decoding[decodingIndex++] = (byte)c2;
+        decoding[decodingIndex++] = (byte)c2;
       if (bytes[index + 3] != pad)
         decoding[decodingIndex++] = (byte)c3;
     }
@@ -84,23 +86,23 @@ public class Base64 {
     int lengthOfOutput = (bytes.length >> 2) * 3;
     if (bytes.length > 0) {
       if (bytes[bytes.length - 1] == pad)
-    	lengthOfOutput--;
+        lengthOfOutput--;
       if (bytes[bytes.length - 2] == pad)
-    	lengthOfOutput--;
+        lengthOfOutput--;
     }
-    	
+
     return lengthOfOutput;
   }
 
   private static int getLengthOfEncoding(byte[] bytes) {
-	return ((bytes.length + 2) / 3) << 2;
+    return ((bytes.length + 2) / 3) << 2;
   }
 
   public static int getValueFor(byte b) {
-	int value = base64Value[b & 0xff];
-	if (value == -1)
-	  throw new IllegalArgumentException("Invalid BASE64 symbol: " + (char)(b & 0xff));
-	return value;
+    int value = base64Value[b & 0xff];
+    if (value == -1)
+      throw new IllegalArgumentException("Invalid BASE64 symbol: " + (char)(b & 0xff));
+    return value;
   }
 
 }

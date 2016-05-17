@@ -16,19 +16,23 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import org.apache.commons.lang.StringUtils;
 
-public class SuiteFilter {
-  public static final Logger LOG = Logger.getLogger(SuiteFilter.class.getName());
+import static org.apache.commons.lang.StringUtils.equalsIgnoreCase;
+import static org.apache.commons.lang.StringUtils.trim;
 
-  final private SuiteTagMatcher notMatchTags;
-  final private SuiteTagMatcher matchTags;
-  final private String startWithTest;
-  
+public class SuiteFilter {
+  private static final Logger LOG = Logger.getLogger(SuiteFilter.class.getName());
+
+  private final SuiteTagMatcher notMatchTags;
+  private final SuiteTagMatcher matchTags;
+  private final String startWithTest;
+
   public static final SuiteFilter NO_MATCHING = new SuiteFilter(null, null, null, null) {
+    @Override
     public boolean isMatchingTest(WikiPage testPage) {
       return false;
     }
   };
-  
+
   public static final SuiteFilter MATCH_ALL = new SuiteFilter(null, null, null, null);
 
   public SuiteFilter(String orTags, String mustNotMatchTags, String andTags, String startWithTest) {
@@ -52,10 +56,10 @@ public class SuiteFilter {
     boolean isTest = data.hasAttribute(PageType.TEST.toString());
     return isTest &&
            matchTags.matches(testPage) &&
-           !notMatchTags.matches(testPage) && 
+           !notMatchTags.matches(testPage) &&
            afterStartingTest(testPage);
   }
-  
+
   private boolean afterStartingTest(WikiPage testPage) {
     if (startWithTest == null) {
       return true;
@@ -74,19 +78,19 @@ public class SuiteFilter {
     if (pageData.hasAttribute(PageType.SUITE.toString()) && matchTags.isFiltering() && matchTags.matches(suitePage)) {
       return new SuiteFilter(null, notMatchTags.tagString, null, startWithTest).getFilterForTestsInSuite(suitePage);
     }
-    
+
     if (notMatchTags.matches(suitePage)) {
       return NO_MATCHING;
     }
 
     return this;
   }
-  
-  
+
+
   @Override
   public String toString() {
-    List<String> criterias = new LinkedList<String>();
-    
+    List<String> criterias = new LinkedList<>();
+
     if (matchTags.isFiltering()) {
       if(matchTags.andStrategy){
         criterias.add("matches all of '" + matchTags.tagString + "'");
@@ -105,17 +109,17 @@ public class SuiteFilter {
 
     return StringUtils.join(criterias, " & ");
   }
-  
+
   private class SuiteTagMatcher {
     private static final String LIST_SEPARATOR = "\\s*,\\s*";
-    final private List<String> tags;
+    private final List<String> tags;
     final String tagString;
-    final private boolean matchIfNoTags;
-    final private boolean andStrategy;
+    private final boolean matchIfNoTags;
+    private final boolean andStrategy;
 
     public SuiteTagMatcher(String suiteTags, boolean matchIfNoTags, boolean andStrategy) {
       tagString = suiteTags;
-      if (suiteTags != null) {
+      if (StringUtils.isNotBlank(suiteTags)) {
         tags = Arrays.asList(suiteTags.split(LIST_SEPARATOR));
       }
       else {
@@ -124,11 +128,11 @@ public class SuiteFilter {
       this.matchIfNoTags = matchIfNoTags;
       this.andStrategy = andStrategy;
     }
-    
+
     boolean isFiltering() {
       return (tags != null);
     }
-    
+
     boolean matches(WikiPage wikiPage) {
       return (tags == null) ? matchIfNoTags : testMatchesQuery(wikiPage);
     }
@@ -137,7 +141,7 @@ public class SuiteFilter {
       String testTagString = getTestTags(wikiPage);
       return (testTagString != null && testTagsMatchQueryTags(testTagString));
     }
-    
+
     private String getTestTags(WikiPage context) {
       try {
         return context.getData().getAttribute(PageData.PropertySUITES);
@@ -148,7 +152,7 @@ public class SuiteFilter {
     }
 
     private boolean testTagsMatchQueryTags(String testTagString) {
-      String testTags[] = testTagString.trim().split(LIST_SEPARATOR);
+      String[] testTags = testTagString.trim().split(LIST_SEPARATOR);
       if(andStrategy){
         return checkIfAllQueryTagsExist(testTags);
       } else {
@@ -157,9 +161,8 @@ public class SuiteFilter {
     }
 
     private boolean checkIfAllQueryTagsExist(String[] testTags) {
-      List<String> testTagList = Arrays.asList(testTags);
       for (String queryTag : tags) {
-        if (!testTagList.contains(queryTag)) {
+        if (!containsTag(testTags, queryTag)) {
           return false;
         }
       }
@@ -167,14 +170,25 @@ public class SuiteFilter {
     }
 
     private boolean checkIfAnyTestTagMatchesAnyQueryTag(String[] testTags) {
-      for (String testTag : testTags) {
-        for (String queryTag : tags) {
-          if (testTag.equalsIgnoreCase(queryTag)) {
-            return true;
-          }
+      for (String queryTag : tags) {
+        if (containsTag(testTags, queryTag)) {
+          return true;
         }
       }
       return false;
+    }
+
+    private boolean containsTag(String[] testTags, String queryTag) {
+      for (String testTag: testTags) {
+        if (tagsMatch(queryTag, testTag)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    private boolean tagsMatch(String queryTag, String testTag) {
+      return equalsIgnoreCase(trim(testTag), trim(queryTag));
     }
   }
 }

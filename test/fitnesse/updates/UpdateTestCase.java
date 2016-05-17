@@ -25,7 +25,7 @@ public abstract class UpdateTestCase {
 
   protected WikiPage root;
   protected Update update;
-  protected UpdaterBase updater;
+  protected WikiContentUpdater updater;
   protected WikiPage pageOne;
   protected WikiPage pageTwo;
   protected FitNesseContext context;
@@ -39,7 +39,7 @@ public abstract class UpdateTestCase {
     pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "some content");
     pageTwo = WikiPageUtil.addPage(pageOne, PathParser.parse("PageTwo"), "page two content");
 
-    updater = new UpdaterBase(context);
+    updater = new WikiContentUpdater(context);
     update = makeUpdate();
 
   }

@@ -7,30 +7,41 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.tables.ScenarioTable;
 
 public class SlimTestContextImpl implements SlimTestContext {
-  private final Map<String, String> symbols = new HashMap<String, String>();
-  private final Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
+  private final Map<String, String> symbols = new HashMap<>();
+  private final Map<String, ScenarioTable> scenarios = new HashMap<>();
   private final TestSummary testSummary = new TestSummary();
+  private final TestPage pageToTest;
 
+  public SlimTestContextImpl(TestPage pageToTest) {
+    this.pageToTest = pageToTest;
+  }
+
+  @Override
   public String getSymbol(String symbolName) {
     return symbols.get(symbolName);
   }
 
+  @Override
   public void setSymbol(String symbolName, String value) {
     symbols.put(symbolName, value);
   }
 
+  @Override
   public void addScenario(String scenarioName, ScenarioTable scenarioTable) {
     scenarios.put(scenarioName, scenarioTable);
   }
 
+  @Override
   public ScenarioTable getScenario(String scenarioName) {
     return scenarios.get(scenarioName);
   }
 
+  @Override
   public Collection<ScenarioTable> getScenarios() {
     return scenarios.values();
   }
@@ -67,5 +78,10 @@ public class SlimTestContextImpl implements SlimTestContext {
 
   public TestSummary getTestSummary() {
     return testSummary;
+  }
+
+  @Override
+  public TestPage getPageToTest() {
+    return pageToTest;
   }
 }

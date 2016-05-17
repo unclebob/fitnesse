@@ -41,7 +41,7 @@ The error log page should not have any errors
 
 |Response Requester.|
 |uri   |valid?|
-|!-ErrorLogs.SuitePage-!|true|
+|!-SuitePage?executionLog-!|true|
 
 |Response Examiner.|
 |contents?|

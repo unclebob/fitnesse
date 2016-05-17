@@ -5,19 +5,14 @@ package fitnesse.testutil;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.PluginException;
+import fitnesse.plugins.PluginException;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.wiki.RecentChangesWikiPage;
-import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.fs.FileSystem;
-import fitnesse.wiki.fs.FileSystemPageFactory;
-import fitnesse.wiki.fs.MemoryFileSystem;
 import fitnesse.wiki.fs.ZipFileVersionsController;
 import fitnesse.wiki.fs.InMemoryPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.VariableSource;
 import util.FileUtil;
 
 import java.io.File;
@@ -31,7 +26,7 @@ public class FitNesseUtil {
 
   private static FitNesse instance = null;
 
-  public static void startFitnesseWithContext(FitNesseContext context) {
+  public static void startFitnesseWithContext(FitNesseContext context) throws IOException {
     instance = context.fitNesse;
     instance.start();
   }
@@ -44,6 +39,11 @@ public class FitNesseUtil {
   public static FitNesseContext makeTestContext() {
     Properties properties = new Properties();
     properties.setProperty("FITNESSE_PORT", String.valueOf(PORT));
+    return makeTestContext(InMemoryPage.newInstance(), properties);
+  }
+
+
+  public static FitNesseContext makeTestContext(Properties properties) {
     return makeTestContext(InMemoryPage.newInstance(), properties);
   }
 
@@ -92,9 +92,7 @@ public class FitNesseUtil {
               .withRecentChanges(new RecentChangesWikiPage())
               .updatedWith(properties)
               .makeFitNesseContext();
-    } catch (IOException e) {
-      throw new IllegalStateException(e);
-    } catch (PluginException e) {
+    } catch (IOException | PluginException e) {
       throw new IllegalStateException(e);
     }
 

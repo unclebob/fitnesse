@@ -8,16 +8,18 @@ package fit;
 
 public class ColumnFixture extends Fixture {
 
-  protected Binding columnBindings[];
+  protected Binding[] columnBindings;
   protected boolean hasExecuted = false;
 
   // Traversal ////////////////////////////////
 
+  @Override
   public void doRows(Parse rows) {
     bind(rows.parts);
     super.doRows(rows.more);
   }
 
+  @Override
   public void doRow(Parse row) {
     hasExecuted = false;
     try {
@@ -32,15 +34,17 @@ public class ColumnFixture extends Fixture {
     }
   }
 
+  @Override
   public void doCell(Parse cell, int column) {
     try {
       columnBindings[column].doCell(this, cell);
     }
-    catch (Throwable e) {
+    catch (Throwable e) { // NOSONAR
       exception(cell, e);
     }
   }
 
+  @Override
   public void check(Parse cell, TypeAdapter a) {
     try {
       executeIfNeeded();
@@ -75,7 +79,7 @@ public class ColumnFixture extends Fixture {
         columnBindings[i] = createBinding(i, heads);
       }
     }
-    catch (Throwable throwable) {
+    catch (Throwable throwable) { // NOSONAR
       exception(heads, throwable);
     }
   }

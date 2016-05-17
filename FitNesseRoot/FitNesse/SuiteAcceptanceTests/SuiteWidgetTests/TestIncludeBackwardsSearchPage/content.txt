@@ -14,7 +14,8 @@ Make sure the !-!include <MyAncestorPage.MyPage-! syntax works.
 |script|
 |start|Page Builder|
 |line|before|
-|line|!-&bang;include <MiddlePage.IncludedPage-! |
+|line|!-&bang;include <MiddlePage.IncludedPage
+-! |
 |line|after|
 |page|!-ParentPage.MiddlePage.MiddlePageTwo.IncludingPage-!|
 #

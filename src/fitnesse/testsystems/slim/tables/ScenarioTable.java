@@ -15,20 +15,23 @@ import java.util.regex.Pattern;
 
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimTestResult;
+
 import org.apache.commons.lang.StringUtils;
 
 
 public class ScenarioTable extends SlimTable {
   private static final String instancePrefix = "scenarioTable";
   private static final String underscorePattern = "\\W_(?=\\W|$)";
+  private static Class<? extends ScriptTable> defaultChildClass = ScriptTable.class;
   private String name;
-  private List<String> inputs = new ArrayList<String>();
-  private Set<String> outputs = new HashSet<String>();
+  private List<String> inputs = new ArrayList<>();
+  private Set<String> outputs = new HashSet<>();
   private final int colsInHeader = table.getColumnCountInRow(0);
   private boolean parameterized = false;
 
@@ -37,6 +40,7 @@ public class ScenarioTable extends SlimTable {
     super(table, tableId, testContext);
   }
 
+  @Override
   protected String getTableType() {
     return instancePrefix;
   }
@@ -132,7 +136,7 @@ private void splitInputAndOutputArguments(String argName) {
   }
 
   private String getNameFromAlternatingCells() {
-    StringBuffer nameBuffer = new StringBuffer();
+    StringBuilder nameBuffer = new StringBuilder();
 
     for (int nameCol = 1; nameCol < colsInHeader; nameCol += 2)
       nameBuffer.append(table.getCellContents(nameCol, 0)).append(" ");
@@ -151,11 +155,11 @@ private void splitInputAndOutputArguments(String argName) {
   }
 
   public Set<String> getInputs() {
-    return new HashSet<String>(inputs);
+    return new HashSet<>(inputs);
   }
 
   public Set<String> getOutputs() {
-    return new HashSet<String>(outputs);
+    return new HashSet<>(outputs);
   }
 
   public List<SlimAssertion> call(final Map<String, String> scenarioArguments,
@@ -186,17 +190,20 @@ private void splitInputAndOutputArguments(String argName) {
 
   protected ScriptTable createChild(ScenarioTestContext testContext, SlimTable parentTable, Table newTable) {
     ScriptTable scriptTable;
-    if (parentTable instanceof ScriptTable && !parentTable.getClass().equals(ScriptTable.class)) {
+    if (parentTable instanceof ScriptTable) {
       scriptTable = createChild((ScriptTable) parentTable, newTable, testContext);
     } else {
-      scriptTable = new ScriptTable(newTable, id, testContext);
+      scriptTable = createChild(defaultChildClass, newTable, testContext);
     }
     scriptTable.setCustomComparatorRegistry(customComparatorRegistry);
     return scriptTable;
   }
 
   protected ScriptTable createChild(ScriptTable parentScriptTable, Table newTable, SlimTestContext testContext) {
-    Class<? extends ScriptTable> parentTableClass = parentScriptTable.getClass();
+    return createChild(parentScriptTable.getClass(), newTable, testContext);
+  }
+
+  protected ScriptTable createChild(Class<? extends ScriptTable> parentTableClass, Table newTable, SlimTestContext testContext) {
     try {
       return SlimTableFactory.createTable(parentTableClass, newTable, id, testContext);
     } catch (Exception e) {
@@ -204,8 +211,16 @@ private void splitInputAndOutputArguments(String argName) {
     }
   }
 
+  public static void setDefaultChildClass(Class<? extends ScriptTable> defaultChildClass) {
+    ScenarioTable.defaultChildClass = defaultChildClass;
+  }
+
+  public static Class<? extends ScriptTable> getDefaultChildClass() {
+    return defaultChildClass;
+  }
+
   public List<SlimAssertion> call(String[] args, ScriptTable parentTable, int row) throws SyntaxError {
-    Map<String, String> scenarioArguments = new HashMap<String, String>();
+    Map<String, String> scenarioArguments = new HashMap<>();
 
     for (int i = 0; (i < inputs.size()) && (i < args.length); i++)
       scenarioArguments.put(inputs.get(i), args[i]);
@@ -223,7 +238,7 @@ private void splitInputAndOutputArguments(String argName) {
 
     if (parameterized) {
       parameterizedName = table.getCellContents(1, 0);
-    } else if (this.inputs.size() > 0) {
+    } else if (!this.inputs.isEmpty()) {
       StringBuilder nameBuffer = new StringBuilder();
 
       for (int nameCol = 1; nameCol < colsInHeader; nameCol += 2)
@@ -284,7 +299,7 @@ private void splitInputAndOutputArguments(String argName) {
       SlimTable parent = scriptTable.getParent();
       ExecutionResult testStatus = ((ScenarioTestContext) scriptTable.getTestContext()).getExecutionResult();
       if (outputs.isEmpty() || testStatus != ExecutionResult.PASS){
-    	  // if the scenario has no output parameters 
+    	  // if the scenario has no output parameters
     	  // or the scenario failed
     	  // then the whole line should be flagged
     	  parent.getTable().updateContent(getRow(), new SlimTestResult(testStatus));
@@ -368,6 +383,11 @@ private void splitInputAndOutputArguments(String argName) {
 
     ExecutionResult getExecutionResult() {
       return ExecutionResult.getExecutionResult(testSummary);
+    }
+
+    @Override
+    public TestPage getPageToTest() {
+      return testContext.getPageToTest();
     }
   }
 }

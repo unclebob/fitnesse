@@ -6,4 +6,12 @@ public class EchoScript {
   public String echo(String s) {
     return s;
   }
+  public String echoToStdout(String s) {
+    System.out.println(s);
+    return s;
+  }
+  public String echoToStderr(String s) {
+    System.err.println(s);
+    return s;
+  }
 }

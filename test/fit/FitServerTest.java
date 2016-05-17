@@ -208,7 +208,7 @@ public class FitServerTest {
   }
 
   private void establishConnection() throws Exception {
-    serverSocket = SocketFactory.tryCreateServerSocket(PORT_NUMBER);
+    serverSocket = SocketFactory.createServerSocket(PORT_NUMBER);
     socket = null;
 
     listenForConnectionSocket();
@@ -316,9 +316,9 @@ public class FitServerTest {
   }
 
   private String readWholeResponse() throws Exception {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     String block = readFromFitServer();
-    while (block.length() > 0) {
+    while (!block.isEmpty()) {
       buffer.append(block);
       block = readFromFitServer();
     }

@@ -12,15 +12,18 @@ import java.io.File;
 public class FileUpdateTest extends UpdateTestCase {
   public final File testFile = new File("classes/testFile");
 
+  @Override
   protected Update makeUpdate() throws Exception {
-    return new FileUpdate("testFile", context.getRootPagePath() + File.separator + "files"+File.separator+"images");
+    return new FileUpdate("testFile", new File(new File(context.getRootPagePath(), "files"), "images"));
   }
 
+  @Override
   public void setUp() throws Exception {
     super.setUp();
     testFile.createNewFile();
   }
 
+  @Override
   public void tearDown() throws Exception {
     super.tearDown();
     testFile.delete();
@@ -44,7 +47,7 @@ public class FileUpdateTest extends UpdateTestCase {
 
   @Test(expected = Exception.class)
   public void testFileMissing() throws Exception {
-    update = new FileUpdate("images/missingFile", updater.context.getRootPagePath() + "/files/images");
+    update = new FileUpdate("images/missingFile", new File(updater.context.getRootPagePath(), "files/images"));
       update.doUpdate();
   }
 }

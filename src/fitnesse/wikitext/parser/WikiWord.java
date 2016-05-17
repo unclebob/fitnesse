@@ -17,6 +17,7 @@ public class WikiWord extends SymbolType implements Translation {
         this.sourcePage = sourcePage;
     }
 
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         if ("true".equals(symbol.getProperty(WITH_EDIT))) {
           return buildEditableLink(
@@ -28,10 +29,6 @@ public class WikiWord extends SymbolType implements Translation {
                 formatWikiWord(symbol));
     }
 
-    public SourcePage getSourcePage() {
-      return sourcePage;
-    }
-    
     private String buildLink(String pagePath, String linkBody) {
          return new WikiWordBuilder(sourcePage, pagePath, linkBody).buildLink( "", pagePath);
     }

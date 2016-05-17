@@ -13,7 +13,6 @@ import fitnesse.Responder;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.responders.ResponderTestCase;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,10 +23,12 @@ public class RenamePageResponderTest extends ResponderTestCase {
   private String pageOneName;
   private String pageTwoName;
 
+  @Override
   protected Responder responderInstance() {
     return new RenamePageResponder();
   }
 
+  @Override
   @Before
   public void setUp() throws Exception {
     super.setUp();

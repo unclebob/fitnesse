@@ -12,9 +12,9 @@ import java.net.Socket;
 
 public interface SocketServer {
 
-  public void serve(Socket s) throws IOException;
+  void serve(Socket s) throws IOException;
 
-  static class StreamUtility {
+  class StreamUtility {
     public static PrintStream GetPrintStream(Socket s) throws IOException {
       OutputStream os = s.getOutputStream();
       return new PrintStream(os);

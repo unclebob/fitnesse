@@ -46,7 +46,7 @@ public class JavaFormatterFolderResultsRepositoryTest {
     
     String outputHtml = readOutputHtml("utf8");
     assertTrue(outputHtml.contains("someContent\u263a"));
-    assertTrue(outputHtml.contains("<meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>"));
+    assertTrue(outputHtml.contains("<meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/>"));
   }
 
   private String evaluateXPathAgainstOutputHtml(String expression) throws Exception {

@@ -4,9 +4,19 @@ package fitnesse.fixtures;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
-import fitnesse.responders.run.SuiteResponder;
+import fitnesse.FitNesseExpediter;
+import fitnesse.http.MockRequest;
+import fitnesse.http.MockResponseSender;
+import fitnesse.responders.editing.EditResponder;
+import fitnesse.util.MockSocket;
+import fitnesse.util.SerialExecutorService;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.SymbolicPage;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
@@ -19,23 +29,10 @@ import org.htmlparser.lexer.Page;
 import org.htmlparser.util.NodeList;
 import org.json.JSONObject;
 
-import fitnesse.FitNesseExpediter;
-import fitnesse.http.MockRequest;
-import fitnesse.http.MockResponseSender;
-import fitnesse.responders.editing.EditResponder;
-import fitnesse.util.MockSocket;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.SymbolicPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-
 public class PageDriver {
   private PageCreator creator = new PageCreator();
   private ResponseRequester requester = new ResponseRequester();
   private ResponseExaminer examiner = new ResponseExaminer();
-  private Map<String, String> hash;
 
   public void createPageWithContent(String pageName, String content) throws Exception {
     creator.pageName = pageName;
@@ -72,7 +69,7 @@ public class PageDriver {
     request.parseRequestUri("/" + pageName);
     WikiPagePath path = PathParser.parse(request.getResource()); // uri;
     FitnesseFixtureContext.page = FitnesseFixtureContext.context.getRootPage().getPageCrawler().getPage(path);
-    FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(""), FitnesseFixtureContext.context);
+    FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(""), FitnesseFixtureContext.context, new SerialExecutorService());
     FitnesseFixtureContext.response = expediter.createGoodResponse(request);
     FitnesseFixtureContext.sender = new MockResponseSender();
     FitnesseFixtureContext.sender.doSending(FitnesseFixtureContext.response);
@@ -128,6 +125,12 @@ public class PageDriver {
     return examiner.matches();
   }
 
+  public String extractMatch(String pattern, String type, int group) throws Exception {
+    examiner.type = type;
+    examiner.pattern = pattern;
+    return examiner.found(group);
+  }
+
   public boolean contentContains(String subString) throws Exception {
     examiner.type = "contents";
     examiner.extractValueFromResponse();
@@ -172,7 +175,7 @@ public class PageDriver {
     if (textPosition == -1)
       return -1;
     String priorToContent = content.substring(0, textPosition);
-    String lines[] = priorToContent.split("\n");
+    String[] lines = priorToContent.split("\n");
     return lines.length;
   }
 
@@ -193,7 +196,7 @@ public class PageDriver {
   }
 
   public String pageHistoryDateSignatureOf(Date date) {
-    SimpleDateFormat dateFormat = new SimpleDateFormat(SuiteResponder.TEST_RESULT_FILE_DATE_PATTERN);
+    SimpleDateFormat dateFormat = new SimpleDateFormat(fitnesse.reporting.history.PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
     return dateFormat.format(date);
   }
 
@@ -204,7 +207,7 @@ public class PageDriver {
                     new HasAttributePrefixFilter("id", parentIdPrefix))
     );
 
-    NodeFilter predicates[] = {
+    NodeFilter[] predicates = {
             new TagNameFilter(childTag),
             new HasAttributeFilter("class", tagClass)
     };
@@ -246,6 +249,7 @@ public class PageDriver {
       super(attribute, prefix);
     }
 
+    @Override
     public boolean accept(Node node) {
       if (!(node instanceof Tag)) {
         return false;

@@ -40,7 +40,7 @@ public class Logger {
   }
 
   String formatLogLine(LogData data) {
-    StringBuffer line = new StringBuffer();
+    StringBuilder line = new StringBuilder();
     line.append(data.host).append(" - ");
     line.append(data.username == null ? "-" : data.username);
     line.append(" [").append(format(makeLogFormat(), data.time)).append("] ");
@@ -51,9 +51,7 @@ public class Logger {
   }
 
   static String makeLogFileName(Calendar calendar) {
-    StringBuffer name = new StringBuffer();
-    name.append("fitnesse").append(format(makeFileNameFormat(), calendar)).append(".log");
-    return name.toString();
+    return "fitnesse" + format(makeFileNameFormat(), calendar) + ".log";
   }
 
   public void log(LogData data) {

@@ -20,7 +20,7 @@ import org.junit.Test;
 // Extracted Test class to be implemented by all Java based Slim ports
 // The tests for PhpSlim and JsSlim implement this class
 
-abstract public class SlimMethodInvocationTestBase {
+public abstract class SlimMethodInvocationTestBase {
   protected StatementExecutorInterface caller;
   protected TestSlimInterface testSlim;
   protected String testClass = "TestSlim";
@@ -99,7 +99,8 @@ abstract public class SlimMethodInvocationTestBase {
   @Test
   public void passOneDate() throws Exception {
     caller.call("testSlim", "oneDate", "5-May-2009");
-    assertEquals((Date) new DateConverter().fromString("5-May-2009"), testSlim.getDateArg());
+    Date expected = new DateConverter().fromString("5-May-2009");
+    assertEquals(expected, testSlim.getDateArg());
   }
 
   @Test
@@ -137,10 +138,12 @@ abstract public class SlimMethodInvocationTestBase {
   @Test
   public void convertArrayOfIntegersThrowsExceptionIfNotInteger() throws Exception {
     try {
-      Object result = caller.call("testSlim", "setIntegerArray", "[1 ,2, 3,4, hello]");
+      caller.call("testSlim", "setIntegerArray", "[1 ,2, 3,4, hello]");
       fail("Converted array with non-integers to an integer array.");
     } catch (SlimException e) {
-      assertTrue(e.getMessage(), e.getMessage().contains("message:<<CANT_CONVERT_TO_INTEGER_LIST>>"));
+      System.out.println(e.getMessage());
+      assertEquals("fitnesse.slim.SlimError: message:<<Can't convert hello to integer.>>", e.getMessage());
+      assertTrue(NumberFormatException.class.isInstance(e.getCause().getCause()));
     }
   }
 
@@ -159,10 +162,12 @@ abstract public class SlimMethodInvocationTestBase {
   @Test
   public void convertArrayOfDoublesThrowsExceptionIfNotInteger() throws Exception {
     try {
-      Object result = caller.call("testSlim", "setDoubleArray", "[1 ,2, 3,4, hello]");
+      caller.call("testSlim", "setDoubleArray", "[1 ,2, 3,4, hello]");
       fail("Converted array with non-doubles to a double array.");
     } catch (SlimException e) {
-      assertTrue(e.getMessage(), e.getMessage().contains("message:<<CANT_CONVERT_TO_DOUBLE_LIST>>"));
+      System.out.println(e.getMessage());
+      assertEquals("fitnesse.slim.SlimError: message:<<Can't convert hello to double.>>", e.getMessage());
+      assertTrue(NumberFormatException.class.isInstance(e.getCause().getCause()));
     }
   }
 

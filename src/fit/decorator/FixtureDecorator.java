@@ -11,6 +11,7 @@ import fit.decorator.util.Table;
 public abstract class FixtureDecorator extends Fixture {
   static final String ENCAPSULATED_FIXTURE_NAME = "EncapsulatedFixtureName";
 
+  @Override
   public void doTable(Parse table) {
     if (table.parts.more == null) {
       return;
@@ -47,7 +48,7 @@ public abstract class FixtureDecorator extends Fixture {
     Fixture fixture = null;
     try {
       fixture = loadFixture(encapsulatedFixtureName);
-    } catch (Throwable e) {
+    } catch (Throwable e) { // NOSONAR
       exception(actualHeader, e);
     }
     return fixture;
@@ -63,7 +64,7 @@ public abstract class FixtureDecorator extends Fixture {
   }
 
   void setAlternativeArgs(Parse table) {
-    List<String> argumentList = new ArrayList<String>();
+    List<String> argumentList = new ArrayList<>();
     Parse columns = table.parts.parts;
     int size = columns.size();
     for (int i = 0; i < size / 2; ++i) {
@@ -71,7 +72,7 @@ public abstract class FixtureDecorator extends Fixture {
       columnValue = escapeExpectedAndActualString(columnValue);
       argumentList.add(columnValue);
     }
-    args = (String[]) argumentList.toArray(new String[argumentList.size()]);
+    args = argumentList.toArray(new String[argumentList.size()]);
   }
 
   private String escapeExpectedAndActualString(String columnValue) {

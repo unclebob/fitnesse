@@ -5,12 +5,13 @@
   #foreach ($result in $response.Results)
   <result>
     <counts>
-      <right>$result.Right</right>
-      <wrong>$result.Wrong</wrong>
-      <ignores>$result.Ignores</ignores>
-      <exceptions>$result.Exceptions</exceptions>
+      <right>$!result.right</right>
+      <wrong>$!result.wrong</wrong>
+      <ignores>$!result.ignores</ignores>
+      <exceptions>$!result.exceptions</exceptions>
     </counts>
-    <runTimeInMillis>$result.RunTimeInMillis</runTimeInMillis>
+    <date>$result.dateString</date>
+    <runTimeInMillis>$result.runTimeInMillis</runTimeInMillis>
     <content>#escape($result.Content)</content>
     <relativePageName>$result.RelativePageName</relativePageName>
     #if($result.Tags)
@@ -51,8 +52,24 @@
     </instructions>
     #end
   </result>
-  #end
-  #if($response.FinalCounts)
+#end
+#foreach ($log in $response.executionLogs)
+  <executionLog>
+    <testSystem>#escape($log.testSystemName)</testSystem>
+    <command>#escape($log.command)</command>
+    <exitCode>#escape($log.exitCode)</exitCode>
+#if( $log.stdOut )
+    <stdOut>#escape($log.stdOut)</stdOut>
+#end
+#if( $log.stdErr )
+    <stdErr>#escape($log.stdErr)</stdErr>
+#end
+#foreach( $exception in $log.exceptions)
+    <exception>#escape($exception.message)</exception>
+#end
+  </executionLog>
+#end
+#if($response.FinalCounts)
   <finalCounts>
     <right>$response.FinalCounts.Right</right>
     <wrong>$response.FinalCounts.Wrong</wrong>
@@ -60,7 +77,6 @@
     <exceptions>$response.FinalCounts.Exceptions</exceptions>
   </finalCounts>
   <totalRunTimeInMillis>$response.TotalRunTimeInMillis</totalRunTimeInMillis>
-  #end
-
+#end
 </testResults>
 

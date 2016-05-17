@@ -17,7 +17,10 @@ public final class HtmlParserTools {
   }
 
   /**
-   * Clone just this one node. No nesting
+   * Make flat clone of just this one node. No nesting
+   *
+   * @param node Node to clone
+   * @return cloned version of node
    */
   public static Node flatClone(Node node) {
     if (node == null) return null;
@@ -30,10 +33,10 @@ public final class HtmlParserTools {
   }
 
   /**
-   * Make a 1:1 clone of the NodeList.
+   * Make a 1:1 clone of a list of Nodes
    *
-   * @param nodeList
-   * @return
+   * @param nodeList NodeList to clone
+   * @return cloned version of NodeList
    */
   public static NodeList deepClone(NodeList nodeList) {
     return deepClone(nodeList, null);
@@ -42,8 +45,9 @@ public final class HtmlParserTools {
   /**
    * Make a 1:1 clone of the Node.
    *
-   * @param node
-   * @return
+   * @param node Node to deepclone
+   * @param <T> Node of child of Node
+   * @return deepcloned version of node
    */
   public static <T extends Node> T deepClone(T node) {
     return (T) deepClone(new NodeList(node), null).elementAt(0);
@@ -51,7 +55,7 @@ public final class HtmlParserTools {
 
   /**
    * Get closing node for this node, if any.
-   * @param node
+   * @param node Node to find closing sibling for
    * @return node or null
    */
   public static Node endTag(Node node) {
@@ -89,7 +93,7 @@ public final class HtmlParserTools {
   }
 
   private static Vector cloneAttributes(Vector<Attribute> attributes) {
-    Vector<Attribute> newAttributes = new Vector<Attribute>(attributes.size());
+    Vector<Attribute> newAttributes = new Vector<>(attributes.size());
     for (Attribute a : attributes) {
       newAttributes.add(new Attribute(a.getName(), a.getAssignment(), a.getValue(), a.getQuote()));
     }

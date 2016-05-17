@@ -38,6 +38,9 @@ public class ExitCodeListener implements TestSystemListener {
 
   @Override
   public void testSystemStopped(TestSystem testSystem, Throwable cause) {
+    if (cause != null) {
+      failCount++;
+    }
   }
 
   @Override

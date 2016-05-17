@@ -14,7 +14,6 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
@@ -27,17 +26,16 @@ public class MultipleTestsRunnerTest {
   private FitNesseContext context;
 
   private TestSystemFactory testSystemFactory;
-  private TestSystem testSystem;
 
   @Before
   public void setUp() throws Exception {
     testSystemFactory = mock(TestSystemFactory.class);
-    testSystem = mock(TestSystem.class);
+    TestSystem testSystem = mock(TestSystem.class);
     when(testSystemFactory.create(any(Descriptor.class))).thenReturn(testSystem);
 
     context = FitNesseUtil.makeTestContext();
     suite = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("SuitePage"), "This is the test suite\n");
- }
+  }
 
   @Test
   public void shouldExecuteTestPagesGroupedByTestSystem() throws IOException, InterruptedException {
@@ -85,6 +83,7 @@ public class MultipleTestsRunnerTest {
     public ForTestSystem(String testSystemType) {
       this.testSystemType = testSystemType;
     }
+    @Override
     public boolean matches(Object descriptor) {
       return testSystemType.equals(((Descriptor) descriptor).getTestSystemType());
     }

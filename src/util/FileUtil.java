@@ -2,17 +2,36 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 public class FileUtil {
+
+  public static final String CHARENCODING = "UTF-8";
 
   public static File createFile(String path, String content) {
     return createFile(path, new ByteArrayInputStream(content.getBytes()));
   }
 
   public static File createFile(String path, InputStream content) {
-    String[] names = path.split("/");
+    String[] names = path.replace("/", File.separator).split(Pattern.quote(File.separator));
     if (names.length == 1)
       return createFile(new File(path), content);
     else {
@@ -29,7 +48,7 @@ public class FileUtil {
 
   public static File createFile(File file, String content) {
     try {
-      return createFile(file, content.getBytes("UTF-8"));
+      return createFile(file, content.getBytes(CHARENCODING));
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException(e);
     }
@@ -88,33 +107,9 @@ public class FileUtil {
   public static void deleteFile(File file) {
     if (!file.exists())
       return;
-    for (int i = 0; i < 10; i++) {
-        if (file.delete()) {
-            waitUntilFileDeleted(file);
-            return;
-        }
-        waitFor(10);
-    }
-    throw new RuntimeException("Could not delete '" + file.getAbsoluteFile() + "'");
+    if (!file.delete())
+      throw new RuntimeException("Could not delete '" + file.getAbsolutePath() + "'");
   }
-
-  private static void waitUntilFileDeleted(File file) {
-    int i = 10;
-    while (file.exists()) {
-      if (--i <= 0) {
-        break;
-      }
-      waitFor(500);
-    }
-  }
-    
-    private static void waitFor(int milliseconds) {
-        try {
-          Thread.sleep(milliseconds);
-        }
-        catch (InterruptedException e) {
-        }
-    }
 
   public static String getFileContent(String path) throws IOException {
     File input = new File(path);
@@ -122,7 +117,7 @@ public class FileUtil {
   }
 
   public static String getFileContent(File input) throws IOException {
-    return new String(getFileBytes(input), "UTF-8");
+    return new String(getFileBytes(input), CHARENCODING);
   }
 
   public static byte[] getFileBytes(File input) throws IOException {
@@ -130,8 +125,7 @@ public class FileUtil {
     FileInputStream stream = null;
     try {
       stream = new FileInputStream(input);
-      byte[] bytes = new StreamReader(stream).readBytes((int) size);
-      return bytes;
+      return new StreamReader(stream).readBytes((int) size);
     } finally {
       if (stream != null)
         stream.close();
@@ -139,20 +133,21 @@ public class FileUtil {
   }
 
   public static LinkedList<String> getFileLines(File file) throws IOException {
-    LinkedList<String> lines = new LinkedList<String>();
+    LinkedList<String> lines = new LinkedList<>();
     BufferedReader reader = new BufferedReader(new FileReader(file));
     String line;
-    while ((line = reader.readLine()) != null)
-      lines.add(line);
-
-    reader.close();
+    try {
+      while ((line = reader.readLine()) != null)
+        lines.add(line);
+    } finally {
+      reader.close();
+    }
     return lines;
   }
 
-  public static void writeLinesToFile(File file, List<?> lines) throws FileNotFoundException {
+  public static void writeLinesToFile(File file, List<String> lines) throws FileNotFoundException {
     PrintStream output = new PrintStream(new FileOutputStream(file));
-    for (Iterator<?> iterator = lines.iterator(); iterator.hasNext();) {
-      String line = (String) iterator.next();
+    for (String line : lines) {
       output.println(line);
     }
     output.close();
@@ -166,7 +161,7 @@ public class FileUtil {
 
   public static String toString(InputStream input) throws IOException {
     String result = "";
-    Scanner s = new Scanner(input, "UTF-8");
+    Scanner s = new Scanner(input, CHARENCODING);
     s.useDelimiter("\\A");
     result = s.hasNext() ? s.next() : "";
     s.close();
@@ -179,44 +174,21 @@ public class FileUtil {
   }
 
   public static File[] getDirectoryListing(File dir) {
-    SortedSet<File> dirSet = new TreeSet<File>();
-    SortedSet<File> fileSet = new TreeSet<File>();
+    SortedSet<File> dirSet = new TreeSet<>();
+    SortedSet<File> fileSet = new TreeSet<>();
     File[] files = dir.listFiles();
     if (files == null)
       return new File[0];
-    for (int i = 0; i < files.length; i++) {
-      if (files[i].isDirectory())
-        dirSet.add(files[i]);
+    for (File file : files) {
+      if (file.isDirectory())
+        dirSet.add(file);
       else
-        fileSet.add(files[i]);
+        fileSet.add(file);
     }
-    List<File> fileList = new LinkedList<File>();
+    List<File> fileList = new LinkedList<>();
     fileList.addAll(dirSet);
     fileList.addAll(fileSet);
     return fileList.toArray(new File[fileList.size()]);
-  }
-
-  public static String buildPath(String[] parts) {
-    String separator = System.getProperty("file.separator");
-    StringBuilder builder = new StringBuilder();
-    for (String part: parts) {
-      if (builder.length() > 0) {
-        builder.append(separator);
-      }
-      builder.append(part);
-    }
-    return builder.toString();
-  }
-
-  public static List<String> breakFilenameIntoParts(String fileName) {
-    List<String> parts = new ArrayList<String>(Arrays.asList(fileName.split("/")));
-    return parts;
-  }
-
-  public static String getPathOfFile(String fileName) {
-    List<String> parts = breakFilenameIntoParts(fileName);
-    parts.remove(parts.size()-1);
-    return buildPath(parts.toArray(new String[parts.size()]));
   }
 
   public static void close(Writer writer) {
@@ -249,4 +221,13 @@ public class FileUtil {
     }
   }
 
+  public static void close(StreamReader reader) {
+    if (reader != null) {
+      try {
+        reader.close();
+      } catch (IOException e) {
+        throw new RuntimeException("Unable to close stream reader", e);
+      }
+    }
+  }
 }

@@ -134,9 +134,8 @@ public abstract class Binding {
   private static Field findField(Fixture fixture, String simpleName) {
     List<Field> fields = getAllDeclaredFields(fixture.getTargetClass());
     Field field = null;
-    for (int i = 0; i < fields.size(); i++) {
-      Field possibleField = fields.get(i);
-      if (simpleName.equals(possibleField.getName().toLowerCase())) {
+    for (Field possibleField : fields) {
+      if (simpleName.equalsIgnoreCase(possibleField.getName())) {
         field = possibleField;
         break;
       }
@@ -150,16 +149,15 @@ public abstract class Binding {
       fields.addAll(asList(clazz.getDeclaredFields()));
       return fields;
     } else {
-      return new ArrayList(asList(clazz.getDeclaredFields()));
+      return new ArrayList<>(asList(clazz.getDeclaredFields()));
     }
   }
 
   private static Method findMethod(Fixture fixture, String simpleName) {
     Method[] methods = fixture.getTargetClass().getMethods();
     Method method = null;
-    for (int i = 0; i < methods.length; i++) {
-      Method possibleMethod = methods[i];
-      if (simpleName.equals(possibleMethod.getName().toLowerCase())) {
+    for (Method possibleMethod : methods) {
+      if (simpleName.equalsIgnoreCase(possibleMethod.getName())) {
         method = possibleMethod;
         break;
       }
@@ -170,6 +168,7 @@ public abstract class Binding {
   public abstract void doCell(Fixture fixture, Parse cell) throws Throwable;
 
   public static class SaveBinding extends Binding {
+    @Override
     public void doCell(Fixture fixture, Parse cell) {
       try {
         //TODO-MdM hmm... somehow this needs to regulated by the fixture.
@@ -189,6 +188,7 @@ public abstract class Binding {
   }
 
   public static class RecallBinding extends Binding {
+    @Override
     public void doCell(Fixture fixture, Parse cell) throws Exception {
       String symbolName = cell.text();
       if (!Fixture.hasSymbol(symbolName))
@@ -208,6 +208,7 @@ public abstract class Binding {
   }
 
   public static class SetBinding extends Binding {
+    @Override
     public void doCell(Fixture fixture, Parse cell) throws Throwable {
       if ("".equals(cell.text()))
         fixture.handleBlankCell(cell, adapter);
@@ -216,18 +217,21 @@ public abstract class Binding {
   }
 
   public static class QueryBinding extends Binding {
+    @Override
     public void doCell(Fixture fixture, Parse cell) {
       fixture.check(cell, adapter);
     }
   }
 
   public static class RegexQueryBinding extends Binding {
+    @Override
     public void doCell(Fixture fixture, Parse cell) {
       fixture.check(cell, adapter);
     }
   }
 
   public static class NullBinding extends Binding {
+    @Override
     public void doCell(Fixture fixture, Parse cell) {
       fixture.ignore(cell);
     }

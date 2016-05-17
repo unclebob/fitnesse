@@ -156,20 +156,30 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
     assertTrue(traversedPages.contains("ChildOne"));
   }
 
-  public void process(WikiPage page) {
-    traversedPages.add(page.getName());
-  }
-
   @Test
-  public void testdoesntTraverseSymbolicPages() throws Exception {
+  public void doesTraverseSymbolicPages() throws Exception {
     PageData data = page1.getData();
-    data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymLink", "PageTwo");
+    data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymLink", page2.getName());
     page1.commit(data);
 
     crawler.traverse(this);
-    assertEquals(6, traversedPages.size());
+    assertEquals(7, traversedPages.size());
 
-    assertFalse(traversedPages.contains("SymLink"));
+    assertTrue(traversedPages.contains("SymLink"));
+  }
+
+  @Test
+  public void doesNotTraverseCyclicPageReferences() {
+    PageData data = child1.getData();
+    data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymLink", "." + page1.getName());
+    child1.commit(data);
+
+    crawler = new PageCrawlerImpl(page1);
+    crawler.traverse(this);
+
+    assertEquals(traversedPages.toString(), 5, traversedPages.size());
+
+    assertTrue(traversedPages.contains("SymLink"));
   }
 
   @Test
@@ -188,5 +198,10 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
     assertTrue(uncles.contains(unclePage));
     assertTrue(uncles.contains(brotherPage));
 
+  }
+
+  @Override
+  public void process(WikiPage page) {
+    traversedPages.add(page.getName());
   }
 }

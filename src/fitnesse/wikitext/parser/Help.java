@@ -13,22 +13,24 @@ public class Help extends SymbolType implements Rule, Translation {
         wikiRule(this);
         htmlTranslation(this);
     }
-    
+
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         List<Symbol> lookAhead = parser.peek(new SymbolType[] {SymbolType.Whitespace, SymbolType.Text});
-        if (lookAhead.size() != 0 ) {
+        if (!lookAhead.isEmpty()) {
             String option = lookAhead.get(1).getContent();
             if (option.equals(editableOption)) {
                 current.putProperty(editableOption, "");
                 parser.moveNext(2);
             }
         }
-        return new Maybe<Symbol>(current);
+        return new Maybe<>(current);
     }
 
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         String helpText = translator.getPage().getProperty(PageData.PropertyHELP);
-        String editText = helpText.length() > 0 ? "edit" : "edit help text";
+        String editText = helpText.isEmpty() ? "edit help text" : "edit";
         if (symbol.hasProperty(editableOption)) {
           helpText += " <a href=\"" + translator.getPage().getFullPath() + "?properties\">(" + editText + ")</a>";
         }

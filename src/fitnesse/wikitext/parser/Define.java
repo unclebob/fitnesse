@@ -9,7 +9,8 @@ public class Define extends SymbolType implements Rule, Translation {
         wikiRule(this);
         htmlTranslation(this);
     }
-    
+
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         if (!parser.isMoveNext(SymbolType.Whitespace)) return Symbol.nothing;
 
@@ -26,7 +27,7 @@ public class Define extends SymbolType implements Rule, Translation {
 
         String variableValue = valueString.getValue();
         parser.getPage().putVariable(variableName, variableValue);
-        return new Maybe<Symbol>(current.add(variableName).add(variableValue));
+        return new Maybe<>(current.add(variableName).add(variableValue));
     }
 
     private Maybe<String> copyVariableValue(Parser parser, Symbol next) {
@@ -36,11 +37,12 @@ public class Define extends SymbolType implements Rule, Translation {
     }
 
     private Maybe<String> parseVariableValue(Parser parser, Symbol next) {
-      SymbolType close = next.closeType();
+      SymbolType close = next.getType().closeType();
       if (close == SymbolType.Empty) return Maybe.noString;
       return parser.parseToAsString(close);
     }
 
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         HtmlTag result = new HtmlTag("span", "variable defined: "
                 + translator.translate(symbol.childAt(0))
@@ -49,4 +51,5 @@ public class Define extends SymbolType implements Rule, Translation {
         result.addAttribute("class", "meta");
         return result.html();
     }
+
 }

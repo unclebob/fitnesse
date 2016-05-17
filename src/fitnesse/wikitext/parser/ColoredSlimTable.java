@@ -1,32 +1,32 @@
 package fitnesse.wikitext.parser;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import fit.FixtureLoader;
 import fit.FixtureName;
+import fitnesse.testsystems.slim.tables.DecisionTable;
+import fitnesse.testsystems.slim.tables.DynamicDecisionTable;
+import fitnesse.testsystems.slim.tables.ImportTable;
+import fitnesse.testsystems.slim.tables.QueryTable;
+import fitnesse.testsystems.slim.tables.ScenarioTable;
+import fitnesse.testsystems.slim.tables.ScriptTable;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 
 public class ColoredSlimTable extends SymbolTypeDecorator{
 
-    public ColoredSlimTable(Table baseSymbolType) {
-        super("Table", baseSymbolType);
+  public static final String CLASS_PROPERTY = "class";
 
-        secondRowTitleClasses.add("fitnesse.testsystems.slim.tables.DecisionTable");
-        secondRowTitleClasses.add("fitnesse.testsystems.slim.tables.DynamicDecisionTable");
-        secondRowTitleClasses.add("fitnesse.testsystems.slim.tables.QueryTable");
-        secondRowTitleClasses.add("fitnesse.testsystems.slim.tables.SubsetQueryTable");
-        secondRowTitleClasses.add("fitnesse.testsystems.slim.tables.OrderedQueryTable");
+  public ColoredSlimTable(Table baseSymbolType) {
+        super("Table", baseSymbolType);
     }
 
-    private List<String> secondRowTitleClasses = new ArrayList<String>();
-
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         HtmlWriter writer = new HtmlWriter();
         writer.startTag("table");
-        if (symbol.hasProperty("class")) {
-          writer.putAttribute("class", symbol.getProperty("class"));
+        if (symbol.hasProperty(CLASS_PROPERTY)) {
+          writer.putAttribute(CLASS_PROPERTY, symbol.getProperty(CLASS_PROPERTY));
         }
         int longestRow = ((Table)baseSymbolType).longestRow(symbol);
         int rowCount = 0;
@@ -34,13 +34,12 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
         boolean colorTable = false;
         boolean isFirstColumnTitle = false;
         boolean isSecondRowTitle = false;
-        boolean isCommentFixture = false;
 
         for (Symbol child : symbol.getChildren()) {
           rowCount++;
           writer.startTag("tr");
           if (rowCount == 1 && symbol.hasProperty("hideFirst")) {
-            writer.putAttribute("class", "hidden");
+            writer.putAttribute(CLASS_PROPERTY, "hidden");
           }
           int extraColumnSpan = longestRow - ((Table)baseSymbolType).rowLength(child);
           int column = 1;
@@ -55,41 +54,29 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
                 Class<? extends SlimTable> slimTableClazz = sf.getTableType(tableName);
                 if(slimTableClazz != null){
                     colorTable = true;
-                    if(secondRowTitleClasses.contains(slimTableClazz.getName())){
-                        isSecondRowTitle = true;
-                    }else if(slimTableClazz.getName().equals("fitnesse.testsystems.slim.tables.ImportTable")){
-                        isImportFixture = true;
-                    }else if(slimTableClazz.getName().equals("fitnesse.testsystems.slim.tables.ScriptTable") ||
-                            slimTableClazz.getName().equals("fitnesse.testsystems.slim.tables.ScenarioTable")){
+                    if (DecisionTable.class.isAssignableFrom(slimTableClazz) ||
+                       DynamicDecisionTable.class.isAssignableFrom(slimTableClazz) ||
+                       QueryTable.class.isAssignableFrom(slimTableClazz)) {
+                      isSecondRowTitle = true;
+                    } else if (ImportTable.class.isAssignableFrom(slimTableClazz)) {
+                      isImportFixture = true;
+                    } else if (ScriptTable.class.isAssignableFrom(slimTableClazz) ||
+                               ScenarioTable.class.isAssignableFrom(slimTableClazz)) {
                         isFirstColumnTitle = true;
                     }
                 }
 
-                // If table has valid class declaration then color table and choose coloring scheme.
-                List<String> potentialClasses = new FixtureName(tableName)
-                    .getPotentialFixtureClassNames(FixtureLoader.instance().fixturePathElements);
-                for(String potentialClass: potentialClasses){
-                    if(potentialClass.equals("fitnesse.testutil.CrashFixture")) continue;
-                    Object fixture;
-                    Class<?> fixtureClazz;
-                    try{
-                        if((fixtureClazz = Class.forName(potentialClass)) != null){
-                            colorTable = true;
-
-                            // Attempt to instantiate class to get inheritance.
-                            fixture = fixtureClazz.newInstance();
-                            if(fixture instanceof fit.Comment){ isCommentFixture = true; }
-                            if(fixture instanceof fit.ImportFixture){ isImportFixture = true; }
-                            if(fixture instanceof fit.ActionFixture){
-                                isSecondRowTitle = true;
-                                isFirstColumnTitle = true;
-                            }
-                            if(fixture instanceof fit.ColumnFixture){ isSecondRowTitle = true; }
+                // Unmarked decision tables aren't found by getTableType().  Color table if first row is valid class.
+                if(!colorTable) {
+                    List<String> potentialClasses = new FixtureName(tableName)
+                        .getPotentialFixtureClassNames(FixtureLoader.instance().fixturePathElements);
+                    for(String potentialClass: potentialClasses){
+                        if (isValidClass(potentialClass)) {
+                          colorTable = true;
+                          isSecondRowTitle = true;
+                          break;
                         }
-                    }catch(ClassNotFoundException cnfe){ }
-                    catch(IllegalAccessException iae){ }
-                    catch(InstantiationException iae){ }
-                    catch(NoClassDefFoundError ncdfe){ }
+                    }
                 }
             }
 
@@ -98,18 +85,18 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
                 if(isImportFixture){ FixtureLoader.instance().addPackageToPath(body); }
 
                 if(rowCount == 1){
-                    writer.putAttribute("class", "slimRowTitle");
+                    writer.putAttribute(CLASS_PROPERTY, "slimRowTitle");
                 }else if(isSecondRowTitle && rowCount == 2){
-                    writer.putAttribute("class", "slimRowTitle");
+                    writer.putAttribute(CLASS_PROPERTY, "slimRowTitle");
                 }else if(isFirstColumnTitle){
                     byte[] bodyBytes = body.getBytes();
                     int sum = 0;
                     for(byte b: bodyBytes){
                         sum = sum + (int) b;
                     }
-                    writer.putAttribute("class", "slimRowColor" + (sum % 10));
-                }else if(!isCommentFixture){
-                    writer.putAttribute("class", "slimRowColor" + (rowCount % 2));
+                    writer.putAttribute(CLASS_PROPERTY, "slimRowColor" + (sum % 10));
+                } else {
+                    writer.putAttribute(CLASS_PROPERTY, "slimRowColor" + (rowCount % 2));
                 }
             }
             writer.startTag("td");
@@ -125,12 +112,23 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
         return writer.toHtml();
     }
 
-    public SymbolType isApplicable(Translator translator){
+  private boolean isValidClass(String potentialClass) {
+    try {
+      return Class.forName(potentialClass) != null;
+    } catch (Exception e) {
+      return false;
+    }catch (NoClassDefFoundError e) {
+      return false;
+    }
+  }
+
+  @Override
+  public SymbolType isApplicable(Translator translator){
         Maybe<String> testSystem = Maybe.noString;
         if(translator instanceof HtmlTranslator){
             testSystem = ((HtmlTranslator) translator).getParsingPage().findVariable("TEST_SYSTEM");
         }
-        if(testSystem.isNothing() || !testSystem.getValue().equals("slim")){
+        if(testSystem.isNothing() || !"slim".equals(testSystem.getValue())) {
             return baseSymbolType;
         }
         return this;

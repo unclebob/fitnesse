@@ -3,6 +3,7 @@ package fitnesse.slim;
 import java.util.List;
 
 import fitnesse.slim.converters.ConverterRegistry;
+import fitnesse.slim.converters.ElementConverterHelper;
 
 public class MethodExecutionResult {
   private static class NoMethod extends MethodExecutionResult {
@@ -39,6 +40,7 @@ public class MethodExecutionResult {
       this.instanceName = instanceName;
     }
 
+    @Override
     public Object returnValue() {
       throw new SlimError(String.format("message:<<%s %s.>>", SlimServer.NO_INSTANCE, instanceName));
     }
@@ -85,6 +87,7 @@ public class MethodExecutionResult {
   }
   
   @SuppressWarnings({"unchecked", "rawtypes"})
+  @Override
   public String toString() {
     Converter converter = ConverterRegistry.getConverterForClass(type);
     if (converter != null)
@@ -92,7 +95,7 @@ public class MethodExecutionResult {
     if (value == null)
       return "null";
     else
-      return value.toString();
+      return ElementConverterHelper.elementToString(value);
   }
 
   public boolean hasMethod() {

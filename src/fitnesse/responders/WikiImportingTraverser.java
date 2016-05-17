@@ -89,9 +89,9 @@ public class WikiImportingTraverser implements WikiImporterClient, Traverser<Obj
   }
 
   public static class ImportError {
-    private String message;
-    private String type;
-    private Exception exception;
+    private final String message;
+    private final String type;
+    private final Exception exception;
 
     public ImportError(String type, String message) {
       this(type, message, null);
@@ -116,6 +116,7 @@ public class WikiImportingTraverser implements WikiImporterClient, Traverser<Obj
       return exception;
     }
 
+    @Override
     public String toString() {
       return getClass().getName() + ": " + getMessage();
     }

@@ -224,9 +224,9 @@ public class PageXmlizerTest {
     assertSubString("this is some content", marshaledValue);
 
     String[] propertyLines = properties.toXml().split("\n");
-    for (int i = 0; i < propertyLines.length; i++) {
-      String propertyLine = propertyLines[i].trim();
-      assertSubString(propertyLine, marshaledValue);
+    for (String propertyLine : propertyLines) {
+      String trimmedPropertyLine = propertyLine.trim();
+      assertSubString(trimmedPropertyLine, marshaledValue);
     }
   }
 
@@ -251,6 +251,7 @@ public class PageXmlizerTest {
     WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "");
 
     xmlizer.addPageCondition(new XmlizePageCondition() {
+      @Override
       public boolean canBeXmlized(WikiPage page) {
         return !page.getName().equals("PageTwo");
       }
@@ -270,12 +271,14 @@ public class PageXmlizerTest {
     public List<Date> modDates = new LinkedList<Date>();
     public int exits = 0;
 
+    @Override
     public void enterChildPage(WikiPage newPage, Date lastModified) {
       handledPages.add(newPage.getName());
       modDates.add(lastModified);
       newPage.commit(newPage.getData());
     }
 
+    @Override
     public void exitPage() {
       exits++;
     }

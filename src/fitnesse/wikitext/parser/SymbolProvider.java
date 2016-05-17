@@ -15,7 +15,7 @@ public class SymbolProvider {
             new AnchorName(), new Contents(), SymbolType.CenterLine, new Define(), new Help(),
             new Include(), SymbolType.Meta, SymbolType.NoteLine, Path.symbolType, new PlainTextTable(),
             See.symbolType, SymbolType.Style, new LastModified(), Image.symbolType,
-            new Today(), SymbolType.Delta, 
+            new Today(), SymbolType.Delta,
             new HorizontalRule(), SymbolType.CloseLiteral, SymbolType.Strike,
             Alias.symbolType, SymbolType.UnorderedList, SymbolType.OrderedList, Comment.symbolType, SymbolType.Whitespace, SymbolType.CloseCollapsible,
             SymbolType.Newline, SymbolType.Colon, SymbolType.Comma,
@@ -27,7 +27,7 @@ public class SymbolProvider {
     });
 
     public static final SymbolProvider tableParsingProvider = new SymbolProvider(wikiParsingProvider).add(SymbolType.EndCell);
-    
+
     public static final SymbolProvider aliasLinkProvider = new SymbolProvider(
             new SymbolType[] {SymbolType.CloseBracket, SymbolType.Whitespace, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
 
@@ -38,7 +38,7 @@ public class SymbolProvider {
           Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
 
     public static final SymbolProvider literalTableProvider = new SymbolProvider(
-            new SymbolType[] {SymbolType.EndCell, SymbolType.Newline, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
+            new SymbolType[] {SymbolType.EndCell, SymbolType.Whitespace, SymbolType.Newline, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
 
     // This scheme is used for parsing system properties (accessed by PageData.getVariable()).
     public static final SymbolProvider variableDefinitionSymbolProvider = new SymbolProvider(new SymbolType[] {
@@ -50,15 +50,15 @@ public class SymbolProvider {
     static final SymbolProvider preformatProvider = new SymbolProvider(
           new SymbolType[] {SymbolType.ClosePreformat, SymbolType.CloseBrace, SymbolType.CloseLiteral, Literal.symbolType, Variable.symbolType});
 
-  private static final char defaultMatch = '\0';
+    private static final char defaultMatch = '\0';
 
-  private HashMap<Character, ArrayList<Matchable>> currentDispatch;
-    private ArrayList<SymbolType> symbolTypes;
+    private Map<Character, ArrayList<Matchable>> currentDispatch;
+    private Collection<SymbolType> symbolTypes;
     private SymbolProvider parent = null;
 
     public SymbolProvider(Iterable<SymbolType> types) {
-        symbolTypes = new ArrayList<SymbolType>();
-        currentDispatch = new HashMap<Character, ArrayList<Matchable>>();
+        symbolTypes = new ArrayList<>();
+        currentDispatch = new HashMap<>();
         currentDispatch.put(defaultMatch, new ArrayList<Matchable>());
         for (char c = 'a'; c <= 'z'; c++) currentDispatch.put(c, new ArrayList<Matchable>());
         for (char c = 'A'; c <= 'Z'; c++) currentDispatch.put(c, new ArrayList<Matchable>());
@@ -80,7 +80,7 @@ public class SymbolProvider {
             add(symbolType);
         }
     }
-    
+
     public SymbolProvider add(SymbolType symbolType) {
         if (matchesFor(symbolType)) return this;
         symbolTypes.add(symbolType);
@@ -93,7 +93,7 @@ public class SymbolProvider {
         return this;
     }
 
-    private ArrayList<Matchable> getMatchTypes(Character match) {
+    private List<Matchable> getMatchTypes(Character match) {
         if (currentDispatch.containsKey(match)) return currentDispatch.get(match);
         return currentDispatch.get(defaultMatch);
     }

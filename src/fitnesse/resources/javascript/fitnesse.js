@@ -64,6 +64,28 @@ $(document)
     });
 
 /**
+ * Modal dialogs
+ */
+$(document)
+    .on("keyup", function (e) {
+        if (e.keyCode == 27 && $('.modal-dialog:visible')) {
+            window.location.hash = "";
+        }
+    })
+    .ready(function () {
+        $(".modal-dialog").keyup(function (e) {
+           if (e.keyCode == 27) {
+               window.history.back();
+           }
+        }).click(function () {
+            window.history.back();
+        });
+        $(".modal-dialog > div").click(function (e) {
+            e.stopPropagation();
+        });
+    });
+
+/**
  * Hide/show passed tests
  */
 $(document)
@@ -143,10 +165,6 @@ function initErrorMetadata() {
         .not(".scenario, .scenario .fail, .scenario .error, .exception .error");
 
     $("#error-nav-max").text(errors.length);
-
-    function validIndex(index) {
-        return index > 0 && index <= errors.length;
-    }
 
     function getCurrentErrorNavIndex() {
         return parseInt($("#error-nav-text").val());

@@ -110,29 +110,14 @@ public class FileUtilTest {
   }
 
   private File createFileInDir(File dir, String fileName) {
-    return FileUtil.createFile(FileUtil.buildPath(new String[]{dir.getPath(), fileName}), "");
+    return FileUtil.createFile(new File(dir.getPath(), fileName), "");
   }
 
   private File createSubDir(File dir, String subDirName) {
-    return FileUtil.createDir(FileUtil.buildPath(new String[]{dir.getPath(), subDirName}));
+    File d = new File(dir.getPath(), subDirName);
+    d.mkdirs();
+    return d;
   }
-
-  @Test
-    public void testBuildPathEmpty() throws Exception {
-    assertEquals("", FileUtil.buildPath(new String[]{}));
-  }
-
-  @Test
-    public void testBuildPathOneElement() throws Exception {
-    assertEquals("a", FileUtil.buildPath(new String[]{"a"}));
-  }
-
-  @Test
-    public void testBuildPathThreeElements() throws Exception {
-    String separator = System.getProperty("file.separator");
-    assertEquals("a" + separator + "b" + separator + "c", FileUtil.buildPath(new String[]{"a", "b", "c"}));
-  }
-
 
 }
 

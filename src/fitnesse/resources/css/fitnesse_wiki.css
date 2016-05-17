@@ -151,6 +151,10 @@ span.pass * {
 span.fail * {
   background-color: #FFAAAA;
 }
+.diff,
+span.diff * {
+  background-color: #FF6666;
+}
 .ignore,
 span.ignore * {
   background-color: lightgray;

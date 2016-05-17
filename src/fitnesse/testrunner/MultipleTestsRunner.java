@@ -91,7 +91,11 @@ public class MultipleTestsRunner implements Stoppable {
       }
     } finally {
       if (!isStopped && testSystem != null) {
-        testSystem.bye();
+        try {
+          testSystem.bye();
+        } catch (Exception e) {
+          executionLogListener.exceptionOccurred(e);
+        }
       }
     }
   }
@@ -116,7 +120,7 @@ public class MultipleTestsRunner implements Stoppable {
       @Override
       public ClassPath getClassPath() {
         if (classPath == null) {
-          ArrayList<ClassPath> paths = new ArrayList<ClassPath>();
+          List<ClassPath> paths = new ArrayList<>();
           for (TestPage testPage: testPages) {
             paths.add(testPage.getClassPath());
           }
@@ -180,9 +184,9 @@ public class MultipleTestsRunner implements Stoppable {
     executionLogListener.addExecutionLogListener(listener);
   }
 
-  private class InternalTestSystemListener implements TestSystemListener<WikiTestPage> {
+  private class InternalTestSystemListener implements TestSystemListener {
     @Override
-    public void testSystemStarted(TestSystem testSystem) {
+    public void testSystemStarted(TestSystem testSystem) throws IOException {
       formatters.testSystemStarted(testSystem);
     }
 
@@ -192,12 +196,12 @@ public class MultipleTestsRunner implements Stoppable {
     }
 
     @Override
-    public void testStarted(WikiTestPage testPage) throws IOException {
+    public void testStarted(TestPage testPage) throws IOException {
       formatters.testStarted(testPage);
     }
 
     @Override
-    public void testComplete(WikiTestPage testPage, TestSummary testSummary) throws IOException {
+    public void testComplete(TestPage testPage, TestSummary testSummary) throws IOException {
       formatters.testComplete(testPage, testSummary);
       testsInProgressCount--;
     }

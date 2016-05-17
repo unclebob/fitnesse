@@ -1,4 +1,7 @@
 !2 The Slim Protocol, version 0.4
+
+!-FitNesse-! communicates with Slim over a socket (see >PortManagement).  When you hit the ''Test'' button, !-FitNesse-! starts up a !-SlimServer-! process by issuing the appropriate command line.  !-FitNesse-! then sends a list of instructions to the !-SlimServer-!, and expects a list of responses back.  The instructions are things like ''call function f(a,b,c)'' or ''make instance of class X with arguments p,q,r''.  The responses are simply the values that are returned by the instructions.
+
 {{{
              instruction list
   +----------+    o--->     +------------+      +----------+       +-----+
@@ -6,8 +9,6 @@
   +----------+    <---o     +------------+      +----------+       +-----+
                response list
 }}}
-
-!-FitNesse-! communicates with Slim over a socket (see >PortManagement).  When you hit the ''Test'' button, !-FitNesse-! starts up a !-SlimServer-! process by issuing the appropriate command line.  !-FitNesse-! then sends a list of instructions to the !-SlimServer-!, and expects a list of responses back.  The instructions are things like ''call function f(a,b,c)'' or ''make instance of class X with arguments p,q,r''.  The responses are simply the values that are returned by the instructions.
 
 Each instruction in the list is itself a list of strings.  Here is a typical instruction list:{{{
       [
@@ -36,7 +37,7 @@ The !-SlimServer-! maintains five pieces of data that are operated on by the ins
  * ''[0.3]'' '''Actors:''' A stack of actor objects.
 
 !3 The Instructions
-There are four instructions in the Slim protocol.  import, make, call, and callAndAssign.  That's all.
+There are five instructions in the Slim protocol.  import, make, call, callAndAssign, and ''[0.4]'' assign.  That's all.
 
 !4 Import
 [''<id>'', import, ''<path>'']
@@ -52,7 +53,7 @@ This instruction causes slim to search for a class named ''<class>'' using the l
 
 ''[0.2]'' '''Fixture Chaining:''' Symbols can be used in the ''Make'' command to represent a class name.  If the ''<class>'' argument of the ''Make'' command contains '$' characters, then Slim should replace any symbols that have been created by previous ''callAndAssign'' commands.  This allows !-FitNesse-! to compose fixture names from symbols set by fixtures, and therefore enables fixture chaining.
 
-''[0.3]'' '''Symbol Copy:''' If ''<class>'' consists entirely of a single symbol name prefixed with $, then the item from the dictionary of symbol values with the symbol name is added to the dictionary of created objects with the name ''<instance>''. The ''<arg>'' strings are ignored and no constructor is called.
+''[0.3]'' '''Symbol Copy:''' If ''<class>'' consists entirely of a single symbol name prefixed with $, and the item from the dictionary of symbol values with the symbol name is not a string, then the item is added to the dictionary of created objects with the name ''<instance>''. The ''<arg>'' strings are ignored and no constructor is called.
 
 !4 Call
 [''<id>'', call,''<instance>'',''<function>'',''<arg>...'']
@@ -108,7 +109,7 @@ As you can see, each item of a list is a string.  But since a string can encode 
 So when you send a list of instructions, what you are really sending is a string.  When you receive a list of responses, what you are really receiving is a string.  So the high level protocol of Slim is just strings.  It looks like this:
 
  1 !-FitNesse-! invokes the Slim Server via a command line.  One of the command line arguments is the port number of the socket to listen on.  !-FitNesse-! opens that socket.
- 1 Slim Server responds with the string "Slim -- ''V<version>''\n", where ''<version>'' is the version number of the slim ''protocol''.  If this protocol ever changes, ''that'' version number will change.  This is the only string that is ever sent without the ''<length>'' encoding.  It is terminated by the '''\n''' instead.  Every other message that slim sends will be prefixed by a ''<length>'' in ''!style_red(bytes)'', followed by a colon.  !style_red(NOTE:) Every other length in this document is in UTF-8 ''characters''.  This one length is in bytes.--
+ 1 Slim Server responds with the string "Slim !----! ''V<version>''\n", where ''<version>'' is the version number of the slim ''protocol''.  If this protocol ever changes, ''that'' version number will change.  This is the only string that is ever sent without the ''<length>'' encoding.  It is terminated by the '''\n''' instead.  Every other message that slim sends will be prefixed by a ''<length>'' in ''!style_red(bytes)'', followed by a colon.  !style_red(NOTE:) Every other length in this document is in UTF-8 ''characters''.  This one length is in bytes.
  1 !-FitNesse-! sends a list of instructions encoded as a string of course.
  1 Slim Server sends a list of responses similarly encoded.
  1 3 and 4 repeat until !-FitNesse-! sends a ''bye'' directive.  This is simply the string ''bye'' properly encoded with ''<length>''.  e.g. "000003:bye".
@@ -127,9 +128,12 @@ There are some standard exception messages that every Slim implementation should
 | NO_INSTANCE ''<instance name>'' | Where ''<instance name>'' is the name of the missing instance. |
 | NO_CLASS ''<some class>'' | Where ''<some class>'' is the class that could not be found. |
 | MALFORMED_INSTRUCTION [''instruction list''] | Where ''instruction list'' is a comma separated list of the instruction strings. |
+| TIMED_OUT ''<n>'' | The instruction timed out after ''<n>'' seconds. To enforce timeouts, set the ''-s xx'' flag (via the ''slim.flags'' variable) |
 
-!4 Aborting a Test
+!4 Aborting a Test 
 If a fixture throws an exception with a ''class'' name that contains "!style_code(!-StopTest-!)", then Slim should stop executing the instructions in the current batch, and return immediately.   The response for this type of exception should be "!style_code(__EXCEPTION__:ABORT_SLIM_TEST:)" which may have an optional suffix of: "!style_code(message:<<''reason''>>)".
+
+To abort the test suite (stop execution directly), throw an exception with a class name that contains "!style_code(!-StopSuite-!)". The syntax is identical to !-StopTest-!.
 
 !3 Type Conversions
 The only types in the instructions and responses are lists and strings, and since the leaves of the lists must eventually be strings, all we really have to worry about are strings.  But we don't want to restrict our fixtures to use only Strings.  So Slim comes with some standard type converters that allow fixtures to take more convenient data types.

@@ -7,11 +7,13 @@ import java.security.CodeSource;
 import java.util.HashMap;
 import java.util.Map;
 
+import static util.FileUtil.CHARENCODING;
+
 public class StackTraceEnricher {
   private Map<String, ClassMetaInformation> elementInformation;
 
   public StackTraceEnricher() {
-    this.elementInformation = new HashMap<String, ClassMetaInformation>();
+    this.elementInformation = new HashMap<>();
   }
 
   public void printStackTrace(Throwable throwable) {
@@ -23,7 +25,7 @@ public class StackTraceEnricher {
   }
 
   public void printStackTrace(Throwable throwable, OutputStream stream) throws IOException {
-    stream.write(getStackTraceAsString(throwable).getBytes());
+    stream.write(getStackTraceAsString(throwable).getBytes(CHARENCODING));
     stream.flush();
   }
 
@@ -33,7 +35,7 @@ public class StackTraceEnricher {
   }
 
   public String getStackTraceAsString(Throwable throwable) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     Throwable t = throwable;
     if (throwable.getStackTrace() == null || throwable.getStackTrace().length == 0) {
       t = throwable.fillInStackTrace();
@@ -135,7 +137,7 @@ public class StackTraceEnricher {
     }
 
     private static Class<?> loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
-      if (className == null || className.length() == 0) {
+      if (className == null || className.isEmpty()) {
         throw new ClassNotFoundException("Unable to load a class with an empty or null name.");
       }
       Class<?> resolvedClass = null;
@@ -215,7 +217,7 @@ public class StackTraceEnricher {
 
     private static String removeParentDirectories(String path, String separator) {
       String parsedPath = path;
-      if (path.indexOf(separator) > -1 && !path.endsWith(separator) || (path.indexOf(separator) < path.lastIndexOf
+      if (path.contains(separator) && !path.endsWith(separator) || (path.indexOf(separator) < path.lastIndexOf
           (separator))) {
         parsedPath = parsedPath.substring(parsedPath.indexOf(separator) + 1);
         parsedPath = removeParentDirectories(parsedPath, separator);
