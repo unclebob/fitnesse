@@ -119,7 +119,7 @@ There are a few things to keep in mind when working from an IDE:
    3. IntelliJ finds the `src` and `test` folder.
    4. There are no plugins defined, so deselect those. The `test-plugin-*.jar` files are used for some unit tests.
    5. Everything should look fine in the review screen: one module named `fitnesse` with a `src` and a `test` folder.
-   6. Select a JDK. At least Java 6 is required.
+   6. Select a JDK. At least Java 7 is required.
    7. Now IntelliJ starts looking for frameworks. It should come up with IvyIDEA.
    8. Finish the wizard. The project should be opened.
 6. We're almost there. The IvyIDEA plugin is not completely configured yet. To fix this open _File_ -> _Project Structure..._ go to _Modules_:
