@@ -11,6 +11,10 @@ import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.ImportInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
+import fitnesse.socketservice.PlainClientSocketFactory;
+import fitnesse.socketservice.PlainServerSocketFactory;
+import fitnesse.socketservice.ServerSocketFactory;
+import fitnesse.socketservice.SslServerSocketFactory;
 import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.MockCommandRunner;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
@@ -29,12 +33,13 @@ public abstract class SlimServiceTestBase {
   protected List<Instruction> statements;
   protected SlimCommandRunningClient slimClient;
 
-  public static synchronized void startWithFactoryAsync(SlimFactory slimFactory, SlimService.Options options) throws IOException {
+  public static synchronized void startWithFactoryAsync(final SlimFactory slimFactory, final SlimService.Options options) throws IOException {
     if (service != null && service.isAlive()) {
       service.interrupt();
       throw new SlimError("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
     }
-    final SlimService slimservice = new SlimService(slimFactory.getSlimServer(), options.port, options.interaction, options.daemon, options.useSSL, options.sslParameterClassName);
+    ServerSocketFactory serverSocketFactory = options.useSSL ? new SslServerSocketFactory(true, options.sslParameterClassName) : new PlainServerSocketFactory();
+    final SlimService slimservice = new SlimService(slimFactory.getSlimServer(), serverSocketFactory.createServerSocket(options.port), options.daemon);
     service = new Thread() {
       @Override
       public void run() {
@@ -70,8 +75,8 @@ public abstract class SlimServiceTestBase {
   @Before
   public void setUp() throws InterruptedException, IOException {
     createSlimService();
-    slimClient = new SlimCommandRunningClient(new MockCommandRunner(new CompositeExecutionLogListener()), "localhost", 8099, 10, SlimCommandRunningClient.MINIMUM_REQUIRED_SLIM_VERSION, false, null);
-    statements = new ArrayList<Instruction>();
+    slimClient = new SlimCommandRunningClient(new MockCommandRunner(new CompositeExecutionLogListener()), "localhost", 8099, 10, SlimCommandRunningClient.MINIMUM_REQUIRED_SLIM_VERSION, new PlainClientSocketFactory());
+    statements = new ArrayList<>();
     slimClient.connect();
   }
 
@@ -243,8 +248,9 @@ public abstract class SlimServiceTestBase {
 
   @Test
   public void canSpecifyAnInteractionClass() {
-    SlimService.parseCommandLine(new String[]{"-i", "fitnesse.slim.fixtureInteraction.DefaultInteraction"});
-    assertEquals("fitnesse.slim.fixtureInteraction.DefaultInteraction", SlimService.getInteraction().getClass().getName());
+    final SlimService.Options options = SlimService.parseCommandLine(new String[]{"-i", "fitnesse.slim.fixtureInteraction.DefaultInteraction"});
+    assertNotNull("should parse correctly", options);
+    assertEquals("fitnesse.slim.fixtureInteraction.DefaultInteraction", options.interaction.getClass().getName());
   }
 
   @Test
@@ -254,7 +260,7 @@ public abstract class SlimServiceTestBase {
 
     SlimService.Options options = SlimService.parseCommandLine(args);
     assertNotNull("should parse correctly", options);
-    assertEquals("should have interaction class set", "fitnesse.slim.fixtureInteraction.DefaultInteraction", SlimService.getInteraction().getClass().getName());
+    assertEquals("should have interaction class set", "fitnesse.slim.fixtureInteraction.DefaultInteraction", options.interaction.getClass().getName());
     assertTrue("should be verbose", options.verbose);
     assertEquals("should have set port", 7890, options.port);
   }
@@ -266,7 +272,7 @@ public abstract class SlimServiceTestBase {
 
     SlimService.Options options = SlimService.parseCommandLine(args);
     assertNotNull("should parse correctly", options);
-    assertEquals("should have interaction class set", "fitnesse.slim.fixtureInteraction.DefaultInteraction", SlimService.getInteraction().getClass().getName());
+    assertEquals("should have interaction class set", "fitnesse.slim.fixtureInteraction.DefaultInteraction", options.interaction.getClass().getName());
     assertTrue("should be verbose", options.verbose);
     assertEquals("should have set port", 7890, options.port);
   }

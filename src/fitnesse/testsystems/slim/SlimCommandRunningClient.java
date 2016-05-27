@@ -9,7 +9,7 @@ import fitnesse.slim.instructions.*;
 import fitnesse.slim.protocol.SlimDeserializer;
 import fitnesse.slim.protocol.SlimListBuilder;
 import fitnesse.slim.protocol.SlimSerializer;
-import fitnesse.socketservice.SocketFactory;
+import fitnesse.socketservice.ClientSocketFactory;
 import fitnesse.testsystems.CommandRunner;
 
 import fitnesse.util.Clock;
@@ -33,6 +33,7 @@ public class SlimCommandRunningClient implements SlimClient {
   private final CommandRunner slimRunner;
   private final int connectionTimeout;
   private final double requiredSlimVersion;
+  private final ClientSocketFactory clientSocketFactory;
   private Socket client;
   private SlimStreamReader reader;
   private OutputStream writer;
@@ -40,17 +41,14 @@ public class SlimCommandRunningClient implements SlimClient {
   private double slimServerVersion;
   private String hostName;
   private int port;
-  private boolean useSSL;
-  private String sslParameterClassName;
 
-  public SlimCommandRunningClient(CommandRunner slimRunner, String hostName, int port, int connectionTimeout, double requiredSlimVersion, boolean useSSL, String sslParameterClassName) {
+  public SlimCommandRunningClient(CommandRunner slimRunner, String hostName, int port, int connectionTimeout, double requiredSlimVersion, ClientSocketFactory clientSocketFactory) {
     this.slimRunner = slimRunner;
     this.hostName = hostName;
     this.port = port;
     this.connectionTimeout = connectionTimeout;
     this.requiredSlimVersion = requiredSlimVersion;
-    this.useSSL = useSSL;
-    this.sslParameterClassName = sslParameterClassName;
+    this.clientSocketFactory = clientSocketFactory;
   }
 
   @Override
@@ -85,14 +83,14 @@ public class SlimCommandRunningClient implements SlimClient {
   public void connect() throws IOException {
     final int sleepStep = 50; // milliseconds
     long timeOut = Clock.currentTimeInMillis() + connectionTimeout * 1000;
-    LOG.finest("Trying to connect to host: " + hostName + " on port: " + port + " SSL=" + useSSL + " timeout setting: " + connectionTimeout);
+    LOG.finest("Trying to connect to host: " + hostName + " on port: " + port + " timeout setting: " + connectionTimeout);
     while (client == null) {
       if (slimRunner != null && slimRunner.isDead()) {
       	final String slimErrorMessage = "Error SLiM server died before a connection could be established. "+slimRunner.getCommandErrorMessage();
       	throw new SlimError(slimErrorMessage);
       }
       try {
-        client = SocketFactory.createClientSocket(hostName, port, useSSL, sslParameterClassName);
+        client = clientSocketFactory.createSocket(hostName, port);
       } catch (IOException e) {
         if (Clock.currentTimeInMillis() > timeOut) {
           throw new SlimError("Error connecting to SLiM server on " + hostName + ":" + port, e);
@@ -105,7 +103,7 @@ public class SlimCommandRunningClient implements SlimClient {
         }
       }
     }
-    LOG.fine("Connected to host: " + hostName + " on port: " + port + " SSL=" + useSSL + " timeout setting: " + connectionTimeout);
+    LOG.fine("Connected to host: " + hostName + " on port: " + port + " timeout setting: " + connectionTimeout);
 
     reader = SlimStreamReader.getReader(client);
     writer = SlimStreamReader.getByteWriter(client);
@@ -144,17 +142,8 @@ public class SlimCommandRunningClient implements SlimClient {
   }
 
   public boolean isConnected() {
-    return slimServerVersionMessage.startsWith(SlimVersion.SLIM_HEADER);
+    return slimServerVersionMessage != null && slimServerVersionMessage.startsWith(SlimVersion.SLIM_HEADER);
   }
-
-  public String getPeerName() {
-    return SocketFactory.peerName(client);
-  }
-
-  public String getMyName() {
-    return SocketFactory.myName(client);
-  }
-
 
   @Override
   public Map<String, Object> invokeAndGetResponse(List<Instruction> statements) throws IOException {

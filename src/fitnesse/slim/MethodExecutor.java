@@ -18,6 +18,12 @@ public abstract class MethodExecutor {
     }
   }
 
+  protected final SlimExecutionContext context;
+
+  public MethodExecutor(SlimExecutionContext context) {
+    this.context = context;
+  }
+
   public abstract MethodExecutionResult execute(String instanceName, String methodName, Object[] args) throws Throwable;
 
   protected Method findMatchingMethod(String methodName, Class<?> k, int nArgs) {
@@ -46,7 +52,7 @@ public abstract class MethodExecutor {
   }
 
   protected Object callMethod(Object instance, Method method, Object[] convertedArgs) throws Throwable {
-    FixtureInteraction interaction = SlimService.getInteraction();
+    FixtureInteraction interaction = context.getInteraction();
     try {
       Object result;
       if (instance instanceof InteractionAwareFixture) {

@@ -19,7 +19,6 @@ import fitnesse.http.MockRequestBuilder;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
-import fitnesse.socketservice.SocketFactory;
 import fitnesse.socketservice.SocketService;
 import fitnesse.util.MockSocket;
 import fitnesse.util.SerialExecutorService;
@@ -43,13 +42,8 @@ public class FitNesse {
             new DaemonThreadFactory(), rejectionHandler);
   }
 
-  public void start() throws IOException {
-    if (context.port > 0) {
-      ServerSocket serverSocket = context.useHTTPS
-              ? SocketFactory.createSslServerSocket(context.port, context.sslClientAuth, context.sslParameterClassName)
-              : SocketFactory.createServerSocket(context.port);
-      theService = new SocketService(new FitNesseServer(context, executorService), false, serverSocket);
-    }
+  public void start(ServerSocket serverSocket) throws IOException {
+    theService = new SocketService(new FitNesseServer(context, executorService), false, serverSocket);
   }
 
   public synchronized void stop() throws IOException {

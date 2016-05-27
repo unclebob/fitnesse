@@ -5,7 +5,7 @@ import java.net.ServerSocket;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import fitnesse.FitNesseContext;
-import fitnesse.socketservice.SocketFactory;
+import fitnesse.socketservice.*;
 import fitnesse.testsystems.ClientBuilder;
 import fitnesse.testsystems.CommandRunner;
 import fitnesse.testsystems.Descriptor;
@@ -20,7 +20,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   private static final String SLIM_VERSION = "SLIM_VERSION";
   public static final String MANUALLY_START_TEST_RUNNER_ON_DEBUG = "MANUALLY_START_TEST_RUNNER_ON_DEBUG";
   public static final String SLIM_SSL = "SLIM_SSL";
-  
+
   private static final AtomicInteger slimPortOffset = new AtomicInteger(0);
 
 
@@ -41,7 +41,15 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
       commandRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(getClassPath()), getExecutionLogListener(), determineTimeout());
     }
 
-    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort(), determineTimeout(), getSlimVersion(), determineSSL(), determineHostSSLParameterClass());
+    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort(), determineTimeout(), getSlimVersion(), determineSocketFactory());
+  }
+
+  protected ClientSocketFactory determineSocketFactory() {
+    if ((determineClientSSLParameterClass() != null)) {
+      return new SslClientSocketFactory(determineHostSSLParameterClass());
+    } else {
+      return new PlainClientSocketFactory();
+    }
   }
 
   protected String determineClientSSLParameterClass() {
@@ -51,10 +59,6 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
       }
       if (sslParameterClassName != null && sslParameterClassName.equalsIgnoreCase("false")) sslParameterClassName=null;
       return sslParameterClassName;
-  }
-
-  protected boolean determineSSL() {
-      return (determineClientSSLParameterClass() != null );
   }
 
   protected String determineHostSSLParameterClass() {
@@ -91,12 +95,12 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     if (useSSL != null){
     	arguments = ArrayUtils.add(arguments, "-ssl");
     	arguments = ArrayUtils.add(arguments, useSSL);
-    }    	
+    }
     String[] slimFlags = getSlimFlags();
     if (slimFlags != null)
     	for (String flag : slimFlags)
     		arguments = ArrayUtils.add(arguments, flag);
-    
+
 	arguments = ArrayUtils.add(arguments, Integer.toString(getSlimPort()));
 
     return (String[]) arguments;
@@ -113,7 +117,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   private int findFreePort() {
     int port;
     try {
-      ServerSocket socket = SocketFactory.createServerSocket(0);
+      ServerSocket socket = new PlainServerSocketFactory().createServerSocket(0);
       port = socket.getLocalPort();
       socket.close();
     } catch (Exception e) {

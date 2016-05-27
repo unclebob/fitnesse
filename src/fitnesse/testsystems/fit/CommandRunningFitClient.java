@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import fitnesse.socketservice.SocketFactory;
+import fitnesse.socketservice.PlainServerSocketFactory;
 import fitnesse.socketservice.SocketService;
 import fitnesse.testsystems.CommandRunner;
 import fitnesse.testsystems.ExecutionLogListener;
@@ -38,7 +38,7 @@ public class CommandRunningFitClient extends FitClient {
   }
 
   public void start() throws IOException {
-    ServerSocket serverSocket = SocketFactory.createServerSocket(0);
+    ServerSocket serverSocket = new PlainServerSocketFactory().createServerSocket(0);
     server = new SocketService(new SocketCatcher(this, ticketNumber), true, serverSocket);
     int port = serverSocket.getLocalPort();
     try {
