@@ -4,6 +4,6 @@ import fitnesse.wiki.WikiPage;
 
 public interface PageFinder {
 
-  abstract void search(WikiPage page);
+  void search(WikiPage page);
 
 }

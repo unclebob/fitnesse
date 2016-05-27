@@ -3,7 +3,7 @@
 Deal with Versions Controllers and the versions they store
 
 !* Technical Note
- This suite demonstrates the use of [[symbolic links ][.FitNesse.FullReferenceGuide.UserGuide.FitNesseWiki.SymbolicLinks]] to test two different implementations against the same requirements.
+ This suite demonstrates the use of [[symbolic links ][.FitNesse.UserGuide.FitNesseWiki.SymbolicLinks]] to test two different implementations against the same requirements.
  The requirements must only be written ones!
 
  The suite also uses variable expressions to handle ambiguity in the different implementations.
