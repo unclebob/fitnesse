@@ -60,10 +60,6 @@ public class WikiPageDummy extends BaseWikiPage {
   }
 
   @Override
-  public void remove() {
-  }
-
-  @Override
   public PageCrawler getPageCrawler() {
     return new PageCrawlerImpl(this);
   }
