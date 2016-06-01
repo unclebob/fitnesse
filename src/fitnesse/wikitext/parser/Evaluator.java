@@ -20,7 +20,11 @@ public class Evaluator extends SymbolType implements Rule, Translation {
     @Override
     public String toTarget(Translator translator, Symbol symbol) {
         String body = translator.translate(symbol.childAt(0));
-        Maybe<String> result = new FormattedExpression(body).evaluate();
+        Maybe<String> formatLocale = Maybe.noString;
+        if(translator instanceof HtmlTranslator){
+          formatLocale = ((HtmlTranslator) translator).getParsingPage().findVariable("FORMAT_LOCALE");
+        }
+        Maybe<String> result = new FormattedExpression(body, formatLocale).evaluate();
         if (result.isNothing()) return translator.formatMessage(result.because());
         return result.getValue();
     }
