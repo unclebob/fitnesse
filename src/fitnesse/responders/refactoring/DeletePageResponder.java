@@ -43,12 +43,11 @@ public class DeletePageResponder implements SecureResponder {
     if (!"yes".equalsIgnoreCase(confirmedString)) {
       response.setContent(buildConfirmationHtml(context.getRootPage(), qualifiedPageName, context));
     } else {
-      String nameOfPageToBeDeleted = path.last();
-      path.removeNameFromEnd();
       WikiPage parentOfPageToBeDeleted = context.getRootPage().getPageCrawler().getPage(path);
       if (parentOfPageToBeDeleted != null) {
-        parentOfPageToBeDeleted.removeChildPage(nameOfPageToBeDeleted);
+        parentOfPageToBeDeleted.remove();
       }
+      path.removeNameFromEnd();
       redirect(path, response);
     }
   }
@@ -74,7 +73,7 @@ public class DeletePageResponder implements SecureResponder {
 
   private String buildConfirmationHtml(final WikiPage root, final String qualifiedPageName, final FitNesseContext context) {
     HtmlPage html = context.pageFactory.newPage();
-    
+
     String tags = "";
 
     WikiPagePath path = PathParser.parse(qualifiedPageName);

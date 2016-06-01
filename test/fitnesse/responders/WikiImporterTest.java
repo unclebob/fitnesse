@@ -203,7 +203,7 @@ public class WikiImporterTest implements WikiImporterClient {
   public void testWholeTreeOrphaned() throws Exception {
     importer.importWiki(localRoot);
 
-    remoteRoot.removeChildPage("PageOne");
+    remoteRoot.getChildPage("PageOne").remove();
 
     importer.importWiki(localRoot);
 

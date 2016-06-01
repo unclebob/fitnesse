@@ -80,7 +80,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
       WikiPagePath path = orphan;
       WikiPage wikiPage = context.getPageCrawler().getPage(path);
       if (wikiPage != null)
-        wikiPage.getParent().removeChildPage(wikiPage.getName());
+        wikiPage.remove();
     }
   }
 
