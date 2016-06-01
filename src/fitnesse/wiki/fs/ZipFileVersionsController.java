@@ -182,7 +182,7 @@ public class ZipFileVersionsController implements VersionsController {
       is.read(bytes);
       zos.write(bytes, 0, size);
     } finally {
-      is.close();
+      FileUtil.close(is);
     }
   }
 

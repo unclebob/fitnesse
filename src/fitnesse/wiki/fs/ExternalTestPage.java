@@ -30,6 +30,10 @@ public class ExternalTestPage extends BaseWikitextPage {
   }
 
   @Override
+  public void remove() {
+  }
+
+  @Override
   public PageData getData() {
     return makePageData();
   }

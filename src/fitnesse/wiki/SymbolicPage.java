@@ -54,6 +54,11 @@ public class SymbolicPage extends BaseWikitextPage {
   }
 
   @Override
+  public void remove() {
+    realPage.remove();
+  }
+
+  @Override
   public List<WikiPage> getChildren() {
     List<WikiPage> children = realPage.getChildren();
     List<WikiPage> symChildren = new LinkedList<>();
