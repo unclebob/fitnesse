@@ -7,12 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import fitnesse.util.Clock;
-import fitnesse.wiki.BaseWikitextPage;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PageType;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.*;
 import fitnesse.wikitext.parser.VariableSource;
 
 public class ExternalTestPage extends BaseWikitextPage {
@@ -74,7 +69,7 @@ public class ExternalTestPage extends BaseWikitextPage {
     try {
       return fileSystem.getContent(path);
     } catch (IOException e) {
-      throw new RuntimeException("Unable to fetch page content", e);
+      throw new WikiPageLoadException("Unable to fetch page content", e);
     }
   }
 
@@ -83,7 +78,7 @@ public class ExternalTestPage extends BaseWikitextPage {
     try {
       content = fileSystem.getContent(path);
     } catch (IOException e) {
-      throw new RuntimeException("Unable to fetch page content", e);
+      throw new WikiPageLoadException("Unable to fetch page content", e);
     }
 
     WikiPageProperties properties = new WikiPageProperties();
@@ -97,7 +92,6 @@ public class ExternalTestPage extends BaseWikitextPage {
     properties.set(PageData.PropertySEARCH);
     properties.setLastModificationTime(Clock.currentDate());
     return new PageData("!-" + content + "-!", properties);
-
   }
 
 }

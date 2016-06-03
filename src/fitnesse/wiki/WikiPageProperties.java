@@ -150,7 +150,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
       try {
         return getTimeFormat().parse(dateStr);
       } catch (ParseException e) {
-        throw new RuntimeException("Unable to parse date '" + dateStr + "'", e);
+        throw new IllegalStateException("Unable to parse date '" + dateStr + "'", e);
       }
   }
 

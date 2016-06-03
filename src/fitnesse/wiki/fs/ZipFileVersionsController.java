@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
@@ -44,7 +45,7 @@ public class ZipFileVersionsController implements VersionsController {
   }
 
   @Override
-  public FileVersion[] getRevisionData(final String label, final File... files) {
+  public FileVersion[] getRevisionData(final String label, final File... files) throws IOException {
     if (label == null) {
       return persistence.getRevisionData(null, files);
     }
@@ -64,8 +65,6 @@ public class ZipFileVersionsController implements VersionsController {
           versions[counter++] = version;
       }
       return versions;
-    } catch (Exception e) {
-      throw new RuntimeException(e);
     } finally {
         FileUtil.close(zipFile);
     }
@@ -110,7 +109,7 @@ public class ZipFileVersionsController implements VersionsController {
     persistence.delete(files);
   }
 
-  protected void makeZipVersion(FileVersion... fileVersions) {
+  protected void makeZipVersion(FileVersion... fileVersions) throws IOException {
     if (!exists(fileVersions)) {
       return;
     }
@@ -123,8 +122,6 @@ public class ZipFileVersionsController implements VersionsController {
       for (FileVersion fileVersion : fileVersions) {
         addToZip(fileVersion.getFile(), zos);
       }
-    } catch (Exception e) {
-      throw new RuntimeException("Unable to make zip of current version", e);
     } finally {
       try {
         if (zos != null) {
@@ -184,15 +181,13 @@ public class ZipFileVersionsController implements VersionsController {
     return ZIP_FILE_PATTERN.matcher(file.getName()).matches();
   }
 
-  private ZipFileVersion loadZipEntry(final ZipFile zipFile, final File file) {
+  private ZipFileVersion loadZipEntry(final ZipFile zipFile, final File file) throws IOException {
     final ZipEntry contentEntry = zipFile.getEntry(file.getName());
     if (contentEntry != null) {
       InputStream contentIS = null;
       try {
         contentIS = zipFile.getInputStream(contentEntry);
         return new ZipFileVersion(file, FileUtil.toString(contentIS), new Date(contentEntry.getTime()));
-      } catch (Exception e) {
-        throw new RuntimeException("Unable to load content for file " + file + " from " + zipFile, e);
       } finally {
         try {
           if (contentIS != null) {

@@ -11,13 +11,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import fitnesse.wiki.BaseWikitextPage;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PageType;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.*;
 import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.util.Clock;
 import util.FileUtil;
@@ -102,7 +96,7 @@ public class FileSystemPage extends BaseWikitextPage {
           }
         });
       } catch (IOException e) {
-        throw new RuntimeException(format("Could not remove page %s", new WikiPagePath(childPage).toString()), e);
+        throw new WikiPageLoadException(format("Could not remove page %s", new WikiPagePath(childPage).toString()), e);
       }
     }
   }
@@ -129,7 +123,11 @@ public class FileSystemPage extends BaseWikitextPage {
   @Override
   public PageData getData() {
     if (pageData == null) {
-      pageData = getDataVersion();
+      try {
+        pageData = getDataVersion();
+      } catch (IOException e) {
+        throw new WikiPageLoadException("Could not load page data for page " + path.getPath(), e);
+      }
     }
     return new PageData(pageData);
   }
@@ -145,7 +143,7 @@ public class FileSystemPage extends BaseWikitextPage {
     try {
       return versionsController.makeVersion(new ContentFileVersion(data), new PropertiesFileVersion(data));
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new WikiPageLoadException(e);
     }
   }
 
@@ -160,7 +158,7 @@ public class FileSystemPage extends BaseWikitextPage {
     return (Collection<VersionInfo>) versionsController.history(contentFile(), propertiesFile());
   }
 
-  private PageData getDataVersion() {
+  private PageData getDataVersion() throws IOException {
     FileVersion[] versions = versionsController.getRevisionData(versionName, contentFile(), propertiesFile());
     String content = "";
     WikiPageProperties properties = null;
@@ -174,7 +172,7 @@ public class FileSystemPage extends BaseWikitextPage {
         }
       }
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new WikiPageLoadException(e);
     }
 
     if (properties == null) {
@@ -207,7 +205,11 @@ public class FileSystemPage extends BaseWikitextPage {
   @Override
   public WikiPage getVersion(String versionName) {
     // Just assert the version is valid
-    versionsController.getRevisionData(versionName, contentFile(), propertiesFile());
+    try {
+      versionsController.getRevisionData(versionName, contentFile(), propertiesFile());
+    } catch (IOException e) {
+      throw new WikiPageLoadException(format("Could not load version %s for page at %s", versionName, path.getPath()), e);
+    }
     return new FileSystemPage(this, versionName);
   }
 
@@ -229,21 +231,15 @@ public class FileSystemPage extends BaseWikitextPage {
   }
 
   private String loadContent(final FileVersion fileVersion) throws IOException {
-    InputStream content = fileVersion.getContent();
-    try {
+    try (InputStream content = fileVersion.getContent()) {
       return FileUtil.toString(content);
-    } finally {
-      content.close();
     }
   }
 
   private WikiPageProperties loadAttributes(final FileVersion fileVersion) throws IOException {
     final WikiPageProperties props = new WikiPageProperties();
-    InputStream content = fileVersion.getContent();
-    try {
+    try (InputStream content = fileVersion.getContent()) {
       props.loadFromXmlStream(content);
-    } finally {
-      content.close();
     }
     props.setLastModificationTime(fileVersion.getLastModificationTime());
     return props;

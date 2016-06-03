@@ -24,7 +24,7 @@ public class MemoryVersionsController implements VersionsController {
   }
 
   @Override
-  public FileVersion[] getRevisionData(String label, File... files) {
+  public FileVersion[] getRevisionData(String label, File... files) throws IOException {
     if (label == null) {
       return persistence.getRevisionData(null, files);
     }

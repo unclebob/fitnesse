@@ -14,9 +14,9 @@ public interface VersionsController {
    * @param revision The revision to look for
    * @param files Files to obtain data for
    * @return An array of FileVersion elements is returned. The size is equal to the number of files requested,
-   *    although there is no grarantee all files will be found at a specific revision.
+   *    although there is no guarantee all files will be found at a specific revision.
    */
-  FileVersion[] getRevisionData(String revision, File... files);
+  FileVersion[] getRevisionData(String revision, File... files) throws IOException;
 
   /**
    * Get history information for a set of files.

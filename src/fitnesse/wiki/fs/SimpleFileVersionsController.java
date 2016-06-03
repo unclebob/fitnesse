@@ -72,11 +72,8 @@ public class SimpleFileVersionsController implements VersionsController {
   public VersionInfo makeVersion(FileVersion... fileVersions) throws IOException {
     for (FileVersion fileVersion : fileVersions) {
       addDirectory(fileVersion.getFile().getParentFile());
-      InputStream content = fileVersion.getContent();
-      try {
+      try (InputStream content = fileVersion.getContent()) {
         fileSystem.makeFile(fileVersion.getFile(), content);
-      } finally {
-        content.close();
       }
     }
     return VersionInfo.makeVersionInfo(fileVersions[0].getAuthor(), fileVersions[0].getLastModificationTime());
