@@ -67,13 +67,7 @@ public class ZipFileVersionsController implements VersionsController {
     } catch (Exception e) {
       throw new RuntimeException(e);
     } finally {
-      try {
-        if (zipFile != null) {
-          zipFile.close();
-        }
-      } catch (IOException e) {
-        LOG.log(Level.WARNING, "Unable to read zip file contents", e);
-      }
+        FileUtil.close(zipFile);
     }
   }
 
