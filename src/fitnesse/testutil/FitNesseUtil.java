@@ -92,9 +92,7 @@ public class FitNesseUtil {
               .withRecentChanges(new RecentChangesWikiPage())
               .updatedWith(properties)
               .makeFitNesseContext();
-    } catch (IOException e) {
-      throw new IllegalStateException(e);
-    } catch (PluginException e) {
+    } catch (IOException | PluginException e) {
       throw new IllegalStateException(e);
     }
 

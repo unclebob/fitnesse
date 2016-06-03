@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import fitnesse.reporting.BaseFormatter;
+import fitnesse.reporting.FormatterException;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.TestingInterruptedException;
@@ -144,7 +145,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
     try {
       resultsRepository.open(test.getFullPath());
     } catch (IOException e) {
-      throw new RuntimeException("Arjan should catch this", e);
+      throw new FormatterException("Could not open new report file for " + test.getFullPath(), e);
     }
   }
 
@@ -167,7 +168,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
     try {
       resultsRepository.write(output);
     } catch (IOException e) {
-      throw new RuntimeException("Arjan should catch this", e);
+      throw new FormatterException("could not write output chunk", e);
     }
   }
 

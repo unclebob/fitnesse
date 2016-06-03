@@ -80,11 +80,7 @@ public class PageHistoryResponder implements SecureResponder {
     if ("latest".equals(date)) {
       resultDate = pageHistory.getLatestDate();
     } else {
-      try {
-        resultDate = dateFormat.parse(date);
-      } catch (ParseException e) {
-        throw new RuntimeException("Invalid date format provided", e);
-      }
+      resultDate = dateFormat.parse(date);
     }
     TestResultRecord testResultRecord = pageHistory.get(resultDate);
     try {

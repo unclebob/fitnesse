@@ -49,7 +49,7 @@ public class TestTextFormatter extends BaseFormatter implements Closeable {
     try {
       response.add(String.format(format, args));
     } catch (IOException e) {
-      throw new RuntimeException("Unable to write data, abort", e);
+      throw new FormatterException("Unable to write data, abort", e);
     }
   }
 
