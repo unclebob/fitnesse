@@ -49,7 +49,7 @@ public class FitNesseRunnerExtensionTest {
     }
 
     @Override
-    public void unableToStartTestSystem(String testSystemName, Throwable cause) throws IOException {
+    public void unableToStartTestSystem(String testSystemName, Throwable cause) {
       super.unableToStartTestSystem(testSystemName, cause);
     }
 

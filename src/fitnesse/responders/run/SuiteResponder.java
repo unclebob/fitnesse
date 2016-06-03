@@ -44,6 +44,7 @@ import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testrunner.SuiteFilter;
 import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.ExecutionLogListener;
+import fitnesse.testsystems.TestExecutionException;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
@@ -298,7 +299,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     return new SuiteHtmlFormatter(page, response.getWriter());
   }
 
-  protected void performExecution() throws IOException, InterruptedException {
+  protected void performExecution() throws TestExecutionException {
     MultipleTestsRunner runner = newMultipleTestsRunner(getPagesToRun());
     runningTestingTracker.addStartedProcess(testRunId, runner);
     if (isInteractive()) {

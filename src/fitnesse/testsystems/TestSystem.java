@@ -14,16 +14,13 @@ public interface TestSystem {
 
   /**
    * Start the test system.
-   * @throws IOException throws IOException
    */
-  void start() throws IOException;
+  void start() throws UnableToStartException;
 
   /**
    * Close the test system. This is typically performed from the test execution thread.
-   * @throws IOException throws IOException
-   * @throws InterruptedException throws InterruptedException
    */
-  void bye() throws IOException, InterruptedException;
+  void bye() throws UnableToStopException;
 
   /**
    * Kill the test system. This is typically invoked asynchronously.
@@ -33,10 +30,8 @@ public interface TestSystem {
   /**
    * Run a collection of tests.
    * @param pageToTest TestPage to run
-   * @throws IOException throws IOException
-   * @throws InterruptedException throws InterruptedException
    */
-  void runTests(TestPage pageToTest) throws IOException, InterruptedException;
+  void runTests(TestPage pageToTest) throws TestExecutionException;
 
   /**
    * System is up and running.

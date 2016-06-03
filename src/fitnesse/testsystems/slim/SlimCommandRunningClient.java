@@ -155,12 +155,17 @@ public class SlimCommandRunningClient implements SlimClient {
 
 
   @Override
-  public Map<String, Object> invokeAndGetResponse(List<Instruction> statements) throws IOException {
+  public Map<String, Object> invokeAndGetResponse(List<Instruction> statements) throws SlimCommunicationException {
     if (statements.isEmpty())
       return Collections.emptyMap();
     String instructions = SlimSerializer.serialize(new SlimListBuilder(slimServerVersion).toList(statements));
-    SlimStreamReader.sendSlimMessage(writer, instructions);
-    String results = reader.getSlimMessage();
+    String results;
+    try {
+      SlimStreamReader.sendSlimMessage(writer, instructions);
+      results = reader.getSlimMessage();
+    } catch (IOException e) {
+      throw new SlimCommunicationException("Could not send/receive data with SUT", e);
+    }
     List<Object> resultList = SlimDeserializer.deserialize(results);
     return resultToMap(resultList);
   }

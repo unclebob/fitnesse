@@ -28,7 +28,7 @@ public class StatementTimeoutExecutor implements StatementExecutorInterface {
   public void assign(final String name, final Object value) {
     inner.assign(name, value);
   }
-  
+
   @Override
   public Object getSymbol(String symbolName) {
     return inner.getSymbol(symbolName);
@@ -99,6 +99,7 @@ public class StatementTimeoutExecutor implements StatementExecutorInterface {
     } catch (TimeoutException e) {
       throw new SlimException(Integer.toString(timeout), SlimServer.TIMED_OUT, true);
     } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
       throw new SlimError("Statement execution was interrupted", e);
     } catch (ExecutionException e) {
       Throwable cause = e.getCause();

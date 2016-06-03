@@ -2,24 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testrunner;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import fitnesse.testsystems.Assertion;
-import fitnesse.testsystems.ClassPath;
-import fitnesse.testsystems.CompositeExecutionLogListener;
-import fitnesse.testsystems.Descriptor;
-import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionLogListener;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.TestResult;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.TestSystemFactory;
-import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.*;
+import fitnesse.testsystems.slim.TestingInterruptedException;
 import util.FileUtil;
 
 public class MultipleTestsRunner implements Stoppable {
@@ -59,12 +47,12 @@ public class MultipleTestsRunner implements Stoppable {
     this.formatters.addTestSystemListener(listener);
   }
 
-  public void executeTestPages() throws IOException, InterruptedException {
+  public void executeTestPages() throws TestExecutionException {
     try {
       internalExecuteTestPages();
-    } catch  (Exception e) {
+    } catch (Exception e) {
       executionLogListener.exceptionOccurred(e);
-      throw e;
+      throw new TestingInterruptedException(e);
     } finally {
       allTestingComplete();
     }
@@ -74,7 +62,7 @@ public class MultipleTestsRunner implements Stoppable {
     FileUtil.close(formatters);
   }
 
-  private void internalExecuteTestPages() throws IOException, InterruptedException {
+  private void internalExecuteTestPages() throws TestExecutionException {
     announceTotalTestsToRun(pagesByTestSystem);
 
     for (WikiPageIdentity identity : pagesByTestSystem.identities()) {
@@ -82,7 +70,7 @@ public class MultipleTestsRunner implements Stoppable {
     }
   }
 
-  private void startTestSystemAndExecutePages(WikiPageIdentity identity, List<TestPage> testSystemPages) throws IOException, InterruptedException {
+  private void startTestSystemAndExecutePages(WikiPageIdentity identity, List<TestPage> testSystemPages) throws TestExecutionException {
     TestSystem testSystem = null;
     try {
       if (!isStopped) {
@@ -104,7 +92,7 @@ public class MultipleTestsRunner implements Stoppable {
     }
   }
 
-  private TestSystem startTestSystem(final WikiPageIdentity identity, final List<TestPage> testPages) throws IOException {
+  private TestSystem startTestSystem(final WikiPageIdentity identity, final List<TestPage> testPages) {
     Descriptor descriptor = new Descriptor() {
       private ClassPath classPath;
 
@@ -167,17 +155,22 @@ public class MultipleTestsRunner implements Stoppable {
     return testSystem;
   }
 
-  private void executeTestSystemPages(List<TestPage> pagesInTestSystem, TestSystem testSystem) throws IOException, InterruptedException {
+  private void executeTestSystemPages(List<TestPage> pagesInTestSystem, TestSystem testSystem) throws TestExecutionException {
     for (TestPage testPage : pagesInTestSystem) {
       testsInProgressCount++;
       testSystem.runTests(testPage);
     }
   }
 
-  private void waitForTestSystemToSendResults() throws InterruptedException {
+  private void waitForTestSystemToSendResults() throws TestingInterruptedException {
     // TODO: use testSystemStopped event to wait for tests to end.
     while (testsInProgressCount > 0 && isNotStopped())
-      Thread.sleep(50);
+      try {
+        Thread.sleep(50);
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        throw new TestingInterruptedException("Interrupted while waiting for test results", e);
+      }
   }
 
   void announceTotalTestsToRun(PagesByTestSystem pagesByTestSystem) {
@@ -190,28 +183,28 @@ public class MultipleTestsRunner implements Stoppable {
 
   private class InternalTestSystemListener implements TestSystemListener {
     @Override
-    public void testSystemStarted(TestSystem testSystem) throws IOException {
+    public void testSystemStarted(TestSystem testSystem) {
       formatters.testSystemStarted(testSystem);
     }
 
     @Override
-    public void testOutputChunk(String output) throws IOException {
+    public void testOutputChunk(String output) {
       formatters.testOutputChunk(output);
     }
 
     @Override
-    public void testStarted(TestPage testPage) throws IOException {
+    public void testStarted(TestPage testPage) {
       formatters.testStarted(testPage);
     }
 
     @Override
-    public void testComplete(TestPage testPage, TestSummary testSummary) throws IOException {
+    public void testComplete(TestPage testPage, TestSummary testSummary) {
       formatters.testComplete(testPage, testSummary);
       testsInProgressCount--;
     }
 
     @Override
-    public void testSystemStopped(TestSystem testSystem, Throwable cause) throws IOException {
+    public void testSystemStopped(TestSystem testSystem, Throwable cause) {
       formatters.testSystemStopped(testSystem, cause);
 
       if (cause != null) {

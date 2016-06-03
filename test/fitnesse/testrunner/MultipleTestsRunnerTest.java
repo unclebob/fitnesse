@@ -5,10 +5,7 @@ package fitnesse.testrunner;
 import java.io.Closeable;
 import java.io.IOException;
 import fitnesse.FitNesseContext;
-import fitnesse.testsystems.Descriptor;
-import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.TestSystemFactory;
-import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.*;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -39,7 +36,7 @@ public class MultipleTestsRunnerTest {
  }
 
   @Test
-  public void shouldExecuteTestPagesGroupedByTestSystem() throws IOException, InterruptedException {
+  public void shouldExecuteTestPagesGroupedByTestSystem() throws TestExecutionException, IOException {
     WikiPage testPage1 = addTestPage(suite, "TestPage1", "!define TEST_SYSTEM {A}");
     WikiPage testPage2 = addTestPage(suite, "TestPage2", "!define TEST_SYSTEM {B}");
 
@@ -53,7 +50,7 @@ public class MultipleTestsRunnerTest {
   }
 
   @Test
-  public void shouldCallCloseOnClosableTestSystemListener() throws IOException, InterruptedException {
+  public void shouldCallCloseOnClosableTestSystemListener() throws TestExecutionException, IOException {
     WikiPage testPage = addTestPage(suite, "TestPage1", "!define TEST_SYSTEM {A}");
     ClosableTestSystemListener listener = mock(ClosableTestSystemListener.class);
 

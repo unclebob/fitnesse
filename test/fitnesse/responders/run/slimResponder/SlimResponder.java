@@ -76,12 +76,12 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
         testSystem = getTestSystem();
         testSystem.start();
         testSystem.runTests(new WikiTestPage(page));
-      } catch (IOException e) {
+      } catch (Exception e) {
         slimException = e;
       } finally {
         try {
           if (testSystem != null) testSystem.bye();
-        } catch (IOException e) {
+        } catch (Exception e) {
           if (slimException == null) {
             slimException = e;
           }

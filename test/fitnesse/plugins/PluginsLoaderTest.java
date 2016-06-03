@@ -346,17 +346,17 @@ public class PluginsLoaderTest {
       return null;
     }
   }
-  
+
   public static class TestCustomComparator implements CustomComparator {
     @Override
     public boolean matches(String actual, String expected) {
       return false;
     }
   }
-  
+
   public static class FooTestSystemFactory implements TestSystemFactory {
     @Override
-    public TestSystem create(Descriptor descriptor) throws IOException {
+    public TestSystem create(Descriptor descriptor) {
       return null;
     }
   }

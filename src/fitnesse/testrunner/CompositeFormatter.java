@@ -1,7 +1,6 @@
 package fitnesse.testrunner;
 
 import java.io.Closeable;
-import java.io.IOException;
 
 import fitnesse.testsystems.CompositeTestSystemListener;
 import fitnesse.testsystems.TestSystemListener;
@@ -17,22 +16,16 @@ public class CompositeFormatter extends CompositeTestSystemListener implements T
   }
 
   @Override
-  public void unableToStartTestSystem(final String testSystemName, final Throwable cause) throws IOException {
-    invokeListeners(new Handler() {
-      @Override public void invoke(TestSystemListener listener) throws IOException {
-        if (listener instanceof TestsRunnerListener)
-          ((TestsRunnerListener) listener).unableToStartTestSystem(testSystemName, cause);
-      }
-    });
+  public void unableToStartTestSystem(final String testSystemName, final Throwable cause) {
+    for (TestSystemListener listener : listeners())
+      if (listener instanceof TestsRunnerListener)
+        ((TestsRunnerListener) listener).unableToStartTestSystem(testSystemName, cause);
   }
 
   @Override
-  public void close() throws IOException {
-    invokeListeners(new Handler() {
-      @Override public void invoke(TestSystemListener listener) throws IOException {
+  public void close() {
+    for (TestSystemListener listener : listeners())
         if (listener instanceof Closeable)
           FileUtil.close((Closeable) listener);
-      }
-    });
   }
 }

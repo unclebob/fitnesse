@@ -109,11 +109,7 @@ public class FitClient implements SocketAccepter {
 
   public void exceptionOccurred(Throwable cause) {
     for (FitClientListener listener : listeners)
-      try {
-        listener.exceptionOccurred(cause);
-      } catch (IOException e) {
-        LOG.log(Level.WARNING, "Could not process error", e);
-      }
+      listener.exceptionOccurred(cause);
   }
 
   private class FitListeningRunnable implements Runnable {

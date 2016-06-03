@@ -1,14 +1,6 @@
 package fitnesse.reporting;
 
-import java.io.IOException;
-
-import fitnesse.testsystems.Assertion;
-import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.TestResult;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.*;
 
 public class ExitCodeListener implements TestSystemListener {
   private int failCount;
@@ -22,15 +14,15 @@ public class ExitCodeListener implements TestSystemListener {
   }
 
   @Override
-  public void testOutputChunk(String output) throws IOException {
+  public void testOutputChunk(String output) {
   }
 
   @Override
-  public void testStarted(TestPage testPage) throws IOException {
+  public void testStarted(TestPage testPage) {
   }
 
   @Override
-  public void testComplete(TestPage testPage, TestSummary testSummary) throws IOException {
+  public void testComplete(TestPage testPage, TestSummary testSummary) {
     if (testSummary.getWrong() > 0 || testSummary.getExceptions() > 0) {
       failCount++;
     }

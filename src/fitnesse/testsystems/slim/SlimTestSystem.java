@@ -8,30 +8,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fitnesse.slim.instructions.AssignInstruction;
 import fitnesse.slim.instructions.Instruction;
-import fitnesse.testsystems.Assertion;
-import fitnesse.testsystems.CompositeTestSystemListener;
-import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.TestResult;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.tables.SlimAssertion;
 import fitnesse.testsystems.slim.tables.SlimTable;
-import fitnesse.testsystems.slim.tables.SyntaxError;
+
 import static fitnesse.slim.SlimServer.*;
 
 public abstract class SlimTestSystem implements TestSystem {
   private static final Logger LOG = Logger.getLogger(SlimTestSystem.class.getName());
-
-  public static final SlimTable START_OF_TEST = null;
-  public static final SlimTable END_OF_TEST = null;
 
   private final SlimClient slimClient;
   private final CompositeTestSystemListener testSystemListener;
@@ -64,12 +53,15 @@ public abstract class SlimTestSystem implements TestSystem {
   }
 
   @Override
-  public void start() throws IOException {
+  public void start() throws UnableToStartException {
     try {
       slimClient.start();
     } catch (SlimVersionMismatch slimVersionMismatch) {
-      exceptionOccurred(slimVersionMismatch);
+      stopTestSystem(slimVersionMismatch);
       return;
+    } catch (IOException e) {
+      stopTestSystem(e);
+      throw new UnableToStartException("Could not start test system", e);
     }
     testSystemListener.testSystemStarted(this);
   }
@@ -80,28 +72,28 @@ public abstract class SlimTestSystem implements TestSystem {
   }
 
   @Override
-  public void bye() throws IOException {
+  public void bye() throws UnableToStopException {
     if (testSystemIsStopped) return;
     try {
       slimClient.bye();
       testSystemStopped(null);
     } catch (IOException e) {
-      exceptionOccurred(e);
-      throw e;
+      stopTestSystem(e);
+      throw new UnableToStopException("Could not stop test system", e);
     }
   }
 
   @Override
-  public void runTests(TestPage pageToTest) throws IOException {
+  public void runTests(TestPage pageToTest) throws TestExecutionException {
     initializeTest(pageToTest);
 
     testStarted(pageToTest);
     try {
       processAllTablesOnPage(pageToTest);
       testComplete(pageToTest, testContext.getTestSummary());
-    } catch (IOException e) {
-      exceptionOccurred(e);
-      throw e;
+    } catch (Exception e) {
+      stopTestSystem(e);
+      throw new TestExecutionException(e);
     }
   }
 
@@ -119,9 +111,9 @@ public abstract class SlimTestSystem implements TestSystem {
     return new SlimTestContextImpl(testPage);
   }
 
-  protected abstract void processAllTablesOnPage(TestPage testPage) throws IOException;
+  protected abstract void processAllTablesOnPage(TestPage testPage) throws TestExecutionException;
 
-  protected void processTable(SlimTable table) throws IOException, SyntaxError {
+  protected void processTable(SlimTable table) throws TestExecutionException {
     List<SlimAssertion> assertions = table.getAssertions();
     Map<String, Object> instructionResults;
     if (!stopTestCalled && !stopSuiteCalled) {
@@ -133,7 +125,7 @@ public abstract class SlimTestSystem implements TestSystem {
     evaluateTables(assertions, instructionResults);
   }
 
-  protected void evaluateTables(List<SlimAssertion> assertions, Map<String, Object> instructionResults) throws IOException {
+  protected void evaluateTables(List<SlimAssertion> assertions, Map<String, Object> instructionResults) throws SlimCommunicationException {
     for (SlimAssertion a : assertions) {
       final String key = a.getInstruction().getId();
       final Object returnValue = instructionResults.get(key);
@@ -174,19 +166,19 @@ public abstract class SlimTestSystem implements TestSystem {
     }
   }
 
-  protected void testOutputChunk(String output) throws IOException {
+  protected void testOutputChunk(String output) {
     testSystemListener.testOutputChunk(output);
   }
 
-  protected void testStarted(TestPage testPage) throws IOException {
+  protected void testStarted(TestPage testPage) {
     testSystemListener.testStarted(testPage);
   }
 
-  protected void testComplete(TestPage testPage, TestSummary testSummary) throws IOException {
+  protected void testComplete(TestPage testPage, TestSummary testSummary) {
     testSystemListener.testComplete(testPage, testSummary);
   }
 
-  protected void exceptionOccurred(Throwable e) throws IOException {
+  protected void stopTestSystem(Throwable e) {
     slimClient.kill();
     testSystemStopped(e);
   }
@@ -200,7 +192,7 @@ public abstract class SlimTestSystem implements TestSystem {
   }
 
   // Ensure testSystemStopped is called only once per test system. First call counts.
-  protected void testSystemStopped(Throwable e) throws IOException {
+  protected void testSystemStopped(Throwable e) {
     if (testSystemIsStopped) return;
     testSystemIsStopped = true;
     testSystemListener.testSystemStopped(this, e);

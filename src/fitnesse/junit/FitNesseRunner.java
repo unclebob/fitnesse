@@ -20,7 +20,9 @@ import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testsystems.ConsoleExecutionLogListener;
+import fitnesse.testsystems.TestExecutionException;
 import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.slim.TestingInterruptedException;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -56,7 +58,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
 
     public boolean value();
   }
-  
+
   /**
    * The <code>PreventSystemExit</code> annotation specifies whether the {@link SystemExitSecurityManager} must be to prevent {@link System#exit(int)} calls. Default is false
    */
@@ -66,7 +68,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
 
     public boolean value() default true;
   }
-  
+
   /**
    * The <code>SuiteFilter</code> annotation specifies the suite filter of the Fitnesse suite
    * to be run, e.g.: fasttests
@@ -304,7 +306,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     }
     return debugModeAnnotation.value();
   }
-  
+
   protected boolean shouldPreventSystemExit(Class<?> klass) throws Exception {
     PreventSystemExit preventSystemExitAnnotation = klass.getAnnotation(PreventSystemExit.class);
     if (null == preventSystemExitAnnotation) {
@@ -394,9 +396,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     System.setProperty(SystemExitSecurityManager.PREVENT_SYSTEM_EXIT, String.valueOf(preventSystemExit));
     try {
       executeTests(testRunner);
-    } catch (AssertionError e) {
-      notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass), e));
-    } catch (Exception e) {
+    } catch (AssertionError | Exception e) {
       notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass), e));
     }
   }
@@ -463,7 +463,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     return runner;
   }
 
-  private void executeTests(MultipleTestsRunner testRunner) throws IOException, InterruptedException {
+  private void executeTests(MultipleTestsRunner testRunner) throws IOException, TestExecutionException {
     JavaFormatter testFormatter = new JavaFormatter(suiteName);
     testFormatter.setResultsRepository(new JavaFormatter.FolderResultsRepository(outputDir));
     testRunner.addTestSystemListener(testFormatter);

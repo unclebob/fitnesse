@@ -31,7 +31,7 @@ public class JunitReFormatter extends BaseFormatter implements Closeable {
     this.historyFormatter = historyFormatter;
   }
 
-@Override
+  @Override
   public void close() throws IOException {
     historyFormatter.close();
 

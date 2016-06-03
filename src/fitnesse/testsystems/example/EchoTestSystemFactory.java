@@ -16,7 +16,7 @@ import fitnesse.testsystems.TestSystemListener;
  */
 public class EchoTestSystemFactory implements TestSystemFactory {
   @Override
-  public TestSystem create(Descriptor descriptor) throws IOException {
+  public TestSystem create(Descriptor descriptor) {
     return new EchoTestSystem();
   }
 
@@ -33,31 +33,26 @@ public class EchoTestSystemFactory implements TestSystemFactory {
     }
 
     @Override
-    public void start() throws IOException {
+    public void start() {
       // Nothing to do, except sending an event
       testSystemListener.testSystemStarted(this);
     }
 
     @Override
-    public void bye() throws IOException, InterruptedException {
+    public void bye() {
 
       // We're done
-      testSystemListener.testSystemStarted(this);
+      testSystemListener.testSystemStopped(this, null);
     }
 
     @Override
     public void kill() {
       // We're really done
-      try {
-        testSystemListener.testSystemStarted(this);
-      } catch (IOException e) {
-        throw new RuntimeException("IO error while killing test system", e);
-      }
+       testSystemListener.testSystemStopped(this, null);
     }
 
     @Override
-    public void runTests(TestPage pageToTest) throws IOException, InterruptedException {
-
+    public void runTests(TestPage pageToTest) {
       testSystemListener.testStarted(pageToTest);
       testSystemListener.testOutputChunk("<pre>" + pageToTest.getHtml() + "</pre>");
       testSystemListener.testComplete(pageToTest, new TestSummary(1, 0, 0, 0));

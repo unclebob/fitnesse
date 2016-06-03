@@ -20,7 +20,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   private static final String SLIM_VERSION = "SLIM_VERSION";
   public static final String MANUALLY_START_TEST_RUNNER_ON_DEBUG = "MANUALLY_START_TEST_RUNNER_ON_DEBUG";
   public static final String SLIM_SSL = "SLIM_SSL";
-  
+
   private static final AtomicInteger slimPortOffset = new AtomicInteger(0);
 
 
@@ -32,7 +32,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   }
 
   @Override
-  public SlimCommandRunningClient build() throws IOException {
+  public SlimCommandRunningClient build() {
     CommandRunner commandRunner;
 
     if (useManualStartForTestSystem()) {
@@ -91,12 +91,12 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     if (useSSL != null){
     	arguments = ArrayUtils.add(arguments, "-ssl");
     	arguments = ArrayUtils.add(arguments, useSSL);
-    }    	
+    }
     String[] slimFlags = getSlimFlags();
     if (slimFlags != null)
     	for (String flag : slimFlags)
     		arguments = ArrayUtils.add(arguments, flag);
-    
+
 	arguments = ArrayUtils.add(arguments, Integer.toString(getSlimPort()));
 
     return (String[]) arguments;
