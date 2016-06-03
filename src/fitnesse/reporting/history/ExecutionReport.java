@@ -1,6 +1,7 @@
 package fitnesse.reporting.history;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -77,20 +78,26 @@ public abstract class ExecutionReport {
     }
     Element documentElement = xmlDocument.getDocumentElement();
     String documentNodeName = documentElement.getNodeName();
-    if (documentNodeName.equals("testResults"))
-      return new TestExecutionReport(xmlDocument);
-    else if (documentNodeName.equals("suiteResults"))
-      return new SuiteExecutionReport(xmlDocument);
-    else
-      throw new InvalidReportException(String.format("%s is not a valid document element tag for an Execution Report.", documentNodeName));
+    switch (documentNodeName) {
+      case "testResults":
+        return new TestExecutionReport(xmlDocument);
+      case "suiteResults":
+        return new SuiteExecutionReport(xmlDocument);
+      default:
+        throw new InvalidReportException(String.format("%s is not a valid document element tag for an Execution Report.", documentNodeName));
+    }
   }
 
-  protected void unpackCommonFields(Element documentElement) {
+  protected void unpackCommonFields(Element documentElement) throws InvalidReportException {
     version = XmlUtil.getTextValue(documentElement, "FitNesseVersion");
     rootPath = XmlUtil.getTextValue(documentElement, "rootPath");
     String dateString = XmlUtil.getTextValue(documentElement, "date");
     if (dateString != null)
-      date = DateTimeUtil.getDateFromString(dateString);
+      try {
+        date = DateTimeUtil.getDateFromString(dateString);
+      } catch (ParseException e) {
+        throw new InvalidReportException(String.format("'%s' is not a valid date.", dateString), e);
+      }
     unpackFinalCounts(documentElement);
     totalRunTimeInMillis = getTotalRunTimeInMillisOrZeroIfNotPresent(documentElement);
   }
@@ -112,7 +119,7 @@ public abstract class ExecutionReport {
     }
   }
 
-  protected void unpackXml(Document xmlDoc) {
+  protected void unpackXml(Document xmlDoc) throws InvalidReportException {
     Element historyDocument = xmlDoc.getDocumentElement();
     unpackCommonFields(historyDocument);
     unpackResults(historyDocument);
@@ -153,7 +160,7 @@ public abstract class ExecutionReport {
     }
   }
 
-  protected abstract void unpackResults(Element testResults);
+  protected abstract void unpackResults(Element testResults) throws InvalidReportException;
 
   public TestSummary getFinalCounts() {
     return finalCounts;

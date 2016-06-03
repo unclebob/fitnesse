@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.xml.sax.SAXException;
 
+import fitnesse.reporting.history.InvalidReportException;
 import fitnesse.reporting.history.TestExecutionReport;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 
@@ -29,18 +30,18 @@ public class HistoryComparer {
   List<MatchedPair> matchedTables = new ArrayList<HistoryComparer.MatchedPair>();
   List<String> resultContent = new ArrayList<String>();
 
-  public String getFileContent(String filePath) throws IOException, SAXException {
+  public String getFileContent(String filePath) throws IOException, SAXException, InvalidReportException {
     return attemptGetFileContent(filePath);
   }
 
-  private String attemptGetFileContent(String filePath) throws IOException, SAXException {
+  private String attemptGetFileContent(String filePath) throws IOException, SAXException, InvalidReportException {
     TestExecutionReport report = readTestExecutionReport(filePath);
     if (!exactlyOneReport(report))
       return null;
     return report.getContentsOfReport(0);
   }
 
-  private TestExecutionReport readTestExecutionReport(String filePath) throws IOException, SAXException {
+  private TestExecutionReport readTestExecutionReport(String filePath) throws IOException, SAXException, InvalidReportException {
     return new TestExecutionReport(new File(filePath));
   }
 
@@ -84,7 +85,7 @@ public class HistoryComparer {
     return true;
   }
 
-  public boolean compare(String firstFilePath, String secondFilePath) throws IOException, SAXException {
+  public boolean compare(String firstFilePath, String secondFilePath) throws IOException, SAXException, InvalidReportException {
     if (firstFilePath.equals(secondFilePath))
       return false;
     initializeFileContents(firstFilePath, secondFilePath);
@@ -247,7 +248,7 @@ public class HistoryComparer {
     }
   }
 
-  private void initializeFileContents(String firstFilePath, String secondFilePath) throws IOException, SAXException {
+  private void initializeFileContents(String firstFilePath, String secondFilePath) throws IOException, SAXException, InvalidReportException {
     String content = getFileContent(firstFilePath);
     firstFileContent = content == null ? "" : content;
     content = getFileContent(secondFilePath);
@@ -261,7 +262,7 @@ public class HistoryComparer {
   static class MatchedPair {
     int first;
     int second;
-    public double matchScore;
+    double matchScore;
 
     public MatchedPair(Integer first, Integer second, double matchScore) {
       this.first = first;
