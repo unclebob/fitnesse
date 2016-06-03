@@ -4,6 +4,7 @@ import fitnesse.wiki.PathParser;
 import util.FileUtil;
 
 import java.io.File;
+import java.text.ParseException;
 import java.util.*;
 
 public class TestHistory {
@@ -29,7 +30,7 @@ public class TestHistory {
   }
 
   public Set<String> getPageNames() {
-    return new TreeSet<String>(pageDirectoryMap.keySet());
+    return new TreeSet<>(pageDirectoryMap.keySet());
   }
 
   public PageHistory getPageHistory(String pageName) {

@@ -23,7 +23,7 @@ import java.util.List;
 public class SuiteExecutionReport extends ExecutionReport {
   private List<PageHistoryReference> pageHistoryReferences = new ArrayList<PageHistoryReference>();
 
-  public SuiteExecutionReport(Document xmlDocument) throws Exception {
+  public SuiteExecutionReport(Document xmlDocument) {
     super();
     unpackXml(xmlDocument);
   }

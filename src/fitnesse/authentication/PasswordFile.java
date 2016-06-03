@@ -17,12 +17,12 @@ public class PasswordFile {
   private Map<String, String> passwordMap = new HashMap<String, String>();
   private PasswordCipher cipher = new TransparentCipher();
 
-  public PasswordFile(String filename) throws IOException {
+  public PasswordFile(String filename) throws IOException, ReflectiveOperationException {
     passwordFile = new File(filename);
     loadFile();
   }
 
-  public PasswordFile(String filename, PasswordCipher cipher) throws IOException {
+  public PasswordFile(String filename, PasswordCipher cipher) throws IOException, ReflectiveOperationException {
     this(filename);
     this.cipher = cipher;
   }
@@ -44,7 +44,7 @@ public class PasswordFile {
     savePasswords();
   }
 
-  private void loadFile() throws IOException {
+  private void loadFile() throws IOException, ReflectiveOperationException {
     LinkedList<String> lines = getPasswordFileLines();
     loadCipher(lines);
     loadPasswords(lines);
@@ -59,16 +59,12 @@ public class PasswordFile {
     }
   }
 
-  private void loadCipher(LinkedList<String> lines) {
+  private void loadCipher(LinkedList<String> lines) throws IllegalAccessException, ClassNotFoundException, InstantiationException {
     if (!lines.isEmpty()) {
       String firstLine = lines.getFirst();
       if (firstLine.startsWith("!")) {
         String cipherClassName = firstLine.substring(1);
-        try {
-          instantiateCipher(cipherClassName);
-        } catch (Exception e) {
-          throw new RuntimeException(e);
-        }
+        instantiateCipher(cipherClassName);
         lines.removeFirst();
       }
     }

@@ -63,11 +63,7 @@ public class PropertiesResponder implements SecureResponder {
   private void makeContent(FitNesseContext context, Request request) throws UnsupportedEncodingException {
     if ("json".equals(request.getInput("format"))) {
       JSONObject jsonObject = makeJson();
-      try {
-        response.setContent(jsonObject.toString(1));
-      } catch (JSONException e) {
-        throw new RuntimeException(e);
-      }
+      response.setContent(jsonObject.toString(1));
     } else {
       String html = makeHtml(context, request);
 
@@ -101,11 +97,7 @@ public class PropertiesResponder implements SecureResponder {
   }
 
   private void addJsonAttribute(JSONObject jsonObject, String attribute) {
-    try {
-      jsonObject.put(attribute, pageData.hasAttribute(attribute));
-    } catch (JSONException e) {
-      throw new RuntimeException(e);
-    }
+    jsonObject.put(attribute, pageData.hasAttribute(attribute));
   }
 
   private String makeHtml(FitNesseContext context, Request request) {

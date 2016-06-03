@@ -1,5 +1,6 @@
 package fitnesse.reporting.history;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +17,7 @@ import fitnesse.util.DateTimeUtil;
 import fitnesse.util.TimeMeasurement;
 import fitnesse.util.XmlUtil;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public abstract class ExecutionReport {
   private String version;
@@ -66,8 +68,13 @@ public abstract class ExecutionReport {
     return new HashCodeBuilder().append(rootPath).append(version).append(date).hashCode();
   }
 
-  public static ExecutionReport makeReport(String xmlString) throws Exception {
-    Document xmlDocument = XmlUtil.newDocument(xmlString);
+  public static ExecutionReport makeReport(String xmlString) throws InvalidReportException {
+    Document xmlDocument = null;
+    try {
+      xmlDocument = XmlUtil.newDocument(xmlString);
+    } catch (IOException | SAXException e) {
+      throw new InvalidReportException("%s is not a valid execution report", e);
+    }
     Element documentElement = xmlDocument.getDocumentElement();
     String documentNodeName = documentElement.getNodeName();
     if (documentNodeName.equals("testResults"))
@@ -75,7 +82,7 @@ public abstract class ExecutionReport {
     else if (documentNodeName.equals("suiteResults"))
       return new SuiteExecutionReport(xmlDocument);
     else
-      throw new RuntimeException(String.format("%s is not a valid document element tag for an Execution Report.", documentNodeName));
+      throw new InvalidReportException(String.format("%s is not a valid document element tag for an Execution Report.", documentNodeName));
   }
 
   protected void unpackCommonFields(Element documentElement) {
@@ -159,7 +166,7 @@ public abstract class ExecutionReport {
   public long getTotalRunTimeInMillis() {
     return totalRunTimeInMillis;
   }
-  
+
   public void setTotalRunTimeInMillis(TimeMeasurement totalTimeMeasurement) {
     totalRunTimeInMillis = totalTimeMeasurement.elapsed();
   }

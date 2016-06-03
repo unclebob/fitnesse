@@ -53,15 +53,11 @@ public class PacketResponder implements SecureResponder {
 
     TableScanner scanner = new HtmlTableScanner(html);
 
-    try {
-      addTablesToPacket(scanner);
-      if (jsonpFunction != null)
-        response.setContent(String.format("%s(%s)", jsonpFunction, packet.toString(1)));
-      else
-        response.setContent(packet.toString(1));
-    } catch (JSONException e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
+    addTablesToPacket(scanner);
+    if (jsonpFunction != null)
+      response.setContent(String.format("%s(%s)", jsonpFunction, packet.toString(1)));
+    else
+      response.setContent(packet.toString(1));
   }
 
   private void addTablesToPacket(TableScanner scanner) throws JSONException {

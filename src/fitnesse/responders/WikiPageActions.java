@@ -50,7 +50,7 @@ public class WikiPageActions {
     }
     return Collections.emptyMap();
   }
-  
+
   public boolean isWithProperties() {
     return hasAction("Properties");
   }
@@ -95,11 +95,7 @@ public class WikiPageActions {
 
   private PageData getData() {
     if (page != null) {
-      try {
-        return page.getData();
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
+      return page.getData();
     }
     return null;
   }

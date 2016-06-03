@@ -72,7 +72,7 @@ public class SerializedPageResponder implements SecureResponder {
         originalPage = page.getVersion(request.getInput("version"));
       object = originalPage.getData();
     } else
-      throw new RuntimeException("Improper use of proxy retrieval");
+      throw new IllegalArgumentException("Improper use of proxy retrieval. 'type' should be one of 'versions', 'meat'.");
     return object;
   }
 

@@ -11,8 +11,8 @@ public class PageHistoryReader {
 
   private SimpleDateFormat dateFormat = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
   public static final String TEST_FILE_FORMAT = "\\A\\d{14}_\\d+_\\d+_\\d+_\\d+(.xml)*\\Z";
-  
-  void readHistoryFromPageDirectory(File pageDirectory) throws ParseException {
+
+  void readHistoryFromPageDirectory(File pageDirectory) {
     File[] resultDir = FileUtil.getDirectoryListing(pageDirectory);
 
     for (File file : resultDir) {
@@ -29,19 +29,24 @@ public class PageHistoryReader {
   public static boolean matchesPageHistoryFileFormat(String pageHistoryFileName) {
     return pageHistoryFileName.matches(TEST_FILE_FORMAT);
   }
-  
-  private void compileResultFileIntoHistory(File file) throws ParseException {
+
+  private void compileResultFileIntoHistory(File file) {
     TestResultRecord record = buildTestResultRecord(file);
     processTestFile(record);
   }
 
-  void processTestFile(TestResultRecord record) throws ParseException {
+  void processTestFile(TestResultRecord record) {
     // for subclasses.
   }
-  
-  private TestResultRecord buildTestResultRecord(File file) throws ParseException {
+
+  private TestResultRecord buildTestResultRecord(File file) {
     String[] parts = file.getName().split("_|\\.");
-    Date date = dateFormat.parse(parts[0]);
+    Date date;
+    try {
+      date = dateFormat.parse(parts[0]);
+    } catch (ParseException e) {
+      throw new IllegalStateException("File format should have been verified", e);
+    }
     TestResultRecord testResultRecord = new TestResultRecord(
       file,
       date,

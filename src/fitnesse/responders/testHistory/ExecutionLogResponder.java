@@ -40,7 +40,7 @@ public class ExecutionLogResponder implements SecureResponder {
       try {
         resultDate = dateFormat.parse(date);
       } catch (ParseException e) {
-        throw new RuntimeException("Invalid date format provided", e);
+        throw new IllegalArgumentException("Invalid date format provided: should be " + PageHistory.TEST_RESULT_FILE_DATE_PATTERN + ".", e);
       }
     }
     TestResultRecord testResultRecord = pageHistory.get(resultDate);

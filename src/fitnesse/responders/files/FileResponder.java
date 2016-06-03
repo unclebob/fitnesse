@@ -183,7 +183,7 @@ public class FileResponder implements SecureResponder {
         try {
           return new File(context.getRootPagePath(), URLDecoder.decode(request.getResource(), FileUtil.CHARENCODING)).isDirectory();
         } catch (UnsupportedEncodingException e) {
-          throw new RuntimeException("Invalid URL encoding", e);
+          throw new IllegalArgumentException("Invalid URL encoding", e);
         }
       }
     };
