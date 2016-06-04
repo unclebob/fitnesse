@@ -37,3 +37,6 @@ FitNesseRoot/files/testResults/*
 FitNesseRoot/RecentChanges
 desktop.ini
 junit*.properties
+FitNesseRoot/updateDoNotCopyOverList
+FitNesseRoot/updateList
+fitMutation/
