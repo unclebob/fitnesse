@@ -385,15 +385,15 @@
     </target>
 
     <path id="pit.path">
-        <pathelement location="antlib/pitest-ant-1.1.10.jar"/>
-        <pathelement location="antlib/pitest-1.1.10.jar"/>
-        <pathelement location="antlib/junit-4.11.jar"/>
+        <pathelement location="lib/pitest-ant.jar"/>
+        <pathelement location="lib/pitest.jar"/>
+        <pathelement location="lib/junit.jar"/>
     </path>
 
 
 
     <taskdef name="pitest" classname="org.pitest.ant.PitestTask" classpathref="pit.path" />
-    <target name="mutationCoverageForFit" depends="resolve">
+    <target name="mutationCoverageForFit" depends="retrieve,test-compile">
         <path id="mutation.path">
             <path refid="pit.path"/>
             <path refid="test.classpath"/>
