@@ -10,6 +10,7 @@ import java.util.List;
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.instructions.Instruction;
+import fitnesse.testsystems.TestExecutionException;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
@@ -104,7 +105,7 @@ public class ScriptTable extends SlimTable {
   }
 
   @Override
-  public List<SlimAssertion> getAssertions() throws SyntaxError {
+  public List<SlimAssertion> getAssertions() throws TestExecutionException {
     List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
     ScenarioTable.setDefaultChildClass(getClass());
     if (table.getCellContents(0, 0).toLowerCase().startsWith(getTableKeyword())) {
@@ -119,7 +120,7 @@ public class ScriptTable extends SlimTable {
   }
 
   // returns a list of statements
-  protected List<SlimAssertion> instructionsForRow(int row) throws SyntaxError {
+  protected List<SlimAssertion> instructionsForRow(int row) throws TestExecutionException {
     String firstCell = table.getCellContents(0, row).trim();
     List<SlimAssertion> assertions;
     String match;
@@ -163,7 +164,7 @@ public class ScriptTable extends SlimTable {
     return assertions;
   }
 
-  protected List<SlimAssertion> action(int row) throws SyntaxError {
+  protected List<SlimAssertion> action(int row) throws TestExecutionException {
     List<SlimAssertion> assertions = assertionsFromScenario(row);
     if (assertions.isEmpty()) {
       // Invoke fixture:
@@ -173,7 +174,7 @@ public class ScriptTable extends SlimTable {
     return assertions;
   }
 
-  protected List<SlimAssertion> assertionsFromScenario(int row) throws SyntaxError {
+  protected List<SlimAssertion> assertionsFromScenario(int row) throws TestExecutionException {
     int lastCol = table.getColumnCountInRow(row) - 1;
     String actionName = getActionNameStartingAt(0, lastCol, row);
     ScenarioTable scenario = getTestContext().getScenario(Disgracer.disgraceClassName(

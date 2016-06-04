@@ -1,6 +1,7 @@
 package fitnesse.testsystems.slim.tables;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -54,7 +55,7 @@ public class SlimTableFactory {
     SlimTable newTable;
     String tableType = getFullTableName(table.getCellContents(0, 0));
     //table.substitute(0, 0, tableType);
-    
+
     // First the "exceptions to the rule"
     if ( tableType.equalsIgnoreCase("define alias")) {
       parseDefineAliasTable(table);
@@ -108,19 +109,23 @@ public class SlimTableFactory {
                                     Table table, String tableId, SlimTestContext slimTestContext) {
     try {
       return createTable(tableClass, table, tableId, slimTestContext);
-    } catch (Exception e) {
-      LOG.log(Level.WARNING, "Can not create new table instance for class " + tableClass, e);
+    } catch (TableCreationException e) {
+      LOG.log(Level.WARNING, e.getMessage(), e);
       return new SlimErrorTable(table, tableId, slimTestContext);
     }
   }
 
-  public static <T extends SlimTable> T createTable(Class<T> tableClass, Table table, String tableId, SlimTestContext slimTestContext) throws Exception {
+  public static <T extends SlimTable> T createTable(Class<T> tableClass, Table table, String tableId, SlimTestContext slimTestContext) throws TableCreationException {
     Constructor<? extends SlimTable> constructor = CONSTRUCTOR_MAP.get(tableClass);
-    if (constructor == null) {
-      constructor = tableClass.getConstructor(Table.class, String.class, SlimTestContext.class);
-      CONSTRUCTOR_MAP.put(tableClass, constructor);
+    try {
+      if (constructor == null) {
+        constructor = tableClass.getConstructor(Table.class, String.class, SlimTestContext.class);
+        CONSTRUCTOR_MAP.put(tableClass, constructor);
+      }
+      return (T) constructor.newInstance(table, tableId, slimTestContext);
+    } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+      throw new TableCreationException("Can not create new table instance for class " + tableClass.getName(), e);
     }
-    return (T) constructor.newInstance(table, tableId, slimTestContext);
   }
 
   private String getFullTableName(String tableName) {

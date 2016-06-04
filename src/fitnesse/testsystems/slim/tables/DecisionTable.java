@@ -9,6 +9,7 @@ import java.util.Map;
 
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
+import fitnesse.testsystems.TestExecutionException;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 
@@ -25,7 +26,7 @@ public class DecisionTable extends SlimTable {
   }
 
   @Override
-  public List<SlimAssertion> getAssertions() throws SyntaxError {
+  public List<SlimAssertion> getAssertions() throws TestExecutionException {
     if (table.getRowCount() == 2)
       throw new SyntaxError("DecisionTables should have at least three rows.");
         // or 1 if only the constructor of a class should be called
@@ -34,7 +35,7 @@ public class DecisionTable extends SlimTable {
     ScenarioTable scenario = getTestContext().getScenario(scenarioName);
     if (scenario != null) {
       return new ScenarioCaller().call(scenario);
-    } else{ 
+    } else{
     	scenarioName =getFixtureName();
     	scenario = getTestContext().getScenario(scenarioName);
         if (scenario != null) {
@@ -67,7 +68,7 @@ public class DecisionTable extends SlimTable {
       super(table);
     }
 
-    public ArrayList<SlimAssertion> call(ScenarioTable scenario) throws SyntaxError {
+    public ArrayList<SlimAssertion> call(ScenarioTable scenario) throws TestExecutionException {
     	gatherFunctionsAndVariablesFromColumnHeader();
       ArrayList<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
       for (int row = 2; row < table.getRowCount(); row++){
@@ -77,7 +78,7 @@ public class DecisionTable extends SlimTable {
       return assertions;
     }
 
-    private List<SlimAssertion> callScenarioForRow(ScenarioTable scenario, int row) throws SyntaxError {
+    private List<SlimAssertion> callScenarioForRow(ScenarioTable scenario, int row) throws TestExecutionException {
       checkRow(row);
       return scenario.call(getArgumentsForRow(row), DecisionTable.this, row);
     }
@@ -104,7 +105,7 @@ public class DecisionTable extends SlimTable {
         return assertion;
       }
 
-    
+
     private Map<String, String> getArgumentsForRow(int row) {
       Map<String, String> scenarioArguments = new HashMap<String, String>();
       for (String var : constructorParameterStore.getLeftToRightAndResetColumnNumberIterator()) {
@@ -112,7 +113,7 @@ public class DecisionTable extends SlimTable {
           int col = constructorParameterStore.getColumnNumber(var);
           String valueToSet = table.getCellContents(col, 0);
           scenarioArguments.put(disgracedVar, valueToSet);
-      }      
+      }
       for (String var : varStore.getLeftToRightAndResetColumnNumberIterator()) {
         String disgracedVar = Disgracer.disgraceMethodName(var);
         int col = varStore.getColumnNumber(var);
@@ -135,7 +136,7 @@ public class DecisionTable extends SlimTable {
 	      gatherConstructorParameters();
 	    }
   }
-  
+
   private class FixtureCaller extends DecisionTableCaller {
     public FixtureCaller() {
       super(table);

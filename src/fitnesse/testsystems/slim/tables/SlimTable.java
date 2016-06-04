@@ -18,6 +18,7 @@ import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TableCell;
+import fitnesse.testsystems.TestExecutionException;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.slim.CustomComparator;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
@@ -78,7 +79,7 @@ public abstract class SlimTable {
 
   protected abstract String getTableType();
 
-  public abstract List<SlimAssertion> getAssertions() throws SyntaxError;
+  public abstract List<SlimAssertion> getAssertions() throws TestExecutionException;
 
   protected String makeInstructionTag() {
     return makeInstructionTag(instructionNumber++);
@@ -122,9 +123,9 @@ public abstract class SlimTable {
   public void setFixtureName(String name){
 	  fixtureName = name;
   }
-  
+
   protected String getFixtureName() {
-	if (fixtureName == null){  
+	if (fixtureName == null){
       String tableHeader = table.getCellContents(0, 0);
       fixtureName = getFixtureName(tableHeader);
 	}
@@ -270,14 +271,14 @@ public abstract class SlimTable {
   }
 
   class SymbolReplacer extends SlimSymbol{
-    private String toReplace; 
+    private String toReplace;
     public SymbolReplacer(String s) {
       super();
       toReplace=s;
     }
 
     //TODO: This is only implemented in the SlimServer but not in the Slim Client so it can't work properly :(
-    // Should be removed. Would this breaks other SLIM Client implementations .Net ... ? 
+    // Should be removed. Would this breaks other SLIM Client implementations .Net ... ?
     @Override
     protected String getSymbolValue(String symbolName) {
       String value = getSymbol(symbolName);
@@ -297,12 +298,12 @@ public abstract class SlimTable {
 //    protected String getSymbolValue(String symbolName){
 //      return getSymbol(symbolName);
 //    }
-    
+
     public String replace(){
       return replace(toReplace);
     }
   }
-  
+
 
   class FullExpansionSymbolReplacer extends SymbolReplacer {
     FullExpansionSymbolReplacer(String s) {
@@ -430,10 +431,10 @@ public abstract class SlimTable {
         String value = getSymbol(this.symbolName);
 	      return super.evaluateExpectation(value);
 	    }
-	    
+
 	    @Override
 	    protected SlimTestResult createEvaluationMessage(String actual, String expected) {
-	      if (assignToName != null){	
+	      if (assignToName != null){
 	        setSymbol(assignToName, actual);
 	        return SlimTestResult.plain(String.format("$%s<-[%s]", assignToName, actual));
 	      }else{
@@ -441,7 +442,7 @@ public abstract class SlimTable {
 	      }
 	    }
   }
-  
+
   class RejectedValueExpectation extends ReturnedValueExpectation {
     public RejectedValueExpectation(int col, int row) {
       super(col, row);

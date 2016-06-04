@@ -1,12 +1,12 @@
 package fitnesse.plugins.slimcoverage;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.TestExecutionException;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.UnableToStopException;
@@ -16,7 +16,6 @@ import fitnesse.testsystems.slim.SlimClient;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
-import fitnesse.testsystems.slim.tables.SyntaxError;
 import fitnesse.wiki.WikiPageDummy;
 
 public class SlimCoverageTestSystem extends HtmlSlimTestSystem {
@@ -64,7 +63,7 @@ public class SlimCoverageTestSystem extends HtmlSlimTestSystem {
     }
 
     @Override
-    protected void processTable(SlimTable table) throws SyntaxError {
+    protected void processTable(SlimTable table) throws TestExecutionException {
         table.getAssertions();
     }
 
