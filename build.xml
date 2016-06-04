@@ -392,8 +392,8 @@
 
 
 
-    <taskdef name="pitest" classname="org.pitest.ant.PitestTask" classpathref="pit.path" />
     <target name="mutationCoverageForFit" depends="retrieve,test-compile">
+        <taskdef name="pitest" classname="org.pitest.ant.PitestTask" classpathref="pit.path" />
         <path id="mutation.path">
             <path refid="pit.path"/>
             <path refid="test.classpath"/>
