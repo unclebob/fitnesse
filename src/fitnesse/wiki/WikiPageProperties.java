@@ -49,7 +49,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
     try {
       document = XmlUtil.newDocument(inputStream);
     } catch (Exception e) {
-      throw new RuntimeException("Unable to parse XML from stream", e);
+      throw new WikiPageLoadException("Unable to parse XML from stream", e);
     }
     Element root = document.getDocumentElement();
     loadFromRootElement(root);
@@ -60,7 +60,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
     try {
       document = XmlUtil.newDocument(xml);
     } catch (Exception e) {
-      throw new RuntimeException("Unable to parse XML from string " + xml, e);
+      throw new WikiPageLoadException("Unable to parse XML from string " + xml, e);
     }
     Element root = document.getDocumentElement();
     loadFromRootElement(root);
