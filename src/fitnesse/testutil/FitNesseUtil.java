@@ -106,7 +106,7 @@ public class FitNesseUtil {
     try {
       createdFolder = File.createTempFile("fitnesse", "");
     } catch (IOException e) {
-      throw new RuntimeException("Unable to create temporary folder for test execution", e);
+      throw new IllegalStateException("Unable to create temporary folder for test execution", e);
     }
     createdFolder.delete();
     createdFolder.mkdir();

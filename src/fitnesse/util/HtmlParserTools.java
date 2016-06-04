@@ -83,7 +83,7 @@ public final class HtmlParserTools {
     try {
       newNode = (Node) node.clone();
     } catch (CloneNotSupportedException e) {
-      throw new RuntimeException("Node must be cloneable", e);
+      throw new IllegalStateException("Node must be cloneable", e);
     }
     node.setParent(clonedParent);
     if (newNode instanceof Tag) {
