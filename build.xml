@@ -3,7 +3,6 @@
     <description>
         Fitnesse is a wiki wrapper for fit, an acceptance test framework.
     </description>
-
     <property environment="env"/>
     <property name="env.FITNESSE_TEST_PORT" value="8080"/>
     <property name="min.java.version" value="1.7"/>
@@ -20,13 +19,13 @@
     <property name="port" value="8001"/>
 
     <property file="${user.home}/.sonatype.properties" />
-  
+
     <target name="all" depends="unit_tests, acceptance_tests" description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fitnesse acceptance tests."/>
-  
+
     <target name="build" depends="clean, compile" description="clean, then compile the source"/>
-      
+
       <target name="unit_tests" depends="clean, unit_test" description="builds code from scratch, runs all the unit tests"/>
-  
+
     <zipfileset id="wikipages.fileset" prefix="Resources/FitNesseRoot" dir="FitNesseRoot">
         <include name="FitNesse/**"/>
         <include name="FrontPage/**"/>
@@ -47,7 +46,7 @@
                 <path refid="standalone.classpath"/>
                 <pathelement location="${classes.dir}"/>
             </classpath>
- 
+
         </java>
     </target>
 
@@ -383,5 +382,30 @@
              when deployed to Maven Central.  -->
         <get src="${maven.central.url}/org/bouncycastle/bcprov-jdk16/1.46/bcprov-jdk16-1.46.jar" dest="${antlib.dir}/bcprov.jar" usetimestamp="true" verbose="true" />
         <get src="${maven.central.url}/org/bouncycastle/bcpg-jdk16/1.46/bcpg-jdk16-1.46.jar" dest="${antlib.dir}/bcpg.jar" usetimestamp="true" verbose="true" />
+    </target>
+
+    <path id="pit.path">
+        <pathelement location="antlib/pitest-ant-1.1.10.jar"/>
+        <pathelement location="antlib/pitest-1.1.10.jar"/>
+        <pathelement location="antlib/junit-4.11.jar"/>
+    </path>
+
+
+
+    <taskdef name="pitest" classname="org.pitest.ant.PitestTask" classpathref="pit.path" />
+    <target name="mutationCoverageForFit" depends="resolve">
+        <path id="mutation.path">
+            <path refid="pit.path"/>
+            <path refid="test.classpath"/>
+            <pathelement location="${classes.dir}"/>
+        </path>
+        <ivy:cachepath pathid="test.classpath" conf="test"/>
+        <pitest
+            pitClasspath="pit.path"
+            classPath="mutation.path"
+            targetClasses="fit.*"
+            targetTests="fit.*"
+            reportDir="fitMutation"
+            sourceDir="src"/>
     </target>
 </project>

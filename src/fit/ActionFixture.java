@@ -34,7 +34,7 @@ public class ActionFixture extends Fixture {
 
   public void start() throws Throwable {
     Parse fixture = cells.more;
-    if (fixture == null)
+    if (fixture == null || fixture.text().equals(""))
       throw new FitFailureException("You must specify a fixture to start.");
     actor = loadFixture(fixture.text());
   }
@@ -85,7 +85,7 @@ public class ActionFixture extends Fixture {
 
   protected Method method(int args) throws NoSuchMethodException {
     final Parse methodCell = cells.more;
-    if (methodCell == null)
+    if (methodCell == null || methodCell.text().equals(""))
       throw new FitFailureException("You must specify a method.");
     return method(camel(methodCell.text()), args);
   }
