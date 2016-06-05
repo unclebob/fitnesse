@@ -77,7 +77,7 @@ public class SerializedPageResponderTest {
 
     assertEquals("this is page one", data.getContent());
 
-    WikiPageProperties props = data.getProperties();
+    WikiPageProperty props = data.getProperties();
     assertTrue(props.has("Attr1"));
   }
 
@@ -121,7 +121,7 @@ public class SerializedPageResponderTest {
     WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "");
 
     PageData data = pageOne.getData();
-    WikiPageProperties properties = data.getProperties();
+    WikiPageProperty properties = data.getProperties();
     WikiPageProperty symLinks = properties.set(SymbolicPage.PROPERTY_NAME);
     symLinks.set("SymPage", "PageTwo");
     pageOne.commit(data);

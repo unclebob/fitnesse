@@ -4,26 +4,30 @@ package fitnesse.wiki;
 
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
+
+import fitnesse.util.Clock;
 
 public class WikiPageProperty implements Serializable {
   private static final long serialVersionUID = 1L;
 
   private String value;
-  protected SortedMap<String, WikiPageProperty> children = new TreeMap<>();
+  private SortedMap<String, WikiPageProperty> children = new TreeMap<>();
 
   public WikiPageProperty() {
   }
 
   public WikiPageProperty(String value) {
     setValue(value);
+  }
+
+  public WikiPageProperty(WikiPageProperty that) {
+    if (that != null && that.children != null)
+      children = new TreeMap<>(that.children);
   }
 
   public String getValue() {
@@ -97,6 +101,18 @@ public class WikiPageProperty implements Serializable {
 
   public boolean hasChildren() {
     return children != null && !children.isEmpty();
+  }
+
+  public Date getLastModificationTime() {
+    String dateStr = get(PageData.PropertyLAST_MODIFIED);
+    if (dateStr == null)
+      return Clock.currentDate();
+    else
+      try {
+        return getTimeFormat().parse(dateStr);
+      } catch (ParseException e) {
+        throw new RuntimeException("Unable to parse date '" + dateStr + "'", e);
+      }
   }
 
   private static ThreadLocal<DateFormat> timeFormat = new ThreadLocal<>();

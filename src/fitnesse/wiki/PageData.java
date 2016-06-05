@@ -53,7 +53,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
   public static final String SUITE_TEARDOWN_NAME = "SuiteTearDown";
 
   private String content = "";
-  private WikiPageProperties properties = new WikiPageProperties();
+  private WikiPageProperty properties = new WikiPageProperty();
 
   public static final String PATH_SEPARATOR = "PATH_SEPARATOR";
 
@@ -63,17 +63,17 @@ public class PageData implements ReadOnlyPageData, Serializable {
   }
 
   public PageData(PageData data) {
-    this.properties = new WikiPageProperties(data.properties);
+    this.properties = new WikiPageProperty(data.properties);
     this.content = data.content;
   }
 
-  public PageData(String content, WikiPageProperties properties) {
+  public PageData(String content, WikiPageProperty properties) {
     setContent(content);
     setProperties(properties);
   }
 
   @Override
-  public WikiPageProperties getProperties() {
+  public WikiPageProperty getProperties() {
     return properties;
   }
 
@@ -107,7 +107,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
     return properties.has(attribute);
   }
 
-  public void setProperties(WikiPageProperties properties) {
+  public void setProperties(WikiPageProperty properties) {
     this.properties = properties;
   }
 

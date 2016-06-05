@@ -39,9 +39,8 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
     loadFromRootElement(rootElement);
   }
 
-  public WikiPageProperties(WikiPageProperties that) {
-    if (that != null && that.children != null)
-      children = new TreeMap<>(that.children);
+  public WikiPageProperties(WikiPageProperty that) {
+    super(that);
   }
 
   public void loadFromXmlStream(InputStream inputStream) {
@@ -140,18 +139,6 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
   @Override
   public String toString() {
     return super.toString("WikiPageProperties", 0);
-  }
-
-  public Date getLastModificationTime() {
-    String dateStr = get(PageData.PropertyLAST_MODIFIED);
-    if (dateStr == null)
-      return Clock.currentDate();
-    else
-      try {
-        return getTimeFormat().parse(dateStr);
-      } catch (ParseException e) {
-        throw new IllegalStateException("Unable to parse date '" + dateStr + "'", e);
-      }
   }
 
   public void setLastModificationTime(Date date) {

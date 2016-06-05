@@ -106,17 +106,18 @@ public class FileSystemPageZipFileVersioningTest {
     Calendar modificationTime = Calendar.getInstance();
     modificationTime.add(Calendar.DATE, -1);
     String timeIndex1 = format(modificationTime);
-    data.getProperties().setLastModificationTime(dateFormat().parse(timeIndex1));
+    WikiPageProperties properties = (WikiPageProperties) data.getProperties();
+    properties.setLastModificationTime(dateFormat().parse(timeIndex1));
     page.commit(data);
     modificationTime.add(Calendar.DATE, -1);
     String timeIndex2 = format(modificationTime);
-    data.getProperties().setLastModificationTime(dateFormat().parse(timeIndex2));
+    properties.setLastModificationTime(dateFormat().parse(timeIndex2));
     page.commit(data);
     modificationTime.add(Calendar.DATE, -1);
-    data.getProperties().setLastModificationTime(dateFormat().parse(format(modificationTime)));
+    properties.setLastModificationTime(dateFormat().parse(format(modificationTime)));
     page.commit(data);
     modificationTime.add(Calendar.DATE, -1);
-    data.getProperties().setLastModificationTime(dateFormat().parse(format(modificationTime)));
+    properties.setLastModificationTime(dateFormat().parse(format(modificationTime)));
     page.commit(data);
 
     Collection<VersionInfo> versions = page.getVersions();
@@ -223,7 +224,7 @@ public class FileSystemPageZipFileVersioningTest {
   public void testVersionedPropertiedLoadedProperly() throws Exception {
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("TestPage"));
     PageData data = page.getData();
-    WikiPageProperties oldProps = data.getProperties();
+    WikiPageProperty oldProps = data.getProperties();
     WikiPageProperties props = new WikiPageProperties();
     props.set("MyProp", "my value");
     data.setProperties(props);
@@ -233,7 +234,7 @@ public class FileSystemPageZipFileVersioningTest {
     VersionInfo version = page.commit(data);
 
     PageData versionedData = page.getVersion(version.getName()).getData();
-    WikiPageProperties versionedProps = versionedData.getProperties();
+    WikiPageProperty versionedProps = versionedData.getProperties();
 
     assertTrue(versionedProps.has("MyProp"));
     assertEquals("my value", versionedProps.get("MyProp"));

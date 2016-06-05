@@ -114,7 +114,7 @@ public class FileSystemPageFactory implements WikiPageFactory<FileSystemPage>, W
 
     protected List<WikiPage> getSymlinkChildren(WikiPage page) {
       List<WikiPage> children = new LinkedList<>();
-      WikiPageProperties props = page.getData().getProperties();
+      WikiPageProperty props = page.getData().getProperties();
       WikiPageProperty symLinksProperty = props.getProperty(SymbolicPage.PROPERTY_NAME);
       if (symLinksProperty != null) {
         for (String linkName : symLinksProperty.keySet()) {

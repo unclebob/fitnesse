@@ -2,17 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiImportProperty;
-import fitnesse.wiki.WikiPageProperties;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import fitnesse.wiki.WikiPageProperty;
+
+import static org.junit.Assert.assertEquals;
 
 public class ImportAndViewResponderTest {
   private WikiImporterTest testData;
@@ -51,7 +52,7 @@ public class ImportAndViewResponderTest {
   @Test
   public void testPageContentIsUpdated() throws Exception {
     PageData data = testData.pageTwo.getData();
-    WikiPageProperties props = data.getProperties();
+    WikiPageProperty props = data.getProperties();
 
     WikiImportProperty importProps = new WikiImportProperty("http://localhost:" + FitNesseUtil.PORT + "/PageTwo");
     importProps.addTo(props);
