@@ -50,6 +50,7 @@ public class FitTestSystem implements TestSystem, FitClientListener {
       else
         client.send(html);
     } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
       exceptionOccurred(e);
       throw new TestExecutionException("Testing has been interrupted", e);
     } catch (IOException e) {
@@ -63,7 +64,10 @@ public class FitTestSystem implements TestSystem, FitClientListener {
     try {
       client.done();
       client.join();
-    } catch (InterruptedException | IOException e) {
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new UnableToStopException("Unable to stop Fit client", e);
+    } catch (IOException e) {
       throw new UnableToStopException("Unable to stop Fit client", e);
     } finally {
       testSystemStopped(null);
@@ -101,8 +105,11 @@ public class FitTestSystem implements TestSystem, FitClientListener {
 
   @Override
   public void exceptionOccurred(Throwable t) {
-    client.kill();
-    testSystemStopped(t);
+    try {
+      client.kill();
+    } finally {
+      testSystemStopped(t);
+    }
   }
 
   private void testSystemStarted(TestSystem testSystem) {

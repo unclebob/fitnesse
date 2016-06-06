@@ -125,10 +125,10 @@ public abstract class SlimTable {
   }
 
   protected String getFixtureName() {
-	if (fixtureName == null){
+	  if (fixtureName == null) {
       String tableHeader = table.getCellContents(0, 0);
       fixtureName = getFixtureName(tableHeader);
-	}
+	  }
     return Disgracer.disgraceClassName(fixtureName);
   }
 
@@ -417,30 +417,31 @@ public abstract class SlimTable {
 	  private String symbolName;
 	  private String assignToName = null;
 	  public ReturnedSymbolExpectation(int col, int row, String symbolName) {
-	      super(col, row);
+      super(col, row);
 		  this.symbolName = symbolName;
-	    }
-	  public ReturnedSymbolExpectation(int col, int row, String symbolName, String assignToName) {
-	      super(col, row);
+    }
+
+    public ReturnedSymbolExpectation(int col, int row, String symbolName, String assignToName) {
+      super(col, row);
 		  this.symbolName = symbolName;
 		  this.assignToName = assignToName;
-	    }
+    }
 
-	    @Override
-	    public TestResult evaluateExpectation(Object returnValue) {
-        String value = getSymbol(this.symbolName);
-	      return super.evaluateExpectation(value);
-	    }
+    @Override
+    public TestResult evaluateExpectation(Object returnValue) {
+      String value = getSymbol(this.symbolName);
+      return super.evaluateExpectation(value);
+    }
 
-	    @Override
-	    protected SlimTestResult createEvaluationMessage(String actual, String expected) {
-	      if (assignToName != null){
-	        setSymbol(assignToName, actual);
-	        return SlimTestResult.plain(String.format("$%s<-[%s]", assignToName, actual));
-	      }else{
-	    	  return super.createEvaluationMessage(actual, expected);
-	      }
-	    }
+    @Override
+    protected SlimTestResult createEvaluationMessage(String actual, String expected) {
+      if (assignToName != null) {
+        setSymbol(assignToName, actual);
+        return SlimTestResult.plain(String.format("$%s<-[%s]", assignToName, actual));
+      }else{
+        return super.createEvaluationMessage(actual, expected);
+      }
+    }
   }
 
   class RejectedValueExpectation extends ReturnedValueExpectation {

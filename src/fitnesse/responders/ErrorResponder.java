@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.io.UnsupportedEncodingException;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.Request;
@@ -48,7 +50,7 @@ public class ErrorResponder implements Responder {
     StringBuilder buffer = new StringBuilder();
     buffer.append(e.toString()).append("\n");
     for (StackTraceElement stackTraceElement : e.getStackTrace()) {
-      buffer.append("\t" + stackTraceElement).append("\n");
+      buffer.append("\t").append(stackTraceElement).append("\n");
     }
 
     return buffer.toString();

@@ -35,14 +35,14 @@ public class DecisionTable extends SlimTable {
     ScenarioTable scenario = getTestContext().getScenario(scenarioName);
     if (scenario != null) {
       return new ScenarioCaller().call(scenario);
-    } else{
+    } else {
     	scenarioName =getFixtureName();
     	scenario = getTestContext().getScenario(scenarioName);
-        if (scenario != null) {
-            return new ScenarioCallerWithConstuctorParameters().call(scenario);
-        }else{
-        	return new FixtureCaller().call(getFixtureName());
-        }
+      if (scenario != null) {
+        return new ScenarioCallerWithConstuctorParameters().call(scenario);
+      } else {
+        return new FixtureCaller().call(getFixtureName());
+      }
     }
   }
 

@@ -20,6 +20,8 @@ import fitnesse.util.XmlUtil;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import static java.lang.String.format;
+
 public abstract class ExecutionReport {
   private String version;
   private String rootPath;
@@ -74,7 +76,7 @@ public abstract class ExecutionReport {
     try {
       xmlDocument = XmlUtil.newDocument(xmlString);
     } catch (IOException | SAXException e) {
-      throw new InvalidReportException("%s is not a valid execution report", e);
+      throw new InvalidReportException(format("%s is not a valid execution report", xmlString), e);
     }
     Element documentElement = xmlDocument.getDocumentElement();
     String documentNodeName = documentElement.getNodeName();
@@ -84,7 +86,7 @@ public abstract class ExecutionReport {
       case "suiteResults":
         return new SuiteExecutionReport(xmlDocument);
       default:
-        throw new InvalidReportException(String.format("%s is not a valid document element tag for an Execution Report.", documentNodeName));
+        throw new InvalidReportException(format("%s is not a valid document element tag for an Execution Report.", documentNodeName));
     }
   }
 
@@ -96,7 +98,7 @@ public abstract class ExecutionReport {
       try {
         date = DateTimeUtil.getDateFromString(dateString);
       } catch (ParseException e) {
-        throw new InvalidReportException(String.format("'%s' is not a valid date.", dateString), e);
+        throw new InvalidReportException(format("'%s' is not a valid date.", dateString), e);
       }
     unpackFinalCounts(documentElement);
     totalRunTimeInMillis = getTotalRunTimeInMillisOrZeroIfNotPresent(documentElement);

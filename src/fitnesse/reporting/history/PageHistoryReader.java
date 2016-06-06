@@ -7,6 +7,8 @@ import java.util.Date;
 
 import util.FileUtil;
 
+import static java.lang.String.format;
+
 public class PageHistoryReader {
 
   private SimpleDateFormat dateFormat = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
@@ -45,16 +47,15 @@ public class PageHistoryReader {
     try {
       date = dateFormat.parse(parts[0]);
     } catch (ParseException e) {
-      throw new IllegalStateException("File format should have been verified", e);
+      throw new IllegalStateException(format("'%s' can not be parsed to a valid date", parts[0]), e);
     }
-    TestResultRecord testResultRecord = new TestResultRecord(
+    return new TestResultRecord(
       file,
       date,
       Integer.parseInt(parts[1]),
       Integer.parseInt(parts[2]),
       Integer.parseInt(parts[3]),
       Integer.parseInt(parts[4]));
-    return testResultRecord;
   }
 
 }

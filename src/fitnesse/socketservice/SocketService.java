@@ -69,7 +69,7 @@ public class SocketService {
         LOG.log(Level.SEVERE, "Can't create new thread.  Out of Memory.  Aborting.", e);
         System.exit(99);
       } catch (SocketException sox) {
-        running = false; // do nothing
+        running = false;
       } catch (IOException e) {
         LOG.log(Level.SEVERE, "I/O exception in service thread", e);
       }
