@@ -232,12 +232,9 @@ public class FileSystemPage extends BaseWikitextPage {
   }
 
   private WikiPageProperties loadAttributes(final FileVersion fileVersion) throws IOException {
-    final WikiPageProperties props = new WikiPageProperties();
-    InputStream content = fileVersion.getContent();
-    try {
-      props.loadFromXmlStream(content);
-    } finally {
-      content.close();
+    WikiPageProperties props;
+    try (InputStream content = fileVersion.getContent()) {
+      props = new WikiPageProperties(content);
     }
     props.setLastModificationTime(fileVersion.getLastModificationTime());
     return props;
