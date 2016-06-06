@@ -6,12 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CachedInteraction extends DefaultInteraction {
-	private static class NotExisting {}
-	private static Constructor<?> noConstructor = NotExisting.class.getConstructors()[0];
+	private static final class NotExisting {}
+	private static final Constructor<?> noConstructor = NotExisting.class.getConstructors()[0];
 
-	private Map<String, Constructor<?>> constructorsByClassAndArgs = new HashMap<>();
-	private Map<String, Class<?>> classCache = new HashMap<>();
-	private Map<MethodKey, Method> methodsByNameAndArgs = new HashMap<>();
+	private final Map<String, Constructor<?>> constructorsByClassAndArgs = new HashMap<>();
+	private final Map<String, Class<?>> classCache = new HashMap<>();
+	private final Map<MethodKey, Method> methodsByNameAndArgs = new HashMap<>();
 
 	protected Constructor<?> getConstructor(Class<?> clazz,
 			Object[] args) {
