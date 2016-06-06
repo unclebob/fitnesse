@@ -12,13 +12,9 @@ import fit.exception.NoSuchMethodFitFailureException;
 
 public class ActionFixture extends Fixture {
   protected static final Class<?> empty[] = {}; //NOSONAR
-
   protected Parse cells;
   private Fixture actor;
 
-  // Traversal ////////////////////////////////
-
-  @Override
   public void doCells(Parse cells) {
     this.cells = cells;
     try {
@@ -29,8 +25,6 @@ public class ActionFixture extends Fixture {
       exception(cells, e);
     }
   }
-
-  // Actions //////////////////////////////////
 
   public void start() throws Throwable {
     Parse fixture = cells.more;
@@ -46,7 +40,7 @@ public class ActionFixture extends Fixture {
   public void enter() throws Exception {
     Method method = method(1);
     Class<?> type = method.getParameterTypes()[0];
-    final Parse argumentCell = cells.more.more;
+    Parse argumentCell = cells.more.more;
     if (argumentCell == null)
       throw new FitFailureException("You must specify an argument.");
     String text = argumentCell.text();
@@ -80,8 +74,6 @@ public class ActionFixture extends Fixture {
 
     check(checkValueCell, adapter);
   }
-
-  // Utility //////////////////////////////////
 
   protected Method method(int args) throws NoSuchMethodException {
     final Parse methodCell = cells.more;
