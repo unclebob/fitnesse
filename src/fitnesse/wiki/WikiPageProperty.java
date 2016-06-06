@@ -15,6 +15,23 @@ import fitnesse.util.Clock;
 public class WikiPageProperty implements Serializable {
   private static final long serialVersionUID = 1L;
 
+  public static final String LAST_MODIFIED = "LastModified";
+  public static final String HELP = "Help";
+  public static final String PRUNE = "Prune";
+  public static final String SEARCH = "Search";
+  public static final String RECENT_CHANGES = "RecentChanges";
+  public static final String FILES = "Files";
+  public static final String WHERE_USED = "WhereUsed";
+  public static final String REFACTOR = "Refactor";
+  public static final String PROPERTIES = "Properties";
+  public static final String VERSIONS = "Versions";
+  public static final String EDIT = "Edit";
+  public static final String SUITES = "Suites";
+
+  public static final String SECURE_READ = "secure-read";
+  public static final String SECURE_WRITE = "secure-write";
+  public static final String SECURE_TEST = "secure-test";
+
   private String value;
   private SortedMap<String, WikiPageProperty> children = new TreeMap<>();
 
