@@ -390,16 +390,15 @@
         <pathelement location="lib/junit.jar"/>
     </path>
 
-
-
     <target name="mutationCoverageForFit" depends="retrieve,test-compile">
-        <taskdef name="pitest" classname="org.pitest.ant.PitestTask" classpathref="pit.path" />
-        <path id="mutation.path">
-            <path refid="pit.path"/>
-            <path refid="test.classpath"/>
-            <pathelement location="${classes.dir}"/>
-        </path>
         <ivy:cachepath pathid="test.classpath" conf="test"/>
+        <path id="mutation.path">
+            <path refid="compile.classpath" />
+            <path refid="test.classpath" />
+            <pathelement location="${classes.dir}" />
+            <pathelement location="${test.classes.dir}" />
+        </path>
+        <taskdef name="pitest" classname="org.pitest.ant.PitestTask" classpathref="pit.path" />
         <pitest
             pitClasspath="pit.path"
             classPath="mutation.path"
