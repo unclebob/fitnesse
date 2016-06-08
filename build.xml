@@ -390,7 +390,8 @@
         <pathelement location="lib/junit.jar"/>
     </path>
 
-    <target name="mutationCoverageForFit" depends="retrieve,test-compile">
+    <target name="mutationTarget" depends="retrieve,test-compile">
+        <property name="excludeClasses" value=""/>
         <ivy:cachepath pathid="test.classpath" conf="test"/>
         <path id="mutation.path">
             <path refid="compile.classpath" />
@@ -402,9 +403,87 @@
         <pitest
             pitClasspath="pit.path"
             classPath="mutation.path"
-            targetClasses="fit.*"
-            targetTests="fit.*"
-            reportDir="fitMutation"
+            targetClasses="${package}"
+            targetTests="${package}"
+            excludedclasses="${excludeClasses}"
+            reportDir="mutation/parts"
+            timestampedreports="false"
             sourceDir="src"/>
     </target>
+
+    <target name="mutationCoverageForFit" depends="retrieve,test-compile">
+        <antcall target="mutationTarget">
+            <param name="package" value="fit.*"/>
+        </antcall>
+    </target>
+
+    <target name="mutationCoverageFitnesseByParts" depends="retrieve,test-compile">
+        <!--Done by parts for speed, and also to avoid certain interactions between the parts -->
+        <antcall target="mutationTarget">
+            <param name="package" value="fitnesse.authentication.*"/>
+        </antcall>
+        <antcall target="mutationTarget">
+            <param name="package" value="fitnesse.components.*"/>
+            <param name="excludeClasses" value="fitnesse.components.PluginsClassLoaderTest"/>
+        </antcall>
+        <antcall target="mutationTarget">
+            <param name="package" value="fitnesse.fixtures.*"/>
+        </antcall>
+        <antcall target="mutationTarget">
+            <param name="package" value="fitnesse.html.*"/>
+        </antcall>
+        <antcall target="mutationTarget">
+            <param name="package" value="fitnesse.http.*"/>
+        </antcall>
+        <antcall target="mutationTarget">
+            <param name="package" value="fitnesse.logging.*"/>
+        </antcall>
+        <antcall target="mutationTarget">
+            <param name="package" value="fitnesse.plugins.*"/>
+        </antcall>
+        <antcall target="mutationTarget">
+            <param name="package" value="fitnesse.reporting.*"/>
+        </antcall>
+        <antcall target="mutationTarget">
+            <param name="package" value="fitnesse.responders.*"/>
+        </antcall>
+        <antcall target="mutationTarget">
+            <param name="package" value="fitnesse.slim.*"/>
+        </antcall>
+        <antcall target="mutationTarget">
+            <param name="package" value="fitnesse.socketservice.*"/>
+        </antcall>
+        <antcall target="mutationTarget">
+            <param name="package" value="fitnesse.testrunner.*"/>
+        </antcall>
+        <antcall target="mutationTarget">
+            <param name="package" value="fitnesse.testsystems.*"/>
+        </antcall>
+        <antcall target="mutationTarget">
+            <param name="package" value="fitnesse.testutil.*"/>
+        </antcall>
+        <antcall target="mutationTarget">
+            <param name="package" value="fitnesse.updates.*"/>
+        </antcall>
+        <antcall target="mutationTarget">
+            <param name="package" value="fitnesse.util.*"/>
+        </antcall>
+        <antcall target="mutationTarget">
+            <param name="package" value="fitnesse.wiki.fs.*"/>
+        </antcall>
+        <antcall target="mutationTarget">
+            <param name="package" value="fitnesse.wiki.refactoring.*"/>
+        </antcall>
+        <antcall target="mutationTarget">
+            <param name="package" value="fitnesse.wiki.search.*"/>
+        </antcall>
+        <antcall target="mutationTarget">
+            <param name="package" value="fitnesse.wiki.*"/>
+            <param name="excludeClasses" value="fitnesse.wiki.fs.*,fitnesse.wiki.refactoring.*,fitnesse.wiki.search.*"/>
+        </antcall>
+        <antcall target="mutationTarget">
+            <param name="package" value="fitnesse.wikitext.*"/>
+        </antcall>
+    </target>
+
 </project>
