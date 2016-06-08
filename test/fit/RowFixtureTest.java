@@ -66,7 +66,7 @@ public class RowFixtureTest extends TestCase {
     RowFixture fixture = new SimpleRowFixture();
     Parse table = new Parse("<table><tr><td>field</td></tr></table>");
     Parse tableHead = table.parts.parts;
-    fixture.bind(tableHead);
+    fixture.bindColumnHeadersToMethodsAndFields(tableHead);
     assertNotNull(fixture.columnBindings[0]);
     Field field = fixture.columnBindings[0].adapter.field;
     assertNotNull(field);

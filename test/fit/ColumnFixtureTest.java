@@ -96,7 +96,7 @@ public class ColumnFixtureTest extends ColumnFixture {
 
   private Parse bindTableOf(String rows) throws FitParseException {
     Parse table = tableOf(rows);
-    selfShuntFixture.bind(table.parts.parts);
+    selfShuntFixture.bindColumnHeadersToMethodsAndFields(table.parts.parts);
     return table;
   }
 
