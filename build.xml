@@ -411,6 +411,26 @@
             sourceDir="src"/>
     </target>
 
+    <target name="mutationForClass" depends="retrieve,test-compile">
+        <property name="excludeClasses" value=""/>
+        <ivy:cachepath pathid="test.classpath" conf="test"/>
+        <path id="mutation.path">
+            <path refid="compile.classpath" />
+            <path refid="test.classpath" />
+            <pathelement location="${classes.dir}" />
+            <pathelement location="${test.classes.dir}" />
+        </path>
+        <taskdef name="pitest" classname="org.pitest.ant.PitestTask" classpathref="pit.path" />
+        <pitest
+            pitClasspath="pit.path"
+            classPath="mutation.path"
+            targetClasses="${class}"
+            targetTests="${class}Test"
+            reportDir="mutation/parts"
+            timestampedreports="false"
+            sourceDir="src"/>
+    </target>
+
     <target name="mutationCoverageForFit" depends="retrieve,test-compile">
         <antcall target="mutationTarget">
             <param name="package" value="fit.*"/>

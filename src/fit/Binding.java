@@ -122,7 +122,8 @@ public abstract class Binding {
     } else {
       try {
         String methodName = matcher.group(1);
-        method = fixture.getTargetClass().getMethod(methodName, new Class[]{});
+        Class<?> targetClass = fixture.getTargetClass();
+        method = targetClass.getMethod(methodName, new Class[]{});
       }
       catch (NoSuchMethodException e) {
       }
