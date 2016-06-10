@@ -188,14 +188,14 @@ public class FileSystemPage extends BaseWikitextPage {
 
   public WikiPageProperties defaultPageProperties() {
     WikiPageProperties properties = new WikiPageProperties();
-    properties.set(PageData.PropertyEDIT);
-    properties.set(PageData.PropertyPROPERTIES);
-    properties.set(PageData.PropertyREFACTOR);
-    properties.set(PageData.PropertyWHERE_USED);
-    properties.set(PageData.PropertyRECENT_CHANGES);
-    properties.set(PageData.PropertyFILES);
-    properties.set(PageData.PropertyVERSIONS);
-    properties.set(PageData.PropertySEARCH);
+    properties.set(WikiPageProperty.EDIT);
+    properties.set(WikiPageProperty.PROPERTIES);
+    properties.set(WikiPageProperty.REFACTOR);
+    properties.set(WikiPageProperty.WHERE_USED);
+    properties.set(WikiPageProperty.RECENT_CHANGES);
+    properties.set(WikiPageProperty.FILES);
+    properties.set(WikiPageProperty.VERSIONS);
+    properties.set(WikiPageProperty.SEARCH);
     properties.setLastModificationTime(Clock.currentDate());
 
     PageType pageType = PageType.getPageTypeForPageName(getName());
@@ -257,8 +257,7 @@ public class FileSystemPage extends BaseWikitextPage {
 
     FileSystemPage that = (FileSystemPage) other;
 
-    if (versionName != null ? !versionName.equals(that.versionName) : that.versionName != null) return false;
-    return super.equals(that);
+    return versionName != null ? versionName.equals(that.versionName) : that.versionName == null && super.equals(that);
   }
 
   @Override
@@ -348,7 +347,7 @@ public class FileSystemPage extends BaseWikitextPage {
     }
 
     private void removeAlwaysChangingProperties(WikiPageProperties properties) {
-      properties.remove(PageData.PropertyLAST_MODIFIED);
+      properties.remove(WikiPageProperty.LAST_MODIFIED);
     }
   }
 }
