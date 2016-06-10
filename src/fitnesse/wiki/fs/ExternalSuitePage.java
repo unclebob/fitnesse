@@ -1,7 +1,6 @@
 package fitnesse.wiki.fs;
 
 import fitnesse.wiki.BaseWikitextPage;
-import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wikitext.parser.VariableSource;
 
 import java.io.File;

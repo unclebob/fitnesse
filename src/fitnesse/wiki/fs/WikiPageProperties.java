@@ -1,17 +1,15 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.wiki;
+package fitnesse.wiki.fs;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import fitnesse.util.XmlUtil;
@@ -19,7 +17,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import fitnesse.util.Clock;
+
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPageLoadException;
+import fitnesse.wiki.WikiPageProperty;
 
 public class WikiPageProperties extends WikiPageProperty implements Serializable {
   private static final Logger LOG = Logger.getLogger(WikiPageProperties.class.getName());

@@ -21,7 +21,6 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
 import org.junit.After;

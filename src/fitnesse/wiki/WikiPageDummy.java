@@ -16,12 +16,12 @@ public class WikiPageDummy extends BaseWikiPage {
 
   public WikiPageDummy(String name, String content, WikiPage parent) {
     super(name, parent);
-    pageData = new PageData(content, new WikiPageProperties());
+    pageData = new PageData(content, new WikiPageProperty());
   }
 
   public WikiPageDummy() {
     super("Default", null);
-    pageData = new PageData("", new WikiPageProperties());
+    pageData = new PageData("", new WikiPageProperty());
   }
 
   @Override

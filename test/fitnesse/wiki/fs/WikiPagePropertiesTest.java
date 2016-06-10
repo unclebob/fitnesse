@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.wiki;
+package fitnesse.wiki.fs;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
@@ -20,6 +20,9 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 import fitnesse.util.Clock;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPageProperty;
+import fitnesse.wiki.fs.WikiPageProperties;
 
 public class WikiPagePropertiesTest {
   private WikiPageProperties properties;

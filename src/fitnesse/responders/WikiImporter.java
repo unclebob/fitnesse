@@ -18,6 +18,7 @@ import fitnesse.components.TraversalListener;
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.ResponseParser;
 import fitnesse.wiki.*;
+import fitnesse.wiki.fs.PageXmlizer;
 
 public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiPage> {
   private String remoteUsername;

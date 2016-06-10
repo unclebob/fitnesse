@@ -23,7 +23,6 @@ import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
 import org.junit.After;

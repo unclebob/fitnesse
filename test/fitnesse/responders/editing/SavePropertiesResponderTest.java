@@ -15,7 +15,7 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.fs.WikiPageProperties;
 import fitnesse.wiki.WikiPageUtil;
 
 import org.junit.Before;
@@ -77,9 +77,9 @@ public class SavePropertiesResponderTest {
     createRequest();
     request.addInput("Suites", "");
     request.addInput("HelpText", "");
-    
+
     responder.makeResponse(context, request);
-    
+
     PageData data = page.getData();
     assertFalse("should not have help attribute", data.hasAttribute(PageData.PropertyHELP));
     assertFalse("should not have suites attribute", data.hasAttribute(PageData.PropertySUITES));
