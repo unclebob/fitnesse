@@ -237,7 +237,7 @@ public class PageXmlizerTest {
   public void testDeXmlizingPageData() throws Exception {
     PageData data = root.getData();
     data.setContent("this is some content.");
-    WikiPageProperty properties = data.getProperties();
+    WikiPageProperty properties = new WikiPageProperties(data.getProperties());
 
     PageData receivedData = xmlizer.deXmlizeData(xmlizer.xmlize(data));
     assertNotSame(data, receivedData);

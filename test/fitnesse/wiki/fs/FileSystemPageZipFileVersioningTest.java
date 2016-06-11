@@ -105,7 +105,8 @@ public class FileSystemPageZipFileVersioningTest {
     Calendar modificationTime = Calendar.getInstance();
     modificationTime.add(Calendar.DATE, -1);
     String timeIndex1 = format(modificationTime);
-    WikiPageProperties properties = (WikiPageProperties) data.getProperties();
+    WikiPageProperties properties = new WikiPageProperties(data.getProperties());
+    data.setProperties(properties);
     properties.setLastModificationTime(dateFormat().parse(timeIndex1));
     page.commit(data);
     modificationTime.add(Calendar.DATE, -1);
