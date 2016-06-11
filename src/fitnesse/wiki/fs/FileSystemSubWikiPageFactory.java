@@ -1,0 +1,121 @@
+package fitnesse.wiki.fs;
+
+import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
+
+import fitnesse.wiki.*;
+import fitnesse.wikitext.parser.VariableSource;
+
+class FileSystemSubWikiPageFactory implements SubWikiPageFactory {
+
+  private final File rootPath;
+  private final FileSystem fileSystem;
+  private final VariableSource variableSource;
+  private final WikiPageFactory<WikiPage> factory;
+
+  public FileSystemSubWikiPageFactory(File rootPath, FileSystem fileSystem, VariableSource variableSource,
+                                      WikiPageFactory<WikiPage> factory) {
+    this.rootPath = rootPath;
+    this.fileSystem = fileSystem;
+    this.variableSource = variableSource;
+    this.factory = factory;
+  }
+
+  @Override
+  public List<WikiPage> getChildren(FileSystemPage page) {
+    List<WikiPage> children = getNormalChildren(page);
+    // TODO: get new style children
+    children.addAll(getSymlinkChildren(page));
+    return children;
+  }
+
+  private List<WikiPage> getNormalChildren(FileSystemPage page) {
+    final File thisDir = page.getFileSystemPath();
+    final List<WikiPage> children = new LinkedList<>();
+    if (fileSystem.exists(thisDir)) {
+      final String[] subFiles = fileSystem.list(thisDir);
+      for (final String subFile : subFiles) {
+        // TODO: Use factory.supports here!
+        if (fileIsValid(new File(thisDir, subFile))) {
+//        if (factory.supports(new File(thisDir, subFile))) {
+          children.add(getChildPage(page, subFile));
+        }
+      }
+    }
+    return children;
+  }
+
+  protected List<WikiPage> getSymlinkChildren(WikiPage page) {
+    List<WikiPage> children = new LinkedList<>();
+    WikiPageProperty props = page.getData().getProperties();
+    WikiPageProperty symLinksProperty = props.getProperty(SymbolicPage.PROPERTY_NAME);
+    if (symLinksProperty != null) {
+      for (String linkName : symLinksProperty.keySet()) {
+        WikiPage linkedPage = createSymbolicPage(page, linkName);
+        if (linkedPage != null && !children.contains(linkedPage))
+          children.add(linkedPage);
+      }
+    }
+    return children;
+  }
+
+  @Override
+  public WikiPage getChildPage(FileSystemPage page, String childName) {
+    File parent = page.getFileSystemPath();
+
+    WikiPage childPage = makeChildPage(new File(parent, childName), childName, page);
+    if (childPage == null) {
+      childPage = createSymbolicPage(page, childName);
+    }
+    return childPage;
+  }
+
+
+  private boolean fileIsValid(final File path) {
+    return fileSystem.isDirectory(path) && PathParser.isSingleWikiWord(path.getName());
+  }
+
+  private WikiPage makeChildPage(File path, String childName, FileSystemPage parent) {
+     return factory.makePage(path, childName, parent, variableSource);
+  }
+
+  private WikiPage createSymbolicPage(WikiPage page, String linkName) {
+    WikiPageProperty symLinkProperty = page.getData().getProperties().getProperty(SymbolicPage.PROPERTY_NAME);
+    if (symLinkProperty == null)
+      return null;
+    String linkPath = symLinkProperty.get(linkName);
+    if (linkPath == null)
+      return null;
+
+    if (linkPath.startsWith("file:"))
+      return createExternalSymbolicLink(linkPath, linkName, page);
+    else
+      return createInternalSymbolicPage(linkPath, linkName, page);
+  }
+
+  private WikiPage createExternalSymbolicLink(String linkPath, String linkName, WikiPage parent) {
+    String fullPagePath = new VariableTool(variableSource).replace(linkPath);
+    File file = WikiPageUtil.resolveFileUri(fullPagePath, rootPath);
+    File parentDirectory = file.getParentFile();
+    if (fileSystem.exists(parentDirectory)) {
+      WikiPage externalRoot = makeChildPage(file, file.getName(), null);
+      if (externalRoot != null) {
+        return new SymbolicPage(linkName, externalRoot, parent);
+      }
+    }
+    return null;
+  }
+
+  protected WikiPage createInternalSymbolicPage(String linkPath, String linkName, WikiPage parent) {
+    WikiPagePath path = PathParser.parse(linkPath);
+    if (path == null) {
+      return null;
+    }
+    WikiPage start = (path.isRelativePath()) ? parent.getParent() : parent;  //TODO -AcD- a better way?
+    WikiPage wikiPage = start.getPageCrawler().getPage(path);
+    if (wikiPage != null)
+      wikiPage = new SymbolicPage(linkName, wikiPage, parent);
+    return wikiPage;
+  }
+}

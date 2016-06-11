@@ -22,7 +22,7 @@ import static org.junit.Assert.assertFalse;
 public class ExternalTestPageTest {
 
   private MemoryFileSystem fileSystem;
-  private FileSystemPage rootPage;
+  private WikiPage rootPage;
   private VariableSource variableSource;
 
   @Before
@@ -66,7 +66,7 @@ public class ExternalTestPageTest {
     FileSystem fileSystem = new MemoryFileSystem();
     File path = new File(directory, name);
     fileSystem.makeFile(path, content);
-    FileSystemPage rootPage = new FileSystemPageFactory(fileSystem, new SimpleFileVersionsController(fileSystem)).makePage(null, "RooT", null, variableSource);
+    WikiPage rootPage = new FileSystemPageFactory(fileSystem, new SimpleFileVersionsController(fileSystem)).makePage(null, "RooT", null, variableSource);
     return new ExternalTestPage(path, name, rootPage, fileSystem, variableSource);
   }
 }

@@ -1,16 +1,17 @@
 package fitnesse.wiki.fs;
 
 import java.io.File;
-
-import fitnesse.wiki.SystemVariableSource;
 import org.junit.Before;
 import org.junit.Test;
+
+import fitnesse.wiki.SystemVariableSource;
+import fitnesse.wiki.WikiPage;
 
 import static org.junit.Assert.assertEquals;
 
 public class ExternalSuitePageTest {
 
-  private FileSystemPage rootPage;
+  private WikiPage rootPage;
   private FileSystem fileSystem;
   private SystemVariableSource variableSource;
 

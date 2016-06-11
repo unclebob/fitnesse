@@ -3,28 +3,37 @@
 
 package fitnesse.wiki.fs;
 
-import fitnesse.wiki.*;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import fitnesse.util.Clock;
-import util.FileUtil;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-import static fitnesse.wiki.PageData.*;
+import fitnesse.util.Clock;
+import fitnesse.wiki.*;
+import util.FileUtil;
+
+import static fitnesse.wiki.WikiPageProperty.EDIT;
+import static fitnesse.wiki.WikiPageProperty.FILES;
+import static fitnesse.wiki.WikiPageProperty.SEARCH;
+import static fitnesse.wiki.WikiPageProperty.VERSIONS;
+import static fitnesse.wiki.PageData.SUITE_SETUP_NAME;
+import static fitnesse.wiki.PageData.SUITE_TEARDOWN_NAME;
 import static fitnesse.wiki.PageType.SUITE;
 import static fitnesse.wiki.PageType.TEST;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class FileSystemPageTest {
   private static final String defaultPath = "./teststorage";
   private static final File base = new File(defaultPath);
-  private FileSystemPage root;
+  private WikiPage root;
 
   @BeforeClass
   public static void initialize() throws IOException {
@@ -188,10 +197,10 @@ public class FileSystemPageTest {
   public void testDefaultAttributesForNormalPageNames() throws Exception {
     WikiPage normalPage = WikiPageUtil.addPage(root, PathParser.parse("NormalPage"));
     PageData data = normalPage.getData();
-    assertTrue(data.hasAttribute(PropertyEDIT));
-    assertTrue(data.hasAttribute(PropertySEARCH));
-    assertTrue(data.hasAttribute(PropertyVERSIONS));
-    assertTrue(data.hasAttribute(PropertyFILES));
+    assertTrue(data.hasAttribute(EDIT));
+    assertTrue(data.hasAttribute(SEARCH));
+    assertTrue(data.hasAttribute(VERSIONS));
+    assertTrue(data.hasAttribute(FILES));
     assertFalse(data.hasAttribute(TEST.toString()));
     assertFalse(data.hasAttribute(SUITE.toString()));
   }
@@ -242,7 +251,7 @@ public class FileSystemPageTest {
 
   @Test
   public void testGetPath() throws Exception {
-    assertEquals(new File(defaultPath + "/RooT"), root.getFileSystemPath());
+    assertEquals(new File(defaultPath + "/RooT"), ((FileSystemPage) root).getFileSystemPath());
   }
 
   @Test
