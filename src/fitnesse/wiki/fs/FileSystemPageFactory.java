@@ -41,7 +41,7 @@ public class FileSystemPageFactory implements WikiPageFactory<WikiPage>, WikiPag
 
   private void initializeWikiPageFactories() {
     registerWikiPageFactory(innerFileSystemPageFactory);
-    registerWikiPageFactory(new NewStyleFileSystemPageFactory());
+    registerWikiPageFactory(new WikiFilePageFactory());
     // Note: ExternalSuitePageFactory should be last in line: it traverses the remainder of the tree looking for .html files.
     registerWikiPageFactory(new ExternalSuitePageFactory(fileSystem));
   }
@@ -106,11 +106,11 @@ public class FileSystemPageFactory implements WikiPageFactory<WikiPage>, WikiPag
     }
   }
 
-  protected class NewStyleFileSystemPageFactory implements WikiPageFactory<WikiPage> {
+  protected class WikiFilePageFactory implements WikiPageFactory<WikiPage> {
     @Override
     public WikiPage makePage(final File path, final String pageName, final WikiPage parent, final VariableSource variableSource) {
       Maybe<String> rootPath = variableSource.findVariable("FITNESSE_ROOTPATH");
-      return new NewFileSystemPage(path, pageName, parent, null, versionsController,
+      return new WikiFilePage(path, pageName, parent, null, versionsController,
         new FileSystemSubWikiPageFactory(new File(rootPath.getValue()), fileSystem, variableSource, FileSystemPageFactory.this),
         variableSource);
     }

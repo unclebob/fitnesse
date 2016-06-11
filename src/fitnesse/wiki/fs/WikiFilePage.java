@@ -10,16 +10,21 @@ import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.VariableSource;
 
-public class NewFileSystemPage extends BaseWikitextPage implements FileBasedWikiPage {
+/**
+ * With this page all content is saved in one file: WikiPageName.wiki.
+ * Sub wiki's are stored as WikiPageMame/SubWiki.wiki.
+ * This format should eventually replace the {@link FileSystemPage}.
+ */
+public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage {
 
   private final File path;
   private final VersionsController versionsController;
   private final SubWikiPageFactory subWikiPageFactory;
   private final String versionName;
 
-  public NewFileSystemPage(final File path, final String name, final WikiPage parent,
-                           final String versionName, final VersionsController versionsController,
-                           final SubWikiPageFactory subWikiPageFactory, final VariableSource variableSource) {
+  public WikiFilePage(final File path, final String name, final WikiPage parent,
+                      final String versionName, final VersionsController versionsController,
+                      final SubWikiPageFactory subWikiPageFactory, final VariableSource variableSource) {
     super(name, parent, variableSource);
     this.path = path;
     this.versionsController = versionsController;
