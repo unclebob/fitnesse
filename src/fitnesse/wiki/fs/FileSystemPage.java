@@ -40,12 +40,8 @@ public class FileSystemPage extends BaseWikitextPage implements FileBasedWikiPag
     this.versionName = null;
   }
 
-  public FileSystemPage(final File path, final String name, final FileSystemPage parent) {
+  private FileSystemPage(final File path, final String name, final FileSystemPage parent) {
     this(path, name, parent, null, parent.versionsController, parent.subWikiPageFactory, parent.getVariableSource());
-  }
-
-  public FileSystemPage(final File path, final String name, final FileSystemPage parent, final VersionsController versionsController) {
-    this(path, name, parent, null, versionsController, parent.subWikiPageFactory, parent.getVariableSource());
   }
 
   private FileSystemPage(FileSystemPage page, String versionName) {
@@ -53,7 +49,7 @@ public class FileSystemPage extends BaseWikitextPage implements FileBasedWikiPag
             page.versionsController, page.subWikiPageFactory, page.getVariableSource());
   }
 
-  private FileSystemPage(final File path, final String name, final FileSystemPage parent, final String versionName,
+  protected FileSystemPage(final File path, final String name, final FileBasedWikiPage parent, final String versionName,
                          final VersionsController versionsController, final SubWikiPageFactory subWikiPageFactory,
                          final VariableSource variableSource) {
     super(name, parent, variableSource);

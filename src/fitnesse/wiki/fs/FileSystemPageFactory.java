@@ -86,19 +86,14 @@ public class FileSystemPageFactory implements WikiPageFactory<WikiPage>, WikiPag
   /**
    * This is the class that does the sole handling of FileSystemPages
    */
-  protected class InnerFileSystemPageFactory implements WikiPageFactory<FileSystemPage> {
+  protected class InnerFileSystemPageFactory implements WikiPageFactory<FileBasedWikiPage> {
 
     @Override
-    public WikiPage makePage(final File path, final String pageName, final FileSystemPage parent, final VariableSource variableSource) {
-      if (parent != null) {
-        return new FileSystemPage(path, pageName, parent);
-      } else {
-        // Initialize fitnesse root path:
-        Maybe<String> rootPath = variableSource.findVariable("FITNESSE_ROOTPATH");
-        return new FileSystemPage(path, pageName, versionsController,
-          new FileSystemSubWikiPageFactory(new File(rootPath.getValue()), fileSystem, variableSource, FileSystemPageFactory.this),
-          variableSource);
-      }
+    public WikiPage makePage(final File path, final String pageName, final FileBasedWikiPage parent, final VariableSource variableSource) {
+      Maybe<String> rootPath = variableSource.findVariable("FITNESSE_ROOTPATH");
+      return new FileSystemPage(path, pageName, parent, null, versionsController,
+        new FileSystemSubWikiPageFactory(new File(rootPath.getValue()), fileSystem, variableSource, FileSystemPageFactory.this),
+        variableSource);
     }
 
     @Override

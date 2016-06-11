@@ -83,7 +83,16 @@ public class FileSystemPageFactoryTest {
     assertEquals(NewFileSystemPage.class, page.getClass());
   }
 
-    @Test
+  @Test
+  public void OldStyleDirectoryInNestedWikiFileIsFileSystemPage() throws Exception {
+    fileSystem.makeFile(new File("./somepath/WikiPage.wiki"), "stuff");
+    fileSystem.makeFile(new File("./somepath/WikiPage/SubPage/content.txt"), "stuff");
+    fileSystem.makeFile(new File("./somepath/WikiPage/SubPage/subsuite/myfile.html"), "stuff");
+    WikiPage page = rootPage.getPageCrawler().getPage(PathParser.parse("WikiPage.SubPage"));
+    assertEquals(FileSystemPage.class, page.getClass());
+  }
+
+  @Test
     public void HtmlFileIsExternalSuitePageChild() throws Exception {
         fileSystem.makeFile(new File("./somepath/ExternalSuite/myfile.html"), "stuff");
         ExternalSuitePage page = (ExternalSuitePage) rootPage.addChildPage("ExternalSuite");
