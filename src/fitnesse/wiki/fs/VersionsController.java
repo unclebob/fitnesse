@@ -58,5 +58,5 @@ public interface VersionsController {
    *
    * @param files files to delete
    */
-  void delete(FileVersion... files) throws IOException;
+  void delete(File... files) throws IOException;
 }

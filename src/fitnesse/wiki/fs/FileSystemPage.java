@@ -79,28 +79,7 @@ public class FileSystemPage extends BaseWikitextPage {
   @Override
   public void remove() {
     try {
-      versionsController.delete(new FileVersion() {
-        @Override
-        public File getFile() {
-          return getFileSystemPath();
-        }
-
-        @Override
-        public InputStream getContent() throws IOException {
-          return null;
-        }
-
-        @Override
-        public String getAuthor() {
-          // Who is deleting this page??
-          return "";
-        }
-
-        @Override
-        public Date getLastModificationTime() {
-          return new Date();
-        }
-      });
+      versionsController.delete(getFileSystemPath());
     } catch (IOException e) {
       throw new WikiPageLoadException(format("Could not remove page %s", new WikiPagePath(this).toString()), e);
     }

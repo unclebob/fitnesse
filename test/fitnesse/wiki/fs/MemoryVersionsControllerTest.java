@@ -1,21 +1,17 @@
 package fitnesse.wiki.fs;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import java.io.File;
 import java.util.Iterator;
+import org.junit.Before;
+import org.junit.Test;
 
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.fs.FileSystem;
-import fitnesse.wiki.fs.FileSystemPageFactory;
-import fitnesse.wiki.fs.MemoryFileSystem;
-import fitnesse.wiki.fs.MemoryVersionsController;
-import org.junit.Before;
-import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class MemoryVersionsControllerTest {
 
@@ -36,7 +32,7 @@ public class MemoryVersionsControllerTest {
     assertEquals("0", root.getVersions().iterator().next().getName());
   }
 
-  private FileSystemPage makeRoot() {
+  private WikiPage makeRoot() {
     return wikiPageFactory.makePage(new File(""), "RooT", null, new SystemVariableSource());
   }
 

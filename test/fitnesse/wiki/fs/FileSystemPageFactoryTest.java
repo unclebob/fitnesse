@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 public class FileSystemPageFactoryTest {
     private FileSystem fileSystem;
     private FileSystemPageFactory fileSystemPageFactory;
-    private FileSystemPage rootPage;
+    private WikiPage rootPage;
 
     @Before
     public void SetUp() throws Exception {
@@ -139,7 +139,7 @@ public class FileSystemPageFactoryTest {
     }
 
     @Override
-    public void delete(FileVersion... files) {
+    public void delete(File... files) {
     }
   }
 

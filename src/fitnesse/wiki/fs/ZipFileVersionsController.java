@@ -104,7 +104,7 @@ public class ZipFileVersionsController implements VersionsController {
   }
 
   @Override
-  public void delete(FileVersion... files) throws IOException {
+  public void delete(File... files) throws IOException {
     persistence.delete(files);
   }
 
