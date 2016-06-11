@@ -23,14 +23,13 @@ class FileSystemSubWikiPageFactory implements SubWikiPageFactory {
   }
 
   @Override
-  public List<WikiPage> getChildren(FileSystemPage page) {
+  public List<WikiPage> getChildren(FileBasedWikiPage page) {
     List<WikiPage> children = getNormalChildren(page);
-    // TODO: get new style children
     children.addAll(getSymlinkChildren(page));
     return children;
   }
 
-  private List<WikiPage> getNormalChildren(FileSystemPage page) {
+  private List<WikiPage> getNormalChildren(FileBasedWikiPage page) {
     final File thisDir = page.getFileSystemPath();
     final List<WikiPage> children = new LinkedList<>();
     if (fileSystem.exists(thisDir)) {
@@ -59,7 +58,7 @@ class FileSystemSubWikiPageFactory implements SubWikiPageFactory {
   }
 
   @Override
-  public WikiPage getChildPage(FileSystemPage page, String childName) {
+  public WikiPage getChildPage(FileBasedWikiPage page, String childName) {
     File parent = page.getFileSystemPath();
 
     WikiPage childPage = makeChildPage(new File(parent, childName), childName, page);
@@ -69,7 +68,7 @@ class FileSystemSubWikiPageFactory implements SubWikiPageFactory {
     return childPage;
   }
 
-  private WikiPage makeChildPage(File path, String childName, FileSystemPage parent) {
+  private WikiPage makeChildPage(File path, String childName, FileBasedWikiPage parent) {
      return factory.makePage(path, childName, parent, variableSource);
   }
 

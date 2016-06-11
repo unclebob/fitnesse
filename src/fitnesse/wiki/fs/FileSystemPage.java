@@ -19,7 +19,7 @@ import util.FileUtil;
 import static fitnesse.wiki.PageType.STATIC;
 import static java.lang.String.format;
 
-public class FileSystemPage extends BaseWikitextPage {
+public class FileSystemPage extends BaseWikitextPage implements FileBasedWikiPage {
 
   static final String contentFilename = "content.txt";
   static final String propertiesFilename = "properties.xml";

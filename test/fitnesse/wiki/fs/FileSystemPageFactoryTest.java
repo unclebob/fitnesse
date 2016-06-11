@@ -1,6 +1,7 @@
 package fitnesse.wiki.fs;
 
 import fitnesse.ConfigurationParameter;
+import fitnesse.wiki.PathParser;
 import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
@@ -55,6 +56,32 @@ public class FileSystemPageFactoryTest {
         WikiPage page = rootPage.addChildPage("WikiPage");
         assertEquals(FileSystemPage.class, page.getClass());
     }
+
+  @Test
+  public void FileWithWikiExtensionIsNewFileSystemPage() throws Exception {
+    fileSystem.makeFile(new File("./somepath/WikiPage.wiki"), "stuff");
+    fileSystem.makeFile(new File("./somepath/WikiPage/subsuite/myfile.html"), "stuff");
+    WikiPage page = rootPage.addChildPage("WikiPage");
+    assertEquals(NewFileSystemPage.class, page.getClass());
+  }
+
+  @Test
+  public void NestedWikiFileIsNewFileSystemPage() throws Exception {
+    fileSystem.makeFile(new File("./somepath/WikiPage/content.txt"), "stuff");
+    fileSystem.makeFile(new File("./somepath/WikiPage/subsuite.wiki"), "stuff");
+    fileSystem.makeFile(new File("./somepath/WikiPage/subsuite/myfile.html"), "stuff");
+    WikiPage page = rootPage.getPageCrawler().getPage(PathParser.parse("WikiPage.subsuite"));
+    assertEquals(NewFileSystemPage.class, page.getClass());
+  }
+
+  @Test
+  public void NestedWikiFileInOldStyleDirectoryIsNewFileSystemPage() throws Exception {
+    fileSystem.makeFile(new File("./somepath/WikiPage.wiki"), "stuff");
+    fileSystem.makeFile(new File("./somepath/WikiPage/subsuite.wiki"), "stuff");
+    fileSystem.makeFile(new File("./somepath/WikiPage/subsuite/myfile.html"), "stuff");
+    WikiPage page = rootPage.getPageCrawler().getPage(PathParser.parse("WikiPage.subsuite"));
+    assertEquals(NewFileSystemPage.class, page.getClass());
+  }
 
     @Test
     public void HtmlFileIsExternalSuitePageChild() throws Exception {
