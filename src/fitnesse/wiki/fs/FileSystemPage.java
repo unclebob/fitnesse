@@ -65,7 +65,7 @@ public class FileSystemPage extends BaseWikitextPage {
 
   @Override
   public boolean hasChildPage(final String pageName) {
-    return subWikiPageFactory.getChildPage(this, pageName) != null;
+    return getChildPage(pageName) != null;
   }
 
   @Override
