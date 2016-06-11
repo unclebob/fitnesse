@@ -41,6 +41,7 @@ public class FileSystemPageFactory implements WikiPageFactory<WikiPage>, WikiPag
 
   private void initializeWikiPageFactories() {
     registerWikiPageFactory(innerFileSystemPageFactory);
+    // Note: ExternalSuitePageFactory should be last in line: it traverses the remainder of the tree looking for .html files.
     registerWikiPageFactory(new ExternalSuitePageFactory(fileSystem));
   }
 
@@ -102,8 +103,6 @@ public class FileSystemPageFactory implements WikiPageFactory<WikiPage>, WikiPag
     @Override
     public boolean supports(File path) {
       String[] children = fileSystem.list(path);
-      // Empty folders are considered
-//      if (children.length == 0) return true;
       for (String child : children) {
         if (child.equals(FileSystemPage.contentFilename)) return true;
       }

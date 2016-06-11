@@ -36,9 +36,7 @@ class FileSystemSubWikiPageFactory implements SubWikiPageFactory {
     if (fileSystem.exists(thisDir)) {
       final String[] subFiles = fileSystem.list(thisDir);
       for (final String subFile : subFiles) {
-        // TODO: Use factory.supports here!
-        if (fileIsValid(new File(thisDir, subFile))) {
-//        if (factory.supports(new File(thisDir, subFile))) {
+        if (factory.supports(new File(thisDir, subFile))) {
           children.add(getChildPage(page, subFile));
         }
       }
@@ -69,11 +67,6 @@ class FileSystemSubWikiPageFactory implements SubWikiPageFactory {
       childPage = createSymbolicPage(page, childName);
     }
     return childPage;
-  }
-
-
-  private boolean fileIsValid(final File path) {
-    return fileSystem.isDirectory(path) && PathParser.isSingleWikiWord(path.getName());
   }
 
   private WikiPage makeChildPage(File path, String childName, FileSystemPage parent) {

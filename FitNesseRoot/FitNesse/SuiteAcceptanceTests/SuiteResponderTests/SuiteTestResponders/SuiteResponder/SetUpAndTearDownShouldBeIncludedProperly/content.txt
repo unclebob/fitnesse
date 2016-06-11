@@ -17,6 +17,7 @@ ${SUT_PATH}
 |SuiteParent.SuiteChildOne.SuiteTearDown |                                 |
 |SuiteParent.SuiteChildOne.TestOneOne    |                                 |
 |SuiteParent.SuiteChildOne.TestOneTwo    |                                 |
+|SuiteParent.SuiteChildTwo               |                                 |
 |SuiteParent.SuiteChildTwo.SuiteSetUp    |                                 |
 |SuiteParent.SuiteChildTwo.SuiteTearDown |                                 |
 |SuiteParent.SuiteChildTwo.TestTwoOne    |                                 |
