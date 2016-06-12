@@ -99,19 +99,20 @@ public abstract class Binding {
   }
 
   private static TypeAdapter makeAdapterForMethod(String name, Fixture fixture, Matcher matcher) {
-    Method method = getMethod(name, fixture, matcher);
-
-    if (method == null)
-      throw new NoSuchMethodFitFailureException(name);
-    return TypeAdapter.on(fixture, method, false);
+    return makeAdapterForMethod(name, fixture, matcher, false);
   }
 
   private static TypeAdapter makeAdapterForRegexMethod(String name, Fixture fixture, Matcher matcher) {
+    return makeAdapterForMethod(name, fixture, matcher, true);
+  }
+
+  private static TypeAdapter makeAdapterForMethod(String name, Fixture fixture, Matcher matcher, boolean isRegex) {
     Method method = getMethod(name, fixture, matcher);
 
-    if (method == null)
+    if (method == null) {
       throw new NoSuchMethodFitFailureException(name);
-    return TypeAdapter.on(fixture, method, true);
+    }
+    return TypeAdapter.on(fixture, method, isRegex);
   }
 
   private static Method getMethod(String name, Fixture fixture, Matcher matcher) {
