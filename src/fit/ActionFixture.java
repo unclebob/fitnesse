@@ -45,7 +45,7 @@ public class ActionFixture extends Fixture {
     if (argumentCell == null)
       throw new FitFailureException("You must specify an argument.");
 
-    Method enterMethod = findMethodWithArgs(1);
+    Method enterMethod = tryFindMethodWithArgs(1);
     Class<?> parameterType = enterMethod.getParameterTypes()[0];
     String argument = argumentCell.text();
     enterMethod.invoke(actor, adaptArgumentToType(parameterType, argument));
@@ -63,11 +63,11 @@ public class ActionFixture extends Fixture {
   }
 
   public void press() throws Exception {
-    findMethodWithArgs(0).invoke(actor);
+    tryFindMethodWithArgs(0).invoke(actor);
   }
 
   public void check() throws Throwable {
-    Method checkMethod = findMethodWithArgs(0);
+    Method checkMethod = tryFindMethodWithArgs(0);
     Class<?> returnType = checkMethod.getReturnType();
 
     Parse checkValueCell = cells.more.more;
@@ -86,16 +86,21 @@ public class ActionFixture extends Fixture {
     }
   }
 
-  protected Method findMethodWithArgs(int args) throws NoSuchMethodException {
+  protected Method tryFindMethodWithArgs(int args) throws NoSuchMethodException {
     Parse methodCell = cells.more;
     if (isNullOrBlank(methodCell))
       throw new FitFailureException("You must specify a method.");
-    return findMethodWithArgs(camel(methodCell.text()), args);
-  }
-
-  protected Method findMethodWithArgs(String methodName, int args) throws NoSuchMethodException {
+    String methodName = camel(methodCell.text());
     if (actor == null)
       throw new FitFailureException("You must start a fixture using the 'start' keyword.");
+    Method theMethod = findMethodWithArgs(methodName, args);
+    if (theMethod == null) {
+      throw new NoSuchMethodFitFailureException(methodName);
+    }
+    return theMethod;
+  }
+
+  private Method findMethodWithArgs(String methodName, int args) {
     Method[] methods = actor.getClass().getMethods();
     Method theMethod = null;
     for (Method m : methods) {
@@ -107,9 +112,7 @@ public class ActionFixture extends Fixture {
         }
       }
     }
-    if (theMethod == null) {
-      throw new NoSuchMethodFitFailureException(methodName);
-    }
     return theMethod;
   }
+
 }
