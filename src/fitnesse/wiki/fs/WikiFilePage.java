@@ -22,7 +22,7 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
   private final SubWikiPageFactory subWikiPageFactory;
   private final String versionName;
 
-  public WikiFilePage(final File path, final String name, final WikiPage parent,
+  protected WikiFilePage(final File path, final String name, final WikiPage parent,
                       final String versionName, final VersionsController versionsController,
                       final SubWikiPageFactory subWikiPageFactory, final VariableSource variableSource) {
     super(name, parent, variableSource);
