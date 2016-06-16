@@ -296,6 +296,7 @@ ${OPT}${BAR} ''optional table row'' ${BAR}${OPT} ''optional 2nd column'' ${BAR}$
 | ${CODE} RSS_PREFIX ${CODEend} | !c | !c | '' Link prefix for [[RSS Feeds][AdministeringFitNesse.RestfulServices.RssFeed]] '' |
 | ${CODE} INCLUDE_SCENARIO_LIBRARIES ${CODEend} | !c false* | !c true${BAR}false | ''Test pages should include [[!-ScenarioLibrary-!][WritingAcceptanceTests.SpecialPages]] pages''!-
 -! * defaults to true if the SLiM test system is defined. |
+| ${CODE} FORMAT_LOCALE ${CODEend} | !c nil | !c IETF language tag | '' IETF language tag for the locale used for formatting evaluated expressions '' |
 | ${CODE} ''PAGE_NAME'' ${CODEend} | !c | !c Read Only | '' Name of current page'' |
 | ${CODE} ''PAGE_PATH '' ${CODEend} | !c | !c Read Only | '' Fully qualified name of parent. '' |
 | ${CODE} ''RUNNING_PAGE_NAME'' ${CODEend} | !c | !c Read Only | '' Name of current top level running page'' |
