@@ -50,7 +50,7 @@ public class VersionsControllerFixture {
   public void deletePage(String pageName) {
     final PageCrawler pageCrawler = rootPage.getPageCrawler();
     lastUsedPage = pageCrawler.getPage(PathParser.parse(pageName));
-    lastUsedPage.getParent().removeChildPage(lastUsedPage.getName());
+    lastUsedPage.remove();
   }
 
   public int historySize() {

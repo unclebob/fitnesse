@@ -109,8 +109,8 @@ public class FileSystemPageTest {
   public void testRemovePage() throws Exception {
     WikiPage levelOne = WikiPageUtil.addPage(root, PathParser.parse("LevelOne"));
     levelOne.commit(levelOne.getData());
-    WikiPageUtil.addPage(levelOne, PathParser.parse("LevelTwo"));
-    levelOne.removeChildPage("LevelTwo");
+    WikiPage levelTwo = WikiPageUtil.addPage(levelOne, PathParser.parse("LevelTwo"));
+    levelTwo.remove();
     File fileOne = new File(defaultPath + "/RooT/LevelOne");
     File fileTwo = new File(defaultPath + "/RooT/LevelOne/LevelTwo");
     assertTrue(fileOne.exists());
@@ -126,7 +126,7 @@ public class FileSystemPageTest {
     File childOne = new File(defaultPath + "/RooT/LevelOne");
     File childTwo = new File(defaultPath + "/RooT/LevelOne/LevelTwo");
     assertTrue(childOne.exists());
-    root.removeChildPage("LevelOne");
+    root.getChildPage("LevelOne").remove();
     assertFalse(childTwo.exists());
     assertFalse(childOne.exists());
   }

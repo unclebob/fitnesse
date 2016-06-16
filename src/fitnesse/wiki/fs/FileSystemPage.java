@@ -72,32 +72,37 @@ public class FileSystemPage extends BaseWikitextPage {
   public void removeChildPage(final String name) {
     final WikiPage childPage = getChildPage(name);
     if (childPage instanceof FileSystemPage) {
-      try {
-        versionsController.delete(new FileVersion() {
-          @Override
-          public File getFile() {
-            return ((FileSystemPage) childPage).getFileSystemPath();
-          }
+      childPage.remove();
+    }
+  }
 
-          @Override
-          public InputStream getContent() throws IOException {
-            return null;
-          }
+  @Override
+  public void remove() {
+    try {
+      versionsController.delete(new FileVersion() {
+        @Override
+        public File getFile() {
+          return getFileSystemPath();
+        }
 
-          @Override
-          public String getAuthor() {
-            // Who is deleting this page??
-            return "";
-          }
+        @Override
+        public InputStream getContent() throws IOException {
+          return null;
+        }
 
-          @Override
-          public Date getLastModificationTime() {
-            return new Date();
-          }
-        });
-      } catch (IOException e) {
-        throw new WikiPageLoadException(format("Could not remove page %s", new WikiPagePath(childPage).toString()), e);
-      }
+        @Override
+        public String getAuthor() {
+          // Who is deleting this page??
+          return "";
+        }
+
+        @Override
+        public Date getLastModificationTime() {
+          return new Date();
+        }
+      });
+    } catch (IOException e) {
+      throw new WikiPageLoadException(format("Could not remove page %s", new WikiPagePath(this).toString()), e);
     }
   }
 

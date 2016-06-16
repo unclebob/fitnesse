@@ -110,8 +110,7 @@ public abstract class PageMovementResponder implements SecureResponder {
 
 	    moveChildren(movedPage, targetPage);
 
-	    WikiPage parentOfMovedPage = movedPage.getParent();
-	    parentOfMovedPage.removeChildPage(movedPage.getName());
+      movedPage.remove();
   	}
   }
 
