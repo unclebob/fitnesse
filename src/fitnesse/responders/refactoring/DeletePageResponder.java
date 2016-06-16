@@ -17,6 +17,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public class DeletePageResponder implements SecureResponder {
@@ -26,7 +27,7 @@ public class DeletePageResponder implements SecureResponder {
   private FitNesseContext context;
 
   @Override
-  public Response makeResponse(final FitNesseContext context, final Request request) {
+  public Response makeResponse(final FitNesseContext context, final Request request) throws Exception {
     this.context = context;
     intializeResponse(request);
 
@@ -38,7 +39,7 @@ public class DeletePageResponder implements SecureResponder {
     return response;
   }
 
-  private void tryToDeletePage(Request request) {
+  private void tryToDeletePage(Request request) throws UnsupportedEncodingException {
     String confirmedString = request.getInput("confirmed");
     if (!"yes".equalsIgnoreCase(confirmedString)) {
       response.setContent(buildConfirmationHtml(context.getRootPage(), qualifiedPageName, context));
@@ -74,7 +75,7 @@ public class DeletePageResponder implements SecureResponder {
 
   private String buildConfirmationHtml(final WikiPage root, final String qualifiedPageName, final FitNesseContext context) {
     HtmlPage html = context.pageFactory.newPage();
-    
+
     String tags = "";
 
     WikiPagePath path = PathParser.parse(qualifiedPageName);

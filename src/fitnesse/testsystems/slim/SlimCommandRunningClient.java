@@ -13,6 +13,7 @@ import fitnesse.socketservice.ClientSocketFactory;
 import fitnesse.testsystems.CommandRunner;
 
 import fitnesse.util.Clock;
+import util.FileUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -68,15 +69,12 @@ public class SlimCommandRunningClient implements SlimClient {
   }
 
   @Override
-  public void kill() throws IOException {
+  public void kill() {
     if (slimRunner != null)
       slimRunner.kill();
-    if (reader != null)
-      reader.close();
-    if (writer != null)
-      writer.close();
-    if (client != null)
-      client.close();
+    FileUtil.close(reader);
+    FileUtil.close(writer);
+    FileUtil.close(client);
   }
 
   @Override
@@ -146,12 +144,17 @@ public class SlimCommandRunningClient implements SlimClient {
   }
 
   @Override
-  public Map<String, Object> invokeAndGetResponse(List<Instruction> statements) throws IOException {
+  public Map<String, Object> invokeAndGetResponse(List<Instruction> statements) throws SlimCommunicationException {
     if (statements.isEmpty())
       return Collections.emptyMap();
     String instructions = SlimSerializer.serialize(new SlimListBuilder(slimServerVersion).toList(statements));
-    SlimStreamReader.sendSlimMessage(writer, instructions);
-    String results = reader.getSlimMessage();
+    String results;
+    try {
+      SlimStreamReader.sendSlimMessage(writer, instructions);
+      results = reader.getSlimMessage();
+    } catch (IOException e) {
+      throw new SlimCommunicationException("Could not send/receive data with SUT", e);
+    }
     List<Object> resultList = SlimDeserializer.deserialize(results);
     return resultToMap(resultList);
   }
@@ -159,9 +162,6 @@ public class SlimCommandRunningClient implements SlimClient {
   @Override
   public void bye() throws IOException {
     SlimStreamReader.sendSlimMessage(writer, SlimVersion.BYEMESSAGE);
-    writer.close();
-    reader.close();
-    client.close();
     slimRunner.join();
     kill();
   }

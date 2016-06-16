@@ -38,12 +38,12 @@ public class ChunkedResponse extends Response implements Closeable {
     return Integer.toHexString(value);
   }
 
-  public void add(String text) {
+  public void add(String text) throws IOException {
     if (text != null)
       add(getEncodedBytes(text));
   }
 
-  public void add(byte[] bytes) {
+  public void add(byte[] bytes) throws IOException {
     if (bytes == null || bytes.length == 0)
       return;
     if (dontChunk) {
@@ -57,20 +57,20 @@ public class ChunkedResponse extends Response implements Closeable {
     bytesSent += bytes.length;
   }
 
-  public void addTrailingHeader(String key, String value) {
+  public void addTrailingHeader(String key, String value) throws IOException {
     if (!dontChunk) {
       String header = key + ": " + value + CRLF;
       sender.send(header.getBytes());
     }
   }
 
-  public void closeChunks() {
+  public void closeChunks() throws IOException {
     if (!dontChunk) {
       sender.send(("0" + CRLF).getBytes());
     }
   }
 
-  public void closeTrailer() {
+  public void closeTrailer() throws IOException {
     if (!dontChunk) {
       sender.send(CRLF.getBytes());
     }

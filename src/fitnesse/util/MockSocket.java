@@ -23,16 +23,12 @@ public class MockSocket extends Socket {
   private String host;
   private boolean closed;
 
-  public MockSocket() {
-    try {
-      PipedInputStream serverInput = new PipedInputStream();
-      PipedInputStream clientInput = new PipedInputStream();
-      PipedOutputStream serverOutput = new PipedOutputStream(clientInput);
-      input = serverInput;
-      output = serverOutput;
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+  public MockSocket() throws IOException {
+    PipedInputStream serverInput = new PipedInputStream();
+    PipedInputStream clientInput = new PipedInputStream();
+    PipedOutputStream serverOutput = new PipedOutputStream(clientInput);
+    input = serverInput;
+    output = serverOutput;
   }
 
   public MockSocket(String input) {

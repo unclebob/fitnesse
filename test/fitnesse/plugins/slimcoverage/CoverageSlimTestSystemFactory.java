@@ -22,7 +22,7 @@ public class CoverageSlimTestSystemFactory implements TestSystemFactory {
   }
 
   @Override
-  public final TestSystem create(Descriptor descriptor) throws IOException {
+  public final TestSystem create(Descriptor descriptor) {
     SlimCoverageTestSystem testSystem = new SlimCoverageTestSystem("slimCoverage",
             slimTableFactory.copy(), customComparatorRegistry);
 

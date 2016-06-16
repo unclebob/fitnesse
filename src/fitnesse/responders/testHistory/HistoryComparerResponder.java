@@ -1,24 +1,22 @@
 package fitnesse.responders.testHistory;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-import fitnesse.reporting.history.PageHistory;
-import org.xml.sax.SAXException;
-
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.reporting.history.PageHistory;
 import fitnesse.responders.ErrorResponder;
-import fitnesse.html.template.HtmlPage;
-import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -64,7 +62,7 @@ public class HistoryComparerResponder implements Responder {
   }
 
   private Response makeResponseFromComparison(FitNesseContext context,
-      Request request) throws IOException, SAXException {
+      Request request) throws Exception {
     if (comparer.compare(firstFilePath, secondFilePath))
       return makeValidResponse(request);
     else {
@@ -116,7 +114,7 @@ public class HistoryComparerResponder implements Responder {
     return false;
   }
 
-  private Response makeValidResponse(Request request) {
+  private Response makeValidResponse(Request request) throws UnsupportedEncodingException {
     int count = 0;
     HtmlPage page = context.pageFactory.newPage();
     page.setTitle("History Comparison");
@@ -163,7 +161,7 @@ public class HistoryComparerResponder implements Responder {
   }
 
   private Response makeErrorResponse(FitNesseContext context, Request request,
-      String message) {
+      String message) throws Exception {
     return new ErrorResponder(message).makeResponse(context, request);
   }
 }

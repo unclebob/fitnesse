@@ -4,6 +4,7 @@ package fitnesse.responders.run;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -192,7 +193,7 @@ public class TestResponderTest {
     return getExecutionLog();
   }
 
-  private String getExecutionLog() {
+  private String getExecutionLog() throws Exception {
     return ((SimpleResponse) new ExecutionLogResponder().makeResponse(context, request)).getContent();
   }
 
@@ -315,7 +316,7 @@ public class TestResponderTest {
   }
 
 
-  private void ensureXmlResultFileDoesNotExist(TestSummary counts) {
+  private void ensureXmlResultFileDoesNotExist(TestSummary counts) throws IOException {
     String resultsFileName = String.format("%s/TestPage/20081205011900_%d_%d_%d_%d.xml",
       context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
     xmlResultsFile = new File(resultsFileName);

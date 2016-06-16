@@ -24,7 +24,7 @@ public class SaveResponder implements SecureResponder {
   private long editTimeStamp;
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     editTimeStamp = getEditTime(request);
     ticketId = getTicketId(request);
     String resource = request.getResource();
@@ -92,7 +92,7 @@ public class SaveResponder implements SecureResponder {
     data.setOrRemoveAttribute(PageData.PropertyHELP, helpText);
     data.setOrRemoveAttribute(PageData.PropertySUITES, suites);
     SaveRecorder.pageSaved(page, ticketId);
-    
+
     data.setOrRemoveAttribute(PageData.LAST_MODIFYING_USER, user);
   }
 

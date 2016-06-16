@@ -12,16 +12,12 @@ public class DateTimeUtil {
   private static final String DATE_FORMAT = "MM/dd/yyyy HH:mm:ss";
   private static final String ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZZ";
 
-  public static long getTimeFromString(String time) {
+  public static long getTimeFromString(String time) throws ParseException {
     return getDateFromString(time).getTime();
   }
 
-  public static Date getDateFromString(String dateString) {
-    try {
-      return DateUtils.parseDateStrictly(dateString, new String[]{ ISO_DATE_FORMAT, DATE_FORMAT });
-    } catch (ParseException e) {
-      throw new RuntimeException(e);
-    }
+  public static Date getDateFromString(String dateString) throws ParseException {
+    return DateUtils.parseDateStrictly(dateString, new String[]{ ISO_DATE_FORMAT, DATE_FORMAT });
   }
 
   public static String formatDate(Date date) {

@@ -31,7 +31,7 @@ public class XmlUtil {
       try {
         builder = documentBuilderFactory.newDocumentBuilder();
       } catch (ParserConfigurationException e) {
-        throw new RuntimeException(e);
+        throw new IllegalStateException(e);
       }
       documentBuilder.set(builder);
     }
@@ -134,7 +134,7 @@ public class XmlUtil {
       StreamResult result =  new StreamResult(sw);
       transformer.transform(source, result);
     } catch (TransformerException e) {
-      throw new RuntimeException("Unable to serialize XML", e);
+      throw new IllegalStateException("Unable to serialize XML", e);
     }
 
     return sw.toString();

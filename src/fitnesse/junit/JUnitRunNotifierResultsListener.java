@@ -36,7 +36,7 @@ public class JUnitRunNotifierResultsListener
   }
 
   @Override
-  public void unableToStartTestSystem(String testSystemName, Throwable cause) throws IOException {
+  public void unableToStartTestSystem(String testSystemName, Throwable cause) {
     notifyOfTestSystemException(testSystemName, cause);
   }
 

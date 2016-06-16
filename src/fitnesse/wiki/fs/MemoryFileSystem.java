@@ -95,7 +95,7 @@ public class MemoryFileSystem implements FileSystem {
 
   @Override
   public void rename(File file, File originalFile) {
-    throw new RuntimeException("FileSystem.rename() has not been implemented for Memory file system.");
+    throw new IllegalStateException("FileSystem.rename() has not been implemented for Memory file system.");
   }
 
   @Override

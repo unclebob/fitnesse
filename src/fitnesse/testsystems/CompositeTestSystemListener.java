@@ -1,9 +1,17 @@
 package fitnesse.testsystems;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import static java.lang.String.format;
+
+/**
+ * Send commands to a set of listeners.
+ * Misbehaving listeners (the ones that throw IOException's) are removed from the list of listeners.
+ */
 public class CompositeTestSystemListener implements TestSystemListener {
 
   private final List<TestSystemListener> listeners = new LinkedList<>();
@@ -17,31 +25,31 @@ public class CompositeTestSystemListener implements TestSystemListener {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem) throws IOException {
+  public void testSystemStarted(final TestSystem testSystem) {
     for (TestSystemListener listener : listeners)
       listener.testSystemStarted(testSystem);
   }
 
   @Override
-  public void testOutputChunk(String output) throws IOException {
+  public void testOutputChunk(final String output) {
     for (TestSystemListener listener : listeners)
       listener.testOutputChunk(output);
   }
 
   @Override
-  public void testStarted(TestPage testPage) throws IOException {
+  public void testStarted(final TestPage testPage) {
     for (TestSystemListener listener : listeners)
       listener.testStarted(testPage);
   }
 
   @Override
-  public void testComplete(TestPage testPage, TestSummary testSummary) throws IOException {
+  public void testComplete(final TestPage testPage, final TestSummary testSummary) {
     for (TestSystemListener listener : listeners)
       listener.testComplete(testPage, testSummary);
   }
 
   @Override
-  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
+  public void testSystemStopped(final TestSystem testSystem, final Throwable cause) {
     for (TestSystemListener listener : listeners)
       listener.testSystemStopped(testSystem, cause);
   }

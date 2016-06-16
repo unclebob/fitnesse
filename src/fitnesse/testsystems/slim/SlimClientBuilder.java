@@ -32,7 +32,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   }
 
   @Override
-  public SlimCommandRunningClient build() throws IOException {
+  public SlimCommandRunningClient build() {
     CommandRunner commandRunner;
 
     if (useManualStartForTestSystem()) {

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import java.io.File;
+import java.io.IOException;
 
 public class FileUtilTest {
   @Test
@@ -83,7 +84,7 @@ public class FileUtilTest {
   }
 
   @Test
-    public void testOrganizeFilesMixOfFilesAndDirs() {
+    public void testOrganizeFilesMixOfFilesAndDirs() throws IOException {
     File dir = FileUtil.createDir("temp7");
     File dir3 = createSubDir(dir, "dDir");
     File file3 = createFileInDir(dir, "dFile.txt");
@@ -109,7 +110,7 @@ public class FileUtilTest {
     FileUtil.deleteFileSystemDirectory(dir);
   }
 
-  private File createFileInDir(File dir, String fileName) {
+  private File createFileInDir(File dir, String fileName) throws IOException {
     return FileUtil.createFile(new File(dir.getPath(), fileName), "");
   }
 

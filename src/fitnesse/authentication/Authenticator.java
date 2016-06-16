@@ -2,15 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
+import java.io.UnsupportedEncodingException;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.Request;
+import org.ietf.jgss.GSSException;
 
 public abstract class Authenticator {
   public Authenticator() {
   }
 
-  public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) {
+  public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) throws Exception {
     request.getCredentials();
     String username = request.getAuthorizationUsername();
     String password = request.getAuthorizationPassword();

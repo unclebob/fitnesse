@@ -121,7 +121,7 @@ public class UpdateFileListTest {
     String args[] = {"-baseDirectory:C:\\FitNesse/Resources", "MasterFolder"};
     updater.parseCommandLine(args);
     assertEquals(asList("C:\\FitNesse/Resources/MasterFolder"), updater.getDirectories());
- 
+
   }
 
   private String runCreateFileAndGetContent(String[] args) throws Exception {
@@ -141,7 +141,7 @@ public class UpdateFileListTest {
   }
 
   @After
-  public void tearDown() {
+  public void tearDown() throws IOException {
     FileUtil.deleteFileSystemDirectory("MasterFolder");
   }
 }

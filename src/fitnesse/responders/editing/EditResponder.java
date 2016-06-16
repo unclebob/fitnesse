@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import java.io.UnsupportedEncodingException;
+
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -39,16 +41,16 @@ public class EditResponder implements SecureResponder {
   }
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     boolean nonExistent = request.hasInput("nonExistent");
     return doMakeResponse(context, request, nonExistent);
   }
 
-  public Response makeResponseForNonExistentPage(FitNesseContext context, Request request) {
+  public Response makeResponseForNonExistentPage(FitNesseContext context, Request request) throws UnsupportedEncodingException {
     return doMakeResponse(context, request, true);
   }
 
-  protected Response doMakeResponse(FitNesseContext context, Request request, boolean firstTimeForNewPage) {
+  protected Response doMakeResponse(FitNesseContext context, Request request, boolean firstTimeForNewPage) throws UnsupportedEncodingException {
     initializeResponder(context.getRootPage(), request);
 
     SimpleResponse response = new SimpleResponse();

@@ -27,17 +27,17 @@ public class TestExecutionReport extends ExecutionReport {
     super(version, rootPath);
   }
 
-  public TestExecutionReport(InputStream input) throws IOException, SAXException {
+  public TestExecutionReport(InputStream input) throws IOException, SAXException, InvalidReportException {
     Document xmlDoc = XmlUtil.newDocument(input);
     unpackXml(xmlDoc);
   }
 
-  public TestExecutionReport(File file) throws IOException, SAXException {
+  public TestExecutionReport(File file) throws IOException, SAXException, InvalidReportException {
     Document xmlDoc = XmlUtil.newDocument(file);
     unpackXml(xmlDoc);
   }
 
-  public TestExecutionReport(Document xmlDocument) {
+  public TestExecutionReport(Document xmlDocument) throws InvalidReportException {
     unpackXml(xmlDocument);
   }
 

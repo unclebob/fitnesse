@@ -1,21 +1,21 @@
 package fitnesse.plugins.slimcoverage;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.TestExecutionException;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.UnableToStopException;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.HtmlSlimTestSystem;
 import fitnesse.testsystems.slim.SlimClient;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
-import fitnesse.testsystems.slim.tables.SyntaxError;
 import fitnesse.wiki.WikiPageDummy;
 
 public class SlimCoverageTestSystem extends HtmlSlimTestSystem {
@@ -29,24 +29,24 @@ public class SlimCoverageTestSystem extends HtmlSlimTestSystem {
     private static SlimClient dummySlimClient() {
         return new SlimClient() {
             @Override
-            public void start() throws IOException {
+            public void start() {
             }
 
             @Override
-            public Map<String, Object> invokeAndGetResponse(List<Instruction> statements) throws IOException {
+            public Map<String, Object> invokeAndGetResponse(List<Instruction> statements) {
                 return null;
             }
 
             @Override
-            public void connect() throws IOException {
+            public void connect() {
             }
 
             @Override
-            public void bye() throws IOException {
+            public void bye() {
             }
 
             @Override
-            public void kill() throws IOException {
+            public void kill() {
             }
         };
     }
@@ -63,12 +63,12 @@ public class SlimCoverageTestSystem extends HtmlSlimTestSystem {
     }
 
     @Override
-    protected void processTable(SlimTable table) throws IOException, SyntaxError {
+    protected void processTable(SlimTable table) throws TestExecutionException {
         table.getAssertions();
     }
 
     @Override
-    protected void testStarted(TestPage testPage) throws IOException {
+    protected void testStarted(TestPage testPage) {
         super.testStarted(testPage);
         // ensure we have a single test passed, which is sometimes a requirement
         // (i.e. when run by FitNesseRunner)
@@ -76,7 +76,7 @@ public class SlimCoverageTestSystem extends HtmlSlimTestSystem {
     }
 
     @Override
-    public void bye() throws IOException {
+    public void bye() throws UnableToStopException {
         try {
             reportScenarioUsage();
         } finally {
@@ -84,15 +84,15 @@ public class SlimCoverageTestSystem extends HtmlSlimTestSystem {
         }
     }
 
-    protected void reportScenarioUsageHeader(String header) throws IOException {
+    protected void reportScenarioUsageHeader(String header) {
         testOutputChunk("<h4>" + header + "</h4>");
     }
 
-    protected void reportScenarioUsageNewline() throws IOException {
+    protected void reportScenarioUsageNewline() {
         testOutputChunk("<br/>");
     }
 
-    protected void reportScenarioUsage() throws IOException {
+    protected void reportScenarioUsage() {
         WikiPageDummy pageDummy = new WikiPageDummy("Scenario Usage Report", "Scenario Usage Report Content", null);
         WikiTestPage testPage = new WikiTestPage(pageDummy);
         testStarted(testPage);

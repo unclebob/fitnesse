@@ -22,12 +22,8 @@ public class MockResponseSender implements ResponseSender {
   }
 
   @Override
-  public void send(byte[] bytes) {
-    try {
-      output.write(bytes);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+  public void send(byte[] bytes) throws IOException {
+    output.write(bytes);
   }
 
   @Override
@@ -35,12 +31,8 @@ public class MockResponseSender implements ResponseSender {
     closed = true;
   }
 
-  public String sentData() {
-    try {
-      return ((ByteArrayOutputStream) output).toString(FileUtil.CHARENCODING);
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException("Unable to decode output stream", e);
-    }
+  public String sentData() throws UnsupportedEncodingException {
+    return ((ByteArrayOutputStream) output).toString(FileUtil.CHARENCODING);
   }
 
   public void doSending(Response response) throws IOException {

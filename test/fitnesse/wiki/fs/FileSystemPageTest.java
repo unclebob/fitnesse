@@ -12,6 +12,7 @@ import fitnesse.util.Clock;
 import util.FileUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class FileSystemPageTest {
   private FileSystemPage root;
 
   @BeforeClass
-  public static void initialize() {
+  public static void initialize() throws IOException {
     FileUtil.deleteFileSystemDirectory(base);
   }
 

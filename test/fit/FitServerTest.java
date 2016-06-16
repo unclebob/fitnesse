@@ -38,7 +38,7 @@ public class FitServerTest {
   private String connectionStatusSize = "0000000000";
 
   @Before
-  public void setup() {
+  public void setup() throws IOException {
     String sentinelName = FitServer.sentinelName(PORT_NUMBER);
     FileUtil.deleteFile(sentinelName);
   }

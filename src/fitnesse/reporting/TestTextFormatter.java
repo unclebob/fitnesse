@@ -24,7 +24,7 @@ public class TestTextFormatter extends BaseFormatter implements Closeable {
 
   @Override
   public void testSystemStarted(TestSystem testSystem) {
-    response.add(String.format("\nStarting Test System: %s.\n", testSystem.getName()));
+    writeData("\nStarting Test System: %s.\n", testSystem.getName());
   }
 
   @Override
@@ -37,12 +37,20 @@ public class TestTextFormatter extends BaseFormatter implements Closeable {
   }
 
   @Override
-  public void testComplete(TestPage page, TestSummary summary) throws IOException {
+  public void testComplete(TestPage page, TestSummary summary) {
     timeMeasurement.stop();
     updateCounters(summary);
     String timeString = new SimpleDateFormat("HH:mm:ss").format(timeMeasurement.startedAtDate());
-    response.add(String.format("%s %s R:%-4d W:%-4d I:%-4d E:%-4d %s\t(%s)\t%.03f seconds\n",
-      passFail(summary), timeString, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions(), page.getName(), page.getFullPath(), timeMeasurement.elapsedSeconds()));
+    writeData("%s %s R:%-4d W:%-4d I:%-4d E:%-4d %s\t(%s)\t%.03f seconds\n",
+      passFail(summary), timeString, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions(), page.getName(), page.getFullPath(), timeMeasurement.elapsedSeconds());
+  }
+
+  private void writeData(String format, Object... args) {
+    try {
+      response.add(String.format(format, args));
+    } catch (IOException e) {
+      throw new FormatterException("Unable to write data, abort", e);
+    }
   }
 
   private void updateCounters(TestSummary summary) {

@@ -4,7 +4,6 @@ package fitnesse.responders.run;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
@@ -15,11 +14,14 @@ import fitnesse.responders.run.TestResponderTest.JunitTestUtilities;
 import fitnesse.responders.run.TestResponderTest.XmlTestUtilities;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.util.Clock;
+import fitnesse.util.DateAlteringClock;
+import fitnesse.util.DateTimeUtil;
+import fitnesse.util.XmlUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,10 +29,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import fitnesse.util.Clock;
-import fitnesse.util.DateAlteringClock;
-import fitnesse.util.DateTimeUtil;
-import fitnesse.util.XmlUtil;
 import static org.junit.Assert.*;
 import static util.RegexTestCase.*;
 
@@ -90,7 +88,7 @@ public class SuiteResponderTest {
     FitNesseUtil.destroyTestContext();
   }
 
-  private String runSuite() throws IOException {
+  private String runSuite() throws Exception {
     Response response = responder.makeResponse(context, request);
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
@@ -384,7 +382,7 @@ public class SuiteResponderTest {
     assertEquals("0",testResultsElement.getAttribute("failures"));
     assertEquals("0",testResultsElement.getAttribute("disabled"));
     assertEquals("0",testResultsElement.getAttribute("errors"));
-    
+
     NodeList resultList = testResultsElement.getElementsByTagName("testcase");
     assertEquals(2, resultList.getLength());
     Element testResult;
@@ -475,7 +473,7 @@ public class SuiteResponderTest {
   }
 
   @Test
-  public void exitCodeHeaderIsErrorCountForXml() throws IOException {
+  public void exitCodeHeaderIsErrorCountForXml() throws Exception {
     request.addInput("format", "xml");
     addTestToSuite("TestFailingTest", fitFailFixture);
     String results = runSuite();
@@ -499,7 +497,7 @@ public class SuiteResponderTest {
   }
 
   @Test
-  public void loadsCustomFormatters() throws IOException {
+  public void loadsCustomFormatters() throws Exception {
 
     context.formatterFactory.registerFormatter(FooFormatter.class);
     FooFormatter.initialized = false;

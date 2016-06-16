@@ -23,7 +23,7 @@ import fitnesse.wiki.WikiPagePath;
 public class RefactorPageResponder implements SecureResponder {
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     String resource = request.getResource();
 
     String tags = "";

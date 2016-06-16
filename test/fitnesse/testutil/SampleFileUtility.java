@@ -3,6 +3,7 @@
 package fitnesse.testutil;
 
 import java.io.File;
+import java.io.IOException;
 
 import util.FileUtil;
 
@@ -14,7 +15,7 @@ public class SampleFileUtility {
   public static File testFile3;
   public static File testFile4;
 
-  public static void makeSampleFiles(String rootPagePath) {
+  public static void makeSampleFiles(String rootPagePath) throws IOException {
     File dir = new File(FitNesseUtil.base);
     dir.mkdir();
     filesDir = new File(dir, "files");
@@ -28,11 +29,11 @@ public class SampleFileUtility {
     testFile4 = FileUtil.createFile(rootPagePath + "/files/file4 with spaces.txt", "file4 content");
   }
 
-  public static void deleteSampleFiles(String rootPagePath) {
+  public static void deleteSampleFiles(String rootPagePath) throws IOException {
     FileUtil.deleteFileSystemDirectory(rootPagePath);
   }
 
-  public static void addFile(String rootPagePath, String name, String content) {
+  public static void addFile(String rootPagePath, String name, String content) throws IOException {
     FileUtil.createFile(rootPagePath + name, content);
   }
 }

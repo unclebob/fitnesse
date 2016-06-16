@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.io.IOException;
+
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.InsecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -16,7 +18,7 @@ import fitnesse.wiki.WikiPagePath;
 public abstract class BasicResponder implements SecureResponder {
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     WikiPage requestedPage = getRequestedPage(request, context);
 
     Response response;
@@ -36,11 +38,11 @@ public abstract class BasicResponder implements SecureResponder {
 
   protected abstract String contentFrom(FitNesseContext context, Request request, WikiPage requestedPage);
 
-  protected Response pageNotFoundResponse(FitNesseContext context, Request request) {
+  protected Response pageNotFoundResponse(FitNesseContext context, Request request) throws Exception {
     return new NotFoundResponder().makeResponse(context, request);
   }
 
-  protected Response responseWith(String content) {
+  protected Response responseWith(String content) throws IOException {
     SimpleResponse response = new SimpleResponse();
     response.setContentType(getContentType());
     response.setContent(content);

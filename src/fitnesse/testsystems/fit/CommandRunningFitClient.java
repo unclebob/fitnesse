@@ -119,7 +119,7 @@ public class CommandRunningFitClient extends FitClient {
       this.executionLogListener = executionLogListener;
     }
 
-    private void makeCommandRunner(int port, int ticketNumber) {
+    private void makeCommandRunner(int port, int ticketNumber) throws UnknownHostException {
       String[] fitArguments = { getLocalhostName(), Integer.toString(port), Integer.toString(ticketNumber) };
       String[] commandLine = (String[]) ArrayUtils.addAll(command, fitArguments);
       commandRunner = new CommandRunner(commandLine, "", environmentVariables, executionLogListener);
@@ -276,12 +276,8 @@ public class CommandRunningFitClient extends FitClient {
 
   }
 
-  private static String getLocalhostName() {
-    try {
-      return java.net.InetAddress.getLocalHost().getHostName();
-    } catch (UnknownHostException e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
+  private static String getLocalhostName() throws UnknownHostException {
+    return java.net.InetAddress.getLocalHost().getHostName();
   }
 
 }

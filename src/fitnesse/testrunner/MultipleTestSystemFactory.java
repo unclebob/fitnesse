@@ -42,7 +42,7 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
   }
 
   @Override
-  public TestSystem create(Descriptor descriptor) throws IOException {
+  public TestSystem create(Descriptor descriptor) {
     TestSystemFactory factory = null;
     if (descriptor.runInProcess()) {
       factory = inProcessTestSystemFactories.get(descriptor.getTestSystemType().toLowerCase());
@@ -67,7 +67,7 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
     }
 
     @Override
-    public final TestSystem create(Descriptor descriptor) throws IOException {
+    public final TestSystem create(Descriptor descriptor) {
       SlimClientBuilder clientBuilder = new SlimClientBuilder(descriptor);
       SlimCommandRunningClient slimClient = clientBuilder.build();
       HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(clientBuilder.getTestSystemName(), slimClient,
@@ -88,7 +88,7 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
     }
 
     @Override
-    public TestSystem create(Descriptor descriptor) throws IOException {
+    public TestSystem create(Descriptor descriptor) {
       InProcessSlimClientBuilder clientBuilder = new InProcessSlimClientBuilder(descriptor);
       SlimClient slimClient = clientBuilder.build();
       HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(clientBuilder.getTestSystemName(), slimClient,
@@ -101,7 +101,7 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
   static class FitTestSystemFactory implements TestSystemFactory {
 
     @Override
-    public FitTestSystem create(Descriptor descriptor) throws IOException {
+    public FitTestSystem create(Descriptor descriptor) {
       FitClientBuilder clientBuilder = new FitClientBuilder(descriptor);
       CommandRunningFitClient fitClient = clientBuilder.build();
 
@@ -112,7 +112,7 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
   static class InProcessFitTestSystemFactory implements TestSystemFactory {
 
     @Override
-    public FitTestSystem create(Descriptor descriptor) throws IOException {
+    public FitTestSystem create(Descriptor descriptor) {
       InProcessFitClientBuilder clientBuilder = new InProcessFitClientBuilder(descriptor);
       CommandRunningFitClient fitClient = clientBuilder.build();
 

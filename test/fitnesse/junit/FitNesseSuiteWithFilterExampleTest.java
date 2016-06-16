@@ -21,6 +21,6 @@ import fitnesse.junit.FitNesseRunner.SuiteFilter;
 public class FitNesseSuiteWithFilterExampleTest {
   @Test
   public void dummy(){
-    
+
   }
 }
