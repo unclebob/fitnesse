@@ -61,7 +61,7 @@ public class MethodExecutionResult {
   private final Object value;
   private final Class<?> type;
 
-  MethodExecutionResult(Object value, Class<?> type) {
+  public MethodExecutionResult(Object value, Class<?> type) {
     this.value = value;
     this.type = type;
   }

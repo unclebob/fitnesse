@@ -57,7 +57,7 @@ public class SlimExecutionContext {
 
     public void addPath(String path) {
         if (!paths.contains(path)) {
-            paths.add(path);
+            paths.add(0, path);
         }
     }
 
