@@ -1,4 +1,16 @@
 !2 ${FITNESSE_VERSION}
+ * Add ability to specify the locale used to format evaluated expressions ([[#929][https://github.com/unclebob/fitnesse/pull/929]])
+ * FitNesse is more strict in propagating exceptions, instead of only logging them ([[#923][https://github.com/unclebob/fitnesse/pull/923]])
+ * ''WikiPage'' interface now has a ''remove()'' method. This will replace the ''removeChild()'' method in the near future ([[#930][https://github.com/unclebob/fitnesse/pull/930]])
+ * Updated ''FixtureInteraction'' interface ([[#911][https://github.com/unclebob/fitnesse/pull/911]])
+ * Issues fixed:
+   * Display of Map results from fixtures should allow nested HTML ([[#921][https://github.com/unclebob/fitnesse/pull/921]])
+   * Fix assignment of output parameters of scenarios with graceful names in decision tables ([[#928][https://github.com/unclebob/fitnesse/pull/928]])
+   * Fix Where Used page for pages under a Symbolic Link ([[#925][https://github.com/unclebob/fitnesse/issues/925]])
+   
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=15&state=closed.
+   
+!2 20160515
  * FitNesse requires Java 7 now ([[#872][https://github.com/unclebob/fitnesse/issues/872]], [[#877][https://github.com/unclebob/fitnesse/issues/877]])
  * New autocomplete feature for the "move page" page ([[#867][https://github.com/unclebob/fitnesse/issues/867]])
  * Name the link to execution log simply "Execution Log" ([[#851][https://github.com/unclebob/fitnesse/issues/851]])
