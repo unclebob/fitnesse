@@ -113,13 +113,18 @@ public abstract class SlimTestSystem implements TestSystem {
 
   protected abstract void processAllTablesOnPage(TestPage testPage) throws TestExecutionException;
 
-  protected void processTable(SlimTable table) throws TestExecutionException {
+  protected void processTable(SlimTable table, boolean isSuiteTearDownPage) throws TestExecutionException {
     List<SlimAssertion> assertions = table.getAssertions();
-    Map<String, Object> instructionResults;
-    if (!stopTestCalled && !stopSuiteCalled) {
-      instructionResults = slimClient.invokeAndGetResponse(SlimAssertion.getInstructions(assertions));
-    } else {
+    final Map<String, Object> instructionResults;
+    if (stopTestCalled && !table.isTearDown()) {
       instructionResults = Collections.emptyMap();
+    } else {
+      boolean tearDownOfAlreadyStartedTest = stopTestCalled && table.isTearDown();
+      if (stopSuiteCalled && !isSuiteTearDownPage && !tearDownOfAlreadyStartedTest) {
+        instructionResults = Collections.emptyMap();
+      } else {
+        instructionResults = slimClient.invokeAndGetResponse(SlimAssertion.getInstructions(assertions));
+      }
     }
 
     evaluateTables(assertions, instructionResults);

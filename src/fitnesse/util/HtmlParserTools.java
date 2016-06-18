@@ -5,6 +5,7 @@ import java.util.Vector;
 import org.htmlparser.Attribute;
 import org.htmlparser.Node;
 import org.htmlparser.Tag;
+import org.htmlparser.nodes.TagNode;
 import org.htmlparser.util.NodeList;
 
 /**
@@ -99,6 +100,22 @@ public final class HtmlParserTools {
       newAttributes.add(new Attribute(a.getName(), a.getAssignment(), a.getValue(), a.getQuote()));
     }
     return newAttributes;
+  }
+
+  public static boolean nodeHasClass(String classToCheck, Node node) {
+    if (!(node instanceof TagNode)) {
+      return false;
+    }
+    String classAttribute = ((TagNode) node).getAttribute("class");
+    if (null == classAttribute) {
+      return false;
+    }
+    for (String className : classAttribute.split(" ")) {
+      if (classToCheck.equals(className)) {
+        return true;
+      }
+    }
+    return false;
   }
 
 }

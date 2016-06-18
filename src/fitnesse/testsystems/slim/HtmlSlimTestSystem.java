@@ -10,6 +10,7 @@ import org.htmlparser.lexer.Page;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
+import fitnesse.wiki.PageData;
 import fitnesse.slim.SlimError;
 import fitnesse.testsystems.TestExecutionException;
 import fitnesse.testsystems.TestPage;
@@ -40,6 +41,8 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
   protected void processAllTablesOnPage(TestPage pageToTest) throws TestExecutionException {
     List<SlimTable> allTables = createSlimTables(pageToTest);
 
+    boolean isSuiteTearDownPage = PageData.SUITE_TEARDOWN_NAME.equals(pageToTest.getName());
+
     if (allTables.isEmpty()) {
       String html = createHtmlResults(START_OF_TEST, END_OF_TEST);
       testOutputChunk(html);
@@ -50,7 +53,7 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
         SlimTable nextTable = (index + 1 < allTables.size()) ? allTables.get(index + 1) : END_OF_TEST;
 
         try {
-          processTable(theTable);
+          processTable(theTable, isSuiteTearDownPage);
         } catch (SyntaxError e) {
           String tableName = theTable.getTable().getCellContents(0, 0);
           theTable.getTable().updateContent(0, 0, SlimTestResult.error(String.format("<strong> %s: Bad table! %s</strong>", tableName, e.getMessage())));
