@@ -18,11 +18,13 @@ import fitnesse.util.XmlUtil;
 import org.w3c.dom.NodeList;
 
 public abstract class ExecutionReport {
+  private static final int NO_RUN_TIME = -1;
+
   private String version;
   private String rootPath;
   private TestSummary finalCounts = new TestSummary(0, 0, 0, 0);
   public Date date;
-  private long totalRunTimeInMillis = 0;
+  private long totalRunTimeInMillis = NO_RUN_TIME;
   private List<ExecutionLogReport> executionLogs = new ArrayList<>();
 
   protected ExecutionReport() {
@@ -85,12 +87,12 @@ public abstract class ExecutionReport {
     if (dateString != null)
       date = DateTimeUtil.getDateFromString(dateString);
     unpackFinalCounts(documentElement);
-    totalRunTimeInMillis = getTotalRunTimeInMillisOrZeroIfNotPresent(documentElement);
+    totalRunTimeInMillis = getTotalRunTimeInMillisOrMinusOneIfNotPresent(documentElement);
   }
 
-  protected long getTotalRunTimeInMillisOrZeroIfNotPresent(Element documentElement) {
+  protected long getTotalRunTimeInMillisOrMinusOneIfNotPresent(Element documentElement) {
     String textValue = XmlUtil.getTextValue(documentElement, "totalRunTimeInMillis");
-    return textValue == null ? 0 : Long.parseLong(textValue);
+    return textValue == null ? NO_RUN_TIME : Long.parseLong(textValue);
   }
 
   private void unpackFinalCounts(Element testResults) {
@@ -177,7 +179,7 @@ public abstract class ExecutionReport {
   }
 
   public boolean hasRunTimes() {
-    return new FitNesseVersion(getVersion()).isAtLeast("v20100607");
+    return totalRunTimeInMillis != NO_RUN_TIME;
   }
 
   public List<ExecutionLogReport> getExecutionLogs() {
