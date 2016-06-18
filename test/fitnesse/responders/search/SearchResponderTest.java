@@ -2,11 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import java.io.IOException;
-
-import static util.RegexTestCase.assertHasRegexp;
-import static util.RegexTestCase.assertSubString;
-
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -18,6 +13,9 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import org.junit.Before;
 import org.junit.Test;
+
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertSubString;
 
 public class SearchResponderTest {
   private SearchResponder responder;
@@ -81,7 +79,7 @@ public class SearchResponderTest {
     assertSubString("!+-<&>", content);
   }
 
-  private String getResponseContentUsingSearchString(String searchString) throws IOException {
+  private String getResponseContentUsingSearchString(String searchString) throws Exception {
     request.addInput("searchString", searchString);
     request.addInput(Request.NOCHUNK, "");
     Response response = responder.makeResponse(context, request);
@@ -103,7 +101,7 @@ public class SearchResponderTest {
   }
 
   @Test
-  public void testLinkShouldContainFullPagePath() throws IOException {
+  public void testLinkShouldContainFullPagePath() throws Exception {
     request.setResource("SomePage");
     String searchPageContent = getResponseContentUsingSearchString("test page");
 
@@ -111,7 +109,7 @@ public class SearchResponderTest {
   }
 
   @Test
-  public void suiteLinkShouldContainFullPagePath() throws IOException {
+  public void suiteLinkShouldContainFullPagePath() throws Exception {
     request.setResource("SomePage");
     String searchPageContent = getResponseContentUsingSearchString("suite page");
 

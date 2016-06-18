@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Collections;
@@ -27,12 +28,12 @@ public class PageXmlizer {
     return document;
   }
 
-  public void deXmlize(Document doc, WikiPage context, XmlizerPageHandler handler) {
+  public void deXmlize(Document doc, WikiPage context, XmlizerPageHandler handler) throws IOException {
     Element pageElement = doc.getDocumentElement();
     addChildFromXml(pageElement, context, handler);
   }
 
-  public void deXmlizeSkippingRootLevel(Document document, WikiPage context, XmlizerPageHandler handler) {
+  public void deXmlizeSkippingRootLevel(Document document, WikiPage context, XmlizerPageHandler handler) throws IOException {
     Element pageElement = document.getDocumentElement();
     addChildrenFromXml(pageElement, context, handler);
   }
@@ -101,7 +102,7 @@ public class PageXmlizer {
     pageElement.appendChild(childrenElement);
   }
 
-  private void addChildFromXml(Element pageElement, WikiPage context, XmlizerPageHandler handler) {
+  private void addChildFromXml(Element pageElement, WikiPage context, XmlizerPageHandler handler) throws IOException {
     String name = XmlUtil.getTextValue(pageElement, "name");
     String modifiedDateString = XmlUtil.getTextValue(pageElement, "lastModified");
 
@@ -120,7 +121,7 @@ public class PageXmlizer {
     handler.exitPage();
   }
 
-  private void addChildrenFromXml(Element pageElement, WikiPage contextPage, XmlizerPageHandler handler) {
+  private void addChildrenFromXml(Element pageElement, WikiPage contextPage, XmlizerPageHandler handler) throws IOException {
     Element childrenElement = XmlUtil.getLocalElementByTagName(pageElement, "children");
     NodeList childNodes = childrenElement.getChildNodes();
     for (int i = 0; i < childNodes.getLength(); i++) {

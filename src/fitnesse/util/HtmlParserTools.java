@@ -49,6 +49,7 @@ public final class HtmlParserTools {
    * @param <T> Node of child of Node
    * @return deepcloned version of node
    */
+  @SuppressWarnings("unchecked")
   public static <T extends Node> T deepClone(T node) {
     return (T) deepClone(new NodeList(node), null).elementAt(0);
   }
@@ -82,7 +83,7 @@ public final class HtmlParserTools {
     try {
       newNode = (Node) node.clone();
     } catch (CloneNotSupportedException e) {
-      throw new RuntimeException("Node must be cloneable", e);
+      throw new IllegalStateException("Node must be cloneable", e);
     }
     node.setParent(clonedParent);
     if (newNode instanceof Tag) {

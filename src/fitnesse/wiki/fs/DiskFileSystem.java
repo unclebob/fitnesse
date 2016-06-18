@@ -48,7 +48,7 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public void delete(File fileToBeDeleted) {
+  public void delete(File fileToBeDeleted) throws IOException {
     if (fileToBeDeleted.isDirectory()) {
       FileUtil.deleteFileSystemDirectory(fileToBeDeleted);
     } else {

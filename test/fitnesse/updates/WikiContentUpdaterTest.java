@@ -51,7 +51,7 @@ public class WikiContentUpdaterTest {
     root.commit(root.getData());
   }
 
-  private void createFakeUpdateListFiles() {
+  private void createFakeUpdateListFiles() throws IOException {
     updateList = new File("classes/Resources/updateList");
     updateDoNotCopyOver = new File("classes/Resources/updateDoNotCopyOverList");
     FileUtil.createFile(updateList, "FitNesseRoot/files/TestFile\nFitNesseRoot/files/BestFile\n");
@@ -178,7 +178,7 @@ public class WikiContentUpdaterTest {
   }
 
   @After
-  public void tearDown() {
+  public void tearDown() throws IOException {
     FileUtil.deleteFileSystemDirectory("classes/Resources");
     FileUtil.deleteFileSystemDirectory(testDir);
   }

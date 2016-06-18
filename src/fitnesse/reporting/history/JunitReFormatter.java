@@ -31,7 +31,7 @@ public class JunitReFormatter extends BaseFormatter implements Closeable {
     this.historyFormatter = historyFormatter;
   }
 
-@Override
+  @Override
   public void close() throws IOException {
     historyFormatter.close();
 
@@ -50,7 +50,7 @@ public class JunitReFormatter extends BaseFormatter implements Closeable {
     return historyFormatter.getErrorCount();
   }
 
-  TestExecutionReport makeTestExecutionReport(File file) throws IOException, SAXException {
+  TestExecutionReport makeTestExecutionReport(File file) throws IOException, SAXException, InvalidReportException {
     return new TestExecutionReport(file);
   }
 

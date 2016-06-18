@@ -19,7 +19,7 @@ public class LoopingActionFixture extends ActionFixture {
 
   Method getAction(String name) throws SecurityException, NoSuchMethodException {
     String methodName = isSpecialName(name) ? ("action_" + name) : name;
-    return getClass().getMethod(methodName, empty);
+    return getClass().getMethod(methodName, new Class<?>[]{});
   }
 
   @Override

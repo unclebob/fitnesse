@@ -13,6 +13,7 @@ import org.junit.Test;
 import util.FileUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
 
 public class PurgeHistoryResponderTest {
@@ -36,11 +37,11 @@ public class PurgeHistoryResponderTest {
   }
 
   @After
-  public void teardown() {
+  public void teardown() throws IOException {
     removeResultsDirectory();
   }
 
-  private void removeResultsDirectory() {
+  private void removeResultsDirectory() throws IOException {
     if (resultsDirectory.exists())
       FileUtil.deleteFileSystemDirectory(resultsDirectory);
   }

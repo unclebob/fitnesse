@@ -22,12 +22,8 @@ public class PageHistory extends PageHistoryReader{
 
   public PageHistory(File pageDirectory) {
     fullPageName = pageDirectory.getName();
-    try {
-      readHistoryFromPageDirectory(pageDirectory);
-      compileBarGraph();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+    readHistoryFromPageDirectory(pageDirectory);
+    compileBarGraph();
   }
 
   private void compileBarGraph() {
@@ -55,7 +51,7 @@ public class PageHistory extends PageHistoryReader{
   }
 
   @Override
-  void processTestFile(TestResultRecord record) throws ParseException {
+  void processTestFile(TestResultRecord record) {
     Date date = record.getDate();
     addTestResult(record, date);
     countResult(record);

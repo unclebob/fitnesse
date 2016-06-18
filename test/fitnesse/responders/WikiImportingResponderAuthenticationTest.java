@@ -1,9 +1,5 @@
 package fitnesse.responders;
 
-import static util.RegexTestCase.assertHasRegexp;
-import static util.RegexTestCase.assertNotSubString;
-import static util.RegexTestCase.assertSubString;
-
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockChunkedDataProvider;
@@ -17,6 +13,8 @@ import fitnesse.wiki.WikiPagePath;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import static util.RegexTestCase.*;
 
 public class WikiImportingResponderAuthenticationTest {
   private WikiImportingResponder responder;
@@ -71,13 +69,13 @@ public class WikiImportingResponderAuthenticationTest {
     return request;
   }
 
-  private ChunkedResponse makeSampleResponse(String remoteUrl) {
+  private ChunkedResponse makeSampleResponse(String remoteUrl) throws Exception {
     MockRequest request = makeRequest(remoteUrl);
 
     return getResponse(request);
   }
 
-  private ChunkedResponse getResponse(MockRequest request) {
+  private ChunkedResponse getResponse(MockRequest request) throws Exception {
     ChunkedResponse response = (ChunkedResponse) responder.makeResponse(testData.localContext, request);
     response.turnOffChunking();
     return response;

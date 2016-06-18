@@ -2,10 +2,8 @@ package fitnesse.slim;
 
 public class FixtureMethodExecutor extends MethodExecutor {
 
-  private final SlimExecutionContext context;
-
   public FixtureMethodExecutor(SlimExecutionContext context) {
-    this.context = context;
+    super(context);
   }
 
   @Override

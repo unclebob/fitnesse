@@ -1,19 +1,37 @@
 !2 ${FITNESSE_VERSION}
+ * Add ability to specify the locale used to format evaluated expressions ([[#929][https://github.com/unclebob/fitnesse/pull/929]])
+ * FitNesse is more strict in propagating exceptions, instead of only logging them ([[#923][https://github.com/unclebob/fitnesse/pull/923]])
+ * ''WikiPage'' interface now has a ''remove()'' method. This will replace the ''removeChild()'' method in the near future ([[#930][https://github.com/unclebob/fitnesse/pull/930]])
+ * Updated ''FixtureInteraction'' interface ([[#911][https://github.com/unclebob/fitnesse/pull/911]])
+ * Issues fixed:
+   * Display of Map results from fixtures should allow nested HTML ([[#921][https://github.com/unclebob/fitnesse/pull/921]])
+   * Fix assignment of output parameters of scenarios with graceful names in decision tables ([[#928][https://github.com/unclebob/fitnesse/pull/928]])
+   * Fix Where Used page for pages under a Symbolic Link ([[#925][https://github.com/unclebob/fitnesse/issues/925]])
+   
+For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=15&state=closed.
+   
+!2 20160515
  * FitNesse requires Java 7 now ([[#872][https://github.com/unclebob/fitnesse/issues/872]], [[#877][https://github.com/unclebob/fitnesse/issues/877]])
  * New autocomplete feature for the "move page" page ([[#867][https://github.com/unclebob/fitnesse/issues/867]])
  * Name the link to execution log simply "Execution Log" ([[#851][https://github.com/unclebob/fitnesse/issues/851]])
  * Dynamically add fitnesse jartoclasspath ([[#862][https://github.com/unclebob/fitnesse/issues/862]], [[#866][https://github.com/unclebob/fitnesse/issues/866]])
  * Searching for tags across Symbolic links ([[#488][https://github.com/unclebob/fitnesse/issues/488]], [[#888][https://github.com/unclebob/fitnesse/issues/888]])
  * Add support for table-in-table editing in rich text editor ([[#669][https://github.com/unclebob/fitnesse/issues/669]], [[#885][https://github.com/unclebob/fitnesse/issues/885]])
+ * ''!-@SystemUnderTest-!'' now accepts method calls from subclasses ([[#907][https://github.com/unclebob/fitnesse/issues/907]])
+ * Disallow uploading to folder ''files/fitnesse'' ([[#889][https://github.com/unclebob/fitnesse/issues/889]])
+ * Avoid infinite cycles when using symlinks ([[#888][https://github.com/unclebob/fitnesse/issues/888]])
+ * (Slim) Deal with escaping content in hash table ([[#886][https://github.com/unclebob/fitnesse/issues/886]])
+ * Properly handle symbol assignment in first column of a query table ([[#914][https://github.com/unclebob/fitnesse/issues/914]])
  * Issues fixed:
    * !-CompareVersions-! responder is not escaping output properly ([[#861][https://github.com/unclebob/fitnesse/issues/861]], [[#869][https://github.com/unclebob/fitnesse/issues/869]])
    * Improve code by honoring ''InterruptedException'' ([[#874][https://github.com/unclebob/fitnesse/issues/874]])
-   * FitNesse no longer stops when calling /?shutdown ([[#875][https://github.com/unclebob/fitnesse/issues/875]])
-   * Running suites does not show the tests summaries ([[#876][https://github.com/unclebob/fitnesse/issues/876]])
-   * FixescapingofHTML in Slim hash tables ([[#878][https://github.com/unclebob/fitnesse/issues/878]])
+   * FitNesse stops again when calling /?shutdown ([[#875][https://github.com/unclebob/fitnesse/issues/875]])
+   * Fixed: Running suites does not show the tests summaries ([[#876][https://github.com/unclebob/fitnesse/issues/876]])
+   * Fix escaping of HTML in Slim hash tables ([[#878][https://github.com/unclebob/fitnesse/issues/878]])
    * Fix class loading for FitNesse resources ([[#880][https://github.com/unclebob/fitnesse/issues/880]])
-   * Changejsoncontent type from ''text/json'' to ''applicatioin/json'' ([[#891][https://github.com/unclebob/fitnesse/issues/891]])
-
+   * Change json content type from ''text/json'' to ''applicatioin/json'' ([[#891][https://github.com/unclebob/fitnesse/issues/891]])
+   * JUnit runner now plays nice with Gradle ([[#909][https://github.com/unclebob/fitnesse/issues/909]])
+   
 For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=14&state=closed.
 
 !2 20151230

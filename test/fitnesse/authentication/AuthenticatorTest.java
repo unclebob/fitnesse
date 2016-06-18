@@ -38,7 +38,7 @@ public class AuthenticatorTest {
     protected void refactorReferences(FitNesseContext context, WikiPage pageToBeMoved, String newParentName) {
     }
   }
-  
+
   @Before
   public void setUp() {
     context = FitNesseUtil.makeTestContext();
@@ -59,19 +59,19 @@ public class AuthenticatorTest {
   }
 
   @Test
-  public void testNotAuthenticated() {
+  public void testNotAuthenticated() throws Exception {
     makeResponder();
     assertEquals(UnauthorizedResponder.class, responderType);
   }
 
   @Test
-  public void testAuthenticated() {
+  public void testAuthenticated() throws Exception {
     authenticator.authenticated = true;
     makeResponder();
     assertEquals(DummySecureResponder.class, responderType);
   }
 
-  private void makeResponder() {
+  private void makeResponder() throws Exception {
     Responder responder = authenticator.authenticate(context, request, privilegedResponder);
     responderType = responder.getClass();
   }

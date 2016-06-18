@@ -3,6 +3,7 @@
 package fitnesse.http;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 public class SimpleResponse extends Response {
@@ -26,7 +27,7 @@ public class SimpleResponse extends Response {
     }
   }
 
-  public void setContent(String value) {
+  public void setContent(String value) throws UnsupportedEncodingException {
     content = getEncodedBytes(value);
   }
 

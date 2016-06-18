@@ -6,23 +6,23 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureTestOperation;
+import fitnesse.html.template.HtmlPage;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.html.template.HtmlPage;
 
 public class StopTestResponder implements SecureResponder {
 
   String testId = null;
-  
+
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     SimpleResponse response = new SimpleResponse();
-    
+
     if (request.hasInput("id")) {
       testId = request.getInput("id");
     }
-    
+
     response.setContent(html(context));
 
     return response;

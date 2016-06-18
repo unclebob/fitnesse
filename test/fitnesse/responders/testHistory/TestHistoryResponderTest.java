@@ -37,7 +37,7 @@ public class TestHistoryResponderTest {
   private FitNesseContext context;
 
   @Before
-  public void setup() throws Exception {
+  public void setup() throws IOException {
     context = FitNesseUtil.makeTestContext();
     resultsDirectory = context.getTestHistoryDirectory();
     removeResultsDirectory();
@@ -49,7 +49,7 @@ public class TestHistoryResponderTest {
     response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
   }
 
-  private void removeResultsDirectory() {
+  private void removeResultsDirectory() throws IOException {
     if (resultsDirectory.exists())
       FileUtil.deleteFileSystemDirectory(resultsDirectory);
   }
@@ -66,7 +66,7 @@ public class TestHistoryResponderTest {
   }
 
   @After
-  public void teardown() {
+  public void teardown() throws IOException {
     removeResultsDirectory();
   }
 

@@ -33,6 +33,14 @@ public abstract class BaseWikiPage implements WikiPage {
   }
 
   @Override
+  public void remove() {
+    WikiPage parent = getParent();
+    if (parent != this) {
+      parent.removeChildPage(getName());
+    }
+  }
+
+  @Override
   public String toString() {
     return this.getClass().getName() + ": " + name;
   }

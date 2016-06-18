@@ -58,15 +58,15 @@ public class JUnitHelperExampleTest {
   public void helperWillFailTestsIfNoTestsAreExecuted() throws Exception{
     try{
       helper.assertSuitePasses("FitNesse.SuiteAcceptanceTests.SuiteSlimTests", "nonExistingFilter");
-    
+
     }
     catch (AssertionError ae){
       assertTrue(ae.getMessage().startsWith("at least one test"));
     }
-    
+
     assertEquals(new HashSet<String>(),
       new HashSet<String>(visitedPages));
-    
+
   }
 
   private class TestRecordingListener implements TestSystemListener {
@@ -76,18 +76,18 @@ public class JUnitHelperExampleTest {
     }
 
     @Override
-    public void testOutputChunk(String output) throws IOException {
+    public void testOutputChunk(String output) {
 
     }
 
     @Override
-    public void testStarted(TestPage testPage) throws IOException {
+    public void testStarted(TestPage testPage) {
       visitedPages.add(((WikiTestPage) testPage).getPath());
 
     }
 
     @Override
-    public void testComplete(TestPage testPage, TestSummary testSummary) throws IOException {
+    public void testComplete(TestPage testPage, TestSummary testSummary) {
 
     }
 

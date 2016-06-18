@@ -3,15 +3,13 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static util.RegexTestCase.assertSubString;
-
 import fit.exception.NoSuchFieldFitFailureException;
 import fit.exception.NoSuchMethodFitFailureException;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
+import static util.RegexTestCase.assertSubString;
 
 public class BindingTest {
   private TestFixture fixture;
@@ -42,13 +40,22 @@ public class BindingTest {
     assertEquals(Binding.SetBinding.class, Binding.create(fixture, "privateIntField").getClass());
     assertEquals(Binding.RecallBinding.class, Binding.create(fixture, "privateIntField=").getClass());
     assertEquals(Binding.SaveBinding.class, Binding.create(fixture, "=privateIntField").getClass());
+    assertEquals(Binding.RegexQueryBinding.class, Binding.create(fixture, "intMethod!!").getClass());
+    assertEquals(Binding.RegexQueryBinding.class, Binding.create(fixture, "intMethod??").getClass());
   }
 
-  public static class TestFixture extends ParentTestFixture { }
+  @Test
+  public void unmatchedPattern() throws Throwable {
+    assertEquals(Binding.NullBinding.class, Binding.create(fixture, "**=**").getClass());
+  }
+
+  public static class TestFixture extends ParentTestFixture {
+  }
 
   public static class ParentTestFixture extends Fixture {
     public int intField = 0;
     private int privateIntField = 0;
+    public boolean spyWasCalled = false;
 
     public int intMethod() {
       return intField;
@@ -63,6 +70,11 @@ public class BindingTest {
     public Integer integerMethodIsNull() {
       return integerField;
     }
+
+    public String spyMethod() {
+      spyWasCalled = true;
+      return "spyMethod";
+    }
   }
 
   @Test
@@ -74,6 +86,14 @@ public class BindingTest {
     fixture.intField = 321;
     binding.doCell(fixture, cell2);
     assertEquals(1, fixture.counts.right);
+  }
+
+  @Test
+  public void regexSetBindingCallsMethod() throws Throwable {
+    Binding binding = Binding.create(fixture, "spyMethod!!");
+    binding.doCell(fixture, cell1);
+    assertTrue(fixture.spyWasCalled);
+    assertTrue(binding.adapter.isRegex);
   }
 
   @Test
@@ -218,8 +238,7 @@ public class BindingTest {
     Binding binding = null;
     try {
       binding = Binding.create(fixture, name);
-    }
-    catch (NoSuchMethodFitFailureException e) {
+    } catch (NoSuchMethodFitFailureException e) {
       assertFalse("method not found", expected);
       return;
     }
@@ -232,8 +251,7 @@ public class BindingTest {
     Binding binding = null;
     try {
       binding = Binding.create(fixture, name);
-    }
-    catch (NoSuchFieldFitFailureException e) {
+    } catch (NoSuchFieldFitFailureException e) {
       assertFalse("field not found", expected);
       return;
     }
@@ -246,8 +264,7 @@ public class BindingTest {
     Binding binding = null;
     try {
       binding = Binding.create(fixture, name);
-    }
-    catch (NoSuchFieldFitFailureException e) {
+    } catch (NoSuchFieldFitFailureException e) {
       assertFalse("field not found", expected);
       return;
     }

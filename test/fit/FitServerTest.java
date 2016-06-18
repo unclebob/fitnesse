@@ -18,7 +18,7 @@ import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import fitnesse.socketservice.SocketFactory;
+import fitnesse.socketservice.PlainServerSocketFactory;
 
 import org.junit.After;
 import org.junit.Before;
@@ -38,7 +38,7 @@ public class FitServerTest {
   private String connectionStatusSize = "0000000000";
 
   @Before
-  public void setup() {
+  public void setup() throws IOException {
     String sentinelName = FitServer.sentinelName(PORT_NUMBER);
     FileUtil.deleteFile(sentinelName);
   }
@@ -208,7 +208,7 @@ public class FitServerTest {
   }
 
   private void establishConnection() throws Exception {
-    serverSocket = SocketFactory.createServerSocket(PORT_NUMBER);
+    serverSocket = new PlainServerSocketFactory().createServerSocket(PORT_NUMBER);
     socket = null;
 
     listenForConnectionSocket();

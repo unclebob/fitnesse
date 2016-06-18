@@ -5,28 +5,19 @@ package fitnesse.responders.editing;
 import java.io.File;
 import java.io.IOException;
 
-import fitnesse.html.HtmlUtil;
-import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.WikiWordReference;
-import fitnesse.wiki.fs.DiskFileSystem;
-import fitnesse.wiki.fs.FileSystem;
-import fitnesse.wiki.VariableTool;
-import org.apache.commons.lang.StringUtils;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.SymbolicPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.WikiPageProperties;
-import fitnesse.wiki.WikiPageProperty;
+import fitnesse.wiki.*;
+import fitnesse.wiki.fs.DiskFileSystem;
+import fitnesse.wiki.fs.FileSystem;
+import fitnesse.wikitext.parser.WikiWordBuilder;
+import org.apache.commons.lang.StringUtils;
 
 public class SymbolicLinkResponder implements Responder {
   private final FileSystem fileSystem;
@@ -44,7 +35,7 @@ public class SymbolicLinkResponder implements Responder {
   }
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) throws IOException {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     resource = request.getResource();
     this.context = context;
     PageCrawler crawler = context.getRootPage().getPageCrawler();
@@ -80,9 +71,9 @@ public class SymbolicLinkResponder implements Responder {
     setRedirect(resource);
   }
 
-  private void  renameSymbolicLink(Request request, WikiPage page) {
-    String linkToRename = request.getInput("rename"),
-    newName = request.getInput("newname");
+  private void  renameSymbolicLink(Request request, WikiPage page) throws Exception {
+    String linkToRename = (String) request.getInput("rename"),
+    newName = (String) request.getInput("newname");
 
     PageData data = page.getData();
     WikiPageProperties properties = data.getProperties();
@@ -97,7 +88,7 @@ public class SymbolicLinkResponder implements Responder {
     }
   }
 
-  private void addSymbolicLink(Request request, WikiPage page) throws IOException {
+  private void addSymbolicLink(Request request, WikiPage page) throws Exception {
     String linkName = StringUtils.trim(request.getInput("linkName"));
     String linkPath = StringUtils.trim(request.getInput("linkPath"));
 
@@ -111,7 +102,7 @@ public class SymbolicLinkResponder implements Responder {
     }
   }
 
-  private boolean isValidWikiPageName(String linkName, WikiPageProperty symLinks) {
+  private boolean isValidWikiPageName(String linkName, WikiPageProperty symLinks) throws Exception {
     if (page.hasChildPage(linkName) && !symLinks.has(linkName)) {
       response = new ErrorResponder(resource + " already has a child named " + linkName + ".").makeResponse(context, null);
       response.setStatus(412);
@@ -124,7 +115,7 @@ public class SymbolicLinkResponder implements Responder {
     return true;
   }
 
-  private boolean isValidLinkPathName(String linkPath) throws IOException {
+  private boolean isValidLinkPathName(String linkPath) throws Exception {
     if (isFilePath(linkPath) && !isValidDirectoryPath(linkPath)) {
       String message = "Cannot create link to the file system path '" + linkPath + "'." +
               " The canonical file system path used was ;" + createFileFromPath(linkPath).getCanonicalPath() + "'." +

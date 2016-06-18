@@ -1,5 +1,7 @@
 package fitnesse.responders.editing;
 
+import java.io.IOException;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.html.template.HtmlPage;
@@ -27,7 +29,7 @@ public class ContentFilterResponder implements Responder {
     return null;
   }
 
-  private Response makeBannedContentResponse(FitNesseContext context, String resource) {
+  private Response makeBannedContentResponse(FitNesseContext context, String resource) throws IOException {
     SimpleResponse response = new SimpleResponse();
     HtmlPage html = context.pageFactory.newPage();
     html.setTitle("Edit " + resource);

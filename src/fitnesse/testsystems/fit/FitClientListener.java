@@ -1,13 +1,11 @@
 package fitnesse.testsystems.fit;
 
-import java.io.IOException;
-
 import fitnesse.testsystems.TestSummary;
 
 public interface FitClientListener {
-  void testOutputChunk(String readValue) throws IOException;
+  void testOutputChunk(String readValue);
 
-  void testComplete(TestSummary summary) throws IOException;
+  void testComplete(TestSummary summary);
 
   void exceptionOccurred(Throwable e);
 }

@@ -6,14 +6,10 @@ import java.io.IOException;
 import java.util.Deque;
 import java.util.LinkedList;
 
-import fitnesse.testsystems.CompositeTestSystemListener;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.*;
 
 public class FitTestSystem implements TestSystem, FitClientListener {
-  protected static final String EMPTY_PAGE_CONTENT = "OH NO! This page is empty!";
+  private static final String EMPTY_PAGE_CONTENT = "OH NO! This page is empty!";
 
   private final CompositeTestSystemListener testSystemListener;
   private final String testSystemName;
@@ -35,13 +31,17 @@ public class FitTestSystem implements TestSystem, FitClientListener {
   }
 
   @Override
-  public void start() throws IOException {
-    client.start();
+  public void start() throws UnableToStartException {
+    try {
+      client.start();
+    } catch (IOException e) {
+      throw new UnableToStartException("Can not start Fit client", e);
+    }
     testSystemStarted(this);
   }
 
   @Override
-  public void runTests(TestPage pageToTest) throws IOException, InterruptedException {
+  public void runTests(TestPage pageToTest) throws TestExecutionException {
     processingQueue.addLast(pageToTest);
     String html = pageToTest.getHtml();
     try {
@@ -50,19 +50,25 @@ public class FitTestSystem implements TestSystem, FitClientListener {
       else
         client.send(html);
     } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
       exceptionOccurred(e);
-      throw e;
+      throw new TestExecutionException("Testing has been interrupted", e);
     } catch (IOException e) {
       exceptionOccurred(e);
-      throw e;
+      throw new TestExecutionException("Communication error during testing", e);
     }
   }
 
   @Override
-  public void bye() throws IOException, InterruptedException {
+  public void bye() throws UnableToStopException {
     try {
       client.done();
       client.join();
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new UnableToStopException("Unable to stop Fit client", e);
+    } catch (IOException e) {
+      throw new UnableToStopException("Unable to stop Fit client", e);
     } finally {
       testSystemStopped(null);
     }
@@ -79,7 +85,7 @@ public class FitTestSystem implements TestSystem, FitClientListener {
   }
 
   @Override
-  public void testOutputChunk(String output) throws IOException {
+  public void testOutputChunk(String output) {
     if (currentTestPage == null) {
       currentTestPage = processingQueue.removeFirst();
       testSystemListener.testStarted(currentTestPage);
@@ -88,10 +94,13 @@ public class FitTestSystem implements TestSystem, FitClientListener {
   }
 
   @Override
-  public void testComplete(TestSummary testSummary) throws IOException {
+  public void testComplete(TestSummary testSummary) {
     assert currentTestPage != null;
-    testSystemListener.testComplete(currentTestPage, testSummary);
-    currentTestPage = null;
+    try {
+      testSystemListener.testComplete(currentTestPage, testSummary);
+    } finally {
+      currentTestPage = null;
+    }
   }
 
   @Override
@@ -103,7 +112,7 @@ public class FitTestSystem implements TestSystem, FitClientListener {
     }
   }
 
-  private void testSystemStarted(TestSystem testSystem) throws IOException {
+  private void testSystemStarted(TestSystem testSystem) {
     testSystemListener.testSystemStarted(testSystem);
   }
 

@@ -9,7 +9,7 @@ import fitnesse.wiki.WikiPage;
 public class DisabledResponder extends BasicResponder {
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     return responseWith(contentFrom(context, request, null));
   }
 

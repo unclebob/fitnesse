@@ -2,27 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang.StringUtils;
 
 import fitnesse.slim.instructions.Instruction;
-import fitnesse.testsystems.ExecutionResult;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.TestResult;
-import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimTestResult;
-
-import org.apache.commons.lang.StringUtils;
 
 
 public class ScenarioTable extends SlimTable {
@@ -84,16 +73,16 @@ public class ScenarioTable extends SlimTable {
     }
   }
 
-private void splitInputAndOutputArguments(String argName) {
-	argName = argName.trim();
-	if (argName.endsWith("?")) {
-        String disgracedArgName = Disgracer.disgraceMethodName(argName);
-        outputs.add(disgracedArgName);
-      } else {
-        String disgracedArgName = Disgracer.disgraceMethodName(argName);
-        inputs.add(disgracedArgName);
-      }
-}
+  private void splitInputAndOutputArguments(String argName) {
+    argName = argName.trim();
+    if (argName.endsWith("?")) {
+      String disgracedArgName = Disgracer.disgraceMethodName(argName);
+      outputs.add(disgracedArgName);
+    } else {
+      String disgracedArgName = Disgracer.disgraceMethodName(argName);
+      inputs.add(disgracedArgName);
+    }
+  }
 
   private void getArgumentsForParameterizedName() {
     String argumentString = table.getCellContents(2, 0);
@@ -163,7 +152,7 @@ private void splitInputAndOutputArguments(String argName) {
   }
 
   public List<SlimAssertion> call(final Map<String, String> scenarioArguments,
-                   SlimTable parentTable, int row) throws SyntaxError {
+                   SlimTable parentTable, int row) throws TestExecutionException {
     Table newTable = getTable().asTemplate(new Table.CellContentSubstitution() {
       @Override
       public String substitute(String content) throws SyntaxError {
@@ -188,7 +177,7 @@ private void splitInputAndOutputArguments(String argName) {
     return assertions;
   }
 
-  protected ScriptTable createChild(ScenarioTestContext testContext, SlimTable parentTable, Table newTable) {
+  protected ScriptTable createChild(ScenarioTestContext testContext, SlimTable parentTable, Table newTable) throws TableCreationException {
     ScriptTable scriptTable;
     if (parentTable instanceof ScriptTable) {
       scriptTable = createChild((ScriptTable) parentTable, newTable, testContext);
@@ -199,16 +188,12 @@ private void splitInputAndOutputArguments(String argName) {
     return scriptTable;
   }
 
-  protected ScriptTable createChild(ScriptTable parentScriptTable, Table newTable, SlimTestContext testContext) {
+  protected ScriptTable createChild(ScriptTable parentScriptTable, Table newTable, SlimTestContext testContext) throws TableCreationException {
     return createChild(parentScriptTable.getClass(), newTable, testContext);
   }
 
-  protected ScriptTable createChild(Class<? extends ScriptTable> parentTableClass, Table newTable, SlimTestContext testContext) {
-    try {
+  protected ScriptTable createChild(Class<? extends ScriptTable> parentTableClass, Table newTable, SlimTestContext testContext) throws TableCreationException {
       return SlimTableFactory.createTable(parentTableClass, newTable, id, testContext);
-    } catch (Exception e) {
-      throw new RuntimeException("Unable to create child table of type: " + parentTableClass.getName(), e);
-    }
   }
 
   public static void setDefaultChildClass(Class<? extends ScriptTable> defaultChildClass) {
@@ -219,7 +204,7 @@ private void splitInputAndOutputArguments(String argName) {
     return defaultChildClass;
   }
 
-  public List<SlimAssertion> call(String[] args, ScriptTable parentTable, int row) throws SyntaxError {
+  public List<SlimAssertion> call(String[] args, ScriptTable parentTable, int row) throws TestExecutionException {
     Map<String, String> scenarioArguments = new HashMap<>();
 
     for (int i = 0; (i < inputs.size()) && (i < args.length); i++)

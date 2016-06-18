@@ -72,7 +72,7 @@ public class NewPageResponderTest {
   }
 
   @Test
-  public void shouldSetPageTemplateIfProvidedAsArgument() {
+  public void shouldSetPageTemplateIfProvidedAsArgument() throws Exception {
     WikiPageUtil.addPage(root, PathParser.parse("FancyTemplate"), "template page");
     request.setResource("");
     request.addInput(NewPageResponder.PAGE_TEMPLATE, ".FancyTemplate");

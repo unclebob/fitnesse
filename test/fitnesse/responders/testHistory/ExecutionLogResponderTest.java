@@ -13,7 +13,7 @@ import org.junit.Test;
 import util.FileUtil;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class ExecutionLogResponderTest {
 
@@ -21,7 +21,7 @@ public class ExecutionLogResponderTest {
   private File resultsDirectory;
 
   @Before
-  public void setUp() {
+  public void setUp() throws IOException {
     resultsDirectory = new File("testHistoryDirectory");
     removeResultsDirectory();
     resultsDirectory.mkdir();
@@ -30,11 +30,11 @@ public class ExecutionLogResponderTest {
   }
 
   @After
-  public void teardown() {
+  public void teardown() throws IOException {
     removeResultsDirectory();
   }
 
-  private void removeResultsDirectory() {
+  private void removeResultsDirectory() throws IOException {
     if (resultsDirectory.exists())
       FileUtil.deleteFileSystemDirectory(resultsDirectory);
   }
@@ -53,7 +53,7 @@ public class ExecutionLogResponderTest {
   }
 
   @Test
-  public void provideMessageInAbsenceOfLogs() throws IOException {
+  public void provideMessageInAbsenceOfLogs() throws Exception {
     File pageDirectory = addPageDirectory("TestPage");
     addTestResult(pageDirectory, "20090418123103_1_2_3_4");
 

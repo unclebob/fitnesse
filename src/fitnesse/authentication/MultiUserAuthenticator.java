@@ -10,7 +10,7 @@ public class MultiUserAuthenticator extends Authenticator {
   private Map<String, String> users = new HashMap<>();
   private PasswordCipher cipher;
 
-  public MultiUserAuthenticator(String passwdFile) throws IOException {
+  public MultiUserAuthenticator(String passwdFile) throws IOException, ReflectiveOperationException {
     PasswordFile passwords = new PasswordFile(passwdFile);
     users = passwords.getPasswordMap();
     cipher = passwords.getCipher();

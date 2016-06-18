@@ -4,6 +4,7 @@ package util;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,17 +21,21 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 public class FileUtil {
 
+  private static final Logger LOG = Logger.getLogger(FileUtil.class.getName());
+
   public static final String CHARENCODING = "UTF-8";
 
-  public static File createFile(String path, String content) {
+  public static File createFile(String path, String content) throws IOException {
     return createFile(path, new ByteArrayInputStream(content.getBytes()));
   }
 
-  public static File createFile(String path, InputStream content) {
+  public static File createFile(String path, InputStream content) throws IOException {
     String[] names = path.replace("/", File.separator).split(Pattern.quote(File.separator));
     if (names.length == 1)
       return createFile(new File(path), content);
@@ -46,27 +51,20 @@ public class FileUtil {
     }
   }
 
-  public static File createFile(File file, String content) {
-    try {
-      return createFile(file, content.getBytes(CHARENCODING));
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
-    }
+  public static File createFile(File file, String content) throws IOException {
+    return createFile(file, content.getBytes(CHARENCODING));
   }
 
 
-  public static File createFile(File file, byte[] bytes) {
+  public static File createFile(File file, byte[] bytes) throws IOException {
     return createFile(file, new ByteArrayInputStream(bytes));
   }
 
-  public static File createFile(File file, InputStream content) {
+  public static File createFile(File file, InputStream content) throws IOException {
     FileOutputStream fileOutput = null;
     try {
       fileOutput = new FileOutputStream(file);
       FileUtil.copyBytes(content, fileOutput);
-    }
-    catch (IOException e) {
-      throw new RuntimeException(e);
     }
     finally {
       if (fileOutput != null)
@@ -83,11 +81,11 @@ public class FileUtil {
     return new File(path).mkdir();
   }
 
-  public static void deleteFileSystemDirectory(String dirPath) {
+  public static void deleteFileSystemDirectory(String dirPath) throws IOException {
     deleteFileSystemDirectory(new File(dirPath));
   }
 
-  public static void deleteFileSystemDirectory(File current) {
+  public static void deleteFileSystemDirectory(File current) throws IOException {
     File[] files = current.listFiles();
 
     for (int i = 0; files != null && i < files.length; i++) {
@@ -100,15 +98,15 @@ public class FileUtil {
     deleteFile(current);
   }
 
-  public static void deleteFile(String filename) {
+  public static void deleteFile(String filename) throws IOException {
     deleteFile(new File(filename));
   }
 
-  public static void deleteFile(File file) {
+  public static void deleteFile(File file) throws IOException{
     if (!file.exists())
       return;
     if (!file.delete())
-      throw new RuntimeException("Could not delete '" + file.getAbsolutePath() + "'");
+      throw new IOException("Could not delete '" + file.getAbsolutePath() + "'");
   }
 
   public static String getFileContent(String path) throws IOException {
@@ -127,8 +125,7 @@ public class FileUtil {
       stream = new FileInputStream(input);
       return new StreamReader(stream).readBytes((int) size);
     } finally {
-      if (stream != null)
-        stream.close();
+      close(stream);
     }
   }
 
@@ -140,7 +137,7 @@ public class FileUtil {
       while ((line = reader.readLine()) != null)
         lines.add(line);
     } finally {
-      reader.close();
+      close(reader);
     }
     return lines;
   }
@@ -191,42 +188,12 @@ public class FileUtil {
     return fileList.toArray(new File[fileList.size()]);
   }
 
-  public static void close(Writer writer) {
-    if (writer != null) {
+  public static void close(Closeable closeable) {
+    if (closeable != null) {
       try {
-        writer.close();
+        closeable.close();
       } catch (IOException e) {
-        throw new RuntimeException("Unable to close writer", e);
-      }
-    }
-  }
-
-  public static void close(OutputStream output) {
-    if (output != null) {
-      try {
-        output.close();
-      } catch (IOException e) {
-        throw new RuntimeException("Unable to close outputstream", e);
-      }
-    }
-  }
-
-  public static void close(InputStream input) {
-    if (input != null) {
-      try {
-        input.close();
-      } catch (IOException e) {
-        throw new RuntimeException("Unable to close inputstream", e);
-      }
-    }
-  }
-
-  public static void close(StreamReader reader) {
-    if (reader != null) {
-      try {
-        reader.close();
-      } catch (IOException e) {
-        throw new RuntimeException("Unable to close stream reader", e);
+        LOG.log(Level.INFO, "Unable to close " + closeable, e);
       }
     }
   }

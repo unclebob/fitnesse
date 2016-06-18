@@ -19,7 +19,7 @@ import java.util.*;
 public class VersionSelectionResponder implements SecureResponder {
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     SimpleResponse response = new SimpleResponse();
     String resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);

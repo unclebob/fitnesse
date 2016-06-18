@@ -3,7 +3,8 @@
 package fitnesse.http;
 
 import java.io.Closeable;
+import java.io.IOException;
 
 public interface ResponseSender extends Closeable {
-  void send(byte[] bytes);
+  void send(byte[] bytes) throws IOException;
 }

@@ -18,7 +18,7 @@ public class DeleteConfirmationResponder implements SecureResponder {
   private String resource;
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     SimpleResponse response = new SimpleResponse();
     resource = request.getResource();
     String filename = request.getInput("filename");

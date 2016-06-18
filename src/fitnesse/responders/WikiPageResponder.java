@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import fitnesse.FitNesseContext;
@@ -22,7 +23,7 @@ import fitnesse.wiki.*;
 public class WikiPageResponder implements SecureResponder {
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     WikiPage page = loadPage(context, request.getResource(), request.getMap());
     if (page == null)
       return notFoundResponse(context, request);
@@ -42,7 +43,7 @@ public class WikiPageResponder implements SecureResponder {
     return page;
   }
 
-  private Response notFoundResponse(FitNesseContext context, Request request) {
+  private Response notFoundResponse(FitNesseContext context, Request request) throws Exception {
     if (dontCreateNonExistentPage(request))
       return new NotFoundResponder().makeResponse(context, request);
     return new EditResponder().makeResponseForNonExistentPage(context, request);
@@ -53,7 +54,7 @@ public class WikiPageResponder implements SecureResponder {
     return dontCreate != null && (dontCreate.isEmpty() || Boolean.parseBoolean(dontCreate));
   }
 
-  private SimpleResponse makePageResponse(FitNesseContext context, WikiPage page) {
+  private SimpleResponse makePageResponse(FitNesseContext context, WikiPage page) throws UnsupportedEncodingException {
       String html = makeHtml(context, page);
 
       SimpleResponse response = new SimpleResponse();
@@ -68,14 +69,14 @@ public class WikiPageResponder implements SecureResponder {
     WikiPagePath fullPath = page.getPageCrawler().getFullPath();
     String fullPathName = PathParser.render(fullPath);
     PageTitle pt = new PageTitle(fullPath);
-    
+
     String tags = pageData.getAttribute(PageData.PropertySUITES);
 
     pt.setPageTags(tags);
-    
+
     html.setTitle(fullPathName);
     html.setPageTitle(pt.notLinked());
-    
+
     html.setNavTemplate("wikiNav.vm");
     html.put("actions", new WikiPageActions(page));
     html.put("helpText", pageData.getProperties().get(PageData.PropertyHELP));

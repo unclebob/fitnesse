@@ -20,6 +20,6 @@ public class FitNesseSuiteExampleFromPropertiesTest {
 
   @Test
   public void dummy(){
-    
+
   }
 }

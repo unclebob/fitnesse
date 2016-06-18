@@ -309,7 +309,17 @@ public abstract class QueryTableTestBase {
     assertEquals("2", result.getVariablesToStore().get("A"));
   }
 
-  
+  @Test
+  public void tableWithSetSymbolInFirstColumnReturnVariableInResult() throws Exception {
+    makeQueryTableAndBuildInstructions(queryTableHeader + "|$A=|2|\n");
+    QueryTable.QueryTableExpectation expectation = qt.new QueryTableExpectation();
+    TestResult result = expectation.evaluateExpectation(asList(asList(asList("n", "1"), asList("2n", "2"))));
+
+    assertNotNull(result.getVariablesToStore());
+    assertEquals("1", result.getVariablesToStore().get("A"));
+  }
+
+
   @Test
   public void commentColumn() throws Exception {
 	queryTableHeader =

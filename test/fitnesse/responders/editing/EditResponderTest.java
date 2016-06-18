@@ -55,13 +55,13 @@ public class EditResponderTest {
     assertSubString("name=\"" + EditResponder.TICKET_ID + "\"", body);
     assertSubString("name=\"" + EditResponder.HELP_TEXT + "\"", body);
     assertSubString("select id=\"" + EditResponder.TEMPLATE_MAP + "\"", body);
-    
+
     assertSubString("type=\"submit\"", body);
     assertSubString("textarea", body);
     assertSubString("<label for=\"suites\">Tags:</label>", body);
   }
 
-  private SimpleResponse makeResponse() {
+  private SimpleResponse makeResponse() throws Exception {
     request.setResource("ChildPage");
     return (SimpleResponse) responder.makeResponse(context, request);
   }
@@ -104,7 +104,7 @@ public class EditResponderTest {
   @Test
   public void testTemplateListPopulates() throws Exception {
     WikiPageUtil.addPage(root, PathParser.parse("TemplateLibrary"), "template library");
-    
+
     WikiPageUtil.addPage(root, PathParser.parse("TemplateLibrary.TemplateOne"), "template 1");
     WikiPageUtil.addPage(root, PathParser.parse("TemplateLibrary.TemplateTwo"), "template 2");
     WikiPageUtil.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
@@ -124,7 +124,7 @@ public class EditResponderTest {
     assertSubString("select id=\"" + EditResponder.TEMPLATE_MAP + "\"", body);
     assertSubString("option value=\"" + ".TemplateLibrary.TemplateOne" + "\"", body);
     assertSubString("option value=\"" + ".TemplateLibrary.TemplateTwo" + "\"", body);
-    
+
     assertSubString("type=\"submit\"", body);
     assertSubString("textarea", body);
   }
@@ -156,5 +156,5 @@ public class EditResponderTest {
     responder.makeResponse(context, request);
     assertFalse(root.hasChildPage("MissingPage"));
   }
-  
+
 }

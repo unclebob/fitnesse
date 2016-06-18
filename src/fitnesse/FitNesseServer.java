@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
@@ -21,17 +22,12 @@ public class FitNesseServer implements SocketServer {
   }
 
   @Override
-  public void serve(Socket s) {
+  public void serve(Socket s) throws IOException {
     serve(s, 10000);
   }
 
-  public void serve(Socket s, long requestTimeout) {
-    try {
-      FitNesseExpediter sender = new FitNesseExpediter(s, context, executorService, requestTimeout);
-      executorService.submit(sender);
-    }
-    catch (Exception e) {
-      LOG.log(Level.SEVERE, "Error while serving socket " + s, e);
-    }
+  public void serve(Socket s, long requestTimeout) throws IOException {
+    FitNesseExpediter sender = new FitNesseExpediter(s, context, executorService, requestTimeout);
+    executorService.submit(sender);
   }
 }

@@ -12,14 +12,15 @@ import java.util.concurrent.Executors;
 
 import fitnesse.slim.fixtureInteraction.DefaultInteraction;
 import fitnesse.slim.fixtureInteraction.FixtureInteraction;
-import fitnesse.socketservice.SocketFactory;
+import fitnesse.socketservice.PlainServerSocketFactory;
+import fitnesse.socketservice.ServerSocketFactory;
+import fitnesse.socketservice.SslServerSocketFactory;
 import util.CommandLine;
 
 import static fitnesse.slim.JavaSlimFactory.createJavaSlimFactory;
 
 public class SlimService {
-  public static final String OPTION_DESCRIPTOR = "[-v] [-i interactionClass] [-s statementTimeout] [-d] [-ssl parameterClass] port";
-  static FixtureInteraction interaction = getInteraction(null);
+  private static final String OPTION_DESCRIPTOR = "[-v] [-i interactionClass] [-s statementTimeout] [-d] [-ssl parameterClass] port";
 
   public static class Options {
     final boolean verbose;
@@ -72,8 +73,20 @@ public class SlimService {
   }
 
   public static void startWithFactory(SlimFactory slimFactory, Options options) throws IOException {
-    SlimService slimservice = new SlimService(slimFactory.getSlimServer(), options.port, options.interaction, options.daemon, options.useSSL, options.sslParameterClassName);
-    slimservice.accept();
+    ServerSocketFactory serverSocketFactory = options.useSSL ? new SslServerSocketFactory(true, options.sslParameterClassName) : new PlainServerSocketFactory();
+    try {
+      SlimService slimservice = new SlimService(slimFactory.getSlimServer(), serverSocketFactory.createServerSocket(options.port), options.daemon);
+      slimservice.accept();
+    } catch (java.lang.OutOfMemoryError e) {
+      System.err.println("Out of Memory. Aborting.");
+      e.printStackTrace();
+      System.exit(99);
+      throw e;
+    } catch (BindException e) {
+      System.err.println("Can not bind to port " + options.port + ". Aborting.");
+      e.printStackTrace();
+      throw e;
+    }
   }
 
   public static Options parseCommandLine(String[] args) {
@@ -88,28 +101,16 @@ public class SlimService {
       boolean daemon = commandLine.hasOption("d");
       String sslParameterClassName = commandLine.getOptionArgument("ssl", "parameterClass");
       boolean useSSL = commandLine.hasOption("ssl");
-      return new Options(verbose, port, getInteraction(interactionClassName), daemon, statementTimeout, useSSL, sslParameterClassName);
+      return new Options(verbose, port, createInteraction(interactionClassName), daemon, statementTimeout, useSSL, sslParameterClassName);
     }
     return null;
   }
 
-  public SlimService(SlimServer slimServer, int port, FixtureInteraction interaction, boolean daemon, boolean useSSL, String sslParameterClassName) throws IOException {
-    SlimService.interaction = interaction;
+  public SlimService(SlimServer slimServer, ServerSocket serverSocket, boolean daemon) throws IOException {
     this.daemon = daemon;
     this.slimServer = slimServer;
-
-    try {
-      serverSocket = useSSL ? SocketFactory.createSslServerSocket(port, useSSL, sslParameterClassName) : SocketFactory.createServerSocket(port);
-    } catch (java.lang.OutOfMemoryError e) {
-      System.err.println("Out of Memory. Aborting.");
-      e.printStackTrace();
-      System.exit(99);
-      throw e;
-    } catch (BindException e) {
-      System.err.println("Can not bind to port " + port + ". Aborting.");
-      e.printStackTrace();
-      throw e;
-    }
+    this.serverSocket = serverSocket;
+//
   }
 
   public int getPort() {
@@ -163,7 +164,7 @@ public class SlimService {
   }
 
   @SuppressWarnings("unchecked")
-  private static FixtureInteraction getInteraction(String interactionClassName) {
+  private static FixtureInteraction createInteraction(String interactionClassName) {
     if (interactionClassName == null) {
       return new DefaultInteraction();
     }
@@ -172,9 +173,5 @@ public class SlimService {
     } catch (Exception e) {
       throw new SlimError(e);
     }
-  }
-
-  public static FixtureInteraction getInteraction() {
-    return interaction;
   }
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import fitnesse.slim.JavaSlimFactory;
 import fitnesse.slim.SlimServer;
+import fitnesse.slim.fixtureInteraction.DefaultInteraction;
 import fitnesse.testsystems.ClientBuilder;
 import fitnesse.testsystems.Descriptor;
 
@@ -17,7 +18,7 @@ public class InProcessSlimClientBuilder extends ClientBuilder<SlimClient> {
   }
 
   @Override
-  public SlimClient build() throws IOException {
+  public SlimClient build() {
     SlimServer slimServer = createSlimServer(1000, isDebug());
     return new InProcessSlimClient(getTestSystemName(), slimServer, getExecutionLogListener());
   }
@@ -28,7 +29,7 @@ public class InProcessSlimClientBuilder extends ClientBuilder<SlimClient> {
   }
 
   protected SlimServer createSlimServer(int timeout, boolean verbose) {
-    return JavaSlimFactory.createJavaSlimFactory(timeout, verbose).getSlimServer();
+    return JavaSlimFactory.createJavaSlimFactory(new DefaultInteraction(), timeout, verbose).getSlimServer();
   }
 
 }

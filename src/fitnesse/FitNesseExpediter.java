@@ -23,7 +23,6 @@ import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
-import fitnesse.socketservice.SocketFactory;
 import org.apache.commons.lang.StringUtils;
 
 import static java.lang.String.format;
@@ -69,13 +68,9 @@ public class FitNesseExpediter implements ResponseSender, Runnable {
   }
 
   @Override
-  public void send(byte[] bytes) {
-    try {
-      output.write(bytes);
-      output.flush();
-    } catch (IOException e) {
-      LOG.log(Level.FINE, format("Could not send data for URL %s: %s (Stop button pressed?)", (request != null ? request.getResource() : ""), e.toString()));
-    }
+  public void send(byte[] bytes) throws IOException {
+    output.write(bytes);
+    output.flush();
   }
 
   @Override
@@ -92,7 +87,6 @@ public class FitNesseExpediter implements ResponseSender, Runnable {
 
   private Request makeRequest() {
     Request request = new Request(input);
-    request.setPeerDn(SocketFactory.peerDn(socket));
     request.setContextRoot(context.contextRoot);
     return request;
   }
@@ -101,7 +95,7 @@ public class FitNesseExpediter implements ResponseSender, Runnable {
     response.sendTo(this);
   }
 
-  private Response makeResponse(final Request request) throws SocketException {
+  private Response makeResponse(final Request request) throws Exception {
     Response response;
     try {
       executorService.submit(new Callable<Request>() {
@@ -150,11 +144,11 @@ public class FitNesseExpediter implements ResponseSender, Runnable {
     return responder.makeResponse(context, request);
   }
 
-  private Response reportError(Request request, int status, String message) {
+  private Response reportError(Request request, int status, String message) throws Exception {
     return new ErrorResponder(message, status).makeResponse(context, request);
   }
 
-  private Response reportError(Request request, Exception e) {
+  private Response reportError(Request request, Exception e) throws Exception {
     return new ErrorResponder(e).makeResponse(context, request);
   }
 

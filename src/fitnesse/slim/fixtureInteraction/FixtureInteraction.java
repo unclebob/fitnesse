@@ -5,10 +5,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import fitnesse.slim.MethodExecutionResult;
+
 public interface FixtureInteraction {
   Object createInstance(List<String> paths, String className, Object[] args)
           throws IllegalArgumentException, InstantiationException,
           IllegalAccessException, InvocationTargetException;
 
-  Object methodInvoke(Method method, Object instance, Object... convertedArgs) throws Throwable;
+  MethodExecutionResult findAndInvoke(String method, Object instance, Object... args) throws Throwable;
+  
+  Object methodInvoke(Method method, Object instance, Object... args) throws Throwable;
 }

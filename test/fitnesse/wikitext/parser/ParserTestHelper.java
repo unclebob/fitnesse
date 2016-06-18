@@ -111,15 +111,18 @@ public class ParserTestHelper {
   }
 
   public static void assertParses(String input, String expected) {
-    WikiPage page = new TestRoot().makePage("TestPage", input);
-    Symbol result = parse(page, input);
+    Symbol result = parse(input);
     assertEquals(expected, serialize(result));
   }
 
   public static void assertParsesWithOffset(String input, String expected) {
-    WikiPage page = new TestRoot().makePage("TestPage", input);
-    Symbol result = parse(page, input);
+    Symbol result = parse(input);
     assertEquals(expected, serializeWithOffset(result));
+  }
+
+  public static Symbol parse(final String input) {
+    WikiPage page = new TestRoot().makePage("TestPage", input);
+    return parse(page, input);
   }
 
   public static Symbol parse(WikiPage page) {
