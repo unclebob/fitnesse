@@ -10,11 +10,23 @@
  - Move file creation to plugin
 */
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.1.9'
+    }
+}
+
 plugins {
   id 'java'
   id "maven-publish"
   id "com.jfrog.bintray" version "1.6"
 }
+
+apply plugin: "info.solidsoft.pitest"
+
 
 version = new Date().format('yyyyMMdd')
 
@@ -120,6 +132,13 @@ task copyRuntimeLibs(type: Copy) {
 test {
   dependsOn copyRuntimeLibs
   maxParallelForks 1
+}
+
+pitest {
+  targetClasses = ['fit.*', 'fitnesse.*']
+  pitestVersion = "1.1.10"
+  threads = 1 // We can not deal with parallel execution yet
+  outputFormats = ['XML', 'HTML']
 }
 
 task run(type: JavaExec) {
