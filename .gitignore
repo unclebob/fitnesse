@@ -1,6 +1,3 @@
-jsunit/*
-agitar/*
-dist/*
 build
 classes/*
 lib/*
@@ -9,9 +6,7 @@ lib/*
 .project
 .settings
 *.zip
-*.ipr
 .DS_Store
-target/*
 *.iml
 *.ipr
 *.iws
@@ -19,14 +14,8 @@ target/*
 desktop.ini
 inst.log
 velocity.log*
-crap_build.xml
-com_ibm_contest/*
-junk/*
 fitserverSentinel*
 tmp/*
-/classes
-/test-classes/
-/bin/
 FitNesseRoot/properties
 FitNesseRoot/ErrorLogs/*
 FitNesseRoot/files/testResults/*

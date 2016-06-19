@@ -25,6 +25,11 @@ public class SslSlimClientBuilderTest {
   }
 
   @Test
+  public void sslParametersCanBeFound() throws ClassNotFoundException {
+    Class.forName("fitnesse.socketservice.SslParametersWiki");
+  }
+
+  @Test
   public void StartAndConnectToSlimClientWithSslAgentWiki() throws Exception {
 	  executeAndCheck("fitnesse.socketservice.SslParametersAgent", "fitnesse.socketservice.SslParametersWiki");
   }
@@ -40,33 +45,34 @@ public class SslSlimClientBuilderTest {
   }
 
   public void executeAndCheck(String agentParameters, String clientParameters) throws Exception {
-	    WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
-	    		"!define TEST_SYSTEM {slim}\n" +
-	    		"!define SLIM_SSL {"+ agentParameters +"}\n" +
-	    		"!define slim.timeout {10}\n" +
-	    		"!define slim.pool.size {1}\n" +
-	    		"!define wiki.protocol.ssl.parameter.class {"+ clientParameters + "}\n"
+    WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
+        "!define TEST_SYSTEM {slim}\n" +
+        "!define SLIM_SSL {"+ agentParameters +"}\n" +
+        "!define slim.timeout {10}\n" +
+        "!define slim.pool.size {1}\n" +
+        "!define wiki.protocol.ssl.parameter.class {"+ clientParameters + "}\n"
     );
-	    WikiPageDescriptor descriptor = new WikiPageDescriptor(testPage, false, false, "test-classes", "classes");	    descriptor.getExecutionLogListener().addExecutionLogListener(new ConsoleExecutionLogListener());
-	    SlimClientBuilder clientBuilder = new SlimClientBuilder(descriptor);
-	    String testSystemName = clientBuilder.getTestSystemName();
-	    assertEquals("slim:" + "fitnesse.slim.SlimService", testSystemName);
+    WikiPageDescriptor descriptor = new WikiPageDescriptor(testPage, false, false, "build/classes/test", "classes");
+    descriptor.getExecutionLogListener().addExecutionLogListener(new ConsoleExecutionLogListener());
+    SlimClientBuilder clientBuilder = new SlimClientBuilder(descriptor);
+    String testSystemName = clientBuilder.getTestSystemName();
+    assertEquals("slim:" + "fitnesse.slim.SlimService", testSystemName);
 
-	    SlimCommandRunningClient client = clientBuilder.build();
+    SlimCommandRunningClient client = clientBuilder.build();
 
-	    boolean isConnected;
+    boolean isConnected;
 
-	    client.start();
+    client.start();
 
-	    try{
-	    	isConnected = client.isConnected();
-	    }finally{
-	        client.bye();
-	        client.kill();
-	  	}
+    try{
+      isConnected = client.isConnected();
+    }finally{
+        client.bye();
+        client.kill();
+    }
 
-	    assertTrue("Got connected to client", isConnected);
-	  }
+    assertTrue("Got connected to client", isConnected);
+  }
 }
 
 

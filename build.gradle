@@ -190,7 +190,7 @@ task acceptanceTest(type: JavaExec) {
   onlyIf { dependsOnTaskDidWork() }
   classpath = standaloneJar.outputs.files
   main "fitnesseMain.FitNesseMain"
-  args "-c", "FitNesse.SuiteAcceptanceTests?suite&format=text"
+  args "-o", "-c", "FitNesse.SuiteAcceptanceTests?suite&format=text"
 }
 
 check.dependsOn acceptanceTest

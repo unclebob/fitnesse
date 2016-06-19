@@ -1,9 +1,6 @@
 language: java
 jdk:
- - openjdk7
  - oraclejdk7
  - oraclejdk8
-
-script: ./gradlew build
-
-sudo: false
+# - openjdk7 Crashes with a buffer overflow (7u91-2.6.3-0ubuntu0.12.04.1)
+# See https://github.com/travis-ci/travis-ci/issues/6203
