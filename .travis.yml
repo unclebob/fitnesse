@@ -4,8 +4,6 @@ jdk:
  - oraclejdk7
  - oraclejdk8
 
-install: ant resolve
-
-script: ant release
+script: ./gradlew build
 
 sudo: false
