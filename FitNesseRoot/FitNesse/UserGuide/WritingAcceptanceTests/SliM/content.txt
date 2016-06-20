@@ -18,6 +18,7 @@ The first cell of a slim table tells you what kind of table it is. Here are the 
 
 | [[Decision Table][>DecisionTable]] | Supplies the inputs and outputs for decisions. This is similar to the Fit Column Fixture |
 | [[Dynamic Decision Table][>DynamicDecisionTable]] | Has the same syntax as a >DecisionTable, but passes the column headers as parameters to the fixture. |
+| [[Hybrid Decision Table][.FitNesse.SuiteAcceptanceTests.SuiteSlimTests.HybridDecisionTable]]| Combines the advantages of a Decision and a Dynamic Decision Table.|
 | [[Query Table][>QueryTable]] | Supplies the expected results of a query. This is similar to the Fit Row Fixture |
 | [[Subset Query Table][>SubsetQueryTable]] | Supplies a subset of the expected results of a query. |
 | [[Ordered query Table][>OrderedQueryTable]] | Supplies the expected results of a query. The rows are expected to be in order. This is similar to the Fit Row Fixture |
