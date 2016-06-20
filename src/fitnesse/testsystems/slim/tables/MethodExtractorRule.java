@@ -35,12 +35,6 @@ public class MethodExtractorRule {
 		return parameterListString;
 	}
 	
-	// For Testing Only
-	//public  MethodExtractor createDisgracerConfiguration(String jsonString){
-	//	if (jsonString == null) return new MethodExtractor();
-	//	else return new MethodExtractor(jsonString);
-	//}
-	
 	public Matcher matcher(String methodName){
 		return scope.matcher(methodName);
 	}

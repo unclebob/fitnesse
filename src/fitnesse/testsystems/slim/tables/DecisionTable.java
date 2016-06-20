@@ -40,15 +40,15 @@ public class DecisionTable extends SlimTable {
     if (scenario != null) {
       return new ScenarioCaller().call(scenario);
     } else {
-    	scenarioName =getFixtureName();
-    	scenario = getTestContext().getScenario(scenarioName);
-        if (scenario != null) {
-            return new ScenarioCallerWithConstuctorParameters().call(scenario);
-        }else{
-        	setterMethodExtractor = prepareMethodExtractorIfNull(setterMethodExtractor,"SLIM_DT_SETTER");
-        	getterMethodExtractor = prepareMethodExtractorIfNull(getterMethodExtractor,"SLIM_DT_GETTER");
-        	return new FixtureCaller().call(getFixtureName());
-        }
+      scenarioName =getFixtureName();
+      scenario = getTestContext().getScenario(scenarioName);
+      if (scenario != null) {
+        return new ScenarioCallerWithConstuctorParameters().call(scenario);
+      } else {
+       	setterMethodExtractor = prepareMethodExtractorIfNull(setterMethodExtractor,"SLIM_DT_SETTER");
+       	getterMethodExtractor = prepareMethodExtractorIfNull(getterMethodExtractor,"SLIM_DT_GETTER");
+       	return new FixtureCaller().call(getFixtureName());
+      }
     }
   }
 
@@ -156,8 +156,7 @@ public class DecisionTable extends SlimTable {
   }
 
   private class FixtureCaller extends DecisionTableCaller {
-
-	  public FixtureCaller() {
+    public FixtureCaller() {
       super(table);
     }
 
@@ -172,7 +171,6 @@ public class DecisionTable extends SlimTable {
       return assertions;
     }
 
-    
     private List<SlimAssertion> invokeRows() throws SyntaxError {
       List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
       assertions.add(callUnreportedFunction("beginTable", 0));
@@ -212,11 +210,11 @@ public class DecisionTable extends SlimTable {
       SlimAssertion assertion;
 
       Object[] args = new Object[] {};
- 	  MethodExtractorResult extractedGetter =  getterMethodExtractor.findRule(functionName);
-	  if(extractedGetter != null){
-	  	functionName = extractedGetter.methodName;
-    	args = extractedGetter.mergeParameters(args);
-	  }
+      MethodExtractorResult extractedGetter =  getterMethodExtractor.findRule(functionName);
+      if(extractedGetter != null){
+        functionName = extractedGetter.methodName;
+        args = extractedGetter.mergeParameters(args);
+      }
 
       if (assignedSymbol != null) {
         assertion = makeAssertion(callAndAssign(assignedSymbol, getTableName(), functionName, args),
@@ -233,17 +231,16 @@ public class DecisionTable extends SlimTable {
       for (String var : varStore.getLeftToRightAndResetColumnNumberIterator()) {
         int col = varStore.getColumnNumber(var);
         String valueToSet = table.getCellContents(col, row);
+
         Object[] args = new Object[] {valueToSet};
-        
    	    MethodExtractorResult extractedSetter =  setterMethodExtractor.findRule(var);
-	  	if(extractedSetter != null){
-	  	  var = extractedSetter.methodName;
-	  	  args = extractedSetter.mergeParameters(args);
-	  	}else{
-	  		// Default for Setter
-	  		var = "set " + var;
-	  	}
-	  	
+   	    if(extractedSetter != null){
+          var = extractedSetter.methodName;
+          args = extractedSetter.mergeParameters(args);
+          }else{
+            // Default for Setter
+            var = "set " + var;
+        }
 
         Instruction setInstruction = callFunction(getTableName(), var, args);
         assertions.add(makeAssertion(setInstruction,
@@ -251,6 +248,5 @@ public class DecisionTable extends SlimTable {
       }
       return assertions;
     }
-
   }
 }
