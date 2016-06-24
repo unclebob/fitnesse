@@ -12,7 +12,7 @@ import java.io.IOException;
 
 @RunWith(FitNesseRunnerExtensionTest.SuiteExtension.class)
 @FitNesseRunner.FitnesseDir(".")
-@FitNesseRunner.OutputDir("./target/fitnesse-results")
+@FitNesseRunner.OutputDir("./build/fitnesse-results")
 public class FitNesseRunnerExtensionTest {
 
   public static class SuiteExtension extends FitNesseRunner {

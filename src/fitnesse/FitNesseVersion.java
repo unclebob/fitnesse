@@ -5,6 +5,8 @@ package fitnesse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,6 +16,7 @@ import java.util.logging.Logger;
  **/
 public class FitNesseVersion {
   private static final Logger LOG = Logger.getLogger(FitNesseVersion.class.getName());
+  private static final String UNKNOWN_VERSION = "vUnknown";
 
   private final String version;
 
@@ -30,14 +33,14 @@ public class FitNesseVersion {
     try {
       is = FitNesseVersion.class.getResourceAsStream("/META-INF/FitNesseVersion.txt");
       if (is == null) {
-        return "unknown";
+        return UNKNOWN_VERSION;
       }
       byte[] b = new byte[64];
       int len = is.read(b);
       return new String(b, 0, len, Charset.forName("ISO-8859-1"));
     } catch (IOException e) {
       LOG.log(Level.WARNING, "Unable to read FitNesse version", e);
-      return "unknown";
+      return UNKNOWN_VERSION;
     } finally {
       if (is != null) {
         try {
@@ -58,7 +61,7 @@ public class FitNesseVersion {
     try {
       return Long.parseLong(fullTextVersion.substring(1, Math.min(9, fullTextVersion.length())));
     } catch (Exception e) {
-      throw new IllegalArgumentException("Unable to extract date version from " + fullTextVersion);
+      throw new IllegalArgumentException("Unable to extract date version from " + fullTextVersion, e);
     }
   }
 
