@@ -11,6 +11,7 @@ lib/*
 *.ipr
 *.iws
 .idea
+.gradletasknamecache
 desktop.ini
 inst.log
 velocity.log*
