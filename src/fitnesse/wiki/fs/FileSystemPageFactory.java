@@ -14,6 +14,12 @@ import fitnesse.wiki.WikiPageFactoryRegistry;
 import fitnesse.wikitext.parser.Maybe;
 import fitnesse.wikitext.parser.VariableSource;
 
+/**
+ * This is the general factory used to load and create wiki pages.
+ *
+ * For historic reasons it's still called FileSystemPageFactory, although it deals with all
+ * file based page types (FileSystemPage, WikiFilePage, ExternalSuitePage).
+ */
 public class FileSystemPageFactory implements WikiPageFactory<WikiPage>, WikiPageFactoryRegistry {
   private final FileSystem fileSystem;
   private final VersionsController versionsController;
@@ -42,6 +48,7 @@ public class FileSystemPageFactory implements WikiPageFactory<WikiPage>, WikiPag
   private void initializeWikiPageFactories() {
     registerWikiPageFactory(innerFileSystemPageFactory);
     registerWikiPageFactory(new WikiFilePageFactory());
+    registerWikiPageFactory(new RootWikiFilePageFactory());
     // Note: ExternalSuitePageFactory should be last in line: it traverses the remainder of the tree looking for .html files.
     registerWikiPageFactory(new ExternalSuitePageFactory(fileSystem));
   }
@@ -63,11 +70,9 @@ public class FileSystemPageFactory implements WikiPageFactory<WikiPage>, WikiPag
 
   @Override // from WikiPageFactory
   public WikiPage makePage(File path, String pageName, WikiPage parent, VariableSource variableSource) {
-    if (parent != null) {
-      for (WikiPageFactory factory : wikiPageFactories) {
-        if (factory.supports(path)) {
-          return factory.makePage(path, pageName, parent, variableSource);
-        }
+    for (WikiPageFactory factory : wikiPageFactories) {
+      if (factory.supports(path)) {
+        return factory.makePage(path, pageName, parent, variableSource);
       }
     }
     if (parent == null || (parent instanceof FileSystemPage && fileIsValid(path)))
@@ -118,7 +123,23 @@ public class FileSystemPageFactory implements WikiPageFactory<WikiPage>, WikiPag
     @Override
     public boolean supports(File path) {
       File wikiFile = new File(path.getPath() + ".wiki");
-      return fileSystem.exists(wikiFile) && !fileSystem.isDirectory(wikiFile);
+      return (fileSystem.exists(wikiFile) && !fileSystem.isDirectory(wikiFile));
+    }
+  }
+
+  protected class RootWikiFilePageFactory implements WikiPageFactory<WikiPage> {
+    @Override
+    public WikiPage makePage(final File path, final String pageName, final WikiPage parent, final VariableSource variableSource) {
+      Maybe<String> rootPath = variableSource.findVariable("FITNESSE_ROOTPATH");
+      return new WikiFilePage(new File(path, "_root"), pageName, parent, null, versionsController,
+        new FileSystemSubWikiPageFactory(new File(rootPath.getValue()), fileSystem, variableSource, FileSystemPageFactory.this),
+        variableSource);
+    }
+
+    @Override
+    public boolean supports(File path) {
+      File rootWikiFile = new File(path, "_root.wiki");
+      return (fileSystem.exists(rootWikiFile) && !fileSystem.isDirectory(rootWikiFile));
     }
   }
 }

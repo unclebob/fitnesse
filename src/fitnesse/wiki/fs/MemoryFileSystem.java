@@ -13,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import fitnesse.util.Clock;
+import fitnesse.util.StringUtils;
 import util.FileUtil;
 
 public class MemoryFileSystem implements FileSystem {
@@ -62,7 +63,7 @@ public class MemoryFileSystem implements FileSystem {
             int size = rest.indexOf(File.separator);
             if (size < 0) size = rest.length();
             String newPath = rest.substring(0, size);
-            if (!result.contains(newPath)) result.add(newPath);
+            if (!StringUtils.isBlank(newPath) && !result.contains(newPath)) result.add(newPath);
         }
         return result.toArray(new String[result.size()]);
     }

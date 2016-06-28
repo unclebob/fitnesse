@@ -43,6 +43,13 @@ public class WikiFilePageTest {
   }
 
   @Test
+  public void loadRootPageContent() throws IOException {
+    fileSystem.makeFile(new File("root", "_root.wiki"), "root page content");
+    root = new FileSystemPageFactory(fileSystem, versionsController).makePage(new File("root"), "root", null, new SystemVariableSource());
+    assertThat(root.getData().getContent(), is("root page content"));
+  }
+
+  @Test
   public void loadPageContent() throws IOException {
     fileSystem.makeFile(new File("root", "testPage.wiki"), "page content");
     final WikiPage testPage = root.getChildPage("testPage");
