@@ -1,14 +1,16 @@
 package fitnesse.wiki.fs;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 
-import fitnesse.wiki.BaseWikitextPage;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.*;
 import fitnesse.wikitext.parser.VariableSource;
+import util.FileUtil;
+
+import static fitnesse.wiki.fs.FileSystemPage.propertiesFilename;
 
 /**
  * With this page all content is saved in one file: WikiPageName.wiki.
@@ -21,6 +23,7 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
   private final VersionsController versionsController;
   private final SubWikiPageFactory subWikiPageFactory;
   private final String versionName;
+  private PageData pageData;
 
   protected WikiFilePage(final File path, final String name, final WikiPage parent,
                       final String versionName, final VersionsController versionsController,
@@ -53,17 +56,32 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
 
   @Override
   public void removeChildPage(final String name) {
+    final WikiPage childPage = getChildPage(name);
+    if (childPage != null) {
+      childPage.remove();
+    }
+  }
 
+  @Override
+  public void remove() {
+    super.remove();
   }
 
   @Override
   public List<WikiPage> getChildren() {
-    return null;
+    return subWikiPageFactory.getChildren(this);
   }
 
   @Override
   public PageData getData() {
-    return null;
+    if (pageData == null) {
+      try {
+        pageData = getDataVersion();
+      } catch (IOException e) {
+        throw new WikiPageLoadException("Could not load page data for page " + path.getPath(), e);
+      }
+    }
+    return new PageData(pageData);
   }
 
   @Override
@@ -85,4 +103,34 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
   public File getFileSystemPath() {
     return path;
   }
-}
+
+  private PageData getDataVersion() throws IOException {
+    FileVersion[] versions = versionsController.getRevisionData(versionName, wikiFile());
+    FileVersion fileVersion = versions[0];
+    String content = "";
+    WikiPageProperties properties = null;
+
+    try {
+        content = loadContent(fileVersion);
+        // TODO: Parse -> Front matter, content
+    } catch (IOException e) {
+      throw new WikiPageLoadException(e);
+    }
+
+    if (properties == null) {
+      properties = defaultPageProperties();
+    }
+    return new PageData(content, properties);
+  }
+
+  private File wikiFile() {
+    return new File(getFileSystemPath().getPath() + ".wiki");
+  }
+
+  private String loadContent(final FileVersion fileVersion) throws IOException {
+    try (InputStream content = fileVersion.getContent()) {
+      return FileUtil.toString(content);
+    }
+  }
+
+  }

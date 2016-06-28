@@ -72,7 +72,7 @@ public class FileSystemPage extends BaseWikitextPage implements FileBasedWikiPag
   @Override
   public void removeChildPage(final String name) {
     final WikiPage childPage = getChildPage(name);
-    if (childPage instanceof FileSystemPage) {
+    if (childPage != null) {
       childPage.remove();
     }
   }
@@ -164,27 +164,6 @@ public class FileSystemPage extends BaseWikitextPage implements FileBasedWikiPag
       properties = defaultPageProperties();
     }
     return new PageData(content, properties);
-  }
-
-  public WikiPageProperties defaultPageProperties() {
-    WikiPageProperties properties = new WikiPageProperties();
-    properties.set(WikiPageProperty.EDIT);
-    properties.set(WikiPageProperty.PROPERTIES);
-    properties.set(WikiPageProperty.REFACTOR);
-    properties.set(WikiPageProperty.WHERE_USED);
-    properties.set(WikiPageProperty.RECENT_CHANGES);
-    properties.set(WikiPageProperty.FILES);
-    properties.set(WikiPageProperty.VERSIONS);
-    properties.set(WikiPageProperty.SEARCH);
-    properties.setLastModificationTime(Clock.currentDate());
-
-    PageType pageType = PageType.getPageTypeForPageName(getName());
-
-    if (STATIC.equals(pageType))
-      return properties;
-
-    properties.set(pageType.toString());
-    return properties;
   }
 
   @Override
