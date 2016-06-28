@@ -103,3 +103,17 @@ There are a few things to keep in mind when working from an IDE:
 3. Select the file `build.gradle` in the fitnesse folder.
 4. Follow the wizard. Use Java 7 or newer. It should find source and test folders.
 5. Open the Gradle Build tool, select the task `copyRuntimeLibs` and (right-click) mark it as _Execute After Make_.
+
+#### Dockerfile
+
+```
+#To create your image
+$ docker build --tag fitnesse .
+
+# To run fitnesse, we add ~/.gradle to share proxy information (and other)
+$ docker run -p 8001:8001 -v ~/.gradle:/root/.gradle -d fitnesse 
+# To run fitnesse
+$ docker run -p 8001:8001 -d fitnesse 
+# To run command in container
+$ docker run -p 8001:8001 -v ~/.gradle:/root/.gradle --rm -ti fitnesse /bin/bash 
+```
