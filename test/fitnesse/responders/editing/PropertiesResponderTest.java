@@ -70,7 +70,7 @@ public class PropertiesResponderTest {
     for (String attribute : new String[]{"Search", "Edit", "Properties", "Versions", "Refactor", "WhereUsed", "RecentChanges"})
       assertCheckboxChecked(attribute, content);
 
-    for (String attribute : new String[]{"Prune", PageData.PropertySECURE_READ, PageData.PropertySECURE_WRITE, PageData.PropertySECURE_TEST})
+    for (String attribute : new String[]{"Prune", WikiPageProperty.SECURE_READ, WikiPageProperty.SECURE_WRITE, WikiPageProperty.SECURE_TEST})
       assertCheckboxNotChecked(content, attribute);
   }
 
@@ -112,9 +112,9 @@ public class PropertiesResponderTest {
     assertFalse(jsonObject.has("Help"));
     assertFalse(jsonObject.getBoolean("Suite"));
     assertFalse(jsonObject.getBoolean("Prune"));
-    assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_READ));
-    assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_WRITE));
-    assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_TEST));
+    assertFalse(jsonObject.getBoolean(WikiImportProperty.SECURE_READ));
+    assertFalse(jsonObject.getBoolean(WikiImportProperty.SECURE_WRITE));
+    assertFalse(jsonObject.getBoolean(WikiImportProperty.SECURE_TEST));
   }
 
   @Test
@@ -122,8 +122,8 @@ public class PropertiesResponderTest {
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
     PageData data = page.getData();
     WikiPageProperty properties = data.getProperties();
-    properties.set(PropertyHELP, "help text");
-    properties.set(PropertySUITES, "foo,bar");
+    properties.set(WikiPageProperty.HELP, "help text");
+    properties.set(WikiPageProperty.SUITES, "foo,bar");
     page.commit(data);
 
     MockRequest request = new MockRequest();
@@ -144,9 +144,9 @@ public class PropertiesResponderTest {
     assertFalse(jsonObject.getBoolean("Test"));
     assertFalse(jsonObject.getBoolean("Suite"));
     assertFalse(jsonObject.getBoolean("Prune"));
-    assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_READ));
-    assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_WRITE));
-    assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_TEST));
+    assertFalse(jsonObject.getBoolean(WikiPageProperty.SECURE_READ));
+    assertFalse(jsonObject.getBoolean(WikiPageProperty.SECURE_WRITE));
+    assertFalse(jsonObject.getBoolean(WikiPageProperty.SECURE_TEST));
   }
 
 
@@ -397,7 +397,7 @@ public class PropertiesResponderTest {
   public void testSuitesDisplayed() throws Exception {
     WikiPage page = getContentFromSimplePropertiesPage();
     PageData data = page.getData();
-    data.setAttribute(PageData.PropertySUITES, "smoke");
+    data.setAttribute(WikiPageProperty.SUITES, "smoke");
     page.commit(data);
 
     getPropertiesContentFromPage(page);

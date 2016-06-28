@@ -18,7 +18,7 @@ public class LastModified extends SymbolType implements Translation {
     @Override
     public String toTarget(Translator translator, Symbol symbol) {
         String user = translator.getPage().getProperty(PageData.LAST_MODIFYING_USER);
-        String date = translator.getPage().getProperty(PageData.PropertyLAST_MODIFIED);
+        String date = translator.getPage().getProperty(WikiPageProperty.LAST_MODIFIED);
         return translator.formatMessage(
                 "Last modified " +
                 (!user.isEmpty() ? "by " + user : "anonymously") +

@@ -3,10 +3,11 @@
 package fitnesse.authentication;
 
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPageProperty;
 
 public class SecureTestOperation extends SecurePageOperation {
   @Override
   protected String getSecurityMode() {
-    return PageData.PropertySECURE_TEST;
+    return WikiPageProperty.SECURE_TEST;
   }
 }

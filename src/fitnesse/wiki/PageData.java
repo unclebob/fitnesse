@@ -61,7 +61,8 @@ public class PageData implements ReadOnlyPageData, Serializable {
   public static final String[] SECURITY_ATTRIBUTES = { WikiPageProperty.SECURE_READ,
       WikiPageProperty.SECURE_WRITE, WikiPageProperty.SECURE_TEST };
 
-  public static final String LAST_MODIFYING_USER = "LastModifyingUser";
+  @Deprecated
+  public static final String LAST_MODIFYING_USER = WikiPageProperty.LAST_MODIFYING_USER;
 
   public static final String SUITE_SETUP_NAME = "SuiteSetUp";
 

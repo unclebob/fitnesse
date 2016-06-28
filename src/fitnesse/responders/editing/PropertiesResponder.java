@@ -32,6 +32,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import static fitnesse.wiki.PageData.*;
+import static fitnesse.wiki.WikiPageProperty.*;
 import static fitnesse.wiki.PageType.SUITE;
 import static fitnesse.wiki.PageType.TEST;
 
@@ -73,24 +74,24 @@ public class PropertiesResponder implements SecureResponder {
   private JSONObject makeJson() {
     response.setContentType(Response.Format.JSON);
     JSONObject jsonObject = new JSONObject();
-    String[] attributes = { TEST.toString(), PropertySEARCH,
-        PropertyEDIT, PropertyPROPERTIES, PropertyVERSIONS, PropertyREFACTOR,
-        PropertyWHERE_USED, PropertyRECENT_CHANGES, SUITE.toString(),
-        PropertyPRUNE, PropertySECURE_READ, PropertySECURE_WRITE,
-        PropertySECURE_TEST, PropertyFILES };
+    String[] attributes = { TEST.toString(), SEARCH,
+        EDIT, PROPERTIES, VERSIONS, REFACTOR,
+        WHERE_USED, RECENT_CHANGES, SUITE.toString(),
+        PRUNE, SECURE_READ, SECURE_WRITE,
+        SECURE_TEST, FILES };
     for (String attribute : attributes)
       addJsonAttribute(jsonObject, attribute);
-    if (pageData.hasAttribute(PropertyHELP)) {
-      jsonObject.put(PropertyHELP, pageData.getAttribute(PropertyHELP));
+    if (pageData.hasAttribute(HELP)) {
+      jsonObject.put(HELP, pageData.getAttribute(HELP));
     }
-    if (pageData.hasAttribute(PropertySUITES)) {
+    if (pageData.hasAttribute(SUITES)) {
       JSONArray tags = new JSONArray();
-      for(String tag : pageData.getAttribute(PropertySUITES).split(",")) {
+      for(String tag : pageData.getAttribute(SUITES).split(",")) {
         if (StringUtils.isNotBlank(tag)) {
           tags.put(tag.trim());
         }
       }
-      jsonObject.put(PropertySUITES, tags);
+      jsonObject.put(SUITES, tags);
     }
     return jsonObject;
   }
@@ -120,7 +121,7 @@ public class PropertiesResponder implements SecureResponder {
   }
 
   private void makeLastModifiedTag() {
-    String username = pageData.getAttribute(LAST_MODIFYING_USER);
+    String username = pageData.getAttribute(WikiPageProperty.LAST_MODIFYING_USER);
     if (username == null || "".equals(username))
       html.put("lastModified", "Last modified anonymously");
     else

@@ -5,11 +5,7 @@ package fitnesse.wiki.fs;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 import fitnesse.util.XmlUtil;
@@ -22,9 +18,11 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPageLoadException;
 import fitnesse.wiki.WikiPageProperty;
 
+/**
+ * These are the (old) page properties, used by the FileSystemPage.
+ */
 public class WikiPageProperties extends WikiPageProperty implements Serializable {
   private static final Logger LOG = Logger.getLogger(WikiPageProperties.class.getName());
-
   private static final long serialVersionUID = 1L;
 
   public WikiPageProperties() {
@@ -121,9 +119,8 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
       if (value != null)
         element.setAttribute("value", value);
 
-      Set<?> childKeys = context.keySet();
-      for (Object childKey : childKeys) {
-        String childKeyAsString = (String) childKey;
+      Set<String> childKeys = context.keySet();
+      for (String childKeyAsString : childKeys) {
         WikiPageProperty child = context.getProperty(childKeyAsString);
         if (child == null) {
           LOG.warning("Property key \"" + childKeyAsString + "\" has null value for {" + context + "}");
@@ -143,7 +140,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
   }
 
   public void setLastModificationTime(Date date) {
-    set(PageData.PropertyLAST_MODIFIED, getTimeFormat().format(date));
+    set(LAST_MODIFIED, getTimeFormat().format(date));
   }
 
 }

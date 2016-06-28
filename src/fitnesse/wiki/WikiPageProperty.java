@@ -16,6 +16,7 @@ public class WikiPageProperty implements Serializable {
   private static final long serialVersionUID = 1L;
 
   public static final String LAST_MODIFIED = "LastModified";
+  public static final String LAST_MODIFYING_USER = "LastModifyingUser";
   public static final String HELP = "Help";
   public static final String PRUNE = "Prune";
   public static final String SEARCH = "Search";
@@ -121,7 +122,7 @@ public class WikiPageProperty implements Serializable {
   }
 
   public Date getLastModificationTime() {
-    String dateStr = get(PageData.PropertyLAST_MODIFIED);
+    String dateStr = get(LAST_MODIFIED);
     if (dateStr == null)
       return Clock.currentDate();
     else
