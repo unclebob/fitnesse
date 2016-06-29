@@ -1,6 +1,5 @@
 package fitnesse.wikitext.parser;
 
-// TODO: Parse those into WikiPageProperties
 public class FrontMatter extends SymbolType implements Rule, Translation {
   public static final FrontMatter symbolType = new FrontMatter();
   private static final String FRONT_MATTER_DELIMITER = "---\n";
@@ -55,7 +54,6 @@ public class FrontMatter extends SymbolType implements Rule, Translation {
         addToPrevious = false;
       } else {
         // All possible alternatives should be covered now.
-        System.out.println("Can not parse front matter" + symbol);
         return Symbol.nothing;
       }
     }
