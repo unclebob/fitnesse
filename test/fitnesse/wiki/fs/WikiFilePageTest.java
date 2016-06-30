@@ -63,4 +63,19 @@ public class WikiFilePageTest {
     final WikiPageProperty properties = testPage.getData().getProperties();
     assertThat(properties.getProperty(WikiPageProperty.EDIT), is(not(nullValue())));
   }
+
+  @Test
+  public void loadPageWithFrontMatter() throws IOException {
+    fileSystem.makeFile(new File("root", "testPage.wiki"),
+        "---\n" +
+        "test\n" +
+        "---\n" +
+        "page content");
+    final WikiPage testPage = root.getChildPage("testPage");
+    String content = testPage.getData().getContent();
+    final WikiPageProperty properties = testPage.getData().getProperties();
+    assertThat(content, is("page content"));
+  }
+
+  // TODO: test page removal, also as child of FileSystemPage
 }

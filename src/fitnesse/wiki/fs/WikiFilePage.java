@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 
 import fitnesse.wiki.*;
-import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.parser.*;
 import util.FileUtil;
 
 import static fitnesse.wiki.fs.FileSystemPage.propertiesFilename;
@@ -18,6 +18,9 @@ import static fitnesse.wiki.fs.FileSystemPage.propertiesFilename;
  * This format should eventually replace the {@link FileSystemPage}.
  */
 public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage {
+
+  private static final SymbolProvider WIKI_FILE_PARSING_PROVIDER = new SymbolProvider( new SymbolType[] {
+    FrontMatter.symbolType, SymbolType.Text});
 
   private final File path;
   private final VersionsController versionsController;
@@ -108,11 +111,21 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
     FileVersion[] versions = versionsController.getRevisionData(versionName, wikiFile());
     FileVersion fileVersion = versions[0];
     String content = "";
-    WikiPageProperties properties = null;
+    WikiPageProperty properties = null;
 
     try {
-        content = loadContent(fileVersion);
-        // TODO: Parse -> Front matter, content
+      content = loadContent(fileVersion);
+
+      final ParsingPage parsingPage = makeParsingPage(this);
+      final Symbol syntaxTree = Parser.make(parsingPage, content, WIKI_FILE_PARSING_PROVIDER).parse();
+      if (syntaxTree.getChildren().size() == 2) {
+        final Symbol maybeFrontMatter = syntaxTree.getChildren().get(0);
+        final Symbol maybeContent = syntaxTree.getChildren().get(1);
+        if (maybeFrontMatter.isType(FrontMatter.symbolType)) {
+          properties = mergeWikiPageProperties(defaultPageProperties(), toWikiPageProperties(maybeFrontMatter));
+          content = maybeContent.getContent();
+        }
+      }
     } catch (IOException e) {
       throw new WikiPageLoadException(e);
     }
@@ -121,6 +134,14 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
       properties = defaultPageProperties();
     }
     return new PageData(content, properties);
+  }
+
+  private WikiPageProperty mergeWikiPageProperties(final WikiPageProperty properties, final WikiPageProperty updates) {
+    return properties;
+  }
+
+  private WikiPageProperty toWikiPageProperties(final Symbol frontMatter) {
+    return new WikiPageProperty();
   }
 
   private File wikiFile() {

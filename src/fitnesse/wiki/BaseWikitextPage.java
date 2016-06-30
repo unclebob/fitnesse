@@ -95,7 +95,7 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
     return new ParsingPage(new WikiSourcePage(page), compositeVariableSource, cache);
   }
 
-  public WikiPageProperties defaultPageProperties() {
+  public WikiPageProperty defaultPageProperties() {
     WikiPageProperties properties = new WikiPageProperties();
     properties.set(WikiPageProperty.EDIT);
     properties.set(WikiPageProperty.PROPERTIES);

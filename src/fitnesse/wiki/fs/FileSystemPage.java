@@ -146,7 +146,7 @@ public class FileSystemPage extends BaseWikitextPage implements FileBasedWikiPag
   private PageData getDataVersion() throws IOException {
     FileVersion[] versions = versionsController.getRevisionData(versionName, contentFile(), propertiesFile());
     String content = "";
-    WikiPageProperties properties = null;
+    WikiPageProperty properties = null;
     try {
       for (FileVersion version : versions) {
         if (version == null) continue;
