@@ -2,6 +2,8 @@ package fitnesse.wikitext.parser;
 
 public class FrontMatter extends SymbolType implements Rule, Translation {
   public static final FrontMatter symbolType = new FrontMatter();
+  public static final SymbolType keyValueSymbolType = new SymbolType("KeyValue");
+
   private static final String FRONT_MATTER_DELIMITER = "---\n";
 
   private static SymbolProvider SYMBOL_PROVIDER = new SymbolProvider(new SymbolType[] {
@@ -23,15 +25,14 @@ public class FrontMatter extends SymbolType implements Rule, Translation {
 
     if (!parser.getCurrent().isType(CloseFrontMatter.symbolType)) return Symbol.nothing;
 
-    Maybe<Symbol> yaml = processYaml(frontMatter);
+    Maybe<Symbol> yaml = processYaml(current, frontMatter);
     if (yaml.isNothing()) {
       return Symbol.nothing;
     }
-    return new Maybe<>(current.add(yaml.getValue()));
+    return new Maybe<>(current);
   }
 
-  private Maybe<Symbol> processYaml(Symbol symbolList) {
-    Symbol yaml = new Symbol(SymbolType.SymbolList);
+  private Maybe<Symbol> processYaml(Symbol yaml, Symbol symbolList) {
     boolean addToPrevious = false;
     String key = null, value = "";
     for (Symbol symbol : symbolList.getChildren()) {
@@ -61,7 +62,7 @@ public class FrontMatter extends SymbolType implements Rule, Translation {
   }
 
   private Symbol yamlLine(final String key, final String value) {
-    return new Symbol(SymbolType.SymbolList).add(key).add(value);
+    return new Symbol(keyValueSymbolType).add(key).add(value);
   }
 
   @Override

@@ -3,6 +3,7 @@ package fitnesse.wiki.fs;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -68,13 +69,53 @@ public class WikiFilePageTest {
   public void loadPageWithFrontMatter() throws IOException {
     fileSystem.makeFile(new File("root", "testPage.wiki"),
         "---\n" +
-        "test\n" +
+        "Test\n" +
+        "Help: text comes here\n" +
         "---\n" +
         "page content");
     final WikiPage testPage = root.getChildPage("testPage");
     String content = testPage.getData().getContent();
     final WikiPageProperty properties = testPage.getData().getProperties();
     assertThat(content, is("page content"));
+    assertThat("Test", properties.get("Test"), isPresent());
+    assertThat("Help", properties.get("Help"), is("text comes here"));
+  }
+
+  @Test
+  public void loadPageWithFrontMatterCanUnsetProperties() throws IOException {
+    fileSystem.makeFile(new File("root", "testPage.wiki"),
+      "---\n" +
+        "Files: no\n" +
+        "---\n" +
+        "page content");
+    final WikiPage testPage = root.getChildPage("testPage");
+    String content = testPage.getData().getContent();
+    final WikiPageProperty properties = testPage.getData().getProperties();
+    assertThat(content, is("page content"));
+    assertThat("Files", properties.get("Files"), isNotPresent());
+  }
+
+  @Test
+  public void loadPageWithFrontMatterWithSymbolicLinks() throws IOException {
+    fileSystem.makeFile(new File("root", "testPage.wiki"),
+      "---\n" +
+        "SymbolicLinks:\n" +
+        "  Linked: SomePage\n" +
+        "---\n" +
+        "page content");
+    final WikiPage testPage = root.getChildPage("testPage");
+    String content = testPage.getData().getContent();
+    final WikiPageProperty properties = testPage.getData().getProperties();
+    assertThat(content, is("page content"));
+    assertThat("SymbolicLinks", properties.getProperty("SymbolicLinks").get("Linked"), is("SomePage"));
+  }
+
+  private Matcher<? super String> isPresent() {
+    return is(not(nullValue()));
+  }
+
+  private Matcher<? super String> isNotPresent() {
+    return is(nullValue());
   }
 
   // TODO: test page removal, also as child of FileSystemPage

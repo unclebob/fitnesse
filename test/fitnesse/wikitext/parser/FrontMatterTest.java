@@ -14,7 +14,7 @@ public class FrontMatterTest {
     assertParses(
         "---\n" +
         "---\n",
-      "SymbolList[FrontMatter[SymbolList]]");
+      "SymbolList[FrontMatter]");
   }
 
   @Test
@@ -33,7 +33,7 @@ public class FrontMatterTest {
         "test\n" +
         "---\n" +
         "WikiText",
-      "SymbolList[FrontMatter[SymbolList[SymbolList[Text, Text]]], Text]");
+      "SymbolList[FrontMatter[KeyValue[Text, Text]], Text]");
   }
 
   @Test
@@ -42,7 +42,7 @@ public class FrontMatterTest {
         "---\n" +
         "test: value with whitespace\n" +
         "---\n",
-      "SymbolList[FrontMatter[SymbolList[SymbolList[Text, Text]]]]");
+      "SymbolList[FrontMatter[KeyValue[Text, Text]]]");
   }
 
   @Test
@@ -51,8 +51,9 @@ public class FrontMatterTest {
         "---\n" +
         "symbolic-links:\n" +
         "  pageName: .FrontPage\n" +
+        "  pageName: .FrontPage\n" +
         "---\n",
-      "SymbolList[FrontMatter[SymbolList[SymbolList[Text, Text, SymbolList[Text, Text]]]]]");
+      "SymbolList[FrontMatter[KeyValue[Text, Text, KeyValue[Text, Text], KeyValue[Text, Text]]]]");
   }
 
   @Test
@@ -63,7 +64,7 @@ public class FrontMatterTest {
         "  pageName: .FrontPage\n" +
         "---\n");
     Symbol frontMatter = symbols.getChildren().get(0);
-    Symbol symlinks = frontMatter.getChildren().get(0).getChildren().get(0);
+    Symbol symlinks = frontMatter.getChildren().get(0);
     Symbol firstSymlink = symlinks.getChildren().get(2);
 
     assertTrue(frontMatter.isType(FrontMatter.symbolType));

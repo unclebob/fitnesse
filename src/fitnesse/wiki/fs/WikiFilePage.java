@@ -6,10 +6,13 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 
+import javax.xml.crypto.dsig.keyinfo.KeyValue;
+
 import fitnesse.wiki.*;
 import fitnesse.wikitext.parser.*;
 import util.FileUtil;
 
+import static fitnesse.util.StringUtils.isBlank;
 import static fitnesse.wiki.fs.FileSystemPage.propertiesFilename;
 
 /**
@@ -122,7 +125,7 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
         final Symbol maybeFrontMatter = syntaxTree.getChildren().get(0);
         final Symbol maybeContent = syntaxTree.getChildren().get(1);
         if (maybeFrontMatter.isType(FrontMatter.symbolType)) {
-          properties = mergeWikiPageProperties(defaultPageProperties(), toWikiPageProperties(maybeFrontMatter));
+          properties = mergeWikiPageProperties(defaultPageProperties(), maybeFrontMatter);
           content = maybeContent.getContent();
         }
       }
@@ -136,12 +139,53 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
     return new PageData(content, properties);
   }
 
-  private WikiPageProperty mergeWikiPageProperties(final WikiPageProperty properties, final WikiPageProperty updates) {
+  private WikiPageProperty mergeWikiPageProperties(final WikiPageProperty properties, final Symbol frontMatter) {
+    for (Symbol keyValue : frontMatter.getChildren()) {
+      if (keyValue.isType(FrontMatter.keyValueSymbolType)) {
+        String key = keyValue.getChildren().get(0).getContent();
+        String value = keyValue.getChildren().get(1).getContent();
+        if (isBooleanProperty(key)) {
+          if (isBlank(value) || isTruthy(value)) {
+            properties.set(key, value);
+          } else if (isFalsy(value)) {
+            properties.remove(key);
+          }
+        } else if (WikiPageProperty.HELP.equals(key)) {
+          properties.set(key, value);
+        } else if (SymbolicPage.PROPERTY_NAME.equals(key)) {
+          WikiPageProperty symLinks = properties.set(SymbolicPage.PROPERTY_NAME);
+          for (int i = 2; i < keyValue.getChildren().size(); i++) {
+            final Symbol symLink = keyValue.getChildren().get(i);
+            assert symLink.isType(FrontMatter.keyValueSymbolType);
+            String linkName = symLink.getChildren().get(0).getContent();
+            String linkPath = symLink.getChildren().get(1).getContent();
+            symLinks.set(linkName, linkPath);
+          }
+        }
+      }
+    }
     return properties;
   }
 
-  private WikiPageProperty toWikiPageProperties(final Symbol frontMatter) {
-    return new WikiPageProperty();
+  private boolean isBooleanProperty(final String key) {
+    return qualifiesAs(key, PageData.PAGE_TYPE_ATTRIBUTES) ||
+      qualifiesAs(key, PageData.NON_SECURITY_ATTRIBUTES) ||
+      qualifiesAs(key, PageData.SECURITY_ATTRIBUTES);
+  }
+
+  private boolean isTruthy(final String value) {
+    return qualifiesAs(value.toLowerCase(), new String[]{"y", "yes", "t", "true", "1"});
+  }
+
+  private boolean isFalsy(final String value) {
+    return qualifiesAs(value.toLowerCase(), new String[]{"n", "no", "f", "false", "0"});
+  }
+
+  private boolean qualifiesAs(final String value, final String[] qualifiers) {
+    for (String q : qualifiers) {
+      if (q.equals(value)) return true;
+    }
+    return false;
   }
 
   private File wikiFile() {
@@ -154,4 +198,4 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
     }
   }
 
-  }
+}
