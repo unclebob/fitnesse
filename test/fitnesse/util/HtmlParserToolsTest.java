@@ -56,28 +56,28 @@ public class HtmlParserToolsTest {
   public void hasClassShouldSayNoOnNoClasses() throws ParserException {
     NodeList tree = parseToTree("<div>content</div>");
 
-    assertFalse(nodeHasClass("foo", tree.elementAt(0)));
+    assertFalse(nodeHasClass(tree.elementAt(0), "foo"));
   }
 
   @Test
   public void hasClassShouldSayNoOnOtherClasses() throws ParserException {
     NodeList tree = parseToTree("<div class='fooe foor'>content</div>");
 
-    assertFalse(nodeHasClass("foo", tree.elementAt(0)));
+    assertFalse(nodeHasClass(tree.elementAt(0), "foo"));
   }
 
   @Test
   public void hasClassShouldSayYesWhenFound() throws ParserException {
     NodeList tree = parseToTree("<div class='fooe foo foor'>content</div>");
 
-    assertTrue(nodeHasClass("foo", tree.elementAt(0)));
+    assertTrue(nodeHasClass(tree.elementAt(0), "foo"));
   }
 
   @Test
   public void hasClassShouldSayNoForNonTagNode() throws ParserException {
     NodeList tree = parseToTree("text node");
 
-    assertFalse(nodeHasClass("foo", tree.elementAt(0)));
+    assertFalse(nodeHasClass(tree.elementAt(0), "foo"));
   }
 
   private static NodeList parseToTree(String html) throws ParserException {

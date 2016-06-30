@@ -61,7 +61,7 @@ public class HtmlTableScanner implements TableScanner<HtmlTable> {
 
         NodeList children = node.getChildren();
         if (children != null) {
-          scanForTables(children, markAsTeardown || nodeHasClass(Include.TEARDOWN, node));
+          scanForTables(children, markAsTeardown || nodeHasClass(node, Include.TEARDOWN));
         }
 
         Node endNode = endTag(node);

@@ -102,7 +102,7 @@ public final class HtmlParserTools {
     return newAttributes;
   }
 
-  public static boolean nodeHasClass(String classToCheck, Node node) {
+  public static boolean nodeHasClass(Node node, String classToCheck) {
     if (!(node instanceof TagNode)) {
       return false;
     }
