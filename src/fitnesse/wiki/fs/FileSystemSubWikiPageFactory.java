@@ -11,10 +11,10 @@ class FileSystemSubWikiPageFactory implements SubWikiPageFactory {
   private final File rootPath;
   private final FileSystem fileSystem;
   private final VariableSource variableSource;
-  private final WikiPageFactory<WikiPage> factory;
+  private final WikiPageFactory factory;
 
   public FileSystemSubWikiPageFactory(File rootPath, FileSystem fileSystem, VariableSource variableSource,
-                                      WikiPageFactory<WikiPage> factory) {
+                                      WikiPageFactory factory) {
     this.rootPath = rootPath;
     this.fileSystem = fileSystem;
     this.variableSource = variableSource;

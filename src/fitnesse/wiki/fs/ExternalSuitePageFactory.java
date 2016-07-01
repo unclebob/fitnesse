@@ -6,7 +6,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wikitext.parser.VariableSource;
 
-public class ExternalSuitePageFactory implements WikiPageFactory<WikiPage> {
+public class ExternalSuitePageFactory implements WikiPageFactory {
 
   private final FileSystem fileSystem;
 

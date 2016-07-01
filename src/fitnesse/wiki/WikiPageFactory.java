@@ -4,9 +4,9 @@ import java.io.File;
 
 import fitnesse.wikitext.parser.VariableSource;
 
-public interface WikiPageFactory<T extends WikiPage> {
+public interface WikiPageFactory {
 
-  WikiPage makePage(File path, String pageName, T parent, VariableSource variableSource);
+  WikiPage makePage(File path, String pageName, WikiPage parent, VariableSource variableSource);
 
   boolean supports(File path);
 }
