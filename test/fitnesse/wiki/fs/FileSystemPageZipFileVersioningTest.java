@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.NoSuchVersionException;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -39,19 +40,15 @@ public class FileSystemPageZipFileVersioningTest {
 
   @Before
   public void setUp() throws Exception {
+    File rootPath = FitNesseUtil.createTemporaryFolder();
     ZipFileVersionsController versionsController = new ZipFileVersionsController(MAX_HISTORY_DEPTH);
     FileSystemPageFactory fileSystemPageFactory = new FileSystemPageFactory(new DiskFileSystem(), versionsController);
-    root = fileSystemPageFactory.makePage(new File("TestDir/RooT"), "RooT", null, new SystemVariableSource());
+    root = fileSystemPageFactory.makePage(rootPath, "RooT", null, new SystemVariableSource());
     page = (FileSystemPage) WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "original content");
 
     PageData data = page.getData();
     firstVersion = VersionInfo.makeVersionInfo(data);
     secondVersion = page.commit(data);
-  }
-
-  @After
-  public void tearDown() throws Exception {
-    FileUtil.deleteFileSystemDirectory("TestDir");
   }
 
   @Test

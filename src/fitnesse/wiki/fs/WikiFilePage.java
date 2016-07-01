@@ -1,9 +1,11 @@
 package fitnesse.wiki.fs;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import fitnesse.wiki.*;
@@ -37,6 +39,11 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
     this.versionsController = versionsController;
     this.subWikiPageFactory = subWikiPageFactory;
     this.versionName = versionName;
+  }
+
+  private WikiFilePage(WikiFilePage page, String versionName) {
+    this(page.getFileSystemPath(), page.getName(), (page.isRoot() ? null : page.getParent()), versionName,
+      page.versionsController, page.subWikiPageFactory, page.getVariableSource());
   }
 
   @Override
@@ -94,12 +101,17 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
 
   @Override
   public Collection<VersionInfo> getVersions() {
-    return null;
+    return versionsController.history(wikiFile());
   }
 
   @Override
   public WikiPage getVersion(final String versionName) {
-    return null;
+    try {
+      versionsController.getRevisionData(versionName, wikiFile());
+    } catch (IOException e) {
+      throw new WikiPageLoadException(format("Could not load version %s for page at %s", versionName, path.getPath()), e);
+    }
+    return new WikiFilePage(this, versionName);
   }
 
   @Override
@@ -205,4 +217,35 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
     }
   }
 
+  private class WikiFilePageVersion implements FileVersion {
+    private final PageData data;
+
+    public WikiFilePageVersion(final PageData data) {
+      this.data = data;
+    }
+
+    @Override
+    public File getFile() {
+      return wikiFile();
+    }
+
+    @Override
+    public InputStream getContent() throws IOException {
+      // TODO: insert properties
+      final String content = "---\n" +
+        "---\n" +
+        data.getContent();
+      return new ByteArrayInputStream(content.getBytes(FileUtil.CHARENCODING));
+    }
+
+    @Override
+    public String getAuthor() {
+      return data.getAttribute(WikiPageProperty.LAST_MODIFYING_USER);
+    }
+
+    @Override
+    public Date getLastModificationTime() {
+      return data.getProperties().getLastModificationTime();
+    }
+  }
 }
