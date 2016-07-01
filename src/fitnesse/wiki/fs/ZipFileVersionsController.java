@@ -70,13 +70,13 @@ public class ZipFileVersionsController implements VersionsController {
   }
 
   @Override
-  public Collection<ZipFileVersionInfo> history(final File... files) {
+  public Collection<VersionInfo> history(final File... files) {
     return history(files[0].getParentFile());
   }
 
-  public Collection<ZipFileVersionInfo> history(final File dir) {
+  public Collection<VersionInfo> history(final File dir) {
     final File[] files = dir.listFiles();
-    final Set<ZipFileVersionInfo> versions = new HashSet<>();
+    final Set<VersionInfo> versions = new HashSet<>();
     if (files != null) {
       for (final File file : files) {
         if (isVersionFile(file)) {
@@ -209,21 +209,21 @@ public class ZipFileVersionsController implements VersionsController {
     return zipFile;
   }
 
-  private void pruneVersions(Collection<ZipFileVersionInfo> versions) {
-    List<ZipFileVersionInfo> versionsList = makeSortedVersionList(versions);
+  private void pruneVersions(Collection<VersionInfo> versions) {
+    List<VersionInfo> versionsList = makeSortedVersionList(versions);
     if (!versions.isEmpty()) {
       VersionInfo lastVersion = versionsList.get(versionsList.size() - 1);
       Date expirationDate = makeVersionExpirationDate(lastVersion);
-      for (ZipFileVersionInfo version : versionsList) {
+      for (VersionInfo version : versionsList) {
         Date thisDate = version.getCreationTime();
         if (thisDate.before(expirationDate) || thisDate.equals(expirationDate))
-          version.getFile().delete();
+          ((ZipFileVersionInfo) version).getFile().delete();
       }
     }
   }
 
-  private List<ZipFileVersionInfo> makeSortedVersionList(Collection<ZipFileVersionInfo> versions) {
-    List<ZipFileVersionInfo> versionsList = new ArrayList<>(versions);
+  private List<VersionInfo> makeSortedVersionList(Collection<VersionInfo> versions) {
+    List<VersionInfo> versionsList = new ArrayList<>(versions);
     Collections.sort(versionsList);
     return versionsList;
   }

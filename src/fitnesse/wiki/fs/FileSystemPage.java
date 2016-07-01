@@ -140,7 +140,7 @@ public class FileSystemPage extends BaseWikitextPage implements FileBasedWikiPag
 
   @Override
   public Collection<VersionInfo> getVersions() {
-    return (Collection<VersionInfo>) versionsController.history(contentFile(), propertiesFile());
+    return versionsController.history(contentFile(), propertiesFile());
   }
 
   private PageData getDataVersion() throws IOException {

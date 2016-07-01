@@ -24,7 +24,7 @@ public interface VersionsController {
    * @param files Files to look for.
    * @return history
    */
-  Collection<? extends VersionInfo> history(File... files);
+  Collection<VersionInfo> history(File... files);
 
   /**
    * Store files as one revision.
