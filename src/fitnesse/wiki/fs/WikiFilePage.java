@@ -14,6 +14,7 @@ import util.FileUtil;
 
 import static fitnesse.util.StringUtils.isBlank;
 import static fitnesse.wiki.fs.FileSystemPage.propertiesFilename;
+import static java.lang.String.format;
 
 /**
  * With this page all content is saved in one file: WikiPageName.wiki.
@@ -70,7 +71,11 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
 
   @Override
   public void remove() {
-    super.remove();
+    try {
+      versionsController.delete(getFileSystemPath(), wikiFile());
+    } catch (IOException e) {
+      throw new WikiPageLoadException(format("Could not remove page %s", new WikiPagePath(this).toString()), e);
+    }
   }
 
   @Override

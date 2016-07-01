@@ -30,17 +30,29 @@ public class WikiFilePageTest {
   }
 
   @Test
-  public void shouldListChildren() {
-    WikiPageUtil.addPage(root, PathParser.parse("AaAa"), "A content");
-    WikiPageUtil.addPage(root, PathParser.parse("BbBb"), "B content");
-    WikiPageUtil.addPage(root, PathParser.parse("c"), "C content");
-    List<WikiPage> children = root.getChildren();
-    assertEquals(3, children.size());
-    for (WikiPage child : children) {
-      String name = child.getName();
-      boolean isOk = "AaAa".equals(name) || "BbBb".equals(name) || "c".equals(name);
-      assertTrue("WikiPAge is not a valid one: " + name, isOk);
-    }
+  public void removePageWithoutSubPages() throws IOException {
+    File wikiPageFile = new File("root", "testPage.wiki");
+    fileSystem.makeFile(wikiPageFile, "page content");
+    final WikiPage testPage = this.root.getChildPage("testPage");
+    testPage.remove();
+
+    assertFalse(fileSystem.exists(wikiPageFile));
+  }
+
+  @Test
+  public void removePageWithSubPages() throws IOException {
+    File wikiPageFile = new File("root", "testPage.wiki");
+    File subWikiPageFile1 = new File("root", "testPage/sub1.wiki");
+    File subWikiPageFile2 = new File("root", "testPage/sub2.wiki");
+    fileSystem.makeFile(wikiPageFile, "page content");
+    fileSystem.makeFile(subWikiPageFile1, "page content");
+    fileSystem.makeFile(subWikiPageFile2, "page content");
+    final WikiPage testPage = this.root.getChildPage("testPage");
+    testPage.remove();
+
+    assertFalse(fileSystem.exists(wikiPageFile));
+    assertFalse(fileSystem.exists(subWikiPageFile1));
+    assertFalse(fileSystem.exists(subWikiPageFile2));
   }
 
   @Test
@@ -118,5 +130,4 @@ public class WikiFilePageTest {
     return is(nullValue());
   }
 
-  // TODO: test page removal, also as child of FileSystemPage
 }
