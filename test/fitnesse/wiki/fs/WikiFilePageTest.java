@@ -14,6 +14,7 @@ import util.FileUtil;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.*;
 
 public class WikiFilePageTest {
@@ -27,6 +28,33 @@ public class WikiFilePageTest {
     fileSystem = new MemoryFileSystem();
     versionsController = new SimpleFileVersionsController(fileSystem);
     root = new FileSystemPageFactory(fileSystem, versionsController).makePage(new File("root"), "root", null, new SystemVariableSource());
+  }
+
+  @Test
+  public void pagesShouldBeListedByOldStyleParentPage() throws IOException {
+    File wikiPageFile = new File("root", "testPage.wiki");
+    fileSystem.makeFile(wikiPageFile, "page content");
+
+    final List<WikiPage> children = root.getChildren();
+
+    assertThat(children, hasSize(1));
+    assertThat(((WikiFilePage) children.get(0)).getFileSystemPath().getPath(), is("root/testPage"));
+    assertThat(children.get(0).getName(), is("testPage"));
+  }
+
+
+  @Test
+  public void pagesWithSubPagesShouldNotBeListedTwice() throws IOException {
+    File wikiPageFile = new File("root", "testPage.wiki");
+    File subWikiPageFile = new File("root", "testPage/subPage.wiki");
+    fileSystem.makeFile(wikiPageFile, "page content");
+    fileSystem.makeFile(subWikiPageFile, "page content");
+
+    final List<WikiPage> children = root.getChildren();
+
+    assertThat(children, hasSize(1));
+    assertThat(((WikiFilePage) children.get(0)).getFileSystemPath().getPath(), is("root/testPage"));
+    assertThat(children.get(0).getName(), is("testPage"));
   }
 
   @Test

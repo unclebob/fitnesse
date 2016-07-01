@@ -122,7 +122,7 @@ public class FileSystemPageFactory implements WikiPageFactory<WikiPage>, WikiPag
 
     @Override
     public boolean supports(File path) {
-      File wikiFile = new File(path.getPath() + ".wiki");
+      File wikiFile = new File(path.getPath() + WikiFilePage.FILE_EXTENSION);
       return (fileSystem.exists(wikiFile) && !fileSystem.isDirectory(wikiFile));
     }
   }

@@ -1,8 +1,7 @@
 package fitnesse.wiki.fs;
 
 import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import fitnesse.wiki.*;
 import fitnesse.wikitext.parser.VariableSource;
@@ -24,17 +23,19 @@ class FileSystemSubWikiPageFactory implements SubWikiPageFactory {
 
   @Override
   public List<WikiPage> getChildren(FileBasedWikiPage page) {
-    List<WikiPage> children = getNormalChildren(page);
+    List<WikiPage> children = new ArrayList<>();
+    children.addAll(getNormalChildren(page));
     children.addAll(getSymlinkChildren(page));
     return children;
   }
 
-  private List<WikiPage> getNormalChildren(FileBasedWikiPage page) {
+  private Set<WikiPage> getNormalChildren(FileBasedWikiPage page) {
     final File thisDir = page.getFileSystemPath();
-    final List<WikiPage> children = new LinkedList<>();
+    final Set<WikiPage> children = new TreeSet<>();
     if (fileSystem.exists(thisDir)) {
       final String[] subFiles = fileSystem.list(thisDir);
-      for (final String subFile : subFiles) {
+      for (String subFile : subFiles) {
+        subFile = fileNameWithoutExtension(subFile);
         if (factory.supports(new File(thisDir, subFile))) {
           children.add(getChildPage(page, subFile));
         }
@@ -43,7 +44,15 @@ class FileSystemSubWikiPageFactory implements SubWikiPageFactory {
     return children;
   }
 
-  protected List<WikiPage> getSymlinkChildren(WikiPage page) {
+  private String fileNameWithoutExtension(String fileName) {
+    int dotIndex = fileName.indexOf('.');
+    if (dotIndex >= 0) {
+      return fileName.substring(0, dotIndex);
+    }
+    return fileName;
+  }
+
+  private List<WikiPage> getSymlinkChildren(WikiPage page) {
     List<WikiPage> children = new LinkedList<>();
     WikiPageProperty props = page.getData().getProperties();
     WikiPageProperty symLinksProperty = props.getProperty(SymbolicPage.PROPERTY_NAME);

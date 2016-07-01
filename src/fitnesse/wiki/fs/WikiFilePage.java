@@ -22,7 +22,7 @@ import static java.lang.String.format;
  * This format should eventually replace the {@link FileSystemPage}.
  */
 public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage {
-
+  public static final String FILE_EXTENSION = ".wiki";
   private static final SymbolProvider WIKI_FILE_PARSING_PROVIDER = new SymbolProvider( new SymbolType[] {
     FrontMatter.symbolType, SymbolType.Text});
 
@@ -194,7 +194,7 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
   }
 
   private File wikiFile() {
-    return new File(getFileSystemPath().getPath() + ".wiki");
+    return new File(getFileSystemPath().getPath() + FILE_EXTENSION);
   }
 
   private String loadContent(final FileVersion fileVersion) throws IOException {
