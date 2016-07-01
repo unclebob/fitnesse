@@ -27,7 +27,7 @@ public abstract class SlimTestSystem implements TestSystem {
   private final String testSystemName;
 
   private SlimTestContextImpl testContext;
-  private boolean stopTestCalled;
+  boolean stopTestCalled;
   private boolean stopSuiteCalled;
   private boolean testSystemIsStopped;
 
