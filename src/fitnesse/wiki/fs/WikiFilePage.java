@@ -6,14 +6,11 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 
-import javax.xml.crypto.dsig.keyinfo.KeyValue;
-
 import fitnesse.wiki.*;
 import fitnesse.wikitext.parser.*;
 import util.FileUtil;
 
 import static fitnesse.util.StringUtils.isBlank;
-import static fitnesse.wiki.fs.FileSystemPage.propertiesFilename;
 import static java.lang.String.format;
 
 /**
@@ -107,7 +104,12 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
 
   @Override
   public VersionInfo commit(final PageData data) {
-    return null;
+    resetCache();
+    try {
+      return versionsController.makeVersion(new WikiFilePageVersion(data));
+    } catch (IOException e) {
+      throw new WikiPageLoadException(e);
+    }
   }
 
   @Override

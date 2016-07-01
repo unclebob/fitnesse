@@ -150,6 +150,18 @@ public class WikiFilePageTest {
     assertThat("SymbolicLinks", properties.getProperty("SymbolicLinks").get("Linked"), is("SomePage"));
   }
 
+  @Test
+  public void updateWikiFile() throws IOException {
+    File wikiPageFile = new File("root", "testPage.wiki");
+    fileSystem.makeFile(wikiPageFile, "page content");
+    final WikiPage testPage = root.getChildPage("testPage");
+    PageData data = testPage.getData();
+    data.setContent("updated!");
+    testPage.commit(data);
+    final String content = fileSystem.getContent(wikiPageFile);
+    assertThat(content, is("---\n---\nupdated!"));
+  }
+
   private Matcher<? super String> isPresent() {
     return is(not(nullValue()));
   }
