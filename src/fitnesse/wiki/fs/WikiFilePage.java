@@ -4,9 +4,9 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+
+import org.apache.commons.lang.StringUtils;
 
 import fitnesse.wiki.*;
 import fitnesse.wikitext.parser.*;
@@ -217,6 +217,33 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
     }
   }
 
+  private String propertiesYaml(final WikiPageProperty pageProperties) {
+    final WikiPageProperty defaultProperties = defaultPageProperties();
+    final List<String> lines = new ArrayList<>();
+    for (String key : pageProperties.keySet()) {
+      if (isBooleanProperty(key) && !defaultProperties.has(key)) {
+        lines.add(key);
+      } else if (WikiPageProperty.HELP.equals(key)) {
+        lines.add(key + ": " + pageProperties.get(key));
+      } else if (SymbolicPage.PROPERTY_NAME.equals(key)) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(key);
+        final WikiPageProperty symLinks = pageProperties.getProperty(key);
+        for (String pageName: symLinks.keySet()) {
+          builder.append("\n  ").append(pageName).append(": ").append(symLinks.get(pageName));
+        }
+        lines.add(builder.toString());
+      }
+    }
+    for (String key : defaultProperties.keySet()) {
+        if (isBooleanProperty(key) && !pageProperties.has(key)) {
+          lines.add(key + ": no");
+        }
+    }
+    Collections.sort(lines);
+    return lines.isEmpty() ? "" : "---\n" + StringUtils.join(lines, '\n') + "\n---\n";
+  }
+
   private class WikiFilePageVersion implements FileVersion {
     private final PageData data;
 
@@ -231,10 +258,8 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
 
     @Override
     public InputStream getContent() throws IOException {
-      // TODO: insert properties
-      final String content = "---\n" +
-        "---\n" +
-        data.getContent();
+      String yaml = propertiesYaml(data.getProperties());
+      final String content = yaml + data.getContent();
       return new ByteArrayInputStream(content.getBytes(FileUtil.CHARENCODING));
     }
 
@@ -248,4 +273,6 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
       return data.getProperties().getLastModificationTime();
     }
   }
+
+
 }

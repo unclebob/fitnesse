@@ -159,7 +159,48 @@ public class WikiFilePageTest {
     data.setContent("updated!");
     testPage.commit(data);
     final String content = fileSystem.getContent(wikiPageFile);
-    assertThat(content, is("---\n---\nupdated!"));
+    assertThat(content, is("updated!"));
+  }
+
+  @Test
+  public void updateWikiFileWithPropertiesChanged() throws IOException {
+    File wikiPageFile = new File("root", "testPage.wiki");
+    fileSystem.makeFile(wikiPageFile, "page content");
+    final WikiPage testPage = root.getChildPage("testPage");
+    PageData data = testPage.getData();
+    data.setContent("updated!");
+    data.getProperties().set("Test");
+    data.getProperties().set("Help", "foo");
+    data.getProperties().remove("Edit");
+    testPage.commit(data);
+    final String content = fileSystem.getContent(wikiPageFile);
+    assertThat(content, is(
+      "---\n" +
+      "Edit: no\n" +
+      "Help: foo\n" +
+      "Test\n" +
+      "---\n" +
+      "updated!"));
+  }
+
+  @Test
+  public void updateWikiFileWithSymLinks() throws IOException {
+    File wikiPageFile = new File("root", "testPage.wiki");
+    fileSystem.makeFile(wikiPageFile, "page content");
+    final WikiPage testPage = root.getChildPage("testPage");
+    PageData data = testPage.getData();
+    final WikiPageProperty symlinks = data.getProperties().set(SymbolicPage.PROPERTY_NAME);
+    symlinks.set("PageOne", "RemotePage");
+    symlinks.set("PageTwo", "AnotherRemotePage");
+    testPage.commit(data);
+    final String content = fileSystem.getContent(wikiPageFile);
+    assertThat(content, is(
+      "---\n" +
+      "SymbolicLinks\n" +
+      "  PageOne: RemotePage\n" +
+      "  PageTwo: AnotherRemotePage\n" +
+      "---\n" +
+      "page content"));
   }
 
   private Matcher<? super String> isPresent() {
