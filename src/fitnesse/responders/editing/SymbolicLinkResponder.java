@@ -3,7 +3,6 @@
 package fitnesse.responders.editing;
 
 import java.io.File;
-import java.io.IOException;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
@@ -16,7 +15,6 @@ import fitnesse.responders.NotFoundResponder;
 import fitnesse.wiki.*;
 import fitnesse.wiki.fs.DiskFileSystem;
 import fitnesse.wiki.fs.FileSystem;
-import fitnesse.wikitext.parser.WikiWordBuilder;
 import org.apache.commons.lang.StringUtils;
 
 public class SymbolicLinkResponder implements Responder {

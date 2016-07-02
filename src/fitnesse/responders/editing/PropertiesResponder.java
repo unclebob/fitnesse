@@ -29,7 +29,6 @@ import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperty;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import static fitnesse.wiki.PageData.*;

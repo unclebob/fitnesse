@@ -1,7 +1,5 @@
 package fitnesse.plugins.slimcoverage;
 
-import java.io.IOException;
-
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemFactory;

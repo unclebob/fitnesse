@@ -1,7 +1,5 @@
 package fitnesse.testsystems.slim;
 
-import java.io.IOException;
-
 import fitnesse.slim.JavaSlimFactory;
 import fitnesse.slim.SlimServer;
 import fitnesse.slim.fixtureInteraction.DefaultInteraction;

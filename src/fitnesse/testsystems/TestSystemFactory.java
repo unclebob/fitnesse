@@ -1,7 +1,5 @@
 package fitnesse.testsystems;
 
-import java.io.IOException;
-
 /**
  * Creates new test systems
  */

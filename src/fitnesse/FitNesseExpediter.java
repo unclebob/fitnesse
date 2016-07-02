@@ -25,8 +25,6 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import org.apache.commons.lang.StringUtils;
 
-import static java.lang.String.format;
-
 public class FitNesseExpediter implements ResponseSender, Runnable {
   private static final Logger LOG = Logger.getLogger(FitNesseExpediter.class.getName());
 

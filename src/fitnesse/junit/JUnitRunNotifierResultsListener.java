@@ -1,7 +1,6 @@
 package fitnesse.junit;
 
 import java.io.Closeable;
-import java.io.IOException;
 
 import fitnesse.testrunner.TestsRunnerListener;
 import fitnesse.testsystems.Assertion;

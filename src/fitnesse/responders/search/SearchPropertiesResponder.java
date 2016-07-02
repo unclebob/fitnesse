@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
-import fitnesse.responders.run.SuiteResponder;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.search.AttributeWikiPageFinder;
 import fitnesse.wiki.search.PageFinder;

@@ -1,7 +1,5 @@
 package fitnesse.testsystems.slim;
 
-import java.io.IOException;
-
 import fitnesse.testsystems.TestExecutionException;
 
 public class SlimCommunicationException extends TestExecutionException {

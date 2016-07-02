@@ -1,11 +1,6 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import org.apache.commons.lang.StringUtils;
-
-import java.util.Arrays;
 
 public class WikiWordBuilder {
     private final SourcePage currentPage;
