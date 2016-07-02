@@ -8,8 +8,6 @@ import org.junit.runner.RunWith;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 
-import java.io.IOException;
-
 @RunWith(FitNesseRunnerExtensionTest.SuiteExtension.class)
 @FitNesseRunner.FitnesseDir(".")
 @FitNesseRunner.OutputDir("./build/fitnesse-results")

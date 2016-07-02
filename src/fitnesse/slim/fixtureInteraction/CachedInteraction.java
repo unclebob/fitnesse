@@ -13,22 +13,23 @@ public class CachedInteraction extends DefaultInteraction {
   private final Map<String, Class<?>> classCache = new HashMap<>();
   private final Map<MethodKey, Method> methodsByNameAndArgs = new HashMap<>();
 
+  @Override
   protected Constructor<?> getConstructor(Class<?> clazz,
-      Object[] args) {
+                                          Object[] args) {
     String key = String.format("%s_%d", clazz.getName(), args.length);
     Constructor<?> cached = constructorsByClassAndArgs.get(key);
     if(cached == noConstructor) return null;
     if(cached != null) return cached;
-    
+
     Constructor<?> constructor = super.getConstructor(clazz, args);
-    if(constructor == null) {      
+    if(constructor == null) {
       constructorsByClassAndArgs.put(key, noConstructor);
     } else {
       constructorsByClassAndArgs.put(key, constructor);
     }
     return constructor;
   }
-  
+
 
   @Override
   protected Class<?> getClass(String className) {
@@ -45,7 +46,7 @@ public class CachedInteraction extends DefaultInteraction {
     return k;
   }
 
-  
+
   private static class MethodKey {
     final String k;
     final String method;
@@ -77,7 +78,7 @@ public class CachedInteraction extends DefaultInteraction {
     if(cached != null) return cached;
 
     Method method = super.findMatchingMethod(methodName, k, nArgs);
-    
+
     this.methodsByNameAndArgs.put(key, method);
     return method;
   }

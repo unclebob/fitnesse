@@ -1,8 +1,6 @@
 package fitnesse.reporting.history;
 
 import java.io.File;
-import java.text.ParseException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MostRecentPageHistoryReader extends PageHistoryReader {

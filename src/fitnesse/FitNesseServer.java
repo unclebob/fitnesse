@@ -5,7 +5,6 @@ package fitnesse;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fitnesse.socketservice.SocketServer;

@@ -1,7 +1,5 @@
 package fitnesse.testsystems.example;
 
-import java.io.IOException;
-
 import fitnesse.testsystems.CompositeTestSystemListener;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestPage;

@@ -1,7 +1,5 @@
 package fitnesse.wiki;
 
-import java.io.IOException;
-
 public class WikiPageLoadException extends RuntimeException {
   public WikiPageLoadException(final String message, final Throwable cause) {
     super(message, cause);

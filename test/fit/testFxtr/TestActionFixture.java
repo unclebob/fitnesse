@@ -1,6 +1,5 @@
 package fit.testFxtr;
 
-import fit.ActionFixture;
 import fit.Fixture;
 
 public class TestActionFixture extends Fixture {

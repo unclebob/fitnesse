@@ -1,12 +1,7 @@
 package fitnesse.testsystems;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import static java.lang.String.format;
 
 /**
  * Send commands to a set of listeners.
