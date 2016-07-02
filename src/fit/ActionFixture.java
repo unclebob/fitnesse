@@ -14,6 +14,7 @@ public class ActionFixture extends Fixture {
   protected Parse cells;
   private Fixture actor;
 
+  @Override
   public void doCells(Parse cells) {
     this.cells = cells;
     String methodName = cells.text();

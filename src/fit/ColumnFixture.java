@@ -7,11 +7,13 @@ public class ColumnFixture extends Fixture {
   protected Binding[] columnBindings;
   protected boolean executeCalledForRow = false;
 
+  @Override
   public void doRows(Parse rows) {
     bindColumnHeadersToMethodsAndFields(rows.parts);
     super.doRows(rows.more);
   }
 
+  @Override
   public void doRow(Parse row) {
     executeCalledForRow = false;
     try {
@@ -24,6 +26,7 @@ public class ColumnFixture extends Fixture {
     }
   }
 
+  @Override
   public void doCell(Parse cell, int column) {
     try {
       columnBindings[column].doCell(this, cell);
@@ -32,6 +35,7 @@ public class ColumnFixture extends Fixture {
     }
   }
 
+  @Override
   public void check(Parse cell, TypeAdapter a) {
     try {
       executeIfNeeded();
