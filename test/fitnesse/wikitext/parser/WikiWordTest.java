@@ -43,10 +43,6 @@ public class WikiWordTest {
         assertTrue(ParserTestHelper.translateTo(pageOne).contains(wikiLink("PageOne", "Page One")));
     }
 
-    private WikiPage addPage(WikiPage parent, String childName) throws Exception {
-        return WikiPageUtil.addPage(parent, PathParser.parse(childName), "");
-    }
-
     private String wikiLink(String link, String text) {
         return "<a href=\"" + link + "\">" + text + "</a>";
     }
