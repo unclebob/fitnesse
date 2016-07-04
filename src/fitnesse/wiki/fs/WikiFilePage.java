@@ -48,7 +48,7 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
 
   @Override
   public WikiPage addChildPage(final String childName) {
-    return null;
+    return new WikiFilePage(new File(getFileSystemPath(), childName), childName, this, null, this.versionsController, this.subWikiPageFactory, this.getVariableSource());
   }
 
   private File getSubWikiFolder() {
