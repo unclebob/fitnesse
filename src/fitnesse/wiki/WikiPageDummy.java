@@ -75,11 +75,6 @@ public class WikiPageDummy extends BaseWikiPage {
   }
 
   @Override
-  public boolean hasChildPage(String name) {
-    return false;
-  }
-
-  @Override
   public WikiPage getChildPage(String name) {
     return null;
   }

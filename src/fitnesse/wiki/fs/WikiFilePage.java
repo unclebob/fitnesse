@@ -56,11 +56,6 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
   }
 
   @Override
-  public boolean hasChildPage(final String childName) {
-    return false;
-  }
-
-  @Override
   public WikiPage getChildPage(final String childName) {
     return subWikiPageFactory.getChildPage(this, childName);
   }

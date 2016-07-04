@@ -33,11 +33,6 @@ public class ExternalSuitePage extends BaseWikitextPage {
   }
 
   @Override
-  public boolean hasChildPage(String pageName) {
-    return getChildPage(pageName) != null;
-  }
-
-  @Override
   public void removeChildPage(String name) {
   }
 

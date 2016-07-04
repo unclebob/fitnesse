@@ -65,11 +65,6 @@ public class FileSystemPage extends BaseWikitextPage implements FileBasedWikiPag
   }
 
   @Override
-  public boolean hasChildPage(final String pageName) {
-    return getChildPage(pageName) != null;
-  }
-
-  @Override
   public void removeChildPage(final String name) {
     final WikiPage childPage = getChildPage(name);
     if (childPage != null) {
