@@ -3,6 +3,7 @@ package fitnesse.wiki.fs;
 import java.io.File;
 import java.util.*;
 
+import fitnesse.util.StringUtils;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.parser.VariableSource;
 
@@ -36,7 +37,7 @@ class FileSystemSubWikiPageFactory implements SubWikiPageFactory {
       final String[] subFiles = fileSystem.list(thisDir);
       for (String subFile : subFiles) {
         subFile = fileNameWithoutExtension(subFile);
-        if (factory.supports(new File(thisDir, subFile))) {
+        if (!StringUtils.isBlank(subFile) && factory.supports(new File(thisDir, subFile))) {
           children.add(getChildPage(page, subFile));
         }
       }
