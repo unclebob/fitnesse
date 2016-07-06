@@ -124,6 +124,7 @@ public class SlimScenarioUsage {
         return value;
     }
 
+    @Override
     public String toString() {
         return "ScenarioUsage: " + usagePerPage;
     }

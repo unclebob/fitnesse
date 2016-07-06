@@ -45,6 +45,7 @@ public class SlimScenarioUsagePer {
         return overriddenScenarios;
     }
 
+    @Override
     public String toString() {
         return groupName + ": " + usage;
     }
