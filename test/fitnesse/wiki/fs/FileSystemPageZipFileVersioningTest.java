@@ -122,7 +122,7 @@ public class FileSystemPageZipFileVersioningTest {
     Collection<VersionInfo> versions = page.getVersions();
     assertEquals(MAX_HISTORY_DEPTH, versions.size());
 
-    List<VersionInfo> versionsList = new LinkedList<VersionInfo>(versions);
+    List<VersionInfo> versionsList = new LinkedList<>(versions);
     Collections.sort(versionsList);
     assertTrue(versionsList.toString(), versionsList.get(0).toString().endsWith(timeIndex2));
     assertTrue(versionsList.toString(), versionsList.get(1).toString().endsWith(timeIndex1));

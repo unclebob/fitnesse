@@ -36,7 +36,7 @@ public class ScenarioAndDecisionTableTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    assertions = new ArrayList<SlimAssertion>();
+    assertions = new ArrayList<>();
     ScenarioTable.setDefaultChildClass(ScriptTable.class);
   }
 

@@ -13,7 +13,7 @@ public class HashWidgetConversionTest extends HashWidgetConversionTestBase {
     public MapConstructor(Map<String, String> map) {
       theMap = map;
     }
-    
+
     @Override
     public boolean setMap(Map<String, String> map) {
       return false;
@@ -22,7 +22,7 @@ public class HashWidgetConversionTest extends HashWidgetConversionTestBase {
 
   public static class MapReceptor {
     public Map<String, String> theMap;
-    
+
     public boolean setMap(Map<String, String> map) {
       theMap = map;
       return true;
@@ -33,9 +33,9 @@ public class HashWidgetConversionTest extends HashWidgetConversionTestBase {
     }
 
     public ArrayList<Object> queryAsArrayList() {
-      ArrayList<Object> list = new ArrayList<Object>();
+      ArrayList<Object> list = new ArrayList<>();
       // Make the test stable by ordering the keys
-      TreeSet<String> orderedKeySet = new TreeSet<String>(theMap.keySet());
+      TreeSet<String> orderedKeySet = new TreeSet<>(theMap.keySet());
       for (String key : orderedKeySet) {
         list.add(Arrays.asList(key, theMap.get(key)));
       }
@@ -143,11 +143,11 @@ public class HashWidgetConversionTest extends HashWidgetConversionTestBase {
   }
 
   public static class NestedMapSender {
-    public LinkedHashMap<String, Object> theMap = new LinkedHashMap<String, Object>();
+    public LinkedHashMap<String, Object> theMap = new LinkedHashMap<>();
 
     public NestedMapSender() {
       theMap.put("address", 1);
-      Map<String, Object> nestedMap = new LinkedHashMap<String, Object>();
+      Map<String, Object> nestedMap = new LinkedHashMap<>();
       nestedMap.put("name2", "Bob2");
       nestedMap.put("address2", 2);
       theMap.put("nestedMap", nestedMap);

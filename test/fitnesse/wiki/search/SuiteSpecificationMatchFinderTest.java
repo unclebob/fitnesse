@@ -17,7 +17,7 @@ import java.util.List;
 public class SuiteSpecificationMatchFinderTest implements TraversalListener<WikiPage> {
 
   WikiPage root;
-  private List<WikiPage> hits = new ArrayList<WikiPage>();
+  private List<WikiPage> hits = new ArrayList<>();
   SuiteSpecificationMatchFinder finder;
 
   @Before
@@ -54,7 +54,7 @@ public class SuiteSpecificationMatchFinderTest implements TraversalListener<Wiki
   public void shouldHandleNullContent() throws Exception {
     finder = new SuiteSpecificationMatchFinder("Child",null,this);
     finder.search(root);
-    assertPagesFound("ChildPage"); 
+    assertPagesFound("ChildPage");
   }
 
   @Test
@@ -70,7 +70,7 @@ public class SuiteSpecificationMatchFinderTest implements TraversalListener<Wiki
     finder.search(root);
     assertPagesFound("TestPageOne", "ChildPage");
   }
-  
+
   @Override
   public void process(WikiPage page) {
     hits.add(page);

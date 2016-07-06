@@ -70,7 +70,7 @@ public class DecisionTable extends SlimTable {
 
     public ArrayList<SlimAssertion> call(ScenarioTable scenario) throws TestExecutionException {
     	gatherFunctionsAndVariablesFromColumnHeader();
-      ArrayList<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+      ArrayList<SlimAssertion> assertions = new ArrayList<>();
       for (int row = 2; row < table.getRowCount(); row++){
         assertions.addAll(callScenarioForRow(scenario, row));
         assertions.addAll(callFunctions(row));
@@ -84,7 +84,7 @@ public class DecisionTable extends SlimTable {
     }
 
     private List<SlimAssertion> callFunctions(int row) {
-        List<SlimAssertion> instructions = new ArrayList<SlimAssertion>();
+        List<SlimAssertion> instructions = new ArrayList<>();
         for (String functionName : funcStore.getLeftToRightAndResetColumnNumberIterator()) {
           instructions.add(callFunctionInRow(functionName, row));
         }
@@ -107,7 +107,7 @@ public class DecisionTable extends SlimTable {
 
 
     private Map<String, String> getArgumentsForRow(int row) {
-      Map<String, String> scenarioArguments = new HashMap<String, String>();
+      Map<String, String> scenarioArguments = new HashMap<>();
       for (String var : constructorParameterStore.getLeftToRightAndResetColumnNumberIterator()) {
           String disgracedVar = Disgracer.disgraceMethodName(var);
           int col = constructorParameterStore.getColumnNumber(var);
@@ -143,7 +143,7 @@ public class DecisionTable extends SlimTable {
     }
 
     public List<SlimAssertion> call(String fixtureName) throws SyntaxError {
-      final List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+      final List<SlimAssertion> assertions = new ArrayList<>();
       assertions.add(constructFixture(fixtureName));
       assertions.add(makeAssertion(
               callFunction(getTableName(), "table", tableAsList()),
@@ -154,7 +154,7 @@ public class DecisionTable extends SlimTable {
     }
 
     private List<SlimAssertion> invokeRows() throws SyntaxError {
-      List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+      List<SlimAssertion> assertions = new ArrayList<>();
       assertions.add(callUnreportedFunction("beginTable", 0));
       gatherFunctionsAndVariablesFromColumnHeader();
       for (int row = 2; row < table.getRowCount(); row++)
@@ -164,7 +164,7 @@ public class DecisionTable extends SlimTable {
     }
 
     private List<SlimAssertion> invokeRow(int row) throws SyntaxError {
-      List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+      List<SlimAssertion> assertions = new ArrayList<>();
       checkRow(row);
       assertions.add(callUnreportedFunction("reset", row));
       assertions.addAll(setVariables(row));
@@ -179,7 +179,7 @@ public class DecisionTable extends SlimTable {
     }
 
     private List<SlimAssertion> callFunctions(int row) {
-      List<SlimAssertion> instructions = new ArrayList<SlimAssertion>();
+      List<SlimAssertion> instructions = new ArrayList<>();
       for (String functionName : funcStore.getLeftToRightAndResetColumnNumberIterator()) {
         instructions.add(callFunctionInRow(functionName, row));
       }
@@ -201,7 +201,7 @@ public class DecisionTable extends SlimTable {
     }
 
     private List<SlimAssertion> setVariables(int row) {
-      List<SlimAssertion> assertions = new ArrayList<SlimAssertion>();
+      List<SlimAssertion> assertions = new ArrayList<>();
       for (String var : varStore.getLeftToRightAndResetColumnNumberIterator()) {
         int col = varStore.getColumnNumber(var);
         String valueToSet = table.getCellContents(col, row);

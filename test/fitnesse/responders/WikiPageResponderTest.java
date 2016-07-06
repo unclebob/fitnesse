@@ -151,7 +151,7 @@ public class WikiPageResponderTest {
     WikiPageUtil.addPage(root, PathParser.parse("SuiteSetUp"), "suite setup ${suiteSetupParam}");
     WikiPageUtil.addPage(root, PathParser.parse("SuiteTearDown"), "suite teardown ${suiteTeardownParam}");
 
-    Map<String,String> urlInputValues = new HashMap<String,String>();
+    Map<String,String> urlInputValues = new HashMap<>();
     urlInputValues.put("normalParam", "normalValue");
     urlInputValues.put("headerParam", "headerValue");
     urlInputValues.put("footerParam", "footerValue");
@@ -163,7 +163,7 @@ public class WikiPageResponderTest {
     assertHasRegexp("footer footerValue", content);
 
 
-    urlInputValues = new HashMap<String,String>();
+    urlInputValues = new HashMap<>();
     urlInputValues.put("headerParam", "headerValue");
     urlInputValues.put("footerParam", "footerValue");
     urlInputValues.put("testPageParam", "testPageValue");

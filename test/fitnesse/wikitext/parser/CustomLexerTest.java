@@ -70,7 +70,7 @@ public class CustomLexerTest {
 
   public List<String> lex(CharSequence buffer) {
     Lexer lexer = new Lexer(buffer);
-    List<String> lexedTokens = new ArrayList<String>();
+    List<String> lexedTokens = new ArrayList<>();
     // lexer.start
     while (lexer.getTokenType() != null) {
       TokenType tokenType = lexer.getTokenType();
@@ -317,7 +317,7 @@ public class CustomLexerTest {
 
   private static class EmptyIterator<E> implements Iterator<E> {
     static final EmptyIterator<Object> EMPTY_ITERATOR
-            = new EmptyIterator<Object>();
+            = new EmptyIterator<>();
 
     @Override
     public boolean hasNext() { return false; }

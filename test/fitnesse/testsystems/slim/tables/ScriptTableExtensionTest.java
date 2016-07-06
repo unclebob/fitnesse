@@ -73,11 +73,11 @@ public class ScriptTableExtensionTest {
       }
     }
   }
-  
+
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    assertions = new ArrayList<SlimAssertion>();
+    assertions = new ArrayList<>();
   }
 
   private ScriptTable buildInstructionsForWholeTable(String pageContents) throws Exception {

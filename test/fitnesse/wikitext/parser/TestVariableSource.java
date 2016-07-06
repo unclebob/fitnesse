@@ -11,6 +11,6 @@ public class TestVariableSource implements VariableSource {
 
     @Override
     public Maybe<String> findVariable(String requestedName) {
-        return requestedName.equals(name) ? new Maybe<String>(value) : Maybe.noString;
+        return requestedName.equals(name) ? new Maybe<>(value) : Maybe.noString;
     }
 }

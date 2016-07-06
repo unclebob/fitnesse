@@ -24,7 +24,7 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
   private WikiPage page;
   private AttributeWikiPageFinder searcher;
 
-  private List<WikiPage> hits = new ArrayList<WikiPage>();
+  private List<WikiPage> hits = new ArrayList<>();
 
   @Override
   public void process(WikiPage page) {
@@ -42,7 +42,7 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
 
   @Test
   public void testPageMatchesQueryWithSingleAttribute() throws Exception {
-    Map<String, Boolean> attributes = new HashMap<String, Boolean>();
+    Map<String, Boolean> attributes = new HashMap<>();
     searcher = new AttributeWikiPageFinder(this, Arrays.asList(TEST),
         attributes, new ArrayList<String>());
     attributes.put(TEST.toString(), true);
@@ -88,7 +88,7 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
 
   @Test
   public void testPageMatchesQueryWithMultipleAttributes() throws Exception {
-    Map<String, Boolean> attributes = new HashMap<String, Boolean>();
+    Map<String, Boolean> attributes = new HashMap<>();
     searcher = generateSearcherByPageTypesAndSearchAttributes(Arrays.asList(TEST), attributes);
     removePageProperty(page, TEST.toString());
     attributes.put(TEST.toString(), true);
@@ -110,7 +110,7 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
 
   @Test
   public void testPageMatchesQueryWithExcludedSetUps() throws Exception {
-    Map<String, Boolean> attributes = new HashMap<String, Boolean>();
+    Map<String, Boolean> attributes = new HashMap<>();
     attributes.put("SetUp", false);
 
     List<PageType> pageTypes = Arrays.asList(TEST, STATIC, SUITE);
@@ -133,7 +133,7 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
 
   @Test
   public void testPageMatchesQueryWithIncludedSetUps() throws Exception {
-    Map<String, Boolean> attributes = new HashMap<String, Boolean>();
+    Map<String, Boolean> attributes = new HashMap<>();
     attributes.put("SetUp", true);
 
     List<PageType> pageTypes = Arrays.asList(TEST, STATIC, SUITE);
@@ -156,7 +156,7 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
 
   @Test
   public void testPageMatchesQueryWithExcludedTearDowns() throws Exception {
-    Map<String, Boolean> attributes = new HashMap<String, Boolean>();
+    Map<String, Boolean> attributes = new HashMap<>();
     attributes.put("TearDown", false);
 
     List<PageType> pageTypes = Arrays.asList(SUITE, TEST, STATIC);
@@ -179,7 +179,7 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
 
   @Test
   public void testPageMatchesQueryWithIncludedTearDowns() throws Exception {
-    Map<String, Boolean> attributes = new HashMap<String, Boolean>();
+    Map<String, Boolean> attributes = new HashMap<>();
     attributes.put("TearDown", true);
 
     List<PageType> pageTypes = Arrays.asList(TEST, STATIC, SUITE);
@@ -215,7 +215,7 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
 
   @Test
   public void testPageMatchWithEmptySuites() throws Exception {
-    Map<String, Boolean> requestInputs = new HashMap<String, Boolean>();
+    Map<String, Boolean> requestInputs = new HashMap<>();
     searcher = generateSearcherByPageTypesAndSearchAttributes(Arrays.asList(TEST), requestInputs);
     assertTrue(searcher.pageMatches(page));
 
@@ -262,7 +262,7 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
 
   @Test
   public void testSetUpAndTearDownMatches() throws Exception {
-    Map<String, Boolean> attributes = new HashMap<String, Boolean>();
+    Map<String, Boolean> attributes = new HashMap<>();
     attributes.put("SetUp", true);
     attributes.put("TearDown", true);
 
@@ -286,7 +286,7 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
   @Test
   public void testPageMatchesQueryWithExcludedSetUpsAndIncludedTearDowns()
       throws Exception {
-    Map<String, Boolean> attributes = new HashMap<String, Boolean>();
+    Map<String, Boolean> attributes = new HashMap<>();
     attributes.put("SetUp", false);
     attributes.put("TearDown", true);
 
@@ -311,7 +311,7 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
   @Test
   public void testPageMatchesQueryWithIncludedSetUpsAndExcludedSetUps()
       throws Exception {
-    Map<String, Boolean> attributes = new HashMap<String, Boolean>();
+    Map<String, Boolean> attributes = new HashMap<>();
     attributes.put("SetUp", true);
     attributes.put("TearDown", false);
 
@@ -335,7 +335,7 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
 
   @Test
   public void testSetUpAndTearDownExcluded() throws Exception {
-    Map<String, Boolean> attributes = new HashMap<String, Boolean>();
+    Map<String, Boolean> attributes = new HashMap<>();
     attributes.put("SetUp", false);
     attributes.put("TearDown", false);
 

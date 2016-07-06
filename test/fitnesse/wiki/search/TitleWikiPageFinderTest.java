@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 public class TitleWikiPageFinderTest implements TraversalListener<WikiPage> {
   WikiPage root;
 
-  private List<WikiPage> hits = new ArrayList<WikiPage>();
+  private List<WikiPage> hits = new ArrayList<>();
 
   @Override
   public void process(WikiPage page) {

@@ -5,8 +5,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SlimScenarioUsagePer {
     private final String groupName;
-    private final Map<String, AtomicInteger> usage = new LinkedHashMap<String, AtomicInteger>();
-    private final List<String> overriddenScenarios = new ArrayList<String>();
+    private final Map<String, AtomicInteger> usage = new LinkedHashMap<>();
+    private final List<String> overriddenScenarios = new ArrayList<>();
 
     public SlimScenarioUsagePer(String groupName) {
         this.groupName = groupName;
@@ -34,7 +34,7 @@ public class SlimScenarioUsagePer {
     }
 
     public Map<String, Integer> getUsage() {
-        Map<String, Integer> result = new LinkedHashMap<String, Integer>();
+        Map<String, Integer> result = new LinkedHashMap<>();
         for (Map.Entry<String, AtomicInteger> entry : usage.entrySet()) {
             result.put(entry.getKey(), entry.getValue().intValue());
         }

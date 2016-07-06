@@ -22,7 +22,7 @@ public class WhereUsedPageFinderTest implements TraversalListener<WikiPage> {
   private WikiPage pageThree;
   private WikiPage pageTwoChild;
 
-  private List<WikiPage> hits = new ArrayList<WikiPage>();
+  private List<WikiPage> hits = new ArrayList<>();
 
   @Override
   public void process(WikiPage page) {

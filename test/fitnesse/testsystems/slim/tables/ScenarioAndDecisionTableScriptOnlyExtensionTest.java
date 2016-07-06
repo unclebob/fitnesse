@@ -42,7 +42,7 @@ public class ScenarioAndDecisionTableScriptOnlyExtensionTest {
     SlimTableFactory slimTableFactory = new SlimTableFactory();
     slimTableFactory.addTableType(SCRIPT_EXTENSION_NAME, DiffScriptTable2.class);
     root = InMemoryPage.makeRoot("root");
-    assertions = new ArrayList<SlimAssertion>();
+    assertions = new ArrayList<>();
   }
 
   private SlimTestContextImpl makeTables(String scenarioText, String scriptText) throws Exception {

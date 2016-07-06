@@ -146,7 +146,7 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
     assertEquals("ChildOne.GrandChildOne", page1.getPageCrawler().getRelativeName(grandChild1));
   }
 
-  Set<String> traversedPages = new HashSet<String>();
+  Set<String> traversedPages = new HashSet<>();
 
   @Test
   public void testTraversal() throws Exception {
@@ -187,7 +187,7 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
     WikiPage grandUnclePage = WikiPageUtil.addPage(root, PathParser.parse("UnclePage"), "");
     WikiPage unclePage = WikiPageUtil.addPage(root, PathParser.parse("PageOne.UnclePage"), "");
     WikiPage brotherPage = WikiPageUtil.addPage(root, PathParser.parse("PageOne.ChildOne.UnclePage"), "");
-    final List<WikiPage> uncles = new ArrayList<WikiPage>();
+    final List<WikiPage> uncles = new ArrayList<>();
     grandChild1.getPageCrawler().traverseUncles("UnclePage", new TraversalListener<WikiPage>() {
       @Override
       public void process(WikiPage page) {

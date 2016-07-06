@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 public class GenericArrayConverterTest extends AbstractConverterTest<Object, GenericArrayConverter<Integer>> {
 
   public GenericArrayConverterTest() {
-    super(new GenericArrayConverter<Integer>(Integer.class, new IntConverter()));
+    super(new GenericArrayConverter<>(Integer.class, new IntConverter()));
   }
 
   /*
@@ -43,7 +43,7 @@ public class GenericArrayConverterTest extends AbstractConverterTest<Object, Gen
   public void toString_should_use_converters_for_element_values() {
     Object[] value = { 1, Collections.singletonMap("a", "b"), 3, null };
 
-    Converter c = new GenericArrayConverter<Object>(Object.class, new DefaultConverter());
+    Converter c = new GenericArrayConverter<>(Object.class, new DefaultConverter());
     String current = c.toString(value);
 
     assertEquals("[1, <table class=\"hash_table\"> <tr class=\"hash_row\"> <td class=\"hash_key\">a</td> <td class=\"hash_value\">b</td> </tr> </table>, 3, null]",

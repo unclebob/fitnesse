@@ -73,11 +73,11 @@ public class ScriptTableTest {
     protected String getShowKeyword() { return "localized show"; }
 
   }
-  
+
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    assertions = new ArrayList<SlimAssertion>();
+    assertions = new ArrayList<>();
   }
 
   private ScriptTable buildInstructionsForWholeTable(String pageContents, boolean localized) throws Exception {
@@ -758,7 +758,7 @@ String newLine = System.getProperty("line.separator");
       "[[Script], [$V<-[3], function], [check, funcion, $V->[3], pass($V->[3])]]", false
     );
   }
-  
+
   @Test
   public void symbolReplacementAAAAAAAA() throws Exception {
     assertScriptResults(
@@ -771,7 +771,7 @@ String newLine = System.getProperty("line.separator");
       "[[Script], [$V<-[3], function], [start, pass(Class), $V->[3]]]", false
     );
   }
-  
+
   @Test
   public void sameSymbolTwiceReplacement() throws Exception {
     assertScriptResults(
