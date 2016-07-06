@@ -181,7 +181,6 @@ public class ColumnFixtureTest extends ColumnFixture {
   public void ensureExecuteIsCalledForRowWithOnlyVariables() throws Exception {
     doTableOf(row("stringField") + row("whatever"));
     assertEquals(1, executeCalled);
-    ;
   }
 
   @Test
