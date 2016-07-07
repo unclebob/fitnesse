@@ -36,21 +36,13 @@ class FileSystemSubWikiPageFactory implements SubWikiPageFactory {
     if (fileSystem.exists(thisDir)) {
       final String[] subFiles = fileSystem.list(thisDir);
       for (String subFile : subFiles) {
-        subFile = fileNameWithoutExtension(subFile);
-        if (!StringUtils.isBlank(subFile) && factory.supports(new File(thisDir, subFile))) {
-          children.add(getChildPage(page, subFile));
+        WikiPage maybeChildPage = getChildPage(page, subFile);
+        if (maybeChildPage != null) {
+          children.add(maybeChildPage);
         }
       }
     }
     return children;
-  }
-
-  private String fileNameWithoutExtension(String fileName) {
-    int dotIndex = fileName.indexOf('.');
-    if (dotIndex >= 0) {
-      return fileName.substring(0, dotIndex);
-    }
-    return fileName;
   }
 
   private List<WikiPage> getSymlinkChildren(WikiPage page) {

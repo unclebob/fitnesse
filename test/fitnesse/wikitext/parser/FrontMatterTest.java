@@ -18,6 +18,16 @@ public class FrontMatterTest {
   }
 
   @Test
+  public void parsesSecurityProperty() {
+    assertParses(
+      "---\n" +
+        "LastModified: 20160706000400\n" +
+        "secure-read\n" +
+        "---\n",
+      "SymbolList[FrontMatter[KeyValue[Text, Text], KeyValue[Text, Text]]]");
+  }
+
+  @Test
   public void notAValidFrontMatter() {
     assertParses(
         "---\n" +

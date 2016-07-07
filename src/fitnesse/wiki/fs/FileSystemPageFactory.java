@@ -24,7 +24,7 @@ public class FileSystemPageFactory implements WikiPageFactory, WikiPageFactoryRe
   private final FileSystem fileSystem;
   private final VersionsController versionsController;
   private final List<WikiPageFactory> wikiPageFactories = new ArrayList<>();
-  private final InnerFileSystemPageFactory innerFileSystemPageFactory = new InnerFileSystemPageFactory();
+  private final InnerFileSystemPageFactory fallbackPageFactory = new InnerFileSystemPageFactory();
 
   public FileSystemPageFactory() {
     fileSystem = new DiskFileSystem();
@@ -46,8 +46,9 @@ public class FileSystemPageFactory implements WikiPageFactory, WikiPageFactoryRe
   }
 
   private void initializeWikiPageFactories() {
-    registerWikiPageFactory(innerFileSystemPageFactory);
+    registerWikiPageFactory(new InnerFileSystemPageFactory());
     registerWikiPageFactory(new WikiFilePageFactory());
+    registerWikiPageFactory(new ChildWikiFilePageFactory());
     registerWikiPageFactory(new RootWikiFilePageFactory());
     // Note: ExternalSuitePageFactory should be last in line: it traverses the remainder of the tree looking for .html files.
     registerWikiPageFactory(new ExternalSuitePageFactory(fileSystem));
@@ -75,8 +76,9 @@ public class FileSystemPageFactory implements WikiPageFactory, WikiPageFactoryRe
         return factory.makePage(path, pageName, parent, variableSource);
       }
     }
-    if (parent == null || (parent instanceof FileSystemPage && fileIsValid(path)))
-      return innerFileSystemPageFactory.makePage(path, pageName, (FileSystemPage) parent, variableSource);
+    // Treat top level and intermediate empty directories as valid pages
+    if (parent == null || (parent instanceof FileBasedWikiPage && fileIsValid(path)))
+      return fallbackPageFactory.makePage(path, pageName, parent, variableSource);
     return null;
   }
 
@@ -115,15 +117,34 @@ public class FileSystemPageFactory implements WikiPageFactory, WikiPageFactoryRe
     @Override
     public WikiPage makePage(final File path, final String pageName, final WikiPage parent, final VariableSource variableSource) {
       Maybe<String> rootPath = variableSource.findVariable("FITNESSE_ROOTPATH");
-      return new WikiFilePage(path, pageName, parent, null, versionsController,
+      return new WikiFilePage(path, pageName.substring(0, pageName.length() - WikiFilePage.FILE_EXTENSION.length()), parent, null, versionsController,
         new FileSystemSubWikiPageFactory(new File(rootPath.getValue()), fileSystem, variableSource, FileSystemPageFactory.this),
         variableSource);
     }
 
     @Override
     public boolean supports(File path) {
-      File wikiFile = new File(path.getPath() + WikiFilePage.FILE_EXTENSION);
-      return (fileSystem.exists(wikiFile) && !fileSystem.isDirectory(wikiFile));
+      return path.getPath().endsWith(WikiFilePage.FILE_EXTENSION) && fileSystem.exists(path) && !fileSystem.isDirectory(path);
+    }
+  }
+
+  protected class ChildWikiFilePageFactory implements WikiPageFactory {
+    @Override
+    public WikiPage makePage(final File path, final String pageName, final WikiPage parent, final VariableSource variableSource) {
+      Maybe<String> rootPath = variableSource.findVariable("FITNESSE_ROOTPATH");
+      return new WikiFilePage(wikiFile(path), pageName, parent, null, versionsController,
+        new FileSystemSubWikiPageFactory(new File(rootPath.getValue()), fileSystem, variableSource, FileSystemPageFactory.this),
+        variableSource);
+    }
+
+    private File wikiFile(final File path) {
+      return new File(path.getPath() + WikiFilePage.FILE_EXTENSION);
+    }
+
+    @Override
+    public boolean supports(File path) {
+      File wikiFile = wikiFile(path);
+      return fileSystem.exists(wikiFile) && !fileSystem.isDirectory(wikiFile);
     }
   }
 
@@ -131,15 +152,15 @@ public class FileSystemPageFactory implements WikiPageFactory, WikiPageFactoryRe
     @Override
     public WikiPage makePage(final File path, final String pageName, final WikiPage parent, final VariableSource variableSource) {
       Maybe<String> rootPath = variableSource.findVariable("FITNESSE_ROOTPATH");
-      return new WikiFilePage(new File(path, "_root"), pageName, parent, null, versionsController,
+      return new WikiFilePage(new File(path, WikiFilePage.ROOT_FILE_NAME), pageName, parent, null, versionsController,
         new FileSystemSubWikiPageFactory(new File(rootPath.getValue()), fileSystem, variableSource, FileSystemPageFactory.this),
         variableSource);
     }
 
     @Override
     public boolean supports(File path) {
-      File rootWikiFile = new File(path, "_root.wiki");
-      return (fileSystem.exists(rootWikiFile) && !fileSystem.isDirectory(rootWikiFile));
+      File rootWikiFile = new File(path, WikiFilePage.ROOT_FILE_NAME);
+      return fileSystem.exists(rootWikiFile) && !fileSystem.isDirectory(rootWikiFile);
     }
   }
 }

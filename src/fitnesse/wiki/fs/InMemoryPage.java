@@ -26,8 +26,7 @@ public class InMemoryPage {
 
   public static WikiPage makeRoot(String name, Properties properties, MemoryFileSystem fileSystem) {
     WikiPageFactory factory = newInstance(fileSystem);
-    FileSystemPage page = (FileSystemPage) factory.makePage(new File("."), name, null, new SystemVariableSource(properties));
-    return page;
+    return factory.makePage(new File("."), name, null, new SystemVariableSource(properties));
   }
 
   public static WikiPageFactory newInstance() {

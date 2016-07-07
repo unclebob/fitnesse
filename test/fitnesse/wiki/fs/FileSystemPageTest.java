@@ -251,7 +251,7 @@ public class FileSystemPageTest {
 
   @Test
   public void testGetPath() throws Exception {
-    assertEquals(new File(defaultPath + "/RooT"), ((FileSystemPage) root).getFileSystemPath());
+    assertEquals(new File(defaultPath + "/RooT"), ((FileBasedWikiPage) root).getFileSystemPath());
   }
 
   @Test

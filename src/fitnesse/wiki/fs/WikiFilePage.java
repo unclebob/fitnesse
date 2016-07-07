@@ -22,6 +22,7 @@ import static java.lang.String.format;
  */
 public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage {
   public static final String FILE_EXTENSION = ".wiki";
+  public static final String ROOT_FILE_NAME = "_root" + FILE_EXTENSION;
   private static final SymbolProvider WIKI_FILE_PARSING_PROVIDER = new SymbolProvider( new SymbolType[] {
     FrontMatter.symbolType, SymbolType.Text});
 
@@ -42,13 +43,13 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
   }
 
   private WikiFilePage(WikiFilePage page, String versionName) {
-    this(page.getFileSystemPath(), page.getName(), (page.isRoot() ? null : page.getParent()), versionName,
+    this(page.path, page.getName(), (page.isRoot() ? null : page.getParent()), versionName,
       page.versionsController, page.subWikiPageFactory, page.getVariableSource());
   }
 
   @Override
   public WikiPage addChildPage(final String childName) {
-    return new WikiFilePage(new File(getFileSystemPath(), childName), childName, this, null, this.versionsController, this.subWikiPageFactory, this.getVariableSource());
+    return new WikiFilePage(new File(getFileSystemPath(), childName + FILE_EXTENSION), childName, this, null, this.versionsController, this.subWikiPageFactory, this.getVariableSource());
   }
 
   private File getSubWikiFolder() {
@@ -71,7 +72,7 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
   @Override
   public void remove() {
     try {
-      versionsController.delete(getFileSystemPath(), wikiFile());
+      versionsController.delete(path, getFileSystemPath());
     } catch (IOException e) {
       throw new WikiPageLoadException(format("Could not remove page %s", new WikiPagePath(this).toString()), e);
     }
@@ -96,13 +97,13 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
 
   @Override
   public Collection<VersionInfo> getVersions() {
-    return versionsController.history(wikiFile());
+    return versionsController.history(path);
   }
 
   @Override
   public WikiPage getVersion(final String versionName) {
     try {
-      versionsController.getRevisionData(versionName, wikiFile());
+      versionsController.getRevisionData(versionName, path);
     } catch (IOException e) {
       throw new WikiPageLoadException(format("Could not load version %s for page at %s", versionName, path.getPath()), e);
     }
@@ -121,36 +122,52 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
 
   @Override
   public File getFileSystemPath() {
-    return path;
+    if (ROOT_FILE_NAME.equals(path.getName())) {
+      return path.getParentFile();
+    } else {
+      String pathStr = this.path.getPath();
+      return new File(pathStr.substring(0, pathStr.length() - FILE_EXTENSION.length()));
+    }
+  }
+
+  @Override
+  protected void resetCache() {
+    super.resetCache();
+    pageData = null;
   }
 
   private PageData getDataVersion() throws IOException {
-    FileVersion[] versions = versionsController.getRevisionData(versionName, wikiFile());
+    FileVersion[] versions = versionsController.getRevisionData(versionName, path);
     FileVersion fileVersion = versions[0];
     String content = "";
     WikiPageProperty properties = null;
 
-    try {
-      content = loadContent(fileVersion);
+    if (fileVersion != null) {
+      try {
+        String fileContent = loadContent(fileVersion);
 
-      final ParsingPage parsingPage = makeParsingPage(this);
-      final Symbol syntaxTree = Parser.make(parsingPage, content, WIKI_FILE_PARSING_PROVIDER).parse();
-      if (syntaxTree.getChildren().size() == 2) {
-        final Symbol maybeFrontMatter = syntaxTree.getChildren().get(0);
-        final Symbol maybeContent = syntaxTree.getChildren().get(1);
-        if (maybeFrontMatter.isType(FrontMatter.symbolType)) {
-          properties = mergeWikiPageProperties(defaultPageProperties(), maybeFrontMatter);
-          content = maybeContent.getContent();
+        final ParsingPage parsingPage = makeParsingPage(this);
+        final Symbol syntaxTree = Parser.make(parsingPage, fileContent, WIKI_FILE_PARSING_PROVIDER).parse();
+        if (!syntaxTree.getChildren().isEmpty()) {
+          final Symbol maybeFrontMatter = syntaxTree.getChildren().get(0);
+          if (maybeFrontMatter.isType(FrontMatter.symbolType)) {
+            properties = mergeWikiPageProperties(defaultPageProperties(), maybeFrontMatter);
+            if (syntaxTree.getChildren().size() == 2) {
+              content = syntaxTree.getChildren().get(1).getContent();
+            }
+          } else {
+            content = maybeFrontMatter.getContent();
+          }
         }
+      } catch (IOException e) {
+        throw new WikiPageLoadException(e);
       }
-    } catch (IOException e) {
-      throw new WikiPageLoadException(e);
     }
-
     if (properties == null) {
       properties = defaultPageProperties();
     }
-    return new PageData(content, properties);
+    pageData = new PageData(content, properties);
+    return pageData;
   }
 
   private WikiPageProperty mergeWikiPageProperties(final WikiPageProperty properties, final Symbol frontMatter) {
@@ -164,8 +181,6 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
           } else if (isFalsy(value)) {
             properties.remove(key);
           }
-        } else if (WikiPageProperty.HELP.equals(key)) {
-          properties.set(key, value);
         } else if (SymbolicPage.PROPERTY_NAME.equals(key)) {
           WikiPageProperty symLinks = properties.set(SymbolicPage.PROPERTY_NAME);
           for (int i = 2; i < keyValue.getChildren().size(); i++) {
@@ -175,6 +190,8 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
             String linkPath = symLink.getChildren().get(1).getContent();
             symLinks.set(linkName, linkPath);
           }
+        } else {
+          properties.set(key, value);
         }
       }
     }
@@ -202,10 +219,6 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
     return false;
   }
 
-  private File wikiFile() {
-    return new File(getFileSystemPath().getPath() + FILE_EXTENSION);
-  }
-
   private String loadContent(final FileVersion fileVersion) throws IOException {
     try (InputStream content = fileVersion.getContent()) {
       return FileUtil.toString(content);
@@ -216,10 +229,10 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
     final WikiPageProperty defaultProperties = defaultPageProperties();
     final List<String> lines = new ArrayList<>();
     for (String key : pageProperties.keySet()) {
-      if (isBooleanProperty(key) && !defaultProperties.has(key)) {
-        lines.add(key);
-      } else if (WikiPageProperty.HELP.equals(key)) {
-        lines.add(key + ": " + pageProperties.get(key));
+      if (isBooleanProperty(key)) {
+        if (!defaultProperties.has(key)) {
+          lines.add(key);
+        }
       } else if (SymbolicPage.PROPERTY_NAME.equals(key)) {
         final StringBuilder builder = new StringBuilder();
         builder.append(key);
@@ -228,6 +241,8 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
           builder.append("\n  ").append(pageName).append(": ").append(symLinks.get(pageName));
         }
         lines.add(builder.toString());
+      } else if (!WikiPageProperty.LAST_MODIFIED.equals(key) && !WikiPageProperty.LAST_MODIFYING_USER.equals(key)){
+        lines.add(key + ": " + pageProperties.get(key));
       }
     }
     for (String key : defaultProperties.keySet()) {
@@ -248,7 +263,7 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
 
     @Override
     public File getFile() {
-      return wikiFile();
+      return path;
     }
 
     @Override

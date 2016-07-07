@@ -5,11 +5,9 @@ import java.io.IOException;
 import java.util.List;
 import org.hamcrest.Matcher;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fitnesse.wiki.*;
-import util.FileUtil;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -85,6 +83,7 @@ public class WikiFilePageTest {
 
   @Test
   public void loadRootPageContent() throws IOException {
+    fileSystem.makeDirectory(new File("root"));
     fileSystem.makeFile(new File("root", "_root.wiki"), "root page content");
     root = new FileSystemPageFactory(fileSystem, versionsController).makePage(new File("root"), "root", null, new SystemVariableSource());
     assertThat(root.getData().getContent(), is("root page content"));
@@ -201,6 +200,17 @@ public class WikiFilePageTest {
       "  PageTwo: AnotherRemotePage\n" +
       "---\n" +
       "page content"));
+  }
+
+  @Test
+  public void readWikiFileWithFrontMatterButNoContent() throws IOException {
+    File wikiPageFile = new File("root", "testPage.wiki");
+    fileSystem.makeFile(wikiPageFile, "---\n" +
+      "Test\n" +
+      "---\n");
+    final WikiPage testPage = root.getChildPage("testPage");
+    PageData data = testPage.getData();
+    assertThat(data.getContent(), is(""));
   }
 
   private Matcher<? super String> isPresent() {
