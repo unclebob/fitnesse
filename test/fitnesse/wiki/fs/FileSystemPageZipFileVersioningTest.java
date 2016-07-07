@@ -33,7 +33,7 @@ import util.FileUtil;
 
 public class FileSystemPageZipFileVersioningTest {
   public static final int MAX_HISTORY_DEPTH = 3;
-  public FileSystemPage page;
+  public FileBasedWikiPage page;
   private VersionInfo firstVersion;
   private VersionInfo secondVersion;
   private WikiPage root;
@@ -44,7 +44,7 @@ public class FileSystemPageZipFileVersioningTest {
     ZipFileVersionsController versionsController = new ZipFileVersionsController(MAX_HISTORY_DEPTH);
     FileSystemPageFactory fileSystemPageFactory = new FileSystemPageFactory(new DiskFileSystem(), versionsController);
     root = fileSystemPageFactory.makePage(rootPath, "RooT", null, new SystemVariableSource());
-    page = (FileSystemPage) WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "original content");
+    page = (FileBasedWikiPage) WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "original content");
 
     PageData data = page.getData();
     firstVersion = VersionInfo.makeVersionInfo(data);
