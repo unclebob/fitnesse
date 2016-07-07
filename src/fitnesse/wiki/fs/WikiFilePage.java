@@ -241,7 +241,7 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
           builder.append("\n  ").append(pageName).append(": ").append(symLinks.get(pageName));
         }
         lines.add(builder.toString());
-      } else if (!WikiPageProperty.LAST_MODIFIED.equals(key) && !WikiPageProperty.LAST_MODIFYING_USER.equals(key)){
+      } else if (!WikiPageProperty.LAST_MODIFIED.equals(key)){
         lines.add(key + ": " + pageProperties.get(key));
       }
     }
