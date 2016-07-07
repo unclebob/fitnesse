@@ -83,6 +83,23 @@ public class FrontMatterTest {
     assertEquals(".FrontPage", firstSymlink.getChildren().get(1).getContent());
   }
 
+  @Test
+  public void readUrlInFrontMatter() {
+    final Symbol symbols = parse(
+      "---\n" +
+        "symbolic-links:\n" +
+        "  pageName: file://test\n" +
+        "---\n");
+    Symbol frontMatter = symbols.getChildren().get(0);
+    Symbol symlinks = frontMatter.getChildren().get(0);
+    Symbol firstSymlink = symlinks.getChildren().get(2);
+
+    assertTrue(frontMatter.isType(FrontMatter.symbolType));
+    assertEquals("symbolic-links", symlinks.getChildren().get(0).getContent());
+    assertEquals("pageName", firstSymlink.getChildren().get(0).getContent());
+    assertEquals("file://test", firstSymlink.getChildren().get(1).getContent());
+  }
+
   public void assertParses(String input, String expected) {
     Symbol result = parse(input);
     assertEquals(expected, ParserTestHelper.serialize(result));

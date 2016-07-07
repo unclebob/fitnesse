@@ -1,5 +1,9 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.util.StringUtils;
+
+import static fitnesse.util.StringUtils.isBlank;
+
 public class FrontMatter extends SymbolType implements Rule, Translation {
   public static final FrontMatter symbolType = new FrontMatter();
   public static final SymbolType keyValueSymbolType = new SymbolType("KeyValue");
@@ -40,11 +44,11 @@ public class FrontMatter extends SymbolType implements Rule, Translation {
         addToPrevious = true;
       } else if (symbol.isType(SymbolType.Text) && key == null) {
         key = symbol.getContent();
+      } else if (symbol.isType(SymbolType.Text) || symbol.isType(SymbolType.Whitespace) || (symbol.isType(SymbolType.Colon) && !isBlank(value))) {
+        value += symbol.getContent();
       } else if (symbol.isType(SymbolType.Colon)) {
         // Now start filling value
         if (key == null) return Symbol.nothing;
-      } else if (symbol.isType(SymbolType.Text) || symbol.isType(SymbolType.Whitespace)) {
-        value += symbol.getContent();
       } else if (symbol.isType(SymbolType.Newline)) {
         if (addToPrevious)
           yaml.getChildren().get(yaml.getChildren().size() - 1).add(yamlLine(key, value.trim()));
