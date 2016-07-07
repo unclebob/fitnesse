@@ -77,12 +77,12 @@ public class FileSystemPageFactory implements WikiPageFactory, WikiPageFactoryRe
       }
     }
     // Treat top level and intermediate empty directories as valid pages
-    if (parent == null || (parent instanceof FileBasedWikiPage && fileIsValid(path)))
+    if (parent == null || (parent instanceof FileBasedWikiPage && isWikiWordDirectory(path)))
       return fallbackPageFactory.makePage(path, pageName, parent, variableSource);
     return null;
   }
 
-  private boolean fileIsValid(final File path) {
+  private boolean isWikiWordDirectory(final File path) {
     return fileSystem.isDirectory(path) && PathParser.isSingleWikiWord(path.getName());
   }
 
