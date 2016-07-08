@@ -6,7 +6,9 @@ import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.wiki.PageCrawlerImpl;
+import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.Description;
@@ -120,7 +122,7 @@ public class JUnitRunNotifierResultsListenerTest {
     assertThat(failure.getMessage(), is("[Actual] Message"));
   }
 
-  private WikiTestPage mockWikiTestPage() {
+  static WikiTestPage mockWikiTestPage() {
     WikiPage root = mock(WikiPage.class);
     when(root.isRoot()).thenReturn(true);
 
@@ -128,6 +130,7 @@ public class JUnitRunNotifierResultsListenerTest {
     when(test.isRoot()).thenReturn(false);
     when(test.getParent()).thenReturn(root);
     when(test.getName()).thenReturn("WikiPage");
+    when(test.getData()).thenReturn(new PageData("content", new WikiPageProperties()));
     when(test.getPageCrawler()).thenReturn(new PageCrawlerImpl(test));
     return new WikiTestPage(test);
   }
