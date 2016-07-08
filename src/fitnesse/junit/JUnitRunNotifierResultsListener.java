@@ -50,18 +50,15 @@ public class JUnitRunNotifierResultsListener
   @Override
   public void testComplete(TestPage test, TestSummary testSummary) {
     increaseCompletedTests();
+    Description description = descriptionFor(test);
     if (firstFailure != null) {
-      notifier.fireTestFailure(new Failure(descriptionFor(test), firstFailure));
+      notifier.fireTestFailure(new Failure(description, firstFailure));
     } else if (testSummary.getExceptions() > 0) {
-      notifier.fireTestFailure(new Failure(descriptionFor(test), new Exception("Exception occurred on page " + test.getFullPath())));
+      notifier.fireTestFailure(new Failure(description, new Exception("Exception occurred on page " + test.getFullPath())));
     } else if (testSummary.getWrong() > 0) {
-      notifier.fireTestFailure(new Failure(descriptionFor(test), new AssertionError("Test failures occurred on page " + test.getFullPath())));
+      notifier.fireTestFailure(new Failure(description, new AssertionError("Test failures occurred on page " + test.getFullPath())));
     }
-    fireTestFinishedFor(test);
-  }
-
-  private void fireTestFinishedFor(TestPage test) {
-    notifier.fireTestFinished(descriptionFor(test));
+    notifier.fireTestFinished(description);
   }
 
   @Override
