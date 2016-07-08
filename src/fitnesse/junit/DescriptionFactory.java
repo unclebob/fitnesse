@@ -1,5 +1,7 @@
 package fitnesse.junit;
 
+import java.lang.annotation.Annotation;
+
 import fitnesse.testsystems.TestPage;
 import fitnesse.wiki.WikiPage;
 import org.junit.runner.Description;
@@ -26,7 +28,8 @@ public class DescriptionFactory {
    */
   public Description createDescription(Class<?> clazz, WikiPage page) {
     String name = page.getPageCrawler().getFullPath().toString();
-    return createDescription(clazz, name);
+    FitNessePageAnnotation wikiPageAnnotation = new FitNessePageAnnotation(page);
+    return createDescription(clazz, name, wikiPageAnnotation);
   }
 
   /**
@@ -38,10 +41,11 @@ public class DescriptionFactory {
    */
   public Description createDescription(Class<?> clazz, TestPage page) {
     String name = page.getFullPath();
-    return createDescription(clazz, name);
+    FitNessePageAnnotation wikiPageAnnotation = new FitNessePageAnnotation(page);
+    return createDescription(clazz, name, wikiPageAnnotation);
   }
 
-  private Description createDescription(Class<?> clazz, String name) {
-    return Description.createTestDescription(clazz, name);
+  private Description createDescription(Class<?> clazz, String name, Annotation... annotations) {
+    return Description.createTestDescription(clazz, name, annotations);
   }
 }
