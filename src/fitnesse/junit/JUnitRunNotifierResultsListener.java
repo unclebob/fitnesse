@@ -20,13 +20,15 @@ public class JUnitRunNotifierResultsListener
 
   private final Class<?> mainClass;
   private final RunNotifier notifier;
+  private final DescriptionFactory descriptionFactory;
   private int totalNumberOfTests;
   private int completedTests;
   private Throwable firstFailure;
 
-  public JUnitRunNotifierResultsListener(RunNotifier notifier, Class<?> mainClass) {
+  public JUnitRunNotifierResultsListener(RunNotifier notifier, Class<?> mainClass, DescriptionFactory descriptionFactory) {
     this.notifier = notifier;
     this.mainClass = mainClass;
+    this.descriptionFactory = descriptionFactory;
   }
 
   @Override
@@ -97,19 +99,23 @@ public class JUnitRunNotifierResultsListener
               "Not all tests executed. Completed %s of %s tests.",
               completedTests, totalNumberOfTests);
       Exception e = new Exception(msg);
-      notifier.fireTestFailure(new Failure(Description.createSuiteDescription(mainClass), e));
+      notifier.fireTestFailure(new Failure(suiteDescription(), e));
     }
   }
 
   protected void notifyOfTestSystemException(String testSystemName, Throwable cause) {
     if (cause != null) {
       Exception e = new Exception("Exception while executing tests using: " + testSystemName, cause);
-      notifier.fireTestFailure(new Failure(Description.createSuiteDescription(mainClass), e));
+      notifier.fireTestFailure(new Failure(suiteDescription(), e));
     }
   }
 
-  private Description descriptionFor(TestPage test) {
-    return Description.createTestDescription(mainClass, test.getFullPath());
+  private Description suiteDescription() {
+    return getDescriptionFactory().createSuiteDescription(getMainClass());
+  }
+
+  protected Description descriptionFor(TestPage test) {
+    return getDescriptionFactory().createDescription(getMainClass(), test);
   }
 
   String createMessage(TestResult testResult) {
@@ -142,6 +148,10 @@ public class JUnitRunNotifierResultsListener
 
   public RunNotifier getNotifier() {
     return notifier;
+  }
+
+  public DescriptionFactory getDescriptionFactory() {
+    return descriptionFactory;
   }
 
   public int getTotalNumberOfTests() {
