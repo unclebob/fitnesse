@@ -1,4 +1,3 @@
-
 The Hybrid Decision Table is a combination of the Decision Table  and the Dynamic Decision Table. 
 A decision table requires for each table column the definition of a method. 
 This is impractical when you deal with structured data that has a varying size like: hash maps, XML, properties, database tables, etc.
@@ -96,13 +95,19 @@ Future versions might define additional features and will require a different ve
 
 If no Method Extractor Rule matches the current column name than the default rules of the Decision Table are used ("set " + column name).
 
-
-!3 The Hybrid Decision Table is no new table type but it modifies the behavior of the decision table with the help of the above variables.
+The Hybrid Decision Table is no new table type but it modifies the behavior of the decision table with the help of the above variables.
 This has the advantage that you don't need to specify the table type in your test cases
 and leaves the decision to the implementer of the test cases if he wants to use a hybrid, dynamic or normal decision table.
 
 
 !4 IMPORTANT: to avoid side effects always add a >TearDown page to reset the mappings to the defaults.  
+
+
+!2 Warning: The Hybrid Decision Table is still experimental
+The way how the method names are configured (via variables) might change.
+Be prepared to refactor your tests if you use this feature.
+Your ideas for a final solution are welcome please give feedback on the [[!-FitNesse-! mail group][https://groups.yahoo.com/neo/groups/fitnesse/info]]
+
 
 
 Further Reading:
