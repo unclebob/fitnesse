@@ -40,7 +40,6 @@ public class WikiFilePageTest {
     assertThat(children.get(0).getName(), is("testPage"));
   }
 
-
   @Test
   public void pagesWithSubPagesShouldNotBeListedTwice() throws IOException {
     File wikiPageFile = new File("root", "testPage.wiki");

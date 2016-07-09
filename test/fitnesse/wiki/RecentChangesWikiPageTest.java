@@ -88,7 +88,7 @@ public class RecentChangesWikiPageTest {
   @Test
   public void testUsernameColumnWithUser() throws Exception {
     PageData data = page1.getData();
-    data.setAttribute(PageData.LAST_MODIFYING_USER, "Aladdin");
+    data.setAttribute(WikiPageProperty.LAST_MODIFYING_USER, "Aladdin");
     page1.commit(data);
 
     recentChangesWikiPage.updateRecentChanges(page1);

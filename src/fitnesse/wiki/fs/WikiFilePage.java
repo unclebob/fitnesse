@@ -181,17 +181,15 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
           } else if (isFalsy(value)) {
             properties.remove(key);
           }
-        } else if (SymbolicPage.PROPERTY_NAME.equals(key)) {
-          WikiPageProperty symLinks = properties.set(SymbolicPage.PROPERTY_NAME);
+        } else {
+          WikiPageProperty symLinks = properties.set(key, value);
           for (int i = 2; i < keyValue.getChildren().size(); i++) {
-            final Symbol symLink = keyValue.getChildren().get(i);
-            assert symLink.isType(FrontMatter.keyValueSymbolType);
-            String linkName = symLink.getChildren().get(0).getContent();
-            String linkPath = symLink.getChildren().get(1).getContent();
+            final Symbol subProperty = keyValue.getChildren().get(i);
+            assert subProperty.isType(FrontMatter.keyValueSymbolType);
+            String linkName = subProperty.getChildren().get(0).getContent();
+            String linkPath = subProperty.getChildren().get(1).getContent();
             symLinks.set(linkName, linkPath);
           }
-        } else {
-          properties.set(key, value);
         }
       }
     }
@@ -233,16 +231,17 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
         if (!defaultProperties.has(key)) {
           lines.add(key);
         }
-      } else if (SymbolicPage.PROPERTY_NAME.equals(key)) {
+      } else if (!WikiPageProperty.LAST_MODIFIED.equals(key)) {
         final StringBuilder builder = new StringBuilder();
         builder.append(key);
-        final WikiPageProperty symLinks = pageProperties.getProperty(key);
-        for (String pageName: symLinks.keySet()) {
-          builder.append("\n  ").append(pageName).append(": ").append(symLinks.get(pageName));
+        if (!isBlank(pageProperties.get(key))) {
+          builder.append(": ").append(pageProperties.get(key));
+        }
+        final WikiPageProperty subProperty = pageProperties.getProperty(key);
+        for (String pageName: subProperty.keySet()) {
+          builder.append("\n  ").append(pageName).append(": ").append(subProperty.get(pageName));
         }
         lines.add(builder.toString());
-      } else if (!WikiPageProperty.LAST_MODIFIED.equals(key)){
-        lines.add(key + ": " + pageProperties.get(key));
       }
     }
     for (String key : defaultProperties.keySet()) {
