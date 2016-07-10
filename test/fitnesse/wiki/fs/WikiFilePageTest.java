@@ -212,6 +212,18 @@ public class WikiFilePageTest {
     assertThat(data.getContent(), is(""));
   }
 
+  @Test
+  public void pageLoadShouldNotLoadRootPage() throws IOException {
+    File rootWikiPageFile = new File("root", "_root.wiki");
+    File wikiPageFile = new File("root", "testPage.wiki");
+    fileSystem.makeFile(rootWikiPageFile, "test");
+    fileSystem.makeFile(wikiPageFile, "test");
+    final List<WikiPage> children = root.getChildren();
+
+    assertThat(children, hasSize(1));
+    assertThat(children.get(0).getName(), is("testPage"));
+  }
+
   private Matcher<? super String> isPresent() {
     return is(not(nullValue()));
   }

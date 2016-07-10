@@ -124,7 +124,10 @@ public class FileSystemPageFactory implements WikiPageFactory, WikiPageFactoryRe
 
     @Override
     public boolean supports(File path) {
-      return path.getPath().endsWith(WikiFilePage.FILE_EXTENSION) && fileSystem.exists(path) && !fileSystem.isDirectory(path);
+      return path.getPath().endsWith(WikiFilePage.FILE_EXTENSION) &&
+        !WikiFilePage.ROOT_FILE_NAME.equals(path.getName()) &&
+        fileSystem.exists(path) &&
+        !fileSystem.isDirectory(path);
     }
   }
 
