@@ -77,6 +77,7 @@ public class SlimTableFactory {
     	newTable = new SlimErrorTable(table, tableId, slimTestContext);
     }
     newTable.setFixtureName(getRawFixtureName(tableType));
+    newTable.setTearDown(table.isTearDown());
     return newTable;
   }
 
