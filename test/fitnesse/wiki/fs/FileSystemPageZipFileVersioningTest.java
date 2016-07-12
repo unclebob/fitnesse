@@ -54,7 +54,7 @@ public class FileSystemPageZipFileVersioningTest {
   @Test
   public void aZipFileIsCreatedAfterUpdatingPageContent() throws Exception {
     File dir = page.getFileSystemPath();
-    String[] filenames = dir.list();
+    String[] filenames = dir.getParentFile().list();
 
     List<String> list = Arrays.asList(filenames);
     assertTrue(list.contains(firstVersion + ".zip"));
@@ -149,18 +149,6 @@ public class FileSystemPageZipFileVersioningTest {
     data.setContent("b");
     page.commit(data);
     assertEquals("b", page.getData().getContent());
-  }
-
-  @Test
-  public void testSetAttributes() throws Exception {
-    PageData data = root.getData();
-    data.setAttribute("Test", "true");
-    data.setAttribute("Search", "true");
-    root.commit(data);
-    assertTrue(root.getData().hasAttribute("Test"));
-    assertTrue(root.getData().hasAttribute("Search"));
-
-    assertEquals("true", root.getData().getAttribute("Test"));
   }
 
   @Test

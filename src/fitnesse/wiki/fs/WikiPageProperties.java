@@ -138,9 +138,4 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
   public String toString() {
     return super.toString("WikiPageProperties", 0);
   }
-
-  public void setLastModificationTime(Date date) {
-    set(LAST_MODIFIED, getTimeFormat().format(date));
-  }
-
 }

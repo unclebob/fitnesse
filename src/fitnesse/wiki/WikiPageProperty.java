@@ -143,4 +143,8 @@ public class WikiPageProperty implements Serializable {
     }
     return format;
   }
+
+  public void setLastModificationTime(Date date) {
+    set(LAST_MODIFIED, getTimeFormat().format(date));
+  }
 }

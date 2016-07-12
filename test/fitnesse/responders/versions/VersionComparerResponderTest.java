@@ -32,7 +32,7 @@ public class VersionComparerResponderTest {
     firstVersion = page.commit(data).getName();
 
     WikiPageProperty properties = data.getProperties();
-    properties.set(PageData.PropertySUITES, "New Page tags");
+    properties.set(WikiPageProperty.SUITES, "New Page tags");
     data.setContent("new stuff");
     secondVersion = page.commit(data).getName();
 

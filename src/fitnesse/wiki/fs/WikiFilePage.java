@@ -140,7 +140,7 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
     FileVersion[] versions = versionsController.getRevisionData(versionName, path);
     FileVersion fileVersion = versions[0];
     String content = "";
-    WikiPageProperty properties = null;
+    WikiPageProperty properties = defaultPageProperties();
 
     if (fileVersion != null) {
       try {
@@ -151,7 +151,7 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
         if (!syntaxTree.getChildren().isEmpty()) {
           final Symbol maybeFrontMatter = syntaxTree.getChildren().get(0);
           if (maybeFrontMatter.isType(FrontMatter.symbolType)) {
-            properties = mergeWikiPageProperties(defaultPageProperties(), maybeFrontMatter);
+            properties = mergeWikiPageProperties(properties, maybeFrontMatter);
             if (syntaxTree.getChildren().size() == 2) {
               content = syntaxTree.getChildren().get(1).getContent();
             }
@@ -159,12 +159,11 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
             content = maybeFrontMatter.getContent();
           }
         }
+        properties.setLastModificationTime(fileVersion.getLastModificationTime());
+
       } catch (IOException e) {
         throw new WikiPageLoadException(e);
       }
-    }
-    if (properties == null) {
-      properties = defaultPageProperties();
     }
     pageData = new PageData(content, properties);
     return pageData;
@@ -257,7 +256,7 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
     private final PageData data;
 
     public WikiFilePageVersion(final PageData data) {
-      this.data = data;
+      this.data = new PageData(data);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package fitnesse.wiki.fs;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -24,25 +26,35 @@ public class FileSystemPageFactory implements WikiPageFactory, WikiPageFactoryRe
   private final FileSystem fileSystem;
   private final VersionsController versionsController;
   private final List<WikiPageFactory> wikiPageFactories = new ArrayList<>();
-  private final InnerFileSystemPageFactory fallbackPageFactory = new InnerFileSystemPageFactory();
+  private final WikiPageFactory fallbackPageFactory;
 
   public FileSystemPageFactory() {
-    fileSystem = new DiskFileSystem();
-    versionsController = new ZipFileVersionsController();
-    initializeWikiPageFactories();
+    this(new DiskFileSystem(), new ZipFileVersionsController());
   }
 
   public FileSystemPageFactory(Properties properties) {
-    fileSystem = new DiskFileSystem();
-    versionsController = new ComponentFactory(properties).createComponent(
-            ConfigurationParameter.VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
-    initializeWikiPageFactories();
+    this(new DiskFileSystem(), new ComponentFactory(properties).createComponent(
+            ConfigurationParameter.VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class));
   }
 
   public FileSystemPageFactory(FileSystem fileSystem, VersionsController versionsController) {
+    this(fileSystem, versionsController, RootWikiFilePageFactory.class);
+  }
+
+  protected FileSystemPageFactory(FileSystem fileSystem, VersionsController versionsController, Class<? extends WikiPageFactory> fallbackPageFactoryClass) {
     this.fileSystem = fileSystem;
     this.versionsController = versionsController;
+    this.fallbackPageFactory = instantiateFallbackPageFactory(fallbackPageFactoryClass);
     initializeWikiPageFactories();
+  }
+
+  private WikiPageFactory instantiateFallbackPageFactory(Class<? extends WikiPageFactory> fallbackPageFactoryClass) {
+    try {
+      Constructor<? extends WikiPageFactory> ctor = fallbackPageFactoryClass.getDeclaredConstructor(FileSystemPageFactory.class);
+      return ctor.newInstance(this);
+    } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+      throw new IllegalStateException("Cannot instantiate wiki page factory", e);
+    }
   }
 
   private void initializeWikiPageFactories() {

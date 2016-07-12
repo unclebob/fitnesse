@@ -292,7 +292,7 @@ public class FileSystemPage extends BaseWikitextPage implements FileBasedWikiPag
 
     @Override
     public String getAuthor() {
-      return data.getAttribute(PageData.LAST_MODIFYING_USER);
+      return data.getAttribute(WikiPageProperty.LAST_MODIFYING_USER);
     }
 
     @Override

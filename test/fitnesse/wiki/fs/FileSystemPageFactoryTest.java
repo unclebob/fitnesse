@@ -25,6 +25,7 @@ public class FileSystemPageFactoryTest {
   public void SetUp() throws Exception {
     fileSystem = new MemoryFileSystem();
     fileSystemPageFactory = new FileSystemPageFactory(fileSystem, new ZipFileVersionsController());
+    fileSystem.makeFile(new File("./somepath/content.txt"), "");
     rootPage = fileSystemPageFactory.makePage(new File("./somepath"), "somepath", null, new SystemVariableSource());
   }
 
@@ -43,11 +44,11 @@ public class FileSystemPageFactoryTest {
   }
 
   @Test
-  public void DirectoryWithoutHtmlFilesIsFileSystemPage() throws Exception {
+  public void DirectoryWithoutHtmlFilesIsWikiFilePage() throws Exception {
     fileSystem.makeFile(new File("./somepath/WikiPage/myfile.txt"), "stuff");
     fileSystem.makeFile(new File("./somepath/OtherPage/myfile.html"), "stuff");
     WikiPage page = rootPage.addChildPage("WikiPage");
-    assertEquals(FileSystemPage.class, page.getClass());
+    assertEquals(WikiFilePage.class, page.getClass());
   }
 
   @Test

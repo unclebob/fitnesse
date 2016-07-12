@@ -8,9 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import fitnesse.wiki.fs.FileSystemPage;
-import fitnesse.wiki.fs.InMemoryPage;
-import fitnesse.wiki.fs.MemoryFileSystem;
+import fitnesse.wiki.fs.*;
 import util.FileUtil;
 
 import static org.junit.Assert.assertEquals;
@@ -74,9 +72,9 @@ public class BaseWikiPageTest {
     assertEquals(SymbolicPage.class, symPage.getClass());
 
     WikiPage realPage = ((SymbolicPage) symPage).getRealPage();
-    assertEquals(FileSystemPage.class, realPage.getClass());
+    assertEquals(WikiFilePage.class, realPage.getClass());
 
-    assertEquals(new File("testDir/ExternalRoot").getCanonicalFile(), ((FileSystemPage) realPage).getFileSystemPath());
+    assertEquals(new File("testDir/ExternalRoot").getCanonicalFile(), ((FileBasedWikiPage) realPage).getFileSystemPath());
     assertEquals("ExternalRoot", realPage.getName());
   }
 

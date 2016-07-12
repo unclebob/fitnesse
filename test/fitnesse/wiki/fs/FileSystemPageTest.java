@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.util.Clock;
 import fitnesse.wiki.*;
 import util.FileUtil;
@@ -31,8 +32,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class FileSystemPageTest {
-  private static final String defaultPath = "./teststorage";
-  private static final File base = new File(defaultPath);
+  private static final File base = FitNesseUtil.createTemporaryFolder();
   private WikiPage root;
 
   @BeforeClass
@@ -44,7 +44,9 @@ public class FileSystemPageTest {
   public void setUp() throws Exception {
     FileUtil.deleteFileSystemDirectory(base);
     createFileSystemDirectory(base);
-    root = new FileSystemPageFactory().makePage(new File(base, "RooT"), "RooT", null, new SystemVariableSource());
+    new DiskFileSystem().makeFile(new File(base, "content.txt"), "");
+    root = new FileSystemPageFactory(new DiskFileSystem(), new ZipFileVersionsController(),
+      FileSystemPageFactory.InnerFileSystemPageFactory.class).makePage(new File(base, "RooT"), "RooT", null, new SystemVariableSource());
   }
 
   @After
@@ -52,15 +54,17 @@ public class FileSystemPageTest {
     FileUtil.deleteFileSystemDirectory(base);
   }
 
-  public static void createFileSystemDirectory(File current) {
+  public static void createFileSystemDirectory(File current) throws IOException {
     current.mkdir();
+    // Lure file system factory into making a FileSystemPage
+    FileUtil.createFile(new File(current, "content.txt"), "");
   }
 
   @Test
   public void testCreateBase() throws Exception {
-    FileSystemPage levelA = (FileSystemPage) WikiPageUtil.addPage(root, PathParser.parse("PageA"), "");
-    assertEquals(new File(defaultPath + "/RooT/PageA"), levelA.getFileSystemPath());
-    assertTrue(new File(defaultPath + "/RooT/PageA").exists());
+    FileBasedWikiPage levelA = (FileBasedWikiPage) WikiPageUtil.addPage(root, PathParser.parse("PageA"), "");
+    assertEquals(new File(base, "RooT/PageA"), levelA.getFileSystemPath());
+    assertTrue(new File(base, "RooT/PageA").exists());
   }
 
   @Test
@@ -68,7 +72,7 @@ public class FileSystemPageTest {
     WikiPage levelA = WikiPageUtil.addPage(root, PathParser.parse("PageA"));
     WikiPage page = WikiPageUtil.addPage(levelA, PathParser.parse("PageB"));
     page.commit(page.getData());
-    assertTrue(new File(defaultPath + "/RooT/PageA/PageB").exists());
+    assertTrue(new File(base, "RooT/PageA/PageB").exists());
   }
 
   @Test
@@ -103,8 +107,8 @@ public class FileSystemPageTest {
     WikiPageUtil.addPage(root, PathParser.parse("AaAa"), "A content");
     WikiPageUtil.addPage(root, PathParser.parse("BbBb"), "B content");
     WikiPageUtil.addPage(root, PathParser.parse("c"), "C content");
-    new File(defaultPath + "/root/.someOtherDir").mkdir();
-    new File(defaultPath + "/root/someOther.SubDir").mkdir();
+    new File(base, "root/.someOtherDir").mkdir();
+    new File(base, "root/someOther.SubDir").mkdir();
     List<WikiPage> children = root.getChildren();
     assertEquals(3, children.size());
     for (WikiPage child : children) {
@@ -120,8 +124,8 @@ public class FileSystemPageTest {
     levelOne.commit(levelOne.getData());
     WikiPage levelTwo = WikiPageUtil.addPage(levelOne, PathParser.parse("LevelTwo"));
     levelTwo.remove();
-    File fileOne = new File(defaultPath + "/RooT/LevelOne");
-    File fileTwo = new File(defaultPath + "/RooT/LevelOne/LevelTwo");
+    File fileOne = new File(base, "RooT/LevelOne");
+    File fileTwo = new File(base, "RooT/LevelOne/LevelTwo");
     assertTrue(fileOne.exists());
     assertFalse(fileTwo.exists());
   }
@@ -132,8 +136,8 @@ public class FileSystemPageTest {
     WikiPage levelTwo = WikiPageUtil.addPage(levelOne, PathParser.parse("LevelTwo"));
     levelOne.commit(levelOne.getData());
     levelTwo.commit(levelTwo.getData());
-    File childOne = new File(defaultPath + "/RooT/LevelOne");
-    File childTwo = new File(defaultPath + "/RooT/LevelOne/LevelTwo");
+    File childOne = new File(base, "RooT/LevelOne");
+    File childTwo = new File(base, "RooT/LevelOne/LevelTwo");
     assertTrue(childOne.exists());
     root.getChildPage("LevelOne").remove();
     assertFalse(childTwo.exists());
@@ -251,7 +255,7 @@ public class FileSystemPageTest {
 
   @Test
   public void testGetPath() throws Exception {
-    assertEquals(new File(defaultPath + "/RooT"), ((FileBasedWikiPage) root).getFileSystemPath());
+    assertEquals(new File(base, "RooT"), ((FileBasedWikiPage) root).getFileSystemPath());
   }
 
   @Test
@@ -274,7 +278,7 @@ public class FileSystemPageTest {
   public void testLoadChildrenWhenPageIsDeletedManualy() throws Exception {
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("TestPage"));
     page.getChildren();
-    FileUtil.deleteFileSystemDirectory(((FileSystemPage) page).getFileSystemPath());
+    FileUtil.deleteFileSystemDirectory(((FileBasedWikiPage) page).getFileSystemPath());
     try {
       page.getChildren();
     } catch (Exception e) {
