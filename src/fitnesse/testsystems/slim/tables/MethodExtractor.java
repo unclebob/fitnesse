@@ -34,12 +34,6 @@ public class MethodExtractor{
 		}
 	}
 
-	public MethodExtractor(
-			ArrayList<MethodExtractorRule> configurations) {
-		super();
-		this.configurations = configurations;
-	}
-	
 	public boolean add(String scope, String targetName, String parameters){
 		return add(new MethodExtractorRule(scope, targetName, parameters));
 	}
