@@ -37,10 +37,11 @@ repositories {
 }
 
 configurations {
-  optional
   lesscss
+  optional
   compile {
     transitive = false
+    extendsFrom optional
   }
   runtime {
     transitive = false
@@ -53,7 +54,6 @@ sourceSets {
     output.classesDir 'classes'
     resources.srcDir 'src'
     output.resourcesDir 'classes'
-    compileClasspath += configurations.optional
   }
   test {
     java.srcDir 'test'
@@ -173,7 +173,9 @@ jar {
 task standaloneJar(type: Jar, dependsOn: jar) {
   baseName = 'fitnesse'
   classifier = 'standalone'
-  from (configurations.compile.files.collect { zipTree(it) }) {
+  from {
+    (configurations.compile - configurations.optional).collect { zipTree(it) }
+  } {
     exclude 'META-INF/**'
   }
   from jar.outputs.files.collect {
@@ -194,10 +196,6 @@ task acceptanceTest(type: JavaExec) {
 }
 
 check.dependsOn acceptanceTest
-
-javadoc {
-  classpath += configurations.optional
-}
 
 task javadocJar(type: Jar) {
   mustRunAfter check
