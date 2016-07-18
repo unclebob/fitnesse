@@ -327,7 +327,7 @@ public class FitServerTest {
   }
 
   protected String command() {
-    return "java -cp classes fit.FitServer";
+    return "java -cp build/classes/main fit.FitServer";
   }
 
   protected String simpleTable(String fixtureName) {

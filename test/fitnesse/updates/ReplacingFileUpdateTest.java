@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 public class ReplacingFileUpdateTest extends UpdateTestCase {
-  public final File sourceFile = new File("classes", "testFile");
+  public final File sourceFile = new File("build/classes/test", "testFile");
 
   public final String destDirName = "subDir";
   public File destFile;

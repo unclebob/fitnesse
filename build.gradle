@@ -51,9 +51,8 @@ configurations {
 sourceSets {
   main {
     java.srcDir 'src'
-    output.classesDir 'classes'
     resources.srcDir 'src'
-    output.resourcesDir 'classes'
+    output.resourcesDir output.classesDir
   }
   test {
     java.srcDir 'test'
@@ -83,7 +82,7 @@ dependencies {
 }
 
 task fitNesseVersion {
-  def versionFile = new File("classes/META-INF/FitNesseVersion.txt")
+  def versionFile = new File("${sourceSets.main.output.resourcesDir}/META-INF/FitNesseVersion.txt")
   versionFile.parentFile.mkdirs()
   versionFile.text="v${version}"
 }
@@ -91,13 +90,12 @@ task fitNesseVersion {
 task compileBootstrap(type: LessCompiler) {
   inputDir file('src/fitnesse/resources/bootstrap/less')
   mainLessFile = 'fitnesse-bootstrap.less'
-  cssFile file("classes/fitnesse/resources/bootstrap/css/fitnesse-bootstrap.css")
+  cssFile file("${sourceSets.main.output.resourcesDir}/fitnesse/resources/bootstrap/css/fitnesse-bootstrap.css")
   classpath configurations.lesscss
 }
 
-// TODO: convert this code to a plugin.
 task createUpdateLists(type: WikiFileListBuilderTask) {
-  outputDirectory = "classes/Resources"
+  outputDirectory = "${sourceSets.main.output.resourcesDir}/Resources"
   doNotReplaceFiles = [
     "FitNesseRoot/FrontPage/content.txt",
     "FitNesseRoot/FrontPage/properties.xml",
@@ -210,7 +208,6 @@ task sourcesJar(type: Jar) {
 }
 
 clean{
-  delete "classes"
   delete "lib"
 }
 
