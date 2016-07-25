@@ -63,7 +63,7 @@ public class SlimCoverageTestSystem extends HtmlSlimTestSystem {
     }
 
     @Override
-    protected void processTable(SlimTable table) throws TestExecutionException {
+    protected void processTable(SlimTable table, boolean isSuiteTearDownPage) throws TestExecutionException {
         table.getAssertions();
     }
 

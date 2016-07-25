@@ -10,6 +10,8 @@ import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.testsystems.slim.tables.SyntaxError;
 
 public interface Table {
+  boolean isTearDown();
+
   String getCellContents(int col, int row);
 
   int getRowCount();

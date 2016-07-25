@@ -2,10 +2,8 @@ package fitnesse.util;
 
 import static fitnesse.util.HtmlParserTools.deepClone;
 import static fitnesse.util.HtmlParserTools.flatClone;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertEquals;
+import static fitnesse.util.HtmlParserTools.nodeHasClass;
+import static org.junit.Assert.*;
 
 import org.htmlparser.Node;
 import org.htmlparser.Parser;
@@ -21,8 +19,7 @@ public class HtmlParserToolsTest {
   @Test
   public void shoudlMakeExactCopy() throws ParserException, CloneNotSupportedException {
     String html = "<div class='foo'>funky <em>content</em></div>";
-    Parser parser = new Parser(new Lexer(new Page(html)));
-    NodeList tree = parser.parse(null);
+    NodeList tree = parseToTree(html);
 
     NodeList cloneTree = deepClone(tree);
 
@@ -34,9 +31,7 @@ public class HtmlParserToolsTest {
 
   @Test
   public void shouldAlsoCloneAttributes() throws ParserException, CloneNotSupportedException {
-    String html = "<div class='foo'>funky <em>content</em></div>";
-    Parser parser = new Parser(new Lexer(new Page(html)));
-    NodeList tree = parser.parse(null);
+    NodeList tree = parseToTree("<div class='foo'>funky <em>content</em></div>");
 
     NodeList cloneTree = deepClone(tree);
 
@@ -49,13 +44,44 @@ public class HtmlParserToolsTest {
 
   @Test
   public void flatCloneShouldJustGiveACopyOfANode() throws ParserException {
-    String html = "<div class='foo'>funky <em>content</em></div>";
-    Parser parser = new Parser(new Lexer(new Page(html)));
-    NodeList tree = parser.parse(null);
+    NodeList tree = parseToTree("<div class='foo'>funky <em>content</em></div>");
 
     Node copy = flatClone(tree.elementAt(0));
 
     assertNull(copy.getParent());
     assertEquals(0, copy.getChildren().size());
+  }
+
+  @Test
+  public void hasClassShouldSayNoOnNoClasses() throws ParserException {
+    NodeList tree = parseToTree("<div>content</div>");
+
+    assertFalse(nodeHasClass(tree.elementAt(0), "foo"));
+  }
+
+  @Test
+  public void hasClassShouldSayNoOnOtherClasses() throws ParserException {
+    NodeList tree = parseToTree("<div class='fooe foor'>content</div>");
+
+    assertFalse(nodeHasClass(tree.elementAt(0), "foo"));
+  }
+
+  @Test
+  public void hasClassShouldSayYesWhenFound() throws ParserException {
+    NodeList tree = parseToTree("<div class='fooe foo foor'>content</div>");
+
+    assertTrue(nodeHasClass(tree.elementAt(0), "foo"));
+  }
+
+  @Test
+  public void hasClassShouldSayNoForNonTagNode() throws ParserException {
+    NodeList tree = parseToTree("text node");
+
+    assertFalse(nodeHasClass(tree.elementAt(0), "foo"));
+  }
+
+  private static NodeList parseToTree(String html) throws ParserException {
+    Parser parser = new Parser(new Lexer(new Page(html)));
+    return parser.parse(null);
   }
 }

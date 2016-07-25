@@ -10,7 +10,7 @@ import org.junit.Test;
 import java.io.File;
 
 public class FileUpdateTest extends UpdateTestCase {
-  public final File testFile = new File("classes/testFile");
+  public final File testFile = new File("build/classes/test/testFile");
 
   @Override
   protected Update makeUpdate() throws Exception {

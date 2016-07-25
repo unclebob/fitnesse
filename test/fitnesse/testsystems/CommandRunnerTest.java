@@ -17,7 +17,7 @@ public class CommandRunnerTest {
 
   @Test
   public void testBasics() throws Exception {
-    CommandRunner runner = new CommandRunner(new String[] { "java", "-cp", "./classes", "fitnesse.testutil.Echo" }, "echo this!", null, executionLogListener);
+    CommandRunner runner = new CommandRunner(new String[] { "java", "-cp", "build/classes/main", "fitnesse.testutil.Echo" }, "echo this!", null, executionLogListener);
     runner.asynchronousStart();
     runner.join();
     assertHasRegexp("echo this!", executionLogListener.stdOut.toString());
