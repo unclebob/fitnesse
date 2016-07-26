@@ -121,7 +121,7 @@ public class FileSystemPageFactoryTest {
 
     @Override
     public Collection<VersionInfo> history(final File... files) {
-      return new HashSet<VersionInfo>();
+      return new HashSet<>();
     }
 
     @Override

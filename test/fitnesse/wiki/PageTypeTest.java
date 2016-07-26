@@ -69,7 +69,7 @@ public class PageTypeTest {
   }
 
   private Collection<Object[]> pageTypeFromPageNameData() {
-    List<Object[]> values = new ArrayList<Object[]>();
+    List<Object[]> values = new ArrayList<>();
 
     addTestData(values, SUITE, "SuitePage");
     addTestData(values, SUITE, "PageSuite");

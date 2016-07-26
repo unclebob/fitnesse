@@ -18,8 +18,8 @@ import org.junit.Test;
 import fitnesse.util.TimeMeasurement;
 
 public class FitClientTest implements FitClientListener {
-  private List<String> outputs = new ArrayList<String>();
-  private List<TestSummary> counts = new ArrayList<TestSummary>();
+  private List<String> outputs = new ArrayList<>();
+  private List<TestSummary> counts = new ArrayList<>();
   private CommandRunningFitClient client;
   private boolean exceptionOccurred = false;
 

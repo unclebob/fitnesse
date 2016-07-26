@@ -267,8 +267,8 @@ public class PageXmlizerTest {
   }
 
   public static class MockXmlizerPageHandler implements XmlizerPageHandler {
-    public List<String> handledPages = new LinkedList<String>();
-    public List<Date> modDates = new LinkedList<Date>();
+    public List<String> handledPages = new LinkedList<>();
+    public List<Date> modDates = new LinkedList<>();
     public int exits = 0;
 
     @Override

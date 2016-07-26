@@ -245,7 +245,7 @@ public class TestHistoryResponderTest {
 
   @Test
   public void barGraphLimitedToLast20Results() throws Exception {
-    ArrayList<String> dates = new ArrayList<String>();
+    ArrayList<String> dates = new ArrayList<>();
     for (int day = 1; day < 32; day++) {
       int right = (day == 31) ? 1 : 0;
       dates.add(String.format("200905%02d010203_%1d_0_0_0", day, right));

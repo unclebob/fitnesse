@@ -20,7 +20,7 @@ public class VersionInfoTest {
 
   @Test
   public void testSortVersions() {
-    List<VersionInfo> list = new LinkedList<VersionInfo>();
+    List<VersionInfo> list = new LinkedList<>();
     VersionInfo toms = new VersionInfo("Tom-45678901234567", "Tom", toDate("45678901234567"));
     VersionInfo anons = new VersionInfo("56789012345678", "", toDate("56789012345678"));
     VersionInfo jerrys = new VersionInfo("Jerry-01234567890123", "Jerry", toDate("01234567890123"));

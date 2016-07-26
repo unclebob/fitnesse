@@ -23,7 +23,7 @@ import org.junit.Test;
 public abstract class ListExecutorTestBase {
   protected List<Object> statements;
   protected ListExecutor executor;
-  protected List<Object> expectedResults = new ArrayList<Object>();
+  protected List<Object> expectedResults = new ArrayList<>();
   protected String testClass = "TestSlim";
 
   protected abstract ListExecutor getListExecutor() throws Exception;
@@ -32,7 +32,7 @@ public abstract class ListExecutorTestBase {
   @Before
   public void setup() throws Exception {
     executor = getListExecutor();
-    statements = new ArrayList<Object>();
+    statements = new ArrayList<>();
     statements.add(Arrays.asList("i1", "import", getTestClassPath()));
     statements.add(Arrays.asList("m1", "make", "testSlim", testClass));
     expectedResults.add(Arrays.asList("i1", "OK"));
@@ -50,7 +50,7 @@ public abstract class ListExecutorTestBase {
   @Test
   public void checkSetup()
   {
-    respondsWith(new ArrayList<Object>());
+    respondsWith(new ArrayList<>());
   }
 
   @Test()
@@ -82,7 +82,7 @@ public abstract class ListExecutorTestBase {
     statements.clear();
     executor.execute(statements);
     expectedResults.clear();
-    respondsWith(new ArrayList<Object>());
+    respondsWith(new ArrayList<>());
   }
 
   @Test

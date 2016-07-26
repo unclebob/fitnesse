@@ -41,7 +41,7 @@ public class CommandRunnerTest {
     private StringBuilder stdOut = new StringBuilder();
     private StringBuilder stdErr = new StringBuilder();
     private int exitCode;
-    private List<Throwable> exceptions = new LinkedList<Throwable>();
+    private List<Throwable> exceptions = new LinkedList<>();
 
     @Override
     public void commandStarted(ExecutionContext context) {

@@ -44,7 +44,7 @@ public class PageListSetUpTearDownSurrounderTest {
 
     private ArrayList<WikiPage> makeTestPageList() throws Exception {
         SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
-        ArrayList<WikiPage> testPages = new ArrayList<WikiPage>();
+        ArrayList<WikiPage> testPages = new ArrayList<>();
         for (WikiPage page : finder.getAllPagesToRunForThisSuite()) testPages.add(page);
         return testPages;
     }

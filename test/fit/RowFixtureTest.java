@@ -51,9 +51,9 @@ public class RowFixtureTest extends TestCase {
     binding.adapter = arrayAdapter;
     fixture.columnBindings = new Binding[]{binding};
 
-    List<BusinessObject> computed = new LinkedList<BusinessObject>();
+    List<BusinessObject> computed = new LinkedList<>();
     computed.add(new BusinessObject(new String[]{"1"}));
-    LinkedList<Parse> expected = new LinkedList<Parse>();
+    LinkedList<Parse> expected = new LinkedList<>();
     expected.add(new Parse("tr", "", new Parse("td", "1", null, null), null));
     fixture.match(expected, computed, 0);
     assertEquals("right", 1, fixture.counts.right);

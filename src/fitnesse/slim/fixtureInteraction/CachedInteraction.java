@@ -57,6 +57,7 @@ public class CachedInteraction extends DefaultInteraction {
       this.nArgs = nArgs;
     }
 
+    @Override
     public int hashCode() {
       return nArgs * 31 + method.hashCode() + 31 * k.hashCode();
     }

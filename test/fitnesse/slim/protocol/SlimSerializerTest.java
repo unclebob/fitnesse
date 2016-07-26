@@ -16,7 +16,7 @@ public class SlimSerializerTest {
 
   @Before
   public void setUp() {
-    list = new ArrayList<Object>();
+    list = new ArrayList<>();
   }
 
   @Test
@@ -39,7 +39,7 @@ public class SlimSerializerTest {
 
   @Test
   public void serializeNestedList() throws Exception {
-    List<String> sublist = new ArrayList<String>();
+    List<String> sublist = new ArrayList<>();
     sublist.add("element");
     list.add(sublist);
     assertEquals("[000001:000024:[000001:000007:element:]:]", SlimSerializer.serialize(list));
@@ -54,7 +54,7 @@ public class SlimSerializerTest {
 
   @Test
   public void serializeNullElement() throws Exception {
-    List<Object> list = new ArrayList<Object>();
+    List<Object> list = new ArrayList<>();
     list.add(null);
     String s = SlimSerializer.serialize(list);
     assertEquals("[000001:000004:null:]", s);

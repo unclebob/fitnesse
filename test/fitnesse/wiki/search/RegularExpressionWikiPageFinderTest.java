@@ -22,7 +22,7 @@ public class RegularExpressionWikiPageFinderTest implements TraversalListener<Wi
   private WikiPage childPage;
   private WikiPage virtualPage;
 
-  List<WikiPage> foundPages = new ArrayList<WikiPage>();
+  List<WikiPage> foundPages = new ArrayList<>();
   private WikiPageFinder pageFinder;
 
   @Override

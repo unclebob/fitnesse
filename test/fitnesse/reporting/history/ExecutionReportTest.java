@@ -117,16 +117,4 @@ public class ExecutionReportTest {
 
     assertEquals(-836274316, original.hashCode());
   }
-
-  private ExecutionReport executionReportWithVersion(final String theVersion) {
-    return new ExecutionReport() {
-      @Override
-      protected void unpackResults(Element testResults) {
-      }
-      @Override
-      public String getVersion() {
-        return theVersion;
-      }
-    };
-  }
 }

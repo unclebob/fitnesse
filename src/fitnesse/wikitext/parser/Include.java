@@ -5,7 +5,6 @@ import fitnesse.wiki.PathParser;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
 
 public class Include extends SymbolType implements Rule, Translation {
     private static final String[] setUpSymbols = new String[] {"COLLAPSE_SETUP"};

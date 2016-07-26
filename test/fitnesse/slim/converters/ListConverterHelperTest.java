@@ -20,7 +20,7 @@ public class ListConverterHelperTest {
 
   @Test
   public void toString_should_return_string_represents_empy_list_when_list_is_empty() throws Exception {
-    List<String> value = new ArrayList<String>();
+    List<String> value = new ArrayList<>();
 
     String current = ListConverterHelper.toString(value);
 
@@ -29,7 +29,7 @@ public class ListConverterHelperTest {
 
   @Test
   public void toString_should_return_values_when_list_is_valid() throws Exception {
-    List<Integer> value = new ArrayList<Integer>();
+    List<Integer> value = new ArrayList<>();
     value.add(1);
     value.add(2);
 

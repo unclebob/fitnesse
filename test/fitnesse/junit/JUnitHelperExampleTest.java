@@ -32,7 +32,7 @@ public class JUnitHelperExampleTest {
   public void prepare() {
     helper = new JUnitHelper(".",
       new File(System.getProperty("java.io.tmpdir"), "fitnesse").getAbsolutePath(), new TestRecordingListener());
-    visitedPages = new LinkedList<String>();
+    visitedPages = new LinkedList<>();
   }
 
   @Test
@@ -48,8 +48,8 @@ public class JUnitHelperExampleTest {
     String suiteName = "FitNesse.SuiteAcceptanceTests.SuiteSlimTests";
     helper.assertSuitePasses(suiteName, "testSuite");
 
-    assertEquals(new HashSet<String>(Arrays.asList(expectedTestsWithSuiteFilter)),
-      new HashSet<String>(visitedPages));
+    assertEquals(new HashSet<>(Arrays.asList(expectedTestsWithSuiteFilter)),
+      new HashSet<>(visitedPages));
 
   }
 
@@ -64,7 +64,7 @@ public class JUnitHelperExampleTest {
     }
 
     assertEquals(new HashSet<String>(),
-      new HashSet<String>(visitedPages));
+      new HashSet<>(visitedPages));
 
   }
 

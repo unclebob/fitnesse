@@ -29,7 +29,7 @@ public class ScenarioTableTest {
   @Before
     public void setUp() throws Exception {
         root = InMemoryPage.makeRoot("root");
-        instructions = new ArrayList<Object>();
+        instructions = new ArrayList<>();
     }
 
     private ScenarioTable makeScenarioTable(String pageContents)

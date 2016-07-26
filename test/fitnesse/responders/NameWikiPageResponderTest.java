@@ -53,14 +53,14 @@ public class NameWikiPageResponderTest {
     pageThreeName = "PageThree";
     pageFourName  = "PageFour";
     pageFiveName  = "PageFive";
-	
+
     frontPagePath = PathParser.parse(frontPageName);
     pageOnePath   = PathParser.parse(pageOneName);
     pageTwoPath   = PathParser.parse(pageTwoName);
     pageThreePath = PathParser.parse(pageThreeName);
     pageFourPath  = PathParser.parse(pageFourName);
     pageFivePath  = PathParser.parse(pageFiveName);
-	
+
 	helloTag = "hello";
 	worldTag = "world";
 	fitnesseTag = "fitnesse";
@@ -109,13 +109,13 @@ public class NameWikiPageResponderTest {
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     JSONArray actual = new JSONArray(response.getContent());
     assertEquals(2, actual.length());
-    Set<String> actualSet = new HashSet<String>();
+    Set<String> actualSet = new HashSet<>();
     actualSet.add(actual.getString(0));
     actualSet.add(actual.getString(1));
-    Set<String> expectedSet = new HashSet<String>();
+    Set<String> expectedSet = new HashSet<>();
     expectedSet.add(pageOneName);
     expectedSet.add(pageTwoName);
-    assertEquals(expectedSet, actualSet); 
+    assertEquals(expectedSet, actualSet);
   }
 
   @Test
@@ -133,7 +133,7 @@ public class NameWikiPageResponderTest {
     if(s == null) { return 0; }
     return s.split("\r\n|\r|\n").length;
   }
-  
+
   private void createTestPageTree() throws Exception {
 	// FrontPage
 	// + PageOne
@@ -141,7 +141,7 @@ public class NameWikiPageResponderTest {
 	// + PageThree (world)
 	//   + PageFour
 	//     + PageFive (fitnesse)
-	
+
     WikiPage frontPage = WikiPageUtil.addPage(root,      frontPagePath, "");
     WikiPage pageOne   = WikiPageUtil.addPage(frontPage, pageOnePath, "");
     WikiPage pageTwo   = WikiPageUtil.addPage(pageOne,   pageTwoPath, "");
@@ -152,7 +152,7 @@ public class NameWikiPageResponderTest {
     setTag(pageTwo, helloTag);
     setTag(pageThree, worldTag);
     setTag(pageFive, fitnesseTag);
-	
+
     assertEquals(helloTag,    pageTwo.getData().getAttribute(PageData.PropertySUITES));
     assertEquals(worldTag,    pageThree.getData().getAttribute(PageData.PropertySUITES));
     assertEquals(fitnesseTag, pageFive.getData().getAttribute(PageData.PropertySUITES));
@@ -167,12 +167,12 @@ public class NameWikiPageResponderTest {
   @Test
   public void canBeUsedRecursively() throws Exception {
     createTestPageTree();
-	
+
     request.setResource(frontPageName);
     request.addInput("Recursive", "");
-	
+
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
-	
+
     assertHasRegexp(pageOneName,                                             response.getContent());
     assertHasRegexp(pageOneName + "." + pageTwoName,                         response.getContent());
     assertHasRegexp(pageThreeName,                                           response.getContent());
@@ -180,15 +180,15 @@ public class NameWikiPageResponderTest {
     assertHasRegexp(pageThreeName + "." + pageFourName + "." + pageFiveName, response.getContent());
     assertEquals(5, CountLines(response.getContent()));
   }
- 
+
   @Test
   public void canReportOnlyLeaves() throws Exception {
     createTestPageTree();
-	
+
     request.setResource(frontPageName);
     request.addInput("Recursive", "");
     request.addInput("LeafOnly", "");
-	
+
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(2, CountLines(response.getContent())); // we only have 2 leave pages
   }
@@ -196,13 +196,13 @@ public class NameWikiPageResponderTest {
   @Test
   public void canShowTags() throws Exception {
     createTestPageTree();
-	
+
     request.setResource(frontPageName);
     request.addInput("Recursive", "");
     request.addInput("ShowTags", "");
-	
+
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
-	
+
     // since the setAttribute() calls in createTestPageTree() don't have an effect the following tests are failing
     // reenable them once the issue above has been resolved!
     assertHasRegexp(pageOneName, response.getContent());
