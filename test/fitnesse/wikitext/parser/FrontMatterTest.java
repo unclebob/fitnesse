@@ -84,6 +84,23 @@ public class FrontMatterTest {
   }
 
   @Test
+  public void readFrontMatterWithManySpacesBeforeChildEntry() {
+    final Symbol symbols = parse(
+      "---\n" +
+        "symbolic-links:\n" +
+        "             pageName: .FrontPage\n" +
+        "---\n");
+    Symbol frontMatter = symbols.getChildren().get(0);
+    Symbol symlinks = frontMatter.getChildren().get(0);
+    Symbol firstSymlink = symlinks.getChildren().get(2);
+
+    assertTrue(frontMatter.isType(FrontMatter.symbolType));
+    assertEquals("symbolic-links", symlinks.getChildren().get(0).getContent());
+    assertEquals("pageName", firstSymlink.getChildren().get(0).getContent());
+    assertEquals(".FrontPage", firstSymlink.getChildren().get(1).getContent());
+  }
+
+  @Test
   public void readUrlInFrontMatter() {
     final Symbol symbols = parse(
       "---\n" +
