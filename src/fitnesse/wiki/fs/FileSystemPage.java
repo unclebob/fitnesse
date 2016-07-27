@@ -13,10 +13,8 @@ import java.util.List;
 
 import fitnesse.wiki.*;
 import fitnesse.wikitext.parser.VariableSource;
-import fitnesse.util.Clock;
 import util.FileUtil;
 
-import static fitnesse.wiki.PageType.STATIC;
 import static java.lang.String.format;
 
 /**
@@ -85,9 +83,18 @@ public class FileSystemPage extends BaseWikitextPage implements FileBasedWikiPag
   public WikiPage addChildPage(String pageName) {
     WikiPage page = getChildPage(pageName);
     if (page == null) {
-      page = new FileSystemPage(new File(getFileSystemPath(), pageName), pageName, this);
+      page = createPage(pageName);
     }
     return page;
+  }
+
+  private WikiPage createPage(final String pageName) {
+    if ("true".equalsIgnoreCase(getVariable("wiki.page.old.style"))) {
+      return new FileSystemPage(new File(getFileSystemPath(), pageName), pageName, this);
+    } else {
+      return new WikiFilePage(new File(getFileSystemPath(), pageName + WikiFilePage.FILE_EXTENSION), pageName, this,
+        null, versionsController, subWikiPageFactory, getVariableSource());
+    }
   }
 
   @Override
