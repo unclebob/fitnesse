@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki.refactoring;
 
-import java.util.logging.Logger;
-
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiWordReference;
@@ -12,8 +10,6 @@ import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.WikiWord;
 
 public class PageReferenceRenamer extends ReferenceRenamer {
-  private static final Logger LOG = Logger.getLogger(PageReferenceRenamer.class.getName());
-
   private WikiPage subjectPage;
   private String newName;
 
