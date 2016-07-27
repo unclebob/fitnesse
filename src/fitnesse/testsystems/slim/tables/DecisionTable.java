@@ -15,10 +15,14 @@ import fitnesse.testsystems.slim.Table;
 
 public class DecisionTable extends SlimTable {
   private static final String instancePrefix = "decisionTable";
+  protected MethodExtractor setterMethodExtractor;
+  protected MethodExtractor getterMethodExtractor;
 
+  
   public DecisionTable(Table table, String id, SlimTestContext context) {
     super(table, id, context);
   }
+
 
   @Override
   protected String getTableType() {
@@ -36,12 +40,14 @@ public class DecisionTable extends SlimTable {
     if (scenario != null) {
       return new ScenarioCaller().call(scenario);
     } else {
-    	scenarioName =getFixtureName();
-    	scenario = getTestContext().getScenario(scenarioName);
+      scenarioName =getFixtureName();
+      scenario = getTestContext().getScenario(scenarioName);
       if (scenario != null) {
         return new ScenarioCallerWithConstuctorParameters().call(scenario);
       } else {
-        return new FixtureCaller().call(getFixtureName());
+       	setterMethodExtractor = prepareMethodExtractorIfNull(setterMethodExtractor,"SLIM_DT_SETTER");
+       	getterMethodExtractor = prepareMethodExtractorIfNull(getterMethodExtractor,"SLIM_DT_GETTER");
+       	return new FixtureCaller().call(getFixtureName());
       }
     }
   }
@@ -62,6 +68,24 @@ public class DecisionTable extends SlimTable {
     return callAndAssign(symbolName, getTableName(), functionName);
   }
 
+  private MethodExtractor prepareMethodExtractorIfNull(MethodExtractor current, String sourceVariableName) throws SyntaxError{
+  	
+  	if (current == null){
+  		String setterString = this.getTestContext().getPageToTest().getVariable(sourceVariableName);
+  		try{
+  		    if (setterString != null && !setterString.isEmpty() ) current = new MethodExtractor(setterString);
+  		    else{
+  		        current = new MethodExtractor();
+  		    }
+  			
+  		}catch (Exception cause ){
+  			SyntaxError sE =  new SyntaxError(sourceVariableName+ " variable could not be parsed:\n"+setterString+"\nCause:"+cause.getMessage());
+  			sE.initCause(cause);
+  			throw sE;
+  		}
+  	}
+  	return current;
+  }
 
   private class ScenarioCaller extends DecisionTableCaller {
     public ScenarioCaller() {
@@ -120,12 +144,6 @@ public class DecisionTable extends SlimTable {
         String valueToSet = table.getCellContents(col, row);
         scenarioArguments.put(disgracedVar, valueToSet);
       }
-//      for (String var : funcStore.getLeftToRightAndResetColumnNumberIterator()) {
-//          String disgracedVar = Disgracer.disgraceMethodName(var);
-//          int col = funcStore.getColumnNumber(var);
-//          String valueToSet = table.getCellContents(col, row);
-//          scenarioArguments.put(disgracedVar, valueToSet);
-//      }
       return scenarioArguments;
     }
   }
@@ -190,11 +208,19 @@ public class DecisionTable extends SlimTable {
       int col = funcStore.getColumnNumber(functionName);
       String assignedSymbol = ifSymbolAssignment(col, row);
       SlimAssertion assertion;
+
+      Object[] args = new Object[] {};
+      MethodExtractorResult extractedGetter =  getterMethodExtractor.findRule(functionName);
+      if(extractedGetter != null){
+        functionName = extractedGetter.methodName;
+        args = extractedGetter.mergeParameters(args);
+      }
+
       if (assignedSymbol != null) {
-        assertion = makeAssertion(callAndAssign(assignedSymbol, functionName),
+        assertion = makeAssertion(callAndAssign(assignedSymbol, getTableName(), functionName, args),
                 new SymbolAssignmentExpectation(assignedSymbol, col, row));
       } else {
-        assertion = makeAssertion(callFunction(getTableName(), functionName),
+        assertion = makeAssertion(callFunction(getTableName(), functionName, args),
                 new ReturnedValueExpectation(col, row));
       }
       return assertion;
@@ -205,7 +231,18 @@ public class DecisionTable extends SlimTable {
       for (String var : varStore.getLeftToRightAndResetColumnNumberIterator()) {
         int col = varStore.getColumnNumber(var);
         String valueToSet = table.getCellContents(col, row);
-        Instruction setInstruction = new CallInstruction(makeInstructionTag(), getTableName(), Disgracer.disgraceMethodName("set " + var), new Object[] {valueToSet});
+
+        Object[] args = new Object[] {valueToSet};
+   	    MethodExtractorResult extractedSetter =  setterMethodExtractor.findRule(var);
+   	    if(extractedSetter != null){
+          var = extractedSetter.methodName;
+          args = extractedSetter.mergeParameters(args);
+          }else{
+            // Default for Setter
+            var = "set " + var;
+        }
+
+        Instruction setInstruction = callFunction(getTableName(), var, args);
         assertions.add(makeAssertion(setInstruction,
                 new VoidReturnExpectation(col, row)));
       }
