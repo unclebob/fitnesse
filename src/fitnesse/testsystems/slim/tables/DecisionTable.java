@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.TestExecutionException;
 import fitnesse.testsystems.slim.SlimTestContext;
@@ -18,7 +17,7 @@ public class DecisionTable extends SlimTable {
   protected MethodExtractor setterMethodExtractor;
   protected MethodExtractor getterMethodExtractor;
 
-  
+
   public DecisionTable(Table table, String id, SlimTestContext context) {
     super(table, id, context);
   }
@@ -69,7 +68,7 @@ public class DecisionTable extends SlimTable {
   }
 
   private MethodExtractor prepareMethodExtractorIfNull(MethodExtractor current, String sourceVariableName) throws SyntaxError{
-  	
+
   	if (current == null){
   		String setterString = this.getTestContext().getPageToTest().getVariable(sourceVariableName);
   		try{
@@ -77,7 +76,7 @@ public class DecisionTable extends SlimTable {
   		    else{
   		        current = new MethodExtractor();
   		    }
-  			
+
   		}catch (Exception cause ){
   			SyntaxError sE =  new SyntaxError(sourceVariableName+ " variable could not be parsed:\n"+setterString+"\nCause:"+cause.getMessage());
   			sE.initCause(cause);
