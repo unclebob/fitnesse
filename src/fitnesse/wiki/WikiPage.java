@@ -35,8 +35,9 @@ public interface WikiPage extends Comparable<WikiPage> {
   WikiPage getChildPage(String name);
 
   /**
+   * Deprecated. Use WikiPage.remove() instead.
+   *
    * @param name change page's name
-   * @Deprecated Use WikiPage.remove() instead
    */
   @Deprecated
   void removeChildPage(String name);
