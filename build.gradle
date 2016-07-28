@@ -239,12 +239,12 @@ publishing {
 }
 
 bintray {
-  user = 'amolenaar'
-  key = 'ca5334354c60461c65afe5c2d86e23a12d317f3a'
+  user = System.getenv("BINTRAY_USER") ?: 'Define your Bintray user name in BINTRAY_USER'
+  key = System.getenv("BINTRAY_API_KEY") ?: 'Define your Bintray BINTRAY_API_KEY'
   publications = ['FitNesseRelease']
   publish = true
   pkg {
-    repo = 'release'
+    repo = System.getenv("BINTRAY_API_KEY") ?: 'edge'
     name = 'fitnesse'
     userOrg = 'fitnesse'
     licenses = ['CPL-1.0']
