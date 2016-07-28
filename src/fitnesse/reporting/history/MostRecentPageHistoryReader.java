@@ -1,11 +1,8 @@
 package fitnesse.reporting.history;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 public class MostRecentPageHistoryReader extends PageHistoryReader {
-  private static final Logger LOG = Logger.getLogger(MostRecentPageHistoryReader.class.getName());
-
   TestResultRecord mostRecentRecord = null;
   File directory = null;
 

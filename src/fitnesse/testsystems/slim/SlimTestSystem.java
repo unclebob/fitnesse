@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 
 import fitnesse.slim.instructions.AssignInstruction;
 import fitnesse.slim.instructions.Instruction;
@@ -20,8 +19,6 @@ import fitnesse.testsystems.slim.tables.SlimTable;
 import static fitnesse.slim.SlimServer.*;
 
 public abstract class SlimTestSystem implements TestSystem {
-  private static final Logger LOG = Logger.getLogger(SlimTestSystem.class.getName());
-
   private final SlimClient slimClient;
   private final CompositeTestSystemListener testSystemListener;
   private final String testSystemName;

@@ -4,15 +4,12 @@ package fitnesse.testrunner;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.TestingInterruptedException;
 import util.FileUtil;
 
 public class MultipleTestsRunner implements Stoppable {
-  private static final Logger LOG = Logger.getLogger(MultipleTestsRunner.class.getName());
-
   private final CompositeFormatter formatters;
   private final PagesByTestSystem pagesByTestSystem;
 
