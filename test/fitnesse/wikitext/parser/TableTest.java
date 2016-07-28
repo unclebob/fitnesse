@@ -20,7 +20,9 @@ public class TableTest {
     ParserTestHelper.assertParses("!|a|\n", "SymbolList[Table[TableRow[TableCell[Text]]]]");
     ParserTestHelper.assertParses("|  a  |\n", "SymbolList[Table[TableRow[TableCell[Whitespace, Text, Whitespace]]]]");
     ParserTestHelper.assertParses("!|  a  |\n", "SymbolList[Table[TableRow[TableCell[Whitespace, Text, Whitespace]]]]");
+    ParserTestHelper.assertParses("!|a:b|\n", "SymbolList[Table[TableRow[TableCell[Text, Colon, Text]]]]");
   }
+
   @Test
   public void translatesTables() {
     ParserTestHelper.assertTranslatesTo("|a|\n", tableWithCell("a"));
