@@ -60,6 +60,7 @@ public class HtmlTable implements Table {
     return tableNode;
   }
 
+  @Override
   public boolean isTearDown() {
     return isTearDown;
   }
