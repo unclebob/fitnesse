@@ -43,7 +43,7 @@ The wiki markup for our table above (with some omissions) looks like this:{{{|eg
 |numerator|denominator|quotient?|
 |10       |2          |5        |
 |12.6     |3          |4.2      |
-|100      |4          |33       |}}}The vertical bars delimit table cells. For this table, there is not much more too it than that. You don't have to line up the vertical bars this way; we just do it to make it easier to read.
+|100      |4          |33       |}}}The vertical bars delimit table cells. For this table, there is not much more to it than that. You don't have to line up the vertical bars this way; we just do it to make it easier to read.
 
 Note that if you don't like mucking about with a markup language at all, you can create your test tables in a spreadsheet such as Excel, copy them to the clipboard, and use the '''Spreadsheet to Fitnesse''' button on the Edit page to have FitNesse format your table properly for you.
 
