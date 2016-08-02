@@ -9,7 +9,7 @@ Michaelangelo:nunchaku}}}
 4 users are defined here.  Leonardo whose password is Katana, Donatello whose password is bo, Rafael whose password is sai, and Michaelangelo whose password is nunchaka.
 
 !3 Hashed Passwords
-A password hashing program, similar to unix's '''passwd''' command, is provided with FitNesse. The Password program has the follwoing usage:
+A password hashing program, similar to unix's '''passwd''' command, is provided with FitNesse. The Password program has the following usage:
 {{{Usage: java fitnesse.authentication.Password [-f <password file>] [-c <password cipher>] <user>
         -f <password file> {passwords.txt}
         -c <password cipher> {fitnesse.authentication.HashingCipher} }}}
