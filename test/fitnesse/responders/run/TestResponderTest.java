@@ -440,6 +440,8 @@ public class TestResponderTest {
 
   private String createAndWaitFixture(String semaphoreName) {
     return "!define TEST_SYSTEM {slim}\n" +
+      // Set a timeout, so the command can be processed async
+      "!define slim.flags {-s 10 }\n" +
       "!|fitnesse.testutil.CreateFileAndWaitFixture|" + semaphoreName + "|\n";
   }
 

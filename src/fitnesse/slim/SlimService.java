@@ -23,14 +23,14 @@ public class SlimService {
   private static final String OPTION_DESCRIPTOR = "[-v] [-i interactionClass] [-s statementTimeout] [-d] [-ssl parameterClass] port";
 
   public static class Options {
-    final boolean verbose;
-    final int port;
-    final FixtureInteraction interaction;
+    public final boolean verbose;
+    public final int port;
+    public final FixtureInteraction interaction;
     /**
      * daemon mode: keep accepting new connections indefinitely.
      */
-    final boolean daemon;
-    final Integer statementTimeout;
+    public final boolean daemon;
+    public final Integer statementTimeout;
     final boolean useSSL;
     final String sslParameterClassName;
 

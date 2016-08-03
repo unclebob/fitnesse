@@ -10,3 +10,4 @@ For this test to perform we reduce the timeout to 2 seconds. If the server is no
 |fitnesse.fixtures.Sleep|20000|
 -! |
 |test results for page|TestPage|should contain|The instruction timed out after 2 seconds|
+|test results for page in debug mode|TestPage|should contain|The instruction timed out after 2 seconds|
