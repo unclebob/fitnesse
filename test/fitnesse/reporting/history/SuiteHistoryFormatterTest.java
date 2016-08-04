@@ -43,7 +43,7 @@ public class SuiteHistoryFormatterTest {
     FitNesseContext context = FitNesseUtil.makeTestContext();
     WikiPage suitePage = context.getRootPage().addChildPage("SuitePage");
     testPage = new WikiTestPage(suitePage.addChildPage("TestPage"));
-    writers = new LinkedList<StringWriter>();
+    writers = new LinkedList<>();
     formatter = new SuiteHistoryFormatter(context, suitePage, new TestXmlFormatter.WriterFactory() {
       @Override
       public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
@@ -95,7 +95,7 @@ public class SuiteHistoryFormatterTest {
   public void allTestingCompleteShouldProduceLinksAndSetTotalRunTimeOnReport() throws Exception {
     performTest(13);
     assertEquals(13L, formatter.getSuiteExecutionReport().getTotalRunTimeInMillis());
-    
+
     String output = suiteOutputAsString();
     Document document = XmlUtil.newDocument(output);
     Element suiteResultsElement = document.getDocumentElement();
@@ -124,7 +124,7 @@ public class SuiteHistoryFormatterTest {
     assertEquals("1", XmlUtil.getTextValue(finalCounts, "wrong"));
     assertEquals("0", XmlUtil.getTextValue(finalCounts, "ignores"));
     assertEquals("0", XmlUtil.getTextValue(finalCounts, "exceptions"));
-    
+
     assertEquals(String.valueOf(13L),
         XmlUtil.getTextValue(suiteResultsElement, "totalRunTimeInMillis"));
   }

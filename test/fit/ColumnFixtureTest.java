@@ -38,12 +38,14 @@ public class ColumnFixtureTest extends ColumnFixture {
     return counter;
   }
 
+  @Override
   public void execute() throws Exception {
     if (executeWillThrow)
       throw new Exception("Execute threw.");
     executeCalled++;
   }
 
+  @Override
   public void reset() throws Exception {
     resetCalled = true;
   }
@@ -179,7 +181,6 @@ public class ColumnFixtureTest extends ColumnFixture {
   public void ensureExecuteIsCalledForRowWithOnlyVariables() throws Exception {
     doTableOf(row("stringField") + row("whatever"));
     assertEquals(1, executeCalled);
-    ;
   }
 
   @Test

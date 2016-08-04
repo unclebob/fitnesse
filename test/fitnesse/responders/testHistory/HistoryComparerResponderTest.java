@@ -43,14 +43,14 @@ public class HistoryComparerResponderTest {
 
     responder = new HistoryComparerResponder(mockedComparer);
     responder.testing = true;
-    mockedComparer.resultContent = new ArrayList<String>();
+    mockedComparer.resultContent = new ArrayList<>();
     mockedComparer.resultContent.add("pass");
     when(mockedComparer.getResultContent()).thenReturn(
             mockedComparer.resultContent);
     when(mockedComparer.compare(firstFilePath, secondFilePath)).thenReturn(
         true);
-    mockedComparer.firstTableResults = new ArrayList<String>();
-    mockedComparer.secondTableResults = new ArrayList<String>();
+    mockedComparer.firstTableResults = new ArrayList<>();
+    mockedComparer.secondTableResults = new ArrayList<>();
     mockedComparer.firstTableResults
         .add("<table><tr><td>This is the content</td></tr></table>");
     mockedComparer.secondTableResults

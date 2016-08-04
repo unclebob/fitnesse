@@ -62,8 +62,8 @@ public abstract class SlimTableTestSupport<T extends SlimTable> {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    instructions = new ArrayList<Instruction>();
-    assertions = new ArrayList<SlimAssertion>();
+    instructions = new ArrayList<>();
+    assertions = new ArrayList<>();
   }
 
   protected T makeSlimTableAndBuildInstructions(String pageContents) throws Exception {

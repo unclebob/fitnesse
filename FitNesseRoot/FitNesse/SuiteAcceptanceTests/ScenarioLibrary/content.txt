@@ -65,6 +65,11 @@
 |ensure|content contains|@text|
 |show|content|
 
+!|scenario|test results for page in debug mode |source|should contain|text|
+|check|request page|@source?test&debug|200|
+|ensure|content contains|@text|
+|show|content|
+
 !|scenario|test results for suite|source|should contain|text|
 |check|request page|@source?suite|200|
 |ensure|content contains|@text|

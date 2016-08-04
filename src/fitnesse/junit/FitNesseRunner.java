@@ -22,7 +22,6 @@ import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.TestExecutionException;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.slim.TestingInterruptedException;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -162,11 +161,13 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   private String excludeSuiteFilter;
   private boolean debugMode;
   private boolean preventSystemExit;
-   private FitNesseContext context;
+  private FitNesseContext context;
+  private DescriptionFactory descriptionFactory;
   private List<WikiPage> children;
 
   public FitNesseRunner(Class<?> suiteClass) throws InitializationError {
     super(suiteClass);
+    descriptionFactory = new DescriptionFactory();
   }
 
   @Override
@@ -360,7 +361,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
 
   @Override
   protected Description describeChild(WikiPage child) {
-    return Description.createTestDescription(suiteClass, child.getPageCrawler().getFullPath().toString());
+    return getDescriptionFactory().createDescription(suiteClass, child);
   }
 
   @Override
@@ -391,18 +392,20 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
 
   protected void runPages(List<WikiPage>pages, final RunNotifier notifier) {
     MultipleTestsRunner testRunner = createTestRunner(pages);
-    addTestSystemListeners(notifier, testRunner, suiteClass);
+    addTestSystemListeners(notifier, testRunner, suiteClass, getDescriptionFactory());
     addExecutionLogListener(notifier, testRunner, suiteClass);
     System.setProperty(SystemExitSecurityManager.PREVENT_SYSTEM_EXIT, String.valueOf(preventSystemExit));
     try {
       executeTests(testRunner);
     } catch (AssertionError | Exception e) {
-      notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass), e));
+      Description description = getDescriptionFactory().createSuiteDescription(suiteClass);
+      notifier.fireTestFailure(new Failure(description, e));
     }
   }
 
-  protected void addTestSystemListeners(RunNotifier notifier, MultipleTestsRunner testRunner, Class<?> suiteClass) {
-    testRunner.addTestSystemListener(new JUnitRunNotifierResultsListener(notifier, suiteClass));
+  protected void addTestSystemListeners(RunNotifier notifier, MultipleTestsRunner testRunner, Class<?> suiteClass,
+                                        DescriptionFactory descriptionFactory) {
+    testRunner.addTestSystemListener(new JUnitRunNotifierResultsListener(notifier, suiteClass, descriptionFactory));
   }
 
   protected void addExecutionLogListener(RunNotifier notifier, MultipleTestsRunner testRunner, Class<?> suiteClass) {
@@ -483,5 +486,13 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     List<WikiPage> list = new ArrayList<>(1);
     list.add(page);
     return list;
+  }
+
+  public DescriptionFactory getDescriptionFactory() {
+    return descriptionFactory;
+  }
+
+  public void setDescriptionFactory(DescriptionFactory descriptionFactory) {
+    this.descriptionFactory = descriptionFactory;
   }
 }

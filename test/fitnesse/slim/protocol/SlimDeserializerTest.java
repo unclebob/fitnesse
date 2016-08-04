@@ -14,7 +14,7 @@ public class SlimDeserializerTest {
 
   @Before
   public void setUp() {
-    list = new ArrayList<Object>();
+    list = new ArrayList<>();
   }
 
   private void check() {
@@ -63,7 +63,7 @@ public class SlimDeserializerTest {
 
   @Test
   public void listWithSubList() throws Exception {
-    List<String> sublist = new ArrayList<String>();
+    List<String> sublist = new ArrayList<>();
     sublist.add("hello");
     sublist.add("world");
     list.add(sublist);

@@ -4,7 +4,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
-import java.util.logging.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -19,8 +18,6 @@ import fitnesse.wiki.WikiPage;
 import util.FileUtil;
 
 public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLogListener, Closeable {
-  private static final Logger LOG = Logger.getLogger(SuiteHistoryFormatter.class.getName());
-
   private final SuiteExecutionReport suiteExecutionReport;
   private final TimeMeasurement totalTimeMeasurement;
   private final FitNesseContext context;

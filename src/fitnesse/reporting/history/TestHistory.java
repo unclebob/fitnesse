@@ -4,7 +4,6 @@ import fitnesse.wiki.PathParser;
 import util.FileUtil;
 
 import java.io.File;
-import java.text.ParseException;
 import java.util.*;
 
 public class TestHistory {

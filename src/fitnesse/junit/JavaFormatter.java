@@ -16,7 +16,6 @@ import fitnesse.reporting.BaseFormatter;
 import fitnesse.reporting.FormatterException;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.slim.TestingInterruptedException;
 import util.FileUtil;
 
 /**

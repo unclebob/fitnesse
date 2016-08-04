@@ -33,6 +33,7 @@ public abstract class SlimTable {
   private String tableName;
   private int instructionNumber = 0;
   private String fixtureName;
+  private boolean isTearDown;
 
   private List<SlimTable> children = new LinkedList<>();
   private SlimTable parent = null;
@@ -75,7 +76,6 @@ public abstract class SlimTable {
   public String replaceSymbolsWithFullExpansion(String s) {
     return new FullExpansionSymbolReplacer(s).replace();
   }
-
 
   protected abstract String getTableType();
 
@@ -130,6 +130,14 @@ public abstract class SlimTable {
       fixtureName = getFixtureName(tableHeader);
     }
     return Disgracer.disgraceClassName(fixtureName);
+  }
+
+  public boolean isTearDown() {
+    return isTearDown;
+  }
+
+  public void setTearDown(boolean teardown) {
+    isTearDown = teardown;
   }
 
   protected String getFixtureName(String tableHeader) {

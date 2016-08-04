@@ -20,5 +20,24 @@ Raising an exception with the term "StopSuite" in it will make sure all remainin
 | table in page B never to be executed |
 
 -! |
+| given page | MySuite.TearDown | with content | !-
+| import |
+| fitnesse.slim.test |
+
+| script | echo script |
+| check | echo | tear down after ${PAGE_NAME} | tear down after ${PAGE_NAME} |
+
+-! |
+| given page | MySuite.SuiteTearDown | with content | !-
+| import |
+| fitnesse.slim.test |
+
+| script | echo script |
+| check | echo | suite tear down executed | suite tear down executed |
+
+-! |
 | test results for suite | MySuite | should contain | table in page A never to be executed <span class="ignore">Test not run</span> |
+| ensure | content contains | <span class="pass">tear down after <a href="MySuite.TestPageA">TestPageA</a></span> |
 | ensure | content contains | table in page B never to be executed <span class="ignore">Test not run</span> |
+| ensure | content contains | tear down after <a href="MySuite.TestPageB">TestPageB</a> <span class="ignore">Test not run</span> |
+| ensure | content contains | <span class="pass">suite tear down executed</span> |

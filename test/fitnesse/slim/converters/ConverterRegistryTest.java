@@ -226,7 +226,7 @@ public class ConverterRegistryTest {
     assertTrue(current instanceof String);
     assertEquals("1", current);
 
-    List<Object> listToConvert = new ArrayList<Object>();
+    List<Object> listToConvert = new ArrayList<>();
     listToConvert.add(this);
     listToConvert.add(new StringBuilderConverter());
     listToConvert.add(null);

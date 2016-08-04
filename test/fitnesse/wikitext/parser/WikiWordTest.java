@@ -1,7 +1,6 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.wiki.*;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,10 +41,6 @@ public class WikiWordTest {
     public void regracesWikiWords() throws Exception {
         root.setPageData(pageOne, "!define " + WikiWord.REGRACE_LINK + " {true}\nPageOne\n!define " + WikiWord.REGRACE_LINK + " {false}\n");
         assertTrue(ParserTestHelper.translateTo(pageOne).contains(wikiLink("PageOne", "Page One")));
-    }
-
-    private WikiPage addPage(WikiPage parent, String childName) throws Exception {
-        return WikiPageUtil.addPage(parent, PathParser.parse(childName), "");
     }
 
     private String wikiLink(String link, String text) {

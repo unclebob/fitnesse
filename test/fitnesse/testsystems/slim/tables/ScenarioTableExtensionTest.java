@@ -34,7 +34,7 @@ public class ScenarioTableExtensionTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    instructions = new ArrayList<Object>();
+    instructions = new ArrayList<>();
   }
 
   private ScenarioTable makeScenarioTable(String contents)
@@ -173,7 +173,7 @@ public class ScenarioTableExtensionTest {
     }
 
     private Set<String> findArguments(Pattern pattern) {
-      Set<String> found = new LinkedHashSet<String>();
+      Set<String> found = new LinkedHashSet<>();
       int rowCount = table.getRowCount();
       for (int row = 0; row < rowCount; row++) {
         int columnCount = table.getColumnCountInRow(row);

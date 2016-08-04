@@ -1,7 +1,6 @@
 package fitnesse.reporting.history;
 
 import java.io.File;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 

@@ -1,12 +1,13 @@
 package fitnesse.testsystems.slim;
 
-import java.io.IOException;
-
 import fitnesse.slim.JavaSlimFactory;
 import fitnesse.slim.SlimServer;
+import fitnesse.slim.SlimService;
 import fitnesse.slim.fixtureInteraction.DefaultInteraction;
 import fitnesse.testsystems.ClientBuilder;
 import fitnesse.testsystems.Descriptor;
+
+import static fitnesse.testsystems.slim.SlimClientBuilder.SLIM_FLAGS;
 
 /**
  * In-process version, mainly for testing FitNesse itself.
@@ -19,7 +20,9 @@ public class InProcessSlimClientBuilder extends ClientBuilder<SlimClient> {
 
   @Override
   public SlimClient build() {
-    SlimServer slimServer = createSlimServer(1000, isDebug());
+    final SlimService.Options options = SlimService.parseCommandLine(getSlimFlags());
+    Integer statementTimeout = options != null ? options.statementTimeout : null;
+    SlimServer slimServer = createSlimServer(statementTimeout, isDebug());
     return new InProcessSlimClient(getTestSystemName(), slimServer, getExecutionLogListener());
   }
 
@@ -28,8 +31,16 @@ public class InProcessSlimClientBuilder extends ClientBuilder<SlimClient> {
     return "in-process";
   }
 
-  protected SlimServer createSlimServer(int timeout, boolean verbose) {
+  protected SlimServer createSlimServer(Integer timeout, boolean verbose) {
     return JavaSlimFactory.createJavaSlimFactory(new DefaultInteraction(), timeout, verbose).getSlimServer();
+  }
+
+  protected String[] getSlimFlags() {
+    String slimFlags = getVariable("slim.flags");
+    if (slimFlags == null) {
+      slimFlags = getVariable(SLIM_FLAGS);
+    }
+    return slimFlags == null ? new String[] {} : parseCommandLine(slimFlags);
   }
 
 }

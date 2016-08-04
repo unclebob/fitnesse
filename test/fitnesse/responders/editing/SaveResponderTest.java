@@ -120,15 +120,15 @@ public class SaveResponderTest {
     assertTrue("RecentChanges should exist", root.hasChildPage("RecentChanges"));
     checkRecentChanges(root, "ChildPageTwo");
   }
-  
+
   @Test
   public void testRemovesHelpAndSuitesAttributeIfEmpty() throws Exception {
     request.setResource("ChildPageTwo");
     request.addInput(EditResponder.HELP_TEXT, "");
     request.addInput(EditResponder.SUITES, "");
-    
+
     responder.makeResponse(context, request);
-    
+
     PageData pageData = root.getChildPage("ChildPageTwo").getData();
     assertFalse("should not have help attribute", pageData.hasAttribute(PageData.PropertyHELP));
     assertFalse("should not have suites attribute", pageData.hasAttribute(PageData.PropertySUITES));

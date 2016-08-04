@@ -41,7 +41,7 @@ public abstract class QueryTableTestBase {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    assertions = new ArrayList<SlimAssertion>();
+    assertions = new ArrayList<>();
     queryTableHeader =
       "|" + tableType() + ":fixture|argument|\n" +
         "|n|2n|\n";
@@ -346,9 +346,9 @@ public abstract class QueryTableTestBase {
 		        "[second, pass(2), ]" +
 		        "]"
 		    );
-	
+
   }
-  
+
   @Test
   public void variablesAreReplacedInExpected() throws Exception {
     makeQueryTableAndBuildInstructions(queryTableHeader + "|2|$V|\n");
@@ -382,7 +382,7 @@ public abstract class QueryTableTestBase {
             asList(
                     asList("queryTable_id_0", "OK"),
                     asList("queryTable_id_1", VoidConverter.VOID_TAG),
-                    asList("queryTable_id_2", new ArrayList<Object>()))
+                    asList("queryTable_id_2", new ArrayList<>()))
     );
     evaluateResults(pseudoResults, "[" +
       headRow +

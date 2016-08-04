@@ -38,7 +38,7 @@ public class PagesByTestSystemTest{
     WikiPage setUp = WikiPageUtil.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
     WikiPage tearDown = WikiPageUtil.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
 
-    LinkedList<WikiPage> testPages = new LinkedList<WikiPage>();
+    LinkedList<WikiPage> testPages = new LinkedList<>();
     testPages.add(setUp);
     testPages.add(slimPage);
     testPages.add(testPage);

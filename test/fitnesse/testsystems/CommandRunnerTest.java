@@ -17,7 +17,7 @@ public class CommandRunnerTest {
 
   @Test
   public void testBasics() throws Exception {
-    CommandRunner runner = new CommandRunner(new String[] { "java", "-cp", "./classes", "fitnesse.testutil.Echo" }, "echo this!", null, executionLogListener);
+    CommandRunner runner = new CommandRunner(new String[] { "java", "-cp", "build/classes/main", "fitnesse.testutil.Echo" }, "echo this!", null, executionLogListener);
     runner.asynchronousStart();
     runner.join();
     assertHasRegexp("echo this!", executionLogListener.stdOut.toString());
@@ -41,7 +41,7 @@ public class CommandRunnerTest {
     private StringBuilder stdOut = new StringBuilder();
     private StringBuilder stdErr = new StringBuilder();
     private int exitCode;
-    private List<Throwable> exceptions = new LinkedList<Throwable>();
+    private List<Throwable> exceptions = new LinkedList<>();
 
     @Override
     public void commandStarted(ExecutionContext context) {

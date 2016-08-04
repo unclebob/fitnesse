@@ -1,10 +1,7 @@
 package fitnesse.reporting;
 
 import fitnesse.testsystems.*;
-import fitnesse.testsystems.slim.TestingInterruptedException;
 import fitnesse.wiki.WikiPage;
-
-import java.io.IOException;
 
 public abstract class BaseFormatter implements Formatter {
 

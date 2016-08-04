@@ -5,7 +5,6 @@ package fitnesse.socketservice;
 import static fitnesse.socketservice.SocketServer.StreamUtility.GetBufferedReader;
 import static fitnesse.socketservice.SocketServer.StreamUtility.GetPrintStream;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class SslSocketServiceTest {

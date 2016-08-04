@@ -4,6 +4,6 @@ The default way Slim handles exceptions is to indicate in the test table that an
 !2 Specifying a custom message
 You can specify a custom message to be written into the test output instead of a stack trace.  This is done by prefixing your message with {{{message:<<}}} and ending with {{{>>}}}  For instance if you want the message to be "Can't create object" then the text for your exception should be {{{message:<<Can't create object>>}}}
 !2 Stopping the execution of the test.
-If your exception indicates an error that cannot be recovered from, then you may want the test execution to stop at that point.   You can do this by throwing an exception with "!-StopTest-!" in the class name.  If the test is part of a suite, then this will cause the next test in the suite to be be started immediately.
+If your exception indicates an error that cannot be recovered from, then you may want the test execution to stop at that point.   You can do this by throwing an exception with "!-StopTest-!" in the class name. Teardown for the test will still be executed. If the test is part of a suite, then the next test in the suite to be be started afterwards.
 
-Be warned, that if you throw a "!-StopTest-!" exception then the tear down for your test will not run.  A fix for this is to run the tear down procedure before you throw the exception.
+By throwing an exception with "!-StopSuite-!" in the class name you can stop both current test and the suite execution. Tear down procedure for the running test and the suite will still be executed, but all the consequent tests in the suite will not run.

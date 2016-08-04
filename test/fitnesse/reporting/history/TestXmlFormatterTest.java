@@ -58,7 +58,7 @@ public class TestXmlFormatterTest {
             "20090413152143_1_2_3_4.xml",
             SuiteResponder.makeResultFileName(summary, clock.currentClockTimeInMillis()));
   }
-  
+
   @Test
   public void processTestResultsShouldBuildUpCurrentResultAndFinalSummary() throws Exception {
     FitNesseContext context = FitNesseUtil.makeTestContext();
@@ -101,7 +101,7 @@ public class TestXmlFormatterTest {
     assertThat(testResult.relativePageName, is(page.getName()));
     assertThat(testResult.tags, is("tag1"));
   }
-  
+
   @Test
   public void allTestingCompleteShouldSetTotalRunTime() throws Exception {
     FitNesseContext context = mock(FitNesseContext.class);
@@ -123,7 +123,7 @@ public class TestXmlFormatterTest {
   public void allExecutionOutputShouldBeAddedToHistory() throws IOException, SAXException {
     FitNesseContext context = FitNesseUtil.makeTestContext();
     WikiPage page = new WikiPageDummy("name", "content", null);
-    final LinkedList<StringWriter> writers = new LinkedList<StringWriter>();
+    final LinkedList<StringWriter> writers = new LinkedList<>();
     TestXmlFormatter formatter = new TestXmlFormatter(context, page, new WriterFactory() {
       @Override
       public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {

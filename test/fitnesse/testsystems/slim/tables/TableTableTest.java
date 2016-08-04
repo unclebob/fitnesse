@@ -38,7 +38,7 @@ public class TableTableTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    assertions = new ArrayList<SlimAssertion>();
+    assertions = new ArrayList<>();
   }
 
   private TableTable makeTableTableAndBuildInstructions(String pageContents) throws Exception {
@@ -303,7 +303,7 @@ public class TableTableTest {
     assertEquals("[[pass(Table:fixture), argument], [pass($X->[value]), fail($X->[value]), $X->[value], ignore($X->[value])]]",
         tt.getTable().toString());
   }
-  
+
   @Test
   public void tableWithSetSymbols() throws Exception {
     makeTableTableAndBuildInstructions(tableTableHeader + "|$A=|$B=|$C=|$D=|$E=|$F=|\n");
@@ -341,7 +341,7 @@ public class TableTableTest {
     assertNull(result.getVariablesToStore().get("E"));
     assertNull(result.getVariablesToStore().get("F"));
   }
-  
+
   @Test
   public void tableMethodReturnsNull() throws Exception {
     assertTableResults("|2|4|\n", null,

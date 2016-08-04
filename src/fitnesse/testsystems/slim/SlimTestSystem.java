@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 
 import fitnesse.slim.instructions.AssignInstruction;
 import fitnesse.slim.instructions.Instruction;
@@ -20,14 +19,12 @@ import fitnesse.testsystems.slim.tables.SlimTable;
 import static fitnesse.slim.SlimServer.*;
 
 public abstract class SlimTestSystem implements TestSystem {
-  private static final Logger LOG = Logger.getLogger(SlimTestSystem.class.getName());
-
   private final SlimClient slimClient;
   private final CompositeTestSystemListener testSystemListener;
   private final String testSystemName;
 
   private SlimTestContextImpl testContext;
-  private boolean stopTestCalled;
+  boolean stopTestCalled;
   private boolean stopSuiteCalled;
   private boolean testSystemIsStopped;
 
@@ -113,13 +110,18 @@ public abstract class SlimTestSystem implements TestSystem {
 
   protected abstract void processAllTablesOnPage(TestPage testPage) throws TestExecutionException;
 
-  protected void processTable(SlimTable table) throws TestExecutionException {
+  protected void processTable(SlimTable table, boolean isSuiteTearDownPage) throws TestExecutionException {
     List<SlimAssertion> assertions = table.getAssertions();
-    Map<String, Object> instructionResults;
-    if (!stopTestCalled && !stopSuiteCalled) {
-      instructionResults = slimClient.invokeAndGetResponse(SlimAssertion.getInstructions(assertions));
-    } else {
+    final Map<String, Object> instructionResults;
+    if (stopTestCalled && !table.isTearDown()) {
       instructionResults = Collections.emptyMap();
+    } else {
+      boolean tearDownOfAlreadyStartedTest = stopTestCalled && table.isTearDown();
+      if (stopSuiteCalled && !isSuiteTearDownPage && !tearDownOfAlreadyStartedTest) {
+        instructionResults = Collections.emptyMap();
+      } else {
+        instructionResults = slimClient.invokeAndGetResponse(SlimAssertion.getInstructions(assertions));
+      }
     }
 
     evaluateTables(assertions, instructionResults);
@@ -151,7 +153,7 @@ public abstract class SlimTestSystem implements TestSystem {
         if (testResult != null) {
           Map<String, ?> variables = testResult.getVariablesToStore();
           if (variables != null) {
-            List<Instruction> instructions = new ArrayList<Instruction>(variables.size());
+            List<Instruction> instructions = new ArrayList<>(variables.size());
             int i = 0;
             for (Entry<String, ?> variable : variables.entrySet()) {
               instructions.add(new AssignInstruction("assign_" + i++, variable.getKey(), variable.getValue()));
