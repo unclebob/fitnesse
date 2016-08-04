@@ -1,3 +1,4 @@
+<p>Current: $lastModified</p>
 <h2>Select a version</h2>
 <form action= "" method="get" name="compareVersions">
  <fieldset>
