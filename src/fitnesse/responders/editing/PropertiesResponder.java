@@ -3,7 +3,10 @@
 package fitnesse.responders.editing;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -26,7 +29,9 @@ import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageProperty;
+
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -121,10 +126,23 @@ public class PropertiesResponder implements SecureResponder {
 
   private void makeLastModifiedTag() {
     String username = pageData.getAttribute(LAST_MODIFYING_USER);
+    String dateString = pageData.getAttribute(PropertyLAST_MODIFIED);
+  if (dateString == null) dateString ="";
+  if (!dateString.isEmpty()){
+    try {
+      Date date = WikiPageProperties.getTimeFormat().parse(dateString);
+      dateString = " on " + new SimpleDateFormat("MMM dd, yyyy").format(date) + " at " + new SimpleDateFormat("hh:mm:ss a").format(date);
+    }
+    catch (ParseException e) {
+      dateString = " on " + dateString;
+    }
+  }
+  
     if (username == null || "".equals(username))
-      html.put("lastModified", "Last modified anonymously");
+      html.put("lastModified", "Last modified anonymously" + dateString);
     else
-      html.put("lastModified", "Last modified by " + username);
+      html.put("lastModified", "Last modified by " + username + dateString) ;
+
   }
 
   private void makeFormSections() {
