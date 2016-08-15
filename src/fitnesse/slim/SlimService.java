@@ -20,12 +20,16 @@ import util.CommandLine;
 import static fitnesse.slim.JavaSlimFactory.createJavaSlimFactory;
 
 public class SlimService {
-  private static final String OPTION_DESCRIPTOR = "[-v] [-i interactionClass] [-s statementTimeout] [-d] [-ssl parameterClass] port";
+  private static final int EXIT_CODE_EXCEPTION_ON_START = 98;
+  private static final int EXIT_CODE_OUT_OF_MEMORY = 99;
+  private static final int DEFAULT_PORT = 8099;
+  private static final String OPTION_DESCRIPTOR = "[-v] [-i interactionClass] [-nt nameTranslatorClass] [-s statementTimeout] [-d] [-ssl parameterClass] port";
 
   public static class Options {
     public final boolean verbose;
     public final int port;
     public final FixtureInteraction interaction;
+    public final NameTranslator nameTranslator;
     /**
      * daemon mode: keep accepting new connections indefinitely.
      */
@@ -34,10 +38,12 @@ public class SlimService {
     final boolean useSSL;
     final String sslParameterClassName;
 
-    public Options(boolean verbose, int port, FixtureInteraction interaction, boolean daemon, Integer statementTimeout, boolean useSSL, String sslParameterClassName) {
+    public Options(boolean verbose, int port, FixtureInteraction interaction, NameTranslator nameTranslator, boolean daemon, Integer statementTimeout,
+        boolean useSSL, String sslParameterClassName) {
       this.verbose = verbose;
       this.port = port;
       this.interaction = interaction;
+      this.nameTranslator = nameTranslator;
       this.daemon = daemon;
       this.statementTimeout = statementTimeout;
       this.useSSL = useSSL;
@@ -59,7 +65,7 @@ public class SlimService {
       } catch (Exception e) {
         e.printStackTrace();
         System.out.println("Exiting as exception occured: " + e.getMessage());
-        System.exit(98);
+        System.exit(EXIT_CODE_EXCEPTION_ON_START);
       }
     } else {
       parseCommandLineFailed(args);
@@ -80,7 +86,7 @@ public class SlimService {
     } catch (java.lang.OutOfMemoryError e) {
       System.err.println("Out of Memory. Aborting.");
       e.printStackTrace();
-      System.exit(99);
+      System.exit(EXIT_CODE_OUT_OF_MEMORY);
       throw e;
     } catch (BindException e) {
       System.err.println("Can not bind to port " + options.port + ". Aborting.");
@@ -94,14 +100,16 @@ public class SlimService {
     if (commandLine.parse(args)) {
       boolean verbose = commandLine.hasOption("v");
       String interactionClassName = commandLine.getOptionArgument("i", "interactionClass");
+      String nameTranslatorClassName = commandLine.getOptionArgument("nt", "nameTranslatorClass");
       String portString = commandLine.getArgument("port");
-      int port = (portString == null) ? 8099 : Integer.parseInt(portString);
+      int port = (portString == null) ? DEFAULT_PORT : Integer.parseInt(portString);
       String statementTimeoutString = commandLine.getOptionArgument("s", "statementTimeout");
       Integer statementTimeout = (statementTimeoutString == null) ? null : Integer.parseInt(statementTimeoutString);
       boolean daemon = commandLine.hasOption("d");
       String sslParameterClassName = commandLine.getOptionArgument("ssl", "parameterClass");
       boolean useSSL = commandLine.hasOption("ssl");
-      return new Options(verbose, port, createInteraction(interactionClassName), daemon, statementTimeout, useSSL, sslParameterClassName);
+      return new Options(verbose, port, createInteraction(interactionClassName), createNameTranslator(nameTranslatorClassName), daemon, statementTimeout,
+          useSSL, sslParameterClassName);
     }
     return null;
   }
@@ -110,7 +118,7 @@ public class SlimService {
     this.daemon = daemon;
     this.slimServer = slimServer;
     this.serverSocket = serverSocket;
-//
+    //
   }
 
   public int getPort() {
@@ -127,7 +135,7 @@ public class SlimService {
     } catch (java.lang.OutOfMemoryError e) {
       System.err.println("Out of Memory. Aborting");
       e.printStackTrace();
-      System.exit(99);
+      System.exit(EXIT_CODE_OUT_OF_MEMORY);
     } finally {
       serverSocket.close();
     }
@@ -163,15 +171,24 @@ public class SlimService {
     handle(socket);
   }
 
-  @SuppressWarnings("unchecked")
   private static FixtureInteraction createInteraction(String interactionClassName) {
-    if (interactionClassName == null) {
-      return new DefaultInteraction();
+    return SlimService.<FixtureInteraction>createInstance(interactionClassName, new DefaultInteraction());
+  }
+
+  private static NameTranslator createNameTranslator(String nameTranslatorClassName) {
+    return SlimService.<NameTranslator>createInstance(nameTranslatorClassName, new NameTranslatorIdentity());
+  }
+
+  @SuppressWarnings("unchecked")
+  private static <T> T createInstance(String className, T defaultInstance) {
+    if (className == null) {
+      return defaultInstance;
     }
     try {
-      return ((Class<FixtureInteraction>) Class.forName(interactionClassName)).newInstance();
+      return ((Class<T>) Class.forName(className)).newInstance();
     } catch (Exception e) {
       throw new SlimError(e);
     }
   }
+
 }

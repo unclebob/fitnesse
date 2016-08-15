@@ -1,16 +1,15 @@
 package fitnesse.slim.instructions;
 
-import fitnesse.slim.NameTranslator;
-import fitnesse.slim.SlimException;
-
 import java.util.Arrays;
+
+import fitnesse.slim.SlimException;
 
 public class CallAndAssignInstruction extends Instruction {
   public static final String INSTRUCTION = "callAndAssign";
-  private String symbolName;
-  private String instanceName;
-  private String methodName;
-  private Object[] args;
+  private final String symbolName;
+  private final String instanceName;
+  private final String methodName;
+  private final Object[] args;
 
   public CallAndAssignInstruction(String id, String symbolName, String instanceName, String methodName) {
     this(id, symbolName, instanceName, methodName, new Object[]{});
@@ -21,15 +20,6 @@ public class CallAndAssignInstruction extends Instruction {
     this.symbolName = symbolName;
     this.instanceName = instanceName;
     this.methodName = methodName;
-    this.args = args;
-  }
-
-  public CallAndAssignInstruction(String id, String symbolName, String instanceName, String methodName, Object[] args,
-                                  NameTranslator methodNameTranslator) {
-    super(id);
-    this.symbolName = symbolName;
-    this.instanceName = instanceName;
-    this.methodName = methodNameTranslator.translate(methodName);
     this.args = args;
   }
 
@@ -64,7 +54,6 @@ public class CallAndAssignInstruction extends Instruction {
     if (!instanceName.equals(that.instanceName)) return false;
     if (!methodName.equals(that.methodName)) return false;
     return symbolName.equals(that.symbolName);
-
   }
 
   @Override

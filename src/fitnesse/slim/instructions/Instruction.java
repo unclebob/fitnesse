@@ -11,7 +11,7 @@ public abstract class Instruction {
     }
   };
 
-  private String id;
+  private final String id;
 
   public Instruction(String id) {
     this.id = id;
@@ -22,7 +22,6 @@ public abstract class Instruction {
   }
 
   public final InstructionResult execute(InstructionExecutor executor) {
-    
     InstructionResult result;
     try {
       SystemExitSecurityManager.activateIfWanted();

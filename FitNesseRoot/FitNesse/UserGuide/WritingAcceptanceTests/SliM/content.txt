@@ -47,7 +47,7 @@ The Slim test system can be configured using the following properties:
 | slim.pool.size | 10 | The size of the pool of ports to cycle through. By default the ports 8085 up to 8095 are used (''slim.port'' + ''slim.pool.size''). |
 | slim.host | localhost | The host the SLIM server will be running on. This is mostly useful if you're running a remote SLIM server. |
 | slim.flags | | Extra flags to provide to the SLIM server. Arguments supported by the slim service are: !-
--![-v] [-i interactionClass] [-s statementTimeout] [-d] [-ssl parameterClass] |
+-![-v] [-i interactionClass] [-nt nameTranslatorClass] [-s statementTimeout] [-d] [-ssl parameterClass] |
 | slim.timeout | 10 seconds | Connection timeout starting and finishing a test run. |
 | slim.debug.timeout | ''slim.timeout'' | Same as ''slim.timeout'', used when the debug property is set (falls back to ''slim.timeout''). |
 | manually.start.test.runner.on.debug | false | Do not launch a SLIM server if the test is ran in debug mode. |

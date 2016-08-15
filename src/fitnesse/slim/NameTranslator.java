@@ -1,5 +1,6 @@
 package fitnesse.slim;
 
 public interface NameTranslator {
-  String translate(String name);
+  String translateClassName(String name);
+  String translateMethodName(String name);
 }

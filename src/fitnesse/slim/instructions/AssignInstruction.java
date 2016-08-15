@@ -4,8 +4,8 @@ import fitnesse.slim.SlimException;
 
 public class AssignInstruction extends Instruction {
   public static final String INSTRUCTION = "assign";
-  private String symbolName;
-  private Object value;
+  private final String symbolName;
+  private final Object value;
 
   public AssignInstruction(String id, String symbolName, Object value) {
     super(id);

@@ -2,7 +2,7 @@ package fitnesse.slim;
 
 public abstract class SlimFactory {
 
-  public abstract NameTranslator getMethodNameTranslator();
+  public abstract NameTranslator getNameTranslator();
 
   public abstract boolean isVerbose();
 

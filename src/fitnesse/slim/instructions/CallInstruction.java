@@ -1,15 +1,14 @@
 package fitnesse.slim.instructions;
 
-import fitnesse.slim.NameTranslator;
-import fitnesse.slim.SlimException;
-
 import java.util.Arrays;
+
+import fitnesse.slim.SlimException;
 
 public class CallInstruction extends Instruction {
   public static final String INSTRUCTION = "call";
-  private String instanceName;
-  private String methodName;
-  private Object[] args;
+  private final String instanceName;
+  private final String methodName;
+  private final Object[] args;
 
   public CallInstruction(String id, String instanceName, String methodName) {
     this(id, instanceName, methodName, new Object[]{});
@@ -19,14 +18,6 @@ public class CallInstruction extends Instruction {
     super(id);
     this.instanceName = instanceName;
     this.methodName = methodName;
-    this.args = args;
-  }
-
-  public CallInstruction(String id, String instanceName, String methodName, Object[] args,
-                         NameTranslator methodNameTranslator) {
-    super(id);
-    this.instanceName = instanceName;
-    this.methodName = methodNameTranslator.translate(methodName);
     this.args = args;
   }
 
