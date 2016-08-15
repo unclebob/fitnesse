@@ -66,7 +66,7 @@ $ ./gradlew test
 To run the acceptance tests:
 
 ```
-$ ./gradlew acceptanceTests
+$ ./gradlew acceptanceTest
 ```
 
 Direct any questions to the [FitNesse Yahoo group](https://groups.yahoo.com/neo/groups/fitnesse/info).
