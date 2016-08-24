@@ -16,6 +16,14 @@ import fitnesse.wiki.*;
 
 import java.util.*;
 
+import fitnesse.wiki.WikiPageProperties;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import fitnesse.wiki.PageData.*;
+import static fitnesse.wiki.PageData.*;
+
+
 public class VersionSelectionResponder implements SecureResponder {
 
   @Override
@@ -33,6 +41,7 @@ public class VersionSelectionResponder implements SecureResponder {
     HtmlPage html = context.pageFactory.newPage();
     html.setTitle("Version Selection: " + resource);
     html.setPageTitle(new PageTitle("Version Selection", PathParser.parse(resource), pageData.getAttribute(PageData.PropertySUITES)));
+  html.put("lastModified", makeLastModifiedTag(pageData));
     html.put("versions", versions);
     html.setNavTemplate("viewNav");
     html.put("viewLocation", request.getResource());
@@ -41,6 +50,26 @@ public class VersionSelectionResponder implements SecureResponder {
     response.setContent(html.html());
 
     return response;
+  }
+
+  private String makeLastModifiedTag(PageData pageData) {
+    String username = pageData.getAttribute(LAST_MODIFYING_USER);
+    String dateString = pageData.getAttribute(PropertyLAST_MODIFIED);
+  if (dateString == null) dateString ="";
+  if (!dateString.isEmpty()){
+  try {
+    Date date = WikiPageProperties.getTimeFormat().parse(dateString);
+    dateString = " on " + new SimpleDateFormat("MMM dd, yyyy").format(date) + " at " + new SimpleDateFormat("hh:mm:ss a").format(date);
+  }
+  catch (ParseException e) {
+    dateString = " on " + dateString;
+  }
+  }
+  if (username == null || "".equals(username))
+  return "Last modified anonymously" + dateString;
+  else
+  return "Last modified by " + username + dateString;
+
   }
 
   public static List<VersionInfo> getVersionsList(WikiPage page) {

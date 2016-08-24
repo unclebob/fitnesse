@@ -19,7 +19,7 @@ In !-FitNesse-!, tests are expressed as tables of '''input''' data and '''expect
 This style of !-FitNesse-! test table is called a [[Decision Table][<UserGuide.WritingAcceptanceTests.SliM.DecisionTable]], each row represents a complete scenario of example inputs and outputs. Here, the "numerator" and "denominator" columns are for inputs, and the question mark in the "quotient?" column tells !-FitNesse-! that this is our column of expected outputs. Notice our "10/2 = 5.0" scenario. Try reading it as a question: ''"If I give you a numerator of 10 and denominator of 2, do I get back a 5?"''
 
 !3 Running our test table: Click the Test button
-If you are reading this page on a local copy of !-FitNesse-!, run this test table. See the '''Test''' button in the upper-right corner? Click it and see what happens.
+If you are reading this page on a local copy of !-FitNesse-!, run this test table. See the '''Test''' button in the top bar next to the FitNesse logo? Click it and see what happens.
 
 !*** Now, if you're reading this on the web site, ...
 

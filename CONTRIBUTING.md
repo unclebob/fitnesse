@@ -31,7 +31,7 @@ The [GitHub issues](https://github.com/unclebob/fitnesse/issues) section is only
 3.  Please don't rush.  You are never in a hurry with FitNesse.  There are no deadlines.  Keep this code as clean
     as you can.  Maintain the highest pride in your workmanship.  Don't make messes.  See the "Clean Code" book for more.
 
-4.  Whenever you make a change, submit is as a pull request on https://github.com/unclebob/fitnesse. Pull requests will get a milestone "Next release" associated to them when they are merged. This milestone is used to compose the release notes.
+4.  Whenever you make a change, submit it as a pull request on https://github.com/unclebob/fitnesse. Pull requests will get a milestone "Next release" associated to them when they are merged. This milestone is used to compose the release notes.
 
 5.  If you have any questions, ask [Uncle Bob](https://github.com/unclebob).
 

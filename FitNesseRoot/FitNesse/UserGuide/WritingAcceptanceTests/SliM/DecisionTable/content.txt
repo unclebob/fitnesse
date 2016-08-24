@@ -84,7 +84,7 @@ The flow is very simple.
 There's not much more to it than that.
 
 !4 Well, yes there is.
-But forthatyou should look at SymbolsInTables and ValueComparisons
+But for that you should look at SymbolsInTables and ValueComparisons
 
 !4 Exceptions
 When exceptions occur in a decision table, they're displayed inline.

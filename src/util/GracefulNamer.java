@@ -34,7 +34,6 @@ public class GracefulNamer {
     return namer.finalName.toString();
   }
 
-  //todo OH FRATZ!  Graceful names was for java method and instance names, not wiki page names!  Get all this wiki page name stuff out of here.
   public static String regrace(String disgracefulName) {
     final char separator = '.';
     char c = '?';
