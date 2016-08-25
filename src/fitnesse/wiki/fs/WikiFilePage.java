@@ -152,11 +152,11 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
           final Symbol maybeFrontMatter = syntaxTree.getChildren().get(0);
           if (maybeFrontMatter.isType(FrontMatter.symbolType)) {
             properties = mergeWikiPageProperties(properties, maybeFrontMatter);
-            if (syntaxTree.getChildren().size() == 2) {
-              content = syntaxTree.getChildren().get(1).getContent();
+            if (syntaxTree.getChildren().size() > 1) {
+              content = fileContent.substring(maybeFrontMatter.getEndOffset());
             }
           } else {
-            content = maybeFrontMatter.getContent();
+            content = fileContent;
           }
         }
         properties.setLastModificationTime(fileVersion.getLastModificationTime());

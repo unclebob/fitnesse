@@ -149,6 +149,31 @@ public class WikiFilePageTest {
   }
 
   @Test
+  public void loadPageWithEmptyLineInFrontMatter() throws IOException {
+    fileSystem.makeFile(new File("root", "testPage.wiki"),
+      "---\n" +
+        "\n" +
+        "---\n" +
+        "page content");
+    final WikiPage testPage = root.getChildPage("testPage");
+    String content = testPage.getData().getContent();
+    assertThat(content, is("page content"));
+  }
+
+  @Test
+  public void loadPageWithFrontMatterAndDashesInContent() throws IOException {
+    fileSystem.makeFile(new File("root", "testPage.wiki"),
+      "---\n" +
+        "\n" +
+        "---\n" +
+        "\n" +
+        "---\n");
+    final WikiPage testPage = root.getChildPage("testPage");
+    String content = testPage.getData().getContent();
+    assertThat(content, is("\n---\n"));
+  }
+
+  @Test
   public void updateWikiFile() throws IOException {
     File wikiPageFile = new File("root", "testPage.wiki");
     fileSystem.makeFile(wikiPageFile, "page content");

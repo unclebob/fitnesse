@@ -31,8 +31,7 @@ public class FrontMatterTest {
   public void notAValidFrontMatter() {
     assertParses(
         "---\n" +
-        "test" +
-        "---\n",
+        "test---\n",
       "SymbolList[Text]");
   }
 
@@ -67,6 +66,17 @@ public class FrontMatterTest {
   }
 
   @Test
+  public void thirdDashLineIsJustText() {
+    assertParses(
+        "---\n" +
+        "Test\n" +
+        "---\n" +
+        "\n" +
+        "---\n",
+      "SymbolList[FrontMatter[KeyValue[Text, Text]], Text, Text]");
+  }
+
+  @Test
   public void readFrontMatter() {
     final Symbol symbols = parse(
         "---\n" +
@@ -98,6 +108,17 @@ public class FrontMatterTest {
     assertEquals("symbolic-links", symlinks.getChildren().get(0).getContent());
     assertEquals("pageName", firstSymlink.getChildren().get(0).getContent());
     assertEquals(".FrontPage", firstSymlink.getChildren().get(1).getContent());
+  }
+
+  @Test
+  public void parsesWithEmptyLines() {
+    final Symbol symbols = parse("---\n" +
+      "\n" +
+      "---\n" +
+      "\n");
+    Symbol frontMatter = symbols.getChildren().get(0);
+    assertTrue(frontMatter.isType(FrontMatter.symbolType));
+    assertTrue(frontMatter.getChildren().isEmpty());
   }
 
   @Test

@@ -14,7 +14,7 @@ public class FrontMatter extends SymbolType implements Rule, Translation {
     CloseFrontMatter.symbolType, SymbolType.Colon, SymbolType.Whitespace, SymbolType.Newline, SymbolType.Text
   });
 
-  public FrontMatter() {
+  FrontMatter() {
     super("FrontMatter");
     wikiMatcher(new Matcher().startLine().string(FRONT_MATTER_DELIMITER));
     wikiRule(this);
@@ -50,10 +50,12 @@ public class FrontMatter extends SymbolType implements Rule, Translation {
         // Now start filling value
         if (key == null) return Symbol.nothing;
       } else if (symbol.isType(SymbolType.Newline)) {
-        if (addToPrevious)
-          yaml.getChildren().get(yaml.getChildren().size() - 1).add(yamlLine(key, value.trim()));
-        else
-          yaml.add(yamlLine(key, value.trim()));
+        if (key != null) {
+          if (addToPrevious)
+            yaml.getChildren().get(yaml.getChildren().size() - 1).add(yamlLine(key, value.trim()));
+          else
+            yaml.add(yamlLine(key, value.trim()));
+        }
         key = null;
         value = "";
         addToPrevious = false;
