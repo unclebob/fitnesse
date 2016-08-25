@@ -18,5 +18,5 @@ Although FitNesse is about writing acceptance tests, you'll probably want to stu
 |[[Files section][>FilesSection]]                       |''The location for attachments, images, etc.''                                              |
 |[[External HTML pages][>ExternalHtmlPages]]            |''In case you've already written some pages in HTML and want to use then in FitNesse''      |
 
-!3 External editors
+!3 [[External editors][>ExternalEditor]]
 Since FitNesse stores its wiki pages as files on disk, it's also possible to edit pages with a [[external editor][>ExternalEditor]], such as Notepad, Sublime text, Eclipse or !-IntelliJ-!.
