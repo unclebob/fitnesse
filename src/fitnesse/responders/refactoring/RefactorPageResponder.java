@@ -15,10 +15,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 
 public class RefactorPageResponder implements SecureResponder {
 
@@ -33,7 +30,7 @@ public class RefactorPageResponder implements SecureResponder {
       wikiPage = context.getRootPage().getPageCrawler().getPage(path);
       if(wikiPage != null) {
         PageData pageData = wikiPage.getData();
-        tags = pageData.getAttribute(PageData.PropertySUITES);
+        tags = pageData.getAttribute(WikiPageProperty.SUITES);
       }
     }
 

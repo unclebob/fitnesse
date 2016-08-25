@@ -102,7 +102,7 @@ public class FitNesseUtil {
     return context;
   }
 
-  private static File createTemporaryFolder() {
+  public static File createTemporaryFolder() {
     File createdFolder;
     try {
       createdFolder = File.createTempFile("fitnesse", "");

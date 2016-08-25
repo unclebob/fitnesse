@@ -174,7 +174,7 @@ public class Request {
   protected void parseQueryString(String queryString) {
     Matcher match = queryStringPattern.matcher(queryString);
     while (match.find()) {
-      String key = match.group(1);
+      String key = decodeContent(match.group(1));
       String value = decodeContent(match.group(2));
       addUniqueInputString(key, value);
     }

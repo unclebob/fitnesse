@@ -1,14 +1,10 @@
 package fitnesse.wikitext.parser;
 
-import fitnesse.html.HtmlElement;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.SymbolicPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
-import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Test;
+
+import fitnesse.html.HtmlElement;
+import fitnesse.wiki.*;
+import fitnesse.wiki.fs.InMemoryPage;
 
 import static org.junit.Assert.assertEquals;
 
@@ -69,7 +65,7 @@ public class ContentsItemTest {
         WikiSourcePage symWikiPage = new WikiSourcePage(symPage);
 
         ContentsItemBuilder builder = new ContentsItemBuilder(contents, 1, rootPage);
-        assertEquals("<li>" + HtmlElement.endl + "\t" + "<a href=\"SymPage\" class=\"static\">SymPage ></a>" 
+        assertEquals("<li>" + HtmlElement.endl + "\t" + "<a href=\"SymPage\" class=\"static\">SymPage ></a>"
                 + HtmlElement.endl + "</li>" + HtmlElement.endl, builder.buildItem(symWikiPage).html());
     }
 
@@ -89,7 +85,7 @@ public class ContentsItemTest {
 
     private WikiPage withProperties(WikiPage page, String[] propList) throws Exception {
         PageData data = page.getData();
-        WikiPageProperties props = data.getProperties();
+        WikiPageProperty props = data.getProperties();
         for (String aPropList : propList) {
             String[] parts = aPropList.split("=");
             if (parts.length == 1) props.set(parts[0]);

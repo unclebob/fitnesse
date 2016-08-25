@@ -8,7 +8,7 @@ import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.fs.WikiPageProperties;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.Description;

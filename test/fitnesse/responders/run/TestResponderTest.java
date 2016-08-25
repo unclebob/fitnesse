@@ -8,6 +8,12 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
@@ -22,31 +28,28 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.testHistory.ExecutionLogResponder;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.WikiPageProperties;
-import fitnesse.wiki.WikiPageUtil;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import fitnesse.util.Clock;
 import fitnesse.util.DateAlteringClock;
 import fitnesse.util.DateTimeUtil;
-import util.FileUtil;
 import fitnesse.util.XmlUtil;
+import fitnesse.wiki.*;
+import util.FileUtil;
 
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
+import static fitnesse.util.XmlUtil.getElementByTagName;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.*;
-import static util.RegexTestCase.*;
-import static fitnesse.util.XmlUtil.getElementByTagName;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
+import static util.RegexTestCase.divWithIdAndContent;
 
 public class TestResponderTest {
   private static final String TEST_TIME = "12/5/2008 01:19:00";
@@ -487,7 +490,7 @@ public class TestResponderTest {
     WikiPageUtil.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
 
     PageData data = testPage.getData();
-    WikiPageProperties properties = data.getProperties();
+    WikiPageProperty properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "Test Page tags");
     testPage.commit(data);
 

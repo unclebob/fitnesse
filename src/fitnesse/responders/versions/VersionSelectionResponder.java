@@ -2,26 +2,27 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.versions;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.html.template.HtmlPage;
-import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.*;
 
-import java.util.*;
-
-import fitnesse.wiki.WikiPageProperties;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import fitnesse.wiki.PageData.*;
-import static fitnesse.wiki.PageData.*;
+import static fitnesse.wiki.PageData.LAST_MODIFYING_USER;
+import static fitnesse.wiki.PageData.PropertyLAST_MODIFIED;
 
 
 public class VersionSelectionResponder implements SecureResponder {
@@ -58,7 +59,7 @@ public class VersionSelectionResponder implements SecureResponder {
   if (dateString == null) dateString ="";
   if (!dateString.isEmpty()){
   try {
-    Date date = WikiPageProperties.getTimeFormat().parse(dateString);
+    Date date = WikiPageProperty.getTimeFormat().parse(dateString);
     dateString = " on " + new SimpleDateFormat("MMM dd, yyyy").format(date) + " at " + new SimpleDateFormat("hh:mm:ss a").format(date);
   }
   catch (ParseException e) {

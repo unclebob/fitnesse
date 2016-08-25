@@ -12,11 +12,8 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
-import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.*;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,7 +35,7 @@ public class EditResponderTest {
   public void testResponse() throws Exception {
     WikiPage page= WikiPageUtil.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
     PageData data = page.getData();
-    WikiPageProperties properties = data.getProperties();
+    WikiPageProperty properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "Edit Page tags");
     page.commit(data);
 

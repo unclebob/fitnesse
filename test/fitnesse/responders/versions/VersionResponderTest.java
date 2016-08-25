@@ -14,12 +14,8 @@ import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
-import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.*;
+
 import org.junit.Test;
 
 public class VersionResponderTest {
@@ -30,8 +26,8 @@ public class VersionResponderTest {
     FitNesseContext context = FitNesseUtil.makeTestContext();
     WikiPage page = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse(pageName), "original content ${requestParam}");
     PageData data = page.getData();
-    
-    WikiPageProperties properties = data.getProperties();
+
+    WikiPageProperty properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "New Page tags");
     data.setContent("new stuff");
     VersionInfo commitRecord = last(page.getVersions());

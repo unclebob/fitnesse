@@ -1,17 +1,11 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.wiki;
+package fitnesse.wiki.fs;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Logger;
 
 import fitnesse.util.XmlUtil;
@@ -19,11 +13,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import fitnesse.util.Clock;
 
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPageLoadException;
+import fitnesse.wiki.WikiPageProperty;
+
+/**
+ * These are the (old) page properties, used by the FileSystemPage.
+ */
 public class WikiPageProperties extends WikiPageProperty implements Serializable {
   private static final Logger LOG = Logger.getLogger(WikiPageProperties.class.getName());
-
   private static final long serialVersionUID = 1L;
 
   public WikiPageProperties() {
@@ -39,9 +38,8 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
     loadFromRootElement(rootElement);
   }
 
-  public WikiPageProperties(WikiPageProperties that) {
-    if (that != null && that.children != null)
-      children = new TreeMap<>(that.children);
+  public WikiPageProperties(WikiPageProperty that) {
+    super(that);
   }
 
   public void loadFromXmlStream(InputStream inputStream) {
@@ -121,9 +119,8 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
       if (value != null)
         element.setAttribute("value", value);
 
-      Set<?> childKeys = context.keySet();
-      for (Object childKey : childKeys) {
-        String childKeyAsString = (String) childKey;
+      Set<String> childKeys = context.keySet();
+      for (String childKeyAsString : childKeys) {
         WikiPageProperty child = context.getProperty(childKeyAsString);
         if (child == null) {
           LOG.warning("Property key \"" + childKeyAsString + "\" has null value for {" + context + "}");
@@ -141,21 +138,4 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
   public String toString() {
     return super.toString("WikiPageProperties", 0);
   }
-
-  public Date getLastModificationTime() {
-    String dateStr = get(PageData.PropertyLAST_MODIFIED);
-    if (dateStr == null)
-      return Clock.currentDate();
-    else
-      try {
-        return getTimeFormat().parse(dateStr);
-      } catch (ParseException e) {
-        throw new IllegalStateException("Unable to parse date '" + dateStr + "'", e);
-      }
-  }
-
-  public void setLastModificationTime(Date date) {
-    set(PageData.PropertyLAST_MODIFIED, getTimeFormat().format(date));
-  }
-
 }

@@ -32,28 +32,7 @@ public class DeleteFileResponder implements SecureResponder {
       return new ErrorResponder("Invalid path: " + pathName.getName()).makeResponse(context, request);
     }
 
-    context.versionsController.delete(new FileVersion() {
-      @Override
-      public File getFile() {
-        return pathName;
-      }
-
-      @Override
-      public InputStream getContent() throws IOException {
-        return null;
-      }
-
-      @Override
-      public String getAuthor() {
-        String user = request.getAuthorizationUsername();
-        return user != null ? user : "";
-      }
-
-      @Override
-      public Date getLastModificationTime() {
-        return new Date();
-      }
-    });
+    context.versionsController.delete(pathName);
 
     response.redirect(context.contextRoot, resource);
     return response;

@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.wiki;
+package fitnesse.wiki.fs;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -11,6 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fitnesse.util.XmlUtil;
+import fitnesse.wiki.*;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -43,7 +45,7 @@ public class PageXmlizer {
     Element dataElement = document.createElement("data");
     XmlUtil.addCdataNode(dataElement, "content", data.getContent());
 
-    Element propertiesElement = data.getProperties().makeRootElement(document);
+    Element propertiesElement = new WikiPageProperties(data.getProperties()).makeRootElement(document);
     dataElement.appendChild(propertiesElement);
 
     document.appendChild(dataElement);

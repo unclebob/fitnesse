@@ -10,6 +10,8 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperty;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +52,7 @@ public class WikiImportingResponderAuthenticationTest {
 
   private void makeSecurePage(WikiPage page) throws Exception {
     PageData data = page.getData();
-    data.setAttribute(PageData.PropertySECURE_READ);
+    data.setAttribute(WikiPageProperty.SECURE_READ);
     page.commit(data);
   }
 

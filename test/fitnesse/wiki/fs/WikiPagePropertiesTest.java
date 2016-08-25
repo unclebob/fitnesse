@@ -1,25 +1,22 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.wiki;
+package fitnesse.wiki.fs;
+
+import java.io.*;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Set;
+import org.junit.Before;
+import org.junit.Test;
+
+import fitnesse.util.Clock;
+import fitnesse.wiki.WikiPageProperty;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.NotSerializableException;
-import java.io.ObjectOutputStream;
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.Set;
-
-import org.junit.Before;
-import org.junit.Test;
-import fitnesse.util.Clock;
 
 public class WikiPagePropertiesTest {
   private WikiPageProperties properties;
@@ -122,7 +119,7 @@ public class WikiPagePropertiesTest {
     assertEquals(format.format(Clock.currentDate()), format.format(props.getLastModificationTime()));
     Date date = format.parse("20040101000001");
     props.setLastModificationTime(date);
-    assertEquals("20040101000001", props.get(PageData.PropertyLAST_MODIFIED));
+    assertEquals("20040101000001", props.get(WikiPageProperty.LAST_MODIFIED));
     assertEquals(date, props.getLastModificationTime());
   }
 

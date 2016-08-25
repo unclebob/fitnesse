@@ -1,23 +1,26 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.wiki;
+package fitnesse.wiki.fs;
+
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import org.junit.Before;
+import org.junit.Test;
+import org.w3c.dom.Document;
+
+import fitnesse.util.XmlUtil;
+import fitnesse.wiki.*;
+import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.fs.PageXmlizer;
+import fitnesse.wiki.fs.WikiPageProperties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static util.RegexTestCase.assertNotSubString;
 import static util.RegexTestCase.assertSubString;
-
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-
-import fitnesse.util.XmlUtil;
-import fitnesse.wiki.fs.InMemoryPage;
-import org.junit.Before;
-import org.junit.Test;
-import org.w3c.dom.Document;
 
 public class PageXmlizerTest {
   private PageXmlizer xmlizer;
@@ -214,7 +217,7 @@ public class PageXmlizerTest {
   public void testXmlizingData() throws Exception {
     PageData data = root.getData();
     data.setContent("this is some content.");
-    WikiPageProperties properties = data.getProperties();
+    WikiPageProperty properties = data.getProperties();
 
     Document doc = xmlizer.xmlize(data);
     String marshaledValue = XmlUtil.xmlAsString(doc);
@@ -223,7 +226,7 @@ public class PageXmlizerTest {
     assertSubString("CDATA", marshaledValue);
     assertSubString("this is some content", marshaledValue);
 
-    String[] propertyLines = properties.toXml().split("\n");
+    String[] propertyLines = new WikiPageProperties(properties).toXml().split("\n");
     for (String propertyLine : propertyLines) {
       String trimmedPropertyLine = propertyLine.trim();
       assertSubString(trimmedPropertyLine, marshaledValue);
@@ -234,13 +237,13 @@ public class PageXmlizerTest {
   public void testDeXmlizingPageData() throws Exception {
     PageData data = root.getData();
     data.setContent("this is some content.");
-    WikiPageProperties properties = data.getProperties();
+    WikiPageProperty properties = new WikiPageProperties(data.getProperties());
 
     PageData receivedData = xmlizer.deXmlizeData(xmlizer.xmlize(data));
     assertNotSame(data, receivedData);
 
     assertEquals("this is some content.", receivedData.getContent());
-    WikiPageProperties receivedProperties = receivedData.getProperties();
+    WikiPageProperty receivedProperties = receivedData.getProperties();
     assertNotSame(properties, receivedProperties);
     assertEquals(properties.toString(), receivedProperties.toString());
   }

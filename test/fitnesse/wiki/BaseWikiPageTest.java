@@ -2,21 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.io.File;
+import java.util.List;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import fitnesse.wiki.fs.*;
+import util.FileUtil;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.util.List;
-
-import fitnesse.wiki.fs.FileSystemPage;
-import fitnesse.wiki.fs.InMemoryPage;
-import fitnesse.wiki.fs.MemoryFileSystem;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import util.FileUtil;
 
 public class BaseWikiPageTest {
   private WikiPage linkingPage;
@@ -74,15 +72,15 @@ public class BaseWikiPageTest {
     assertEquals(SymbolicPage.class, symPage.getClass());
 
     WikiPage realPage = ((SymbolicPage) symPage).getRealPage();
-    assertEquals(FileSystemPage.class, realPage.getClass());
+    assertEquals(WikiFilePage.class, realPage.getClass());
 
-    assertEquals(new File("testDir/ExternalRoot").getCanonicalFile(), ((FileSystemPage) realPage).getFileSystemPath());
+    assertEquals(new File("testDir/ExternalRoot").getCanonicalFile(), ((FileBasedWikiPage) realPage).getFileSystemPath());
     assertEquals("ExternalRoot", realPage.getName());
   }
 
   private void createLink(String linkedPagePath) throws Exception {
     PageData data = linkingPage.getData();
-    WikiPageProperties properties = data.getProperties();
+    WikiPageProperty properties = data.getProperties();
     properties.set(SymbolicPage.PROPERTY_NAME);
     properties.getProperty(SymbolicPage.PROPERTY_NAME).set("SymLink", linkedPagePath);
     linkingPage.commit(data);
