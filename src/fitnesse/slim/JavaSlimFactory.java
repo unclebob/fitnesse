@@ -5,13 +5,14 @@ import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 
 public class JavaSlimFactory extends SlimFactory {
 
-  private final NameTranslator identityTranslator = new NameTranslatorIdentity();
+  private final NameTranslator nameTranslator;
   private final Integer timeout;
   private final boolean verbose;
   private final FixtureInteraction interaction;
 
-  private JavaSlimFactory(FixtureInteraction interaction, Integer timeout, boolean verbose) {
+  private JavaSlimFactory(FixtureInteraction interaction, NameTranslator nameTranslator, Integer timeout, boolean verbose) {
     this.interaction = interaction;
+    this.nameTranslator = nameTranslator;
     this.timeout = timeout;
     this.verbose = verbose;
   }
@@ -26,8 +27,8 @@ public class JavaSlimFactory extends SlimFactory {
   }
 
   @Override
-  public NameTranslator getMethodNameTranslator() {
-    return getIdentityTranslator();
+  public NameTranslator getNameTranslator() {
+    return nameTranslator;
   }
 
   @Override
@@ -35,21 +36,17 @@ public class JavaSlimFactory extends SlimFactory {
     return verbose;
   }
 
-  private NameTranslator getIdentityTranslator() {
-    return identityTranslator;
-  }
-
   // Called from main
   public static SlimFactory createJavaSlimFactory(SlimService.Options options) {
-    return createJavaSlimFactory(options.interaction, options.statementTimeout, options.verbose);
+    return createJavaSlimFactory(options.interaction, options.nameTranslator, options.statementTimeout, options.verbose);
   }
 
-  public static SlimFactory createJavaSlimFactory(FixtureInteraction interaction, Integer timeout, boolean verbose) {
-    return new JavaSlimFactory(interaction, timeout, verbose);
+  public static SlimFactory createJavaSlimFactory(FixtureInteraction interaction, NameTranslator nameTranslator, Integer timeout, boolean verbose) {
+    return new JavaSlimFactory(interaction, nameTranslator, timeout, verbose);
   }
 
   // Only used in tests
   public static SlimFactory createJavaSlimFactory() {
-    return new JavaSlimFactory(new DefaultInteraction(), null, false);
+    return new JavaSlimFactory(new DefaultInteraction(), new NameTranslatorIdentity(), null, false);
   }
 }

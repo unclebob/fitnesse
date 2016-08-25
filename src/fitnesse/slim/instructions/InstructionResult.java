@@ -3,8 +3,8 @@ package fitnesse.slim.instructions;
 import fitnesse.slim.SlimException;
 
 public class InstructionResult {
-  private String id;
-  private Object result;
+  private final String id;
+  private final Object result;
 
   public InstructionResult(String id, Object result) {
     this.id = id;

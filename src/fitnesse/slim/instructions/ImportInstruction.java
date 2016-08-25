@@ -4,7 +4,7 @@ import fitnesse.slim.SlimException;
 
 public class ImportInstruction extends Instruction {
   public static final String INSTRUCTION = "import";
-  private String path;
+  private final String path;
 
   public ImportInstruction(String id, String path) {
     super(id);

@@ -1,6 +1,7 @@
 package fitnesse.testsystems.slim;
 
 import fitnesse.slim.JavaSlimFactory;
+import fitnesse.slim.NameTranslatorIdentity;
 import fitnesse.slim.SlimServer;
 import fitnesse.slim.SlimService;
 import fitnesse.slim.fixtureInteraction.DefaultInteraction;
@@ -32,7 +33,7 @@ public class InProcessSlimClientBuilder extends ClientBuilder<SlimClient> {
   }
 
   protected SlimServer createSlimServer(Integer timeout, boolean verbose) {
-    return JavaSlimFactory.createJavaSlimFactory(new DefaultInteraction(), timeout, verbose).getSlimServer();
+    return JavaSlimFactory.createJavaSlimFactory(new DefaultInteraction(), new NameTranslatorIdentity(), timeout, verbose).getSlimServer();
   }
 
   protected String[] getSlimFlags() {

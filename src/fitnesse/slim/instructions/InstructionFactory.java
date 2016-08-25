@@ -9,68 +9,64 @@ import fitnesse.slim.SlimServer;
 import static java.lang.String.format;
 
 public class InstructionFactory {
-  private InstructionFactory() {
+  private final NameTranslator nameTranslator;
+
+  public InstructionFactory(NameTranslator nameTranslator) {
+    this.nameTranslator = nameTranslator;
   }
 
-  public static Instruction createInstruction(List<Object> words, NameTranslator methodNameTranslator) {
+  public Instruction createInstruction(List<Object> words) {
     String id = getWord(words, 0);
     String operation = getWord(words, 1);
-    Instruction instruction;
 
     if (MakeInstruction.INSTRUCTION.equalsIgnoreCase(operation)) {
-      instruction = createMakeInstruction(id, words);
+      return createMakeInstruction(id, words);
     } else if (AssignInstruction.INSTRUCTION.equalsIgnoreCase(operation)) {
-      instruction = createAssignInstruction(id, words);
+      return createAssignInstruction(id, words);
     } else if (CallAndAssignInstruction.INSTRUCTION.equalsIgnoreCase(operation)) {
-      instruction = createCallAndAssignInstruction(id, words, methodNameTranslator);
+      return createCallAndAssignInstruction(id, words);
     } else if (CallInstruction.INSTRUCTION.equalsIgnoreCase(operation)) {
-      instruction = createCallInstruction(id, words, methodNameTranslator);
+      return createCallInstruction(id, words);
     } else if (ImportInstruction.INSTRUCTION.equalsIgnoreCase(operation)) {
-      instruction = createImportInstruction(id, words);
-    } else {
-      instruction = createInvalidInstruction(id, operation);
+      return createImportInstruction(id, words);
     }
-
-    return instruction;
+    return createInvalidInstruction(id, operation);
   }
 
-  private static MakeInstruction createMakeInstruction(String id, List<Object> words) {
+  private MakeInstruction createMakeInstruction(String id, List<Object> words) {
     String instanceName = getWord(words, 2);
-    String className = getWord(words, 3);
+    String className = nameTranslator.translateClassName(getWord(words, 3));
     Object[] args = makeArgsArray(words, 4);
     return new MakeInstruction(id, instanceName, className, args);
   }
 
-  private static AssignInstruction createAssignInstruction(String id, List<Object> words) {
+  private AssignInstruction createAssignInstruction(String id, List<Object> words) {
     String symbolName = getWord(words, 2);
     String value = getWord(words, 3);
     return new AssignInstruction(id, symbolName, value);
   }
 
-  private static CallAndAssignInstruction createCallAndAssignInstruction(String id,
-                                                                         List<Object> words,
-                                                                         NameTranslator methodNameTranslator) {
+  private CallAndAssignInstruction createCallAndAssignInstruction(String id, List<Object> words) {
     String symbolName = getWord(words, 2);
     String instanceName = getWord(words, 3);
-    String methodName = getWord(words, 4);
+    String methodName = nameTranslator.translateMethodName(getWord(words, 4));
     Object[] args = makeArgsArray(words, 5);
-    return new CallAndAssignInstruction(id, symbolName, instanceName, methodName, args, methodNameTranslator);
+    return new CallAndAssignInstruction(id, symbolName, instanceName, methodName, args);
   }
 
-  private static CallInstruction createCallInstruction(String id, List<Object> words,
-                                                       NameTranslator methodNameTranslator) {
+  private CallInstruction createCallInstruction(String id, List<Object> words) {
     String instanceName = getWord(words, 2);
-    String methodName = getWord(words, 3);
+    String methodName = nameTranslator.translateMethodName(getWord(words, 3));
     Object[] args = makeArgsArray(words, 4);
-    return new CallInstruction(id, instanceName, methodName, args, methodNameTranslator);
+    return new CallInstruction(id, instanceName, methodName, args);
   }
 
-  private static ImportInstruction createImportInstruction(String id, List<Object> words) {
+  private ImportInstruction createImportInstruction(String id, List<Object> words) {
     String path = getWord(words, 2);
     return new ImportInstruction(id, path);
   }
 
-  private static InvalidInstruction createInvalidInstruction(String id, String operation) {
+  private InvalidInstruction createInvalidInstruction(String id, String operation) {
     return new InvalidInstruction(id, operation);
   }
 

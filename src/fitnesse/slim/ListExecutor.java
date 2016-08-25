@@ -2,21 +2,21 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import fitnesse.slim.instructions.Instruction;
-import fitnesse.slim.instructions.InstructionFactory;
-import fitnesse.slim.instructions.InstructionResult;
+import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import fitnesse.slim.instructions.Instruction;
+import fitnesse.slim.instructions.InstructionFactory;
+import fitnesse.slim.instructions.InstructionResult;
 
 /**
  * executes a list of SLIM statements, and returns a list of return values.
  */
 public class ListExecutor {
   private StatementExecutorInterface executor;
-  private NameTranslator methodNameTranslator;
+  private InstructionFactory instructionFactory;
   private boolean verbose;
 
   public ListExecutor(SlimFactory slimFactory) {
@@ -26,7 +26,7 @@ public class ListExecutor {
   protected ListExecutor(boolean verbose, SlimFactory slimFactory) {
     this.verbose = verbose;
     this.executor = slimFactory.getStatementExecutor();
-    this.methodNameTranslator = slimFactory.getMethodNameTranslator();
+    this.instructionFactory = new InstructionFactory(slimFactory.getNameTranslator());
   }
 
   protected void setVerbose() {
@@ -45,7 +45,7 @@ public class ListExecutor {
     }
 
     public Object executeStatement(Object statement) {
-      Instruction instruction = InstructionFactory.createInstruction(asStatementList(statement), methodNameTranslator);
+      Instruction instruction = instructionFactory.createInstruction(asStatementList(statement));
       InstructionResult result = instruction.execute(executor);
       Object resultObject;
       if (result.hasResult() || result.hasError()) {
