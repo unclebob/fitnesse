@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<properties>
+<Edit/>
+<Files/>
+<Help>This file contains text samples which will be used to auto complete words in the wiki plain editor once you press [ctrl][space]. Each line contains one textblock.</Help>
+<Properties/>
+<RecentChanges/>
+<Refactor/>
+<Search/>
+<Suites>beta, codemirror, wiki</Suites>
+<Versions/>
+<WhereUsed/>
+</properties>
