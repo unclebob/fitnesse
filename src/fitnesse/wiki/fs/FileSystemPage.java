@@ -20,7 +20,7 @@ import static java.lang.String.format;
 /**
  * This is the "old style" page format. content is stored as: WikiPageName/content.txt and WikiPageName/properties.xml.
  *
- * @see {@link WikiFilePage}
+ * @see fitnesse.wiki.fs.WikiFilePage
  */
 public class FileSystemPage extends BaseWikitextPage implements FileBasedWikiPage {
 
