@@ -24,7 +24,7 @@ public interface VersionsController {
    * @param files Files to look for.
    * @return history
    */
-  Collection<? extends VersionInfo> history(File... files);
+  Collection<VersionInfo> history(File... files);
 
   /**
    * Store files as one revision.
@@ -58,5 +58,5 @@ public interface VersionsController {
    *
    * @param files files to delete
    */
-  void delete(FileVersion... files) throws IOException;
+  void delete(File... files) throws IOException;
 }

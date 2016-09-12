@@ -51,7 +51,7 @@ public class SecureOperationTest {
 
   private void makeSecure(WikiPage securePage) throws Exception {
     PageData data = securePage.getData();
-    data.setAttribute(PageData.PropertySECURE_READ);
+    data.setAttribute(WikiPageProperty.SECURE_READ);
     securePage.commit(data);
   }
 

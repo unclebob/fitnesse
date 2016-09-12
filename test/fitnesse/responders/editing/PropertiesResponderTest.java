@@ -2,6 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.junit.Before;
+import org.junit.Test;
+
+import fitnesse.FitNesseContext;
+import fitnesse.Responder;
+import fitnesse.http.MockRequest;
+import fitnesse.http.SimpleResponse;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.*;
+
 import static fitnesse.wiki.PageData.PropertyHELP;
 import static fitnesse.wiki.PageData.PropertySUITES;
 import static org.junit.Assert.assertEquals;
@@ -12,25 +24,6 @@ import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertMatches;
 import static util.RegexTestCase.assertNotSubString;
 import static util.RegexTestCase.assertSubString;
-
-import fitnesse.FitNesseContext;
-import fitnesse.Responder;
-import fitnesse.http.MockRequest;
-import fitnesse.http.SimpleResponse;
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PageType;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.SymbolicPage;
-import fitnesse.wiki.WikiImportProperty;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
-import fitnesse.wiki.WikiPageProperty;
-import fitnesse.wiki.WikiPageUtil;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.junit.Before;
-import org.junit.Test;
 
 public class PropertiesResponderTest {
   private FitNesseContext context;
@@ -55,7 +48,7 @@ public class PropertiesResponderTest {
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "");
     PageData data = page.getData();
     data.setContent("some content");
-    WikiPageProperties properties = data.getProperties();
+    WikiPageProperty properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "Page Tags");
     properties.set("Test", "true");
     page.commit(data);
@@ -77,7 +70,7 @@ public class PropertiesResponderTest {
     for (String attribute : new String[]{"Search", "Edit", "Properties", "Versions", "Refactor", "WhereUsed", "RecentChanges"})
       assertCheckboxChecked(attribute, content);
 
-    for (String attribute : new String[]{"Prune", PageData.PropertySECURE_READ, PageData.PropertySECURE_WRITE, PageData.PropertySECURE_TEST})
+    for (String attribute : new String[]{"Prune", WikiPageProperty.SECURE_READ, WikiPageProperty.SECURE_WRITE, WikiPageProperty.SECURE_TEST})
       assertCheckboxNotChecked(content, attribute);
   }
 
@@ -93,7 +86,7 @@ public class PropertiesResponderTest {
   public void testJsonResponse() throws Exception {
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
     PageData data = page.getData();
-    WikiPageProperties properties = data.getProperties();
+    WikiPageProperty properties = data.getProperties();
     properties.set(PageType.TEST.toString(), "true");
     page.commit(data);
 
@@ -119,18 +112,18 @@ public class PropertiesResponderTest {
     assertFalse(jsonObject.has("Help"));
     assertFalse(jsonObject.getBoolean("Suite"));
     assertFalse(jsonObject.getBoolean("Prune"));
-    assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_READ));
-    assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_WRITE));
-    assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_TEST));
+    assertFalse(jsonObject.getBoolean(WikiImportProperty.SECURE_READ));
+    assertFalse(jsonObject.getBoolean(WikiImportProperty.SECURE_WRITE));
+    assertFalse(jsonObject.getBoolean(WikiImportProperty.SECURE_TEST));
   }
 
   @Test
   public void testJsonResponseWithHelpTextAndTags() throws Exception {
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("PageOne"));
     PageData data = page.getData();
-    WikiPageProperties properties = data.getProperties();
-    properties.set(PropertyHELP, "help text");
-    properties.set(PropertySUITES, "foo,bar");
+    WikiPageProperty properties = data.getProperties();
+    properties.set(WikiPageProperty.HELP, "help text");
+    properties.set(WikiPageProperty.SUITES, "foo,bar");
     page.commit(data);
 
     MockRequest request = new MockRequest();
@@ -151,9 +144,9 @@ public class PropertiesResponderTest {
     assertFalse(jsonObject.getBoolean("Test"));
     assertFalse(jsonObject.getBoolean("Suite"));
     assertFalse(jsonObject.getBoolean("Prune"));
-    assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_READ));
-    assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_WRITE));
-    assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_TEST));
+    assertFalse(jsonObject.getBoolean(WikiPageProperty.SECURE_READ));
+    assertFalse(jsonObject.getBoolean(WikiPageProperty.SECURE_WRITE));
+    assertFalse(jsonObject.getBoolean(WikiPageProperty.SECURE_TEST));
   }
 
 
@@ -262,7 +255,7 @@ public class PropertiesResponderTest {
     WikiPageUtil.addPage(pageOne, PathParser.parse("ChildOne"), "");                //...page must exist!
 
     PageData data = page.getData();
-    WikiPageProperties props = data.getProperties();
+    WikiPageProperty props = data.getProperties();
     WikiPageProperty symProp = props.set(SymbolicPage.PROPERTY_NAME);
     symProp.set("InternalAbsPage", ".PageOne.ChildOne");
     symProp.set("InternalRelPage", "PageOne.ChildOne");
@@ -292,7 +285,7 @@ public class PropertiesResponderTest {
     WikiPageUtil.addPage(page, PathParser.parse("OtherChild"), "");
 
     PageData data = child.getData();
-    WikiPageProperties props = data.getProperties();
+    WikiPageProperty props = data.getProperties();
     WikiPageProperty symProp = props.set(SymbolicPage.PROPERTY_NAME);
     symProp.set("InternalBackPage", "<SomePage.OtherChild");
     page.commit(data);
@@ -404,7 +397,7 @@ public class PropertiesResponderTest {
   public void testSuitesDisplayed() throws Exception {
     WikiPage page = getContentFromSimplePropertiesPage();
     PageData data = page.getData();
-    data.setAttribute(PageData.PropertySUITES, "smoke");
+    data.setAttribute(WikiPageProperty.SUITES, "smoke");
     page.commit(data);
 
     getPropertiesContentFromPage(page);

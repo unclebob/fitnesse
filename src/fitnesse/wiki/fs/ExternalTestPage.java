@@ -45,11 +45,6 @@ public class ExternalTestPage extends BaseWikitextPage {
   }
 
   @Override
-  public boolean hasChildPage(String pageName) {
-    return false;
-  }
-
-  @Override
   public VersionInfo commit(PageData data) {
     return null;
   }

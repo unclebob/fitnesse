@@ -19,7 +19,7 @@ tmp/*
 FitNesseRoot/properties
 FitNesseRoot/ErrorLogs/*
 FitNesseRoot/files/testResults/*
-FitNesseRoot/RecentChanges
+FitNesseRoot/RecentChanges*
 desktop.ini
 junit*.properties
 FitNesseRoot/updateDoNotCopyOverList

@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import fitnesse.util.Clock;
+import fitnesse.wiki.fs.WikiPageProperties;
 import fitnesse.wikitext.parser.CompositeVariableSource;
 import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.Maybe;
@@ -11,6 +13,8 @@ import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wikitext.parser.WikiSourcePage;
+
+import static fitnesse.wiki.PageType.STATIC;
 
 /**
  * This class adds support for FitNesse wiki text ({@link fitnesse.wikitext.parser.Parser}).
@@ -89,6 +93,27 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
             new ParentPageVariableSource(page),
             page.variableSource);
     return new ParsingPage(new WikiSourcePage(page), compositeVariableSource, cache);
+  }
+
+  public WikiPageProperty defaultPageProperties() {
+    WikiPageProperties properties = new WikiPageProperties();
+    properties.set(WikiPageProperty.EDIT);
+    properties.set(WikiPageProperty.PROPERTIES);
+    properties.set(WikiPageProperty.REFACTOR);
+    properties.set(WikiPageProperty.WHERE_USED);
+    properties.set(WikiPageProperty.RECENT_CHANGES);
+    properties.set(WikiPageProperty.FILES);
+    properties.set(WikiPageProperty.VERSIONS);
+    properties.set(WikiPageProperty.SEARCH);
+    properties.setLastModificationTime(Clock.currentDate());
+
+    PageType pageType = PageType.getPageTypeForPageName(getName());
+
+    if (STATIC.equals(pageType))
+      return properties;
+
+    properties.set(pageType.toString());
+    return properties;
   }
 
   public static class UserVariableSource implements VariableSource {

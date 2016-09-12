@@ -244,7 +244,7 @@ bintray {
   publications = ['FitNesseRelease']
   publish = true
   pkg {
-    repo = System.getenv("BINTRAY_API_KEY") ?: 'edge'
+    repo = System.getenv("BINTRAY_REPO") ?: 'edge'
     name = 'fitnesse'
     userOrg = 'fitnesse'
     licenses = ['CPL-1.0']

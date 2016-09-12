@@ -18,6 +18,11 @@ public abstract class BaseWikiPage implements WikiPage {
   }
 
   @Override
+  public boolean hasChildPage(final String pageName) {
+    return getChildPage(pageName) != null;
+  }
+
+  @Override
   public PageCrawler getPageCrawler() {
     return new PageCrawlerImpl(this);
   }

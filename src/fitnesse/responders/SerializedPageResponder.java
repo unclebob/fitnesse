@@ -14,7 +14,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.util.XmlUtil;
-import fitnesse.wiki.PageXmlizer;
+import fitnesse.wiki.fs.PageXmlizer;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiPage;

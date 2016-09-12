@@ -60,7 +60,7 @@ public class SymbolicLinkResponder implements Responder {
     String linkToRemove = request.getInput("removal");
 
     PageData data = page.getData();
-    WikiPageProperties properties = data.getProperties();
+    WikiPageProperty properties = data.getProperties();
     WikiPageProperty symLinks = getSymLinkProperty(properties);
     symLinks.remove(linkToRemove);
     if (symLinks.keySet().isEmpty())
@@ -74,7 +74,7 @@ public class SymbolicLinkResponder implements Responder {
     newName = (String) request.getInput("newname");
 
     PageData data = page.getData();
-    WikiPageProperties properties = data.getProperties();
+    WikiPageProperty properties = data.getProperties();
     WikiPageProperty symLinks = getSymLinkProperty(properties);
 
     if (isValidWikiPageName(newName, symLinks)) {
@@ -91,7 +91,7 @@ public class SymbolicLinkResponder implements Responder {
     String linkPath = StringUtils.trim(request.getInput("linkPath"));
 
     PageData data = page.getData();
-    WikiPageProperties properties = data.getProperties();
+    WikiPageProperty properties = data.getProperties();
     WikiPageProperty symLinks = getSymLinkProperty(properties);
     if (isValidLinkPathName(linkPath) && isValidWikiPageName(linkName, symLinks)) {
       symLinks.set(linkName, linkPath);
@@ -160,7 +160,7 @@ public class SymbolicLinkResponder implements Responder {
     return !start.getPageCrawler().pageExists(path);
   }
 
-  private WikiPageProperty getSymLinkProperty(WikiPageProperties properties) {
+  private WikiPageProperty getSymLinkProperty(WikiPageProperty properties) {
     WikiPageProperty symLinks = properties.getProperty(SymbolicPage.PROPERTY_NAME);
     if (symLinks == null)
       symLinks = properties.set(SymbolicPage.PROPERTY_NAME);

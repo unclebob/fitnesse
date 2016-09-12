@@ -1,7 +1,6 @@
 package fitnesse.wiki.fs;
 
 import fitnesse.wiki.BaseWikitextPage;
-import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wikitext.parser.VariableSource;
 
 import java.io.File;
@@ -31,11 +30,6 @@ public class ExternalSuitePage extends BaseWikitextPage {
   @Override
   public WikiPage addChildPage(String name) {
     return null;
-  }
-
-  @Override
-  public boolean hasChildPage(String pageName) {
-    return getChildPage(pageName) != null;
   }
 
   @Override

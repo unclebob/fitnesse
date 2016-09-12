@@ -3,11 +3,12 @@
 package fitnesse.authentication;
 
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPageProperty;
 
 public class SecureReadOperation extends SecurePageOperation {
   @Override
   protected String getSecurityMode() {
-    return PageData.PropertySECURE_READ;
+    return WikiPageProperty.SECURE_READ;
   }
 
 }

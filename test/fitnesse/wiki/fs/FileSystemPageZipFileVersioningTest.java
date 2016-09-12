@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.NoSuchVersionException;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -23,7 +24,6 @@ import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
 import org.junit.After;
@@ -33,32 +33,28 @@ import util.FileUtil;
 
 public class FileSystemPageZipFileVersioningTest {
   public static final int MAX_HISTORY_DEPTH = 3;
-  public FileSystemPage page;
+  public FileBasedWikiPage page;
   private VersionInfo firstVersion;
   private VersionInfo secondVersion;
   private WikiPage root;
 
   @Before
   public void setUp() throws Exception {
+    File rootPath = FitNesseUtil.createTemporaryFolder();
     ZipFileVersionsController versionsController = new ZipFileVersionsController(MAX_HISTORY_DEPTH);
     FileSystemPageFactory fileSystemPageFactory = new FileSystemPageFactory(new DiskFileSystem(), versionsController);
-    root = fileSystemPageFactory.makePage(new File("TestDir/RooT"), "RooT", null, new SystemVariableSource());
-    page = (FileSystemPage) WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "original content");
+    root = fileSystemPageFactory.makePage(rootPath, "RooT", null, new SystemVariableSource());
+    page = (FileBasedWikiPage) WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "original content");
 
     PageData data = page.getData();
     firstVersion = VersionInfo.makeVersionInfo(data);
     secondVersion = page.commit(data);
   }
 
-  @After
-  public void tearDown() throws Exception {
-    FileUtil.deleteFileSystemDirectory("TestDir");
-  }
-
   @Test
   public void aZipFileIsCreatedAfterUpdatingPageContent() throws Exception {
     File dir = page.getFileSystemPath();
-    String[] filenames = dir.list();
+    String[] filenames = dir.getParentFile().list();
 
     List<String> list = Arrays.asList(filenames);
     assertTrue(list.contains(firstVersion + ".zip"));
@@ -106,17 +102,19 @@ public class FileSystemPageZipFileVersioningTest {
     Calendar modificationTime = Calendar.getInstance();
     modificationTime.add(Calendar.DATE, -1);
     String timeIndex1 = format(modificationTime);
-    data.getProperties().setLastModificationTime(dateFormat().parse(timeIndex1));
+    WikiPageProperties properties = new WikiPageProperties(data.getProperties());
+    data.setProperties(properties);
+    properties.setLastModificationTime(dateFormat().parse(timeIndex1));
     page.commit(data);
     modificationTime.add(Calendar.DATE, -1);
     String timeIndex2 = format(modificationTime);
-    data.getProperties().setLastModificationTime(dateFormat().parse(timeIndex2));
+    properties.setLastModificationTime(dateFormat().parse(timeIndex2));
     page.commit(data);
     modificationTime.add(Calendar.DATE, -1);
-    data.getProperties().setLastModificationTime(dateFormat().parse(format(modificationTime)));
+    properties.setLastModificationTime(dateFormat().parse(format(modificationTime)));
     page.commit(data);
     modificationTime.add(Calendar.DATE, -1);
-    data.getProperties().setLastModificationTime(dateFormat().parse(format(modificationTime)));
+    properties.setLastModificationTime(dateFormat().parse(format(modificationTime)));
     page.commit(data);
 
     Collection<VersionInfo> versions = page.getVersions();
@@ -151,18 +149,6 @@ public class FileSystemPageZipFileVersioningTest {
     data.setContent("b");
     page.commit(data);
     assertEquals("b", page.getData().getContent());
-  }
-
-  @Test
-  public void testSetAttributes() throws Exception {
-    PageData data = root.getData();
-    data.setAttribute("Test", "true");
-    data.setAttribute("Search", "true");
-    root.commit(data);
-    assertTrue(root.getData().hasAttribute("Test"));
-    assertTrue(root.getData().hasAttribute("Search"));
-
-    assertEquals("true", root.getData().getAttribute("Test"));
   }
 
   @Test
@@ -223,7 +209,7 @@ public class FileSystemPageZipFileVersioningTest {
   public void testVersionedPropertiedLoadedProperly() throws Exception {
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("TestPage"));
     PageData data = page.getData();
-    WikiPageProperties oldProps = data.getProperties();
+    WikiPageProperty oldProps = data.getProperties();
     WikiPageProperties props = new WikiPageProperties();
     props.set("MyProp", "my value");
     data.setProperties(props);
@@ -233,7 +219,7 @@ public class FileSystemPageZipFileVersioningTest {
     VersionInfo version = page.commit(data);
 
     PageData versionedData = page.getVersion(version.getName()).getData();
-    WikiPageProperties versionedProps = versionedData.getProperties();
+    WikiPageProperty versionedProps = versionedData.getProperties();
 
     assertTrue(versionedProps.has("MyProp"));
     assertEquals("my value", versionedProps.get("MyProp"));

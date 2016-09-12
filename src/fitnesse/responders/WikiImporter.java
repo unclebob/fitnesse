@@ -17,14 +17,8 @@ import fitnesse.util.XmlUtil;
 import fitnesse.components.TraversalListener;
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.ResponseParser;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PageXmlizer;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiImportProperty;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.WikiPageProperties;
-import fitnesse.wiki.XmlizerPageHandler;
+import fitnesse.wiki.*;
+import fitnesse.wiki.fs.PageXmlizer;
 
 public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiPage> {
   private String remoteUsername;
@@ -115,7 +109,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
     localPath.addNameToEnd(childPage.getName());
 
     PageData data = childPage.getData();
-    WikiPageProperties props = data.getProperties();
+    WikiPageProperty props = data.getProperties();
     WikiImportProperty importProps = WikiImportProperty.createFrom(props);
     if (importProps != null) {
       Date lastRemoteModification = importProps.getLastRemoteModificationTime();
@@ -139,7 +133,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
 
   public void configureAutoUpdateSetting(WikiPage page) {
     PageData data = page.getData();
-    WikiPageProperties props = data.getProperties();
+    WikiPageProperty props = data.getProperties();
     WikiImportProperty importProps = WikiImportProperty.createFrom(props);
     if (importProps != null)
       configureAutoUpdateSetting(importProps, data, page);
@@ -154,7 +148,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
       Document doc = getXmlDocument("data");
       PageData remoteData = new PageXmlizer().deXmlizeData(doc);
 
-      WikiPageProperties remoteProps = remoteData.getProperties();
+      WikiPageProperty remoteProps = remoteData.getProperties();
       remoteProps.remove(PageData.PropertyEDIT);
 
       WikiImportProperty importProperty = new WikiImportProperty(remoteUrl());

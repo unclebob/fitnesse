@@ -99,8 +99,8 @@ public class AddChildPageResponder implements SecureResponder {
       childPageData.getProperties().remove("Suite");
       childPageData.setAttribute(pageType);
     }
-    childPageData.setAttribute(PageData.PropertyHELP, helpText);
-    childPageData.setAttribute(PageData.PropertySUITES, suites);
+    childPageData.setOrRemoveAttribute(PageData.PropertyHELP, helpText);
+    childPageData.setOrRemoveAttribute(PageData.PropertySUITES, suites);
     childPageData.setOrRemoveAttribute(PageData.LAST_MODIFYING_USER, user);
     childPage.commit(childPageData);
   }

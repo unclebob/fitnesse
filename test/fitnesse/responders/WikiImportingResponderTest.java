@@ -10,14 +10,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiImportProperty;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageDummy;
-import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.WikiPageProperties;
-import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.*;
 import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.After;
 import org.junit.Before;
@@ -119,7 +112,7 @@ public class WikiImportingResponderTest {
   }
 
   private void checkProperties(WikiPage page, String source, boolean isRoot, WikiPage remotePage) throws Exception {
-    WikiPageProperties props = page.getData().getProperties();
+    WikiPageProperty props = page.getData().getProperties();
     if (!isRoot)
       assertFalse("should not have Edit property", props.has("Edit"));
 

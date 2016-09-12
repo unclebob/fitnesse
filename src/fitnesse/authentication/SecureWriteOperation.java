@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
-import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPageProperty;
 
 public class SecureWriteOperation extends SecurePageOperation {
   @Override
   protected String getSecurityMode() {
-    return PageData.PropertySECURE_WRITE;
+    return WikiPageProperty.SECURE_WRITE;
   }
 }
