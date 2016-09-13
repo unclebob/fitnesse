@@ -6,7 +6,7 @@
  * Fixture frameworks you can use 
  * and more ...
 
-See http://fitnesse.org/PlugIns for a list of all available extensions.
+See [[All Available Plugins][http://fitnesse.org/PlugIns?getPage&FitnesseVersion=${FITNESSE_VERSION}]] for a list of all available extensions.
 
 Read [[Writing Plugins][FitNesse.UserGuide.AdministeringFitNesse.WritingPlugins]] to understand how to install them or write your ownn.
 
