@@ -14,8 +14,7 @@ public class CachedInteraction extends DefaultInteraction {
   private final Map<MethodKey, Method> methodsByNameAndArgs = new HashMap<>();
 
   @Override
-  protected Constructor<?> getConstructor(Class<?> clazz,
-                                          Object[] args) {
+  protected Constructor<?> getConstructor(Class<?> clazz, Object[] args) {
     String key = String.format("%s_%d", clazz.getName(), args.length);
     Constructor<?> cached = constructorsByClassAndArgs.get(key);
     if (cached == noConstructor) return null;
@@ -106,7 +105,10 @@ public class CachedInteraction extends DefaultInteraction {
   }
 
   private static final class NotExisting {
-    public NotExisting() {}
-    public void doIt() {}
+    public NotExisting() {
+    }
+
+    public void doIt() {
+    }
   }
 }
