@@ -3,7 +3,6 @@ package fitnesse.slim.fixtureInteraction;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
-import com.sun.tools.corba.se.idl.constExpr.Times;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.tables.SlimTable;
