@@ -45,6 +45,30 @@ public class CachedInteraction extends DefaultInteraction {
     return k;
   }
 
+  @Override
+  protected Method findMatchingMethod(String methodName, Class<?> k, int nArgs) {
+    MethodKey key = new MethodKey(k, methodName, nArgs);
+    Method cached = this.methodsByNameAndArgs.get(key);
+    if (cached != null) return cached;
+
+    Method method = handleMethodCacheMiss(methodName, k, nArgs);
+
+    this.methodsByNameAndArgs.put(key, method);
+    return method;
+  }
+
+  protected Constructor<?> handleConstructorCacheMiss(Class<?> clazz, Object[] args) {
+    return super.getConstructor(clazz, args);
+  }
+
+  protected Class<?> handleClassCacheMiss(String className) {
+    return super.getClass(className);
+  }
+
+  protected Method handleMethodCacheMiss(String methodName, Class<?> k, int nArgs) {
+    return super.findMatchingMethod(methodName, k, nArgs);
+  }
+
   private static class MethodKey {
     final String k;
     final String method;
@@ -68,29 +92,5 @@ public class CachedInteraction extends DefaultInteraction {
       if (m.nArgs != nArgs) return false;
       return m.method.equals(method);
     }
-  }
-
-  @Override
-  protected Method findMatchingMethod(String methodName, Class<?> k, int nArgs) {
-    MethodKey key = new MethodKey(k, methodName, nArgs);
-    Method cached = this.methodsByNameAndArgs.get(key);
-    if (cached != null) return cached;
-
-    Method method = handleMethodCacheMiss(methodName, k, nArgs);
-
-    this.methodsByNameAndArgs.put(key, method);
-    return method;
-  }
-
-  protected Constructor<?> handleConstructorCacheMiss(Class<?> clazz, Object[] args) {
-    return super.getConstructor(clazz, args);
-  }
-
-  protected Class<?> handleClassCacheMiss(String className) {
-    return super.getClass(className);
-  }
-
-  protected Method handleMethodCacheMiss(String methodName, Class<?> k, int nArgs) {
-    return super.findMatchingMethod(methodName, k, nArgs);
   }
 }
