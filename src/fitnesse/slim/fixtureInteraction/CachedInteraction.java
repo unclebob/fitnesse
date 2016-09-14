@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CachedInteraction extends DefaultInteraction {
-  private static final class NotExisting { public NotExisting() {} public void doIt() {} }
   private static final Constructor<?> noConstructor = NotExisting.class.getConstructors()[0];
   private static final Method noMethod = NotExisting.class.getDeclaredMethods()[0];
 
@@ -98,5 +97,10 @@ public class CachedInteraction extends DefaultInteraction {
       if (!m.k.equals(k)) return false;
       return m.method.equals(method);
     }
+  }
+
+  private static final class NotExisting {
+    public NotExisting() {}
+    public void doIt() {}
   }
 }
