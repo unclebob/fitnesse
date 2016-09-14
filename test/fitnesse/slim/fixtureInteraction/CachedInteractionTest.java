@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
+import fitnesse.testsystems.slim.tables.ScriptTable;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -93,40 +94,40 @@ public class CachedInteractionTest {
   public void canFindMethod() {
     String findMethod = "canFindMethod";
 
-    Method method = interaction.findMatchingMethod(findMethod, getClass(), 0);
+    Method method = interaction.findMatchingMethod(findMethod, this, 0);
 
     assertEquals(findMethod, method.getName());
     assertEquals(getClass(), method.getDeclaringClass());
-    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, getClass(), 0);
+    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, this, 0);
 
     //2nd call
 
-    method = interaction.findMatchingMethod(findMethod, getClass(), 0);
+    method = interaction.findMatchingMethod(findMethod, this, 0);
 
     assertEquals(findMethod, method.getName());
     assertEquals(getClass(), method.getDeclaringClass());
     // cache hit, no 2nd call
-    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, getClass(), 0);
+    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, this, 0);
   }
 
   @Test
   public void canFindMethodWithArguments() {
-    String findMethod = "addChildTable";
+    String findMethod = "createInstance";
+    DefaultInteraction instance = new DefaultInteraction();
 
-    Method method = interaction.findMatchingMethod(findMethod, SlimTable.class, 2);
+    Method method = interaction.findMatchingMethod(findMethod, instance, 3);
 
     assertEquals(findMethod, method.getName());
-    assertEquals(SlimTable.class, method.getDeclaringClass());
-    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, SlimTable.class, 2);
+    assertEquals(DefaultInteraction.class, method.getDeclaringClass());
+    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, instance, 3);
 
     //2nd call
-
-    method = interaction.findMatchingMethod(findMethod, SlimTable.class, 2);
+    method = interaction.findMatchingMethod(findMethod, instance, 3);
 
     assertEquals(findMethod, method.getName());
-    assertEquals(SlimTable.class, method.getDeclaringClass());
+    assertEquals(DefaultInteraction.class, method.getDeclaringClass());
     // cache hit, no 2nd call
-    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, SlimTable.class, 2);
+    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, instance, 3);
   }
 
   @Test

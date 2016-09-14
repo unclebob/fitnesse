@@ -13,7 +13,7 @@ import fitnesse.slim.SlimServer;
 
 public class DefaultInteraction implements FixtureInteraction {
   private static final Method AROUND_METHOD;
-  
+
   static {
     try {
       AROUND_METHOD = InteractionAwareFixture.class.getMethod("aroundSlimInvoke", FixtureInteraction.class, Method.class, Object[].class);
@@ -87,14 +87,15 @@ public class DefaultInteraction implements FixtureInteraction {
 
 	@Override
 	public MethodExecutionResult findAndInvoke(String methodName, Object instance, Object... args) throws Throwable {
-		Method method = findMatchingMethod(methodName, instance.getClass(), args.length);
+		Method method = findMatchingMethod(methodName, instance, args.length);
 		if (method != null) {
 			return this.invokeMethod(instance, method, args);
 		}
 		return MethodExecutionResult.noMethod(methodName, instance.getClass(), args.length);
 	}
-	
-	protected Method findMatchingMethod(String methodName, Class<?> k, int nArgs) {
+
+	protected Method findMatchingMethod(String methodName, Object instance, int nArgs) {
+    Class<?> k = instance.getClass();
 		Method[] methods = k.getMethods();
 		if(methods == null) {
 			methods = k.getMethods();
@@ -126,7 +127,7 @@ public class DefaultInteraction implements FixtureInteraction {
 		try {
 			Object result;
 			if (instance instanceof InteractionAwareFixture) {
-				// invoke via interaction, so it can also do its thing on the aroundMethod invocation 
+				// invoke via interaction, so it can also do its thing on the aroundMethod invocation
 				Object[] args = { this, method, convertedArgs };
         result = methodInvoke(AROUND_METHOD, instance, args);
 			} else {
@@ -141,7 +142,7 @@ public class DefaultInteraction implements FixtureInteraction {
 			}
 		}
 	}
-	
+
   @Override
 	public Object methodInvoke(Method method, Object instance, Object... convertedArgs) throws Throwable {
 		try {
