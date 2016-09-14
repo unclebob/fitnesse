@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CachedInteraction extends DefaultInteraction {
-  private static final class NotExisting {}
+  private static final class NotExisting { public NotExisting() {} }
   private static final Constructor<?> noConstructor = NotExisting.class.getConstructors()[0];
 
   private final Map<String, Constructor<?>> constructorsByClassAndArgs = new HashMap<>();
