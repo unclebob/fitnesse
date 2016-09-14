@@ -48,7 +48,7 @@ public class CachedInteraction extends DefaultInteraction {
   @Override
   protected Method findMatchingMethod(String methodName, Class<?> k, int nArgs) {
     MethodKey key = new MethodKey(k, methodName, nArgs);
-    Method cached = this.methodsByNameAndArgs.get(key);
+    Method cached = methodsByNameAndArgs.get(key);
     if (cached == noMethod) return null;
     if (cached != null) return cached;
 
