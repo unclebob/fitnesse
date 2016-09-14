@@ -87,20 +87,21 @@ public class DefaultInteraction implements FixtureInteraction {
 
 	@Override
 	public MethodExecutionResult findAndInvoke(String methodName, Object instance, Object... args) throws Throwable {
-		Method method = findMatchingMethod(methodName, instance, args.length);
+		Method method = findMatchingMethod(methodName, instance, args);
 		if (method != null) {
 			return this.invokeMethod(instance, method, args);
 		}
 		return MethodExecutionResult.noMethod(methodName, instance.getClass(), args.length);
 	}
 
-	protected Method findMatchingMethod(String methodName, Object instance, int nArgs) {
+	protected Method findMatchingMethod(String methodName, Object instance, Object... args) {
     Class<?> k = instance.getClass();
 		Method[] methods = k.getMethods();
 		if(methods == null) {
 			methods = k.getMethods();
 		}
 
+    int nArgs = args.length;
 		for (Method method : methods) {
 			boolean hasMatchingName = method.getName().equals(methodName);
 			boolean hasMatchingArguments = method.getParameterTypes().length == nArgs;

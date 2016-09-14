@@ -94,20 +94,20 @@ public class CachedInteractionTest {
   public void canFindMethod() {
     String findMethod = "canFindMethod";
 
-    Method method = interaction.findMatchingMethod(findMethod, this, 0);
+    Method method = interaction.findMatchingMethod(findMethod, this);
 
     assertEquals(findMethod, method.getName());
     assertEquals(getClass(), method.getDeclaringClass());
-    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, this, 0);
+    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, this, new Object[0]);
 
     //2nd call
 
-    method = interaction.findMatchingMethod(findMethod, this, 0);
+    method = interaction.findMatchingMethod(findMethod, this);
 
     assertEquals(findMethod, method.getName());
     assertEquals(getClass(), method.getDeclaringClass());
     // cache hit, no 2nd call
-    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, this, 0);
+    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, this, new Object[0]);
   }
 
   @Test
@@ -115,19 +115,19 @@ public class CachedInteractionTest {
     String findMethod = "createInstance";
     DefaultInteraction instance = new DefaultInteraction();
 
-    Method method = interaction.findMatchingMethod(findMethod, instance, 3);
+    Method method = interaction.findMatchingMethod(findMethod, instance, null, null, null);
 
     assertEquals(findMethod, method.getName());
     assertEquals(DefaultInteraction.class, method.getDeclaringClass());
-    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, instance, 3);
+    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, instance, new Object[3]);
 
     //2nd call
-    method = interaction.findMatchingMethod(findMethod, instance, 3);
+    method = interaction.findMatchingMethod(findMethod, instance, null, null, null);
 
     assertEquals(findMethod, method.getName());
     assertEquals(DefaultInteraction.class, method.getDeclaringClass());
     // cache hit, no 2nd call
-    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, instance, 3);
+    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, instance, new Object[3]);
   }
 
   @Test
@@ -136,11 +136,11 @@ public class CachedInteractionTest {
 
     Method method = interaction.findMatchingMethod(findMethod, SlimTable.class, 3);
     assertNull(method);
-    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, SlimTable.class, 3);
+    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, SlimTable.class, new Integer[] { 3 });
 
     // 2nd call cache hit
     method = interaction.findMatchingMethod(findMethod, SlimTable.class, 3);
     assertNull(method);
-    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, SlimTable.class, 3);
+    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, SlimTable.class, new Integer[] { 3 });
   }
 }

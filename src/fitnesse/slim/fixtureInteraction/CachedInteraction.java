@@ -49,13 +49,13 @@ public class CachedInteraction extends DefaultInteraction {
   }
 
   @Override
-  protected Method findMatchingMethod(String methodName, Object instance, int nArgs) {
-    MethodKey key = new MethodKey(instance.getClass(), methodName, nArgs);
+  protected Method findMatchingMethod(String methodName, Object instance, Object... args) {
+    MethodKey key = new MethodKey(instance.getClass(), methodName, args.length);
     Method cached = methodsByNameAndArgs.get(key);
     if (cached == noMethod) return null;
     if (cached != null) return cached;
 
-    Method method = handleMethodCacheMiss(methodName, instance, nArgs);
+    Method method = handleMethodCacheMiss(methodName, instance, args);
 
     if (method == null) {
       methodsByNameAndArgs.put(key, noMethod);
@@ -73,8 +73,8 @@ public class CachedInteraction extends DefaultInteraction {
     return super.getClass(className);
   }
 
-  protected Method handleMethodCacheMiss(String methodName, Object instance, int nArgs) {
-    return super.findMatchingMethod(methodName, instance, nArgs);
+  protected Method handleMethodCacheMiss(String methodName, Object instance, Object[] args) {
+    return super.findMatchingMethod(methodName, instance, args);
   }
 
   private static final class MethodKey {
