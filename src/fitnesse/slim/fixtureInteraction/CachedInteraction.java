@@ -88,8 +88,8 @@ public class CachedInteraction extends DefaultInteraction {
     public boolean equals(Object o) {
       if (!(o instanceof MethodKey)) return false;
       MethodKey m = (MethodKey) o;
-      if (!m.k.equals(k)) return false;
       if (m.nArgs != nArgs) return false;
+      if (!m.k.equals(k)) return false;
       return m.method.equals(method);
     }
   }
