@@ -21,7 +21,7 @@ public class CachedInteraction extends DefaultInteraction {
     if (cached == noConstructor) return null;
     if (cached != null) return cached;
 
-    Constructor<?> constructor = super.getConstructor(clazz, args);
+    Constructor<?> constructor = handleConstructorCacheMiss(clazz, args);
     if (constructor == null) {
       constructorsByClassAndArgs.put(key, noConstructor);
     } else {
@@ -30,14 +30,13 @@ public class CachedInteraction extends DefaultInteraction {
     return constructor;
   }
 
-
   @Override
   protected Class<?> getClass(String className) {
     Class<?> k = classCache.get(className);
     if (k == NotExisting.class) return null;
     if (k != null) return k;
 
-    k = super.getClass(className);
+    k = handleClassCacheMiss(className);
     if (k == null) {
       classCache.put(className, NotExisting.class);
     } else {
@@ -45,7 +44,6 @@ public class CachedInteraction extends DefaultInteraction {
     }
     return k;
   }
-
 
   private static class MethodKey {
     final String k;
@@ -66,7 +64,7 @@ public class CachedInteraction extends DefaultInteraction {
     public boolean equals(Object o) {
       if (!(o instanceof MethodKey)) return false;
       MethodKey m = (MethodKey) o;
-      if (m.k != k) return false;
+      if (!m.k.equals(k)) return false;
       if (m.nArgs != nArgs) return false;
       return m.method.equals(method);
     }
@@ -78,9 +76,21 @@ public class CachedInteraction extends DefaultInteraction {
     Method cached = this.methodsByNameAndArgs.get(key);
     if (cached != null) return cached;
 
-    Method method = super.findMatchingMethod(methodName, k, nArgs);
+    Method method = handleMethodCacheMiss(methodName, k, nArgs);
 
     this.methodsByNameAndArgs.put(key, method);
     return method;
+  }
+
+  protected Constructor<?> handleConstructorCacheMiss(Class<?> clazz, Object[] args) {
+    return super.getConstructor(clazz, args);
+  }
+
+  protected Class<?> handleClassCacheMiss(String className) {
+    return super.getClass(className);
+  }
+
+  protected Method handleMethodCacheMiss(String methodName, Class<?> k, int nArgs) {
+    return super.findMatchingMethod(methodName, k, nArgs);
   }
 }
