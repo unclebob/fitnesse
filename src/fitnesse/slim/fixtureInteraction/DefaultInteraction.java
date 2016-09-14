@@ -97,9 +97,6 @@ public class DefaultInteraction implements FixtureInteraction {
 	protected Method findMatchingMethod(String methodName, Object instance, Object... args) {
     Class<?> k = instance.getClass();
 		Method[] methods = k.getMethods();
-		if(methods == null) {
-			methods = k.getMethods();
-		}
 
     int nArgs = args.length;
 		for (Method method : methods) {
