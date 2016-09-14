@@ -133,9 +133,9 @@ public class DefaultInteraction implements FixtureInteraction {
 			}
 			return result;
 		} catch (InvocationTargetException e) {
-			if(e.getCause() != null){
+			if (e.getCause() != null) {
 				throw e.getCause();
-			}else{
+			} else {
 				throw e.getTargetException();
 			}
 		}
@@ -146,9 +146,9 @@ public class DefaultInteraction implements FixtureInteraction {
 		try {
 			return method.invoke(instance, convertedArgs);
 		} catch (InvocationTargetException e) {
-			if(e.getCause() != null){
+			if (e.getCause() != null) {
 				throw e.getCause();
-			}else{
+			} else {
 				throw e.getTargetException();
 			}
 		}
