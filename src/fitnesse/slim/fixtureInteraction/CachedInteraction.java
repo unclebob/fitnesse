@@ -15,7 +15,7 @@ public class CachedInteraction extends DefaultInteraction {
 
   @Override
   protected Constructor<?> getConstructor(Class<?> clazz, Object[] args) {
-    String key = String.format("%s_%d", clazz.getName(), args.length);
+    String key = getConstructorKey(clazz, args);
     Constructor<?> cached = constructorsByClassAndArgs.get(key);
     if (cached == noConstructor) return null;
     if (cached != null) return cached;
@@ -27,6 +27,10 @@ public class CachedInteraction extends DefaultInteraction {
       constructorsByClassAndArgs.put(key, constructor);
     }
     return constructor;
+  }
+
+  protected String getConstructorKey(Class<?> clazz, Object[] args) {
+    return clazz.getName()+ "_" + args.length;
   }
 
   @Override
