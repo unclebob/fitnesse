@@ -20,6 +20,23 @@ public class CachedInteractionTest {
     Class<?> clazz = interaction.getClass(myClass.getName());
 
     assertEquals(myClass, clazz);
+
+    // 2nd call
+    clazz = interaction.getClass(myClass.getName());
+
+    assertEquals(myClass, clazz);
+  }
+
+  @Test
+  public void canDealWithNoClassFound() {
+    Class<?> clazz = interaction.getClass("IDontExist");
+
+    assertNull(clazz);
+
+    // 2nd call
+    clazz = interaction.getClass("IDontExist");
+
+    assertNull(clazz);
   }
 
   @Test
