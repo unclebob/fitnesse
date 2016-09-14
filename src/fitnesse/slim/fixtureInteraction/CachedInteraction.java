@@ -74,10 +74,10 @@ public class CachedInteraction extends DefaultInteraction {
     return super.findMatchingMethod(methodName, k, nArgs);
   }
 
-  private static class MethodKey {
-    final String k;
-    final String method;
-    final int nArgs;
+  private static final class MethodKey {
+    private final String k;
+    private final String method;
+    private final int nArgs;
 
     public MethodKey(Class<?> k, String method, int nArgs) {
       this.k = k.getSimpleName();
@@ -85,17 +85,23 @@ public class CachedInteraction extends DefaultInteraction {
       this.nArgs = nArgs;
     }
 
+    @Override
     public int hashCode() {
-      return nArgs * 31 + method.hashCode() + 31 * k.hashCode();
+      int result = k.hashCode();
+      result = 31 * result + method.hashCode();
+      result = 31 * result + nArgs;
+      return result;
     }
 
     @Override
     public boolean equals(Object o) {
-      if (!(o instanceof MethodKey)) return false;
-      MethodKey m = (MethodKey) o;
-      if (m.nArgs != nArgs) return false;
-      if (!m.k.equals(k)) return false;
-      return m.method.equals(method);
+      if (o == null || getClass() != o.getClass()) return false;
+
+      MethodKey methodKey = (MethodKey) o;
+
+      if (nArgs != methodKey.nArgs) return false;
+      if (!k.equals(methodKey.k)) return false;
+      return method.equals(methodKey.method);
     }
   }
 
