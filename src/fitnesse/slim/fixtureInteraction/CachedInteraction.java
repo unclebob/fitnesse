@@ -31,11 +31,11 @@ public class CachedInteraction extends DefaultInteraction {
 
   @Override
   protected Class<?> getClass(String className) {
-    Class<?> k = classCache.get(className);
-    if (k == NotExisting.class) return null;
-    if (k != null) return k;
+    Class<?> cached = classCache.get(className);
+    if (cached == NotExisting.class) return null;
+    if (cached != null) return cached;
 
-    k = handleClassCacheMiss(className);
+    Class<?> k = handleClassCacheMiss(className);
     if (k == null) {
       classCache.put(className, NotExisting.class);
     } else {
