@@ -6,8 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CachedInteraction extends DefaultInteraction {
-  private static final class NotExisting { public NotExisting() {} }
+  private static final class NotExisting { public NotExisting() {} public void doIt() {} }
   private static final Constructor<?> noConstructor = NotExisting.class.getConstructors()[0];
+  private static final Method noMethod = NotExisting.class.getDeclaredMethods()[0];
 
   private final Map<String, Constructor<?>> constructorsByClassAndArgs = new HashMap<>();
   private final Map<String, Class<?>> classCache = new HashMap<>();
@@ -49,11 +50,16 @@ public class CachedInteraction extends DefaultInteraction {
   protected Method findMatchingMethod(String methodName, Class<?> k, int nArgs) {
     MethodKey key = new MethodKey(k, methodName, nArgs);
     Method cached = this.methodsByNameAndArgs.get(key);
+    if (cached == noMethod) return null;
     if (cached != null) return cached;
 
     Method method = handleMethodCacheMiss(methodName, k, nArgs);
 
-    this.methodsByNameAndArgs.put(key, method);
+    if (method == null) {
+      methodsByNameAndArgs.put(key, noMethod);
+    } else {
+      methodsByNameAndArgs.put(key, method);
+    }
     return method;
   }
 

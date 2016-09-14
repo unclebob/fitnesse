@@ -136,5 +136,11 @@ public class CachedInteractionTest {
 
     Method method = interaction.findMatchingMethod(findMethod, SlimTable.class, 3);
     assertNull(method);
+    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, SlimTable.class, 3);
+
+    // 2nd call cache hit
+    method = interaction.findMatchingMethod(findMethod, SlimTable.class, 3);
+    assertNull(method);
+    verify(interaction, times(1)).handleMethodCacheMiss(findMethod, SlimTable.class, 3);
   }
 }
