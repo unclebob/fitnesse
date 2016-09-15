@@ -151,6 +151,9 @@ public class DefaultInteraction implements FixtureInteraction {
 			} else {
 				throw e.getTargetException();
 			}
-		}
+		} catch (IllegalArgumentException e) {
+		  throw new RuntimeException("Bad call of: " + method.getDeclaringClass().getName() + "." + method.getName()
+                                  + ". On instance of: " + instance.getClass().getName(), e);
+    }
 	}
 }

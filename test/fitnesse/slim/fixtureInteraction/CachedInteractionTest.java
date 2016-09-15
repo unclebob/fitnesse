@@ -2,10 +2,11 @@ package fitnesse.slim.fixtureInteraction;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Collections;
 
+import fitnesse.slim.test.TableTableIncFirstCol;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.tables.ScriptTable;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -128,6 +129,27 @@ public class CachedInteractionTest {
     assertEquals(DefaultInteraction.class, method.getDeclaringClass());
     // cache hit, no 2nd call
     verify(interaction, times(1)).handleMethodCacheMiss(findMethod, instance, new Object[3]);
+  }
+
+  @Test
+  public void canFindMethodWithSameSimpleClassName() {
+    String findMethod = "doTable";
+    TableTableIncFirstCol instance = new TableTableIncFirstCol();
+    fitnesse.slim.test.statementexecutorconsumer.TableTableIncFirstCol consInstance =
+      new fitnesse.slim.test.statementexecutorconsumer.TableTableIncFirstCol();
+
+    Method method = interaction.findMatchingMethod(findMethod, instance, Collections.emptyList());
+
+    assertEquals(findMethod, method.getName());
+    assertEquals("Method returned is defined by the wrong class (i.e. not the class of the instance passed)",
+      instance.getClass(), method.getDeclaringClass());
+
+    //2nd call
+    Method consMethod = interaction.findMatchingMethod(findMethod, consInstance, Collections.emptyList());
+
+    assertEquals(findMethod, consMethod.getName());
+    assertEquals("Method returned is defined by the wrong class (i.e. not the class of the instance passed)",
+      consInstance.getClass(), consMethod.getDeclaringClass());
   }
 
   @Test

@@ -83,7 +83,7 @@ public class CachedInteraction extends DefaultInteraction {
     private final int nArgs;
 
     public MethodKey(Class<?> k, String method, int nArgs) {
-      this.k = k.getSimpleName();
+      this.k = k.getName();
       this.method = method;
       this.nArgs = nArgs;
     }
