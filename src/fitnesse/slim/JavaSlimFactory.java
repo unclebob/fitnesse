@@ -48,11 +48,6 @@ public class JavaSlimFactory extends SlimFactory {
     return new JavaSlimFactory(interaction, timeout, verbose);
   }
 
-  // Only used in tests
-  public static SlimFactory createJavaSlimFactory() {
-    return createJavaSlimFactory(createInteraction(null), null, false);
-  }
-
   @SuppressWarnings("unchecked")
   public static FixtureInteraction createInteraction(String interactionClassName) {
     if (interactionClassName == null) {

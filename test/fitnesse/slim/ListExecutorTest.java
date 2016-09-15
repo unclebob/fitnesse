@@ -2,11 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import static fitnesse.slim.JavaSlimFactory.*;
+
 public class ListExecutorTest extends ListExecutorTestBase {
 
   @Override
   protected ListExecutor getListExecutor() throws Exception {
-    SlimFactory slimFactory = JavaSlimFactory.createJavaSlimFactory();
+    SlimFactory slimFactory = createJavaSlimFactory(createInteraction(null), null, false);
     return slimFactory.getListExecutor();
   }
 
