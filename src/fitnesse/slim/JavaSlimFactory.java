@@ -50,6 +50,18 @@ public class JavaSlimFactory extends SlimFactory {
 
   // Only used in tests
   public static SlimFactory createJavaSlimFactory() {
-    return new JavaSlimFactory(new DefaultInteraction(), null, false);
+    return createJavaSlimFactory(createInteraction(null), null, false);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static FixtureInteraction createInteraction(String interactionClassName) {
+    if (interactionClassName == null) {
+      return new DefaultInteraction();
+    }
+    try {
+      return ((Class<FixtureInteraction>) Class.forName(interactionClassName)).newInstance();
+    } catch (Exception e) {
+      throw new SlimError(e);
+    }
   }
 }

@@ -2,7 +2,7 @@ package fitnesse.testsystems.slim;
 
 import fitnesse.slim.JavaSlimFactory;
 import fitnesse.slim.SlimServer;
-import fitnesse.slim.fixtureInteraction.DefaultInteraction;
+import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 import fitnesse.testsystems.ClientBuilder;
 import fitnesse.testsystems.Descriptor;
 
@@ -27,7 +27,8 @@ public class InProcessSlimClientBuilder extends ClientBuilder<SlimClient> {
   }
 
   protected SlimServer createSlimServer(int timeout, boolean verbose) {
-    return JavaSlimFactory.createJavaSlimFactory(new DefaultInteraction(), timeout, verbose).getSlimServer();
+    FixtureInteraction interaction = JavaSlimFactory.createInteraction(null);
+    return JavaSlimFactory.createJavaSlimFactory(interaction, timeout, verbose).getSlimServer();
   }
 
 }

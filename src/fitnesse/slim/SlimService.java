@@ -10,14 +10,13 @@ import java.util.Arrays;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import fitnesse.slim.fixtureInteraction.DefaultInteraction;
 import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 import fitnesse.socketservice.PlainServerSocketFactory;
 import fitnesse.socketservice.ServerSocketFactory;
 import fitnesse.socketservice.SslServerSocketFactory;
 import util.CommandLine;
 
-import static fitnesse.slim.JavaSlimFactory.createJavaSlimFactory;
+import static fitnesse.slim.JavaSlimFactory.*;
 
 public class SlimService {
   private static final String OPTION_DESCRIPTOR = "[-v] [-i interactionClass] [-s statementTimeout] [-d] [-ssl parameterClass] port";
@@ -101,7 +100,8 @@ public class SlimService {
       boolean daemon = commandLine.hasOption("d");
       String sslParameterClassName = commandLine.getOptionArgument("ssl", "parameterClass");
       boolean useSSL = commandLine.hasOption("ssl");
-      return new Options(verbose, port, createInteraction(interactionClassName), daemon, statementTimeout, useSSL, sslParameterClassName);
+      FixtureInteraction interaction = createInteraction(interactionClassName);
+      return new Options(verbose, port, interaction, daemon, statementTimeout, useSSL, sslParameterClassName);
     }
     return null;
   }
@@ -161,17 +161,5 @@ public class SlimService {
   private void acceptOne() throws IOException {
     Socket socket = serverSocket.accept();
     handle(socket);
-  }
-
-  @SuppressWarnings("unchecked")
-  private static FixtureInteraction createInteraction(String interactionClassName) {
-    if (interactionClassName == null) {
-      return new DefaultInteraction();
-    }
-    try {
-      return ((Class<FixtureInteraction>) Class.forName(interactionClassName)).newInstance();
-    } catch (Exception e) {
-      throw new SlimError(e);
-    }
   }
 }
