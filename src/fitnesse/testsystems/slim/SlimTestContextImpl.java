@@ -19,7 +19,8 @@ public class SlimTestContextImpl implements SlimTestContext {
   private final Map<String, ScenarioTable> scenarios = new HashMap<>();
   private final TestSummary testSummary = new TestSummary();
   private final TestPage pageToTest;
-  private List<ScenarioTable> sortedTables = null;
+  private final List<ScenarioTable> allTables = new ArrayList<>();
+  private boolean isSorted = false;
 
   public SlimTestContextImpl(TestPage pageToTest) {
     this.pageToTest = pageToTest;
@@ -37,10 +38,11 @@ public class SlimTestContextImpl implements SlimTestContext {
 
   @Override
   public void addScenario(String scenarioName, ScenarioTable scenarioTable) {
-    if (sortedTables != null && !scenarios.containsValue(scenarioTable)) {
-      sortedTables = null;
+    ScenarioTable oldValue = scenarios.put(scenarioName, scenarioTable);
+    if (oldValue == null || !oldValue.equals(scenarioTable)) {
+      allTables.add(scenarioTable);
+      isSorted = false;
     }
-    scenarios.put(scenarioName, scenarioTable);
   }
 
   @Override
@@ -64,12 +66,11 @@ public class SlimTestContextImpl implements SlimTestContext {
   }
 
   private List<ScenarioTable> getScenariosWithMostArgumentsFirst() {
-    if (sortedTables == null) {
-      Collection<ScenarioTable> scenarioMap = getScenarios();
-      sortedTables = new ArrayList<>(scenarioMap);
-      Collections.sort(sortedTables, new ScenarioTableLengthComparator());
+    if (!isSorted) {
+      Collections.sort(allTables, new ScenarioTableLengthComparator());
+      isSorted = true;
     }
-    return sortedTables;
+    return allTables;
   }
 
   private static class ScenarioTableLengthComparator implements java.util.Comparator<ScenarioTable> {
