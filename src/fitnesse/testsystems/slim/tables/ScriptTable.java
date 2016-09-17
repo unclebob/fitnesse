@@ -186,7 +186,7 @@ public class ScriptTable extends SlimTable {
       args = getArgumentsStartingAt(1, lastCol, row, assertions);
     } else if (lastCol == 0) {
       String cellContents = table.getCellContents(0, row);
-      scenario = getTestContext().getScenarioByPatternMatching(cellContents, customComparatorRegistry);
+      scenario = getTestContext().getScenarioByPattern(cellContents, customComparatorRegistry);
       if (scenario != null) {
         args = scenario.matchParameters(cellContents);
       }

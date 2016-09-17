@@ -45,8 +45,8 @@ public class SlimTestContextImpl implements SlimTestContext {
   }
 
   @Override
-  public ScenarioTable getScenarioByPatternMatching(String invokingString,
-                                                    CustomComparatorRegistry customComparatorRegistry) {
+  public ScenarioTable getScenarioByPattern(String invokingString,
+                                            CustomComparatorRegistry customComparatorRegistry) {
     ScenarioTable result = null;
     for (ScenarioTable s : getScenariosWithMostArgumentsFirst()) {
       s.setCustomComparatorRegistry(customComparatorRegistry);
