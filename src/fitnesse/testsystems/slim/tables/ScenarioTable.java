@@ -50,8 +50,8 @@ public class ScenarioTable extends SlimTable {
 
     parameterized = determineParameterized();
     name = getScenarioName();
-    getTestContext().addScenario(name, this);
     getScenarioArguments();
+    getTestContext().addScenario(name, this);
   }
 
   protected boolean determineParameterized() {
