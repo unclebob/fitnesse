@@ -3,7 +3,6 @@
 package fitnesse.testsystems.slim.tables;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -186,34 +185,14 @@ public class ScriptTable extends SlimTable {
       assertions.addAll(scenario.call(args, this, row));
     } else if (lastCol == 0) {
       String firstNameCell = table.getCellContents(0, row);
-      for (ScenarioTable s : getScenariosWithMostArgumentsFirst()) {
-        s.setCustomComparatorRegistry(customComparatorRegistry);
+      ScenarioTable s = getTestContext().getScenarioByPatternMatching(firstNameCell, customComparatorRegistry);
+      if (s != null) {
         String[] args = s.matchParameters(firstNameCell);
-        if (args != null) {
-          assertions.addAll(s.call(args, this, row));
-          break;
-        }
+        assertions.addAll(s.call(args, this, row));
       }
     }
     return assertions;
   }
-
-  private List<ScenarioTable> getScenariosWithMostArgumentsFirst() {
-    Collection<ScenarioTable> scenarioMap = getTestContext().getScenarios();
-    List<ScenarioTable> scenarios = new ArrayList<>(scenarioMap);
-    Collections.sort(scenarios, new ScenarioTableLengthComparator());
-    return scenarios;
-  }
-
-  private static class ScenarioTableLengthComparator implements java.util.Comparator<ScenarioTable> {
-    @Override
-    public int compare(ScenarioTable st1, ScenarioTable st2) {
-      int size1 = st1.getInputs().size();
-      int size2 = st2.getInputs().size();
-      return size2 - size1;
-    }
-  }
-
 
   protected List<SlimAssertion> note(int row) {
     return Collections.emptyList();

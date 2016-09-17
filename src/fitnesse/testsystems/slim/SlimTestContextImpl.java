@@ -2,8 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import fitnesse.testsystems.ExecutionResult;
@@ -39,6 +42,36 @@ public class SlimTestContextImpl implements SlimTestContext {
   @Override
   public ScenarioTable getScenario(String scenarioName) {
     return scenarios.get(scenarioName);
+  }
+
+  @Override
+  public ScenarioTable getScenarioByPatternMatching(String invokingString, CustomComparatorRegistry customComparatorRegistry) {
+    ScenarioTable result = null;
+    for (ScenarioTable s : getScenariosWithMostArgumentsFirst()) {
+      s.setCustomComparatorRegistry(customComparatorRegistry);
+      String[] args = s.matchParameters(invokingString);
+      if (args != null) {
+        result = s;
+        break;
+      }
+    }
+    return result;
+  }
+
+  private List<ScenarioTable> getScenariosWithMostArgumentsFirst() {
+    Collection<ScenarioTable> scenarioMap = getScenarios();
+    List<ScenarioTable> scenarios = new ArrayList<>(scenarioMap);
+    Collections.sort(scenarios, new ScenarioTableLengthComparator());
+    return scenarios;
+  }
+
+  private static class ScenarioTableLengthComparator implements java.util.Comparator<ScenarioTable> {
+    @Override
+    public int compare(ScenarioTable st1, ScenarioTable st2) {
+      int size1 = st1.getInputs().size();
+      int size2 = st2.getInputs().size();
+      return size2 - size1;
+    }
   }
 
   @Override

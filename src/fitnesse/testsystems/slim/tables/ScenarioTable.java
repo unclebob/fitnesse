@@ -5,6 +5,8 @@ package fitnesse.testsystems.slim.tables;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import org.apache.commons.lang.StringUtils;
 
 import fitnesse.slim.instructions.Instruction;
@@ -327,6 +329,11 @@ public class ScenarioTable extends SlimTable {
     @Override
     public ScenarioTable getScenario(String scenarioName) {
       return testContext.getScenario(scenarioName);
+    }
+
+    @Override
+    public ScenarioTable getScenarioByPatternMatching(String invokingString, CustomComparatorRegistry customComparatorRegistry) {
+      return testContext.getScenarioByPatternMatching(invokingString, customComparatorRegistry);
     }
 
     @Override
