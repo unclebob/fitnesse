@@ -2,18 +2,28 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import fitnesse.testsystems.slim.CustomComparatorRegistry;
-import org.apache.commons.lang.StringUtils;
-
 import fitnesse.slim.instructions.Instruction;
-import fitnesse.testsystems.*;
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestExecutionException;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestResult;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimTestResult;
+import org.apache.commons.lang.StringUtils;
 
 
 public class ScenarioTable extends SlimTable {
@@ -25,6 +35,7 @@ public class ScenarioTable extends SlimTable {
   private Set<String> outputs = new HashSet<>();
   private final int colsInHeader = table.getColumnCountInRow(0);
   private boolean parameterized = false;
+  private Pattern pattern = null;
 
   public ScenarioTable(Table table, String tableId,
                        SlimTestContext testContext) {
@@ -51,6 +62,7 @@ public class ScenarioTable extends SlimTable {
     parameterized = determineParameterized();
     name = getScenarioName();
     getScenarioArguments();
+    setParameterMatchingPattern();
     getTestContext().addScenario(name, this);
   }
 
@@ -220,46 +232,36 @@ public class ScenarioTable extends SlimTable {
   }
 
 ///// scriptTable matcher logic:
-  public String[] matchParameters(String invokingString) {
-    String parameterizedName;
-
+  private void setParameterMatchingPattern() {
+    String parameterizedName = null;
     if (parameterized) {
       parameterizedName = table.getCellContents(1, 0);
-    } else if (!this.inputs.isEmpty()) {
+    } else if (!inputs.isEmpty()) {
       StringBuilder nameBuffer = new StringBuilder();
 
-      for (int nameCol = 1; nameCol < colsInHeader; nameCol += 2)
-        nameBuffer.append(table.getCellContents(nameCol, 0))
+      for (int nameCol = 1; nameCol < colsInHeader; nameCol += 2) {
+        String cell = table.getCellContents(nameCol, 0);
+        nameBuffer.append(cell)
           .append(" _ ");
+      }
 
       parameterizedName = nameBuffer.toString().trim();
-    } else {
-      return null;
     }
-
-    return getArgumentsMatchingParameterizedName(parameterizedName,
-      invokingString);
-  }
-
-  private String[] getArgumentsMatchingParameterizedName(
-    String parameterizedName, String invokingString) {
-    Matcher matcher = makeParameterizedNameMatcher(parameterizedName,
-      invokingString);
-
-    if (matcher.matches()) {
-      return extractNamesFromMatcher(matcher);
-    } else {
-      return null;
+    if (parameterizedName != null) {
+      String patternString = parameterizedName.replaceAll("_", "(.*)");
+      pattern = Pattern.compile(patternString);
     }
   }
 
-  private Matcher makeParameterizedNameMatcher(String parameterizedName,
-                                               String invokingString) {
-    String patternString = parameterizedName.replaceAll("_", "(.*)");
-    Pattern pattern = Pattern.compile(patternString);
-    Matcher matcher = pattern.matcher(invokingString);
-
-    return matcher;
+  public String[] matchParameters(String invokingString) {
+    String[] result = null;
+    if (pattern != null) {
+      Matcher matcher = pattern.matcher(invokingString);
+      if (matcher.matches()) {
+        result = extractNamesFromMatcher(matcher);
+      }
+    }
+    return result;
   }
 
   private String[] extractNamesFromMatcher(Matcher matcher) {
