@@ -5,6 +5,7 @@ package fitnesse.testsystems.slim;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +74,7 @@ public class SlimTestContextImpl implements SlimTestContext {
     return allTables;
   }
 
-  private static class ScenarioTableLengthComparator implements java.util.Comparator<ScenarioTable> {
+  private static class ScenarioTableLengthComparator implements Comparator<ScenarioTable> {
     @Override
     public int compare(ScenarioTable st1, ScenarioTable st2) {
       int size1 = st1.getInputs().size();
