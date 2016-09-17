@@ -176,20 +176,23 @@ public class ScriptTable extends SlimTable {
   protected List<SlimAssertion> assertionsFromScenario(int row) throws TestExecutionException {
     int lastCol = table.getColumnCountInRow(row) - 1;
     String actionName = getActionNameStartingAt(0, lastCol, row);
-    ScenarioTable scenario = getTestContext().getScenario(Disgracer.disgraceClassName(
-            actionName.replace(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX, "")));
+    String simpleName = actionName.replace(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX, "");
+    String scenarioName = Disgracer.disgraceClassName(simpleName);
+    ScenarioTable scenario = getTestContext().getScenario(scenarioName);
+    String[] args = null;
     List<SlimAssertion> assertions = new ArrayList<>();
     if (scenario != null) {
       scenario.setCustomComparatorRegistry(customComparatorRegistry);
-      String[] args = getArgumentsStartingAt(1, lastCol, row, assertions);
-      assertions.addAll(scenario.call(args, this, row));
+      args = getArgumentsStartingAt(1, lastCol, row, assertions);
     } else if (lastCol == 0) {
-      String firstNameCell = table.getCellContents(0, row);
-      ScenarioTable s = getTestContext().getScenarioByPatternMatching(firstNameCell, customComparatorRegistry);
-      if (s != null) {
-        String[] args = s.matchParameters(firstNameCell);
-        assertions.addAll(s.call(args, this, row));
+      String cellContents = table.getCellContents(0, row);
+      scenario = getTestContext().getScenarioByPatternMatching(cellContents, customComparatorRegistry);
+      if (scenario != null) {
+        args = scenario.matchParameters(cellContents);
       }
+    }
+    if (scenario != null) {
+      assertions.addAll(scenario.call(args, this, row));
     }
     return assertions;
   }
