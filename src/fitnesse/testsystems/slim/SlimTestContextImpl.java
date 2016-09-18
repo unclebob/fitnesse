@@ -21,7 +21,7 @@ public class SlimTestContextImpl implements SlimTestContext {
   private final TestSummary testSummary = new TestSummary();
   private final TestPage pageToTest;
   private List<ScenarioTable> scenariosWithInputs = null;
-  private boolean isSorted = false;
+  private boolean isSorted = true;
 
   public SlimTestContextImpl(TestPage pageToTest) {
     this.pageToTest = pageToTest;
@@ -88,18 +88,20 @@ public class SlimTestContextImpl implements SlimTestContext {
   private void initializeScenariosWithInputs() {
     int initialCapacity = scenarios.size();
     scenariosWithInputs = new ArrayList<>(initialCapacity);
+    isSorted = true;
     for (ScenarioTable table : scenarios.values()) {
-      if (!table.getInputs().isEmpty()) {
-        scenariosWithInputs.add(table);
-      }
+      addToScenariosWithInputsIfNeeded(table);
     }
-    isSorted = scenariosWithInputs.isEmpty();
   }
 
   private void maintainScenariosWithInputs(ScenarioTable oldTable, ScenarioTable newTable) {
     if (oldTable != null && !oldTable.getInputs().isEmpty()) {
       scenariosWithInputs.remove(oldTable);
     }
+    addToScenariosWithInputsIfNeeded(newTable);
+  }
+
+  private void addToScenariosWithInputsIfNeeded(ScenarioTable newTable) {
     if (!newTable.getInputs().isEmpty()) {
       scenariosWithInputs.add(newTable);
       isSorted = false;
