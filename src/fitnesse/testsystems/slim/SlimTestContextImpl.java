@@ -17,10 +17,10 @@ import fitnesse.testsystems.slim.tables.ScenarioTable;
 
 public class SlimTestContextImpl implements SlimTestContext {
   private final Map<String, String> symbols = new HashMap<>();
-  private final Map<String, ScenarioTable> scenarios = new HashMap<>();
+  private final Map<String, ScenarioTable> scenarios = new HashMap<>(512);
   private final TestSummary testSummary = new TestSummary();
   private final TestPage pageToTest;
-  private final List<ScenarioTable> scenariosWithInputs = new ArrayList<>();
+  private final List<ScenarioTable> scenariosWithInputs = new ArrayList<>(256);
   private boolean isSorted = false;
 
   public SlimTestContextImpl(TestPage pageToTest) {
