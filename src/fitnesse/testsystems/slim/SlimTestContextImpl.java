@@ -20,7 +20,7 @@ public class SlimTestContextImpl implements SlimTestContext {
   private final Map<String, ScenarioTable> scenarios = new HashMap<>(512);
   private final TestSummary testSummary = new TestSummary();
   private final TestPage pageToTest;
-  private final List<ScenarioTable> scenariosWithInputs = new ArrayList<>(256);
+  private List<ScenarioTable> scenariosWithInputs = null;
   private boolean isSorted = false;
 
   public SlimTestContextImpl(TestPage pageToTest) {
@@ -40,12 +40,8 @@ public class SlimTestContextImpl implements SlimTestContext {
   @Override
   public void addScenario(String scenarioName, ScenarioTable scenarioTable) {
     ScenarioTable oldValue = scenarios.put(scenarioName, scenarioTable);
-    if (oldValue != null && !oldValue.getInputs().isEmpty()) {
-      scenariosWithInputs.remove(oldValue);
-    }
-    if (!scenarioTable.getInputs().isEmpty()) {
-      scenariosWithInputs.add(scenarioTable);
-      isSorted = false;
+    if (scenariosWithInputs != null) {
+      maintainScenariosWithInputs(oldValue, scenarioTable);
     }
   }
 
@@ -70,6 +66,9 @@ public class SlimTestContextImpl implements SlimTestContext {
   }
 
   private List<ScenarioTable> getScenariosWithMostArgumentsFirst() {
+    if (scenariosWithInputs == null) {
+      initializeScenariosWithInputs();
+    }
     if (!isSorted) {
       Collections.sort(scenariosWithInputs, new ScenarioTableLengthComparator());
       isSorted = true;
@@ -83,6 +82,27 @@ public class SlimTestContextImpl implements SlimTestContext {
       int size1 = st1.getInputs().size();
       int size2 = st2.getInputs().size();
       return size2 - size1;
+    }
+  }
+
+  private void initializeScenariosWithInputs() {
+    int initialCapacity = scenarios.size();
+    scenariosWithInputs = new ArrayList<>(initialCapacity);
+    for (ScenarioTable table : scenarios.values()) {
+      if (!table.getInputs().isEmpty()) {
+        scenariosWithInputs.add(table);
+      }
+    }
+    isSorted = scenariosWithInputs.isEmpty();
+  }
+
+  private void maintainScenariosWithInputs(ScenarioTable oldTable, ScenarioTable newTable) {
+    if (oldTable != null && !oldTable.getInputs().isEmpty()) {
+      scenariosWithInputs.remove(oldTable);
+    }
+    if (!newTable.getInputs().isEmpty()) {
+      scenariosWithInputs.add(newTable);
+      isSorted = false;
     }
   }
 
