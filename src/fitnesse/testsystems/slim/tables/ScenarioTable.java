@@ -19,7 +19,6 @@ import fitnesse.testsystems.TestExecutionException;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimTestResult;
@@ -253,12 +252,26 @@ public class ScenarioTable extends SlimTable {
     }
   }
 
+  public boolean canMatchParameters(String invokingString) {
+    Matcher matcher = getMatchingMatcher(invokingString);
+    return matcher != null;
+  }
+
   public String[] matchParameters(String invokingString) {
     String[] result = null;
+    Matcher matcher = getMatchingMatcher(invokingString);
+    if (matcher != null) {
+      result = extractNamesFromMatcher(matcher);
+    }
+    return result;
+  }
+
+  private Matcher getMatchingMatcher(String invokingString) {
+    Matcher result = null;
     if (pattern != null) {
       Matcher matcher = pattern.matcher(invokingString);
       if (matcher.matches()) {
-        result = extractNamesFromMatcher(matcher);
+        result = matcher;
       }
     }
     return result;

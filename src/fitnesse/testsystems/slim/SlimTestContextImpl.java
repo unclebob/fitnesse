@@ -54,8 +54,7 @@ public class SlimTestContextImpl implements SlimTestContext {
   public ScenarioTable getScenarioByPattern(String invokingString) {
     ScenarioTable result = null;
     for (ScenarioTable s : getScenariosWithMostArgumentsFirst()) {
-      String[] args = s.matchParameters(invokingString);
-      if (args != null) {
+      if (s.canMatchParameters(invokingString)) {
         result = s;
         break;
       }
