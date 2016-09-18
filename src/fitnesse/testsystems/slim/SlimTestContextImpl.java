@@ -20,7 +20,7 @@ public class SlimTestContextImpl implements SlimTestContext {
   private final Map<String, ScenarioTable> scenarios = new HashMap<>();
   private final TestSummary testSummary = new TestSummary();
   private final TestPage pageToTest;
-  private final List<ScenarioTable> allTables = new ArrayList<>();
+  private final List<ScenarioTable> scenariosWithInputs = new ArrayList<>();
   private boolean isSorted = false;
 
   public SlimTestContextImpl(TestPage pageToTest) {
@@ -40,8 +40,11 @@ public class SlimTestContextImpl implements SlimTestContext {
   @Override
   public void addScenario(String scenarioName, ScenarioTable scenarioTable) {
     ScenarioTable oldValue = scenarios.put(scenarioName, scenarioTable);
-    if (oldValue == null || !oldValue.equals(scenarioTable)) {
-      allTables.add(scenarioTable);
+    if (oldValue != null && !oldValue.getInputs().isEmpty()) {
+      scenariosWithInputs.remove(oldValue);
+    }
+    if (!scenarioTable.getInputs().isEmpty()) {
+      scenariosWithInputs.add(scenarioTable);
       isSorted = false;
     }
   }
@@ -68,10 +71,10 @@ public class SlimTestContextImpl implements SlimTestContext {
 
   private List<ScenarioTable> getScenariosWithMostArgumentsFirst() {
     if (!isSorted) {
-      Collections.sort(allTables, new ScenarioTableLengthComparator());
+      Collections.sort(scenariosWithInputs, new ScenarioTableLengthComparator());
       isSorted = true;
     }
-    return allTables;
+    return scenariosWithInputs;
   }
 
   private static class ScenarioTableLengthComparator implements Comparator<ScenarioTable> {
