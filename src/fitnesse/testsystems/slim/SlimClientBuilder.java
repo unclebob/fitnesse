@@ -3,14 +3,16 @@ package fitnesse.testsystems.slim;
 import java.net.ServerSocket;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.lang.ArrayUtils;
 import fitnesse.FitNesseContext;
-import fitnesse.socketservice.*;
+import fitnesse.socketservice.ClientSocketFactory;
+import fitnesse.socketservice.PlainClientSocketFactory;
+import fitnesse.socketservice.PlainServerSocketFactory;
+import fitnesse.socketservice.SslClientSocketFactory;
 import fitnesse.testsystems.ClientBuilder;
 import fitnesse.testsystems.CommandRunner;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.MockCommandRunner;
-
-import org.apache.commons.lang.ArrayUtils;
 
 public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   public static final String SLIM_PORT = "SLIM_PORT";
@@ -34,13 +36,23 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   public SlimCommandRunningClient build() {
     CommandRunner commandRunner;
 
+    //TODO SLIMSLAVE
     if (useManualStartForTestSystem()) {
       commandRunner = new MockCommandRunner(getExecutionLogListener());
+    } else if (getTestRunner().contains("Slave")) {
+      commandRunner = new CommandRunner(buildCommand(), "SLAVE",
+          createClasspathEnvironment(getClassPath()),
+          getExecutionLogListener(), determineTimeout());
+      return new SlimSlaveCommandRunningClient(commandRunner,
+          determineSlimHost(), getSlimPort(), determineTimeout(),
+          getSlimVersion(), determineSocketFactory());
     } else {
       commandRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(getClassPath()), getExecutionLogListener(), determineTimeout());
     }
+    return new SlimCommandRunningClient(commandRunner, determineSlimHost(),
+        getSlimPort(), determineTimeout(), getSlimVersion(),
+        determineSocketFactory());
 
-    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort(), determineTimeout(), getSlimVersion(), determineSocketFactory());
   }
 
   protected ClientSocketFactory determineSocketFactory() {
@@ -79,7 +91,8 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
 
   @Override
   protected String defaultTestRunner() {
-    return "fitnesse.slim.SlimService";
+    //TODO SlimSlave return "fitnesse.slim.SlimService";
+    return "fitnesse.slim.SlimSlave";
   }
 
   protected String[] buildCommand() {

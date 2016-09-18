@@ -2,19 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import fitnesse.slim.SlimError;
-import fitnesse.slim.SlimStreamReader;
-import fitnesse.slim.SlimVersion;
-import fitnesse.slim.instructions.*;
-import fitnesse.slim.protocol.SlimDeserializer;
-import fitnesse.slim.protocol.SlimListBuilder;
-import fitnesse.slim.protocol.SlimSerializer;
-import fitnesse.socketservice.ClientSocketFactory;
-import fitnesse.testsystems.CommandRunner;
-
-import fitnesse.util.Clock;
-import util.FileUtil;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -25,19 +12,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import util.FileUtil;
+import fitnesse.slim.SlimError;
+import fitnesse.slim.SlimStreamReader;
+import fitnesse.slim.SlimVersion;
+import fitnesse.slim.instructions.Instruction;
+import fitnesse.slim.protocol.SlimDeserializer;
+import fitnesse.slim.protocol.SlimListBuilder;
+import fitnesse.slim.protocol.SlimSerializer;
+import fitnesse.socketservice.ClientSocketFactory;
+import fitnesse.testsystems.CommandRunner;
+import fitnesse.util.Clock;
+
 public class SlimCommandRunningClient implements SlimClient {
   private static final Logger LOG = Logger.getLogger(SlimCommandRunningClient.class.getName());
 
   public static final int NO_SLIM_SERVER_CONNECTION_FLAG = -32000;
   public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.3;
 
-  private final CommandRunner slimRunner;
+  protected final CommandRunner slimRunner;
   private final int connectionTimeout;
   private final double requiredSlimVersion;
   private final ClientSocketFactory clientSocketFactory;
   private Socket client;
-  private SlimStreamReader reader;
-  private OutputStream writer;
+  protected SlimStreamReader reader;
+  protected OutputStream writer;
   private String slimServerVersionMessage;
   private double slimServerVersion;
   private String hostName;
@@ -108,18 +107,25 @@ public class SlimCommandRunningClient implements SlimClient {
     validateConnection();
   }
 
-  private void validateConnection() throws IOException {
+  protected void validateConnection() throws IOException {
     // Convert seconds to milliseconds
     int waittime = connectionTimeout * 1000;
-    int oldTimeout = client.getSoTimeout();
-    client.setSoTimeout(waittime);
+    int oldTimeout = 10;
+    if (client != null) {
+      // TODO happens only for SlimSlave
+      oldTimeout = client.getSoTimeout();
+      client.setSoTimeout(waittime);
+    }
     try{
     	slimServerVersionMessage = reader.readLine();
     }catch (SocketTimeoutException e){
     	throw new SlimError("Timeout while reading slim header from client. Check that you are connecting to the right port and that the slim client is running. You can increase the timeout limit by setting 'slim.timeout' in the fitnesse properties file.");
     }finally{
     	// restore previous value
-    	client.setSoTimeout(oldTimeout);
+      if (client != null) {
+        // TODO happens only for SlimSlave
+        client.setSoTimeout(oldTimeout);
+      }
     }
     LOG.finest("Read Slim Header: >" + slimServerVersionMessage + "<");
     if (!isConnected()) {

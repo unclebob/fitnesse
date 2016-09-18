@@ -3,6 +3,12 @@
 
 package fitnesse.testsystems;
 
+import static java.util.Arrays.asList;
+import static util.FileUtil.CHARENCODING;
+import org.apache.commons.lang.StringUtils;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,10 +22,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.StringUtils;
+import fitnesse.slim.SlimStreamReader;
 
-import static java.util.Arrays.asList;
-import static util.FileUtil.CHARENCODING;
 
 public class CommandRunner {
   private static final Logger LOG = Logger.getLogger(CommandRunner.class.getName());
@@ -69,12 +73,6 @@ public class CommandRunner {
     InputStream stderr = process.getErrorStream();
 
     sendCommandStartedEvent();
-    new Thread(new OutputReadingRunnable(stdout, new OutputWriter() {
-      @Override
-      public void write(String output) {
-        executionLogListener.stdOut(output);
-      }
-    }), "CommandRunner stdOut").start();
 
     new Thread(new OutputReadingRunnable(stderr, new OutputWriter() {
       @Override
@@ -84,7 +82,18 @@ public class CommandRunner {
       }
     }), "CommandRunner stdErr").start();
 
-    sendInput(stdin);
+    if (!this.input.equalsIgnoreCase("SLAVE")) {
+      new Thread(new OutputReadingRunnable(stdout, new OutputWriter() {
+        @Override
+        public void write(String output) {
+          executionLogListener.stdOut(output);
+        }
+      }), "CommandRunner stdOut").start();
+
+      sendInput(stdin);
+    } else {
+      // Nothing to be done
+    }
   }
 
   protected void sendCommandStartedEvent() {
@@ -237,5 +246,16 @@ public class CommandRunner {
 
   public String getCommandErrorMessage() {
 	return commandErrorMessage;
+  }
+
+  // TODO only used for SlimSlave - refactor
+  public SlimStreamReader getReader() {
+    return new SlimStreamReader(new BufferedInputStream(
+        process.getInputStream()));
+  }
+
+  // TODO only used for SlimSlave - refactor
+  public OutputStream getByteWriter() {
+    return new BufferedOutputStream(process.getOutputStream());
   }
 }
