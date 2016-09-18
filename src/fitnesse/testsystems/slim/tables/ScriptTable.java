@@ -175,9 +175,7 @@ public class ScriptTable extends SlimTable {
 
   protected List<SlimAssertion> assertionsFromScenario(int row) throws TestExecutionException {
     int lastCol = table.getColumnCountInRow(row) - 1;
-    String actionName = getActionNameStartingAt(0, lastCol, row);
-    String simpleName = actionName.replace(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX, "");
-    String scenarioName = Disgracer.disgraceClassName(simpleName);
+    String scenarioName = getScenarioNameFromAlternatingCells(lastCol, row);
     ScenarioTable scenario = getTestContext().getScenario(scenarioName);
     String[] args = null;
     List<SlimAssertion> assertions = new ArrayList<>();
@@ -195,6 +193,12 @@ public class ScriptTable extends SlimTable {
       assertions.addAll(scenario.call(args, this, row));
     }
     return assertions;
+  }
+
+  protected String getScenarioNameFromAlternatingCells(int endingCol, int row) {
+    String actionName = getActionNameStartingAt(0, endingCol, row);
+    String simpleName = actionName.replace(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX, "");
+    return Disgracer.disgraceClassName(simpleName);
   }
 
   protected List<SlimAssertion> note(int row) {
