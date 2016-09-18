@@ -182,16 +182,16 @@ public class ScriptTable extends SlimTable {
     String[] args = null;
     List<SlimAssertion> assertions = new ArrayList<>();
     if (scenario != null) {
-      scenario.setCustomComparatorRegistry(customComparatorRegistry);
       args = getArgumentsStartingAt(1, lastCol, row, assertions);
     } else if (lastCol == 0) {
       String cellContents = table.getCellContents(0, row);
-      scenario = getTestContext().getScenarioByPattern(cellContents, customComparatorRegistry);
+      scenario = getTestContext().getScenarioByPattern(cellContents);
       if (scenario != null) {
         args = scenario.matchParameters(cellContents);
       }
     }
     if (scenario != null) {
+      scenario.setCustomComparatorRegistry(customComparatorRegistry);
       assertions.addAll(scenario.call(args, this, row));
     }
     return assertions;

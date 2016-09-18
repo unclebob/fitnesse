@@ -334,8 +334,8 @@ public class ScenarioTable extends SlimTable {
     }
 
     @Override
-    public ScenarioTable getScenarioByPattern(String invokingString, CustomComparatorRegistry customComparatorRegistry) {
-      return testContext.getScenarioByPattern(invokingString, customComparatorRegistry);
+    public ScenarioTable getScenarioByPattern(String invokingString) {
+      return testContext.getScenarioByPattern(invokingString);
     }
 
     @Override

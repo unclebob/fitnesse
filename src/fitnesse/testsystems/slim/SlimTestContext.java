@@ -18,7 +18,7 @@ public interface SlimTestContext {
 
   ScenarioTable getScenario(String scenarioName);
 
-  ScenarioTable getScenarioByPattern(String invokingString, CustomComparatorRegistry customComparatorRegistry);
+  ScenarioTable getScenarioByPattern(String invokingString);
 
   Collection<ScenarioTable> getScenarios();
 
