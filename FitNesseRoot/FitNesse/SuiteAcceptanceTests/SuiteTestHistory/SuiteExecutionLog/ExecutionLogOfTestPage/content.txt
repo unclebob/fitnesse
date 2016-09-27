@@ -10,8 +10,7 @@
 -! |
 |check |request page    |TestPage?test     |200    |
 |check |request page    |TestPage?executionLog     |200    |
-|# ensure | content contains | slim:fitnesse.slim.SlimService |
-| ensure | content contains | slim:fitnesse.slim.SlimSlave |
+| ensure | content contains | slim:fitnesse.slim.SlimService |
 | ensure | content contains | This is standard output |
 | ensure | content contains | This is error output |
 |show  collapsed |content |

@@ -29,7 +29,7 @@ public class CommandRunner {
   private static final Logger LOG = Logger.getLogger(CommandRunner.class.getName());
 
   private Process process;
-  private String input = "";
+  private String input = null;
   protected int exitCode = -1;
   private String[] command;
   private Map<String, String> environmentVariables;
@@ -74,25 +74,39 @@ public class CommandRunner {
 
     sendCommandStartedEvent();
 
-    new Thread(new OutputReadingRunnable(stderr, new OutputWriter() {
-      @Override
-      public void write(String output) {
-        executionLogListener.stdErr(output);
-        commandErrorMessage = output;
-      }
-    }), "CommandRunner stdErr").start();
+    if (this.input == null) {
+      // Slim Slave Mode
+      new Thread(new OutputReadingRunnable(stderr, new OutputWriter() {
+        @Override
+        public void write(String output) {
+          // Separate StdOut and StdErr
+          if (output.startsWith("SOUT:"))
+            executionLogListener.stdOut(output.substring(5));
+          else if (output.startsWith("SERR:")) {
+            executionLogListener.stdErr(output.substring(5));
+            commandErrorMessage = output.substring(5);
+          } else
+            executionLogListener.stdOut(output);
 
-    if (!this.input.equalsIgnoreCase("SLAVE")) {
+        }
+      }), "CommandRunner stdErr").start();
+    } else {
+      // Fit and SlimService
       new Thread(new OutputReadingRunnable(stdout, new OutputWriter() {
         @Override
         public void write(String output) {
           executionLogListener.stdOut(output);
         }
       }), "CommandRunner stdOut").start();
+      new Thread(new OutputReadingRunnable(stderr, new OutputWriter() {
+        @Override
+        public void write(String output) {
+          executionLogListener.stdErr(output);
+          commandErrorMessage = output;
+        }
+      }), "CommandRunner stdErr").start();
 
       sendInput(stdin);
-    } else {
-      // Nothing to be done
     }
   }
 
@@ -248,14 +262,11 @@ public class CommandRunner {
 	return commandErrorMessage;
   }
 
-  // TODO only used for SlimSlave - refactor
-  public SlimStreamReader getReader() {
-    return new SlimStreamReader(new BufferedInputStream(
-        process.getInputStream()));
+  public InputStream getReader() {
+    return process.getInputStream();
   }
 
-  // TODO only used for SlimSlave - refactor
-  public OutputStream getByteWriter() {
-    return new BufferedOutputStream(process.getOutputStream());
+  public OutputStream getWriter() {
+    return process.getOutputStream();
   }
 }

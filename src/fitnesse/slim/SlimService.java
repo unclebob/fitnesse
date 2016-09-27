@@ -58,11 +58,12 @@ public class SlimService {
         System.exit(0);
       } catch (Exception e) {
         e.printStackTrace();
-        System.out.println("Exiting as exception occured: " + e.getMessage());
+        System.err.println("Exiting as exception occured: " + e.getMessage());
         System.exit(98);
       }
     } else {
       parseCommandLineFailed(args);
+      System.exit(97);
     }
   }
 
@@ -73,9 +74,21 @@ public class SlimService {
   }
 
   public static void startWithFactory(SlimFactory slimFactory, Options options) throws IOException {
-    ServerSocketFactory serverSocketFactory = options.useSSL ? new SslServerSocketFactory(true, options.sslParameterClassName) : new PlainServerSocketFactory();
+    ServerSocket socket;
+    if (options.port == 1) {
+      socket = new SlimSlaveSocket();
+      if (options.daemon) {
+        System.err
+            .println("Warning: in SlimSlave mode the daemon flag is not supported.");
+      }
+    } else {
+      ServerSocketFactory serverSocketFactory = options.useSSL ? new SslServerSocketFactory(
+          true, options.sslParameterClassName) : new PlainServerSocketFactory();
+      socket = serverSocketFactory.createServerSocket(options.port);
+    }
     try {
-      SlimService slimservice = new SlimService(slimFactory.getSlimServer(), serverSocketFactory.createServerSocket(options.port), options.daemon);
+      SlimService slimservice = new SlimService(slimFactory.getSlimServer(),
+          socket, options.daemon);
       slimservice.accept();
     } catch (java.lang.OutOfMemoryError e) {
       System.err.println("Out of Memory. Aborting.");
@@ -95,7 +108,7 @@ public class SlimService {
       boolean verbose = commandLine.hasOption("v");
       String interactionClassName = commandLine.getOptionArgument("i", "interactionClass");
       String portString = commandLine.getArgument("port");
-      int port = (portString == null) ? 8099 : Integer.parseInt(portString);
+      int port = (portString == null) ? 1 : Integer.parseInt(portString);
       String statementTimeoutString = commandLine.getOptionArgument("s", "statementTimeout");
       Integer statementTimeout = (statementTimeoutString == null) ? null : Integer.parseInt(statementTimeoutString);
       boolean daemon = commandLine.hasOption("d");

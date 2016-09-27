@@ -5,19 +5,17 @@ To test this we run in debug mode and request to start the slim server ourselfs.
 Use the property slim.timeout to define how long the test system should wait for the slim client. The default is 10 seconds.
 In this test we set it to 1 second.
 
-Required Improvement: also the timeout is set to 1 second the detection takes 20 seconds :(
-
 !| script |
 | create page | TestPage | with content | !-
 !define TEST_SYSTEM {SLIM}
 !define slim.timeout {1}
+!define SLIM_PORT {8099}
 !define MANUALLY_START_TEST_RUNNER_ON_DEBUG (true)
 
 -! |
 | check | request page | TestPage?test&remote_debug | 200 |
-| ensure | content contains | TEST_SYSTEM=SLIM|
-| #show | content |
-| check | request page | TestPage?executionLog| 200 |
 |ensure |content contains |Error connecting to SLiM server on localhost:|
+| show collapsed| content |
+| check | request page | TestPage?executionLog| 200 |
 |ensure | content matches  | Time elapsed:.* seconds |
-|# show | content |
+| show collapsed| content |

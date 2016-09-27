@@ -82,20 +82,4 @@ public class SlimServer implements SocketServer {
     List<Object> results = executor.execute(statements);
     return SlimSerializer.serialize(results);
   }
-
-  public void serve(SlimSocket socket) throws IOException {
-    SlimStreamReader reader = null;
-    OutputStream writer = null;
-    try {
-      reader = socket.getReader();
-      writer = socket.getByteWriter();
-      tryProcessInstructions(reader, writer);
-    } finally {
-      slimFactory.stop();
-      FileUtil.close(reader);
-      FileUtil.close(writer);
-    }
-
-  }
-
 }

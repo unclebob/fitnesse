@@ -1,7 +1,10 @@
 package fitnesse.testsystems.slim;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 
+import fitnesse.slim.SlimStreamReader;
 import fitnesse.socketservice.ClientSocketFactory;
 import fitnesse.testsystems.CommandRunner;
 
@@ -16,8 +19,9 @@ public class SlimSlaveCommandRunningClient extends SlimCommandRunningClient {
 
   @Override
   public void connect() throws IOException {
-    reader = slimRunner.getReader();
-    writer = slimRunner.getByteWriter();
+    reader = new SlimStreamReader(new BufferedInputStream(
+        slimRunner.getReader()));
+    writer = new BufferedOutputStream(slimRunner.getWriter());
     validateConnection();
   }
 }

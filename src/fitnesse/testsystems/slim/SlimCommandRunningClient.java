@@ -53,7 +53,14 @@ public class SlimCommandRunningClient implements SlimClient {
 
   @Override
   public void start() throws IOException, SlimVersionMismatch {
-    slimRunner.asynchronousStart();
+    try {
+      slimRunner.asynchronousStart();
+    } catch (Exception e) {
+      final String slimErrorMessage = "Error SLiM server startup failed. "
+          + slimRunner.getCommandErrorMessage();
+      throw new SlimError(slimErrorMessage, e);
+
+    }
     connect();
     checkForVersionMismatch();
   }
@@ -83,7 +90,7 @@ public class SlimCommandRunningClient implements SlimClient {
     LOG.finest("Trying to connect to host: " + hostName + " on port: " + port + " timeout setting: " + connectionTimeout);
     while (client == null) {
       if (slimRunner != null && slimRunner.isDead()) {
-      	final String slimErrorMessage = "Error SLiM server died before a connection could be established. "+slimRunner.getCommandErrorMessage();
+        final String slimErrorMessage = "Error SLiM server died before a connection could be established. " + slimRunner.getCommandErrorMessage();
       	throw new SlimError(slimErrorMessage);
       }
       try {
@@ -104,28 +111,23 @@ public class SlimCommandRunningClient implements SlimClient {
 
     reader = SlimStreamReader.getReader(client);
     writer = SlimStreamReader.getByteWriter(client);
-    validateConnection();
+
+    // Convert seconds to milliseconds
+    int waittime = connectionTimeout * 1000;
+    int oldTimeout = client.getSoTimeout();
+    client.setSoTimeout(waittime);
+    try {
+      validateConnection();
+    } finally {
+      client.setSoTimeout(oldTimeout);
+    }
   }
 
   protected void validateConnection() throws IOException {
-    // Convert seconds to milliseconds
-    int waittime = connectionTimeout * 1000;
-    int oldTimeout = 10;
-    if (client != null) {
-      // TODO happens only for SlimSlave
-      oldTimeout = client.getSoTimeout();
-      client.setSoTimeout(waittime);
-    }
     try{
     	slimServerVersionMessage = reader.readLine();
     }catch (SocketTimeoutException e){
     	throw new SlimError("Timeout while reading slim header from client. Check that you are connecting to the right port and that the slim client is running. You can increase the timeout limit by setting 'slim.timeout' in the fitnesse properties file.");
-    }finally{
-    	// restore previous value
-      if (client != null) {
-        // TODO happens only for SlimSlave
-        client.setSoTimeout(oldTimeout);
-      }
     }
     LOG.finest("Read Slim Header: >" + slimServerVersionMessage + "<");
     if (!isConnected()) {

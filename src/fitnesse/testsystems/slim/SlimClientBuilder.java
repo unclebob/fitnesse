@@ -21,6 +21,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   private static final String SLIM_VERSION = "SLIM_VERSION";
   public static final String MANUALLY_START_TEST_RUNNER_ON_DEBUG = "MANUALLY_START_TEST_RUNNER_ON_DEBUG";
   public static final String SLIM_SSL = "SLIM_SSL";
+  public static final int SLIM_SLAVE_PORT = 1;
 
   private static final AtomicInteger slimPortOffset = new AtomicInteger(0);
 
@@ -36,11 +37,10 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   public SlimCommandRunningClient build() {
     CommandRunner commandRunner;
 
-    //TODO SLIMSLAVE
     if (useManualStartForTestSystem()) {
       commandRunner = new MockCommandRunner(getExecutionLogListener());
-    } else if (getTestRunner().contains("Slave")) {
-      commandRunner = new CommandRunner(buildCommand(), "SLAVE",
+    } else if (getSlimPort() == SLIM_SLAVE_PORT) {
+      commandRunner = new CommandRunner(buildCommand(), null,
           createClasspathEnvironment(getClassPath()),
           getExecutionLogListener(), determineTimeout());
       return new SlimSlaveCommandRunningClient(commandRunner,
@@ -91,8 +91,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
 
   @Override
   protected String defaultTestRunner() {
-    //TODO SlimSlave return "fitnesse.slim.SlimService";
-    return "fitnesse.slim.SlimSlave";
+    return "fitnesse.slim.SlimService";
   }
 
   protected String[] buildCommand() {
@@ -145,6 +144,8 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     if (base == 0) {
       return findFreePort();
     }
+    if (base == SLIM_SLAVE_PORT)
+      return SLIM_SLAVE_PORT;
 
     synchronized (SlimClientBuilder.class) {
       int offset = slimPortOffset.get();
@@ -173,7 +174,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     } catch (NumberFormatException e) {
       // stick with default
     }
-    return 8085;
+    return SLIM_SLAVE_PORT;
   }
 
   private int getSlimPortPoolSize() {

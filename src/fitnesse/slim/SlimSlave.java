@@ -6,6 +6,8 @@ import static fitnesse.slim.JavaSlimFactory.createJavaSlimFactory;
 
 import java.io.IOException;
 import java.net.BindException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Arrays;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -40,7 +42,7 @@ public class SlimSlave {
     }
   }
 
-  private final SlimSocket serverSocket;
+  private final ServerSocket serverSocket;
   private final SlimServer slimServer;
   private final boolean daemon;
   private final Executor executor = Executors.newFixedThreadPool(5);
@@ -103,12 +105,11 @@ public class SlimSlave {
     return null;
   }
 
-  public SlimSlave(SlimServer slimServer, SlimSocket serverSocket,
+  public SlimSlave(SlimServer slimServer, ServerSocket serverSocket,
       boolean daemon) throws IOException {
     this.daemon = daemon;
     this.slimServer = slimServer;
     this.serverSocket = serverSocket;
-//
   }
 
   public int getPort() {
@@ -133,7 +134,7 @@ public class SlimSlave {
 
   private void acceptMany() throws IOException {
     while (true) {
-      final SlimSocket socket = serverSocket.accept();
+      final Socket socket = serverSocket.accept();
       executor.execute(new Runnable() {
 
         @Override
@@ -148,7 +149,7 @@ public class SlimSlave {
     }
   }
 
-  private void handle(SlimSocket socket) throws IOException {
+  private void handle(Socket socket) throws IOException {
     try {
       slimServer.serve(socket);
     } finally {
@@ -157,7 +158,7 @@ public class SlimSlave {
   }
 
   private void acceptOne() throws IOException {
-    SlimSocket socket = serverSocket.accept();
+    Socket socket = serverSocket.accept();
     handle(socket);
   }
 

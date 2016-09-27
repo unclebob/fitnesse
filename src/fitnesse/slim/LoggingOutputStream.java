@@ -49,8 +49,10 @@ class LoggingOutputStream extends ByteArrayOutputStream {
       // avoid empty records
       return;
     }
-
-    logger.println(level + ":" + record);
+    // Prefix each line
+    for (String item : record.split(this.lineSeparator)) {
+      logger.println(level + ":" + item);
+    }
   }
 
 }
