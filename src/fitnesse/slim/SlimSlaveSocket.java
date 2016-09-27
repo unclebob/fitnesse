@@ -1,3 +1,5 @@
+// Copyright (C) 2016 by six42@gmx.net, All rights reserved.
+
 package fitnesse.slim;
 
 import java.io.IOException;
@@ -9,7 +11,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import util.FileUtil;
-import fitnesse.socketservice.PlainServerSocketFactory;
 import fitnesse.util.MockSocket;
 
 public class SlimSlaveSocket extends ServerSocket {
@@ -22,19 +23,16 @@ public class SlimSlaveSocket extends ServerSocket {
 
   public SlimSlaveSocket() throws IOException {
 
-    // preserve old stdout/stderr streams in case they might be useful
+    // preserve original streams
     this.stdout = System.out;
     this.stderr = System.err;
     this.stdin = System.in;
 
-    // now rebind stdout/stderr to original stderr
-    LoggingOutputStream los;
-
-    los = new LoggingOutputStream(this.stderr, "SOUT");
-    System.setOut(new PrintStream(los, true));
-
-    los = new LoggingOutputStream(this.stderr, "SERR");
-    System.setErr(new PrintStream(los, true));
+    // bind System.stdout/System.stderr to original stderr
+    System.setOut(new PrintStream(new LoggingOutputStream(this.stderr, "SOUT"),
+        true));
+    System.setErr(new PrintStream(new LoggingOutputStream(this.stderr, "SERR"),
+        true));
 
     LOG.log(Level.FINER, "Creating port free Slim Slave.");
 
@@ -48,6 +46,9 @@ public class SlimSlaveSocket extends ServerSocket {
   @Override
   public void close() {
     FileUtil.close(stdin);
+    System.out.flush();
+    System.err.flush();
+    stdout.flush();
     FileUtil.close(stdout);
     FileUtil.close(stderr);
   }

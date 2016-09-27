@@ -2,15 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import fitnesse.slim.protocol.SlimDeserializer;
+import fitnesse.slim.protocol.SlimSerializer;
+import fitnesse.socketservice.SocketServer;
+import util.FileUtil;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.List;
-
-import util.FileUtil;
-import fitnesse.slim.protocol.SlimDeserializer;
-import fitnesse.slim.protocol.SlimSerializer;
-import fitnesse.socketservice.SocketServer;
 
 
 /**
@@ -82,4 +82,5 @@ public class SlimServer implements SocketServer {
     List<Object> results = executor.execute(statements);
     return SlimSerializer.serialize(results);
   }
+
 }

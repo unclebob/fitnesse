@@ -7,8 +7,6 @@ import static java.util.Arrays.asList;
 import static util.FileUtil.CHARENCODING;
 import org.apache.commons.lang.StringUtils;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,8 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import fitnesse.slim.SlimStreamReader;
 
 
 public class CommandRunner {
@@ -79,12 +75,12 @@ public class CommandRunner {
       new Thread(new OutputReadingRunnable(stderr, new OutputWriter() {
         @Override
         public void write(String output) {
-          // Separate StdOut and StdErr
-          if (output.startsWith("SOUT:"))
-            executionLogListener.stdOut(output.substring(5));
-          else if (output.startsWith("SERR:")) {
-            executionLogListener.stdErr(output.substring(5));
-            commandErrorMessage = output.substring(5);
+          // Separate StdOut and StdErr and remove prefix "SOUT.:", "SERR.:"
+          if (output.startsWith("SOUT"))
+            executionLogListener.stdOut(output.substring(6));
+          else if (output.startsWith("SERR")) {
+            executionLogListener.stdErr(output.substring(6));
+            commandErrorMessage = output.substring(6);
           } else
             executionLogListener.stdOut(output);
 

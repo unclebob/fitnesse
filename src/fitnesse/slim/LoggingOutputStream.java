@@ -1,3 +1,5 @@
+// Copyright (C) 2016 by six42@gmx.net, All rights reserved.
+// The below code is based on https://blogs.oracle.com/nickstephen/entry/java_redirecting_system_out_and
 package fitnesse.slim;
 
 import java.io.ByteArrayOutputStream;
@@ -49,10 +51,10 @@ class LoggingOutputStream extends ByteArrayOutputStream {
       // avoid empty records
       return;
     }
-    // Prefix each line
-    for (String item : record.split(this.lineSeparator)) {
-      logger.println(level + ":" + item);
-    }
+    // Prefix each new line with: newline + level + DOT + ":"
+    record.replace(this.lineSeparator, this.lineSeparator + level + ".:");
+    // Prefix first line with: level + SPACE + ":"
+    logger.println(level + " :" + record);
   }
 
 }
