@@ -9,7 +9,9 @@ import java.lang.annotation.Target;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
@@ -153,6 +155,19 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     public String value();
   }
 
+  /**
+   * The <code>UrlPathVariables</code> annotation specifies the variable overrides to
+   * use for the duration of the test. Example: <code>ID=100&gizmo=true</code>
+   */
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.TYPE)
+  public @interface UrlPathVariables {
+
+    public String value() default "";
+
+    public String systemProperty() default "";
+  }
+
   private Class<?> suiteClass;
   private String suiteName;
   private String outputDir;
@@ -164,6 +179,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   private FitNesseContext context;
   private DescriptionFactory descriptionFactory;
   private List<WikiPage> children;
+  private Map<String, String> urlPathVariables;
 
   public FitNesseRunner(Class<?> suiteClass) throws InitializationError {
     super(suiteClass);
@@ -218,6 +234,13 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     } catch (Exception e) {
       errors.add(e);
     }
+
+    try {
+      this.urlPathVariables = parseUrlPathVariables(suiteClass);
+    } catch (Exception e) {
+      errors.add(e);
+    }
+
     try {
       this.context = createContext(suiteClass);
     } catch (Exception e) {
@@ -298,6 +321,20 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
       return null;
     }
     return excludeSuiteFilterAnnotation.value();
+  }
+
+  protected String getUrlPathVariables(Class<?> klass) {
+    UrlPathVariables urlParamsAnnotation = klass.getAnnotation(UrlPathVariables.class);
+    if (urlParamsAnnotation == null) {
+      return null;
+    }
+    if (!"".equals(urlParamsAnnotation.value())) {
+      return urlParamsAnnotation.value();
+    }
+    if (!"".equals(urlParamsAnnotation.systemProperty())) {
+      return System.getProperty(urlParamsAnnotation.systemProperty());
+    }
+    return null;
   }
 
   protected boolean useDebugMode(Class<?> klass) throws Exception {
@@ -475,6 +512,24 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     TestSummary summary = testFormatter.getTotalSummary();
 
     assertTrue(msgAtLeastOneTest(suiteName, summary), summary.getRight() > 0 || summary.getWrong() > 0 || summary.getExceptions() > 0);
+  }
+
+  private Map<String, String> parseUrlPathVariables(Class<?> klass) {
+    Map<String, String> variables = new HashMap<String, String>();
+    String urlParams = getUrlPathVariables(klass);
+    if (urlParams == null || urlParams.indexOf('=') < 1) {
+      return variables;
+    }
+    for (String keyValue : urlParams.split("&")) {
+      int index = keyValue.indexOf('=');
+      if (index < 1) {
+        continue;
+      }
+      String key = keyValue.substring(0, index);
+      String value = keyValue.substring(index + 1);
+      variables.put(key, value);
+    }
+    return variables;
   }
 
   private String msgAtLeastOneTest(String pageName, TestSummary summary) {
