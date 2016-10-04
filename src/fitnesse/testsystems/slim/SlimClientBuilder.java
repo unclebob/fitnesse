@@ -20,6 +20,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   public static final String SLIM_FLAGS = "SLIM_FLAGS";
   private static final String SLIM_VERSION = "SLIM_VERSION";
   public static final String MANUALLY_START_TEST_RUNNER_ON_DEBUG = "MANUALLY_START_TEST_RUNNER_ON_DEBUG";
+  public static final String MANUALLY_START_TEST_RUNNER = "MANUALLY_START_TEST_RUNNER";
   public static final String SLIM_SSL = "SLIM_SSL";
   public static final int SLIM_SLAVE_PORT = 1;
 
@@ -37,15 +38,19 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   public SlimCommandRunningClient build() {
     CommandRunner commandRunner;
 
-    if (useManualStartForTestSystem()) {
-      commandRunner = new MockCommandRunner(getExecutionLogListener());
-    } else if (getSlimPort() == SLIM_SLAVE_PORT) {
+    if (getSlimPort() == SLIM_SLAVE_PORT) {
       commandRunner = new CommandRunner(buildCommand(), null,
           createClasspathEnvironment(getClassPath()),
           getExecutionLogListener(), determineTimeout());
       return new SlimSlaveCommandRunningClient(commandRunner,
           determineSlimHost(), getSlimPort(), determineTimeout(),
           getSlimVersion(), determineSocketFactory());
+    }
+
+    if (useManualStartForTestSystem()) {
+      commandRunner = new MockCommandRunner(
+          "Connection to running SlimService: " + determineSlimHost() + ":"
+              + getSlimPort(), getExecutionLogListener(), determineTimeout());
     } else {
       commandRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(getClassPath()), getExecutionLogListener(), determineTimeout());
     }
@@ -233,8 +238,15 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
       if (useManualStart == null) {
         useManualStart = getVariable(MANUALLY_START_TEST_RUNNER_ON_DEBUG);
       }
-      return "true".equalsIgnoreCase(useManualStart);
+      if (useManualStart != null) {
+        return "true".equalsIgnoreCase(useManualStart);
+      }
     }
-    return false;
+    String useManualStart = getVariable("manually.start.test.runner");
+    if (useManualStart == null) {
+      useManualStart = getVariable(MANUALLY_START_TEST_RUNNER);
+    }
+    return "true".equalsIgnoreCase(useManualStart);
+
   }
 }

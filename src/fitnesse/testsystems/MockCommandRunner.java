@@ -9,6 +9,11 @@ public class MockCommandRunner extends CommandRunner {
     super(new String[] {""}, "", null, executionLogListener, 2);
   }
 
+  public MockCommandRunner(String commandText,
+      ExecutionLogListener executionLogListener, int timeout) {
+    super(new String[] { commandText }, "", null, executionLogListener, timeout);
+  }
+
   @Override
   public void join() {
   }
