@@ -18,6 +18,8 @@ public interface SlimTestContext {
 
   ScenarioTable getScenario(String scenarioName);
 
+  ScenarioTable getScenarioByPattern(String invokingString);
+
   Collection<ScenarioTable> getScenarios();
 
   void incrementPassedTestsCount();
@@ -31,6 +33,6 @@ public interface SlimTestContext {
   void increment(ExecutionResult testSummary);
 
   void increment(TestSummary testSummary);
-  
+
   TestPage getPageToTest();
 }
