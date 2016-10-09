@@ -13,7 +13,7 @@ import fitnesse.slim.SlimServer;
 
 public class DefaultInteraction implements FixtureInteraction {
   private static final Method AROUND_METHOD;
-  
+
   static {
     try {
       AROUND_METHOD = InteractionAwareFixture.class.getMethod("aroundSlimInvoke", FixtureInteraction.class, Method.class, Object[].class);
@@ -87,19 +87,18 @@ public class DefaultInteraction implements FixtureInteraction {
 
 	@Override
 	public MethodExecutionResult findAndInvoke(String methodName, Object instance, Object... args) throws Throwable {
-		Method method = findMatchingMethod(methodName, instance.getClass(), args.length);
+		Method method = findMatchingMethod(methodName, instance, args);
 		if (method != null) {
 			return this.invokeMethod(instance, method, args);
 		}
 		return MethodExecutionResult.noMethod(methodName, instance.getClass(), args.length);
 	}
-	
-	protected Method findMatchingMethod(String methodName, Class<?> k, int nArgs) {
-		Method[] methods = k.getMethods();
-		if(methods == null) {
-			methods = k.getMethods();
-		}
 
+	protected Method findMatchingMethod(String methodName, Object instance, Object... args) {
+    Class<?> k = instance.getClass();
+		Method[] methods = k.getMethods();
+
+    int nArgs = args.length;
 		for (Method method : methods) {
 			boolean hasMatchingName = method.getName().equals(methodName);
 			boolean hasMatchingArguments = method.getParameterTypes().length == nArgs;
@@ -126,7 +125,7 @@ public class DefaultInteraction implements FixtureInteraction {
 		try {
 			Object result;
 			if (instance instanceof InteractionAwareFixture) {
-				// invoke via interaction, so it can also do its thing on the aroundMethod invocation 
+				// invoke via interaction, so it can also do its thing on the aroundMethod invocation
 				Object[] args = { this, method, convertedArgs };
         result = methodInvoke(AROUND_METHOD, instance, args);
 			} else {
@@ -134,24 +133,27 @@ public class DefaultInteraction implements FixtureInteraction {
 			}
 			return result;
 		} catch (InvocationTargetException e) {
-			if(e.getCause() != null){
+			if (e.getCause() != null) {
 				throw e.getCause();
-			}else{
+			} else {
 				throw e.getTargetException();
 			}
 		}
 	}
-	
+
   @Override
 	public Object methodInvoke(Method method, Object instance, Object... convertedArgs) throws Throwable {
 		try {
 			return method.invoke(instance, convertedArgs);
 		} catch (InvocationTargetException e) {
-			if(e.getCause() != null){
+			if (e.getCause() != null) {
 				throw e.getCause();
-			}else{
+			} else {
 				throw e.getTargetException();
 			}
-		}
+		} catch (IllegalArgumentException e) {
+		  throw new RuntimeException("Bad call of: " + method.getDeclaringClass().getName() + "." + method.getName()
+                                  + ". On instance of: " + instance.getClass().getName(), e);
+    }
 	}
 }

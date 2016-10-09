@@ -6,23 +6,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CachedInteraction extends DefaultInteraction {
-  private static final class NotExisting {}
   private static final Constructor<?> noConstructor = NotExisting.class.getConstructors()[0];
+  private static final Method noMethod = NotExisting.class.getDeclaredMethods()[0];
 
   private final Map<String, Constructor<?>> constructorsByClassAndArgs = new HashMap<>();
   private final Map<String, Class<?>> classCache = new HashMap<>();
   private final Map<MethodKey, Method> methodsByNameAndArgs = new HashMap<>();
 
   @Override
-  protected Constructor<?> getConstructor(Class<?> clazz,
-                                          Object[] args) {
-    String key = String.format("%s_%d", clazz.getName(), args.length);
+  protected Constructor<?> getConstructor(Class<?> clazz, Object[] args) {
+    String key = getConstructorKey(clazz, args);
     Constructor<?> cached = constructorsByClassAndArgs.get(key);
-    if(cached == noConstructor) return null;
-    if(cached != null) return cached;
+    if (cached == noConstructor) return null;
+    if (cached != null) return cached;
 
-    Constructor<?> constructor = super.getConstructor(clazz, args);
-    if(constructor == null) {
+    Constructor<?> constructor = handleConstructorCacheMiss(clazz, args);
+    if (constructor == null) {
       constructorsByClassAndArgs.put(key, noConstructor);
     } else {
       constructorsByClassAndArgs.put(key, constructor);
@@ -30,15 +29,18 @@ public class CachedInteraction extends DefaultInteraction {
     return constructor;
   }
 
+  protected String getConstructorKey(Class<?> clazz, Object[] args) {
+    return clazz.getName()+ "_" + args.length;
+  }
 
   @Override
   protected Class<?> getClass(String className) {
-    Class<?> k = classCache.get(className);
-    if(k == NotExisting.class) return null;
-    if(k != null) return k;
+    Class<?> cached = classCache.get(className);
+    if (cached == NotExisting.class) return null;
+    if (cached != null) return cached;
 
-    k = super.getClass(className);
-    if(k == null) {
+    Class<?> k = handleClassCacheMiss(className);
+    if (k == null) {
       classCache.put(className, NotExisting.class);
     } else {
       classCache.put(className, k);
@@ -46,41 +48,71 @@ public class CachedInteraction extends DefaultInteraction {
     return k;
   }
 
+  @Override
+  protected Method findMatchingMethod(String methodName, Object instance, Object... args) {
+    MethodKey key = new MethodKey(instance.getClass(), methodName, args.length);
+    Method cached = methodsByNameAndArgs.get(key);
+    if (cached == noMethod) return null;
+    if (cached != null) return cached;
 
-  private static class MethodKey {
-    final String k;
-    final String method;
-    final int nArgs;
+    Method method = handleMethodCacheMiss(methodName, instance, args);
+
+    if (method == null) {
+      methodsByNameAndArgs.put(key, noMethod);
+    } else {
+      methodsByNameAndArgs.put(key, method);
+    }
+    return method;
+  }
+
+  protected Constructor<?> handleConstructorCacheMiss(Class<?> clazz, Object[] args) {
+    return super.getConstructor(clazz, args);
+  }
+
+  protected Class<?> handleClassCacheMiss(String className) {
+    return super.getClass(className);
+  }
+
+  protected Method handleMethodCacheMiss(String methodName, Object instance, Object[] args) {
+    return super.findMatchingMethod(methodName, instance, args);
+  }
+
+  private static final class MethodKey {
+    private final String k;
+    private final String method;
+    private final int nArgs;
+
     public MethodKey(Class<?> k, String method, int nArgs) {
-      this.k = k.getSimpleName();
+      this.k = k.getName();
       this.method = method;
       this.nArgs = nArgs;
     }
 
     @Override
     public int hashCode() {
-      return nArgs * 31 + method.hashCode() + 31 * k.hashCode();
+      int result = k.hashCode();
+      result = 31 * result + method.hashCode();
+      result = 31 * result + nArgs;
+      return result;
     }
 
     @Override
     public boolean equals(Object o) {
-      if(!(o instanceof MethodKey)) return false;
-      MethodKey m = (MethodKey) o;
-      if(m.k != k) return false;
-      if(m.nArgs != nArgs) return false;
-      return m.method.equals(method);
+      if (o == null || getClass() != o.getClass()) return false;
+
+      MethodKey methodKey = (MethodKey) o;
+
+      if (nArgs != methodKey.nArgs) return false;
+      if (!k.equals(methodKey.k)) return false;
+      return method.equals(methodKey.method);
     }
   }
 
-  @Override
-  protected Method findMatchingMethod(String methodName, Class<?> k, int nArgs) {
-    MethodKey key = new MethodKey(k, methodName, nArgs);
-    Method cached = this.methodsByNameAndArgs.get(key);
-    if(cached != null) return cached;
+  private static final class NotExisting {
+    public NotExisting() {
+    }
 
-    Method method = super.findMatchingMethod(methodName, k, nArgs);
-
-    this.methodsByNameAndArgs.put(key, method);
-    return method;
+    public void doIt() {
+    }
   }
 }

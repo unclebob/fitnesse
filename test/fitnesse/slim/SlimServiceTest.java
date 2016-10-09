@@ -4,6 +4,7 @@ package fitnesse.slim;
 
 import java.io.IOException;
 
+import fitnesse.slim.fixtureInteraction.InteractionDemo;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -39,14 +40,16 @@ public class SlimServiceTest extends SlimServiceTestBase {
 
   @Test
   public void nullInteractionService_returnsDefaultClass() {
+    String defaultInteractionName = JavaSlimFactory.createInteraction(null).getClass().getName();
     SlimService.Options options = SlimService.parseCommandLine(new String[]{"8099"});
-    assertEquals("fitnesse.slim.fixtureInteraction.DefaultInteraction", options.interaction.getClass().getName());
+    assertEquals(defaultInteractionName, options.interaction.getClass().getName());
   }
 
   @Test
   public void definedInteractionService_returnsCorrectClass() {
-    SlimService.Options options = SlimService.parseCommandLine(new String[]{"-i", "fitnesse.slim.fixtureInteraction.InteractionDemo", "8099"});
-    assertEquals("fitnesse.slim.fixtureInteraction.InteractionDemo", options.interaction.getClass().getName());
+    String interactionClassName = InteractionDemo.class.getName();
+    SlimService.Options options = SlimService.parseCommandLine(new String[]{"-i", interactionClassName, "8099"});
+    assertEquals(interactionClassName, options.interaction.getClass().getName());
   }
 
   @Test
