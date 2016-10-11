@@ -11,6 +11,8 @@ import static util.RegexTestCase.assertHasRegexp;
 
 import org.junit.Test;
 
+import fitnesse.testutil.Echo;
+
 public class CommandRunnerTest {
 
   private TestExecutionLogListener executionLogListener = new TestExecutionLogListener();
@@ -20,7 +22,7 @@ public class CommandRunnerTest {
     CommandRunner runner = new CommandRunner(new String[] { "java", "-cp", "build/classes/main", "fitnesse.testutil.Echo" }, "echo this!", null, executionLogListener);
     runner.asynchronousStart();
     runner.join();
-    assertHasRegexp("echo this!", executionLogListener.stdOut.toString());
+    assertHasRegexp(Echo.ECHO_THIS, executionLogListener.stdOut.toString());
     assertEquals("", executionLogListener.stdErr.toString());
     assertEquals(true, executionLogListener.exceptions.isEmpty());
     assertEquals(0, executionLogListener.exitCode);
