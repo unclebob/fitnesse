@@ -25,35 +25,32 @@ public class CommandRunner {
   private static final Logger LOG = Logger.getLogger(CommandRunner.class.getName());
 
   private Process process;
-  private String input = null;
   protected int exitCode = -1;
   private String[] command;
   private Map<String, String> environmentVariables;
   private final int timeout;
   private final ExecutionLogListener executionLogListener;
   private String commandErrorMessage = "";
+  private boolean usePipe;
 
   /**
-   *
-   * @param command Commands to run
-   * @param input INput
+   *  @param command Commands to run
    * @param environmentVariables Map of environment variables
    * @param executionLogListener Execution Log Listener
    * @param timeout Time-out in seconds.
    */
-  public CommandRunner(String[] command, String input, Map<String, String> environmentVariables, ExecutionLogListener executionLogListener, int timeout) {
+  public CommandRunner(String[] command, Map<String, String> environmentVariables, ExecutionLogListener executionLogListener, int timeout) {
     if (executionLogListener == null) {
       throw new IllegalArgumentException("executionLogListener may not be null");
     }
     this.command = command;
-    this.input = input;
     this.environmentVariables = environmentVariables;
     this.executionLogListener = executionLogListener;
     this.timeout = timeout;
   }
 
-  public CommandRunner(String[] command, String input, Map<String, String> environmentVariables, ExecutionLogListener executionLogListener) {
-    this(command, input, environmentVariables, executionLogListener, 2);
+  public CommandRunner(String[] command, Map<String, String> environmentVariables, ExecutionLogListener executionLogListener) {
+    this(command, environmentVariables, executionLogListener, 2);
   }
 
   public void asynchronousStart() throws IOException {
@@ -64,18 +61,23 @@ public class CommandRunner {
     }
     process = processBuilder.start();
 
-    OutputStream stdin = process.getOutputStream();
+    sendCommandStartedEvent();
+    redirectOutputs();
+  }
+
+  private void redirectOutputs() throws IOException {
     InputStream stdout = process.getInputStream();
     InputStream stderr = process.getErrorStream();
 
-    sendCommandStartedEvent();
+    if (usePipe) {
+      // TODO: should be outside this runner? in a exec.listener.
 
-    if (this.input == null) {
-      // Slim Slave Mode
+      // Slim Piped Mode
       new Thread(new OutputReadingRunnable(stderr, new OutputWriter() {
         @Override
         public void write(String output) {
           // Separate StdOut and StdErr and remove prefix "SOUT.:", "SERR.:"
+          // TODO: move SOUT.: and SERR.: to constants (maybe use <<OUT>> and <<ERR>> instead)
           if (output.startsWith("SOUT"))
             executionLogListener.stdOut(output.substring(6));
           else if (output.startsWith("SERR")) {
@@ -86,6 +88,7 @@ public class CommandRunner {
 
         }
       }), "CommandRunner stdErr").start();
+
     } else {
       // Fit and SlimService
       new Thread(new OutputReadingRunnable(stdout, new OutputWriter() {
@@ -102,7 +105,8 @@ public class CommandRunner {
         }
       }), "CommandRunner stdErr").start();
 
-      sendInput(stdin);
+      // Close stdin?
+      process.getOutputStream().close();
     }
   }
 
@@ -206,19 +210,6 @@ public class CommandRunner {
     executionLogListener.exceptionOccurred(e);
   }
 
-  protected void sendInput(OutputStream stdin) throws IOException {
-    try {
-      stdin.write(input.getBytes(CHARENCODING));
-      stdin.flush();
-    } finally {
-      try {
-        stdin.close();
-      } catch (IOException e) {
-        LOG.log(Level.FINE, "Failed to close output stream", e);
-      }
-    }
-  }
-
   private class OutputReadingRunnable implements Runnable {
     public OutputWriter writer;
     private BufferedReader reader;
@@ -258,6 +249,11 @@ public class CommandRunner {
 	return commandErrorMessage;
   }
 
+  public void usePipe() {
+    usePipe = true;
+  }
+
+  // TODO: Those should go, since the data is sent to the ExecutionListener already
   public InputStream getReader() {
     return process.getInputStream();
   }

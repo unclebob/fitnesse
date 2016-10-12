@@ -5,10 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang.ArrayUtils;
 import fitnesse.FitNesseContext;
-import fitnesse.socketservice.ClientSocketFactory;
-import fitnesse.socketservice.PlainClientSocketFactory;
-import fitnesse.socketservice.PlainServerSocketFactory;
-import fitnesse.socketservice.SslClientSocketFactory;
+import fitnesse.socketservice.*;
 import fitnesse.testsystems.ClientBuilder;
 import fitnesse.testsystems.CommandRunner;
 import fitnesse.testsystems.Descriptor;
@@ -36,32 +33,33 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
 
   @Override
   public SlimCommandRunningClient build() {
-    CommandRunner commandRunner;
+    CommandRunner commandRunner = determineCommandRunner();
 
-    if (getSlimPort() == SLIM_SLAVE_PORT) {
-      commandRunner = new CommandRunner(buildCommand(), null,
-          createClasspathEnvironment(getClassPath()),
-          getExecutionLogListener(), determineTimeout());
-      return new SlimSlaveCommandRunningClient(commandRunner,
-          determineSlimHost(), getSlimPort(), determineTimeout(),
-          getSlimVersion(), determineSocketFactory());
-    }
-
-    if (useManualStartForTestSystem()) {
-      commandRunner = new MockCommandRunner(
-          "Connection to running SlimService: " + determineSlimHost() + ":"
-              + getSlimPort(), getExecutionLogListener(), determineTimeout());
-    } else {
-      commandRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(getClassPath()), getExecutionLogListener(), determineTimeout());
-    }
     return new SlimCommandRunningClient(commandRunner, determineSlimHost(),
         getSlimPort(), determineTimeout(), getSlimVersion(),
-        determineSocketFactory());
+        determineSocketFactory(commandRunner));
 
   }
 
-  protected ClientSocketFactory determineSocketFactory() {
-    if ((determineClientSSLParameterClass() != null)) {
+  protected CommandRunner determineCommandRunner() {
+    if (getSlimPort() == SLIM_SLAVE_PORT) {
+      // Wrap executionLogListener
+      return new CommandRunner(buildCommand(),
+        createClasspathEnvironment(getClassPath()),
+          getExecutionLogListener(), determineTimeout());
+    } else if (useManualStartForTestSystem()) {
+      return new MockCommandRunner(
+          "Connection to running SlimService: " + determineSlimHost() + ":"
+              + getSlimPort(), getExecutionLogListener(), determineTimeout());
+    } else {
+      return new CommandRunner(buildCommand(), createClasspathEnvironment(getClassPath()), getExecutionLogListener(), determineTimeout());
+    }
+  }
+
+  protected ClientSocketFactory determineSocketFactory(CommandRunner commandRunner) {
+    if (getSlimPort() == SLIM_SLAVE_PORT) {
+      return new PipeBasedSocketFactory(commandRunner);
+    } else if ((determineClientSSLParameterClass() != null)) {
       return new SslClientSocketFactory(determineHostSSLParameterClass());
     } else {
       return new PlainClientSocketFactory();

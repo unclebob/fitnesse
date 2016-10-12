@@ -19,7 +19,7 @@ public class CommandRunnerTest {
 
   @Test
   public void testBasics() throws Exception {
-    CommandRunner runner = new CommandRunner(new String[] { "java", "-cp", "build/classes/main", "fitnesse.testutil.Echo" }, "echo this!", null, executionLogListener);
+    CommandRunner runner = new CommandRunner(new String[] { "java", "-cp", "build/classes/main", "fitnesse.testutil.Echo" }, null, executionLogListener);
     runner.asynchronousStart();
     runner.join();
     assertHasRegexp(Echo.ECHO_THIS, executionLogListener.stdOut.toString());
@@ -30,7 +30,7 @@ public class CommandRunnerTest {
 
   @Test
   public void testClassNotFound() throws Exception {
-    CommandRunner runner = new CommandRunner(new String[] {  "java", "-Duser.country=US", "-Duser.language=en", "BadClass" }, "", null, executionLogListener);
+    CommandRunner runner = new CommandRunner(new String[] {  "java", "-Duser.country=US", "-Duser.language=en", "BadClass" }, null, executionLogListener);
     runner.asynchronousStart();
     runner.join();
     assertHasRegexp("Error", executionLogListener.stdErr.toString());
