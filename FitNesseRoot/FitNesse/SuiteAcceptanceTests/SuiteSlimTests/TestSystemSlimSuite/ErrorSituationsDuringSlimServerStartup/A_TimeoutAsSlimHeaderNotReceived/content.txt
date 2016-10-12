@@ -6,8 +6,8 @@ As a result we can connect to a socket but never get a Slim Header message.
 After slim.timeout seconds we should abort and stop the test.
 
 
-!| script |
-| create page | TestPage | with content | !-
+!| script                         |
+|create page|TestPage|with content|!-
 
 !define TEST_SYSTEM {SLIM}
 !define slim.timeout {1}
@@ -15,9 +15,9 @@ After slim.timeout seconds we should abort and stop the test.
 !define SLIM_PORT (-!${FITNESSE_PORT}!-)
 !define SLIM_FLAGS (-v)
 -! |
-| check | request page | TestPage?test | 200 |
-| ensure | content contains | Timeout while reading slim header from client.|
-| show collapsed| content |
-| check | request page | TestPage?executionLog| 200 |
-|ensure |content contains |Address already in use: JVM_Bind|
-| show collapsed | content |
+|check         |request page    |TestPage?test                   |200          |
+|ensure        |content contains|Timeout while reading slim header from client.|
+|show collapsed|content                                                        |
+|check         |request page    |TestPage?executionLog           |200          |
+|ensure        |content contains|Address already in use                        |
+|show collapsed|content                                                        |
