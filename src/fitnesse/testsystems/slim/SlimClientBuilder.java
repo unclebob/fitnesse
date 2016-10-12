@@ -1,15 +1,14 @@
 package fitnesse.testsystems.slim;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang.ArrayUtils;
 import fitnesse.FitNesseContext;
 import fitnesse.socketservice.*;
-import fitnesse.testsystems.ClientBuilder;
-import fitnesse.testsystems.CommandRunner;
-import fitnesse.testsystems.Descriptor;
-import fitnesse.testsystems.MockCommandRunner;
+import fitnesse.testsystems.*;
 
 public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   public static final String SLIM_PORT = "SLIM_PORT";
@@ -46,7 +45,28 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
       // Wrap executionLogListener
       return new CommandRunner(buildCommand(),
         createClasspathEnvironment(getClassPath()),
-          getExecutionLogListener(), determineTimeout());
+          getExecutionLogListener(), determineTimeout()) {
+        @Override
+        protected void redirectOutputs(Process process, final ExecutionLogListener executionLogListener) throws IOException {
+          InputStream stderr = process.getErrorStream();
+          new Thread(new OutputReadingRunnable(stderr, new OutputWriter() {
+            @Override
+            public void write(String output) {
+              // Separate StdOut and StdErr and remove prefix "SOUT.:", "SERR.:"
+              // TODO: move SOUT.: and SERR.: to constants (maybe use <<OUT>> and <<ERR>> instead)
+              if (output.startsWith("SOUT")) {
+                executionLogListener.stdOut(output.substring(6));
+              } else if (output.startsWith("SERR")) {
+                executionLogListener.stdErr(output.substring(6));
+                setCommandErrorMessage(output.substring(6));
+              } else {
+                executionLogListener.stdOut(output);
+              }
+            }
+          }), "CommandRunner stdErr").start();
+
+        }
+      };
     } else if (useManualStartForTestSystem()) {
       return new MockCommandRunner(
           "Connection to running SlimService: " + determineSlimHost() + ":"

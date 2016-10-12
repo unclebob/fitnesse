@@ -13,7 +13,6 @@ public class PipeBasedSocketFactory implements ClientSocketFactory {
 
   public PipeBasedSocketFactory(CommandRunner commandRunner) {
     this.commandRunner = commandRunner;
-    commandRunner.usePipe();
   }
 
   @Override

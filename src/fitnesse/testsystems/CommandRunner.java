@@ -31,7 +31,6 @@ public class CommandRunner {
   private final int timeout;
   private final ExecutionLogListener executionLogListener;
   private String commandErrorMessage = "";
-  private boolean usePipe;
 
   /**
    *  @param command Commands to run
@@ -62,52 +61,30 @@ public class CommandRunner {
     process = processBuilder.start();
 
     sendCommandStartedEvent();
-    redirectOutputs();
+    redirectOutputs(process, executionLogListener);
   }
 
-  private void redirectOutputs() throws IOException {
+  protected void redirectOutputs(Process process, final ExecutionLogListener executionLogListener) throws IOException {
     InputStream stdout = process.getInputStream();
     InputStream stderr = process.getErrorStream();
 
-    if (usePipe) {
-      // TODO: should be outside this runner? in a exec.listener.
+    // Fit and SlimService
+    new Thread(new OutputReadingRunnable(stdout, new OutputWriter() {
+      @Override
+      public void write(String output) {
+        executionLogListener.stdOut(output);
+      }
+    }), "CommandRunner stdOut").start();
+    new Thread(new OutputReadingRunnable(stderr, new OutputWriter() {
+      @Override
+      public void write(String output) {
+        executionLogListener.stdErr(output);
+        setCommandErrorMessage(output);
+      }
+    }), "CommandRunner stdErr").start();
 
-      // Slim Piped Mode
-      new Thread(new OutputReadingRunnable(stderr, new OutputWriter() {
-        @Override
-        public void write(String output) {
-          // Separate StdOut and StdErr and remove prefix "SOUT.:", "SERR.:"
-          // TODO: move SOUT.: and SERR.: to constants (maybe use <<OUT>> and <<ERR>> instead)
-          if (output.startsWith("SOUT"))
-            executionLogListener.stdOut(output.substring(6));
-          else if (output.startsWith("SERR")) {
-            executionLogListener.stdErr(output.substring(6));
-            commandErrorMessage = output.substring(6);
-          } else
-            executionLogListener.stdOut(output);
-
-        }
-      }), "CommandRunner stdErr").start();
-
-    } else {
-      // Fit and SlimService
-      new Thread(new OutputReadingRunnable(stdout, new OutputWriter() {
-        @Override
-        public void write(String output) {
-          executionLogListener.stdOut(output);
-        }
-      }), "CommandRunner stdOut").start();
-      new Thread(new OutputReadingRunnable(stderr, new OutputWriter() {
-        @Override
-        public void write(String output) {
-          executionLogListener.stdErr(output);
-          commandErrorMessage = output;
-        }
-      }), "CommandRunner stdErr").start();
-
-      // Close stdin?
-      process.getOutputStream().close();
-    }
+    // Close stdin
+    process.getOutputStream().close();
   }
 
   protected void sendCommandStartedEvent() {
@@ -210,7 +187,7 @@ public class CommandRunner {
     executionLogListener.exceptionOccurred(e);
   }
 
-  private class OutputReadingRunnable implements Runnable {
+  protected class OutputReadingRunnable implements Runnable {
     public OutputWriter writer;
     private BufferedReader reader;
 
@@ -241,16 +218,16 @@ public class CommandRunner {
     return process.waitFor();
   }
 
-  private interface OutputWriter {
+  protected interface OutputWriter {
     void write(String output);
+  }
+
+  protected void setCommandErrorMessage(String commandErrorMessage) {
+    this.commandErrorMessage = commandErrorMessage;
   }
 
   public String getCommandErrorMessage() {
 	return commandErrorMessage;
-  }
-
-  public void usePipe() {
-    usePipe = true;
   }
 
   // TODO: Those should go, since the data is sent to the ExecutionListener already
