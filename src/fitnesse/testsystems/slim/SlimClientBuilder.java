@@ -4,11 +4,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import org.apache.commons.lang.ArrayUtils;
+
 import fitnesse.FitNesseContext;
 import fitnesse.slim.SlimPipeSocket;
-import fitnesse.socketservice.*;
+import fitnesse.socketservice.ClientSocketFactory;
+import fitnesse.socketservice.PlainClientSocketFactory;
+import fitnesse.socketservice.PlainServerSocketFactory;
+import fitnesse.socketservice.SslClientSocketFactory;
 import fitnesse.testsystems.*;
 
 public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
@@ -19,7 +22,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   public static final String MANUALLY_START_TEST_RUNNER_ON_DEBUG = "MANUALLY_START_TEST_RUNNER_ON_DEBUG";
   public static final String MANUALLY_START_TEST_RUNNER = "MANUALLY_START_TEST_RUNNER";
   public static final String SLIM_SSL = "SLIM_SSL";
-  public static final int SLIM_SLAVE_PORT = 1;
+  public static final int SLIM_USE_PIPE_PORT = 1;
 
   private static final AtomicInteger slimPortOffset = new AtomicInteger(0);
 
@@ -42,7 +45,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   }
 
   protected CommandRunner determineCommandRunner() {
-    if (getSlimPort() == SLIM_SLAVE_PORT) {
+    if (getSlimPort() == SLIM_USE_PIPE_PORT) {
       // Wrap executionLogListener
       return new CommandRunner(buildCommand(),
         createClasspathEnvironment(getClassPath()),
@@ -78,7 +81,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   }
 
   protected ClientSocketFactory determineSocketFactory(CommandRunner commandRunner) {
-    if (getSlimPort() == SLIM_SLAVE_PORT) {
+    if (getSlimPort() == SLIM_USE_PIPE_PORT) {
       return new PipeBasedSocketFactory(commandRunner);
     } else if ((determineClientSSLParameterClass() != null)) {
       return new SslClientSocketFactory(determineHostSSLParameterClass());
@@ -168,8 +171,8 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     if (base == 0) {
       return findFreePort();
     }
-    if (base == SLIM_SLAVE_PORT)
-      return SLIM_SLAVE_PORT;
+    if (base == SLIM_USE_PIPE_PORT)
+      return SLIM_USE_PIPE_PORT;
 
     synchronized (SlimClientBuilder.class) {
       int offset = slimPortOffset.get();
@@ -198,7 +201,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     } catch (NumberFormatException e) {
       // stick with default
     }
-    return SLIM_SLAVE_PORT;
+    return SLIM_USE_PIPE_PORT;
   }
 
   private int getSlimPortPoolSize() {
