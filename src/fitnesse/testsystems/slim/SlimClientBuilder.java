@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang.ArrayUtils;
 import fitnesse.FitNesseContext;
+import fitnesse.slim.SlimPipeSocket;
 import fitnesse.socketservice.*;
 import fitnesse.testsystems.*;
 
@@ -54,11 +55,11 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
             public void write(String output) {
               // Separate StdOut and StdErr and remove prefix "SOUT.:", "SERR.:"
               // TODO: move SOUT.: and SERR.: to constants (maybe use <<OUT>> and <<ERR>> instead)
-              if (output.startsWith("SOUT")) {
-                executionLogListener.stdOut(output.substring(6));
-              } else if (output.startsWith("SERR")) {
-                executionLogListener.stdErr(output.substring(6));
-                setCommandErrorMessage(output.substring(6));
+              if (output.startsWith(SlimPipeSocket.STDOUT_PREFIX)) {
+                executionLogListener.stdOut(output.substring(SlimPipeSocket.STDOUT_PREFIX.length()));
+              } else if (output.startsWith(SlimPipeSocket.STDERR_PREFIX)) {
+                executionLogListener.stdErr(output.substring(SlimPipeSocket.STDERR_PREFIX.length()));
+                setCommandErrorMessage(output.substring(SlimPipeSocket.STDERR_PREFIX.length()));
               } else {
                 executionLogListener.stdOut(output);
               }
