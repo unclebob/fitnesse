@@ -1,5 +1,5 @@
-!1 Get more out of Fitnesse
-!3 Add Plugins to your installation and extend Fitnesse with additional great features.
+!1 Get more out of !-FitNesse-!
+!3 Add Plugins to your installation and extend !-FitNesse-! with additional great features.
  * Suport for other programming languages
  * Additional table types to express your tests and requirements in other ways
  * Additional Wiki Markup commands 
