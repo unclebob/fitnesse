@@ -13,6 +13,7 @@
  * [[Working with the FitNesse wiki][>FitNesseWiki]]
  * [[Writing Acceptance Tests][>WritingAcceptanceTests]] (jump directly to [[Fit][>WritingAcceptanceTests.FitFramework]] or [[Slim][>WritingAcceptanceTests.SliM]])
  * [[Administering FitNesse][>AdministeringFitNesse]]
+ * [[Plugins][.PlugIns]]
  * [[Quick Reference Guide][>QuickReferenceGuide]]
  * [[Full Reference Guide][<FitNesse.FullReferenceGuide]] (takes some time to load)
 
