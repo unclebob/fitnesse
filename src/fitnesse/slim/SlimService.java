@@ -79,7 +79,7 @@ public class SlimService {
       socket = new SlimPipeSocket();
       if (options.daemon) {
         System.err
-            .println("Warning: in SlimSlave mode the daemon flag is not supported.");
+            .println("Warning: in Slim Pipe mode the daemon flag is not supported.");
       }
     } else {
       ServerSocketFactory serverSocketFactory = options.useSSL ? new SslServerSocketFactory(

@@ -51,9 +51,10 @@ class LoggingOutputStream extends ByteArrayOutputStream {
       return;
     }
     // Prefix each new line with: newline + level + DOT + ":"
-    record.replace(this.lineSeparator, this.lineSeparator + level);
+    record = record.replace("\n", "\n" + level
+        + SlimPipeSocket.FOLLOWING_LINE_PREFIX);
     // Prefix first line with: level + SPACE + ":"
-    logger.println(level + " :" + record);
+    logger.println(level + SlimPipeSocket.FIRST_LINE_PREFIX + record);
   }
 
 }

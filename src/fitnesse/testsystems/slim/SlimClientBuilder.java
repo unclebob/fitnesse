@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import org.apache.commons.lang.ArrayUtils;
 
 import fitnesse.FitNesseContext;
@@ -56,17 +57,41 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
           new Thread(new OutputReadingRunnable(stderr, new OutputWriter() {
             @Override
             public void write(String output) {
-              // Separate StdOut and StdErr and remove prefix "SOUT.:", "SERR.:"
-              // TODO: move SOUT.: and SERR.: to constants (maybe use <<OUT>> and <<ERR>> instead)
-              if (output.startsWith(SlimPipeSocket.STDOUT_PREFIX)) {
-                executionLogListener.stdOut(output.substring(SlimPipeSocket.STDOUT_PREFIX.length()));
-              } else if (output.startsWith(SlimPipeSocket.STDERR_PREFIX)) {
-                executionLogListener.stdErr(output.substring(SlimPipeSocket.STDERR_PREFIX.length()));
-                setCommandErrorMessage(output.substring(SlimPipeSocket.STDERR_PREFIX.length()));
+              // Separate StdOut and StdErr and remove prefix"
+              String originalMsg;
+              originalMsg = extractOriginalMessage(output,
+                  SlimPipeSocket.STDOUT_PREFIX);
+              if (originalMsg != null) {
+                executionLogListener.stdOut(originalMsg);
               } else {
-                executionLogListener.stdOut(output);
+                originalMsg = extractOriginalMessage(output,
+                    SlimPipeSocket.STDERR_PREFIX);
+                if (originalMsg != null) {
+                  executionLogListener.stdErr(originalMsg);
+                  setCommandErrorMessage(originalMsg);
+                } else {
+                  executionLogListener.stdOut(output);
+                }
               }
             }
+
+            /**
+             * This reverts the wrap that the LoggingOutputStream.flush method
+             * is doing.
+             * 
+             * @param prefixedMessage
+             * @param level
+             * @return == null : the message is not prefixed with the given
+             *         level != null : the original message content
+             */
+            private String extractOriginalMessage(String prefixedMessage,
+                String level) {
+              if (prefixedMessage.startsWith(level))
+                return prefixedMessage.substring(level.length()
+                    + SlimPipeSocket.FOLLOWING_LINE_PREFIX.length());
+              return null;
+            }
+
           }), "CommandRunner stdErr").start();
 
         }
