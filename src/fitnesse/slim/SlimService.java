@@ -76,10 +76,10 @@ public class SlimService {
   public static void startWithFactory(SlimFactory slimFactory, Options options) throws IOException {
     ServerSocket socket;
     if (options.port == 1) {
-      socket = new SlimSlaveSocket();
+      socket = new SlimPipeSocket();
       if (options.daemon) {
         System.err
-            .println("Warning: in SlimSlave mode the daemon flag is not supported.");
+            .println("Warning: in Slim Pipe mode the daemon flag is not supported.");
       }
     } else {
       ServerSocketFactory serverSocketFactory = options.useSSL ? new SslServerSocketFactory(

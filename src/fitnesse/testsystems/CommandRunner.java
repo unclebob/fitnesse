@@ -25,7 +25,6 @@ public class CommandRunner {
   private static final Logger LOG = Logger.getLogger(CommandRunner.class.getName());
 
   private Process process;
-  private String input = null;
   protected int exitCode = -1;
   private String[] command;
   private Map<String, String> environmentVariables;
@@ -34,26 +33,23 @@ public class CommandRunner {
   private String commandErrorMessage = "";
 
   /**
-   *
-   * @param command Commands to run
-   * @param input INput
+   *  @param command Commands to run
    * @param environmentVariables Map of environment variables
    * @param executionLogListener Execution Log Listener
    * @param timeout Time-out in seconds.
    */
-  public CommandRunner(String[] command, String input, Map<String, String> environmentVariables, ExecutionLogListener executionLogListener, int timeout) {
+  public CommandRunner(String[] command, Map<String, String> environmentVariables, ExecutionLogListener executionLogListener, int timeout) {
     if (executionLogListener == null) {
       throw new IllegalArgumentException("executionLogListener may not be null");
     }
     this.command = command;
-    this.input = input;
     this.environmentVariables = environmentVariables;
     this.executionLogListener = executionLogListener;
     this.timeout = timeout;
   }
 
-  public CommandRunner(String[] command, String input, Map<String, String> environmentVariables, ExecutionLogListener executionLogListener) {
-    this(command, input, environmentVariables, executionLogListener, 2);
+  public CommandRunner(String[] command, Map<String, String> environmentVariables, ExecutionLogListener executionLogListener) {
+    this(command, environmentVariables, executionLogListener, 2);
   }
 
   public void asynchronousStart() throws IOException {
@@ -64,46 +60,31 @@ public class CommandRunner {
     }
     process = processBuilder.start();
 
-    OutputStream stdin = process.getOutputStream();
+    sendCommandStartedEvent();
+    redirectOutputs(process, executionLogListener);
+  }
+
+  protected void redirectOutputs(Process process, final ExecutionLogListener executionLogListener) throws IOException {
     InputStream stdout = process.getInputStream();
     InputStream stderr = process.getErrorStream();
 
-    sendCommandStartedEvent();
+    // Fit and SlimService
+    new Thread(new OutputReadingRunnable(stdout, new OutputWriter() {
+      @Override
+      public void write(String output) {
+        executionLogListener.stdOut(output);
+      }
+    }), "CommandRunner stdOut").start();
+    new Thread(new OutputReadingRunnable(stderr, new OutputWriter() {
+      @Override
+      public void write(String output) {
+        executionLogListener.stdErr(output);
+        setCommandErrorMessage(output);
+      }
+    }), "CommandRunner stdErr").start();
 
-    if (this.input == null) {
-      // Slim Slave Mode
-      new Thread(new OutputReadingRunnable(stderr, new OutputWriter() {
-        @Override
-        public void write(String output) {
-          // Separate StdOut and StdErr and remove prefix "SOUT.:", "SERR.:"
-          if (output.startsWith("SOUT"))
-            executionLogListener.stdOut(output.substring(6));
-          else if (output.startsWith("SERR")) {
-            executionLogListener.stdErr(output.substring(6));
-            commandErrorMessage = output.substring(6);
-          } else
-            executionLogListener.stdOut(output);
-
-        }
-      }), "CommandRunner stdErr").start();
-    } else {
-      // Fit and SlimService
-      new Thread(new OutputReadingRunnable(stdout, new OutputWriter() {
-        @Override
-        public void write(String output) {
-          executionLogListener.stdOut(output);
-        }
-      }), "CommandRunner stdOut").start();
-      new Thread(new OutputReadingRunnable(stderr, new OutputWriter() {
-        @Override
-        public void write(String output) {
-          executionLogListener.stdErr(output);
-          commandErrorMessage = output;
-        }
-      }), "CommandRunner stdErr").start();
-
-      sendInput(stdin);
-    }
+    // Close stdin
+    process.getOutputStream().close();
   }
 
   protected void sendCommandStartedEvent() {
@@ -206,20 +187,7 @@ public class CommandRunner {
     executionLogListener.exceptionOccurred(e);
   }
 
-  protected void sendInput(OutputStream stdin) throws IOException {
-    try {
-      stdin.write(input.getBytes(CHARENCODING));
-      stdin.flush();
-    } finally {
-      try {
-        stdin.close();
-      } catch (IOException e) {
-        LOG.log(Level.FINE, "Failed to close output stream", e);
-      }
-    }
-  }
-
-  private class OutputReadingRunnable implements Runnable {
+  protected class OutputReadingRunnable implements Runnable {
     public OutputWriter writer;
     private BufferedReader reader;
 
@@ -250,14 +218,19 @@ public class CommandRunner {
     return process.waitFor();
   }
 
-  private interface OutputWriter {
+  protected interface OutputWriter {
     void write(String output);
+  }
+
+  protected void setCommandErrorMessage(String commandErrorMessage) {
+    this.commandErrorMessage = commandErrorMessage;
   }
 
   public String getCommandErrorMessage() {
 	return commandErrorMessage;
   }
 
+  // TODO: Those should go, since the data is sent to the ExecutionListener already
   public InputStream getReader() {
     return process.getInputStream();
   }

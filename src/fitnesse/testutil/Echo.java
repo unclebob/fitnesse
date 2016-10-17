@@ -6,11 +6,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 public class Echo {
+
+  public static final String ECHO_THIS = "echo this!";
+
   public static void main(String[] args) throws Exception {
-    String s;
-    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-    while ((s = bufferedReader.readLine()) != null)
-      System.out.println(s);
-    System.exit(0);
+    System.out.println(ECHO_THIS);
   }
 }

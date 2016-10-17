@@ -18,8 +18,7 @@ class LoggingOutputStream extends ByteArrayOutputStream {
 
   /**
    * Constructor
-   * 
-   * @param stdout
+   *
    * @param logger
    *          Logger to write to
    * @param level
@@ -35,7 +34,7 @@ class LoggingOutputStream extends ByteArrayOutputStream {
   /**
    * upon flush() write the existing contents of the OutputStream to the logger
    * as a log record.
-   * 
+   *
    * @throws java.io.IOException
    *           in case of error
    */
@@ -52,9 +51,10 @@ class LoggingOutputStream extends ByteArrayOutputStream {
       return;
     }
     // Prefix each new line with: newline + level + DOT + ":"
-    record.replace(this.lineSeparator, this.lineSeparator + level + ".:");
+    record = record.replace("\n", "\n" + level
+        + SlimPipeSocket.FOLLOWING_LINE_PREFIX);
     // Prefix first line with: level + SPACE + ":"
-    logger.println(level + " :" + record);
+    logger.println(level + SlimPipeSocket.FIRST_LINE_PREFIX + record);
   }
 
 }
