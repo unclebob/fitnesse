@@ -147,6 +147,14 @@ public class PageDriver {
     return (html.contains(subString));
   }
 
+  public boolean htmlWithoutContains(String strip, String subString)
+      throws Exception {
+    String html = requester.html();
+    html = html.replaceAll(strip, "");
+    subString = subString.replaceAll(strip, "");
+    return (html.contains(subString));
+  }
+
   public boolean containsJsonPacket(String packet) throws Exception {
     packet = ResponseExaminer.convertBreaksToLineSeparators(packet);
     JSONObject expected = new JSONObject(packet);
