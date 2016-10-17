@@ -1,13 +1,18 @@
 !2 ${FITNESSE_VERSION}
  * Add ability to specify the locale used to format evaluated expressions ([[#929][https://github.com/unclebob/fitnesse/pull/929]])
- * FitNesse is more strict in propagating exceptions, instead of only logging them ([[#923][https://github.com/unclebob/fitnesse/pull/923]])
- * ''WikiPage'' interface now has a ''remove()'' method. This will replace the ''removeChild()'' method in the near future ([[#930][https://github.com/unclebob/fitnesse/pull/930]])
- * Updated ''FixtureInteraction'' interface ([[#911][https://github.com/unclebob/fitnesse/pull/911]])
+ * !-FitNesse-! and Slim can now communicate over stdin/stdout. This removes the hassle with network ports ([[977][https://github.com/unclebob/fitnesse/pull/977]], see UserGuide.WritingAcceptanceTests.SliM.SlimProtocol.PortManagement)
+ * Add base folder for plugin documentation ([[971][https://github.com/unclebob/fitnesse/pull/971]])
+ * API changes:
+   * FitNesse is more strictly propagating exceptions, instead of only logging them ([[#923][https://github.com/unclebob/fitnesse/pull/923]])
+   * Updated ''!-FixtureInteraction-!'' interface ([[#911][https://github.com/unclebob/fitnesse/pull/911]])
+   * To improve extensibility, scenario resolution has been moved to ``!-SlimtestContext-!'' ([[974][https://github.com/unclebob/fitnesse/pull/974]])
+   * ''!-WikiPage-!'' interface now has a ''remove()'' method. This will replace the ''removeChild()'' method in the near future ([[#930][https://github.com/unclebob/fitnesse/pull/930]])
  * Issues fixed:
    * Display of Map results from fixtures should allow nested HTML ([[#921][https://github.com/unclebob/fitnesse/pull/921]])
    * Fix assignment of output parameters of scenarios with graceful names in decision tables ([[#928][https://github.com/unclebob/fitnesse/pull/928]])
    * Fix Where Used page for pages under a Symbolic Link ([[#925][https://github.com/unclebob/fitnesse/issues/925]])
-   
+   * Fixed issues in ''!-CachedInteraction-!'' ([[973][https://github.com/unclebob/fitnesse/pull/973]])
+
 For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=15&state=closed.
    
 !2 20160515
