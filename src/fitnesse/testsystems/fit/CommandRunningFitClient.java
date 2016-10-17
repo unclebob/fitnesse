@@ -122,7 +122,7 @@ public class CommandRunningFitClient extends FitClient {
     private void makeCommandRunner(int port, int ticketNumber) throws UnknownHostException {
       String[] fitArguments = { getLocalhostName(), Integer.toString(port), Integer.toString(ticketNumber) };
       String[] commandLine = (String[]) ArrayUtils.addAll(command, fitArguments);
-      commandRunner = new CommandRunner(commandLine, "", environmentVariables, executionLogListener);
+      commandRunner = new CommandRunner(commandLine, environmentVariables, executionLogListener);
     }
 
     @Override

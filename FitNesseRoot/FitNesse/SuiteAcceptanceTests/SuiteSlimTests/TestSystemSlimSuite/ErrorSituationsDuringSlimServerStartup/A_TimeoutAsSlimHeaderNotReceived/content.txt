@@ -5,19 +5,19 @@ We start the test system Slim but connect to the fitnesse wiki server instead of
 As a result we can connect to a socket but never get a Slim Header message.
 After slim.timeout seconds we should abort and stop the test.
 
-!| script |
-| create page | TestPage | with content | !-
+
+!| script                         |
+|create page|TestPage|with content|!-
 
 !define TEST_SYSTEM {SLIM}
 !define slim.timeout {1}
 !define slim.pool.size (1)
 !define SLIM_PORT (-!${FITNESSE_PORT}!-)
-!define MANUALLY_START_TEST_RUNNER_ON_DEBUG {true}
 !define SLIM_FLAGS (-v)
 -! |
-| check | request page | TestPage?test&remote_debug | 200 |
-| ensure | content contains | TEST_SYSTEM=SLIM|
-| #show | content |
-| check | request page | TestPage?executionLog| 200 |
-|ensure |content contains |Timeout while reading slim header from client.|
-| #show | content |
+|check         |request page    |TestPage?test                   |200          |
+|ensure        |content contains|Timeout while reading slim header from client.|
+|show collapsed|content                                                        |
+|check         |request page    |TestPage?executionLog           |200          |
+|ensure        |content contains|Address already in use                        |
+|show collapsed|content                                                        |

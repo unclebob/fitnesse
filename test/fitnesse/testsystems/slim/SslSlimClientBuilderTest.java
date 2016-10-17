@@ -47,6 +47,7 @@ public class SslSlimClientBuilderTest {
   public void executeAndCheck(String agentParameters, String clientParameters) throws Exception {
     WikiPage testPage = WikiPageUtil.addPage(root, PathParser.parse("TestPage"),
         "!define TEST_SYSTEM {slim}\n" +
+        "!define SLIM_PORT {0}\n" +
         "!define SLIM_SSL {"+ agentParameters +"}\n" +
         "!define slim.timeout {10}\n" +
         "!define slim.pool.size {1}\n" +
