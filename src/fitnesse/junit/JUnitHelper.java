@@ -71,8 +71,8 @@ public class JUnitHelper {
     assertPasses(pageName, pageType, suiteFilter, null);
   }
 
-  public void assertPasses(String pageName, String pageType, String suiteFilter, String excludeSuiteFilter) throws Exception {
-    FitNesseContext context = FitNesseRunner.initContext(new File(ContextConfigurator.DEFAULT_CONFIG_FILE), fitNesseRootPath, ContextConfigurator.DEFAULT_ROOT, port);
+  public void assertPasses(String pageName, String pageType, String suiteFilter, String excludeSuiteFilter) throws Exception { 
+    FitNesseContext context = FitNesseRunner.initContext(new File(ContextConfigurator.DEFAULT_CONFIG_FILE), fitNesseRootPath, ContextConfigurator.DEFAULT_ROOT, port, null);
 
     JavaFormatter testFormatter = new JavaFormatter(pageName);
     testFormatter.setResultsRepository(new JavaFormatter.FolderResultsRepository(outputDir));

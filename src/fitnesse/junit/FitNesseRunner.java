@@ -16,6 +16,7 @@ import java.util.Map;
 import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
+import fitnesse.http.Request;
 import fitnesse.plugins.PluginException;
 import fitnesse.slim.instructions.SystemExitSecurityManager;
 import fitnesse.testrunner.MultipleTestsRunner;
@@ -157,13 +158,14 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
 
   /**
    * The <code>UrlPathVariables</code> annotation specifies the variable overrides to
-   * use for the duration of the test. Example: <code>ID=100&gizmo=true</code>
+   * use for the duration of the test. Example: <code>{"ID", "100", "gizmo, "true"}</code>
+   * or <code>ID=100&gizmo=true</code>.
    */
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.TYPE)
   public @interface UrlPathVariables {
 
-    public String value() default "";
+    public String[] value() default {};
 
     public String systemProperty() default "";
   }
@@ -179,7 +181,6 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   private FitNesseContext context;
   private DescriptionFactory descriptionFactory;
   private List<WikiPage> children;
-  private Map<String, String> urlPathVariables;
 
   public FitNesseRunner(Class<?> suiteClass) throws InitializationError {
     super(suiteClass);
@@ -236,12 +237,6 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     }
 
     try {
-      this.urlPathVariables = parseUrlPathVariables(suiteClass);
-    } catch (Exception e) {
-      errors.add(e);
-    }
-
-    try {
       this.context = createContext(suiteClass);
     } catch (Exception e) {
       errors.add(e);
@@ -253,8 +248,8 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     String fitNesseRoot = getFitNesseRoot(suiteClass);
     int port = getPort(suiteClass);
     File configFile = getConfigFile(rootPath, suiteClass);
-
-    return initContext(configFile, rootPath, fitNesseRoot, port);
+    Map<String, String> urlPathVariables = getUrlPathVariables(suiteClass);
+    return initContext(configFile, rootPath, fitNesseRoot, port, urlPathVariables);
   }
 
   protected String getSuiteName(Class<?> klass) throws InitializationError {
@@ -323,16 +318,22 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     return excludeSuiteFilterAnnotation.value();
   }
 
-  protected String getUrlPathVariables(Class<?> klass) {
+  protected Map<String, String> getUrlPathVariables(Class<?> klass) {
     UrlPathVariables urlParamsAnnotation = klass.getAnnotation(UrlPathVariables.class);
     if (urlParamsAnnotation == null) {
       return null;
     }
-    if (!"".equals(urlParamsAnnotation.value())) {
-      return urlParamsAnnotation.value();
+    if (urlParamsAnnotation.value().length > 0) {
+      String[] urlParams = urlParamsAnnotation.value();
+      Map<String, String> map = new HashMap<>();
+      for (int i = 0; (i + 1) < urlParams.length; i += 2) {
+        map.put(urlParams[i], urlParams[i + 1]);
+      }
+      return map;
     }
     if (!"".equals(urlParamsAnnotation.systemProperty())) {
-      return System.getProperty(urlParamsAnnotation.systemProperty());
+      String urlParams = System.getProperty(urlParamsAnnotation.systemProperty());
+      return Request.getQueryMap(urlParams);
     }
     return null;
   }
@@ -475,7 +476,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     return suiteFilterAndStrategy ? suiteFilter : null;
   }
 
-  static FitNesseContext initContext(File configFile, String rootPath, String fitNesseRoot, int port) throws IOException, PluginException {
+  static FitNesseContext initContext(File configFile, String rootPath, String fitNesseRoot, int port, Map<String, String> urlPathVariables) throws IOException, PluginException {
     ContextConfigurator contextConfigurator = ContextConfigurator.systemDefaults()
       .updatedWith(System.getProperties())
       .updatedWith(ConfigurationParameter.loadProperties(configFile))
@@ -485,6 +486,11 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
             ConfigurationParameter.ROOT_DIRECTORY, fitNesseRoot,
             ConfigurationParameter.OMITTING_UPDATES, true));
 
+    if (urlPathVariables != null) {
+      for (String key : urlPathVariables.keySet()) {
+        contextConfigurator.withParameter(key, urlPathVariables.get(key));
+      }
+    }
     return contextConfigurator.makeFitNesseContext();
   }
 
@@ -512,24 +518,6 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     TestSummary summary = testFormatter.getTotalSummary();
 
     assertTrue(msgAtLeastOneTest(suiteName, summary), summary.getRight() > 0 || summary.getWrong() > 0 || summary.getExceptions() > 0);
-  }
-
-  private Map<String, String> parseUrlPathVariables(Class<?> klass) {
-    Map<String, String> variables = new HashMap<String, String>();
-    String urlParams = getUrlPathVariables(klass);
-    if (urlParams == null || urlParams.indexOf('=') < 1) {
-      return variables;
-    }
-    for (String keyValue : urlParams.split("&")) {
-      int index = keyValue.indexOf('=');
-      if (index < 1) {
-        continue;
-      }
-      String key = keyValue.substring(0, index);
-      String value = keyValue.substring(index + 1);
-      variables.put(key, value);
-    }
-    return variables;
   }
 
   private String msgAtLeastOneTest(String pageName, TestSummary summary) {

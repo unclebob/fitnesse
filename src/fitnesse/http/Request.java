@@ -297,6 +297,12 @@ public class Request {
     }
   }
 
+  public static Map<String, String> getQueryMap(String queryString) {
+    Request request = new Request();
+    request.parseQueryString(queryString);
+    return request.inputs;
+  }
+
   public boolean hasBeenParsed() {
     return hasBeenParsed;
   }
