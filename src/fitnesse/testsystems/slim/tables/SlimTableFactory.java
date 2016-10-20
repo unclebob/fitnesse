@@ -35,6 +35,7 @@ public class SlimTableFactory {
     addTableType("scenario", ScenarioTable.class);
     addTableType("import", ImportTable.class);
     addTableType("library", LibraryTable.class);
+    addTableType("baseline", BaselineDecisionTable.class);
   }
 
   protected SlimTableFactory(Map<String, Class<? extends SlimTable>> tableTypes, Map<String, String> tableTypeArrays, Map<String, String> aliasArrays) {
