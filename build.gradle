@@ -207,7 +207,37 @@ task sourcesJar(type: Jar) {
   from sourceSets.main.allSource
 }
 
-clean{
+task releaseTag(type: Exec) {
+  commandLine 'git', 'tag', project.version
+  doLast {
+    println "Tagged release ${project.version}"
+  }
+}
+
+task publishTag(type: Exec) {
+  commandLine 'git', 'push', '--tags'
+  shouldRunAfter releaseTag
+}
+
+task prepareSnapshotRepo {
+    bintray.pkg.repo = 'edge'
+}
+
+task prepareReleaseRepo {
+    bintray.pkg.repo = 'release'
+}
+
+bintrayUpload.mustRunAfter prepareSnapshotRepo, prepareReleaseRepo
+
+task snapshotRelease {
+  dependsOn prepareSnapshotRepo, bintrayUpload
+}
+
+task release {
+  dependsOn releaseTag, prepareReleaseRepo, bintrayUpload, publishTag
+}
+
+clean {
   delete "lib"
 }
 
@@ -244,7 +274,6 @@ bintray {
   publications = ['FitNesseRelease']
   publish = true
   pkg {
-    repo = System.getenv("BINTRAY_REPO") ?: 'edge'
     name = 'fitnesse'
     userOrg = 'fitnesse'
     licenses = ['CPL-1.0']
