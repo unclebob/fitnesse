@@ -1,7 +1,8 @@
 !2 ${FITNESSE_VERSION}
  * Add ability to specify the locale used to format evaluated expressions ([[#929][https://github.com/unclebob/fitnesse/pull/929]])
- * !-FitNesse-! and Slim can now communicate over stdin/stdout. This removes the hassle with network ports ([[977][https://github.com/unclebob/fitnesse/pull/977]], see UserGuide.WritingAcceptanceTests.SliM.SlimProtocol.PortManagement)
+ * New Slim table type: [[Baseline decision table][!-SuiteAcceptanceTests.SuiteSlimTests.BaseLineDecisionTable-!]] ([[965][https://github.com/unclebob/fitnesse/pull/965]])
  * Add base folder for plugin documentation ([[971][https://github.com/unclebob/fitnesse/pull/971]])
+ * !-FitNesse-! and Slim can now communicate over stdin/stdout. This removes the hassle with network ports ([[977][https://github.com/unclebob/fitnesse/pull/977]], see UserGuide.WritingAcceptanceTests.SliM.SlimProtocol.PortManagement)
  * API changes:
    * FitNesse is more strictly propagating exceptions, instead of only logging them ([[#923][https://github.com/unclebob/fitnesse/pull/923]])
    * Updated ''!-FixtureInteraction-!'' interface ([[#911][https://github.com/unclebob/fitnesse/pull/911]])
