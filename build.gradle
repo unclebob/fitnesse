@@ -264,7 +264,7 @@ bintray {
 }
 
 wrapper {
-  gradleVersion = '2.13'
+  gradleVersion = '3.1'
 }
 
 def pomLicenses() {
