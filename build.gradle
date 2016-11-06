@@ -251,8 +251,13 @@ publishing {
       groupId 'org.fitnesse'
       artifactId 'fitnesse'
       pom.withXml {
-        asNode().get('version') + { url('http://fitnesse.org') }
-        asNode().appendNode('description', 'The fully integrated standalone wiki, and acceptance testing framework.')
+        asNode().get('version') + {
+          resolveStrategy = Closure.DELEGATE_FIRST
+          name('FitNesse')
+          description('The fully integrated standalone wiki, and acceptance testing framework.')
+          url('http://fitnesse.org')
+          packaging('jar')
+        }
         asNode().append(pomLicenses())
         asNode().append(pomScm())
         asNode().append(pomDevelopers())
@@ -295,6 +300,7 @@ bintray {
 wrapper {
   gradleVersion = '3.1'
 }
+
 
 def pomLicenses() {
   new NodeBuilder().licenses {
