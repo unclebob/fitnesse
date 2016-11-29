@@ -63,4 +63,20 @@ public class DefaultInteractionTest {
     Object testee = interaction.createInstance(Arrays.asList("fitnesse.slim.fixtureInteraction"), "testee", new Object[0]);
     assertThat(testee, is(notNullValue()));
   }
+
+  @Test
+  public void findMatchingMethodWithCorrectCapitalization() {
+    DefaultInteraction interaction = new DefaultInteraction();
+
+    Method setI = interaction.findMatchingMethod("setI", new Testee(), new Integer(1));
+    assertThat(setI, is(notNullValue()));
+  }
+
+  @Test
+  public void findMatchingMethodWithIncorrectCapitalizationShouldReturnCorrectMethod() {
+    DefaultInteraction interaction = new DefaultInteraction();
+
+    Method setI = interaction.findMatchingMethod("SetI", new Testee(), new Integer(1));
+    assertThat(setI, is(notNullValue()));
+  }
 }

@@ -65,8 +65,8 @@ public class DefaultInteraction implements FixtureInteraction {
     throw new SlimError(String.format("message:<<%s %s>>", SlimServer.NO_CLASS, className));
   }
 
-  private String swapCaseOfFirstLetter(String className) {
-    return StringUtils.swapCase(className.substring(0, 1)) + className.substring((1));
+  private String swapCaseOfFirstLetter(String classOrMethodName) {
+    return StringUtils.swapCase(classOrMethodName.substring(0, 1)) + classOrMethodName.substring((1));
   }
 
   protected Class<?> getClass(String className) {
@@ -110,13 +110,19 @@ public class DefaultInteraction implements FixtureInteraction {
 
     int nArgs = args.length;
     for (Method method : methods) {
-      boolean hasMatchingName = method.getName().equals(methodName);
-      boolean hasMatchingArguments = method.getParameterTypes().length == nArgs;
-      if (hasMatchingName && hasMatchingArguments) {
+      boolean isMatchingMethod = findMatchingMethod(methodName, nArgs, method);
+      isMatchingMethod = isMatchingMethod || findMatchingMethod(swapCaseOfFirstLetter(methodName), nArgs, method);
+      if (isMatchingMethod) {
         return method;
       }
     }
     return null;
+  }
+
+  private boolean findMatchingMethod(String methodName, int nArgs, Method method) {
+    boolean hasMatchingName = method.getName().equals(methodName);
+    boolean hasMatchingArguments = method.getParameterTypes().length == nArgs;
+    return hasMatchingName && hasMatchingArguments;
   }
 
   protected MethodExecutionResult invokeMethod(Object instance, Method method, Object[] args) throws Throwable {
