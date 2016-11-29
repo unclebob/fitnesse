@@ -81,13 +81,13 @@ public class WikiTestPage implements TestPage {
     }
   }
 
-
   protected String getPathSeparator() {
     String separator = sourcePage.getVariable(PageData.PATH_SEPARATOR);
     if (separator == null)
       separator = File.pathSeparator;
     return separator;
   }
+
 
   public WikiPage getSourcePage() {
     return sourcePage;
@@ -197,7 +197,7 @@ public class WikiTestPage implements TestPage {
   }
 
   protected boolean isSuiteSetUpOrTearDownPage() {
-    return PageData.SUITE_SETUP_NAME.equals(getName()) || PageData.SUITE_TEARDOWN_NAME.equals(getName());
+    return isSuiteSetupOrTearDown(sourcePage);
   }
 
   protected WikiPage findInheritedPage(String pageName) {
@@ -215,5 +215,10 @@ public class WikiTestPage implements TestPage {
       });
     }
     return uncles;
+  }
+
+  public static boolean isSuiteSetupOrTearDown(WikiPage wikiPage) {
+    String name = wikiPage.getName();
+    return (PageData.SUITE_SETUP_NAME.equals(name) || PageData.SUITE_TEARDOWN_NAME.equals(name));
   }
 }

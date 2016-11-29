@@ -25,7 +25,6 @@ public class SuiteContentsFinder {
 
   public List<WikiPage> getAllPagesToRunForThisSuite() {
     String content = pageToRun.getHtml();
-    //todo perf: all pages html parsed here?
     if (SuiteSpecificationRunner.isASuiteSpecificationsPage(content)) {
       SuiteSpecificationRunner runner = new SuiteSpecificationRunner(wikiRootPage);
       if (runner.getPageListFromPageContent(content))
@@ -106,19 +105,14 @@ public class SuiteContentsFinder {
 
   private void addXrefPages(List<WikiPage> pages, WikiPage thePage) {
     List<String> pageReferences = WikiPageUtil.getXrefPages(thePage);
-    WikiPagePath testPagePath = thePage.getPageCrawler().getFullPath();
-    WikiPage parent = wikiRootPage.getPageCrawler().getPage(testPagePath.parentPath());
+    if (pageReferences.isEmpty()) {
+      return;
+    }
     for (String pageReference : pageReferences) {
       WikiPagePath path = PathParser.parse(pageReference);
-      WikiPage referencedPage = parent.getPageCrawler().getPage(path);
+      WikiPage referencedPage = thePage.getPageCrawler().getSiblingPage(path);
       if (referencedPage != null)
         pages.add(referencedPage);
     }
   }
-
-  public static boolean isSuiteSetupOrTearDown(WikiPage testPage) {
-    String name = testPage.getName();
-    return (PageData.SUITE_SETUP_NAME.equals(name) || PageData.SUITE_TEARDOWN_NAME.equals(name));
-  }
-
 }
