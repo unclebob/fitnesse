@@ -1,4 +1,4 @@
-The syntax of a wiki word is ''Camel Case'': an alternating pattern of upper and lower case letters.  Strictly speaking a wiki word is a string of two more more capital letters with lower case letters or numbers between them.
+The syntax of a wiki word is ''Camel Case'': an alternating pattern of upper and lower case letters.  Strictly speaking a wiki word is a string of two more capital letters with lower case letters or numbers between them.
 
  * '''!-BobMartin-!''' is a wiki word.
  * '''!-SalesReport1972-!''' is a wiki word.
