@@ -106,7 +106,6 @@ public class ScriptTable extends SlimTable {
   @Override
   public List<SlimAssertion> getAssertions() throws TestExecutionException {
     List<SlimAssertion> assertions = new ArrayList<>();
-    ScenarioTable.setDefaultChildClass(getClass());
     if (table.getCellContents(0, 0).toLowerCase().startsWith(getTableKeyword())) {
       List<SlimAssertion> createAssertions = startActor();
       if (createAssertions != null) {
@@ -190,6 +189,8 @@ public class ScriptTable extends SlimTable {
     }
     if (scenario != null) {
       scenario.setCustomComparatorRegistry(customComparatorRegistry);
+      // TODO: ensure our scenario has the right table type
+      scenario.setDefaultChildClass(getClass());
       assertions.addAll(scenario.call(args, this, row));
     }
     return assertions;

@@ -25,10 +25,16 @@ import fitnesse.testsystems.slim.results.SlimTestResult;
 import org.apache.commons.lang.StringUtils;
 
 
+/**
+ * Scenario table acts as a factory for script tables. Those tables are created
+ * where ever a scenario table is invoked. The type of table used to actually execute
+ * the scenario may vary, depending on from which table a scenario is invoked.
+ */
 public class ScenarioTable extends SlimTable {
   private static final String instancePrefix = "scenarioTable";
   private static final String underscorePattern = "\\W_(?=\\W|$)";
-  private static Class<? extends ScriptTable> defaultChildClass = ScriptTable.class;
+  // TODO: This property should not be static! This could cause race conditions
+  private Class<? extends ScriptTable> defaultChildClass = ScriptTable.class;
   private String name;
   private List<String> inputs = new ArrayList<>();
   private Set<String> outputs = new HashSet<>();
@@ -209,11 +215,11 @@ public class ScenarioTable extends SlimTable {
       return SlimTableFactory.createTable(parentTableClass, newTable, id, testContext);
   }
 
-  public static void setDefaultChildClass(Class<? extends ScriptTable> defaultChildClass) {
-    ScenarioTable.defaultChildClass = defaultChildClass;
+  public void setDefaultChildClass(Class<? extends ScriptTable> defaultChildClass) {
+    this.defaultChildClass = defaultChildClass;
   }
 
-  public static Class<? extends ScriptTable> getDefaultChildClass() {
+  public Class<? extends ScriptTable> getDefaultChildClass() {
     return defaultChildClass;
   }
 

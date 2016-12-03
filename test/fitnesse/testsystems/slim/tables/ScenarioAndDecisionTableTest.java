@@ -37,7 +37,6 @@ public class ScenarioAndDecisionTableTest {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     assertions = new ArrayList<>();
-    ScenarioTable.setDefaultChildClass(ScriptTable.class);
   }
 
   private SlimTestContextImpl makeTables(String tableText) throws Exception {
@@ -54,7 +53,7 @@ public class ScenarioAndDecisionTableTest {
   }
 
   @Test
-  public void bracesArountArgumentInTable() throws Exception {
+  public void bracesAroundArgumentInTable() throws Exception {
     SlimTestContextImpl testContext = makeTables(
             "!|scenario|echo|user|giving|user_old|\n" +
                     "|check|echo|@{user}|@{user_old}|\n" +

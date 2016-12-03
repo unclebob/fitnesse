@@ -44,7 +44,6 @@ public class ScenarioAndDecisionTableExtensionTest {
     slimTableFactory.addTableType(SCRIPT_EXTENSION_NAME, DiffScriptTable.class);
     root = InMemoryPage.makeRoot("root");
     assertions = new ArrayList<>();
-    ScenarioTable.setDefaultChildClass(ScriptTable.class);
   }
 
   private SlimTestContextImpl makeTables(String scenarioText, String scriptText) throws Exception {
