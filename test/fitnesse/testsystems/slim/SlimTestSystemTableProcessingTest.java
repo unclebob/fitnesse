@@ -205,6 +205,7 @@ public class SlimTestSystemTableProcessingTest {
   private static class DummySlimTable extends SlimTable {
 
     private final List<SlimAssertion> assertions;
+    private boolean tearDown;
 
     public DummySlimTable(String assertionId) {
       super(null, null, null);
@@ -212,6 +213,15 @@ public class SlimTestSystemTableProcessingTest {
           new SlimAssertion(new DummyInstruction(assertionId),
               new IgnoreOnNullPassOtherwiseSlimExpectation())
       );
+    }
+
+    public void setTearDown(boolean tearDown) {
+      this.tearDown = tearDown;
+    }
+
+    @Override
+    public boolean isTearDown() {
+      return tearDown;
     }
 
     @Override

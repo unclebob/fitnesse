@@ -33,7 +33,6 @@ public abstract class SlimTable {
   private String tableName;
   private int instructionNumber = 0;
   private String fixtureName;
-  private boolean isTearDown;
 
   private List<SlimTable> children = new LinkedList<>();
   private SlimTable parent = null;
@@ -129,11 +128,7 @@ public abstract class SlimTable {
   }
 
   public boolean isTearDown() {
-    return isTearDown;
-  }
-
-  public void setTearDown(boolean teardown) {
-    isTearDown = teardown;
+    return table.isTearDown();
   }
 
   protected String getFixtureName(String tableHeader) {
