@@ -14,6 +14,7 @@ import fitnesse.socketservice.PlainClientSocketFactory;
 import fitnesse.socketservice.PlainServerSocketFactory;
 import fitnesse.socketservice.SslClientSocketFactory;
 import fitnesse.testsystems.*;
+import org.apache.commons.lang.SystemUtils;
 
 public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   public static final String SLIM_PORT = "SLIM_PORT";
@@ -78,7 +79,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
             /**
              * This reverts the wrap that the LoggingOutputStream.flush method
              * is doing.
-             * 
+             *
              * @param prefixedMessage
              * @param level
              * @return == null : the message is not prefixed with the given
@@ -226,7 +227,9 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     } catch (NumberFormatException e) {
       // stick with default
     }
-    return SLIM_USE_PIPE_PORT;
+    // Windows console does not support Unicode (by default)
+    // so we use a socket by default on Windows.
+    return SystemUtils.IS_OS_WINDOWS ? 0 : SLIM_USE_PIPE_PORT;
   }
 
   private int getSlimPortPoolSize() {
