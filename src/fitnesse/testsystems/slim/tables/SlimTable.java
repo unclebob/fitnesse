@@ -58,8 +58,7 @@ public abstract class SlimTable {
 
   public void addChildTable(SlimTable slimtable, int row) {
     slimtable.id = id + "." + children.size();
-    slimtable.tableName = makeInstructionTag(instructionNumber) + "/" + slimtable.tableName;
-    instructionNumber++;
+    slimtable.tableName = makeInstructionTag() + "/" + slimtable.tableName;
     slimtable.parent = this;
     children.add(slimtable);
 
@@ -81,11 +80,7 @@ public abstract class SlimTable {
   public abstract List<SlimAssertion> getAssertions() throws TestExecutionException;
 
   protected String makeInstructionTag() {
-    return makeInstructionTag(instructionNumber++);
-  }
-
-  protected String makeInstructionTag(int instructionNumber) {
-    return String.format("%s_%d", tableName, instructionNumber);
+    return String.format("%s_%d", tableName, instructionNumber++);
   }
 
   public String getTableName() {
@@ -292,16 +287,10 @@ public abstract class SlimTable {
         return value;
     }
 
-//    @Override
-//    protected String getSymbolValue(String symbolName){
-//      return getSymbol(symbolName);
-//    }
-
     public String replace(){
       return replace(toReplace);
     }
   }
-
 
   class FullExpansionSymbolReplacer extends SymbolReplacer {
     FullExpansionSymbolReplacer(String s) {
