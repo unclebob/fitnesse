@@ -35,28 +35,14 @@ public abstract class SlimTableTestSupport<T extends SlimTable> {
   protected List<SlimAssertion> assertions;
   protected T tableUnderTest;
 
-  @SuppressWarnings("unchecked")
-  private Class<T> getParameterizedClass() {
-    Type superclass = this.getClass().getGenericSuperclass();
-    if(superclass instanceof ParameterizedType) {
-      ParameterizedType type = ParameterizedType.class.cast(superclass);
-       return (Class<T>) type.getActualTypeArguments()[0];
-    }
-    throw new IllegalStateException("Unable to detect the actual type of SlimTable.");
-  }
-
   public T createSlimTable(String tableText) {
-    try {
-      Constructor<T> constructor = getParameterizedClass().getConstructor(Table.class, String.class, SlimTestContext.class);
-      WikiPageUtil.setPageContents(root, tableText);
-      String html = root.getHtml();
-      TableScanner<HtmlTable> ts = new HtmlTableScanner(html);
-      Table t = ts.getTable(0);
-      SlimTestContextImpl testContext = new SlimTestContextImpl(new WikiTestPage(new WikiPageDummy()));
-      return constructor.newInstance(t, "id", testContext);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+    WikiPageUtil.setPageContents(root, tableText);
+    String html = root.getHtml();
+    TableScanner<HtmlTable> ts = new HtmlTableScanner(html);
+    Table t = ts.getTable(0);
+    SlimTestContextImpl testContext = new SlimTestContextImpl(new WikiTestPage(new WikiPageDummy()));
+    SlimTableFactory tableFactory = new SlimTableFactory();
+    return (T) tableFactory.makeSlimTable(t, "id", testContext);
   }
 
   @Before

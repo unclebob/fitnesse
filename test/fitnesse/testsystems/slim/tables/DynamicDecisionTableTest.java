@@ -64,7 +64,7 @@ public class DynamicDecisionTableTest extends SlimTableTestSupport<DynamicDecisi
 
   @Test
   public void dynamicDecisionTableCanBeConstructorOnly() throws Exception {
-    makeDynamicDecisionTableAndBuildInstructions("|fixture|argument|\n");
+    makeDynamicDecisionTableAndBuildInstructions("|ddt:fixture|argument|\n");
     List<Instruction> expectedInstructions = asList(
             new MakeInstruction(id(0), TABLE_INSTANCE_NAME, "fixture", new Object[]{"argument"}),
             new CallInstruction(id(1), TABLE_INSTANCE_NAME, "table", new Object[]{asList()})
@@ -80,7 +80,7 @@ public class DynamicDecisionTableTest extends SlimTableTestSupport<DynamicDecisi
 
     String colorizedTable = dynamicDecisionTable.getTable().toString();
     String expectedColorizedTable =
-      "[[pass(fixture), argument]]";
+      "[[pass(ddt:fixture), argument]]";
     assertEquals(expectedColorizedTable, colorizedTable);
   }
 

@@ -125,10 +125,6 @@ public abstract class SlimTable {
   }
 
   protected String getFixtureName() {
-    if (fixtureName == null) {
-      String tableHeader = table.getCellContents(0, 0);
-      fixtureName = getFixtureName(tableHeader);
-    }
     return Disgracer.disgraceClassName(fixtureName);
   }
 
