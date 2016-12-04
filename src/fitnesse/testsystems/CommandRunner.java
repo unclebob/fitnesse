@@ -64,6 +64,7 @@ public class CommandRunner {
     redirectOutputs(process, executionLogListener);
   }
 
+  // Note: for pipe-based connection, this method is overridden in SlimClientBuilder
   protected void redirectOutputs(Process process, final ExecutionLogListener executionLogListener) throws IOException {
     InputStream stdout = process.getInputStream();
     InputStream stderr = process.getErrorStream();
@@ -117,7 +118,6 @@ public class CommandRunner {
       if (isDead(process)) {
         exitCode = process.exitValue();
         executionLogListener.exitCode(exitCode);
-
       }
     }
   }

@@ -198,6 +198,7 @@ public class CommandRunningFitClient extends FitClient {
               fitClient.notify();
               Exception e = new Exception(
                       "FitClient: external process terminated before a connection could be established.");
+              // TODO: use executionLogListener.exceptionOccurred(e)
               commandRunner.exceptionOccurred(e);
               fitClient.exceptionOccurred(e);
             }
