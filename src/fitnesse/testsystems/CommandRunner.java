@@ -231,11 +231,11 @@ public class CommandRunner {
   }
 
   // TODO: Those should go, since the data is sent to the ExecutionListener already
-  public InputStream getReader() {
+  public InputStream getInputStream() {
     return process.getInputStream();
   }
 
-  public OutputStream getWriter() {
+  public OutputStream getOutputStream() {
     return process.getOutputStream();
   }
 }
