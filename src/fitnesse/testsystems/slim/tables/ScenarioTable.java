@@ -130,14 +130,14 @@ public class ScenarioTable extends SlimTable {
     }
   }
 
-  public static boolean isNameParameterized(String firstNameCell) {
+  private boolean isNameParameterized(String firstNameCell) {
     Pattern regPat = Pattern.compile(underscorePattern);
     Matcher underscoreMatcher = regPat.matcher(firstNameCell);
 
     return underscoreMatcher.find();
   }
 
-  public static String unparameterize(String firstNameCell) {
+  private String unparameterize(String firstNameCell) {
     String name = firstNameCell.replaceAll(underscorePattern, " ").trim();
 
     return Disgracer.disgraceClassName(name);
