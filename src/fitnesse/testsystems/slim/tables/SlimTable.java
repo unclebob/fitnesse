@@ -173,17 +173,16 @@ public abstract class SlimTable {
     return new CallAndAssignInstruction(makeInstructionTag(), symbolName, instanceName, Disgracer.disgraceMethodName(functionName), args);
   }
 
-
   protected Instruction assign(String symbolName, String value) {
     return new AssignInstruction(makeInstructionTag(), symbolName, value);
   }
 
-  protected String ifSymbolAssignment(int col, int row) {
+  protected String isSymbolAssignment(int col, int row) {
     String expected = table.getCellContents(col, row);
-    return ifSymbolAssignment(expected);
+    return isSymbolAssignment(expected);
   }
 
-  protected String ifSymbolAssignment(String expected) {
+  protected String isSymbolAssignment(String expected) {
 	return SlimSymbol.isSymbolAssignment(expected);
   }
 

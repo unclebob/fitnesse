@@ -17,7 +17,7 @@ public class DecisionTable extends SlimTable {
   protected MethodExtractor setterMethodExtractor;
   protected MethodExtractor getterMethodExtractor;
   protected boolean baselineDecisionTable = false;
-  
+
 
   public DecisionTable(Table table, String id, SlimTestContext context) {
     super(table, id, context);
@@ -118,7 +118,7 @@ public class DecisionTable extends SlimTable {
       private SlimAssertion callFunctionInRow(String functionName, int row) {
         int col = funcStore.getColumnNumber(functionName);
         String name = Disgracer.disgraceMethodName(functionName);
-        String assignedSymbol = ifSymbolAssignment(col, row);
+        String assignedSymbol = isSymbolAssignment(col, row);
         SlimAssertion assertion;
         if (assignedSymbol != null) {
         	assertion= makeAssertion(callAndAssign(assignedSymbol, "scriptTable" + "Actor", "cloneSymbol", "$"+name),
@@ -206,7 +206,7 @@ public class DecisionTable extends SlimTable {
 
     private SlimAssertion callFunctionInRow(String functionName, int row) {
       int col = funcStore.getColumnNumber(functionName);
-      String assignedSymbol = ifSymbolAssignment(col, row);
+      String assignedSymbol = isSymbolAssignment(col, row);
       SlimAssertion assertion;
 
       Object[] args = new Object[] {};

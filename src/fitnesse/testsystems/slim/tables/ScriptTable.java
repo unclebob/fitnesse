@@ -136,7 +136,7 @@ public class ScriptTable extends SlimTable {
       assertions = show(row);
     else if (firstCell.equalsIgnoreCase(getNoteKeyword()))
       assertions = note(row);
-    else if ((match = ifSymbolAssignment(0, row)) != null)
+    else if ((match = isSymbolAssignment(0, row)) != null)
       assertions = actionAndAssign(match, row);
     else if (firstCell.isEmpty())
       assertions = note(row);
