@@ -219,10 +219,6 @@ public class ScenarioTable extends SlimTable {
     this.defaultChildClass = defaultChildClass;
   }
 
-  public Class<? extends ScriptTable> getDefaultChildClass() {
-    return defaultChildClass;
-  }
-
   public List<SlimAssertion> call(String[] args, ScriptTable parentTable, int row) throws TestExecutionException {
     Map<String, String> scenarioArguments = new HashMap<>();
 

@@ -14,6 +14,7 @@ import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimTestResult;
+import fitnesse.util.StringUtils;
 
 public class ScriptTable extends SlimTable {
   private static final String SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX = ";";
@@ -106,7 +107,8 @@ public class ScriptTable extends SlimTable {
   @Override
   public List<SlimAssertion> getAssertions() throws TestExecutionException {
     List<SlimAssertion> assertions = new ArrayList<>();
-    if (table.getCellContents(0, 0).toLowerCase().startsWith(getTableKeyword())) {
+    // TODO: Should take into account here that a table can be assigned as
+    if (isTopLevelTable()) {
       List<SlimAssertion> createAssertions = startActor();
       if (createAssertions != null) {
         assertions.addAll(createAssertions);
@@ -115,6 +117,10 @@ public class ScriptTable extends SlimTable {
     for (int row = 1; row < table.getRowCount(); row++)
       assertions.addAll(instructionsForRow(row));
     return assertions;
+  }
+
+  private boolean isTopLevelTable() {
+    return getParent() == null;
   }
 
   // returns a list of statements
