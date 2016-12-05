@@ -119,7 +119,7 @@ public abstract class SlimTable {
   }
 
   protected String getFixtureName() {
-    return Disgracer.disgraceClassName(fixtureName);
+    return fixtureName != null ? Disgracer.disgraceClassName(fixtureName) : "";
   }
 
   public boolean isTearDown() {

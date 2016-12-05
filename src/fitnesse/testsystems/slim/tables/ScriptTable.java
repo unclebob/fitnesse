@@ -282,11 +282,8 @@ public class ScriptTable extends SlimTable {
   }
 
   protected List<SlimAssertion> startActor() {
-    String firstCellContents = table.getCellContents(0, 0);
-    String keyworkd = getTableKeyword() + ":";
-    int pos = firstCellContents.toLowerCase().indexOf(keyworkd);
-    if (pos == 0) {
-      return startActor(0, firstCellContents.substring(keyworkd.length() ), 0);
+    if (!StringUtils.isBlank(getFixtureName())) {
+      return startActor(0, getFixtureName(), 0);
     } else if (table.getColumnCountInRow(0) > 1) {
       return startActor(0);
     }
