@@ -1,7 +1,5 @@
 package fitnesse.wikitext.parser;
 
-import fitnesse.util.StringUtils;
-
 import static fitnesse.util.StringUtils.isBlank;
 
 public class FrontMatter extends SymbolType implements Rule, Translation {

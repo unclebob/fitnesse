@@ -3,9 +3,6 @@
 package fitnesse.responders.files;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Date;
 
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
@@ -15,7 +12,6 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
-import fitnesse.wiki.fs.FileVersion;
 
 public class DeleteFileResponder implements SecureResponder {
   public String resource;

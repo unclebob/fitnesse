@@ -4,20 +4,15 @@
 package fitnesse.wiki.fs;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import org.hamcrest.CoreMatchers;
-import org.junit.After;
+
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.util.Clock;
 import fitnesse.wiki.*;
-import fitnesse.wikitext.parser.Maybe;
 import util.FileUtil;
 
 import static fitnesse.wiki.WikiPageProperty.EDIT;
@@ -28,11 +23,9 @@ import static fitnesse.wiki.PageData.SUITE_SETUP_NAME;
 import static fitnesse.wiki.PageData.SUITE_TEARDOWN_NAME;
 import static fitnesse.wiki.PageType.SUITE;
 import static fitnesse.wiki.PageType.TEST;
-import static org.hamcrest.CoreMatchers.isA;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
