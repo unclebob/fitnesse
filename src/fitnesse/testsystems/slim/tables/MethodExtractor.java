@@ -1,6 +1,7 @@
 package fitnesse.testsystems.slim.tables;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 
 import org.json.JSONArray;
@@ -9,7 +10,7 @@ import org.json.JSONObject;
 public class MethodExtractor {
   private final String version = "1.0";
 
-  private final ArrayList<MethodExtractorRule> configurations;
+  private final List<MethodExtractorRule> configurations;
 
   public MethodExtractor() {
     super();
@@ -45,22 +46,23 @@ public class MethodExtractor {
 
 
   public MethodExtractorResult findRule(String methodName) {
-    for (int i = 0; i < configurations.size(); i++) {
-      Matcher m = configurations.get(i).matcher(methodName);
+    for (MethodExtractorRule configuration : configurations) {
+      Matcher m = configuration.matcher(methodName);
       if (m.matches()) {
         // The order of the next two lines is important. Don't change it
-        ArrayList<String> parameterObjects = configurations.get(i).getParameterList(m);
-        methodName = configurations.get(i).getMethodName(m);
+        List<String> parameterObjects = configuration.getParameterList(m);
+        methodName = configuration.getMethodName(m);
         return new MethodExtractorResult(methodName, parameterObjects);
       }
     }
     return null;
   }
 
+  @Override
   public String toString() {
     StringBuilder sb = new StringBuilder("ME:[");
-    for (int i = 0; i < configurations.size(); i++) {
-      sb.append(configurations.get(i).toString());
+    for (MethodExtractorRule configuration : configurations) {
+      sb.append(configuration.toString());
     }
     sb.append("]");
     return sb.toString();

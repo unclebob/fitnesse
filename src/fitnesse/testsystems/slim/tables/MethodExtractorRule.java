@@ -1,6 +1,7 @@
 package fitnesse.testsystems.slim.tables;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,11 +41,10 @@ public class MethodExtractorRule {
     return scope.matcher(methodName);
   }
 
-  public ArrayList<String> getParameterList(Matcher m) {
-    ArrayList<String> parameterObjects = new ArrayList<>();
-    for (int i = 0; i < parameterList.length; i++) {
-      if (!parameterList[i].isEmpty()) {
-        String parameter = parameterList[i];
+  public List<String> getParameterList(Matcher m) {
+    List<String> parameterObjects = new ArrayList<>();
+    for (String parameter : parameterList) {
+      if (!parameter.isEmpty()) {
         if (parameter.startsWith("$")) {
           String groupName = parameter.substring(1);
           try {
@@ -68,6 +68,7 @@ public class MethodExtractorRule {
     return m.replaceAll(getMethodNamePattern());
   }
 
+  @Override
   public String toString() {
     return "Scope:" + scopePattern + ";TargetName:" + methodNamePattern + ";Parameters:" + parameterListString;
   }

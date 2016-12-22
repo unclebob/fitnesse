@@ -1,13 +1,13 @@
 package fitnesse.testsystems.slim.tables;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public final class MethodExtractorResult {
   public final String methodName;
-  public final ArrayList<String> parameterNames;
+  public final List<String> parameterNames;
 
   public MethodExtractorResult(String methodName,
-                               ArrayList<String> parameterNames) {
+                               List<String> parameterNames) {
     this.methodName = methodName;
     this.parameterNames = parameterNames;
   }
