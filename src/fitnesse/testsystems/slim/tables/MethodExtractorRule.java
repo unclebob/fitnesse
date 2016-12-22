@@ -38,7 +38,7 @@ public class MethodExtractorRule {
 	}
 
 	public ArrayList<String> getParameterList(Matcher m){
-		  ArrayList<String>  parameterObjects = new ArrayList<String>();
+		  ArrayList<String>  parameterObjects = new ArrayList<>();
 		  for (int i=0; i< parameterList.length; i++){
 			  if (!parameterList[i].isEmpty()){
 				  String parameter =parameterList[i];

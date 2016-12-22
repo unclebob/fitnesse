@@ -8,20 +8,20 @@ import org.json.JSONObject;
 
 public class MethodExtractor{
 	private final String version = "1.0";
-	
+
 	private final ArrayList<MethodExtractorRule> configurations;
 
 	public MethodExtractor() {
 		super();
-		this.configurations = new ArrayList<MethodExtractorRule>();
+		this.configurations = new ArrayList<>();
 	}
-	
+
 	public MethodExtractor(String configString) {
 		super();
-		this.configurations = new ArrayList<MethodExtractorRule>();
-		
+		this.configurations = new ArrayList<>();
+
 			JSONObject jo = new JSONObject(configString);
-		
+
 		String fV= jo.getString("FormatVersion");
 		if (!version.equals(fV)) throw new IllegalArgumentException("JSON Mesage has version '" + fV + "'. This class expects version '"+ version +"'." );
 		JSONArray configList = jo.getJSONArray("MethodExtractorRules");
@@ -37,11 +37,11 @@ public class MethodExtractor{
 	public boolean add(String scope, String targetName, String parameters){
 		return add(new MethodExtractorRule(scope, targetName, parameters));
 	}
-	
+
 	public boolean add(MethodExtractorRule config){
 		return configurations.add(config);
 	}
-	
+
 
 	public MethodExtractorResult findRule(String methodName){
 		for(int i=0; i< configurations.size(); i++){
@@ -50,7 +50,7 @@ public class MethodExtractor{
 				  // The order of the next two lines is important. Don't change it
 				  ArrayList<String>  parameterObjects = configurations.get(i).getParameterList(m);
 				  methodName = configurations.get(i).getMethodName(m);
-				  return new MethodExtractorResult(methodName, parameterObjects);	
+				  return new MethodExtractorResult(methodName, parameterObjects);
 			  }
 		}
 		return null;
