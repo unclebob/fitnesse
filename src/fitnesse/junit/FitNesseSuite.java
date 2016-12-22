@@ -23,7 +23,7 @@ public class FitNesseSuite extends FitNesseRunner {
   @Target(ElementType.TYPE)
   public @interface Name {
 
-    public String value();
+    String value();
   }
 
   public FitNesseSuite(Class<?> suiteClass) throws InitializationError {
