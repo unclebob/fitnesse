@@ -12,7 +12,7 @@ import fitnesse.testsystems.slim.tables.SlimTableFactory;
  */
 public class CustomTableAliasPlugin extends PluginFeatureFactoryBase {
 
-  private final static Logger LOG = Logger.getLogger(CustomTableAliasPlugin.class.getName());
+  private static final Logger LOG = Logger.getLogger(CustomTableAliasPlugin.class.getName());
 
   @Override
   public void registerSlimTables(SlimTableFactory slimTableFactory) {
