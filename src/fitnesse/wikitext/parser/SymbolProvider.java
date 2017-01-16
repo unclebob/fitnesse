@@ -48,8 +48,10 @@ public class SymbolProvider {
     });
 
     static final SymbolProvider preformatProvider = new SymbolProvider(
-          new SymbolType[] {SymbolType.ClosePreformat, SymbolType.CloseBrace, SymbolType.CloseLiteral, Literal.symbolType, Variable.symbolType});
-
+          new SymbolType[] {SymbolType.ClosePreformat, SymbolType.CloseBrace, SymbolType.CloseLiteral, Literal.symbolType, Variable.symbolType, 
+                            new Today(), SymbolType.Delta, SymbolType.Whitespace, SymbolType.OpenParenthesis, SymbolType.CloseParenthesis, SymbolType.DateFormatOption,
+                            Evaluator.symbolType, SymbolType.CloseEvaluator});
+ 
     private static final char defaultMatch = '\0';
 
     private Map<Character, ArrayList<Matchable>> currentDispatch;

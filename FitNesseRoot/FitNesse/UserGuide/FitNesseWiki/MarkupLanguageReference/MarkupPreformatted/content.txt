@@ -19,5 +19,19 @@ public class AddRemovePlayerFixture extends ColumnFixture {
   }
 } }}}
 
+TodaysDate and MarkupVariables WILL be evaluated inside preformatted block. 
 
+!define MyVar {Hi}
+
+!-{{{-!
+{{{
+Say !-${MyVar}-!, 
+today is !-!today-!
+}}}!-}}}-!
+
+Will be rendered as:
+{{{
+Say ${MyVar}, 
+today is !today
+}}}
 
