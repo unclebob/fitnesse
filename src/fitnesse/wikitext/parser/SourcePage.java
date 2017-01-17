@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface SourcePage extends Comparable<SourcePage> {
     String getName();
@@ -17,4 +18,6 @@ public interface SourcePage extends Comparable<SourcePage> {
     boolean hasProperty(String propertyKey);
     String getProperty(String propertyKey);
     String makeUrl(String wikiWordPath);
+
+    List<Symbol> getSymbols(SymbolType symbolType);
 }

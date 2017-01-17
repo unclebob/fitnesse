@@ -8,6 +8,7 @@ The !-FitNesse-! markup language is straightforward to learn, and powerful eno
 | [[Style][>MarkupStyle]] | ''Setting the style of some text.'' |
 | [[Cross Reference][>MarkupCrossReference]] | ''Add a cross reference to another page.'' |
 | [[Headers][>MarkupHeaders]] | ''Setting a line as a title or section header.'' |
+| [[Headings][>MarkupHeadings]] | ''Generate a table of contents of all headers from within a wiki page.'' |
 | [[Centering][>MarkupCenter]] | ''Centering a line.'' |
 | [[Notes][>MarkupNote]] | ''Making a note.'' |
 | [[Horizontal Rules][>MarkupHorizontalRule]] | ''Drawing a horizontal separator.'' |

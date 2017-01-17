@@ -2,18 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
-import static org.junit.Assert.assertEquals;
-import static util.RegexTestCase.assertSubString;
-
 import fitnesse.FitNesseContext;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.reporting.JavascriptUtil;
+import fitnesse.responders.WikiPageActions;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
-import fitnesse.responders.WikiPageActions;
 import fitnesse.wiki.WikiPageUtil;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static util.RegexTestCase.assertSubString;
 
 public class HtmlUtilTest {
 
@@ -121,8 +121,8 @@ public class HtmlUtilTest {
   public void testMakeAppendElementScript() {
     String appendText = "<p>My string has \"quotes\" and \r \n</p>";
     HtmlTag scriptTag = JavascriptUtil.makeAppendElementScript("element-name", appendText);
-    String expected1 = "<script>var existingContent = document.getElementById(\"element-name\").innerHTML;"; 
-    String expected2 = "document.getElementById(\"element-name\").innerHTML = " + 
+    String expected1 = "<script>var existingContent = document.getElementById(\"element-name\").innerHTML;";
+    String expected2 = "document.getElementById(\"element-name\").innerHTML = " +
       "existingContent + \"<p>My string has \\\"quotes\\\" and \\r \\n</p>\";";
     String expected3 =  "</script>";
     assertSubString(expected1, scriptTag.html());
@@ -152,4 +152,18 @@ public class HtmlUtilTest {
     HtmlTag tag = JavascriptUtil.makeSilentLink("test?responder", new RawHtml("string with \"quotes\""));
     assertSubString("<a href=\"#\" onclick=\"doSilentRequest('test?responder')\">string with \"quotes\"</a>", tag.html());
   }
+
+  @Test
+  public void testRemainRfc3986UnreservedCharacters_WhenMixedStringGiven_ExpectedCleanString() {
+    String mixedString = "abcdefghijklmnopqrstuvwxyzäöü" +
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜ" +
+      "0123456789" +
+      "-._~" + "^°!\"§$%&/()=?`'´{[]}+*#,;:";
+    String cleanString = "abcdefghijklmnopqrstuvwxyz" +
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+      "0123456789" +
+      "-._~";
+    assertEquals(cleanString, HtmlUtil.remainRfc3986UnreservedCharacters(mixedString));
+  }
+
 }
