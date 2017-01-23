@@ -33,6 +33,14 @@ public class Testee {
     this.doubleVal = realVal;
   }
 
+  public Testee(String stringVal) {
+    this.stringVal = stringVal;
+  }
+
+  public Testee(Date dateVal) {
+    this.dateVal = dateVal;
+  }
+
   public Testee() {
   }
 

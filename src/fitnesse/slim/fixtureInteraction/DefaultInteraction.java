@@ -82,29 +82,44 @@ public class DefaultInteraction implements FixtureInteraction {
     * matches as args number, and not as args types
      */
     Constructor<?> defaultConstructor = null;
+    Constructor<?> constructorSelectedByType = null;
+    int diffCounter = 0;
+    
     for (Constructor<?> constructor : clazz.getConstructors()) {
+      int currentDiffCounter;
       Class<?>[] constructorArgs = constructor.getParameterTypes();
       if (constructorArgs.length == args.length) {
         if (defaultConstructor == null) {
           defaultConstructor = constructor;
         }
-        if (hasConstructorArgsTypes(constructorArgs, args)) {
-          return constructor;
+        
+        final Object[] convertedArgs = getConvertedConstructorArgsTypes(constructor, args);
+        final boolean matchedConstructorArgsTypes = hasConstructorArgsTypes(constructorArgs, convertedArgs);
+        if (matchedConstructorArgsTypes) {
+          //the constructor with most convertion changes should be more eligible for picking-up
+          currentDiffCounter = getConstructorArgsConvertionDiff(args, convertedArgs);
+          //pick-up the constructor with the most explicitly args typess
+          if (currentDiffCounter >= diffCounter) {
+            diffCounter = currentDiffCounter;
+            constructorSelectedByType = constructor;
+          }
         }
       }
     }
-    return defaultConstructor;
+
+    return constructorSelectedByType == null ? defaultConstructor : constructorSelectedByType;
   }
 
-  private boolean hasConstructorArgsTypes(Class<?>[] constructorArgs, Object[] args) {
+  private boolean hasConstructorArgsTypes(final Class<?>[] constructorArgs, final Object[] convertedArgs) {
     boolean constructorMatched = true;
     for (int i = 0; i < constructorArgs.length; i++) {
-      if (args[i] == null) {
+      if (convertedArgs[i] == null) {
         continue;
       }
+      
       Class<?> classArg = constructorArgs[i];
-      Class<?> classInputArg = args[i].getClass();
-      if (!constructorArgs[i].isAssignableFrom(args[i].getClass())) {
+      Class<?> classInputArg = convertedArgs[i].getClass();
+      if (!constructorArgs[i].isAssignableFrom(convertedArgs[i].getClass())) {
         if (constructorArgs[i].isPrimitive()) {
           constructorMatched = isWrapper(classArg, classInputArg);
         } else {
@@ -116,6 +131,17 @@ public class DefaultInteraction implements FixtureInteraction {
       }
     }
     return constructorMatched;
+  }
+
+  Object[] getConvertedConstructorArgsTypes(final Constructor<?> constructor, final Object[] args) {
+    Type[] argumentTypes = constructor.getGenericParameterTypes();
+    try {
+      //from fixture call we get only String values
+      return ConverterSupport.convertArgs(args, argumentTypes);
+    } catch (SlimError ex) {
+      //swallow the exception silently, as for this step it's not relevant
+      return args;
+    }
   }
 
   private boolean isWrapper(Class<?> classArg, Class<?> classInputArg) {
@@ -203,5 +229,18 @@ public class DefaultInteraction implements FixtureInteraction {
       throw new RuntimeException("Bad call of: " + method.getDeclaringClass().getName() + "." + method.getName()
               + ". On instance of: " + instance.getClass().getName(), e);
     }
+  }
+
+  private int getConstructorArgsConvertionDiff(Object[] args, Object[] convertedArgs) {
+    int diffCounter = 0;
+    for (int i = 0; i < args.length; i++) {
+      if (args[i] != null) {
+        //this implies that a conversation was made
+        if (!args[i].equals(convertedArgs[i])) {
+          diffCounter++;
+        }
+      }
+    }
+    return diffCounter;
   }
 }
