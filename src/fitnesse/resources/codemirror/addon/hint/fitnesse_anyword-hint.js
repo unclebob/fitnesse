@@ -12,7 +12,38 @@
 })(function(CodeMirror) {
   "use strict";
 
-  var WORD = /([@\!\$\w][\w]*)([^|]*\|)?/, RANGE = 500;
+  var WORD = /([@>!$\w]\w*)([^|]*\|)?/, RANGE = 500;
+  var autonames;
+  var autocompletes;
+  
+    var pageDataUrl = window.location.pathname + "?names";
+      $.ajax({
+        url: pageDataUrl,
+		async: true,
+        cache: true,
+        timeout: 2000,
+        success: function(result) {
+		    autonames = result.split(/\r?\n/);
+        },
+        error: function() {
+          alert("Error Accessing Child Page Names");
+        }
+      });
+	
+	
+    var pageDataUrl = "WikiAutoComplete" + "?pageData";
+      $.ajax({
+        url: pageDataUrl,
+		async: true,
+        cache: true,
+        timeout: 2000,
+        success: function(result) {
+		    autocompletes = result.split(/\r?\n/);
+        },
+        error: function() {
+          alert("Error Accessing Page Content from 'WikiAutoComplete'");
+        }
+      });
   
   CodeMirror.registerHelper("hint", "fitnesse_anyword", function(editor, options) {
     var word = options && options.word || WORD;
@@ -25,35 +56,33 @@
 
     var list = options && options.list || [], seen = {};
 	function addIfMatch(newWord){
-          if ((!curWord || newWord.toLocaleLowerCase().lastIndexOf(curWord, 0) == 0) && !Object.prototype.hasOwnProperty.call(seen, newWord)) {
+          if ((!curWord || newWord.toLocaleLowerCase().lastIndexOf(curWord, 0) == 0) && !seen.hasOwnProperty(newWord)) {
             seen[newWord] = true;
             list.push(newWord);
           }
 	}
-	addIfMatch("!contents -R2 -g -p -f -h");
-	addIfMatch("!include");
-	addIfMatch("!include -setup");
-	addIfMatch("!include -seamless");
-	addIfMatch("!include -teardown");
-	addIfMatch("!define");
-	addIfMatch("!today");
-	addIfMatch("!help");
-	addIfMatch("!path");
-	addIfMatch("!fixture");
-	addIfMatch("!lastmodified");
-	addIfMatch("!img -l");
 
+	  
     var re = new RegExp(word.source, "g");
     for (var dir = -1; dir <= 1; dir += 2) {
       var line = cur.line, endLine = Math.min(Math.max(line + dir * range, editor.firstLine()), editor.lastLine()) + dir;
       for (; line != endLine; line += dir) {
         var text = editor.getLine(line), m;
         while (m = re.exec(text)) {
-			if (line == cur.line && m[0] === curWord) continue;
+			//Don't match myself
+			if (line == cur.line && m.index == start) continue;
 			addIfMatch(m[0]);
         }
       }
     }
+
+	autonames.forEach(function (item, index, array) {
+		addIfMatch(">" + item);
+	});
+	autocompletes.forEach(function (item, index, array) {
+		addIfMatch(item);
+	});
+
     return {list: list, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
   });
 });

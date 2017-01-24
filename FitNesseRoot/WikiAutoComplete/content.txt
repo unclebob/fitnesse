@@ -1,0 +1,21 @@
+!define
+!today
+!help
+!path
+!fixture
+!lastmodified
+!img -l
+!contents
+!contents -R2 -g -p -f -h
+!include
+!include -setup
+!include -seamless
+!include -teardown
+!define TEST_SYSTEM (SLIM)
+!define TEST_SYSTEM (FIT)
+!define MANUALLY_START_TEST_RUNNER_ON_DEBUG (true)
+!define MANUALLY_START_TEST_RUNNER_ON_DEBUG (false)
+!define COMMAND_PATTERN (java -cp %p %m)
+!define TEST_RUNNER ()
+!anchor
+!style_()
