@@ -89,6 +89,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   public @interface ExcludeSuiteFilter {
 
     public String value();
+    public String systemProperty() default "";
   }
   /**
    * The <code>FitnesseDir</code> annotation specifies the absolute or relative
@@ -297,7 +298,14 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     if (excludeSuiteFilterAnnotation == null) {
       return null;
     }
-    return excludeSuiteFilterAnnotation.value();
+    if (!"".equals(excludeSuiteFilterAnnotation.value())) {
+      return excludeSuiteFilterAnnotation.value();
+    }
+    if (!"".equals(excludeSuiteFilterAnnotation.systemProperty())) {
+      return System.getProperty(excludeSuiteFilterAnnotation.systemProperty());
+    }
+    throw new InitializationError(
+            "In annotation @ExcludeSuiteFilter you have to specify either 'value' or 'systemProperty'");
   }
 
   protected boolean useDebugMode(Class<?> klass) throws Exception {
