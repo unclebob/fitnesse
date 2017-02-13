@@ -1,0 +1,10 @@
+---
+Search: no
+---
+When errors occur, we get the message:
+ * Errors Occurred
+
+!define FIXTURE_NAME {CrashFixture}
+!define EXPECTED_STYLE {error}
+
+!include DoTest

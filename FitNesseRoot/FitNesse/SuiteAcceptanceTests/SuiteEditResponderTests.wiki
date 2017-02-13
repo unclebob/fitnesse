@@ -1,0 +1,9 @@
+---
+Help
+Suites
+saveId: 1229153668185
+ticketId: 5760355884637638070
+---
+The edit responder is invoked with a url of the form {{{SomePage?edit}}}
+!contents -R2 -p
+!define TEST_SYSTEM {slim}

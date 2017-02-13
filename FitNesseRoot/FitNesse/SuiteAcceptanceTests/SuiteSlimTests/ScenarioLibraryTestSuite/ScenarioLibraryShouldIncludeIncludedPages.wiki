@@ -1,0 +1,7 @@
+---
+Test
+---
+This should be enough to see if the page was included in the scenario library:
+
+| script |
+| scenario in included page |

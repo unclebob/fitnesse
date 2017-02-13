@@ -1,0 +1,15 @@
+---
+saveId: 1238349003304
+ticketId: 2669078479729799561
+---
+!|script|
+|given page|ImportingPage|
+|given page|ImportedPage|
+|given page|ImportedPage.ImportedChild|
+|import|ImportedPage|into|ImportingPage|
+|Water mark and edit buttons should be on page|ImportingPage.ImportedChild|
+||
+|Water mark and edit buttons should not be on page|ImportingPage|
+|Water mark and edit buttons should not be on page|ImportedPage|
+|Water mark and edit buttons should not be on page|ImportedPage.ImportedChild|
+

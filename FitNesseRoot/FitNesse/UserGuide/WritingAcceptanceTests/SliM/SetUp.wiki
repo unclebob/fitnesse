@@ -1,0 +1,10 @@
+---
+saveId: 1231691120894
+ticketId: 2877052885879097211
+---
+!*> setup
+|import|
+|fitnesse.slim.test|
+|fitnesse.fixtures|
+
+*!

@@ -1,0 +1,27 @@
+---
+Edit: no
+Help
+Properties: no
+Refactor: no
+Search: no
+Suites
+Versions: no
+WhereUsed: no
+saveId: 1197318232254
+ticketId: -6614712250920689672
+---
+Create an nested backward symbolic link from a sub-page:
+
+First we need to create some pages to play with.
+!|Page creator.|
+|Page name.                                                       |PageContents.       |valid?|
+|LinkingPage                                                      |LINKING PAGE        |true  |
+|LinkingPage.LinkingChild                                         |LINKING CHILD       |true  |
+|LinkingPage.LinkingChild.LinkingGrandChild                       |LINKING GRAND CHILD |true  |
+|LinkingPage.LinkingChild.LinkingGrandChild.LinkingGreatGrandChild|LINKING GREAT GRAND CHILD |true  |
+|LinkingPage.LinkingChild.LinkedChild                             |LINKED CHILD        |true  |
+
+Now we create a symbolic link named !-SymLink-!.  This links !-LinkedPage.LinkedChild-! as a child of !-LinkingPage.LinkingChild-!.
+!|Response Requester.|
+|uri   |status?|
+|LinkingPage.LinkingChild.LinkingGrandChild.LinkingGreatGrandChild?responder=symlink&linkName=SymLink&linkPath=<LinkingChild.LinkedChild|303|

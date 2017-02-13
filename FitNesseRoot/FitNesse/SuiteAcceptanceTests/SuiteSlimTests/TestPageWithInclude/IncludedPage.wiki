@@ -1,0 +1,11 @@
+---
+saveId: 1228834474023
+ticketId: -1244951035038974341
+---
+!define FOO {foobar}
+
+|echo fixture|
+|name|name?|
+|${FOO}|foobar|
+
+

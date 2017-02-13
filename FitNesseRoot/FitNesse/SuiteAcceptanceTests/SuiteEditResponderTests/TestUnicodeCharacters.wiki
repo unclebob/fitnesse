@@ -1,0 +1,9 @@
+---
+Help
+Suites
+saveId: 1229153634306
+ticketId: 2076309857569861535
+---
+!|script|
+|save page|NewPage|with contents|þðæö|
+|it should contain|þðæö|

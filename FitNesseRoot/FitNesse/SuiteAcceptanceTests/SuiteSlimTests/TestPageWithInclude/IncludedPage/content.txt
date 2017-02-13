@@ -1,7 +1,0 @@
-!define FOO {foobar}
-
-|echo fixture|
-|name|name?|
-|${FOO}|foobar|
-
-

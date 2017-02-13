@@ -1,0 +1,12 @@
+---
+Edit: no
+Properties: no
+Refactor: no
+Search: no
+Suites: slim
+Versions: no
+saveId: 1224951903697
+ticketId: -9087830465292801545
+---
+!define TEST_SYSTEM {slim}
+!contents -R1 -g

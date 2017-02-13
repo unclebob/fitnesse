@@ -1,0 +1,12 @@
+---
+Edit: no
+Help
+Properties: no
+Refactor: no
+Search: no
+Suites
+Versions: no
+---
+^TestFinalScores
+^TestGames
+^TestGamesWithFancyFixture

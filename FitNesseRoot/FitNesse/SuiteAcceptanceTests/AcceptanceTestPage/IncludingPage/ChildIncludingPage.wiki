@@ -1,0 +1,9 @@
+---
+Edit: no
+Properties: no
+Refactor: no
+Search: no
+Versions: no
+---
+Child Including Page
+!include .FitNesse.SuiteAcceptanceTests.AcceptanceTestPage.IncludedPage

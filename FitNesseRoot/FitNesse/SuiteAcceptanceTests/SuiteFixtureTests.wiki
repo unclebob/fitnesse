@@ -1,0 +1,7 @@
+---
+Edit: no
+---
+^SuiteColumnFixtureSpec
+^SuiteGeneralFixtureSpec
+^SuiteRowFixtureSpec
+

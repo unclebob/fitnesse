@@ -1,8 +1,0 @@
-^TestBlankAndNullCells
-^TestParsingOfObjects
-^TestFixtureNotFound
-^TestFixtureNotFoundAfterTackingOnFixture
-^TestNotFixture
-^TestTackOnFixtureNotFixture
-^TestCannotResolveGracefullyNamedFixture
-^TestNoDefaultConstructor

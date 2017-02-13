@@ -1,0 +1,9 @@
+---
+Edit: no
+Properties: no
+Refactor: no
+Static
+Versions: no
+---
+!2 Administering FitNesse
+!contents -R1 -g -h

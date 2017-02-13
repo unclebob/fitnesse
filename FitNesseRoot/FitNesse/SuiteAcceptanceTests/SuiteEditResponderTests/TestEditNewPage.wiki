@@ -1,0 +1,16 @@
+---
+Help
+Refactor: no
+Suites
+saveId: 1229153513098
+ticketId: -3655776539143142112
+---
+!2 Test editing a non-existent page.
+The form should have a normal header, a blank edit area, a save button.
+
+!|script                                      |
+|attempt to edit |SomeNonExistentPage         |
+|and should match|<textarea.*></textarea>     |
+|and should match|<form.*>                    |
+|and should match|action="SomeNonExistentPage"|
+|and should match|type="submit"               |

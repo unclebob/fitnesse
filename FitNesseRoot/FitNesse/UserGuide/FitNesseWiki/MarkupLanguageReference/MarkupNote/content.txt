@@ -1,6 +1,0 @@
-You can make a note by starting a line with '''!note'''
-
-|!c '''Markup Text'''|!c '''Displayed as'''|
-|!-!note this text is a note-!|!note this text is a note|
-
-

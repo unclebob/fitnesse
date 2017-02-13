@@ -1,0 +1,11 @@
+---
+Help
+Suites
+Test
+---
+!|script|
+|create page|ScenarioLibrary|with content||
+|given page|SomePage|
+|it should not contain|Scenario Libraries|
+
+

@@ -1,0 +1,13 @@
+---
+Help
+Suites: testSuite
+Test
+---
+|import|
+|fitnesse.slim.test|
+
+!|test slim|3|
+|string|getStringArg?|
+|Bob|Bob|
+|Köln|Köln|
+

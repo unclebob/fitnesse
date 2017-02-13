@@ -1,0 +1,7 @@
+---
+Help: Reset DT Getter and Setter variables
+Static
+---
+Reset variables to get normal behaviour back.
+!define SLIM_DT_GETTER ()
+!define SLIM_DT_SETTER ()

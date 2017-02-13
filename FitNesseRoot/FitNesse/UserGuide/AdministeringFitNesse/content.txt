@@ -1,2 +1,0 @@
-!2 Administering FitNesse
-!contents -R1 -g -h

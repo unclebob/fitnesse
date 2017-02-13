@@ -1,0 +1,9 @@
+---
+Help: Create a new page might or might not create a backup file.
+Test
+---
+!help 
+!| script | 
+| Given a new wiki page |
+| Then the history size is ${Create_backup_for_initial_page_version}|
+

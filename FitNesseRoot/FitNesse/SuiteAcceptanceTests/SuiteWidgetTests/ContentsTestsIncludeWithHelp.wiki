@@ -1,0 +1,24 @@
+---
+Edit: no
+Help
+Properties: no
+Refactor: no
+Search: no
+Suites
+Versions: no
+saveId: 1224982442282
+ticketId: 8969296584301579115
+---
+'''Next create a child'''
+-|script|
+|start|Page Builder|
+|line        |I came first!|
+|attributes  |Help=First Child's help|
+|page        |!-ParentPage.FirstChild-!|
+
+'''Next create a sibling'''
+-|script|
+|start|Page Builder|
+|line        |I'm younger, but wiser|
+|attributes  |Help=Second Child's help|
+|page        |!-ParentPage.SecondChild-!|

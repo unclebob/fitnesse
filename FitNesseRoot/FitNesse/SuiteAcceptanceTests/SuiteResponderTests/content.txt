@@ -1,4 +1,0 @@
-The incoming URL determines which responder gets activated.  There are many different types of responders (and more every iteration!)
-!define TEST_SYSTEM {slim}
-
-!contents -g -p

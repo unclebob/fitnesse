@@ -1,4 +1,0 @@
-^SuiteColumnFixtureSpec
-^SuiteGeneralFixtureSpec
-^SuiteRowFixtureSpec
-

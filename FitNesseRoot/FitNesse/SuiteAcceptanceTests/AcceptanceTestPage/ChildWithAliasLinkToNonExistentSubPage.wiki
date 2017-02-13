@@ -1,0 +1,10 @@
+---
+Edit: no
+Properties: no
+Refactor: no
+Search: no
+Versions: no
+---
+This page contains an alias link to a non existent sub page.
+
+[[link][^NonExistentSubPage]]
