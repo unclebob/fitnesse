@@ -3,7 +3,6 @@
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
   <title>$pageTitle.Title ($title)</title>
   ## Deal with HTML 5 element in older IE browsers
   <!--[if lt IE 9]>
@@ -20,6 +19,8 @@
    <link rel="shortcut icon" type="image/png" href="${contextRoot}files/fitnesse/images/test-favicon.png" />
   #elseif( $actions.suitePage )
    <link rel="shortcut icon" type="image/png" href="${contextRoot}files/fitnesse/images/suite-favicon.png" />
+  #elseif ( $title.contains("Edit:") )
+   <link rel="shortcut icon" type="image/png" href="${contextRoot}files/fitnesse/images/edit-favicon.png" />
   #else
    <link rel="shortcut icon" type="image/png" href="${contextRoot}files/fitnesse/images/favicon.png" />
   #end
