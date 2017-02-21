@@ -4,7 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  <title>$title</title>
+  <title>$pageTitle.Title ($title)</title>
   ## Deal with HTML 5 element in older IE browsers
   <!--[if lt IE 9]>
    <script>
@@ -15,8 +15,15 @@
     document.createElement('footer');
    </script>
   <![endif]-->
-  
-  <link rel="shortcut icon" type="image/png" href="${contextRoot}files/fitnesse/images/favicon.png" />
+
+  #if( $actions.testPage )
+   <link rel="shortcut icon" type="image/png" href="${contextRoot}files/fitnesse/images/test-favicon.png" />
+  #elseif( $actions.suitePage )
+   <link rel="shortcut icon" type="image/png" href="${contextRoot}files/fitnesse/images/suite-favicon.png" />
+  #else
+   <link rel="shortcut icon" type="image/png" href="${contextRoot}files/fitnesse/images/favicon.png" />
+  #end
+
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/fitnesse_wiki.css" />
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/fitnesse_pages.css" />
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/wysiwyg/wysiwyg.css" media="screen"/>
@@ -50,16 +57,16 @@
   <header>
    #parse( $headerTemplate )
   </header>
-  
+
   <article>
    #parse( $mainTemplate )
   </article>
-  
+
   #if( $!footerTemplate )
   <footer>
    #parse( $footerTemplate )
   </footer>
   #end
-  
+
  </body>
 </html>
