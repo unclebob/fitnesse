@@ -161,8 +161,8 @@ $(document).ready(function() {
 });
 
 function initErrorMetadata() {
-    var errors = $(".alternating_block .fail, .alternating_block .error, .alternating_block .exception")
-        .not(".scenario, .scenario .fail, .scenario .error, .exception .error");
+    var errors = $(" .fail, .error, .exception")
+        .not("#test-summary, .scenario, .scenario .fail, .scenario .error, .exception .error");
 
     $("#error-nav-max").text(errors.length);
 
