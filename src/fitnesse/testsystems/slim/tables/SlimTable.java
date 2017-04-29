@@ -2,20 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import fitnesse.slim.SlimSymbol;
-import fitnesse.slim.instructions.AssignInstruction;
-import fitnesse.slim.instructions.CallAndAssignInstruction;
-import fitnesse.slim.instructions.CallInstruction;
-import fitnesse.slim.instructions.Instruction;
-import fitnesse.slim.instructions.MakeInstruction;
+import fitnesse.slim.instructions.*;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TableCell;
 import fitnesse.testsystems.TestExecutionException;
@@ -26,6 +14,11 @@ import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static fitnesse.testsystems.slim.tables.ComparatorUtil.approximatelyEqual;
 
 public abstract class SlimTable {
@@ -425,6 +418,41 @@ public abstract class SlimTable {
 
   }
 
+  class ReturnedValuePartialExpectation extends RowExpectation {
+    public ReturnedValuePartialExpectation(int col, int row) {
+      super(col, row, table.getCellContents(col, row));
+    }
+
+    public ReturnedValuePartialExpectation(int col, int row, String expected) {
+      super(col, row, expected);
+    }
+
+    @Override
+    protected SlimTestResult createEvaluationMessage(String actual, String expected) {
+      SlimTestResult testResult;
+      String replacedExpected = replaceSymbols(expected);
+
+      if (actual == null)
+        testResult = SlimTestResult.fail("null", replacedExpected); //todo can't be right message.
+      else if(actual.contains(replacedExpected))
+        testResult=SlimTestResult.pass(announceBlank(replaceSymbolsWithFullExpansion(expected)));
+      else if (replacedExpected.isEmpty())
+        testResult = SlimTestResult.ignore(actual);
+      else {
+        testResult = new Comparator(replacedExpected, actual, expected).evaluate();
+        if (testResult == null)
+          testResult = SlimTestResult.fail(actual, replaceSymbolsWithFullExpansion(expected));
+      }
+
+      return testResult;
+    }
+
+    private String announceBlank(String originalValue) {
+      return originalValue.isEmpty() ? "BLANK" : originalValue;
+    }
+
+  }
+
   class ReturnedSymbolExpectation extends ReturnedValueExpectation {
     private String symbolName;
     private String assignToName = null;
@@ -463,6 +491,21 @@ public abstract class SlimTable {
 
   class RejectedValueExpectation extends ReturnedValueExpectation {
     public RejectedValueExpectation(int col, int row) {
+      super(col, row);
+    }
+
+    @Override
+    protected SlimTestResult createEvaluationMessage(String actual, String expected) {
+      SlimTestResult testResult = super.createEvaluationMessage(actual, expected);
+      if (testResult != null)
+        return testResult.negateTestResult();
+      return null;
+    }
+  }
+
+
+  class RejectedValuePartialExpectation extends ReturnedValuePartialExpectation{
+    public RejectedValuePartialExpectation(int col, int row) {
       super(col, row);
     }
 

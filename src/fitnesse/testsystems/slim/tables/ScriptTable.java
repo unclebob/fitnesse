@@ -2,10 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.instructions.Instruction;
@@ -14,6 +10,10 @@ import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimTestResult;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class ScriptTable extends SlimTable {
   private static final String SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX = ";";
@@ -57,6 +57,25 @@ public class ScriptTable extends SlimTable {
   protected String getCheckKeyword() {
     return "check";
   }
+
+  /**
+   * Template method to provide the keyword for the {@code checkPartial} action.
+   *
+   * @return keyword for {@code checkPartial} action
+   */
+  protected String getCheckPartialKeyword() {
+    return "check partial";
+  }
+
+  /**
+   * Template method to provide the keyword for the {@code checkPartial} action.
+   *
+   * @return keyword for {@code checkPartial} action
+   */
+  protected String getCheckPartialNotKeyword() {
+    return "check partial not";
+  }
+
 
   /**
    * Template method to provide the keyword for the {@code checkNot} action.
@@ -127,6 +146,10 @@ public class ScriptTable extends SlimTable {
       assertions = startActor(row);
     else if (firstCell.equalsIgnoreCase(getCheckKeyword()))
       assertions = checkAction(row);
+    else if(firstCell.equalsIgnoreCase(getCheckPartialKeyword()))
+      assertions = checkPartialAction(row);
+    else if(firstCell.equalsIgnoreCase(getCheckPartialNotKeyword()))
+      assertions = checkPartialNotAction(row);
     else if (firstCell.equalsIgnoreCase(getCheckNotKeyword()))
       assertions = checkNotAction(row);
     else if (firstCell.equalsIgnoreCase(getRejectKeyword()))
@@ -237,6 +260,21 @@ public class ScriptTable extends SlimTable {
     return invokeAction(1, lastColInAction - 1, row,
             new RejectedValueExpectation(lastColInAction, row));
   }
+
+  protected List<SlimAssertion> checkPartialAction(int row) {
+    int lastColInAction = table.getColumnCountInRow(row) - 1;
+    table.getCellContents(lastColInAction, row);
+    return invokeAction(1, lastColInAction - 1, row,
+      new ReturnedValuePartialExpectation(lastColInAction, row));
+  }
+
+  protected List<SlimAssertion> checkPartialNotAction(int row) {
+    int lastColInAction = table.getColumnCountInRow(row) - 1;
+    table.getCellContents(lastColInAction, row);
+    return invokeAction(1, lastColInAction - 1, row,
+      new RejectedValuePartialExpectation(lastColInAction, row));
+  }
+
 
   protected List<SlimAssertion> invokeAction(int startingCol, int endingCol, int row, SlimExpectation expectation) {
     String actionName = getActionNameStartingAt(startingCol, endingCol, row);
