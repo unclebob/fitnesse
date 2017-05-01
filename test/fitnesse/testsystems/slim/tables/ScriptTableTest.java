@@ -2,33 +2,26 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import fitnesse.html.HtmlUtil;
-import fitnesse.testrunner.WikiTestPage;
-import fitnesse.testsystems.slim.SlimCommandRunningClient;
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.instructions.CallAndAssignInstruction;
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
-import fitnesse.testsystems.slim.HtmlTable;
-import fitnesse.testsystems.slim.HtmlTableScanner;
-import fitnesse.testsystems.slim.SlimTestContext;
-import fitnesse.testsystems.slim.SlimTestContextImpl;
-import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.TableScanner;
+import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.slim.*;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.InMemoryPage;
-
 import org.apache.commons.collections.ListUtils;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -517,6 +510,46 @@ public class ScriptTableTest {
                     asList("localizedScriptTable_id_0", "3")
             ),
       "[[Script], [localized check, func, pass(3)]]", true
+    );
+  }
+
+  @Test
+  public void checkPartialPasses() throws Exception {
+    assertScriptResults("|check partial|func|saved|\n",
+      asList(
+        asList("scriptTable_id_0", "1234 saved.")
+      ),
+      "[[Script], [check partial, func, pass(/saved/ found in: 1234 saved.)]]", false
+    );
+  }
+
+  @Test
+  public void checkPartialFails() throws Exception {
+    assertScriptResults("|check partial|func|saved|\n",
+      asList(
+        asList("scriptTable_id_0", "successful")
+      ),
+      "[[Script], [check partial, func, fail(/saved/ not found in: successful)]]", false
+    );
+  }
+
+  @Test
+  public void checkPartialNotPasses() throws Exception {
+    assertScriptResults("|check partial not|func|saved|\n",
+      asList(
+        asList("scriptTable_id_0", "success")
+      ),
+      "[[Script], [check partial not, func, pass(/saved/ not found in: success)]]", false
+    );
+  }
+
+  @Test
+  public void checkPartialNotFails() throws Exception {
+    assertScriptResults("|check partial not|func|saved|\n",
+      asList(
+        asList("scriptTable_id_0", "saved")
+      ),
+      "[[Script], [check partial not, func, fail(/saved/ found in: saved)]]", false
     );
   }
 
