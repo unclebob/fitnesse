@@ -418,41 +418,6 @@ public abstract class SlimTable {
 
   }
 
-  class ReturnedValuePartialExpectation extends RowExpectation {
-    public ReturnedValuePartialExpectation(int col, int row) {
-      super(col, row, table.getCellContents(col, row));
-    }
-
-    public ReturnedValuePartialExpectation(int col, int row, String expected) {
-      super(col, row, expected);
-    }
-
-    @Override
-    protected SlimTestResult createEvaluationMessage(String actual, String expected) {
-      SlimTestResult testResult;
-      String replacedExpected = replaceSymbols(expected);
-
-      if (actual == null)
-        testResult = SlimTestResult.fail("null", replacedExpected); //todo can't be right message.
-      else if(actual.contains(replacedExpected))
-        testResult=SlimTestResult.pass(announceBlank(replaceSymbolsWithFullExpansion(expected)));
-      else if (replacedExpected.isEmpty())
-        testResult = SlimTestResult.ignore(actual);
-      else {
-        testResult = new Comparator(replacedExpected, actual, expected).evaluate();
-        if (testResult == null)
-          testResult = SlimTestResult.fail(actual, replaceSymbolsWithFullExpansion(expected));
-      }
-
-      return testResult;
-    }
-
-    private String announceBlank(String originalValue) {
-      return originalValue.isEmpty() ? "BLANK" : originalValue;
-    }
-
-  }
-
   class ReturnedSymbolExpectation extends ReturnedValueExpectation {
     private String symbolName;
     private String assignToName = null;
@@ -494,19 +459,8 @@ public abstract class SlimTable {
       super(col, row);
     }
 
-    @Override
-    protected SlimTestResult createEvaluationMessage(String actual, String expected) {
-      SlimTestResult testResult = super.createEvaluationMessage(actual, expected);
-      if (testResult != null)
-        return testResult.negateTestResult();
-      return null;
-    }
-  }
-
-
-  class RejectedValuePartialExpectation extends ReturnedValuePartialExpectation{
-    public RejectedValuePartialExpectation(int col, int row) {
-      super(col, row);
+    public RejectedValueExpectation(int col, int row, String content) {
+      super(col, row, content);
     }
 
     @Override

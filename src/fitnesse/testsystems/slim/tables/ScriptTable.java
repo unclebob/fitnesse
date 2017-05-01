@@ -264,15 +264,19 @@ public class ScriptTable extends SlimTable {
   protected List<SlimAssertion> checkPartialAction(int row) {
     int lastColInAction = table.getColumnCountInRow(row) - 1;
     table.getCellContents(lastColInAction, row);
+    String regexString = table.getCellContents(lastColInAction,row);
+    regexString = "=~/" + regexString + "/";
     return invokeAction(1, lastColInAction - 1, row,
-      new ReturnedValuePartialExpectation(lastColInAction, row));
+      new ReturnedValueExpectation(lastColInAction, row, regexString));
   }
 
   protected List<SlimAssertion> checkPartialNotAction(int row) {
     int lastColInAction = table.getColumnCountInRow(row) - 1;
     table.getCellContents(lastColInAction, row);
+    String regexString = table.getCellContents(lastColInAction,row);
+    regexString = "=~/" + regexString + "/";
     return invokeAction(1, lastColInAction - 1, row,
-      new RejectedValuePartialExpectation(lastColInAction, row));
+      new RejectedValueExpectation(lastColInAction, row, regexString));
   }
 
 

@@ -519,7 +519,7 @@ public class ScriptTableTest {
       asList(
         asList("scriptTable_id_0", "1234 saved.")
       ),
-      "[[Script], [check partial, func, pass(saved)]]", false
+      "[[Script], [check partial, func, pass(/saved/ found in: 1234 saved.)]]", false
     );
   }
 
@@ -529,7 +529,7 @@ public class ScriptTableTest {
       asList(
         asList("scriptTable_id_0", "successful")
       ),
-      "[[Script], [check partial, func, fail(a=successful;e=saved)]]", false
+      "[[Script], [check partial, func, fail(/saved/ not found in: successful)]]", false
     );
   }
 
@@ -539,7 +539,7 @@ public class ScriptTableTest {
       asList(
         asList("scriptTable_id_0", "success")
       ),
-      "[[Script], [check partial not, func, pass(a=success;e=saved)]]", false
+      "[[Script], [check partial not, func, pass(/saved/ not found in: success)]]", false
     );
   }
 
@@ -549,7 +549,7 @@ public class ScriptTableTest {
       asList(
         asList("scriptTable_id_0", "saved")
       ),
-      "[[Script], [check partial not, func, fail(saved)]]", false
+      "[[Script], [check partial not, func, fail(/saved/ found in: saved)]]", false
     );
   }
 
