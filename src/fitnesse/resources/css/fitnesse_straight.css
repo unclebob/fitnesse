@@ -144,6 +144,11 @@ nav ul ul li a:active {
 nav li:hover ul {
 	display: block;
 }
+nav>ul {
+	position: fixed;
+	z-index: 1000;
+	right: 0px;
+}
 article {
 	padding: 0.5em;
 }
@@ -209,14 +214,16 @@ article th {
 	border-width: 3px;
 	border-style: solid;
 	border-color: Black;
-	height: 60px;
-	width: 180px;
+	height: 25px;
+	width: 300px;
 	background-color: #FFAAAA ;
 }
 
 #error-nav-label {
 	text-align: center;
-	line-height: 50%;
+	line-height: 0;
+	float: left;
+  margin-left: 5px;
 }
 
 #error-nav-controls {
