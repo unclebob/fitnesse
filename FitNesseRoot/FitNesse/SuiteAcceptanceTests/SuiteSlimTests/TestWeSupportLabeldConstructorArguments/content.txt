@@ -1,0 +1,36 @@
+| import |
+| fitnesse.slim.test |
+
+
+
+!2 Constructor without arguments 
+
+|script|Fixture with parametrized constructor |
+|check|saved porperties are | null |
+
+
+!2 Constructor with one argument 
+
+|script|Fixture with parametrized constructor | argument 1|
+|check|saved porperties are | [argument 1] |
+
+!2 Constructor with one labeled argument
+
+|script|Fixture with parametrized constructor |#first argument | argument 1|
+|check|saved porperties are | [argument 1] |
+
+
+!2 Constructor with two arguments
+
+|script|Fixture with parametrized constructor | argument 1 | argument 2 |
+|check|saved porperties are | [argument 1, argument 2]|
+
+
+!2 Constructor with two labeled arguments
+
+|script|Fixture with parametrized constructor | #first argument | argument 1 | #second argument | argument 2 |
+|check|saved porperties are | [argument 1, argument 2]|
+
+
+
+

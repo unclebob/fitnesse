@@ -160,7 +160,10 @@ public abstract class SlimTable {
     int columnCount = table.getColumnCountInRow(row);
     List<String> arguments = new ArrayList<>();
     for (int col = startingColumn; col < columnCount; col++) {
-      arguments.add(table.getCellContents(col, row));
+      String cellContent = table.getCellContents(col, row);
+        if(cellContent == null || !cellContent.startsWith("#")){
+          arguments.add(cellContent);
+        }
     }
     return arguments.toArray(new String[arguments.size()]);
   }
