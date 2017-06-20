@@ -144,7 +144,7 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
 
     if (fileVersion != null) {
       try {
-        String fileContent = loadContent(fileVersion);
+        String fileContent = loadContent(fileVersion).replace("\r\n", "\n");
 
         final ParsingPage parsingPage = makeParsingPage(this);
         final Symbol syntaxTree = Parser.make(parsingPage, fileContent, WIKI_FILE_PARSING_PROVIDER).parse();
