@@ -318,7 +318,7 @@ public class PageHistoryResponderTest {
     addDummyTestResult(new File(pageDirectory, "19801205012000_30_20_3_0"));
 
     makeResultForDate("TestPage", "latest");
-    assertHasRegexp("Fri Dec 05 01:20:00 [A-Z]+ 1980", response.getContent());
+    assertHasRegexp("Fri Dec 05 01:20:00 [A-Z0-9:+]+ 1980", response.getContent());
   }
 
   @Test
@@ -330,7 +330,7 @@ public class PageHistoryResponderTest {
     addDummyTestResult(new File(pageDirectory, "19941205012000_30_20_3_0"));
 
     makeResultForDate("TestPage", "latest");
-    assertHasRegexp("Tue Dec 05 01:20:00 [A-Z]+ 1995", response.getContent());
+    assertHasRegexp("Tue Dec 05 01:20:00 [A-Z0-9:+]+ 1995", response.getContent());
   }
 
   private void addDummySuiteResult(File resultFile) throws Exception {
