@@ -1,0 +1,10 @@
+---
+saveId: 1213102754520
+ticketId: -2900228412536126644
+---
+!path zork
+
+!|script|Java Properties|
+|show|property|java.class.path||
+|property|java.class.path|should match|.*zork.*|
+

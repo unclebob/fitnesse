@@ -1,4 +1,0 @@
-|script| hash fixture |
-|send|!{name:bob, address:here}|as hash|
-|check|hash|name|is|bob|
-|check|hash|address|is|here|

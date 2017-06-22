@@ -1,3 +1,0 @@
-Reset variables to get normal behaviour back.
-!define SLIM_DT_GETTER ()
-!define SLIM_DT_SETTER ()

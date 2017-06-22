@@ -1,6 +1,0 @@
-!3 !-SetUp-! and !-TearDown-!
-Sometimes you will need to delete a test database at the end of each test in a suite, or create an empty database at the beginning of each test.  Operations like this can be performed by writing special fixtures that perform these functions in their constructors.  These fixtures can then be invoked in the '''!-SetUp-!''' and '''!-TearDown-!''' pages of the suite.  See <FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.SpecialPages.
-
-To perform operations at the beginning or end of an entire suite, rather than for each test, define the operations on pages named '''!-SuiteSetUp-!''' and '''!-SuiteTearDown-!'''.
-
-!-SuiteSetUp and SuiteTearDown-! are associated with a test page by "Uncle Inheritance" as described in <FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.SpecialPages.  A suite has many different test pages, and it is possible that some will have different !-SuiteSetUp and SuiteTearDown-! pages.  Therefore tests in a suite are organized into groups that share the same !-SuiteSetup and SuiteTearDown-! pages.  The tests are executed in those groups, with the !-SuiteSetUp-! preceding them, and the !-SuiteTearDown-! following them.   

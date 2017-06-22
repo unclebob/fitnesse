@@ -1,3 +1,0 @@
-!contents -R4 -g -p -f -h
-
-

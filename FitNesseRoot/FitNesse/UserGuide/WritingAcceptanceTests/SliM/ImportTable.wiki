@@ -1,0 +1,10 @@
+---
+Test
+saveId: 1225490313404
+ticketId: -3711766748557255495
+---
+|Import|
+|myPackage.subPackage.whatever|
+|another.path.to.classes|
+
+The Import table tells the Slim Executor where the fixtures live.  

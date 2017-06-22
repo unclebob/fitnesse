@@ -1,0 +1,14 @@
+---
+Edit: no
+Properties: no
+Refactor: no
+Search: no
+Versions: no
+---
+When everything works just fine we get the message:
+ * Tests Executed OK
+
+!define FIXTURE_NAME {PassFixture}
+!define EXPECTED_STYLE {ok}
+
+!include DoTest

@@ -1,0 +1,7 @@
+---
+Help: Test for testing the Slim Test System
+LastModifyingUser: six42
+Suites: SLIM
+---
+!1 !help
+!contents -R2 -g -p -f -h

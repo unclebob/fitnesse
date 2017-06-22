@@ -1,0 +1,8 @@
+---
+Edit: no
+Properties: no
+Refactor: no
+Search: no
+Versions: no
+---
+See .FitNesse.WikiWord

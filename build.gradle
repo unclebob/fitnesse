@@ -97,26 +97,15 @@ task compileBootstrap(type: LessCompiler) {
 task createUpdateLists(type: WikiFileListBuilderTask) {
   outputDirectory = "${sourceSets.main.output.resourcesDir}/Resources"
   doNotReplaceFiles = [
-    "FitNesseRoot/FrontPage/content.txt",
-    "FitNesseRoot/FrontPage/properties.xml",
-    "FitNesseRoot/PageHeader/content.txt",
-    "FitNesseRoot/PageHeader/properties.xml",
-    "FitNesseRoot/PageFooter/content.txt",
-    "FitNesseRoot/PageFooter/properties.xml",
-    "FitNesseRoot/PageFooter/properties.xml",
-    "FitNesseRoot/TemplateLibrary/content.txt",
-    "FitNesseRoot/TemplateLibrary/properties.xml",
-    "FitNesseRoot/TemplateLibrary/StaticPage/content.txt",
-    "FitNesseRoot/TemplateLibrary/StaticPage/properties.xml",
-    "FitNesseRoot/TemplateLibrary/SuitePage/content.txt",
-    "FitNesseRoot/TemplateLibrary/SuitePage/properties.xml",
-    "FitNesseRoot/TemplateLibrary/TestPage/content.txt",
-    "FitNesseRoot/TemplateLibrary/TestPage/properties.xml" ]
+    "FitNesseRoot/FrontPage.wiki",
+    "FitNesseRoot/PageHeader.wiki",
+    "FitNesseRoot/PageFooter.wiki",
+    "FitNesseRoot/TemplateLibrary.wiki",
+    "FitNesseRoot/TemplateLibrary/StaticPage.wiki",
+    "FitNesseRoot/TemplateLibrary/SuitePage.wiki",
+    "FitNesseRoot/TemplateLibrary/TestPage.wiki"]
   mainDirectories = [
     "FitNesseRoot/FitNesse",
-    "FitNesseRoot/FrontPage",
-    "FitNesseRoot/PageFooter",
-    "FitNesseRoot/PageHeader",
     "FitNesseRoot/TemplateLibrary" ]
 }
 
@@ -150,16 +139,9 @@ jar {
   dependsOn createUpdateLists
   into('Resources') {
     from('.') {
-      include 'FitNesseRoot/FitNesse/**/content.txt'
-      include 'FitNesseRoot/FitNesse/**/properties.xml'
-      include 'FitNesseRoot/FrontPage/**/content.txt'
-      include 'FitNesseRoot/FrontPage/**/properties.xml'
-      include 'FitNesseRoot/PageFooter/**/content.txt'
-      include 'FitNesseRoot/PageFooter/**/properties.xml'
-      include 'FitNesseRoot/PageHeader/**/content.txt'
-      include 'FitNesseRoot/PageHeader/**/properties.xml'
-      include 'FitNesseRoot/TemplateLibrary/**/content.txt'
-      include 'FitNesseRoot/TemplateLibrary/**/properties.xml'
+      include 'FitNesse/**.wiki'
+      include 'FitNesseRoot/FitNesse/**.wiki'
+      include 'FitNesseRoot/TemplateLibrary/**.wiki'
     }
   }
   manifest {

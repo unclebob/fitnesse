@@ -1,2 +1,0 @@
-Child Including Page
-!include .FitNesse.SuiteAcceptanceTests.AcceptanceTestPage.IncludedPage

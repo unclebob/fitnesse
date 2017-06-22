@@ -1,0 +1,9 @@
+---
+saveId: 1225293418146
+ticketId: 4034578242887246818
+---
+Most tables use some kind of fixture class.  That class will be constructed once for each table.  You can pass constructor arguments simply by adding those arguments in table cells after the constructor name.
+
+|Decision:my decision table|constructor argument 1|constructor argument 2|
+|...|
+

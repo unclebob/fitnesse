@@ -1,0 +1,11 @@
+---
+Edit: no
+Properties: no
+Refactor: no
+Search: no
+Versions: no
+---
+
+!|script|
+|given page|CrazyPage|with content|brother content|
+|it should contain|brother content|

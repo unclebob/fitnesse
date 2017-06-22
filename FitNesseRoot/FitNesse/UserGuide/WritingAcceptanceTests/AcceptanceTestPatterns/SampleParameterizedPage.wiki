@@ -1,0 +1,15 @@
+---
+Edit: no
+Properties: no
+Refactor: no
+Search: no
+Versions: no
+---
+This page requires that 3 variables be defined before it is included.
+ * NUMERATOR
+ * DENOMINATOR
+ * QUOTIENT
+
+!|eg.Division|
+|numerator|denominator|quotient?|
+|${NUMERATOR}|${DENOMINATOR}|${QUOTIENT}|

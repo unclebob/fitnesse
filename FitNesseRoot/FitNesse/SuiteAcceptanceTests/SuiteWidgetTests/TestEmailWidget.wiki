@@ -1,0 +1,28 @@
+---
+Edit: no
+Properties: no
+Refactor: no
+Search: no
+Versions: no
+saveId: 1229150339876
+ticketId: -5994279846297980652
+---
+This page tests bold text on a wiki page.
+
+First create a page with bold text on it.
+
+!|Page Creator|
+|page name|page contents|page attributes|valid?|
+|EmailPage|This is an@email.com text||true|
+
+Then request that page
+
+!|Response Requester|
+|uri|valid?|
+|EmailPage|true|
+
+Examine the page to be sure it has the bold text
+
+!|Response Examiner|
+|type|pattern|matches?|value|
+|contents|This is <a href="mailto:an@email.com">an@email.com</a> text|true||

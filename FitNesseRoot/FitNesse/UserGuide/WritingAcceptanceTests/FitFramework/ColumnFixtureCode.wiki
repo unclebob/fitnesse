@@ -1,0 +1,23 @@
+---
+Edit: no
+Properties: no
+Refactor: no
+Static
+Versions: no
+saveId: 1225604433616
+ticketId: 5487233518994786467
+---
+{{{
+package eg;
+import fit.ColumnFixture;
+
+public class Division extends ColumnFixture {
+  public double numerator;
+  public double denominator;
+  public double quotient() {return numerator/denominator;}
+}
+}}}
+
+Input variables must be public.
+
+If the fixture declares the method ''public void execute()'' it will be called after all fields have been loaded, but before any output methods have been called.

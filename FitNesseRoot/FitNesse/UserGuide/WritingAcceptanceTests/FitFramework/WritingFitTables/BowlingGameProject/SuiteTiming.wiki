@@ -1,0 +1,14 @@
+---
+Edit: no
+Help
+Properties: no
+Refactor: no
+Search: no
+Suites
+Versions: no
+---
+^TestGutterGameTiming
+^TestNoMarksTiming
+^TestSpareAndStrikeTiming
+^PerfectGameTiming
+

@@ -1,0 +1,18 @@
+---
+Edit: no
+Properties: no
+Refactor: no
+Search: no
+Versions: no
+---
+!c !2 Search Responder
+
+The search responder works in two fashions: Title Search and Content Search.
+
+ ^TestSearchForm
+ ^TestTitleSearch
+ ^TestContentSearch
+
+----
+Includes:
+ ^SamplePages

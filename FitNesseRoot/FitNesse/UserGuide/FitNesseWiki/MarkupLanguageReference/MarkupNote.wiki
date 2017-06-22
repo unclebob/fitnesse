@@ -1,0 +1,15 @@
+---
+Edit: no
+Properties: no
+Refactor: no
+Search: no
+Versions: no
+saveId: 1238167379384
+ticketId: 6044718649644820583
+---
+You can make a note by starting a line with '''!note'''
+
+|!c '''Markup Text'''|!c '''Displayed as'''|
+|!-!note this text is a note-!|!note this text is a note|
+
+

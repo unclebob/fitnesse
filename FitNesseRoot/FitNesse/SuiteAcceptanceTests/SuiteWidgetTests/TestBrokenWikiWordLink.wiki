@@ -1,0 +1,17 @@
+---
+Edit: no
+Properties: no
+Refactor: no
+Search: no
+Versions: no
+saveId: 1233786561543
+ticketId: 4684496641888779625
+---
+!2 Test the rendering of a broken WikiPageReference.
+ * A broken WikiPageReference is a reference to a page that does not not exist.
+ * It should be rendered as a '''[?]'''.  The '''[?]''' is a link to the wiki page followed by '''?edit'''
+----
+!|script|
+|given page|ReferencePage|with content|SomePage|
+|it should have creating link to|SomePage|
+

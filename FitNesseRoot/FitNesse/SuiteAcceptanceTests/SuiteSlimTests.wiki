@@ -1,0 +1,9 @@
+---
+Suites: slim, tag2
+saveId: 1232466948299
+ticketId: -7901610663668633806
+---
+!define TEST_SYSTEM {slim}
+
+!contents -R2 -g -p -f -h
+

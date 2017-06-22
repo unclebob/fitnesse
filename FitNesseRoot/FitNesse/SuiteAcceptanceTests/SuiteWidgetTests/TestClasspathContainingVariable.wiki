@@ -1,0 +1,14 @@
+---
+Edit: no
+Properties: no
+Refactor: no
+Search: no
+Versions: no
+saveId: 1233785822993
+ticketId: -6227523914168338832
+---
+Classpath widgets can cantain variables.  The text of !path widgets do not get processed with exception of variable references.
+
+!|script|
+|given page|ClasspathTestPage|with content|!define BASE_PATH {/some/path/}!-<br>-!!path &dollar;{BASE_PATH}blah.jar|
+|it should contain|classpath: /some/path/blah.jar|

@@ -1,0 +1,10 @@
+---
+Help
+Suites
+saveId: 1234542746248
+ticketId: 6270647661064016024
+---
+The incoming URL determines which responder gets activated.  There are many different types of responders (and more every iteration!)
+!define TEST_SYSTEM {slim}
+
+!contents -g -p
