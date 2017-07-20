@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
+import java.net.ServerSocket;
 
 import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
@@ -17,6 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+
 import util.FileUtil;
 
 import static org.hamcrest.Matchers.*;
@@ -50,7 +52,7 @@ public class FitNesseMainTest {
     context = spy(context);
     doAnswer(fitNesseContextWith(fitNesse)).when(context).makeFitNesseContext();
     new FitNesseMain().launchFitNesse(context);
-    verify(fitNesse, never()).start();
+    verify(fitNesse, never()).start(org.mockito.Matchers.any(ServerSocket.class));
   }
 
   @Test
@@ -65,7 +67,7 @@ public class FitNesseMainTest {
 
     int exitCode = new FitNesseMain().launchFitNesse(context);
     assertThat(exitCode, is(0));
-    verify(fitNesse, never()).start();
+    verify(fitNesse, never()).start(org.mockito.Matchers.any(ServerSocket.class));
     verify(fitNesse, times(1)).executeSingleCommand("command", System.out);
     verify(fitNesse, times(1)).stop();
   }
@@ -85,7 +87,7 @@ public class FitNesseMainTest {
 
     assertFalse(fitnesse.isRunning());
 
-    fitnesse.start();
+    fitnesse.start(new ServerSocket(0));
     assertTrue(fitnesse.isRunning());
 
     fitnesse.stop();
@@ -141,8 +143,7 @@ public class FitNesseMainTest {
     Integer exitCode = new FitNesseMain().launchFitNesse(arguments);
     assertThat(exitCode, is(0));
     System.setErr(err);
-    String response = outputBytes.toString();
-    return response;
+    return outputBytes.toString();
   }
 
   private Answer<FitNesseContext> fitNesseContextWith(final FitNesse fitNesse) {

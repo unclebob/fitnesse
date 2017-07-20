@@ -25,7 +25,7 @@ public abstract class RowFixture extends ColumnFixture {
   @Override
   public void doRows(Parse rows) {
     try {
-      bind(rows.parts);
+      bindColumnHeadersToMethodsAndFields(rows.parts);
       results = query();
       match(list(rows.more), list(results), 0);
       Parse last = rows.last();

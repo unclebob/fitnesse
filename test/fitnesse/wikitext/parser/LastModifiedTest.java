@@ -1,13 +1,14 @@
 package fitnesse.wikitext.parser;
 
-import fitnesse.wiki.PageData;
+import java.util.GregorianCalendar;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import fitnesse.util.Clock;
 import fitnesse.util.DateAlteringClock;
-
-import java.util.GregorianCalendar;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPageProperty;
 
 public class LastModifiedTest {
 
@@ -53,7 +54,7 @@ public class LastModifiedTest {
 
     private TestSourcePage makeTestPageWithDate(String date) {
         return makeTestPage()
-                .withProperty(PageData.PropertyLAST_MODIFIED, date);
+                .withProperty(WikiPageProperty.LAST_MODIFIED, date);
     }
 
     private TestSourcePage makeTestPage() {

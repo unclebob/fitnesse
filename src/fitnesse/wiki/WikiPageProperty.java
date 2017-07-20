@@ -4,26 +4,48 @@ package fitnesse.wiki;
 
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
+
+import fitnesse.util.Clock;
 
 public class WikiPageProperty implements Serializable {
   private static final long serialVersionUID = 1L;
 
+  public static final String LAST_MODIFIED = "LastModified";
+  public static final String LAST_MODIFYING_USER = "LastModifyingUser";
+  public static final String HELP = "Help";
+  public static final String PRUNE = "Prune";
+  public static final String SEARCH = "Search";
+  public static final String RECENT_CHANGES = "RecentChanges";
+  public static final String FILES = "Files";
+  public static final String WHERE_USED = "WhereUsed";
+  public static final String REFACTOR = "Refactor";
+  public static final String PROPERTIES = "Properties";
+  public static final String VERSIONS = "Versions";
+  public static final String EDIT = "Edit";
+  public static final String SUITES = "Suites";
+
+  public static final String SECURE_READ = "secure-read";
+  public static final String SECURE_WRITE = "secure-write";
+  public static final String SECURE_TEST = "secure-test";
+
   private String value;
-  protected SortedMap<String, WikiPageProperty> children = new TreeMap<>();
+  private SortedMap<String, WikiPageProperty> children = new TreeMap<>();
 
   public WikiPageProperty() {
   }
 
   public WikiPageProperty(String value) {
     setValue(value);
+  }
+
+  public WikiPageProperty(WikiPageProperty that) {
+    if (that != null && that.children != null)
+      children = new TreeMap<>(that.children);
   }
 
   public String getValue() {
@@ -99,6 +121,18 @@ public class WikiPageProperty implements Serializable {
     return children != null && !children.isEmpty();
   }
 
+  public Date getLastModificationTime() {
+    String dateStr = get(LAST_MODIFIED);
+    if (dateStr == null)
+      return Clock.currentDate();
+    else
+      try {
+        return getTimeFormat().parse(dateStr);
+      } catch (ParseException e) {
+        throw new RuntimeException("Unable to parse date '" + dateStr + "'", e);
+      }
+  }
+
   private static ThreadLocal<DateFormat> timeFormat = new ThreadLocal<>();
 
   public static DateFormat getTimeFormat() {
@@ -108,5 +142,9 @@ public class WikiPageProperty implements Serializable {
       timeFormat.set(format);
     }
     return format;
+  }
+
+  public void setLastModificationTime(Date date) {
+    set(LAST_MODIFIED, getTimeFormat().format(date));
   }
 }

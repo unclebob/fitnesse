@@ -54,6 +54,11 @@ public class SymbolicPage extends BaseWikitextPage {
   }
 
   @Override
+  public void remove() {
+    realPage.remove();
+  }
+
+  @Override
   public List<WikiPage> getChildren() {
     List<WikiPage> children = realPage.getChildren();
     List<WikiPage> symChildren = new LinkedList<>();
@@ -137,7 +142,8 @@ public class SymbolicPage extends BaseWikitextPage {
   @Override
   @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
   public boolean equals(Object other) {
-    return realPage.equals(other);
+    // Wrong! If Other is also a symbolicPage, the comparison is not valid
+    return ((other instanceof SymbolicPage) && realPage.equals(((SymbolicPage) other).realPage)) || realPage.equals(other);
   }
 
   @Override

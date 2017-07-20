@@ -1,7 +1,6 @@
 package fitnesse.junit;
 
 import java.io.Closeable;
-import java.io.IOException;
 
 import fitnesse.testrunner.TestsRunnerListener;
 import fitnesse.testsystems.Assertion;
@@ -21,13 +20,15 @@ public class JUnitRunNotifierResultsListener
 
   private final Class<?> mainClass;
   private final RunNotifier notifier;
+  private final DescriptionFactory descriptionFactory;
   private int totalNumberOfTests;
   private int completedTests;
   private Throwable firstFailure;
 
-  public JUnitRunNotifierResultsListener(RunNotifier notifier, Class<?> mainClass) {
+  public JUnitRunNotifierResultsListener(RunNotifier notifier, Class<?> mainClass, DescriptionFactory descriptionFactory) {
     this.notifier = notifier;
     this.mainClass = mainClass;
+    this.descriptionFactory = descriptionFactory;
   }
 
   @Override
@@ -36,7 +37,7 @@ public class JUnitRunNotifierResultsListener
   }
 
   @Override
-  public void unableToStartTestSystem(String testSystemName, Throwable cause) throws IOException {
+  public void unableToStartTestSystem(String testSystemName, Throwable cause) {
     notifyOfTestSystemException(testSystemName, cause);
   }
 
@@ -49,18 +50,15 @@ public class JUnitRunNotifierResultsListener
   @Override
   public void testComplete(TestPage test, TestSummary testSummary) {
     increaseCompletedTests();
+    Description description = descriptionFor(test);
     if (firstFailure != null) {
-      notifier.fireTestFailure(new Failure(descriptionFor(test), firstFailure));
+      notifier.fireTestFailure(new Failure(description, firstFailure));
     } else if (testSummary.getExceptions() > 0) {
-      notifier.fireTestFailure(new Failure(descriptionFor(test), new Exception("Exception occurred on page " + test.getFullPath())));
+      notifier.fireTestFailure(new Failure(description, new Exception("Exception occurred on page " + test.getFullPath())));
     } else if (testSummary.getWrong() > 0) {
-      notifier.fireTestFailure(new Failure(descriptionFor(test), new AssertionError("Test failures occurred on page " + test.getFullPath())));
+      notifier.fireTestFailure(new Failure(description, new AssertionError("Test failures occurred on page " + test.getFullPath())));
     }
-    fireTestFinishedFor(test);
-  }
-
-  private void fireTestFinishedFor(TestPage test) {
-    notifier.fireTestFinished(descriptionFor(test));
+    notifier.fireTestFinished(description);
   }
 
   @Override
@@ -98,19 +96,23 @@ public class JUnitRunNotifierResultsListener
               "Not all tests executed. Completed %s of %s tests.",
               completedTests, totalNumberOfTests);
       Exception e = new Exception(msg);
-      notifier.fireTestFailure(new Failure(Description.createSuiteDescription(mainClass), e));
+      notifier.fireTestFailure(new Failure(suiteDescription(), e));
     }
   }
 
   protected void notifyOfTestSystemException(String testSystemName, Throwable cause) {
     if (cause != null) {
       Exception e = new Exception("Exception while executing tests using: " + testSystemName, cause);
-      notifier.fireTestFailure(new Failure(Description.createSuiteDescription(mainClass), e));
+      notifier.fireTestFailure(new Failure(suiteDescription(), e));
     }
   }
 
-  private Description descriptionFor(TestPage test) {
-    return Description.createTestDescription(mainClass, test.getFullPath());
+  private Description suiteDescription() {
+    return getDescriptionFactory().createSuiteDescription(getMainClass());
+  }
+
+  protected Description descriptionFor(TestPage test) {
+    return getDescriptionFactory().createDescription(getMainClass(), test);
   }
 
   String createMessage(TestResult testResult) {
@@ -143,6 +145,10 @@ public class JUnitRunNotifierResultsListener
 
   public RunNotifier getNotifier() {
     return notifier;
+  }
+
+  public DescriptionFactory getDescriptionFactory() {
+    return descriptionFactory;
   }
 
   public int getTotalNumberOfTests() {

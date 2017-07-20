@@ -1,16 +1,19 @@
 package fitnesse.responders.versions;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
-import static util.RegexTestCase.assertHasRegexp;
+import org.junit.Before;
+import org.junit.Test;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
-import org.junit.Before;
-import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static util.RegexTestCase.assertHasRegexp;
 
 public class VersionComparerResponderTest {
   private String firstVersion;
@@ -20,7 +23,7 @@ public class VersionComparerResponderTest {
   private MockRequest request;
   private FitNesseContext context;
   private VersionComparer mockedComparer;
-  
+
   @Before
   public void setUp() throws Exception {
     context = FitNesseUtil.makeTestContext();
@@ -28,17 +31,17 @@ public class VersionComparerResponderTest {
     PageData data = page.getData();
     firstVersion = page.commit(data).getName();
 
-    WikiPageProperties properties = data.getProperties();
-    properties.set(PageData.PropertySUITES, "New Page tags");
+    WikiPageProperty properties = data.getProperties();
+    properties.set(WikiPageProperty.SUITES, "New Page tags");
     data.setContent("new stuff");
     secondVersion = page.commit(data).getName();
-    
+
     data.setContent("even newer stuff");
     page.commit(data);
 
     request = new MockRequest();
     request.setResource("ComparedPage");
-    
+
     mockedComparer = mock(VersionComparer.class);
     responder = new VersionComparerResponder(mockedComparer);
     responder.testing = true;
@@ -62,7 +65,7 @@ public class VersionComparerResponderTest {
     assertEquals(200, response.getStatus());
     verify(mockedComparer).compare(secondVersion, "new stuff", "latest", "even newer stuff");
   }
-  
+
   @Test
   public void shouldReturnErrorResponseIfNoVersionsSpecified() throws Exception {
     response = (SimpleResponse) responder.makeResponse(context, request);

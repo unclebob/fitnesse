@@ -6,7 +6,7 @@ import fitnesse.wiki.WikiPage;
 
 public interface SubWikiPageFactory {
 
-  List<WikiPage> getChildren(FileSystemPage fileSystemPage);
+  List<WikiPage> getChildren(FileBasedWikiPage wikiPage);
 
-  WikiPage getChildPage(FileSystemPage fileSystemPage, String childName);
+  WikiPage getChildPage(FileBasedWikiPage wikiPage, String childName);
 }

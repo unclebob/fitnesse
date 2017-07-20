@@ -2,35 +2,23 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static util.RegexTestCase.assertNotSubString;
-import static util.RegexTestCase.assertSubString;
-
-import java.io.IOException;
-
+import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageFactory;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockChunkedDataProvider;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
-import fitnesse.html.template.HtmlPage;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiImportProperty;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageDummy;
-import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.WikiPageProperties;
-import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.*;
 import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
 
 public class WikiImportingResponderTest {
   private WikiImportingResponder responder;
@@ -124,7 +112,7 @@ public class WikiImportingResponderTest {
   }
 
   private void checkProperties(WikiPage page, String source, boolean isRoot, WikiPage remotePage) throws Exception {
-    WikiPageProperties props = page.getData().getProperties();
+    WikiPageProperty props = page.getData().getProperties();
     if (!isRoot)
       assertFalse("should not have Edit property", props.has("Edit"));
 
@@ -140,7 +128,7 @@ public class WikiImportingResponderTest {
     }
   }
 
-  private String simulateWebRequest(MockRequest request) throws IOException {
+  private String simulateWebRequest(MockRequest request) throws Exception {
     ChunkedResponse response = getResponse(request);
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
@@ -149,7 +137,7 @@ public class WikiImportingResponderTest {
   }
 
   @Test
-  public void testHtmlOfMakeResponse() throws IOException {
+  public void testHtmlOfMakeResponse() throws Exception {
     Response response = makeSampleResponse(baseUrl);
     MockResponseSender sender = new MockResponseSender();
     ((ChunkedResponse) response).turnOffChunking();
@@ -191,13 +179,13 @@ public class WikiImportingResponderTest {
     assertSubString("3 pages were unmodified.", content);
   }
 
-  private ChunkedResponse makeSampleResponse(String remoteUrl) {
+  private ChunkedResponse makeSampleResponse(String remoteUrl) throws Exception {
     MockRequest request = makeRequest(remoteUrl);
 
     return getResponse(request);
   }
 
-  private ChunkedResponse getResponse(MockRequest request) {
+  private ChunkedResponse getResponse(MockRequest request) throws Exception {
     ChunkedResponse response = (ChunkedResponse) responder.makeResponse(testData.localContext, request);
     response.turnOffChunking();
     return response;

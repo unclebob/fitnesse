@@ -1,5 +1,6 @@
 package fitnesse.responders.versions;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -38,8 +39,7 @@ public class VersionComparerResponder implements Responder {
   }
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request)
-      throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     String resource = request.getResource();
     PageCrawler pageCrawler = context.getRootPage().getPageCrawler();
     WikiPagePath path = PathParser.parse(resource);
@@ -93,11 +93,11 @@ public class VersionComparerResponder implements Responder {
   }
 
   private Response makeErrorResponse(FitNesseContext context, Request request,
-      String message) {
+      String message) throws Exception {
     return new ErrorResponder(message).makeResponse(context, request);
   }
 
-  private Response makeValidResponse(Request request) {
+  private Response makeValidResponse(Request request) throws IOException {
     HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Version Comparison");
     page.setPageTitle(makePageTitle(request.getResource()));
@@ -113,7 +113,7 @@ public class VersionComparerResponder implements Responder {
     response.setContent(page.html());
     return response;
   }
-  
+
   private PageTitle makePageTitle(String resource) {
 
     String tags="";

@@ -17,19 +17,12 @@
 | ensure | content contains | slim:fitnesse.slim.SlimService |
 | ensure | content contains | This is standard output |
 | ensure | content contains | This is error output |
-
-!**> Page content
-| script |
-|show  |content |
-*!
+|show  collapsed |content |
 
 !|script |
 |check |request page    |SuitePage.TestPage?executionLog     |200    |
 | ensure | content contains | This test ran as part of a suite. |
 | ensure | content contains | This is standard output |
 | ensure | content contains | This is error output |
+|show  collapsed |content |
 
-!**> Page content
-| script |
-|show  |content |
-*!

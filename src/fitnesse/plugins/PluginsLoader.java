@@ -53,11 +53,15 @@ public class PluginsLoader {
     return logDirectory != null ? new Logger(logDirectory) : null;
   }
 
-  public Authenticator makeAuthenticator(String authenticationParameter) throws IOException {
+  public Authenticator makeAuthenticator(String authenticationParameter) throws IOException, PluginException {
     Authenticator authenticator = new PromiscuousAuthenticator();
     if (authenticationParameter != null) {
       if (new File(authenticationParameter).exists())
-        authenticator = new MultiUserAuthenticator(authenticationParameter);
+        try {
+          authenticator = new MultiUserAuthenticator(authenticationParameter);
+        } catch (ReflectiveOperationException e) {
+          throw new PluginException("Could not instantiate authentication classes", e);
+        }
       else {
         String[] values = authenticationParameter.split(":");
         authenticator = new OneUserAuthenticator(values[0], values[1]);

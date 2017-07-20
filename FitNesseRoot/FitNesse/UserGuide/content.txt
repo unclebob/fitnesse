@@ -13,12 +13,13 @@
  * [[Working with the FitNesse wiki][>FitNesseWiki]]
  * [[Writing Acceptance Tests][>WritingAcceptanceTests]] (jump directly to [[Fit][>WritingAcceptanceTests.FitFramework]] or [[Slim][>WritingAcceptanceTests.SliM]])
  * [[Administering FitNesse][>AdministeringFitNesse]]
+ * [[Plugins][.PlugIns]]
  * [[Quick Reference Guide][>QuickReferenceGuide]]
  * [[Full Reference Guide][<FitNesse.FullReferenceGuide]] (takes some time to load)
 
 !1 Introduction !anchor introduction
 
-FitNesse is a tool for specifying and verifying application acceptance criteria (requirements). It acts as a bridge between the different stakeholders (disciplines) in a software delivery process. It's wiki server makes it easy to document the software.It's testexecution capabilities allow you to verify the documentation against the software, ensuring the documentation remains up to date and the software is not facing regression.
+FitNesse is a tool for specifying and verifying application acceptance criteria (requirements). It acts as a bridge between the different stakeholders (disciplines) in a software delivery process. Its wiki server makes it easy to document the software. Its test-execution capabilities allow you to verify the documentation against the software, ensuring the documentation remains up to date and the software is not facing regression.
 
 For this to work, the tests should be defined on a business level, in conjunction with business representatives. They are basically business requirements, laid out in a way easy to understand by all stakeholders. When your requirements are unambiguous, they can be automatically verified with your application.
 
@@ -40,4 +41,4 @@ Fit allows customers, testers, and programmers to learn what their software ''sh
 *!
 Interestingly both the wiki and Fit were developed by Ward Cunningham, and you can read about them both on Ward's [[c2 wiki][http://fit.c2.com/]].
 
-Nowadays FitNesse is a comprehensive tool, supports multiple test systems and has been used for many software and even hardware projects.
+Nowadays FitNesse is a comprehensive tool, supports multiple test systems, and has been used for many software and even hardware projects.

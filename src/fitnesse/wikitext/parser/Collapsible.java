@@ -3,6 +3,9 @@ package fitnesse.wikitext.parser;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.RawHtml;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class Collapsible extends SymbolType implements Rule, Translation {
 
     private static final String STATE = "State";
@@ -56,8 +59,17 @@ public class Collapsible extends SymbolType implements Rule, Translation {
     }
 
     public static String generateHtml(String state, String titleText, String bodyText) {
+        return generateHtml(state, titleText, bodyText, Collections.<String>emptySet());
+    }
+
+    public static String generateHtml(String state, String titleText, String bodyText, Collection<String> extraClasses) {
+        StringBuilder outerClasses = new StringBuilder("collapsible" + state);
+        for (String extraClass : extraClasses) {
+            outerClasses.append(' ').append(extraClass);
+        }
+
         HtmlTag outerBlock = new HtmlTag("div");
-        outerBlock.addAttribute("class", "collapsible" + state);
+        outerBlock.addAttribute("class", outerClasses.toString());
 
         outerBlock.add(new RawHtml("<ul>" +
         		"<li><a href='#' class='expandall'>Expand</a></li>" +

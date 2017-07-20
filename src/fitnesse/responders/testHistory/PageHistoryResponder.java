@@ -2,7 +2,7 @@ package fitnesse.responders.testHistory;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -37,7 +37,7 @@ public class PageHistoryResponder implements SecureResponder {
   private FitNesseContext context;
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     this.context = context;
     prepareResponse(request);
 
@@ -50,7 +50,7 @@ public class PageHistoryResponder implements SecureResponder {
     }
   }
 
-  private Response makePageHistoryResponse(Request request) {
+  private Response makePageHistoryResponse(Request request) throws UnsupportedEncodingException {
     page.setTitle("Page History");
     page.put("pageHistory", pageHistory);
     page.setNavTemplate("viewNav");
@@ -58,8 +58,8 @@ public class PageHistoryResponder implements SecureResponder {
     page.setMainTemplate("pageHistory");
     return makeResponse();
   }
-  
-  private Response makePageHistoryXmlResponse() {
+
+  private Response makePageHistoryXmlResponse() throws UnsupportedEncodingException {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("pageHistory", pageHistory);
 
@@ -73,17 +73,13 @@ public class PageHistoryResponder implements SecureResponder {
     return "xml".equalsIgnoreCase(format);
   }
 
-  private Response tryToMakeTestExecutionReport(Request request) {
+  private Response tryToMakeTestExecutionReport(Request request) throws Exception {
     Date resultDate;
     String date = request.getInput("resultDate");
     if ("latest".equals(date)) {
       resultDate = pageHistory.getLatestDate();
     } else {
-      try {
-        resultDate = dateFormat.parse(date);
-      } catch (ParseException e) {
-        throw new RuntimeException("Invalid date format provided", e);
-      }
+      resultDate = dateFormat.parse(date);
     }
     TestResultRecord testResultRecord = pageHistory.get(resultDate);
     try {
@@ -93,7 +89,7 @@ public class PageHistoryResponder implements SecureResponder {
     }
   }
 
-  private Response makeCorruptFileResponse(Request request) {
+  private Response makeCorruptFileResponse(Request request) throws Exception {
     return new ErrorResponder("Corrupt Test Result File").makeResponse(context, request);
   }
 
@@ -145,7 +141,7 @@ public class PageHistoryResponder implements SecureResponder {
     return makeResponse();
   }
 
-  private Response generateXMLResponse(File file) {
+  private Response generateXMLResponse(File file) throws UnsupportedEncodingException {
     try {
       response.setContent(FileUtil.getFileContent(file));
     } catch (IOException e) {
@@ -155,7 +151,7 @@ public class PageHistoryResponder implements SecureResponder {
     return response;
   }
 
-  private Response makeResponse() {
+  private Response makeResponse() throws UnsupportedEncodingException {
     response.setContent(page.html());
     return response;
   }

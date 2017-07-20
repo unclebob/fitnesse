@@ -38,7 +38,7 @@ public class ZipFileVersionInfo extends VersionInfo {
       try {
         creationTime = makeVersionTimeFormat().parse(match.group(2));
       } catch (ParseException e) {
-        throw new RuntimeException(e);
+        throw new IllegalStateException(e);
       }
     }
     return new ZipFileVersionInfo(complexName, author, creationTime, file);

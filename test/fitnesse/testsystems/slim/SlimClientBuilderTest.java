@@ -17,17 +17,17 @@ public class SlimClientBuilderTest {
   }
 
   @Test
-  public void portRotates() throws Exception {
+  public void standardPortWillNotRotate() throws Exception {
     Descriptor descriptor = mock(Descriptor.class);
     when(descriptor.getVariable("SLIM_PORT")).thenReturn(null);
     for (int i = 0; i < 15; i++) {
       SlimClientBuilder clientBuilder = new SlimClientBuilder(descriptor);
-      assertEquals(8085 + (i % 10), clientBuilder.getSlimPort());
+      assertEquals(1, clientBuilder.getSlimPort());
     }
   }
 
   @Test
-  public void portStartsAtSlimPortVariable() throws Exception {
+  public void portStartsAtSlimPortVariableAndRotates() throws Exception {
     Descriptor descriptor = mock(Descriptor.class);
     when(descriptor.getVariable("SLIM_PORT")).thenReturn("9000");
     for (int i = 0; i < 15; i++) {
@@ -51,15 +51,17 @@ public class SlimClientBuilderTest {
     Descriptor descriptor = mock(Descriptor.class);
     when(descriptor.getVariable("SLIM_PORT")).thenReturn("BOB");
     for (int i = 0; i < 15; i++)
-      assertEquals(8085 + (i % 10), new SlimClientBuilder(descriptor).getSlimPort());
+      assertEquals(1, new SlimClientBuilder(descriptor).getSlimPort());
   }
 
   @Test
   public void slimPortPoolSizeCanBeModified() throws Exception {
     Descriptor descriptor = mock(Descriptor.class);
+    when(descriptor.getVariable("SLIM_PORT")).thenReturn("9000");
     when(descriptor.getVariable("slim.pool.size")).thenReturn("20");
     for (int i = 0; i < 25; i++)
-      assertEquals(8085 + (i % 20), new SlimClientBuilder(descriptor).getSlimPort());
+      assertEquals(9000 + (i % 20),
+          new SlimClientBuilder(descriptor).getSlimPort());
   }
 
   @Test

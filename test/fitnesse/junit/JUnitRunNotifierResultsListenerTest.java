@@ -1,11 +1,15 @@
 package fitnesse.junit;
 
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.wiki.PageCrawlerImpl;
+import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.fs.WikiPageProperties;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
@@ -15,13 +19,20 @@ import org.mockito.ArgumentCaptor;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 public class JUnitRunNotifierResultsListenerTest {
   private RunNotifier notifier = mock(RunNotifier.class);
-  private JUnitRunNotifierResultsListener listener = new JUnitRunNotifierResultsListener(notifier, getClass());
+  private DescriptionFactory descriptionFactory = mock(DescriptionFactory.class);
+  private Description description;
+  private JUnitRunNotifierResultsListener listener = new JUnitRunNotifierResultsListener(notifier, getClass(), descriptionFactory);
   private ArgumentCaptor<Failure> arguments = ArgumentCaptor.forClass(Failure.class);
+
+  @Before
+  public void setUp() {
+    description = Description.createTestDescription("myTest","bla");
+    when(descriptionFactory.createDescription(eq(getClass()), any(TestPage.class))).thenReturn(description);
+  }
 
   @Test
   public void shouldFinishSuccessfully() {
@@ -30,7 +41,7 @@ public class JUnitRunNotifierResultsListenerTest {
     listener.testAssertionVerified(null, testResult);
     listener.testComplete(mockWikiTestPage(), summary("-"));
 
-    verify(notifier).fireTestFinished(any(Description.class));
+    verify(notifier).fireTestFinished(description);
   }
 
   @Test
@@ -41,7 +52,7 @@ public class JUnitRunNotifierResultsListenerTest {
     listener.testComplete(mockWikiTestPage(), summary("-"));
 
     verify(notifier).fireTestFailure(any(Failure.class));
-    verify(notifier).fireTestFinished(any(Description.class));
+    verify(notifier).fireTestFinished(description);
   }
 
   @Test
@@ -52,7 +63,7 @@ public class JUnitRunNotifierResultsListenerTest {
     listener.testComplete(mockWikiTestPage(), summary("W"));
 
     verify(notifier).fireTestFailure(arguments.capture());
-    verify(notifier).fireTestFinished(any(Description.class));
+    verify(notifier).fireTestFinished(description);
 
     Failure failure = arguments.getValue();
     assertThat(failure.getMessage(), is("Test failures occurred on page WikiPage"));
@@ -66,7 +77,7 @@ public class JUnitRunNotifierResultsListenerTest {
     listener.testComplete(mockWikiTestPage(), summary("-"));
 
     verify(notifier).fireTestFailure(any(Failure.class));
-    verify(notifier).fireTestFinished(any(Description.class));
+    verify(notifier).fireTestFinished(description);
   }
 
   @Test
@@ -77,7 +88,7 @@ public class JUnitRunNotifierResultsListenerTest {
     listener.testComplete(mockWikiTestPage(), summary("E"));
 
     verify(notifier).fireTestFailure(arguments.capture());
-    verify(notifier).fireTestFinished(any(Description.class));
+    verify(notifier).fireTestFinished(description);
 
     Failure failure = arguments.getValue();
     assertThat(failure.getMessage(), is("Exception occurred on page WikiPage"));
@@ -111,7 +122,7 @@ public class JUnitRunNotifierResultsListenerTest {
     assertThat(failure.getMessage(), is("[Actual] Message"));
   }
 
-  private WikiTestPage mockWikiTestPage() {
+  static WikiTestPage mockWikiTestPage() {
     WikiPage root = mock(WikiPage.class);
     when(root.isRoot()).thenReturn(true);
 
@@ -119,6 +130,7 @@ public class JUnitRunNotifierResultsListenerTest {
     when(test.isRoot()).thenReturn(false);
     when(test.getParent()).thenReturn(root);
     when(test.getName()).thenReturn("WikiPage");
+    when(test.getData()).thenReturn(new PageData("content", new WikiPageProperties()));
     when(test.getPageCrawler()).thenReturn(new PageCrawlerImpl(test));
     return new WikiTestPage(test);
   }

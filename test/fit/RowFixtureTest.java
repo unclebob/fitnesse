@@ -51,9 +51,9 @@ public class RowFixtureTest extends TestCase {
     binding.adapter = arrayAdapter;
     fixture.columnBindings = new Binding[]{binding};
 
-    List<BusinessObject> computed = new LinkedList<BusinessObject>();
+    List<BusinessObject> computed = new LinkedList<>();
     computed.add(new BusinessObject(new String[]{"1"}));
-    LinkedList<Parse> expected = new LinkedList<Parse>();
+    LinkedList<Parse> expected = new LinkedList<>();
     expected.add(new Parse("tr", "", new Parse("td", "1", null, null), null));
     fixture.match(expected, computed, 0);
     assertEquals("right", 1, fixture.counts.right);
@@ -66,7 +66,7 @@ public class RowFixtureTest extends TestCase {
     RowFixture fixture = new SimpleRowFixture();
     Parse table = new Parse("<table><tr><td>field</td></tr></table>");
     Parse tableHead = table.parts.parts;
-    fixture.bind(tableHead);
+    fixture.bindColumnHeadersToMethodsAndFields(tableHead);
     assertNotNull(fixture.columnBindings[0]);
     Field field = fixture.columnBindings[0].adapter.field;
     assertNotNull(field);

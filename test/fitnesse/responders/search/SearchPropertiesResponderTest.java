@@ -1,5 +1,19 @@
 package fitnesse.responders.search;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang.StringUtils;
+import org.junit.Before;
+import org.junit.Test;
+
+import fitnesse.FitNesseContext;
+import fitnesse.http.MockRequest;
+import fitnesse.http.MockResponseSender;
+import fitnesse.http.Response;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.*;
+
 import static fitnesse.responders.search.SearchPropertiesResponder.ACTION;
 import static fitnesse.responders.search.SearchPropertiesResponder.SPECIAL;
 import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTE;
@@ -12,25 +26,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import fitnesse.FitNesseContext;
-import fitnesse.http.MockRequest;
-import fitnesse.http.MockResponseSender;
-import fitnesse.http.Response;
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PageType;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
-import fitnesse.wiki.WikiPageUtil;
-import org.apache.commons.lang.StringUtils;
-import org.junit.Before;
-import org.junit.Test;
 
 public class SearchPropertiesResponderTest {
   private SearchPropertiesResponder responder;
@@ -94,7 +89,7 @@ public class SearchPropertiesResponderTest {
     WikiPage page = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("PageOne"));
     PageData data = page.getData();
     data.setContent("some content");
-    WikiPageProperties properties = data.getProperties();
+    WikiPageProperty properties = data.getProperties();
     properties.set(TEST.toString(), "true");
     properties.set("Suites", "filter1,filter2");
     page.commit(data);
@@ -197,10 +192,10 @@ public class SearchPropertiesResponderTest {
     WikiPage page = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("ObsoletePage"));
     PageData data = page.getData();
     data.setContent("some content");
-    WikiPageProperties properties1 = data.getProperties();
+    WikiPageProperty properties1 = data.getProperties();
     properties1.set(TEST.toString(), "true");
     properties1.set("Suites", "filter1,filter2");
-    WikiPageProperties properties = properties1;
+    WikiPageProperty properties = properties1;
     properties.set(PropertyPRUNE, "true");
     page.commit(data);
 

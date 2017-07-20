@@ -37,7 +37,7 @@ public class TestHistoryResponderTest {
   private FitNesseContext context;
 
   @Before
-  public void setup() throws Exception {
+  public void setup() throws IOException {
     context = FitNesseUtil.makeTestContext();
     resultsDirectory = context.getTestHistoryDirectory();
     removeResultsDirectory();
@@ -49,7 +49,7 @@ public class TestHistoryResponderTest {
     response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
   }
 
-  private void removeResultsDirectory() {
+  private void removeResultsDirectory() throws IOException {
     if (resultsDirectory.exists())
       FileUtil.deleteFileSystemDirectory(resultsDirectory);
   }
@@ -66,7 +66,7 @@ public class TestHistoryResponderTest {
   }
 
   @After
-  public void teardown() {
+  public void teardown() throws IOException {
     removeResultsDirectory();
   }
 
@@ -245,7 +245,7 @@ public class TestHistoryResponderTest {
 
   @Test
   public void barGraphLimitedToLast20Results() throws Exception {
-    ArrayList<String> dates = new ArrayList<String>();
+    ArrayList<String> dates = new ArrayList<>();
     for (int day = 1; day < 32; day++) {
       int right = (day == 31) ? 1 : 0;
       dates.add(String.format("200905%02d010203_%1d_0_0_0", day, right));

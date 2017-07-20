@@ -1,0 +1,331 @@
+
+/* Plan:
+ - Create multi-module repo:
+   - fit (deps: common)
+   - slim (deps: common, networking)
+   - common
+   - networking
+   - ant
+   - fitnesse, the wiki server
+ - Move file creation to plugin
+*/
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.1.9'
+    }
+}
+
+plugins {
+  id 'java'
+  id "maven-publish"
+  id "com.jfrog.bintray" version "1.6"
+}
+
+apply plugin: "info.solidsoft.pitest"
+
+
+version = new Date().format('yyyyMMdd')
+
+println "Building FitNesse v${project.version}..."
+
+repositories {
+  mavenCentral()
+}
+
+configurations {
+  lesscss
+  optional
+  compile {
+    transitive = false
+    extendsFrom optional
+  }
+  runtime {
+    transitive = false
+  }
+}
+
+sourceSets {
+  main {
+    java.srcDir 'src'
+    resources.srcDir 'src'
+    output.resourcesDir output.classesDir
+  }
+  test {
+    java.srcDir 'test'
+  }
+}
+
+sourceCompatibility = '1.7'
+targetCompatibility = '1.7'
+
+dependencies {
+  compile "org.htmlparser:htmlparser:2.1"
+  compile "org.htmlparser:htmllexer:2.1"
+  compile "org.apache.velocity:velocity:1.7"
+  compile "commons-lang:commons-lang:2.6"
+  compile "commons-collections:commons-collections:3.2.2"
+  compile "org.json:json:20151123"
+  compile "com.googlecode.java-diff-utils:diffutils:1.3.0"
+  optional "org.apache.ant:ant:1.9.6"
+  optional "junit:junit:4.12"
+
+  testCompile "junit:junit:4.12"
+  testCompile "org.mockito:mockito-core:1.10.19"
+  testCompile "org.hamcrest:hamcrest-all:1.3"
+  testCompile "net.javacrumbs.json-unit:json-unit:1.1.6"
+
+  lesscss "org.mozilla:rhino:1.7.7.1"
+}
+
+task fitNesseVersion {
+  def versionFile = new File("${sourceSets.main.output.resourcesDir}/META-INF/FitNesseVersion.txt")
+  versionFile.parentFile.mkdirs()
+  versionFile.text="v${version}"
+}
+
+task compileBootstrap(type: LessCompiler) {
+  inputDir file('src/fitnesse/resources/bootstrap/less')
+  mainLessFile = 'fitnesse-bootstrap.less'
+  cssFile file("${sourceSets.main.output.resourcesDir}/fitnesse/resources/bootstrap/css/fitnesse-bootstrap.css")
+  classpath configurations.lesscss
+}
+
+task createUpdateLists(type: WikiFileListBuilderTask) {
+  outputDirectory = "${sourceSets.main.output.resourcesDir}/Resources"
+  doNotReplaceFiles = [
+    "FitNesseRoot/FrontPage/content.txt",
+    "FitNesseRoot/FrontPage/properties.xml",
+    "FitNesseRoot/PageHeader/content.txt",
+    "FitNesseRoot/PageHeader/properties.xml",
+    "FitNesseRoot/PageFooter/content.txt",
+    "FitNesseRoot/PageFooter/properties.xml",
+    "FitNesseRoot/PageFooter/properties.xml",
+    "FitNesseRoot/TemplateLibrary/content.txt",
+    "FitNesseRoot/TemplateLibrary/properties.xml",
+    "FitNesseRoot/TemplateLibrary/StaticPage/content.txt",
+    "FitNesseRoot/TemplateLibrary/StaticPage/properties.xml",
+    "FitNesseRoot/TemplateLibrary/SuitePage/content.txt",
+    "FitNesseRoot/TemplateLibrary/SuitePage/properties.xml",
+    "FitNesseRoot/TemplateLibrary/TestPage/content.txt",
+    "FitNesseRoot/TemplateLibrary/TestPage/properties.xml" ]
+  mainDirectories = [
+    "FitNesseRoot/FitNesse",
+    "FitNesseRoot/FrontPage",
+    "FitNesseRoot/PageFooter",
+    "FitNesseRoot/PageHeader",
+    "FitNesseRoot/TemplateLibrary" ]
+}
+
+processResources.dependsOn "fitNesseVersion", "compileBootstrap", "createUpdateLists"
+
+task copyRuntimeLibs(type: Copy) {
+  into "lib"
+  from configurations.runtime
+}
+
+test {
+  dependsOn copyRuntimeLibs
+  maxParallelForks 1
+}
+
+pitest {
+  targetClasses = ['fit.*', 'fitnesse.*']
+  pitestVersion = "1.1.10"
+  threads = 1 // We can not deal with parallel execution yet
+  outputFormats = ['XML', 'HTML']
+}
+
+task run(type: JavaExec) {
+  dependsOn classes, copyRuntimeLibs
+  classpath = sourceSets.main.runtimeClasspath
+  main "fitnesseMain.FitNesseMain"
+  args "-p", "8001", "-e", "0"
+}
+
+jar {
+  dependsOn createUpdateLists
+  into('Resources') {
+    from('.') {
+      include 'FitNesseRoot/FitNesse/**/content.txt'
+      include 'FitNesseRoot/FitNesse/**/properties.xml'
+      include 'FitNesseRoot/FrontPage/**/content.txt'
+      include 'FitNesseRoot/FrontPage/**/properties.xml'
+      include 'FitNesseRoot/PageFooter/**/content.txt'
+      include 'FitNesseRoot/PageFooter/**/properties.xml'
+      include 'FitNesseRoot/PageHeader/**/content.txt'
+      include 'FitNesseRoot/PageHeader/**/properties.xml'
+      include 'FitNesseRoot/TemplateLibrary/**/content.txt'
+      include 'FitNesseRoot/TemplateLibrary/**/properties.xml'
+    }
+  }
+  manifest {
+    attributes("Main-Class": "fitnesseMain.FitNesseMain",
+        "Implementation-Version": version)
+  }
+}
+
+task standaloneJar(type: Jar, dependsOn: jar) {
+  baseName = 'fitnesse'
+  classifier = 'standalone'
+  from {
+    (configurations.compile - configurations.optional).collect { zipTree(it) }
+  } {
+    exclude 'META-INF/**'
+  }
+  from jar.outputs.files.collect {
+    zipTree(it)
+  }
+  manifest {
+    attributes("Main-Class": "fitnesseMain.FitNesseMain",
+        "Implementation-Version": version)
+  }
+}
+
+task acceptanceTest(type: JavaExec) {
+  mustRunAfter test
+  onlyIf { dependsOnTaskDidWork() }
+  classpath = standaloneJar.outputs.files
+  main "fitnesseMain.FitNesseMain"
+  args "-o", "-c", "FitNesse.SuiteAcceptanceTests?suite&format=text"
+}
+
+check.dependsOn acceptanceTest
+
+task javadocJar(type: Jar) {
+  mustRunAfter check
+  classifier = 'javadoc'
+  from javadoc
+}
+
+task sourcesJar(type: Jar) {
+  mustRunAfter check
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+task releaseTag(type: Exec) {
+  commandLine 'git', 'tag', project.version
+  doLast {
+    println "Tagged release ${project.version}"
+  }
+}
+
+task publishTag(type: Exec) {
+  commandLine 'git', 'push', '--tags'
+  shouldRunAfter releaseTag
+}
+
+task prepareSnapshotRepo {
+    bintray.pkg.repo = 'edge'
+}
+
+task prepareReleaseRepo {
+    bintray.pkg.repo = 'release'
+}
+
+bintrayUpload.mustRunAfter prepareSnapshotRepo, prepareReleaseRepo
+
+task snapshotRelease {
+  dependsOn prepareSnapshotRepo, bintrayUpload
+}
+
+task release {
+  dependsOn releaseTag, prepareReleaseRepo, bintrayUpload, publishTag
+}
+
+clean {
+  delete "lib"
+}
+
+publishing {
+  publications {
+    FitNesseRelease(MavenPublication) {
+      from components.java
+      artifact sourcesJar
+      artifact javadocJar
+      artifact standaloneJar
+      groupId 'org.fitnesse'
+      artifactId 'fitnesse'
+      pom.withXml {
+        asNode().get('version') + {
+          resolveStrategy = Closure.DELEGATE_FIRST
+          name('FitNesse')
+          description('The fully integrated standalone wiki, and acceptance testing framework.')
+          url('http://fitnesse.org')
+          packaging('jar')
+        }
+        asNode().append(pomLicenses())
+        asNode().append(pomScm())
+        asNode().append(pomDevelopers())
+
+        // Clean up scope entries added by the pom generator:
+        asNode().dependencies.'*'.findAll() {
+          if (it.scope.text() == 'runtime') {
+            it.remove(it.scope)
+          }
+        }
+      }
+    }
+  }
+}
+
+bintray {
+  user = System.getenv("BINTRAY_USER") ?: 'Define your Bintray user name in BINTRAY_USER'
+  key = System.getenv("BINTRAY_API_KEY") ?: 'Define your Bintray BINTRAY_API_KEY'
+  publications = ['FitNesseRelease']
+  publish = true
+  pkg {
+    name = 'fitnesse'
+    userOrg = 'fitnesse'
+    licenses = ['CPL-1.0']
+    websiteUrl = 'http://fitnesse.org'
+    vcsUrl = 'https://github.com/unclebob/fitnesse.git'
+    publicDownloadNumbers = true
+    githubRepo = 'unclebob/fitnesse'
+    version {
+      name = project.version
+      desc = "FitNesse release ${project.version}"
+      vcsTag = project.version
+      gpg {
+        sign = true
+      }
+    }
+  }
+}
+
+wrapper {
+  gradleVersion = '3.1'
+}
+
+
+def pomLicenses() {
+  new NodeBuilder().licenses {
+    license {
+      name 'Common Public License version 1.0'
+      url 'http://www.opensource.org/licenses/cpl1.0'
+      distribution 'repo'
+    }
+  }
+}
+
+def pomScm() {
+  new NodeBuilder().scm {
+    connection 'scm:git:git://github.com/unclebob/fitnesse.git'
+    developerConnection 'scm:git:git@github.com:unclebob/fitnesse.git'
+    url 'scm:git:http://github.com/unclebob/fitnesse'
+  }
+}
+
+def pomDevelopers() {
+  new NodeBuilder().developers {
+    developer {
+      id 'unclebob'
+      name 'Robert C. Martin'
+      email 'unclebob@cleancoder.com'
+    }
+  }
+}

@@ -10,7 +10,7 @@ public abstract class Authenticator {
   public Authenticator() {
   }
 
-  public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) {
+  public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) throws Exception {
     request.getCredentials();
     String username = request.getAuthorizationUsername();
     String password = request.getAuthorizationPassword();

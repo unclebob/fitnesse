@@ -107,9 +107,9 @@ public class FitClient implements SocketAccepter {
     Thread.sleep(10);
   }
 
-  public void exceptionOccurred(Throwable e) {
+  public void exceptionOccurred(Throwable cause) {
     for (FitClientListener listener : listeners)
-      listener.exceptionOccurred(e);
+      listener.exceptionOccurred(cause);
   }
 
   private class FitListeningRunnable implements Runnable {
@@ -118,12 +118,11 @@ public class FitClient implements SocketAccepter {
       listenToFit();
     }
 
-
     private void listenToFit() {
       try {
         attemptToListenToFit();
       } catch (Exception e) {
-        exceptionOccurred(e);
+         exceptionOccurred(e);
       }
     }
 

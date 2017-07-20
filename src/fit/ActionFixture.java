@@ -11,32 +11,30 @@ import fit.exception.FitFailureException;
 import fit.exception.NoSuchMethodFitFailureException;
 
 public class ActionFixture extends Fixture {
-  protected static final Class<?> empty[] = {}; //NOSONAR
-
   protected Parse cells;
   private Fixture actor;
-
-  // Traversal ////////////////////////////////
 
   @Override
   public void doCells(Parse cells) {
     this.cells = cells;
+    String methodName = cells.text();
     try {
-      Method action = getClass().getMethod(cells.text(), empty);
-      action.invoke(this);
+      getClass().getMethod(methodName).invoke(this);
     }
     catch (Exception e) {
       exception(cells, e);
     }
   }
 
-  // Actions //////////////////////////////////
-
   public void start() throws Throwable {
     Parse fixture = cells.more;
-    if (fixture == null)
+    if (isNullOrBlank(fixture))
       throw new FitFailureException("You must specify a fixture to start.");
     actor = loadFixture(fixture.text());
+  }
+
+  private boolean isNullOrBlank(Parse fixture) {
+    return fixture == null || fixture.text().equals("");
   }
 
   public Fixture getActor() {
@@ -44,69 +42,78 @@ public class ActionFixture extends Fixture {
   }
 
   public void enter() throws Exception {
-    Method method = method(1);
-    Class<?> type = method.getParameterTypes()[0];
-    final Parse argumentCell = cells.more.more;
+    Parse argumentCell = cells.more.more;
     if (argumentCell == null)
       throw new FitFailureException("You must specify an argument.");
-    String text = argumentCell.text();
-    Object[] args;
+
+    Method enterMethod = tryFindMethodWithArgs(1);
+    Class<?> parameterType = enterMethod.getParameterTypes()[0];
+    String argument = argumentCell.text();
+    enterMethod.invoke(actor, adaptArgumentToType(parameterType, argument));
+  }
+
+  private Object adaptArgumentToType(Class<?> parameterType, String argument) throws Exception {
+    Object arg;
     try {
-      args = new Object[]{TypeAdapter.on(actor, type).parse(text)};
+      arg = TypeAdapter.on(actor, parameterType).parse(argument);
     }
     catch (NumberFormatException e) {
-      throw new CouldNotParseFitFailureException(text, type.getName());
+      throw new CouldNotParseFitFailureException(argument, parameterType.getName());
     }
-    method.invoke(actor, args);
+    return arg;
   }
 
   public void press() throws Exception {
-    method(0).invoke(actor);
+    tryFindMethodWithArgs(0).invoke(actor);
   }
 
   public void check() throws Throwable {
-    TypeAdapter adapter;
-    Method theMethod = method(0);
-    Class<?> type = theMethod.getReturnType();
-    try {
-      adapter = TypeAdapter.on(actor, theMethod);
-    }
-    catch (Throwable e) { // NOSONAR
-      throw new FitFailureException("Can not parse return type: " + type.getName());
-    }
+    Method checkMethod = tryFindMethodWithArgs(0);
+    Class<?> returnType = checkMethod.getReturnType();
+
     Parse checkValueCell = cells.more.more;
     if (checkValueCell == null)
       throw new FitFailureException("You must specify a value to check.");
 
-    check(checkValueCell, adapter);
+    check(checkValueCell, getTypeAdapter(checkMethod, returnType));
   }
 
-  // Utility //////////////////////////////////
+  private TypeAdapter getTypeAdapter(Method checkMethod, Class<?> returnType) {
+    try {
+      return(TypeAdapter.on(actor, checkMethod));
+    }
+    catch (Throwable e) { // NOSONAR
+      throw new FitFailureException("Can not parse return type: " + returnType.getName());
+    }
+  }
 
-  protected Method method(int args) throws NoSuchMethodException {
-    final Parse methodCell = cells.more;
-    if (methodCell == null)
+  protected Method tryFindMethodWithArgs(int args) throws NoSuchMethodException {
+    Parse methodCell = cells.more;
+    if (isNullOrBlank(methodCell))
       throw new FitFailureException("You must specify a method.");
-    return method(camel(methodCell.text()), args);
-  }
-
-  protected Method method(String test, int args) throws NoSuchMethodException {
+    String methodName = camel(methodCell.text());
     if (actor == null)
       throw new FitFailureException("You must start a fixture using the 'start' keyword.");
+    Method theMethod = findMethodWithArgs(methodName, args);
+    if (theMethod == null) {
+      throw new NoSuchMethodFitFailureException(methodName);
+    }
+    return theMethod;
+  }
+
+  private Method findMethodWithArgs(String methodName, int args) {
     Method[] methods = actor.getClass().getMethods();
-    Method result = null;
+    Method theMethod = null;
     for (Method m : methods) {
-      if (m.getName().equals(test) && m.getParameterTypes().length == args) {
-        if (result == null) {
-          result = m;
+      if (m.getName().equals(methodName) && m.getParameterTypes().length == args) {
+        if (theMethod == null) {
+          theMethod = m;
         } else {
-          throw new FitFailureException("You can only have one " + test + "(arg) method in your fixture.");
+          throw new FitFailureException("You can only have one " + methodName + "(arg) method in your fixture.");
         }
       }
     }
-    if (result == null) {
-      throw new NoSuchMethodFitFailureException(test);
-    }
-    return result;
+    return theMethod;
   }
+
 }

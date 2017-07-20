@@ -6,9 +6,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-import fitnesse.util.XmlUtil;
-import org.w3c.dom.Document;
-
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -16,12 +13,14 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.PageXmlizer;
+import fitnesse.util.XmlUtil;
+import fitnesse.wiki.fs.PageXmlizer;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.XmlizePageCondition;
+import org.w3c.dom.Document;
 
 public class SerializedPageResponder implements SecureResponder {
   private XmlizePageCondition xmlizePageCondition = new XmlizePageCondition() {
@@ -32,7 +31,7 @@ public class SerializedPageResponder implements SecureResponder {
   };
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) throws IOException {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     WikiPage page = getRequestedPage(request, context);
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
@@ -73,7 +72,7 @@ public class SerializedPageResponder implements SecureResponder {
         originalPage = page.getVersion(request.getInput("version"));
       object = originalPage.getData();
     } else
-      throw new RuntimeException("Improper use of proxy retrieval");
+      throw new IllegalArgumentException("Improper use of proxy retrieval. 'type' should be one of 'versions', 'meat'.");
     return object;
   }
 

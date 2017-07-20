@@ -1,6 +1,7 @@
 package fitnesse.reporting.history;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -54,20 +55,24 @@ public class HistoryPurger {
   }
 
   private void deleteIfExpired(File file) {
-    if (file.isDirectory()) {
-      deleteDirectoryIfExpired(file);
-    } else
-      deleteFileIfExpired(file);
+    try {
+      if (file.isDirectory()) {
+        deleteDirectoryIfExpired(file);
+      } else
+        deleteFileIfExpired(file);
+    } catch (IOException e) {
+      LOG.log(Level.INFO, format("Unable to remove test history file %s", file.getPath()));
+    }
   }
 
-  private void deleteDirectoryIfExpired(File file) {
+  private void deleteDirectoryIfExpired(File file) throws IOException {
     File[] files = FileUtil.getDirectoryListing(file);
     deleteExpiredFiles(files);
     if (file.list().length == 0)
       FileUtil.deleteFileSystemDirectory(file);
   }
 
-  private void deleteFileIfExpired(File file) {
+  private void deleteFileIfExpired(File file) throws IOException {
     String name = file.getName();
     Date date = getDateFromPageHistoryFileName(name);
     if (date.getTime() < expirationDate.getTime())

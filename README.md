@@ -16,7 +16,7 @@ To get started, check out [http://fitnesse.org](http://fitnesse.org)!
 
 ## Bug tracker
 
-Have a bug or a feature request? [Please open a new issue](https://github.com/unclebob/fitnesse/issues). 
+Have a bug or a feature request? [Please open a new issue](https://github.com/unclebob/fitnesse/issues).
 
 
 ## Community
@@ -35,22 +35,24 @@ Issues and pull requests are administered at [GitHub](https://github.com/unclebo
 
 ### Building
 
-[Apache Ant](http://ant.apache.org/) and a proper internet connection is sufficient to build FitNesse. The build process will bootstrap itself by downloading Ivy (dependency management) and from there will download the modules required to build and test FitNesse.
+A proper internet connection is sufficient to build FitNesse. The build process will bootstrap itself by downloading [Gradle](http://gradle.org) and from there will download the dependencies required to build and test FitNesse.
 
 To build and run all tests, run the command
 
 ```
-$ ant
-``` 
+$ ./gradlew
+```
 
-which builds the `all` target. 
+which builds the `all` target.
+
+NB. On windows call `gradlew.bat` instead of `./gradlew`.
 
 ### Running
 
 To start the FitNesse wiki locally, for example to browse the local version of the User Guide
 
 ```
-$ ant run
+$ ./gradlew run
 ```
 
 ### Testing
@@ -58,20 +60,14 @@ $ ant run
 To run the unit tests:
 
 ```
-$ ant unit_test
+$ ./gradlew test
 ```
 
 To run the acceptance tests:
 
 ```
-$ ant acceptance_tests
+$ ./gradlew acceptanceTest
 ```
-
-There is a second source directory, `srcFitServerTests`, which contains units
-tests that test invocation of Fit servers written in Ruby, C++, and .NET. These
-tests are not run as part of the normal ant test-related targets. When using an
-IDE, make sure it does not invoke these tests when running the "normal" tests
-under the `src` directory.
 
 Direct any questions to the [FitNesse Yahoo group](https://groups.yahoo.com/neo/groups/fitnesse/info).
 
@@ -80,49 +76,59 @@ Direct any questions to the [FitNesse Yahoo group](https://groups.yahoo.com/neo/
 
 There are a few things to keep in mind when working from an IDE:
 
-1. The Ant build file does some extra things apart from compiling the code.
+1. The Gradle build  does some extra things apart from compiling the code.
     * It sets the FitNesse version in a META-INF/FitNesseVersion.txt
     * It copies the dependencies to the lib folder so they can be used by the acceptance tests.
 
    Perform a
    ```
-   $ ant post-compile
+   $ ./gradlew copyRuntimeLibs
    ```
-   to execute those actions. In your IDE it is possible to define "post-compilation" steps. If
+   to execute the copy action. In your IDE it is possible to define "post-compilation" steps. If
    you set the "post-compile" target from the build file, you won't have any trouble with
    cleaning, building and executing tests from your IDE.
 
-2. Apache Ivy is used for dependency management. Your IDE can be set up to support Ivy. Alternatively,
-   ```
-   $ ant retrieve
-   ```
-   will download the dependencies and copy them to `lib/`, from where your
-   IDE can pick them up.
 
 #### Import FitNesse in Eclipse
 
 1. Clone the FitNesse Git repository from https://github.com/unclebob/fitnesse.
-2. Install the _IvyDE_ plugin if you haven't already done so.
-3. Import FitNesse via _Project..._ -> _Java_ -> _Java Project from existing Ant Buildfile_. It asks from a javac target to use. Just pick any. Make sure both `src` and `test` directories are marked as source paths.
-4. Open _Properties_ (right-mouse click). In _Java Build Path_ select _Libraries_ and _Add Library..._. Select IvyDE. The _Main_ settings are okay by default. On the _Settings_ tab, select `ivysettings.xml` from the project folder. 
-5. While still in the _Properties_ dialog, change the output folders in the _Source_ tab: for the `src` directory, change it to `classes`, for the `test` directory, change it to `test-classes`. Apply the changes are you're good to go.
+2. Import FitNesse via _File_ -> _Import..._ -> _Gradle Project_.
+3. Select the just cloned project folder. Follow the wizard.
+4. Ensure the project properties have a Java 7 compiler or newer set.
 
-#### Import FitNesse in IntelliJ IDEA (15)
+#### Import FitNesse in IntelliJ IDEA (16)
 
 1. Clone the FitNesse Git repository from https://github.com/unclebob/fitnesse.
-2. Install the _IvyIDEA_ plugin if you haven't already done so.
-3. From the welcome screen (the one you get when all projects are closed), click _Import Project_.
-4. Select the folder containing the fitnesse project.
-5. Now the Import project wizard guides you through the import process:
-   1. We're not importing from an existing model, so _Create project from existing sources_.
-   2. Give it a name.
-   3. IntelliJ finds the `src` and `test` folder.
-   4. There are no plugins defined, so deselect those. The `test-plugin-*.jar` files are used for some unit tests.
-   5. Everything should look fine in the review screen: one module named `fitnesse` with a `src` and a `test` folder.
-   6. Select a JDK. At least Java 6 is required.
-   7. Now IntelliJ starts looking for frameworks. It should come up with IvyIDEA.
-   8. Finish the wizard. The project should be opened.
-6. We're almost there. The IvyIDEA plugin is not completely configured yet. To fix this open _File_ -> _Project Structure..._ go to _Modules_:
-   1. Select the `fitnesse` module and set the output path to the `classes` folder and the test output path to `test-classes`. This ensures IntelliJ works nicely with the Ant tasks we want to execute as part of the build process.
-   2. Select IvyIDEA. Tell it to use _Module specific ivy settings_ and select `ivysettings.xml` from the project folder.
-7. Open the Ant Build tool, add the projects `build.xml` file and right click on the `post-compile` task. Select _Execute on_ -> _Before Compilation_. Apply the changes are you're good to go.
+2. From the welcome screen (the one you get when all projects are closed), click _Import Project_.
+3. Select the file `build.gradle` in the fitnesse folder.
+4. Follow the wizard. Deselect the option `Create separate module per source set`. You can use the
+   `Use gradle wrapper task configuration`. Use Java 7 or newer. It should find source and test folders and
+    show you two modules: `fitnesse` and `:buildSrc`; import both.
+5. Open the Gradle Build tool, select the task `copyRuntimeLibs` and (right-click) mark it as _Execute After Make_.
+
+### The release process
+
+Software artifacts (the FitNesse jar, the standalone jar and POM files) are uploaded to [Bintray](https://bintray.com/fitnesse). There are two repositories:
+
+* _Edge_ contains snapshot builds
+* _Release_ contains the official release builds. 
+
+In both cases you'll need sufficient permissions to perform a release.
+
+#### Edge builds
+
+Edge builds can be done at any time
+
+   ```
+   $ ./gradlew snapshotRelease
+   ```
+
+#### Release builds
+
+Release builds denote "blessed" releases. Those are tagged in Git along with being released. The releases will be available from
+both Maven Central and JCenter.
+
+   ```
+   $ ./gradlew release
+   ```
+

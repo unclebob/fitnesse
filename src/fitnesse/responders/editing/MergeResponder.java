@@ -8,11 +8,11 @@ import java.util.List;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.html.HtmlUtil;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.html.template.HtmlPage;
-import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -29,7 +29,7 @@ public class MergeResponder implements Responder {
   }
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     SimpleResponse response = new SimpleResponse();
     resource = this.request.getResource();
     WikiPagePath path = PathParser.parse(resource);

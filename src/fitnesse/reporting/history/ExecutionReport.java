@@ -1,5 +1,7 @@
 package fitnesse.reporting.history;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,13 +18,18 @@ import fitnesse.util.DateTimeUtil;
 import fitnesse.util.TimeMeasurement;
 import fitnesse.util.XmlUtil;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import static java.lang.String.format;
 
 public abstract class ExecutionReport {
+  private static final int NO_RUN_TIME = -1;
+
   private String version;
   private String rootPath;
   private TestSummary finalCounts = new TestSummary(0, 0, 0, 0);
   public Date date;
-  private long totalRunTimeInMillis = 0;
+  private long totalRunTimeInMillis = NO_RUN_TIME;
   private List<ExecutionLogReport> executionLogs = new ArrayList<>();
 
   protected ExecutionReport() {
@@ -66,31 +73,42 @@ public abstract class ExecutionReport {
     return new HashCodeBuilder().append(rootPath).append(version).append(date).hashCode();
   }
 
-  public static ExecutionReport makeReport(String xmlString) throws Exception {
-    Document xmlDocument = XmlUtil.newDocument(xmlString);
+  public static ExecutionReport makeReport(String xmlString) throws InvalidReportException {
+    Document xmlDocument = null;
+    try {
+      xmlDocument = XmlUtil.newDocument(xmlString);
+    } catch (IOException | SAXException e) {
+      throw new InvalidReportException(format("%s is not a valid execution report", xmlString), e);
+    }
     Element documentElement = xmlDocument.getDocumentElement();
     String documentNodeName = documentElement.getNodeName();
-    if (documentNodeName.equals("testResults"))
-      return new TestExecutionReport(xmlDocument);
-    else if (documentNodeName.equals("suiteResults"))
-      return new SuiteExecutionReport(xmlDocument);
-    else
-      throw new RuntimeException(String.format("%s is not a valid document element tag for an Execution Report.", documentNodeName));
+    switch (documentNodeName) {
+      case "testResults":
+        return new TestExecutionReport(xmlDocument);
+      case "suiteResults":
+        return new SuiteExecutionReport(xmlDocument);
+      default:
+        throw new InvalidReportException(format("%s is not a valid document element tag for an Execution Report.", documentNodeName));
+    }
   }
 
-  protected void unpackCommonFields(Element documentElement) {
+  protected void unpackCommonFields(Element documentElement) throws InvalidReportException {
     version = XmlUtil.getTextValue(documentElement, "FitNesseVersion");
     rootPath = XmlUtil.getTextValue(documentElement, "rootPath");
     String dateString = XmlUtil.getTextValue(documentElement, "date");
     if (dateString != null)
-      date = DateTimeUtil.getDateFromString(dateString);
+      try {
+        date = DateTimeUtil.getDateFromString(dateString);
+      } catch (ParseException e) {
+        throw new InvalidReportException(format("'%s' is not a valid date.", dateString), e);
+      }
     unpackFinalCounts(documentElement);
-    totalRunTimeInMillis = getTotalRunTimeInMillisOrZeroIfNotPresent(documentElement);
+    totalRunTimeInMillis = getTotalRunTimeInMillisOrMinusOneIfNotPresent(documentElement);
   }
 
-  protected long getTotalRunTimeInMillisOrZeroIfNotPresent(Element documentElement) {
+  protected long getTotalRunTimeInMillisOrMinusOneIfNotPresent(Element documentElement) {
     String textValue = XmlUtil.getTextValue(documentElement, "totalRunTimeInMillis");
-    return textValue == null ? 0 : Long.parseLong(textValue);
+    return textValue == null ? NO_RUN_TIME : Long.parseLong(textValue);
   }
 
   private void unpackFinalCounts(Element testResults) {
@@ -105,7 +123,7 @@ public abstract class ExecutionReport {
     }
   }
 
-  protected void unpackXml(Document xmlDoc) {
+  protected void unpackXml(Document xmlDoc) throws InvalidReportException {
     Element historyDocument = xmlDoc.getDocumentElement();
     unpackCommonFields(historyDocument);
     unpackResults(historyDocument);
@@ -146,7 +164,7 @@ public abstract class ExecutionReport {
     }
   }
 
-  protected abstract void unpackResults(Element testResults);
+  protected abstract void unpackResults(Element testResults) throws InvalidReportException;
 
   public TestSummary getFinalCounts() {
     return finalCounts;
@@ -177,7 +195,7 @@ public abstract class ExecutionReport {
   }
 
   public boolean hasRunTimes() {
-    return new FitNesseVersion(getVersion()).isAtLeast("v20100607");
+    return totalRunTimeInMillis != NO_RUN_TIME;
   }
 
   public List<ExecutionLogReport> getExecutionLogs() {

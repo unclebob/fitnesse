@@ -3,7 +3,6 @@
 package fitnesse.plugins;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
@@ -346,17 +345,17 @@ public class PluginsLoaderTest {
       return null;
     }
   }
-  
+
   public static class TestCustomComparator implements CustomComparator {
     @Override
     public boolean matches(String actual, String expected) {
       return false;
     }
   }
-  
+
   public static class FooTestSystemFactory implements TestSystemFactory {
     @Override
-    public TestSystem create(Descriptor descriptor) throws IOException {
+    public TestSystem create(Descriptor descriptor) {
       return null;
     }
   }

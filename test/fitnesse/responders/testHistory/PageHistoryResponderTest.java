@@ -44,9 +44,9 @@ public class PageHistoryResponderTest {
   private MockRequest request;
   private FitNesseContext context;
   private FitNesseVersion fitNesseVersion = new FitNesseVersion();
-  
+
   @Before
-  public void setup() throws Exception {
+  public void setup() throws IOException {
     resultsDirectory = new File("testHistoryDirectory");
     removeResultsDirectory();
     resultsDirectory.mkdir();
@@ -57,7 +57,7 @@ public class PageHistoryResponderTest {
   }
 
   @After
-  public void teardown() {
+  public void teardown() throws IOException {
     removeResultsDirectory();
   }
 
@@ -67,7 +67,7 @@ public class PageHistoryResponderTest {
     response = (SimpleResponse) responder.makeResponse(context, request);
   }
 
-  private void removeResultsDirectory() {
+  private void removeResultsDirectory() throws IOException {
     if (resultsDirectory.exists())
       FileUtil.deleteFileSystemDirectory(resultsDirectory);
   }
@@ -300,7 +300,7 @@ public class PageHistoryResponderTest {
     assertHasRegexp("99 ms", response.getContent());
     assertHasRegexp("wad of HTML content after control character", response.getContent());
   }
-  
+
   @Test
   public void canGetSuiteExecutionReport() throws Exception {
     File pageDirectory = addPageDirectory("SuitePage");
@@ -318,7 +318,7 @@ public class PageHistoryResponderTest {
     addDummyTestResult(new File(pageDirectory, "19801205012000_30_20_3_0"));
 
     makeResultForDate("TestPage", "latest");
-    assertHasRegexp("Fri Dec 05 01:20:00 [A-Z]+ 1980", response.getContent());
+    assertHasRegexp("Fri Dec 05 01:20:00 [A-Z0-9:+]+ 1980", response.getContent());
   }
 
   @Test
@@ -330,7 +330,7 @@ public class PageHistoryResponderTest {
     addDummyTestResult(new File(pageDirectory, "19941205012000_30_20_3_0"));
 
     makeResultForDate("TestPage", "latest");
-    assertHasRegexp("Tue Dec 05 01:20:00 [A-Z]+ 1995", response.getContent());
+    assertHasRegexp("Tue Dec 05 01:20:00 [A-Z0-9:+]+ 1995", response.getContent());
   }
 
   private void addDummySuiteResult(File resultFile) throws Exception {

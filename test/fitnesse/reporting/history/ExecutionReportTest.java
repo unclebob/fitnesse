@@ -2,7 +2,6 @@ package fitnesse.reporting.history;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -70,7 +69,7 @@ public class ExecutionReportTest {
     assertEquals(original, report);
     assertEquals(41, report.getTotalRunTimeInMillis());
   }
-  
+
   @Test
   public void shouldHandleMissingRunTimesGraceFully() throws Exception {
     TestExecutionReport report = new TestExecutionReport(new FitNesseVersion("version"), "rootPath");
@@ -78,8 +77,8 @@ public class ExecutionReportTest {
     NodeList emptyNodeList = mock(NodeList.class);
     when(element.getElementsByTagName("totalRunTimeInMillis")).thenReturn(emptyNodeList);
     when(emptyNodeList.getLength()).thenReturn(0);
-    assertThat(report.getTotalRunTimeInMillisOrZeroIfNotPresent(element), is(0L));
-    
+    assertThat(report.getTotalRunTimeInMillisOrMinusOneIfNotPresent(element), is(-1L));
+
     element = mock(Element.class);
     NodeList matchingNodeList = mock(NodeList.class);
     Node elementWithText = mock(Element.class);
@@ -87,14 +86,7 @@ public class ExecutionReportTest {
     when(matchingNodeList.getLength()).thenReturn(1);
     when(matchingNodeList.item(0)).thenReturn(elementWithText);
     when(elementWithText.getTextContent()).thenReturn("255");
-    assertThat(report.getTotalRunTimeInMillisOrZeroIfNotPresent(element), is(255L));
-  }
-
-  @Test
-  public void hasRunTimesShouldBeVersionAware() throws Exception {
-    assertFalse(executionReportWithVersion("v20100303").hasRunTimes());
-    assertTrue(executionReportWithVersion("v20100607").hasRunTimes());
-    assertTrue(executionReportWithVersion("v20100608").hasRunTimes());
+    assertThat(report.getTotalRunTimeInMillisOrMinusOneIfNotPresent(element), is(255L));
   }
 
   @Test
@@ -124,17 +116,5 @@ public class ExecutionReportTest {
     TestExecutionReport original = new TestExecutionReport(new FitNesseVersion("version"), "rootPath");
 
     assertEquals(-836274316, original.hashCode());
-  }
-
-  private ExecutionReport executionReportWithVersion(final String theVersion) {
-    return new ExecutionReport() {
-      @Override
-      protected void unpackResults(Element testResults) {
-      }
-      @Override
-      public String getVersion() {
-        return theVersion;
-      }
-    };
   }
 }

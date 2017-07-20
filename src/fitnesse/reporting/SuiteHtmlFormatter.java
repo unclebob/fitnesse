@@ -41,7 +41,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
     totalTests = (testsToRun != 0) ? testsToRun : 1;
   }
 
-  public void announceStartNewTest(String relativeName, String fullPathName) throws IOException {
+  public void announceStartNewTest(String relativeName, String fullPathName) {
     currentTest++;
     updateSummaryDiv(getProgressHtml(relativeName));
 
@@ -49,7 +49,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
     writeTestOutputDiv(relativeName, fullPathName);
   }
 
-  private void writeTestOutputDiv(String relativeName, String fullPathName) throws IOException {
+  private void writeTestOutputDiv(String relativeName, String fullPathName) {
     if (!testBasePathName.equals(fullPathName)) {
       HtmlTag title = new HtmlTag("h3");
 
@@ -70,7 +70,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
     writeData("<div class=\"alternating_block\">");
   }
 
-  private void maybeWriteTestSystem() throws IOException {
+  private void maybeWriteTestSystem() {
     if (testSystemName != null) {
       HtmlTag systemTitle = new HtmlTag("h2", String.format("Test System: %s", testSystemName));
       writeData(systemTitle.html());
@@ -80,7 +80,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
   }
 
   @Override
-  public void testStarted(TestPage testPage) throws IOException {
+  public void testStarted(TestPage testPage) {
     latestTestTime = new TimeMeasurement().start();
     super.testStarted(testPage);
 
@@ -105,7 +105,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
     return progressDiv.html();
   }
 
-  public void processTestResults(String relativeName, TestSummary testSummary) throws IOException {
+  public void processTestResults(String relativeName, TestSummary testSummary) {
     finishOutputForTest();
 
     getAssertionCounts().add(testSummary);
@@ -127,7 +127,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
     writeData(insertScript.html());
   }
 
-  private void finishOutputForTest() throws IOException {
+  private void finishOutputForTest() {
     writeData("</div>" + HtmlTag.endl);
   }
 
@@ -142,13 +142,13 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
   }
 
   @Override
-  public void testOutputChunk(String output) throws IOException {
+  public void testOutputChunk(String output) {
     writeData(output);
   }
 
 
   @Override
-  public void testComplete(TestPage testPage, TestSummary testSummary) throws IOException {
+  public void testComplete(TestPage testPage, TestSummary testSummary) {
     latestTestTime.stop();
     super.testComplete(testPage, testSummary);
 
@@ -157,7 +157,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem) throws IOException {
+  public void testSystemStarted(TestSystem testSystem) {
     testSystemName = testSystem.getName();
     testSummariesId = "test-system-" + testSystemName;
     String tag = String.format("<h3>%s</h3>\n<ul id=\"%s\"></ul>", testSystemName, testSummariesId);

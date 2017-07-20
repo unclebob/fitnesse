@@ -1,16 +1,17 @@
 package fitnesse.wiki.fs;
 
 import java.io.File;
-
-import fitnesse.wiki.SystemVariableSource;
 import org.junit.Before;
 import org.junit.Test;
+
+import fitnesse.wiki.SystemVariableSource;
+import fitnesse.wiki.WikiPage;
 
 import static org.junit.Assert.assertEquals;
 
 public class ExternalSuitePageTest {
 
-  private FileSystemPage rootPage;
+  private WikiPage rootPage;
   private FileSystem fileSystem;
   private SystemVariableSource variableSource;
 
@@ -18,7 +19,7 @@ public class ExternalSuitePageTest {
   public void prepare() {
     fileSystem = new MemoryFileSystem();
     variableSource = new SystemVariableSource();
-    rootPage = new FileSystemPageFactory(fileSystem, new SimpleFileVersionsController(fileSystem)).makePage(null, "RooT", null, variableSource);
+    rootPage = new FileSystemPageFactory(fileSystem, new SimpleFileVersionsController(fileSystem)).makePage(new File("RooT"), "RooT", null, variableSource);
   }
 
   @Test

@@ -30,7 +30,7 @@ public class UploadResponder implements SecureResponder {
   private String rootPath;
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) throws IOException {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     rootPath = context.getRootPagePath();
     SimpleResponse response = new SimpleResponse();
 

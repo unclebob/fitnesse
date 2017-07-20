@@ -10,16 +10,16 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipOutputStream;
+import java.util.zip.*;
 
 import static fitnesse.ConfigurationParameter.VERSIONS_CONTROLLER_DAYS;
+import static java.lang.String.format;
 
 public class ZipFileVersionsController implements VersionsController {
   private static final Logger LOG = Logger.getLogger(ZipFileVersionsController.class.getName());
 
-  public static final Pattern ZIP_FILE_PATTERN = Pattern.compile("(\\S+)?\\d+(~\\d+)?\\.zip");
+  private static final Pattern ZIP_FILE_PATTERN = Pattern.compile("(\\S+)?\\d+(~\\d+)?\\.zip");
+  public static final String ZIP_EXTENSION = ".zip";
 
   private final int daysTillVersionsExpire;
 
@@ -44,11 +44,11 @@ public class ZipFileVersionsController implements VersionsController {
   }
 
   @Override
-  public FileVersion[] getRevisionData(final String label, final File... files) {
+  public FileVersion[] getRevisionData(final String label, final File... files) throws IOException {
     if (label == null) {
       return persistence.getRevisionData(null, files);
     }
-    final File file = new File(files[0].getParentFile(), label + ".zip");
+    final File file = new File(files[0].getParentFile(), label + ZIP_EXTENSION);
     if (!file.exists()) {
       throw new NoSuchVersionException("There is no version '" + label + "'");
     }
@@ -64,30 +64,20 @@ public class ZipFileVersionsController implements VersionsController {
           versions[counter++] = version;
       }
       return versions;
-    } catch (Exception e) {
-      throw new RuntimeException(e);
     } finally {
-      try {
-        if (zipFile != null) {
-          zipFile.close();
-        }
-      } catch (IOException e) {
-        LOG.log(Level.WARNING, "Unable to read zip file contents", e);
-      }
+        FileUtil.close(zipFile);
     }
   }
 
   @Override
-  public Collection<ZipFileVersionInfo> history(final File... files) {
-    return history(files[0].getParentFile());
-  }
-
-  public Collection<ZipFileVersionInfo> history(final File dir) {
+  public Collection<VersionInfo> history(final File... pageFiles) {
+    // Let's assume for a second all files live in the same folder
+    File dir = commonBaseDir(pageFiles);
     final File[] files = dir.listFiles();
-    final Set<ZipFileVersionInfo> versions = new HashSet<>();
+    final Set<VersionInfo> versions = new HashSet<>();
     if (files != null) {
       for (final File file : files) {
-        if (isVersionFile(file)) {
+        if (isVersionFile(file) && isZipForFiles(file, pageFiles)) {
           versions.add(ZipFileVersionInfo.makeVersionInfo(file));
         }
       }
@@ -95,10 +85,40 @@ public class ZipFileVersionsController implements VersionsController {
     return versions;
   }
 
+  // What about a page with just a content.txt file and no properties.xml?
+  // Is okay to have one of the files present!
+  private boolean isZipForFiles(File zipFile, File... containedFiles) {
+    List<String> zipFileNames = getFileNamesInZipFile(zipFile);
+    for (File f : containedFiles) {
+      if (zipFileNames.contains(f.getName())) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private List<String> getFileNamesInZipFile(File zipFile) {
+    List<String> names = new ArrayList<>();
+    try (final ZipInputStream zos = new ZipInputStream(new FileInputStream(zipFile))) {
+      for (ZipEntry entry = zos.getNextEntry(); entry != null; entry = zos.getNextEntry()) {
+        names.add(entry.getName());
+      }
+    } catch (IOException e) {
+      LOG.log(Level.WARNING, format("Could not read zip file %s", zipFile), e);
+    }
+    return names;
+  }
+
   @Override
   public VersionInfo makeVersion(final FileVersion... fileVersions) throws IOException {
-    makeZipVersion(fileVersions);
-    return persistence.makeVersion(fileVersions);
+    File commonBaseDir = commonBaseDir(fileVersions);
+    String versionName = makeVersionName(commonBaseDir, fileVersions[0]);
+    final File zipFile = new File(commonBaseDir, versionName + ZIP_EXTENSION);
+
+    makeZipVersion(zipFile, fileVersions);
+    pruneVersions(history(toFiles(fileVersions)));
+    persistence.makeVersion(fileVersions);
+    return new VersionInfo(versionName, fileVersions[0].getAuthor(), fileVersions[0].getLastModificationTime());
   }
 
   @Override
@@ -112,46 +132,31 @@ public class ZipFileVersionsController implements VersionsController {
   }
 
   @Override
-  public void delete(FileVersion... files) {
+  public void delete(File... files) throws IOException {
     persistence.delete(files);
   }
 
-  protected void makeZipVersion(FileVersion... fileVersions) {
+  protected void makeZipVersion(File zipFile, FileVersion... fileVersions) throws IOException {
     if (!exists(fileVersions)) {
       return;
     }
 
     ZipOutputStream zos = null;
-    File commonBaseDir = commonBaseDir(fileVersions);
     try {
-      final File zipFile = makeVersionFileName(commonBaseDir, makeVersionName(fileVersions[0]));
       zos = new ZipOutputStream(new FileOutputStream(zipFile));
       for (FileVersion fileVersion : fileVersions) {
         addToZip(fileVersion.getFile(), zos);
       }
-    } catch (Exception e) {
-      throw new RuntimeException("Unable to make zip of current version", e);
     } finally {
       try {
         if (zos != null) {
           zos.finish();
-          zos.close();
+          FileUtil.close(zos);
         }
       } catch (IOException e) {
         LOG.log(Level.WARNING, "Unable to create zip file", e);
       }
-      pruneVersions(history(commonBaseDir));
     }
-  }
-
-  private String makeVersionName(FileVersion fileVersion) {
-    Date time = fileVersion.getLastModificationTime();
-    String versionName = WikiImportProperty.getTimeFormat().format(time);
-    final String user = fileVersion.getAuthor();
-    if (user != null && !"".equals(user)) {
-      versionName = user + "-" + versionName;
-    }
-    return versionName;
   }
 
   private boolean exists(FileVersion[] fileVersions) {
@@ -162,8 +167,20 @@ public class ZipFileVersionsController implements VersionsController {
     return false;
   }
 
+  private File[] toFiles(FileVersion[] fileVersions) {
+    File[] files = new File[fileVersions.length];
+    for (int i = 0; i < fileVersions.length; i++) {
+      files[i] = fileVersions[i].getFile();
+    }
+    return files;
+  }
+
   private File commonBaseDir(FileVersion[] fileVersions) {
-    return fileVersions[0].getFile().getParentFile();
+    return commonBaseDir(fileVersions[0].getFile());
+  }
+
+  private File commonBaseDir(File... files) {
+    return files[0].getParentFile();
   }
 
   private void addToZip(final File file, final ZipOutputStream zos) throws IOException {
@@ -182,7 +199,7 @@ public class ZipFileVersionsController implements VersionsController {
       is.read(bytes);
       zos.write(bytes, 0, size);
     } finally {
-      is.close();
+      FileUtil.close(is);
     }
   }
 
@@ -190,15 +207,13 @@ public class ZipFileVersionsController implements VersionsController {
     return ZIP_FILE_PATTERN.matcher(file.getName()).matches();
   }
 
-  private ZipFileVersion loadZipEntry(final ZipFile zipFile, final File file) {
+  private ZipFileVersion loadZipEntry(final ZipFile zipFile, final File file) throws IOException {
     final ZipEntry contentEntry = zipFile.getEntry(file.getName());
     if (contentEntry != null) {
       InputStream contentIS = null;
       try {
         contentIS = zipFile.getInputStream(contentEntry);
         return new ZipFileVersion(file, FileUtil.toString(contentIS), new Date(contentEntry.getTime()));
-      } catch (Exception e) {
-        throw new RuntimeException("Unable to load content for file " + file + " from " + zipFile, e);
       } finally {
         try {
           if (contentIS != null) {
@@ -212,30 +227,36 @@ public class ZipFileVersionsController implements VersionsController {
     return null;
   }
 
-  private File makeVersionFileName(final File file, final String name) {
-    File zipFile = new File(file, name + ".zip");
-    int counter = 1;
-    while (zipFile.exists()) {
-      zipFile = new File(file, name + "~" + (counter++) + ".zip");
+  private String makeVersionName(final File baseDir, final FileVersion fileVersion) {
+    Date time = fileVersion.getLastModificationTime();
+    String versionName = WikiImportProperty.getTimeFormat().format(time);
+    final String user = fileVersion.getAuthor();
+    if (user != null && !"".equals(user)) {
+      versionName = user + "-" + versionName;
     }
-    return zipFile;
+    String name = versionName;
+    int counter = 1;
+    while (new File(baseDir, name + ZIP_EXTENSION).exists()) {
+      name = versionName + "~" + (counter++);
+    }
+    return name;
   }
 
-  private void pruneVersions(Collection<ZipFileVersionInfo> versions) {
-    List<ZipFileVersionInfo> versionsList = makeSortedVersionList(versions);
+  private void pruneVersions(Collection<VersionInfo> versions) {
+    List<VersionInfo> versionsList = makeSortedVersionList(versions);
     if (!versions.isEmpty()) {
       VersionInfo lastVersion = versionsList.get(versionsList.size() - 1);
       Date expirationDate = makeVersionExpirationDate(lastVersion);
-      for (ZipFileVersionInfo version : versionsList) {
+      for (VersionInfo version : versionsList) {
         Date thisDate = version.getCreationTime();
         if (thisDate.before(expirationDate) || thisDate.equals(expirationDate))
-          version.getFile().delete();
+          ((ZipFileVersionInfo) version).getFile().delete();
       }
     }
   }
 
-  private List<ZipFileVersionInfo> makeSortedVersionList(Collection<ZipFileVersionInfo> versions) {
-    List<ZipFileVersionInfo> versionsList = new ArrayList<>(versions);
+  private List<VersionInfo> makeSortedVersionList(Collection<VersionInfo> versions) {
+    List<VersionInfo> versionsList = new ArrayList<>(versions);
     Collections.sort(versionsList);
     return versionsList;
   }

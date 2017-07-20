@@ -3,6 +3,7 @@
 package fitnesse.wiki;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,14 +71,14 @@ public class WildcardTest {
   }
 
   private List<String> fileArrayToStringList(File[] files) {
-    List<String> list = new ArrayList<String>();
+    List<String> list = new ArrayList<>();
     for (File file : files) {
       list.add(file.getName());
     }
     return list;
   }
 
-  public static void makeSampleFiles() {
+  public static void makeSampleFiles() throws IOException {
     FileUtil.makeDir(TEST_DIR);
     FileUtil.createFile(TEST_DIR + "/one.jar", "");
     FileUtil.createFile(TEST_DIR + "/two.jar", "");
@@ -87,7 +88,7 @@ public class WildcardTest {
     FileUtil.createFile(TEST_DIR + "/twoA", "");
   }
 
-  public static void deleteSampleFiles() {
+  public static void deleteSampleFiles() throws IOException {
     FileUtil.deleteFileSystemDirectory(TEST_DIR);
   }
 

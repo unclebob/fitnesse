@@ -1,7 +1,5 @@
 package fitnesse.testsystems;
 
-import java.io.IOException;
-
 /**
  * Creates new test systems
  */
@@ -13,8 +11,7 @@ public interface TestSystemFactory {
    *
    * @param descriptor Configuration for the test system.
    * @return a new TestSystem
-   * @throws IOException IOException thrown
    */
-  TestSystem create(Descriptor descriptor) throws IOException;
+  TestSystem create(Descriptor descriptor);
 
 }

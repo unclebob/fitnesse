@@ -1,7 +1,5 @@
 package fitnesse.plugins.slimcoverage;
 
-import java.io.IOException;
-
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemFactory;
@@ -22,7 +20,7 @@ public class CoverageSlimTestSystemFactory implements TestSystemFactory {
   }
 
   @Override
-  public final TestSystem create(Descriptor descriptor) throws IOException {
+  public final TestSystem create(Descriptor descriptor) {
     SlimCoverageTestSystem testSystem = new SlimCoverageTestSystem("slimCoverage",
             slimTableFactory.copy(), customComparatorRegistry);
 

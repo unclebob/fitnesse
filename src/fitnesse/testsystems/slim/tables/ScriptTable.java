@@ -3,13 +3,13 @@
 package fitnesse.testsystems.slim.tables;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.instructions.Instruction;
+import fitnesse.testsystems.TestExecutionException;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
@@ -104,7 +104,7 @@ public class ScriptTable extends SlimTable {
   }
 
   @Override
-  public List<SlimAssertion> getAssertions() throws SyntaxError {
+  public List<SlimAssertion> getAssertions() throws TestExecutionException {
     List<SlimAssertion> assertions = new ArrayList<>();
     ScenarioTable.setDefaultChildClass(getClass());
     if (table.getCellContents(0, 0).toLowerCase().startsWith(getTableKeyword())) {
@@ -119,7 +119,7 @@ public class ScriptTable extends SlimTable {
   }
 
   // returns a list of statements
-  protected List<SlimAssertion> instructionsForRow(int row) throws SyntaxError {
+  protected List<SlimAssertion> instructionsForRow(int row) throws TestExecutionException {
     String firstCell = table.getCellContents(0, row).trim();
     List<SlimAssertion> assertions;
     String match;
@@ -163,7 +163,7 @@ public class ScriptTable extends SlimTable {
     return assertions;
   }
 
-  protected List<SlimAssertion> action(int row) throws SyntaxError {
+  protected List<SlimAssertion> action(int row) throws TestExecutionException {
     List<SlimAssertion> assertions = assertionsFromScenario(row);
     if (assertions.isEmpty()) {
       // Invoke fixture:
@@ -173,46 +173,33 @@ public class ScriptTable extends SlimTable {
     return assertions;
   }
 
-  protected List<SlimAssertion> assertionsFromScenario(int row) throws SyntaxError {
+  protected List<SlimAssertion> assertionsFromScenario(int row) throws TestExecutionException {
     int lastCol = table.getColumnCountInRow(row) - 1;
-    String actionName = getActionNameStartingAt(0, lastCol, row);
-    ScenarioTable scenario = getTestContext().getScenario(Disgracer.disgraceClassName(
-            actionName.replace(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX, "")));
+    String scenarioName = getScenarioNameFromAlternatingCells(lastCol, row);
+    ScenarioTable scenario = getTestContext().getScenario(scenarioName);
+    String[] args = null;
     List<SlimAssertion> assertions = new ArrayList<>();
     if (scenario != null) {
-      scenario.setCustomComparatorRegistry(customComparatorRegistry);
-      String[] args = getArgumentsStartingAt(1, lastCol, row, assertions);
-      assertions.addAll(scenario.call(args, this, row));
+      args = getArgumentsStartingAt(1, lastCol, row, assertions);
     } else if (lastCol == 0) {
-      String firstNameCell = table.getCellContents(0, row);
-      for (ScenarioTable s : getScenariosWithMostArgumentsFirst()) {
-        s.setCustomComparatorRegistry(customComparatorRegistry);
-        String[] args = s.matchParameters(firstNameCell);
-        if (args != null) {
-          assertions.addAll(s.call(args, this, row));
-          break;
-        }
+      String cellContents = table.getCellContents(0, row);
+      scenario = getTestContext().getScenarioByPattern(cellContents);
+      if (scenario != null) {
+        args = scenario.matchParameters(cellContents);
       }
+    }
+    if (scenario != null) {
+      scenario.setCustomComparatorRegistry(customComparatorRegistry);
+      assertions.addAll(scenario.call(args, this, row));
     }
     return assertions;
   }
 
-  private List<ScenarioTable> getScenariosWithMostArgumentsFirst() {
-    Collection<ScenarioTable> scenarioMap = getTestContext().getScenarios();
-    List<ScenarioTable> scenarios = new ArrayList<>(scenarioMap);
-    Collections.sort(scenarios, new ScenarioTableLengthComparator());
-    return scenarios;
+  protected String getScenarioNameFromAlternatingCells(int endingCol, int row) {
+    String actionName = getActionNameStartingAt(0, endingCol, row);
+    String simpleName = actionName.replace(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX, "");
+    return Disgracer.disgraceClassName(simpleName);
   }
-
-  private static class ScenarioTableLengthComparator implements java.util.Comparator<ScenarioTable> {
-    @Override
-    public int compare(ScenarioTable st1, ScenarioTable st2) {
-      int size1 = st1.getInputs().size();
-      int size2 = st2.getInputs().size();
-      return size2 - size1;
-    }
-  }
-
 
   protected List<SlimAssertion> note(int row) {
     return Collections.emptyList();

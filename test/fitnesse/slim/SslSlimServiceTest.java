@@ -5,7 +5,7 @@ package fitnesse.slim;
 import org.junit.Before;
 import org.junit.Test;
 
-import fitnesse.slim.instructions.Instruction;
+import fitnesse.socketservice.SslClientSocketFactory;
 import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.MockCommandRunner;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
@@ -33,8 +33,8 @@ public class SslSlimServiceTest extends SlimServiceTestBase {
   @Before
   public void setUp() throws InterruptedException, IOException {
     createSlimService();
-    slimClient = new SlimCommandRunningClient(new MockCommandRunner(new CompositeExecutionLogListener()), "localhost", 8099, 1, SlimCommandRunningClient.MINIMUM_REQUIRED_SLIM_VERSION, true, "fitnesse.socketservice.SslParametersWiki");
-    statements = new ArrayList<Instruction>();
+    slimClient = new SlimCommandRunningClient(new MockCommandRunner(new CompositeExecutionLogListener()), "localhost", 8099, 1, SlimCommandRunningClient.MINIMUM_REQUIRED_SLIM_VERSION, new SslClientSocketFactory("fitnesse.socketservice.SslParametersWiki"));
+    statements = new ArrayList<>();
     slimClient.connect();
   }
 
@@ -59,14 +59,5 @@ public class SslSlimServiceTest extends SlimServiceTestBase {
   public void definedStatementSsl_returnsSslClassName() {
     SlimService.Options options = SlimService.parseCommandLine(new String[]{"-ssl", "fitnesse.socketservice.SslParametersWiki", "8099"});
     assertEquals("fitnesse.socketservice.SslParametersWiki", options.sslParameterClassName);
-  }
-  @Test
-  public void slimClientcanIdentifyItselfAndPeer() {
-	  // current setup allows only one SSL key per JVM
-	  // as we run in process the SUT both names are here the same
-	  // SslSlimClientBuilderTest has a test with different names in differnt processes
-	  assertEquals("My Name is ", "FitNesseWiki", slimClient.getMyName());
-	  assertEquals("I am connected to ", "FitNesseWiki", slimClient.getPeerName());
-	  
   }
 }

@@ -1,7 +1,6 @@
 package fitnesse.junit;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -33,7 +32,7 @@ public class JUnitHelperExampleTest {
   public void prepare() {
     helper = new JUnitHelper(".",
       new File(System.getProperty("java.io.tmpdir"), "fitnesse").getAbsolutePath(), new TestRecordingListener());
-    visitedPages = new LinkedList<String>();
+    visitedPages = new LinkedList<>();
   }
 
   @Test
@@ -49,8 +48,8 @@ public class JUnitHelperExampleTest {
     String suiteName = "FitNesse.SuiteAcceptanceTests.SuiteSlimTests";
     helper.assertSuitePasses(suiteName, "testSuite");
 
-    assertEquals(new HashSet<String>(Arrays.asList(expectedTestsWithSuiteFilter)),
-      new HashSet<String>(visitedPages));
+    assertEquals(new HashSet<>(Arrays.asList(expectedTestsWithSuiteFilter)),
+      new HashSet<>(visitedPages));
 
   }
 
@@ -58,15 +57,15 @@ public class JUnitHelperExampleTest {
   public void helperWillFailTestsIfNoTestsAreExecuted() throws Exception{
     try{
       helper.assertSuitePasses("FitNesse.SuiteAcceptanceTests.SuiteSlimTests", "nonExistingFilter");
-    
+
     }
     catch (AssertionError ae){
       assertTrue(ae.getMessage().startsWith("at least one test"));
     }
-    
+
     assertEquals(new HashSet<String>(),
-      new HashSet<String>(visitedPages));
-    
+      new HashSet<>(visitedPages));
+
   }
 
   private class TestRecordingListener implements TestSystemListener {
@@ -76,18 +75,18 @@ public class JUnitHelperExampleTest {
     }
 
     @Override
-    public void testOutputChunk(String output) throws IOException {
+    public void testOutputChunk(String output) {
 
     }
 
     @Override
-    public void testStarted(TestPage testPage) throws IOException {
+    public void testStarted(TestPage testPage) {
       visitedPages.add(((WikiTestPage) testPage).getPath());
 
     }
 
     @Override
-    public void testComplete(TestPage testPage, TestSummary testSummary) throws IOException {
+    public void testComplete(TestPage testPage, TestSummary testSummary) {
 
     }
 

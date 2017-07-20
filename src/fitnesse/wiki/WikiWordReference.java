@@ -73,7 +73,7 @@ public class WikiWordReference {
         return qualifiedReference.equals(qualifiedTarget) || qualifiedReference.startsWith(qualifiedTarget + ".");
     }
 
-    public void wikiWordRenamePageIfReferenced(Symbol wikiWord, WikiPage pageToRename, String newName) throws Exception {
+    public void wikiWordRenamePageIfReferenced(Symbol wikiWord, WikiPage pageToRename, String newName) {
       String fullPathToReferent = getQualifiedWikiWord(wikiWord.getContent());
       WikiPagePath pathToPageBeingRenamed = pageToRename.getPageCrawler().getFullPath();
       pathToPageBeingRenamed.makeAbsolute();
@@ -100,7 +100,7 @@ public class WikiWordReference {
       return newQualifiedName;
     }
 
-    private String makeRenamedRelativeReference(String wikiWordText, WikiPagePath renamedPathToReferent) throws Exception {
+    private String makeRenamedRelativeReference(String wikiWordText, WikiPagePath renamedPathToReferent) {
       WikiPage parent = currentPage.getParent();
       WikiPagePath parentPath = parent.getPageCrawler().getFullPath();
       parentPath.makeAbsolute();

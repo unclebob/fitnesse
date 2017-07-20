@@ -43,7 +43,7 @@ public class ScenarioAndDecisionTableExtensionTest {
     slimTableFactory.addTableType(SCEN_EXTENSION_NAME, ScenarioTableWithDifferentScript.class);
     slimTableFactory.addTableType(SCRIPT_EXTENSION_NAME, DiffScriptTable.class);
     root = InMemoryPage.makeRoot("root");
-    assertions = new ArrayList<SlimAssertion>();
+    assertions = new ArrayList<>();
     ScenarioTable.setDefaultChildClass(ScriptTable.class);
   }
 

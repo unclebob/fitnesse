@@ -6,7 +6,9 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wikitext.parser.VariableSource;
 
-public class ExternalSuitePageFactory implements WikiPageFactory<WikiPage> {
+import static fitnesse.wiki.fs.ExternalSuitePage.hasHtmlChild;
+
+public class ExternalSuitePageFactory implements WikiPageFactory {
 
   private final FileSystem fileSystem;
 
@@ -21,15 +23,7 @@ public class ExternalSuitePageFactory implements WikiPageFactory<WikiPage> {
 
   @Override
   public boolean supports(File path) {
-    return hasHtmlChild(path);
-  }
-
-  private boolean hasHtmlChild(File path) {
-    if (path.getName().endsWith(".html")) return true;
-    for (String child : fileSystem.list(path)) {
-      if (hasHtmlChild(new File(path, child))) return true;
-    }
-    return false;
+    return hasHtmlChild(fileSystem, path);
   }
 
 }

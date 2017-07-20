@@ -18,6 +18,11 @@ public abstract class BaseWikiPage implements WikiPage {
   }
 
   @Override
+  public boolean hasChildPage(final String pageName) {
+    return getChildPage(pageName) != null;
+  }
+
+  @Override
   public PageCrawler getPageCrawler() {
     return new PageCrawlerImpl(this);
   }
@@ -30,6 +35,14 @@ public abstract class BaseWikiPage implements WikiPage {
   @Override
   public boolean isRoot() {
     return parent == null || parent == this;
+  }
+
+  @Override
+  public void remove() {
+    WikiPage parent = getParent();
+    if (parent != this) {
+      parent.removeChildPage(getName());
+    }
   }
 
   @Override

@@ -98,7 +98,7 @@ public class FitNesseServerTest {
   }
 
   @Test
-  public void testLoggingDataCreation() {
+  public void testLoggingDataCreation() throws Exception {
     MockRequest request = new MockRequest();
     SimpleResponse response = new SimpleResponse(200);
     MockSocket socket = new MockSocket("something");

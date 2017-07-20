@@ -3,33 +3,25 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-// Copyright (c) 2002 Cunningham & Cunningham, Inc.
-// Released under the terms of the GNU General Public License version 2 or later.
-
 public class ColumnFixture extends Fixture {
-
   protected Binding[] columnBindings;
-  protected boolean hasExecuted = false;
-
-  // Traversal ////////////////////////////////
+  protected boolean executeCalledForRow = false;
 
   @Override
   public void doRows(Parse rows) {
-    bind(rows.parts);
+    bindColumnHeadersToMethodsAndFields(rows.parts);
     super.doRows(rows.more);
   }
 
   @Override
   public void doRow(Parse row) {
-    hasExecuted = false;
+    executeCalledForRow = false;
     try {
       reset();
       super.doRow(row);
-      if (!hasExecuted) {
+      if (!executeCalledForRow)
         execute();
-      }
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       exception(row.leaf(), e);
     }
   }
@@ -38,8 +30,7 @@ public class ColumnFixture extends Fixture {
   public void doCell(Parse cell, int column) {
     try {
       columnBindings[column].doCell(this, cell);
-    }
-    catch (Throwable e) { // NOSONAR
+    } catch (Throwable e) { // NOSONAR
       exception(cell, e);
     }
   }
@@ -48,38 +39,32 @@ public class ColumnFixture extends Fixture {
   public void check(Parse cell, TypeAdapter a) {
     try {
       executeIfNeeded();
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       exception(cell, e);
     }
     super.check(cell, a);
   }
 
   protected void executeIfNeeded() throws Exception {
-    if (!hasExecuted) {
-      hasExecuted = true;
+    if (!executeCalledForRow) {
+      executeCalledForRow = true;
       execute();
     }
   }
 
   public void reset() throws Exception {
-    // about to process first cell of row
   }
 
   public void execute() throws Exception {
-    // about to process first method call of row
   }
 
-  // Utility //////////////////////////////////
-
-  protected void bind(Parse heads) {
+  protected void bindColumnHeadersToMethodsAndFields(Parse heads) {
     try {
       columnBindings = new Binding[heads.size()];
       for (int i = 0; heads != null; i++, heads = heads.more) {
         columnBindings[i] = createBinding(i, heads);
       }
-    }
-    catch (Throwable throwable) { // NOSONAR
+    } catch (Throwable throwable) { // NOSONAR
       exception(heads, throwable);
     }
   }
@@ -87,5 +72,4 @@ public class ColumnFixture extends Fixture {
   protected Binding createBinding(int column, Parse heads) throws Throwable {
     return Binding.create(this, heads.text());
   }
-
 }

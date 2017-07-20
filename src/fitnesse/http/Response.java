@@ -168,13 +168,8 @@ public abstract class Response {
     return headers.get(key);
   }
 
-  public byte[] getEncodedBytes(String value) {
-    // TODO: -AJM- Defer encoding to the latest responsible moment
-    try {
-      return value.getBytes(FileUtil.CHARENCODING);
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException("Unable to encode data", e);
-    }
+  public byte[] getEncodedBytes(String value) throws UnsupportedEncodingException {
+    return value.getBytes(FileUtil.CHARENCODING);
   }
 
   void makeHeaders(StringBuffer text) {

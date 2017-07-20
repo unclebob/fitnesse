@@ -1,14 +1,7 @@
 package fitnesse.reporting;
 
-import fitnesse.testsystems.Assertion;
-import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.TestResult;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.*;
 import fitnesse.wiki.WikiPage;
-
-import java.io.IOException;
 
 public abstract class BaseFormatter implements Formatter {
 
@@ -27,19 +20,19 @@ public abstract class BaseFormatter implements Formatter {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem) throws IOException {
+  public void testSystemStarted(TestSystem testSystem) {
   }
 
   @Override
-  public void testStarted(TestPage testPage) throws IOException {
+  public void testStarted(TestPage testPage) {
   }
 
   @Override
-  public void testOutputChunk(String output) throws IOException {
+  public void testOutputChunk(String output) {
   }
 
   @Override
-  public void testComplete(TestPage test, TestSummary summary) throws IOException {
+  public void testComplete(TestPage test, TestSummary summary) {
   }
 
   public int getErrorCount() {

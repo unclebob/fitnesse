@@ -9,17 +9,17 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.html.template.HtmlPage;
-import fitnesse.html.template.PageTitle;
 
 public class ShutdownResponder implements SecureResponder {
   private static final Logger LOG = Logger.getLogger(ShutdownResponder.class.getName());
 
   @Override
-  public Response makeResponse(final FitNesseContext context, Request request) {
+  public Response makeResponse(final FitNesseContext context, Request request) throws Exception {
     SimpleResponse response = new SimpleResponse();
 
     HtmlPage html = context.pageFactory.newPage();

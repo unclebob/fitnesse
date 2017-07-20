@@ -16,7 +16,7 @@ public class NotFoundResponder implements Responder {
   private String resource;
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     SimpleResponse response = new SimpleResponse(404);
     resource = request.getResource();
 

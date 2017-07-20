@@ -14,7 +14,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.fs.WikiPageProperties;
 import fitnesse.wiki.WikiPageUtil;
 import org.junit.Test;
 

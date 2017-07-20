@@ -2,58 +2,74 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import static fitnesse.wiki.PageType.*;
-
 import java.io.Serializable;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+
+import static fitnesse.wiki.PageType.STATIC;
+import static fitnesse.wiki.PageType.SUITE;
+import static fitnesse.wiki.PageType.TEST;
 
 public class PageData implements ReadOnlyPageData, Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  // TODO: Find a better place for us
-  public static final String PropertyLAST_MODIFIED = "LastModified";
-  public static final String PropertyHELP = "Help";
-  public static final String PropertyPRUNE = "Prune";
-  public static final String PropertySEARCH = "Search";
-  public static final String PropertyRECENT_CHANGES = "RecentChanges";
-  public static final String PropertyFILES = "Files";
-  public static final String PropertyWHERE_USED = "WhereUsed";
-  public static final String PropertyREFACTOR = "Refactor";
-  public static final String PropertyPROPERTIES = "Properties";
-  public static final String PropertyVERSIONS = "Versions";
-  public static final String PropertyEDIT = "Edit";
-  public static final String PropertySUITES = "Suites";
+  @Deprecated
+  public static final String PropertyLAST_MODIFIED = WikiPageProperty.LAST_MODIFIED;
+  @Deprecated
+  public static final String PropertyHELP = WikiPageProperty.HELP;
+  @Deprecated
+  public static final String PropertyPRUNE = WikiPageProperty.PRUNE;
+  @Deprecated
+  public static final String PropertySEARCH = WikiPageProperty.SEARCH;
+  @Deprecated
+  public static final String PropertyRECENT_CHANGES = WikiPageProperty.RECENT_CHANGES;
+  @Deprecated
+  public static final String PropertyFILES = WikiPageProperty.FILES;
+  @Deprecated
+  public static final String PropertyWHERE_USED = WikiPageProperty.WHERE_USED;
+  @Deprecated
+  public static final String PropertyREFACTOR = WikiPageProperty.REFACTOR;
+  @Deprecated
+  public static final String PropertyPROPERTIES = WikiPageProperty.PROPERTIES;
+  @Deprecated
+  public static final String PropertyVERSIONS = WikiPageProperty.VERSIONS;
+  @Deprecated
+  public static final String PropertyEDIT = WikiPageProperty.EDIT;
+  @Deprecated
+  public static final String PropertySUITES = WikiPageProperty.SUITES;
 
   public static final String PAGE_TYPE_ATTRIBUTE = "PageType";
   public static final String[] PAGE_TYPE_ATTRIBUTES = { STATIC.toString(),
       TEST.toString(), SUITE.toString() };
 
-  public static final String[] ACTION_ATTRIBUTES = { PropertyEDIT,
-      PropertyVERSIONS, PropertyPROPERTIES,
-      PropertyREFACTOR, PropertyWHERE_USED };
+  public static final String[] ACTION_ATTRIBUTES = { WikiPageProperty.EDIT,
+      WikiPageProperty.VERSIONS, WikiPageProperty.PROPERTIES,
+      WikiPageProperty.REFACTOR, WikiPageProperty.WHERE_USED };
 
   public static final String[] NAVIGATION_ATTRIBUTES = {
-      PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH };
+      WikiPageProperty.RECENT_CHANGES, WikiPageProperty.FILES, WikiPageProperty.SEARCH };
 
   public static final String[] NON_SECURITY_ATTRIBUTES = (String[]) ArrayUtils.addAll(ACTION_ATTRIBUTES, NAVIGATION_ATTRIBUTES);
 
-  public static final String PropertySECURE_READ = "secure-read";
-  public static final String PropertySECURE_WRITE = "secure-write";
-  public static final String PropertySECURE_TEST = "secure-test";
-  public static final String[] SECURITY_ATTRIBUTES = { PropertySECURE_READ,
-      PropertySECURE_WRITE, PropertySECURE_TEST };
+  @Deprecated
+  public static final String PropertySECURE_READ = WikiPageProperty.SECURE_READ;
+  @Deprecated
+  public static final String PropertySECURE_WRITE = WikiPageProperty.SECURE_WRITE;
+  @Deprecated
+  public static final String PropertySECURE_TEST = WikiPageProperty.SECURE_TEST;
+  public static final String[] SECURITY_ATTRIBUTES = { WikiPageProperty.SECURE_READ,
+      WikiPageProperty.SECURE_WRITE, WikiPageProperty.SECURE_TEST };
 
-  public static final String LAST_MODIFYING_USER = "LastModifyingUser";
+  @Deprecated
+  public static final String LAST_MODIFYING_USER = WikiPageProperty.LAST_MODIFYING_USER;
 
   public static final String SUITE_SETUP_NAME = "SuiteSetUp";
 
   public static final String SUITE_TEARDOWN_NAME = "SuiteTearDown";
 
   private String content = "";
-  private WikiPageProperties properties = new WikiPageProperties();
+  private WikiPageProperty properties = new WikiPageProperty();
 
   public static final String PATH_SEPARATOR = "PATH_SEPARATOR";
 
@@ -63,17 +79,17 @@ public class PageData implements ReadOnlyPageData, Serializable {
   }
 
   public PageData(PageData data) {
-    this.properties = new WikiPageProperties(data.properties);
+    this.properties = new WikiPageProperty(data.properties);
     this.content = data.content;
   }
 
-  public PageData(String content, WikiPageProperties properties) {
+  public PageData(String content, WikiPageProperty properties) {
     setContent(content);
     setProperties(properties);
   }
 
   @Override
-  public WikiPageProperties getProperties() {
+  public WikiPageProperty getProperties() {
     return properties;
   }
 
@@ -107,7 +123,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
     return properties.has(attribute);
   }
 
-  public void setProperties(WikiPageProperties properties) {
+  public void setProperties(WikiPageProperty properties) {
     this.properties = properties;
   }
 

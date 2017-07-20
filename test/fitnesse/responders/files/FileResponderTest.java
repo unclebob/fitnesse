@@ -2,12 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
-import static fitnesse.responders.files.FileResponder.isInFilesDirectory;
-import static org.junit.Assert.*;
-import static util.RegexTestCase.assertHasRegexp;
-import static util.RegexTestCase.assertMatches;
-import static util.RegexTestCase.assertSubString;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
@@ -25,6 +19,10 @@ import fitnesse.testutil.SampleFileUtility;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import static fitnesse.responders.files.FileResponder.isInFilesDirectory;
+import static org.junit.Assert.*;
+import static util.RegexTestCase.*;
 
 public class FileResponderTest {
   MockRequest request;
@@ -105,7 +103,7 @@ public class FileResponderTest {
     assertMatches(HTTP_DATE_REGEXP, lastModifiedHeader);
   }
 
-  private void test304IfNotModified(String resource) throws IOException {
+  private void test304IfNotModified(String resource) throws Exception {
     Locale.setDefault(Locale.US);
     Calendar now = new GregorianCalendar();
     now.add(Calendar.DATE, -1);
@@ -129,12 +127,12 @@ public class FileResponderTest {
   }
 
   @Test
-  public void test304IfNotModifiedForFiles() throws IOException {
+  public void test304IfNotModifiedForFiles() throws Exception {
     test304IfNotModified("files/testFile1");
   }
 
   @Test
-  public void test304IfNotModifiedForClasspathResources() throws IOException {
+  public void test304IfNotModifiedForClasspathResources() throws Exception {
     test304IfNotModified("files/fitnesse/css/fitnesse.css");
   }
 

@@ -8,21 +8,30 @@ import org.junit.runner.RunWith;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 
-import java.io.IOException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(FitNesseRunnerExtensionTest.SuiteExtension.class)
 @FitNesseRunner.FitnesseDir(".")
-@FitNesseRunner.OutputDir("./target/fitnesse-results")
+@FitNesseRunner.OutputDir("./build/fitnesse-results")
 public class FitNesseRunnerExtensionTest {
 
   public static class SuiteExtension extends FitNesseRunner {
+    private DescriptionFactory myDescriptionFactory = new DescriptionFactory();
+
     public SuiteExtension(Class<?> suiteClass) throws InitializationError {
       super(suiteClass);
+      assertNotNull("No default description factory", getDescriptionFactory());
+      setDescriptionFactory(myDescriptionFactory);
     }
 
     @Override
-    protected void addTestSystemListeners(RunNotifier notifier, MultipleTestsRunner testRunner, Class<?> suiteClass) {
-      testRunner.addTestSystemListener(new ListenerExtension(notifier, suiteClass));
+    protected void addTestSystemListeners(RunNotifier notifier,
+                                          MultipleTestsRunner testRunner,
+                                          Class<?> suiteClass,
+                                          DescriptionFactory descriptionFactory) {
+      assertEquals("Wrong description factory provided to listener", myDescriptionFactory, descriptionFactory);
+      testRunner.addTestSystemListener(new ListenerExtension(notifier, suiteClass, descriptionFactory));
     }
 
     @Override
@@ -39,8 +48,8 @@ public class FitNesseRunnerExtensionTest {
   }
 
   public static class ListenerExtension extends JUnitRunNotifierResultsListener {
-    public ListenerExtension(RunNotifier notifier, Class<?> mainClass) {
-      super(notifier, mainClass);
+    public ListenerExtension(RunNotifier notifier, Class<?> mainClass, DescriptionFactory descriptionFactory) {
+      super(notifier, mainClass, descriptionFactory);
     }
 
     @Override
@@ -49,7 +58,7 @@ public class FitNesseRunnerExtensionTest {
     }
 
     @Override
-    public void unableToStartTestSystem(String testSystemName, Throwable cause) throws IOException {
+    public void unableToStartTestSystem(String testSystemName, Throwable cause) {
       super.unableToStartTestSystem(testSystemName, cause);
     }
 

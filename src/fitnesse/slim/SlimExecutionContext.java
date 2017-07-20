@@ -7,13 +7,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.slim.fixtureInteraction.FixtureInteraction;
+
 public class SlimExecutionContext {
+    private final FixtureInteraction interaction;
     private Map<String, Object> instances = new HashMap<>();
     private List<Library> libraries = new ArrayList<>();
     private VariableStore variables = new VariableStore();
     private List<String> paths = new ArrayList<>();
 
-    public SlimExecutionContext() {
+    public SlimExecutionContext(FixtureInteraction interaction) {
+      this.interaction = interaction;
     }
 
     public List<Library> getLibraries() {
@@ -45,7 +49,7 @@ public class SlimExecutionContext {
         } else {
             String replacedClassName = variables
                     .replaceSymbolsInString(className);
-            Object instance = SlimService.getInteraction().createInstance(paths,
+            Object instance = interaction.createInstance(paths,
                     replacedClassName, replaceSymbols(args));
             addToInstancesOrLibrary(instanceName, instance);
         }
@@ -53,7 +57,7 @@ public class SlimExecutionContext {
 
     public void addPath(String path) {
         if (!paths.contains(path)) {
-            paths.add(path);
+            paths.add(0, path);
         }
     }
 
@@ -84,12 +88,15 @@ public class SlimExecutionContext {
         instances.put(instanceName, instance);
     }
 
-  private boolean isLibrary(String instanceName) {
+    private boolean isLibrary(String instanceName) {
         return instanceName.startsWith("library");
     }
-
 
     public Object[] replaceSymbols(Object[] args) {
         return variables.replaceSymbols(args);
     }
+
+  public FixtureInteraction getInteraction() {
+    return interaction;
+  }
 }

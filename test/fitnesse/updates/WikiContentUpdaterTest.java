@@ -51,17 +51,17 @@ public class WikiContentUpdaterTest {
     root.commit(root.getData());
   }
 
-  private void createFakeUpdateListFiles() {
-    updateList = new File("classes/Resources/updateList");
-    updateDoNotCopyOver = new File("classes/Resources/updateDoNotCopyOverList");
+  private void createFakeUpdateListFiles() throws IOException {
+    updateList = new File("build/classes/test/Resources/updateList");
+    updateDoNotCopyOver = new File("build/classes/test/Resources/updateDoNotCopyOverList");
     FileUtil.createFile(updateList, "FitNesseRoot/files/TestFile\nFitNesseRoot/files/BestFile\n");
     FileUtil.createFile(updateDoNotCopyOver, "FitNesseRoot/SpecialFile");
   }
 
   private void createFakeJarFileResources() throws IOException {
-    FileUtil.createFile("classes/Resources/FitNesseRoot/files/TestFile","") ;
-    FileUtil.createFile("classes/Resources/FitNesseRoot/files/BestFile","") ;
-    FileUtil.createFile("classes/Resources/FitNesseRoot/SpecialFile","");
+    FileUtil.createFile("build/classes/test/Resources/FitNesseRoot/files/TestFile","") ;
+    FileUtil.createFile("build/classes/test/Resources/FitNesseRoot/files/BestFile","") ;
+    FileUtil.createFile("build/classes/test/Resources/FitNesseRoot/SpecialFile","");
   }
 
   @Test
@@ -76,8 +76,8 @@ public class WikiContentUpdaterTest {
 
   @Test
   public void shouldBeAbleToGetThePathOfJustTheParent() throws Exception {
-    File filePath = updater.getCorrectPathForTheDestination("classes/files/moreFiles/TestFile");
-    assertSubString(portablePath("classes/files/moreFiles"), filePath.getPath());
+    File filePath = updater.getCorrectPathForTheDestination("build/classes/test/files/moreFiles/TestFile");
+    assertSubString(portablePath("build/classes/test/files/moreFiles"), filePath.getPath());
   }
 
   private String portablePath(String path) {
@@ -174,12 +174,12 @@ public class WikiContentUpdaterTest {
   @Test(expected = RuntimeException.class)
   public void shouldThrowExceptionInNoUpdateFileExists() throws Exception {
     FileUtil.deleteFile(updateList);
-    updater.parseResource("Resources/updateList");
+    updater.parseResource("build/classes/test/Resources/updateList");
   }
 
   @After
-  public void tearDown() {
-    FileUtil.deleteFileSystemDirectory("classes/Resources");
+  public void tearDown() throws IOException {
+    FileUtil.deleteFileSystemDirectory("build/classes/test/Resources");
     FileUtil.deleteFileSystemDirectory(testDir);
   }
 

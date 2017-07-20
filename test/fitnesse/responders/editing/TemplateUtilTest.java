@@ -29,13 +29,13 @@ public class TemplateUtilTest {
   @Test public void testGetTemplatesFromUncles() {
     WikiPageUtil.addPage(root, PathParser.parse(".TemplateLibrary"), "template library");
     WikiPageUtil.addPage(root, PathParser.parse(".TemplateLibrary.TemplateFromRoot"), "template from root");
-    
+
     WikiPageUtil.addPage(root, PathParser.parse(".LibraryParent"), "library parent");
     WikiPageUtil.addPage(root, PathParser.parse(".LibraryParent.TemplateLibrary"), "template library 2");
     WikiPageUtil.addPage(root, PathParser.parse(".LibraryParent.TemplateLibrary.TemplateOne"), "template 1");
-    
+
     WikiPage childPage = WikiPageUtil.addPage(root, PathParser.parse(".LibraryParent.ChildPage"), "library parent");
-    
+
     List<String> pathList = TemplateUtil.getTemplatesFromUncles(childPage);
 
     assertTrue(pathList.contains(REGULAR_PARENT_PATH));
@@ -46,10 +46,10 @@ public class TemplateUtilTest {
     WikiPageUtil.addPage(root, PathParser.parse(".TemplateLibrary"), "template library");
     WikiPageUtil.addPage(root, PathParser.parse(".TemplateLibrary.TemplateFromRoot"), "template from root");
     WikiPageUtil.addPage(root, PathParser.parse(".TemplateLibrary.TemplateFromRoot.TemplateFromRootChild"), "template from root child");
-    
+
     WikiPageUtil.addPage(root, PathParser.parse(".LibraryParent"), "library parent");
     WikiPage childPage = WikiPageUtil.addPage(root, PathParser.parse(".LibraryParent.ChildPage"), "library parent");
-    
+
     List<String> pathList = TemplateUtil.getTemplatesFromUncles(childPage);
 
     assertTrue(pathList.contains(ROOT_PARENT_PATH));
@@ -65,7 +65,7 @@ public class TemplateUtilTest {
   }
 
   @Test public void testGetShortTemplateNames() {
-    List<String> pathList = new ArrayList<String>();
+    List<String> pathList = new ArrayList<>();
     pathList.add(REGULAR_PARENT_PATH);
     pathList.add(ROOT_PARENT_PATH);
 
@@ -75,7 +75,7 @@ public class TemplateUtilTest {
   }
 
   @Test public void testGetPageNames() {
-    List<String> pathList = new ArrayList<String>();
+    List<String> pathList = new ArrayList<>();
     pathList.add(REGULAR_PARENT_PATH);
     pathList.add(ROOT_PARENT_PATH);
 
@@ -85,7 +85,7 @@ public class TemplateUtilTest {
   }
 
   @Test public void shouldShowOnlyOneTemplateWithASpecificName() {
-    List<String> pathList = new ArrayList<String>();
+    List<String> pathList = new ArrayList<>();
     pathList.add(REGULAR_PARENT_PATH);
     pathList.add(ROOT_PARENT_PATH);
     pathList.add(ROOT_OVERRIDDEN_PATH);

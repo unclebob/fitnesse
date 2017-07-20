@@ -15,15 +15,18 @@ import fitnesse.util.DateTimeUtil;
 import fitnesse.util.XmlUtil;
 
 import java.io.Writer;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static java.lang.String.format;
+
 public class SuiteExecutionReport extends ExecutionReport {
   private List<PageHistoryReference> pageHistoryReferences = new ArrayList<>();
 
-  public SuiteExecutionReport(Document xmlDocument) throws Exception {
+  public SuiteExecutionReport(Document xmlDocument) throws InvalidReportException {
     super();
     unpackXml(xmlDocument);
   }
@@ -61,7 +64,7 @@ public class SuiteExecutionReport extends ExecutionReport {
 
   @Override
   public String toString() {
-    return String.format("SuiteExecutionReport({%s}{%s})", super.toString(), pageHistoryReferencesToString());
+    return format("SuiteExecutionReport({%s}{%s})", super.toString(), pageHistoryReferencesToString());
   }
 
   private String pageHistoryReferencesToString() {
@@ -84,12 +87,18 @@ public class SuiteExecutionReport extends ExecutionReport {
   }
 
   @Override
-  protected void unpackResults(Element testResults) {
+  protected void unpackResults(Element testResults) throws InvalidReportException {
     NodeList references = testResults.getElementsByTagName("pageHistoryReference");
     for (int referenceIndex = 0;referenceIndex < references.getLength();referenceIndex++){
       Element refElement = (Element) references.item(referenceIndex);
       String name = XmlUtil.getTextValue(refElement,"name");
-      long time = DateTimeUtil.getTimeFromString(XmlUtil.getTextValue(refElement,"date"));
+      long time = 0;
+      String dateString = XmlUtil.getTextValue(refElement, "date");
+      try {
+        time = DateTimeUtil.getTimeFromString(dateString);
+      } catch (ParseException e) {
+        throw new InvalidReportException(format("'%s' is not a valid date", dateString), e);
+      }
       long runTimeInMillis = getRunTimeInMillisOrZeroIfNotPresent(refElement);
       PageHistoryReference r1 = new PageHistoryReference(name,time,runTimeInMillis);
       Element counts = XmlUtil.getElementByTagName(refElement,"counts");
@@ -134,7 +143,7 @@ public class SuiteExecutionReport extends ExecutionReport {
 
     @Override
     public String toString() {
-      return String.format("[%s, %s, %s, %s]", pageName, DateTimeUtil.formatDate(new Date(time)), testSummary, runTimeInMillis);
+      return format("[%s, %s, %s, %s]", pageName, DateTimeUtil.formatDate(new Date(time)), testSummary, runTimeInMillis);
     }
 
     @Override

@@ -4,31 +4,20 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import fitnesse.reporting.BaseFormatter;
-import fitnesse.testrunner.WikiTestPageUtil;
-import fitnesse.testsystems.Assertion;
-import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionLogListener;
-import fitnesse.testsystems.ExecutionResult;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.TestResult;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.TestSystem;
-import fitnesse.wiki.PageType;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
-import fitnesse.util.TimeMeasurement;
 import fitnesse.FitNesseContext;
+import fitnesse.reporting.BaseFormatter;
+import fitnesse.testrunner.WikiTestPageUtil;
+import fitnesse.testsystems.*;
+import fitnesse.util.TimeMeasurement;
+import fitnesse.wiki.PageType;
 import fitnesse.wiki.WikiPage;
+import util.FileUtil;
 
 public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLogListener, Closeable {
-  private static final Logger LOG = Logger.getLogger(SuiteHistoryFormatter.class.getName());
-
   private final SuiteExecutionReport suiteExecutionReport;
   private final TimeMeasurement totalTimeMeasurement;
   private final FitNesseContext context;
@@ -58,11 +47,7 @@ public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLog
       suiteExecutionReport.tallyPageCounts(ExecutionResult.ERROR);
     }
     if (testHistoryFormatter != null) {
-      try {
-        testHistoryFormatter.close();
-      } catch (IOException e) {
-        LOG.log(Level.SEVERE, "Unable to close test history formatter", e);
-      }
+      FileUtil.close(testHistoryFormatter);
       testHistoryFormatter = null;
     }
   }
@@ -83,9 +68,9 @@ public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLog
   }
 
   @Override
-  public void testComplete(TestPage test, TestSummary testSummary) throws IOException {
+  public void testComplete(TestPage test, TestSummary testSummary) {
     testHistoryFormatter.testComplete(test, testSummary);
-    testHistoryFormatter.close();
+    FileUtil.close(testHistoryFormatter);
     referenceToCurrentTest.setTestSummary(testSummary);
     referenceToCurrentTest.setRunTimeInMillis(testHistoryFormatter.runTime());
     suiteExecutionReport.addPageHistoryReference(referenceToCurrentTest);
@@ -115,9 +100,8 @@ public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLog
     suiteExecutionReport.setTotalRunTimeInMillis(totalTimeMeasurement);
 
     if (testHistoryFormatter != null) {
-      testHistoryFormatter.close();
+      FileUtil.close(testHistoryFormatter);
     }
-
     if (PageType.fromWikiPage(getPage()) == PageType.SUITE) {
       Writer writer = writerFactory.getWriter(context, getPage(), getPageCounts(), suiteTime.startedAt());
       try {
@@ -127,7 +111,7 @@ public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLog
         Template template = velocityEngine.getTemplate("suiteHistoryXML.vm");
         template.merge(velocityContext, writer);
       } finally {
-        writer.close();
+        FileUtil.close(writer);
       }
     }
   }

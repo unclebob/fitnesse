@@ -72,20 +72,17 @@ public class SimpleFileVersionsController implements VersionsController {
   public VersionInfo makeVersion(FileVersion... fileVersions) throws IOException {
     for (FileVersion fileVersion : fileVersions) {
       addDirectory(fileVersion.getFile().getParentFile());
-      InputStream content = fileVersion.getContent();
-      try {
+      try (InputStream content = fileVersion.getContent()) {
         fileSystem.makeFile(fileVersion.getFile(), content);
-      } finally {
-        content.close();
       }
     }
     return VersionInfo.makeVersionInfo(fileVersions[0].getAuthor(), fileVersions[0].getLastModificationTime());
   }
 
   @Override
-  public void delete(FileVersion... files) {
-    for (FileVersion fileVersion : files) {
-      fileSystem.delete(fileVersion.getFile());
+  public void delete(File... files) throws IOException {
+    for (File file : files) {
+      fileSystem.delete(file);
     }
   }
 

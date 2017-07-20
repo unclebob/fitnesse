@@ -54,7 +54,7 @@ public class MapConverter implements Converter<Map> {
 
   protected void addCellContent(HtmlTag valueCell, Object cellValue) {
     String valueToAdd = ElementConverterHelper.elementToString(cellValue);
-    if (!tableIsValid(valueToAdd))
+    if (!HtmlUtil.isValidTableCellContent(valueToAdd))
       valueToAdd = HtmlUtil.escapeHTML(valueToAdd);
 
     valueCell.add(valueToAdd.trim());

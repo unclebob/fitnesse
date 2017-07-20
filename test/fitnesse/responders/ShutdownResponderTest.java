@@ -2,8 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
@@ -11,9 +12,9 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.ResponseParser;
 import fitnesse.testutil.FitNesseUtil;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class ShutdownResponderTest {
   private FitNesseContext context;
@@ -22,7 +23,7 @@ public class ShutdownResponderTest {
   @Before
   public void setUp() throws Exception {
     context = FitNesseUtil.makeTestContext();
-    context.fitNesse.start();
+    FitNesseUtil.startFitnesseWithContext(context);
   }
 
   @After

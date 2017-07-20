@@ -2,23 +2,29 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-
-import fitnesse.slim.SlimError;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.slim.results.SlimTestResult;
-import fitnesse.testsystems.slim.tables.SlimTable;
-import fitnesse.testsystems.slim.tables.SlimTableFactory;
-import fitnesse.testsystems.slim.tables.SyntaxError;
 import org.htmlparser.Parser;
 import org.htmlparser.lexer.Lexer;
 import org.htmlparser.lexer.Page;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
+import fitnesse.wiki.PageData;
+import fitnesse.slim.SlimError;
+import fitnesse.testsystems.TestExecutionException;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.slim.results.SlimTestResult;
+import fitnesse.testsystems.slim.tables.SlimTable;
+import fitnesse.testsystems.slim.tables.SlimTableFactory;
+import fitnesse.testsystems.slim.tables.SyntaxError;
+
 public class HtmlSlimTestSystem extends SlimTestSystem {
+
+
+  private static final SlimTable START_OF_TEST = null;
+  private static final SlimTable END_OF_TEST = null;
+
   private final SlimTableFactory slimTableFactory;
   private final CustomComparatorRegistry customComparatorRegistry;
   private HtmlTableScanner tableScanner;
@@ -32,8 +38,10 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
   }
 
   @Override
-  protected void processAllTablesOnPage(TestPage pageToTest) throws IOException {
+  protected void processAllTablesOnPage(TestPage pageToTest) throws TestExecutionException {
     List<SlimTable> allTables = createSlimTables(pageToTest);
+
+    boolean isSuiteTearDownPage = PageData.SUITE_TEARDOWN_NAME.equals(pageToTest.getName());
 
     if (allTables.isEmpty()) {
       String html = createHtmlResults(START_OF_TEST, END_OF_TEST);
@@ -45,7 +53,7 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
         SlimTable nextTable = (index + 1 < allTables.size()) ? allTables.get(index + 1) : END_OF_TEST;
 
         try {
-          processTable(theTable);
+          processTable(theTable, isSuiteTearDownPage);
         } catch (SyntaxError e) {
           String tableName = theTable.getTable().getCellContents(0, 0);
           theTable.getTable().updateContent(0, 0, SlimTestResult.error(String.format("<strong> %s: Bad table! %s</strong>", tableName, e.getMessage())));

@@ -2,30 +2,52 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import org.apache.commons.lang.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.html.HtmlUtil;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.html.template.HtmlPage;
-import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.*;
-import org.apache.commons.lang.StringUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import static fitnesse.wiki.PageData.*;
+import static fitnesse.wiki.PageData.ACTION_ATTRIBUTES;
+import static fitnesse.wiki.PageData.NAVIGATION_ATTRIBUTES;
+import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTES;
+import static fitnesse.wiki.PageData.SECURITY_ATTRIBUTES;
 import static fitnesse.wiki.PageType.SUITE;
 import static fitnesse.wiki.PageType.TEST;
+import static fitnesse.wiki.WikiPageProperty.EDIT;
+import static fitnesse.wiki.WikiPageProperty.FILES;
+import static fitnesse.wiki.WikiPageProperty.HELP;
+import static fitnesse.wiki.WikiPageProperty.LAST_MODIFIED;
+import static fitnesse.wiki.WikiPageProperty.LAST_MODIFYING_USER;
+import static fitnesse.wiki.WikiPageProperty.PROPERTIES;
+import static fitnesse.wiki.WikiPageProperty.PRUNE;
+import static fitnesse.wiki.WikiPageProperty.RECENT_CHANGES;
+import static fitnesse.wiki.WikiPageProperty.REFACTOR;
+import static fitnesse.wiki.WikiPageProperty.SEARCH;
+import static fitnesse.wiki.WikiPageProperty.SECURE_READ;
+import static fitnesse.wiki.WikiPageProperty.SECURE_TEST;
+import static fitnesse.wiki.WikiPageProperty.SECURE_WRITE;
+import static fitnesse.wiki.WikiPageProperty.SUITES;
+import static fitnesse.wiki.WikiPageProperty.VERSIONS;
+import static fitnesse.wiki.WikiPageProperty.WHERE_USED;
 
 public class PropertiesResponder implements SecureResponder {
   private WikiPage page;
@@ -36,7 +58,7 @@ public class PropertiesResponder implements SecureResponder {
   private HtmlPage html;
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     response = new SimpleResponse();
     resource = request.getResource();
     path = PathParser.parse(resource);
@@ -51,14 +73,10 @@ public class PropertiesResponder implements SecureResponder {
     return response;
   }
 
-  private void makeContent(FitNesseContext context, Request request) {
+  private void makeContent(FitNesseContext context, Request request) throws UnsupportedEncodingException {
     if ("json".equals(request.getInput("format"))) {
       JSONObject jsonObject = makeJson();
-      try {
-        response.setContent(jsonObject.toString(1));
-      } catch (JSONException e) {
-        throw new RuntimeException(e);
-      }
+      response.setContent(jsonObject.toString(1));
     } else {
       String html = makeHtml(context, request);
 
@@ -69,34 +87,30 @@ public class PropertiesResponder implements SecureResponder {
   private JSONObject makeJson() {
     response.setContentType(Response.Format.JSON);
     JSONObject jsonObject = new JSONObject();
-    String[] attributes = { TEST.toString(), PropertySEARCH,
-        PropertyEDIT, PropertyPROPERTIES, PropertyVERSIONS, PropertyREFACTOR,
-        PropertyWHERE_USED, PropertyRECENT_CHANGES, SUITE.toString(),
-        PropertyPRUNE, PropertySECURE_READ, PropertySECURE_WRITE,
-        PropertySECURE_TEST, PropertyFILES };
+    String[] attributes = { TEST.toString(), SEARCH,
+        EDIT, PROPERTIES, VERSIONS, REFACTOR,
+        WHERE_USED, RECENT_CHANGES, SUITE.toString(),
+        PRUNE, SECURE_READ, SECURE_WRITE,
+        SECURE_TEST, FILES };
     for (String attribute : attributes)
       addJsonAttribute(jsonObject, attribute);
-    if (pageData.hasAttribute(PropertyHELP)) {
-      jsonObject.put(PropertyHELP, pageData.getAttribute(PropertyHELP));
+    if (pageData.hasAttribute(HELP)) {
+      jsonObject.put(HELP, pageData.getAttribute(HELP));
     }
-    if (pageData.hasAttribute(PropertySUITES)) {
+    if (pageData.hasAttribute(SUITES)) {
       JSONArray tags = new JSONArray();
-      for(String tag : pageData.getAttribute(PropertySUITES).split(",")) {
+      for(String tag : pageData.getAttribute(SUITES).split(",")) {
         if (StringUtils.isNotBlank(tag)) {
           tags.put(tag.trim());
         }
       }
-      jsonObject.put(PropertySUITES, tags);
+      jsonObject.put(SUITES, tags);
     }
     return jsonObject;
   }
 
   private void addJsonAttribute(JSONObject jsonObject, String attribute) {
-    try {
-      jsonObject.put(attribute, pageData.hasAttribute(attribute));
-    } catch (JSONException e) {
-      throw new RuntimeException(e);
-    }
+    jsonObject.put(attribute, pageData.hasAttribute(attribute));
   }
 
   private String makeHtml(FitNesseContext context, Request request) {
@@ -107,7 +121,7 @@ public class PropertiesResponder implements SecureResponder {
 
     String tags = "";
     if(pageData != null)  {
-      tags = pageData.getAttribute(PageData.PropertySUITES);
+      tags = pageData.getAttribute(SUITES);
     }
 
     html.setPageTitle(new PageTitle("Page Properties", path, tags));
@@ -121,10 +135,23 @@ public class PropertiesResponder implements SecureResponder {
 
   private void makeLastModifiedTag() {
     String username = pageData.getAttribute(LAST_MODIFYING_USER);
+    String dateString = pageData.getAttribute(LAST_MODIFIED);
+  if (dateString == null) dateString ="";
+  if (!dateString.isEmpty()){
+    try {
+      Date date = WikiPageProperty.getTimeFormat().parse(dateString);
+      dateString = " on " + new SimpleDateFormat("MMM dd, yyyy").format(date) + " at " + new SimpleDateFormat("hh:mm:ss a").format(date);
+    }
+    catch (ParseException e) {
+      dateString = " on " + dateString;
+    }
+  }
+
     if (username == null || "".equals(username))
-      html.put("lastModified", "Last modified anonymously");
+      html.put("lastModified", "Last modified anonymously" + dateString);
     else
-      html.put("lastModified", "Last modified by " + username);
+      html.put("lastModified", "Last modified by " + username + dateString) ;
+
   }
 
   private void makeFormSections() {

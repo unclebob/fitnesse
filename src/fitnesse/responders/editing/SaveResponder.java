@@ -12,40 +12,34 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
 
+import static fitnesse.responders.editing.SaveRecorder.changesShouldBeMerged;
+
 public class SaveResponder implements SecureResponder {
 
-  private String user;
-  private long ticketId;
-  private String savedContent;
-  private String helpText;
-  private String suites;
-  private WikiPage page;
-  private PageData data;
-  private long editTimeStamp;
-
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
-    editTimeStamp = getEditTime(request);
-    ticketId = getTicketId(request);
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    long editTimeStamp = getEditTime(request);
+    long ticketId = getTicketId(request);
     String resource = request.getResource();
-    page = getPage(resource, context);
-    data = page.getData();
-    user = request.getAuthorizationUsername();
+    WikiPage page = getPage(resource, context);
 
-    if (editsNeedMerge())
+    if (changesShouldBeMerged(editTimeStamp, ticketId, page))
       return new MergeResponder(request).makeResponse(context, request);
     else {
-      savedContent = request.getInput(EditResponder.CONTENT_INPUT_NAME);
-      helpText = request.getInput(EditResponder.HELP_TEXT);
-      suites = request.getInput(EditResponder.SUITES);
-
-      return saveEdits(context, request, page);
+      return saveEdits(context, request, page, ticketId);
     }
   }
 
-  private Response saveEdits(FitNesseContext context, Request request, WikiPage page) {
+  private Response saveEdits(FitNesseContext context, Request request, WikiPage page, long ticketId) {
+    String savedContent = request.getInput(EditResponder.CONTENT_INPUT_NAME);
+    String helpText = request.getInput(EditResponder.HELP_TEXT);
+    String suites = request.getInput(EditResponder.SUITES);
+    String user = request.getAuthorizationUsername();
+    PageData data = page.getData();
+
     Response response = new SimpleResponse();
-    setData();
+    setData(data, savedContent, helpText, suites, user);
+    SaveRecorder.pageSaved(page, ticketId);
     VersionInfo commitRecord = page.commit(data);
     if (commitRecord != null) {
       response.addHeader("Current-Version", commitRecord.getName());
@@ -58,10 +52,6 @@ public class SaveResponder implements SecureResponder {
       response.redirect(context.contextRoot, request.getResource());
 
     return response;
-  }
-
-  private boolean editsNeedMerge() {
-    return SaveRecorder.changesShouldBeMerged(editTimeStamp, ticketId, page);
   }
 
   private long getTicketId(Request request) {
@@ -87,12 +77,10 @@ public class SaveResponder implements SecureResponder {
     return page;
   }
 
-  private void setData() {
+  private void setData(final PageData data, final String savedContent, final String helpText, final String suites, String user) {
     data.setContent(savedContent);
     data.setOrRemoveAttribute(PageData.PropertyHELP, helpText);
     data.setOrRemoveAttribute(PageData.PropertySUITES, suites);
-    SaveRecorder.pageSaved(page, ticketId);
-    
     data.setOrRemoveAttribute(PageData.LAST_MODIFYING_USER, user);
   }
 

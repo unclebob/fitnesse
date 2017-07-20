@@ -1,15 +1,23 @@
 package fitnesse.wiki.fs;
 
+import java.io.*;
+import java.util.Arrays;
+import java.util.Collection;
+
 import fitnesse.util.Clock;
 import util.FileUtil;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 public class DiskFileSystem implements FileSystem {
+
+  private FilenameFilter filenameFilter = new FilenameFilter() {
+    private Collection skippedFileNames = Arrays.asList("CVS", "RCS");
+
+    @Override
+    public boolean accept(final File dir, final String name) {
+      return !(new File(dir, name).isHidden() || skippedFileNames.contains(name));
+    }
+  };
+
   @Override
   public void makeFile(File file, String content) throws IOException {
     FileUtil.createFile(file, content);
@@ -34,7 +42,7 @@ public class DiskFileSystem implements FileSystem {
 
   @Override
   public String[] list(File path) {
-    return path.isDirectory() ? path.list() : new String[]{};
+    return path.isDirectory() ? path.list(filenameFilter) : new String[]{};
   }
 
   @Override
@@ -48,7 +56,7 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public void delete(File fileToBeDeleted) {
+  public void delete(File fileToBeDeleted) throws IOException {
     if (fileToBeDeleted.isDirectory()) {
       FileUtil.deleteFileSystemDirectory(fileToBeDeleted);
     } else {

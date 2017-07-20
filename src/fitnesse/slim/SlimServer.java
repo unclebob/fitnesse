@@ -4,7 +4,6 @@ package fitnesse.slim;
 
 import fitnesse.slim.protocol.SlimDeserializer;
 import fitnesse.slim.protocol.SlimSerializer;
-import fitnesse.socketservice.SocketFactory;
 import fitnesse.socketservice.SocketServer;
 import util.FileUtil;
 
@@ -40,7 +39,6 @@ public class SlimServer implements SocketServer {
 
   @Override
   public void serve(Socket s) throws IOException {
-    SocketFactory.printSocketInfo(s);
     SlimStreamReader reader = null;
     OutputStream writer = null;
     try {

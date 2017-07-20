@@ -8,6 +8,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.plugins.PluginException;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
+import fitnesse.socketservice.PlainServerSocketFactory;
 import fitnesse.wiki.RecentChangesWikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.fs.FileSystem;
@@ -28,7 +29,7 @@ public class FitNesseUtil {
 
   public static void startFitnesseWithContext(FitNesseContext context) throws IOException {
     instance = context.fitNesse;
-    instance.start();
+    instance.start(new PlainServerSocketFactory().createServerSocket(context.port));
   }
 
   public static void stopFitnesse() throws IOException {
@@ -101,23 +102,23 @@ public class FitNesseUtil {
     return context;
   }
 
-  private static File createTemporaryFolder() {
+  public static File createTemporaryFolder() {
     File createdFolder;
     try {
       createdFolder = File.createTempFile("fitnesse", "");
     } catch (IOException e) {
-      throw new RuntimeException("Unable to create temporary folder for test execution", e);
+      throw new IllegalStateException("Unable to create temporary folder for test execution", e);
     }
     createdFolder.delete();
     createdFolder.mkdir();
     return createdFolder;
   }
 
-  public static void destroyTestContext(FitNesseContext context) {
+  public static void destroyTestContext(FitNesseContext context) throws IOException {
     FileUtil.deleteFileSystemDirectory(context.rootPath);
   }
 
-  public static void destroyTestContext() {
+  public static void destroyTestContext() throws IOException {
     FileUtil.deleteFileSystemDirectory(FitNesseUtil.base);
   }
 }

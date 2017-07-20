@@ -119,10 +119,10 @@ public class IncludeTest {
   }
 
   @Test
-  public void teardownsAreHidden() throws Exception {
+  public void teardownsAreHiddenAndMarked() throws Exception {
     String result = ParserTestHelper.translateTo(makePageThatIncludesTeardown());
 
-    assertContains(result, "class=\"collapsible closed\"");
+    assertContains(result, "class=\"collapsible closed teardown\"");
     assertContains(result, "<a href=\"PageTwo.TearDown\">");
   }
 

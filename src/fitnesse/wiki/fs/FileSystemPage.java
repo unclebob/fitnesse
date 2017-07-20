@@ -11,19 +11,18 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import fitnesse.wiki.BaseWikitextPage;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PageType;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.*;
 import fitnesse.wikitext.parser.VariableSource;
-import fitnesse.util.Clock;
 import util.FileUtil;
 
-import static fitnesse.wiki.PageType.STATIC;
+import static java.lang.String.format;
 
-public class FileSystemPage extends BaseWikitextPage {
+/**
+ * This is the "old style" page format. content is stored as: WikiPageName/content.txt and WikiPageName/properties.xml.
+ *
+ * @see fitnesse.wiki.fs.WikiFilePage
+ */
+public class FileSystemPage extends BaseWikitextPage implements FileBasedWikiPage {
 
   static final String contentFilename = "content.txt";
   static final String propertiesFilename = "properties.xml";
@@ -44,20 +43,16 @@ public class FileSystemPage extends BaseWikitextPage {
     this.versionName = null;
   }
 
-  public FileSystemPage(final File path, final String name, final FileSystemPage parent) {
+  private FileSystemPage(final File path, final String name, final FileSystemPage parent) {
     this(path, name, parent, null, parent.versionsController, parent.subWikiPageFactory, parent.getVariableSource());
   }
 
-  public FileSystemPage(final File path, final String name, final FileSystemPage parent, final VersionsController versionsController) {
-    this(path, name, parent, null, versionsController, parent.subWikiPageFactory, parent.getVariableSource());
-  }
-
   private FileSystemPage(FileSystemPage page, String versionName) {
-    this(page.getFileSystemPath(), page.getName(), (FileSystemPage) (page.isRoot() ? null : page.getParent()), versionName,
+    this(page.getFileSystemPath(), page.getName(), (page.isRoot() ? null : page.getParent()), versionName,
             page.versionsController, page.subWikiPageFactory, page.getVariableSource());
   }
 
-  private FileSystemPage(final File path, final String name, final FileSystemPage parent, final String versionName,
+  protected FileSystemPage(final File path, final String name, final WikiPage parent, final String versionName,
                          final VersionsController versionsController, final SubWikiPageFactory subWikiPageFactory,
                          final VariableSource variableSource) {
     super(name, parent, variableSource);
@@ -68,36 +63,19 @@ public class FileSystemPage extends BaseWikitextPage {
   }
 
   @Override
-  public boolean hasChildPage(final String pageName) {
-    return subWikiPageFactory.getChildPage(this, pageName) != null;
+  public void removeChildPage(final String name) {
+    final WikiPage childPage = getChildPage(name);
+    if (childPage != null) {
+      childPage.remove();
+    }
   }
 
   @Override
-  public void removeChildPage(final String name) {
-    final WikiPage childPage = getChildPage(name);
-    if (childPage instanceof FileSystemPage) {
-      versionsController.delete(new FileVersion() {
-        @Override
-        public File getFile() {
-          return ((FileSystemPage) childPage).getFileSystemPath();
-        }
-
-        @Override
-        public InputStream getContent() throws IOException {
-          return null;
-        }
-
-        @Override
-        public String getAuthor() {
-          // Who is deleting this page??
-          return "";
-        }
-
-        @Override
-        public Date getLastModificationTime() {
-          return new Date();
-        }
-      });
+  public void remove() {
+    try {
+      versionsController.delete(getFileSystemPath());
+    } catch (IOException e) {
+      throw new WikiPageLoadException(format("Could not remove page %s", new WikiPagePath(this).toString()), e);
     }
   }
 
@@ -105,9 +83,18 @@ public class FileSystemPage extends BaseWikitextPage {
   public WikiPage addChildPage(String pageName) {
     WikiPage page = getChildPage(pageName);
     if (page == null) {
-      page = new FileSystemPage(new File(getFileSystemPath(), pageName), pageName, this);
+      page = createPage(pageName);
     }
     return page;
+  }
+
+  private WikiPage createPage(final String pageName) {
+    if ("true".equalsIgnoreCase(getVariable("wiki.page.old.style"))) {
+      return new FileSystemPage(new File(getFileSystemPath(), pageName), pageName, this);
+    } else {
+      return new WikiFilePage(new File(getFileSystemPath(), pageName + WikiFilePage.FILE_EXTENSION), pageName, this,
+        null, versionsController, subWikiPageFactory, getVariableSource());
+    }
   }
 
   @Override
@@ -123,7 +110,11 @@ public class FileSystemPage extends BaseWikitextPage {
   @Override
   public PageData getData() {
     if (pageData == null) {
-      pageData = getDataVersion();
+      try {
+        pageData = getDataVersion();
+      } catch (IOException e) {
+        throw new WikiPageLoadException("Could not load page data for page " + path.getPath(), e);
+      }
     }
     return new PageData(pageData);
   }
@@ -139,7 +130,7 @@ public class FileSystemPage extends BaseWikitextPage {
     try {
       return versionsController.makeVersion(new ContentFileVersion(data), new PropertiesFileVersion(data));
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new WikiPageLoadException(e);
     }
   }
 
@@ -151,13 +142,13 @@ public class FileSystemPage extends BaseWikitextPage {
 
   @Override
   public Collection<VersionInfo> getVersions() {
-    return (Collection<VersionInfo>) versionsController.history(contentFile(), propertiesFile());
+    return versionsController.history(contentFile(), propertiesFile());
   }
 
-  private PageData getDataVersion() {
+  private PageData getDataVersion() throws IOException {
     FileVersion[] versions = versionsController.getRevisionData(versionName, contentFile(), propertiesFile());
     String content = "";
-    WikiPageProperties properties = null;
+    WikiPageProperty properties = null;
     try {
       for (FileVersion version : versions) {
         if (version == null) continue;
@@ -168,7 +159,7 @@ public class FileSystemPage extends BaseWikitextPage {
         }
       }
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new WikiPageLoadException(e);
     }
 
     if (properties == null) {
@@ -177,31 +168,14 @@ public class FileSystemPage extends BaseWikitextPage {
     return new PageData(content, properties);
   }
 
-  public WikiPageProperties defaultPageProperties() {
-    WikiPageProperties properties = new WikiPageProperties();
-    properties.set(PageData.PropertyEDIT);
-    properties.set(PageData.PropertyPROPERTIES);
-    properties.set(PageData.PropertyREFACTOR);
-    properties.set(PageData.PropertyWHERE_USED);
-    properties.set(PageData.PropertyRECENT_CHANGES);
-    properties.set(PageData.PropertyFILES);
-    properties.set(PageData.PropertyVERSIONS);
-    properties.set(PageData.PropertySEARCH);
-    properties.setLastModificationTime(Clock.currentDate());
-
-    PageType pageType = PageType.getPageTypeForPageName(getName());
-
-    if (STATIC.equals(pageType))
-      return properties;
-
-    properties.set(pageType.toString());
-    return properties;
-  }
-
   @Override
   public WikiPage getVersion(String versionName) {
     // Just assert the version is valid
-    versionsController.getRevisionData(versionName, contentFile(), propertiesFile());
+    try {
+      versionsController.getRevisionData(versionName, contentFile(), propertiesFile());
+    } catch (IOException e) {
+      throw new WikiPageLoadException(format("Could not load version %s for page at %s", versionName, path.getPath()), e);
+    }
     return new FileSystemPage(this, versionName);
   }
 
@@ -223,21 +197,15 @@ public class FileSystemPage extends BaseWikitextPage {
   }
 
   private String loadContent(final FileVersion fileVersion) throws IOException {
-    InputStream content = fileVersion.getContent();
-    try {
+    try (InputStream content = fileVersion.getContent()) {
       return FileUtil.toString(content);
-    } finally {
-      content.close();
     }
   }
 
   private WikiPageProperties loadAttributes(final FileVersion fileVersion) throws IOException {
     final WikiPageProperties props = new WikiPageProperties();
-    InputStream content = fileVersion.getContent();
-    try {
+    try (InputStream content = fileVersion.getContent()) {
       props.loadFromXmlStream(content);
-    } finally {
-      content.close();
     }
     props.setLastModificationTime(fileVersion.getLastModificationTime());
     return props;
@@ -250,8 +218,7 @@ public class FileSystemPage extends BaseWikitextPage {
 
     FileSystemPage that = (FileSystemPage) other;
 
-    if (versionName != null ? !versionName.equals(that.versionName) : that.versionName != null) return false;
-    return super.equals(that);
+    return versionName != null ? versionName.equals(that.versionName) : that.versionName == null && super.equals(that);
   }
 
   @Override
@@ -299,7 +266,7 @@ public class FileSystemPage extends BaseWikitextPage {
 
     @Override
     public String getAuthor() {
-      return data.getAttribute(PageData.LAST_MODIFYING_USER);
+      return data.getAttribute(WikiPageProperty.LAST_MODIFYING_USER);
 
     }
 
@@ -332,7 +299,7 @@ public class FileSystemPage extends BaseWikitextPage {
 
     @Override
     public String getAuthor() {
-      return data.getAttribute(PageData.LAST_MODIFYING_USER);
+      return data.getAttribute(WikiPageProperty.LAST_MODIFYING_USER);
     }
 
     @Override
@@ -341,7 +308,7 @@ public class FileSystemPage extends BaseWikitextPage {
     }
 
     private void removeAlwaysChangingProperties(WikiPageProperties properties) {
-      properties.remove(PageData.PropertyLAST_MODIFIED);
+      properties.remove(WikiPageProperty.LAST_MODIFIED);
     }
   }
 }

@@ -3,14 +3,14 @@ package fitnesse.slim;
 import fitnesse.slim.fixtureInteraction.DefaultInteraction;
 import org.junit.Test;
 
-import static fitnesse.slim.JavaSlimFactory.createJavaSlimFactory;
+import static fitnesse.slim.JavaSlimFactory.*;
 import static org.junit.Assert.assertTrue;
 
 public class JavaSlimFactoryTest {
 
   @Test
   public void slimFactoryWithNoStatementTimeout() {
-    SlimFactory factory = createJavaSlimFactory();
+    SlimFactory factory = createJavaSlimFactory(createInteraction(null), null, false);
     StatementExecutorInterface executor = factory.getStatementExecutor();
     assertTrue(executor instanceof StatementExecutor);
   }

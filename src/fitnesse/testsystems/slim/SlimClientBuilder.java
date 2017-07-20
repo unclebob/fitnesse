@@ -1,17 +1,22 @@
 package fitnesse.testsystems.slim;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import fitnesse.FitNesseContext;
-import fitnesse.socketservice.SocketFactory;
-import fitnesse.testsystems.ClientBuilder;
-import fitnesse.testsystems.CommandRunner;
-import fitnesse.testsystems.Descriptor;
-import fitnesse.testsystems.MockCommandRunner;
-
 import org.apache.commons.lang.ArrayUtils;
+
+import fitnesse.FitNesseContext;
+import fitnesse.slim.SlimPipeSocket;
+import fitnesse.socketservice.ClientSocketFactory;
+import fitnesse.socketservice.PlainClientSocketFactory;
+import fitnesse.socketservice.PlainServerSocketFactory;
+import fitnesse.socketservice.SslClientSocketFactory;
+import fitnesse.testsystems.*;
+
+import static fitnesse.slim.SlimPipeSocket.STDERR_PREFIX;
+import static fitnesse.slim.SlimPipeSocket.STDOUT_PREFIX;
 
 public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   public static final String SLIM_PORT = "SLIM_PORT";
@@ -19,8 +24,10 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   public static final String SLIM_FLAGS = "SLIM_FLAGS";
   private static final String SLIM_VERSION = "SLIM_VERSION";
   public static final String MANUALLY_START_TEST_RUNNER_ON_DEBUG = "MANUALLY_START_TEST_RUNNER_ON_DEBUG";
+  public static final String MANUALLY_START_TEST_RUNNER = "MANUALLY_START_TEST_RUNNER";
   public static final String SLIM_SSL = "SLIM_SSL";
-  
+  public static final int SLIM_USE_PIPE_PORT = 1;
+
   private static final AtomicInteger slimPortOffset = new AtomicInteger(0);
 
 
@@ -32,16 +39,83 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   }
 
   @Override
-  public SlimCommandRunningClient build() throws IOException {
-    CommandRunner commandRunner;
+  public SlimCommandRunningClient build() {
+    CommandRunner commandRunner = determineCommandRunner();
 
-    if (useManualStartForTestSystem()) {
-      commandRunner = new MockCommandRunner(getExecutionLogListener());
+    return new SlimCommandRunningClient(commandRunner, determineSlimHost(),
+        getSlimPort(), determineTimeout(), getSlimVersion(),
+        determineSocketFactory(commandRunner));
+
+  }
+
+  protected CommandRunner determineCommandRunner() {
+    if (getSlimPort() == SLIM_USE_PIPE_PORT) {
+      // Wrap executionLogListener
+      return new CommandRunner(buildCommand(),
+        createClasspathEnvironment(getClassPath()),
+          getExecutionLogListener(), determineTimeout()) {
+
+        @Override
+        protected void redirectOutputs(Process process, final ExecutionLogListener executionLogListener) throws IOException {
+          InputStream stderr = process.getErrorStream();
+          new Thread(new OutputReadingRunnable(stderr, new OutputWriter() {
+            @Override
+            public void write(String output) {
+              // Separate StdOut and StdErr and remove prefix"
+              String originalMsg;
+              originalMsg = extractOriginalMessage(output, STDOUT_PREFIX);
+              if (originalMsg != null) {
+                executionLogListener.stdOut(originalMsg);
+              } else {
+                originalMsg = extractOriginalMessage(output, STDERR_PREFIX);
+                if (originalMsg != null) {
+                  executionLogListener.stdErr(originalMsg);
+                  setCommandErrorMessage(originalMsg);
+                } else {
+                  executionLogListener.stdOut(output);
+                }
+              }
+            }
+
+            /**
+             * This reverts the wrap that the LoggingOutputStream.flush method
+             * is doing.
+             *
+             * @param prefixedMessage
+             * @param level
+             * @return == null : the message is not prefixed with the given
+             *         level != null : the original message content
+             */
+            private String extractOriginalMessage(String prefixedMessage,
+                String level) {
+              if (prefixedMessage.startsWith(level))
+                return prefixedMessage.substring(level.length()
+                    + SlimPipeSocket.FOLLOWING_LINE_PREFIX.length());
+              return null;
+            }
+
+          }), "CommandRunner stdOutErr").start();
+
+        }
+      };
+
+    } else if (useManualStartForTestSystem()) {
+      return new MockCommandRunner(
+          "Connection to running SlimService: " + determineSlimHost() + ":"
+              + getSlimPort(), getExecutionLogListener(), determineTimeout());
     } else {
-      commandRunner = new CommandRunner(buildCommand(), "", createClasspathEnvironment(getClassPath()), getExecutionLogListener(), determineTimeout());
+      return new CommandRunner(buildCommand(), createClasspathEnvironment(getClassPath()), getExecutionLogListener(), determineTimeout());
     }
+  }
 
-    return new SlimCommandRunningClient(commandRunner, determineSlimHost(), getSlimPort(), determineTimeout(), getSlimVersion(), determineSSL(), determineHostSSLParameterClass());
+  protected ClientSocketFactory determineSocketFactory(CommandRunner commandRunner) {
+    if (getSlimPort() == SLIM_USE_PIPE_PORT) {
+      return new PipeBasedSocketFactory(commandRunner);
+    } else if ((determineClientSSLParameterClass() != null)) {
+      return new SslClientSocketFactory(determineHostSSLParameterClass());
+    } else {
+      return new PlainClientSocketFactory();
+    }
   }
 
   protected String determineClientSSLParameterClass() {
@@ -51,10 +125,6 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
       }
       if (sslParameterClassName != null && sslParameterClassName.equalsIgnoreCase("false")) sslParameterClassName=null;
       return sslParameterClassName;
-  }
-
-  protected boolean determineSSL() {
-      return (determineClientSSLParameterClass() != null );
   }
 
   protected String determineHostSSLParameterClass() {
@@ -91,12 +161,12 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     if (useSSL != null){
     	arguments = ArrayUtils.add(arguments, "-ssl");
     	arguments = ArrayUtils.add(arguments, useSSL);
-    }    	
+    }
     String[] slimFlags = getSlimFlags();
     if (slimFlags != null)
     	for (String flag : slimFlags)
     		arguments = ArrayUtils.add(arguments, flag);
-    
+
 	arguments = ArrayUtils.add(arguments, Integer.toString(getSlimPort()));
 
     return (String[]) arguments;
@@ -113,7 +183,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   private int findFreePort() {
     int port;
     try {
-      ServerSocket socket = SocketFactory.createServerSocket(0);
+      ServerSocket socket = new PlainServerSocketFactory().createServerSocket(0);
       port = socket.getLocalPort();
       socket.close();
     } catch (Exception e) {
@@ -129,6 +199,8 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     if (base == 0) {
       return findFreePort();
     }
+    if (base == SLIM_USE_PIPE_PORT)
+      return SLIM_USE_PIPE_PORT;
 
     synchronized (SlimClientBuilder.class) {
       int offset = slimPortOffset.get();
@@ -157,7 +229,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     } catch (NumberFormatException e) {
       // stick with default
     }
-    return 8085;
+    return SLIM_USE_PIPE_PORT;
   }
 
   private int getSlimPortPoolSize() {
@@ -216,8 +288,15 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
       if (useManualStart == null) {
         useManualStart = getVariable(MANUALLY_START_TEST_RUNNER_ON_DEBUG);
       }
-      return "true".equalsIgnoreCase(useManualStart);
+      if (useManualStart != null) {
+        return "true".equalsIgnoreCase(useManualStart);
+      }
     }
-    return false;
+    String useManualStart = getVariable("manually.start.test.runner");
+    if (useManualStart == null) {
+      useManualStart = getVariable(MANUALLY_START_TEST_RUNNER);
+    }
+    return "true".equalsIgnoreCase(useManualStart);
+
   }
 }

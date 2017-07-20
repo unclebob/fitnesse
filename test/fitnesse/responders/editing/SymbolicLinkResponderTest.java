@@ -3,29 +3,26 @@
 package fitnesse.responders.editing;
 
 import java.io.File;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static util.RegexTestCase.assertSubString;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.SymbolicPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperty;
-import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.*;
+import fitnesse.wiki.fs.FileBasedWikiPage;
 import fitnesse.wiki.fs.FileSystemPage;
 import fitnesse.wiki.fs.MemoryFileSystem;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import fitnesse.wiki.fs.WikiFilePage;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertSubString;
 
 public class SymbolicLinkResponderTest {
   private WikiPage root;
@@ -309,8 +306,8 @@ public class SymbolicLinkResponderTest {
     assertEquals(SymbolicPage.class, symLink.getClass());
 
     WikiPage realPage = ((SymbolicPage) symLink).getRealPage();
-    assertEquals(FileSystemPage.class, realPage.getClass());
-    assertEquals(new File("/somedir/ExternalRoot"), ((FileSystemPage) realPage).getFileSystemPath());
+    assertEquals(WikiFilePage.class, realPage.getClass());
+    assertEquals(new File("/somedir/ExternalRoot"), ((FileBasedWikiPage) realPage).getFileSystemPath());
   }
 
   @Test

@@ -59,19 +59,15 @@ public class SocketService {
     while (running) {
       try {
         Socket s = serverSocket.accept();
-        if (!everRan){
-          // Print information about the first connection done
-          SocketFactory.printSocketInfo(s);
-        }
         everRan = true;
         server.serve(s);
       } catch (java.lang.OutOfMemoryError e) {
         LOG.log(Level.SEVERE, "Can't create new thread.  Out of Memory.  Aborting.", e);
         System.exit(99);
       } catch (SocketException sox) {
-        running = false; // do nothing
+        running = false;
       } catch (IOException e) {
-        throw new RuntimeException(e);
+        LOG.log(Level.SEVERE, "I/O exception in service thread", e);
       }
     }
   }

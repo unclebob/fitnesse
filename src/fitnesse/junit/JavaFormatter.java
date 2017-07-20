@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import fitnesse.reporting.BaseFormatter;
+import fitnesse.reporting.FormatterException;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import util.FileUtil;
@@ -20,7 +21,7 @@ import util.FileUtil;
 /**
  * Used to run tests from a JUnit test suite.
  *
- * @see fitnesse.junit.FitNesseSuite
+ * @see fitnesse.junit.FitNesseRunner
  */
 public class JavaFormatter extends BaseFormatter implements Closeable {
 
@@ -28,10 +29,8 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
   private boolean isSuite = true;
 
 
-  public interface ResultsRepository {
+  public interface ResultsRepository extends Closeable {
     void open(String string) throws IOException;
-
-    void close() throws IOException;
 
     void write(String content) throws IOException;
   }
@@ -50,8 +49,8 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
           out.write(buf, 0, len);
         }
       } finally {
-        if (in != null) in.close();
-        if (out != null) out.close();
+        FileUtil.close(in);
+        FileUtil.close(out);
       }
     }
   }
@@ -141,17 +140,21 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
   private Map<String, TestSummary> testSummaries = new HashMap<>();
 
   @Override
-  public void testStarted(TestPage test) throws IOException {
-    resultsRepository.open(test.getFullPath());
+  public void testStarted(TestPage test) {
+    try {
+      resultsRepository.open(test.getFullPath());
+    } catch (IOException e) {
+      throw new FormatterException("Could not open new report file for " + test.getFullPath(), e);
+    }
   }
 
   @Override
-  public void testComplete(TestPage test, TestSummary testSummary) throws IOException {
+  public void testComplete(TestPage test, TestSummary testSummary) {
     String fullPath = test.getFullPath();
     visitedTestPages.add(fullPath);
     totalSummary.add(testSummary);
     testSummaries.put(fullPath, new TestSummary(testSummary));
-    resultsRepository.close();
+    FileUtil.close(resultsRepository);
     isSuite = isSuite && (!mainPageName.equals(fullPath));
   }
 
@@ -160,8 +163,12 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
   }
 
   @Override
-  public void testOutputChunk(String output) throws IOException {
-    resultsRepository.write(output);
+  public void testOutputChunk(String output) {
+    try {
+      resultsRepository.write(output);
+    } catch (IOException e) {
+      throw new FormatterException("could not write output chunk", e);
+    }
   }
 
   private ResultsRepository resultsRepository;

@@ -44,7 +44,7 @@ public class SocketServiceTest {
   }
 
   public SocketService createSocketService(SocketServer socketServer) throws IOException {
-    return new SocketService(socketServer, false, SocketFactory.createServerSocket(PORT_NUMBER));
+    return new SocketService(socketServer, false, new PlainServerSocketFactory().createServerSocket(PORT_NUMBER));
   }
 
   @Test

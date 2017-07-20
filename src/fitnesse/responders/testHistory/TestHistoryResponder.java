@@ -1,6 +1,7 @@
 package fitnesse.responders.testHistory;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 
 import fitnesse.reporting.history.TestHistory;
 import fitnesse.wiki.PathParser;
@@ -20,9 +21,9 @@ import fitnesse.html.template.PageTitle;
 public class TestHistoryResponder implements SecureResponder {
 
   private FitNesseContext context;
-  
+
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws UnsupportedEncodingException {
     this.context = context;
     File resultsDirectory = context.getTestHistoryDirectory();
     String pageName = request.getResource();
@@ -35,7 +36,7 @@ public class TestHistoryResponder implements SecureResponder {
     }
   }
 
-  private Response makeTestHistoryResponse(TestHistory testHistory, Request request, String pageName) {
+  private Response makeTestHistoryResponse(TestHistory testHistory, Request request, String pageName) throws UnsupportedEncodingException {
     HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Test History");
     page.setPageTitle(new PageTitle(PathParser.parse(pageName)));
@@ -48,7 +49,7 @@ public class TestHistoryResponder implements SecureResponder {
     return response;
   }
 
-  private Response makeTestHistoryXmlResponse(TestHistory history) {
+  private Response makeTestHistoryXmlResponse(TestHistory history) throws UnsupportedEncodingException {
     SimpleResponse response = new SimpleResponse();
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("testHistory", history);

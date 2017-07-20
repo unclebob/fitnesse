@@ -53,17 +53,12 @@ public class FitNesseExpediterTest {
     assertEquals(401, response.getStatus());
   }
 
-  @Test
+  @Test(expected = IOException.class)
   public void testClosedSocketMidResponse() throws Exception {
-    try {
-      MockRequest request = new MockRequest();
-      Response response = expediter.createGoodResponse(request);
-      socket.close();
-      response.sendTo(expediter);
-    }
-    catch (IOException e) {
-      fail("no IOException should be thrown");
-    }
+    MockRequest request = new MockRequest();
+    Response response = expediter.createGoodResponse(request);
+    socket.close();
+    response.sendTo(expediter);
   }
 
   @Test

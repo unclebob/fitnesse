@@ -278,10 +278,13 @@ ${OPT}${BAR} ''optional table row'' ${BAR}${OPT} ''optional 2nd column'' ${BAR}$
 
 | ''' NAME ''' | ''' Default ''' | ''' Values ''' | ''' Notes ''' |
 | ${CODE} TEST_SYSTEM ${CODEend} | !c fit | !c fit&bar;slim | '' Selects the test system to use for this, and descendant pages.'' |
-| ${CODE} SLIM_PORT ${CODEend} ''(deprecated)''| !c 8085 | !c integer | '' Selects the starting port number in a range of 10 for slim.'' |
+| ${CODE} SLIM_PORT ${CODEend} ''(deprecated)''| !c 1 | !c integer | '' !-1= communicate via STDIN/STDOUT requires no network ports
+0= find a free port automatically
+else Defines the starting port number and rotates in a range defined by slim.pool.size (10).-!'' |
 | ${CODE} SLIM_HOST ${CODEend} ''(deprecated)''| !c localhost | !c string | '' The name of the host on which !-SlimServer-! is running.'' |
 | ${CODE} SLIM_VERSION ${CODEend} | !c nil | !c string | '' The minimum Slim Protocol Version required for this page.  Used to turn off slim protocol error messages.'' |
-| ${CODE} MANUALLY_START_TEST_RUNNER_ON_DEBUG ${CODEend} | !c false | !c true${BAR}false | '' When set to true, and a page is run in debug mode then fitnesse will not create it's own slim runner, and will instead connect to an existing runner on port ${CODE} SLIM_PORT ${CODEend}.'' |
+| ${CODE} [[MANUALLY_START_TEST_RUNNER][.FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestSystemSlimSuite.ManualStartofSlimService]] ${CODEend} | !c false | !c true${BAR}false | '' When set to true then fitnesse will not create it's own slim runner, and will instead connect to an existing runner on port ${CODE} SLIM_PORT ${CODEend} on host ${CODE} SLIM_HOST ${CODEend}.'' |
+| ${CODE} MANUALLY_START_TEST_RUNNER_ON_DEBUG ${CODEend} | !c false | !c true${BAR}false | '' Same as above but only when and a page is run in debug mode .'' |
 | ${CODE} CLASSPATH_PROPERTY ${CODEend} | !c nil | !c ''an environment variable'' | '' If not nil, loads classpath (as gathered from !path) into the named environment variable.  See [[Customizing Test Execution][WritingAcceptanceTests.CustomizingTestExecution]].'' |
 | ${CODE} COLLAPSE_SETUP ${CODEend} | !c false | !c true${BAR}false | '' Collapses all !-SetUps-! '' |
 | ${CODE} COLLAPSE_TEARDOWN ${CODEend} | !c false | !c true${BAR}false | '' Collapses all !-TearDowns-! '' |
@@ -296,6 +299,7 @@ ${OPT}${BAR} ''optional table row'' ${BAR}${OPT} ''optional 2nd column'' ${BAR}$
 | ${CODE} RSS_PREFIX ${CODEend} | !c | !c | '' Link prefix for [[RSS Feeds][AdministeringFitNesse.RestfulServices.RssFeed]] '' |
 | ${CODE} INCLUDE_SCENARIO_LIBRARIES ${CODEend} | !c false* | !c true${BAR}false | ''Test pages should include [[!-ScenarioLibrary-!][WritingAcceptanceTests.SpecialPages]] pages''!-
 -! * defaults to true if the SLiM test system is defined. |
+| ${CODE} FORMAT_LOCALE ${CODEend} | !c nil | !c IETF language tag | '' IETF language tag for the locale used for formatting evaluated expressions '' |
 | ${CODE} ''PAGE_NAME'' ${CODEend} | !c | !c Read Only | '' Name of current page'' |
 | ${CODE} ''PAGE_PATH '' ${CODEend} | !c | !c Read Only | '' Fully qualified name of parent. '' |
 | ${CODE} ''RUNNING_PAGE_NAME'' ${CODEend} | !c | !c Read Only | '' Name of current top level running page'' |

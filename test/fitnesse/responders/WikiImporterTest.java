@@ -54,8 +54,8 @@ public class WikiImporterTest implements WikiImporterClient {
     importer.setWikiImporterClient(this);
     importer.parseUrl("http://localhost:" + FitNesseUtil.PORT);
 
-    imports = new LinkedList<WikiPage>();
-    errors = new LinkedList<Exception>();
+    imports = new LinkedList<>();
+    errors = new LinkedList<>();
   }
 
   public FitNesseContext createLocalRoot() throws Exception {
@@ -203,7 +203,7 @@ public class WikiImporterTest implements WikiImporterClient {
   public void testWholeTreeOrphaned() throws Exception {
     importer.importWiki(localRoot);
 
-    remoteRoot.removeChildPage("PageOne");
+    remoteRoot.getChildPage("PageOne").remove();
 
     importer.importWiki(localRoot);
 

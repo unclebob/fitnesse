@@ -13,6 +13,8 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.SimpleAuthenticator;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperty;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,7 +40,7 @@ public class AuthenticatorTest {
     protected void refactorReferences(FitNesseContext context, WikiPage pageToBeMoved, String newParentName) {
     }
   }
-  
+
   @Before
   public void setUp() {
     context = FitNesseUtil.makeTestContext();
@@ -54,24 +56,24 @@ public class AuthenticatorTest {
 
   private void makeReadSecure(WikiPage frontpage) {
     PageData data = frontpage.getData();
-    data.setAttribute(PageData.PropertySECURE_READ);
+    data.setAttribute(WikiPageProperty.SECURE_READ);
     frontpage.commit(data);
   }
 
   @Test
-  public void testNotAuthenticated() {
+  public void testNotAuthenticated() throws Exception {
     makeResponder();
     assertEquals(UnauthorizedResponder.class, responderType);
   }
 
   @Test
-  public void testAuthenticated() {
+  public void testAuthenticated() throws Exception {
     authenticator.authenticated = true;
     makeResponder();
     assertEquals(DummySecureResponder.class, responderType);
   }
 
-  private void makeResponder() {
+  private void makeResponder() throws Exception {
     Responder responder = authenticator.authenticate(context, request, privilegedResponder);
     responderType = responder.getClass();
   }

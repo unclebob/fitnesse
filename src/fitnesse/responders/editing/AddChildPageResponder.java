@@ -22,14 +22,13 @@ public class AddChildPageResponder implements SecureResponder {
   private WikiPage pageTemplate;
   private String user;
 
-
   @Override
   public SecureOperation getSecureOperation() {
     return new SecureWriteOperation();
   }
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     parseRequest(context, request);
     if (currentPage == null)
       return notFoundResponse(context, request);
@@ -100,21 +99,21 @@ public class AddChildPageResponder implements SecureResponder {
       childPageData.getProperties().remove("Suite");
       childPageData.setAttribute(pageType);
     }
-    childPageData.setAttribute(PageData.PropertyHELP, helpText);
-    childPageData.setAttribute(PageData.PropertySUITES, suites);
+    childPageData.setOrRemoveAttribute(PageData.PropertyHELP, helpText);
+    childPageData.setOrRemoveAttribute(PageData.PropertySUITES, suites);
     childPageData.setOrRemoveAttribute(PageData.LAST_MODIFYING_USER, user);
     childPage.commit(childPageData);
   }
 
-  private Response errorResponse(FitNesseContext context, Request request) {
+  private Response errorResponse(FitNesseContext context, Request request) throws Exception {
     return new ErrorResponder("Invalid Child Name").makeResponse(context, request);
   }
 
-  private Response alreadyExistsResponse(FitNesseContext context, Request request) {
+  private Response alreadyExistsResponse(FitNesseContext context, Request request) throws Exception {
     return new ErrorResponder("Child page already exists", 409).makeResponse(context, request);
   }
 
-  private Response notFoundResponse(FitNesseContext context, Request request) {
+  private Response notFoundResponse(FitNesseContext context, Request request) throws Exception {
     return new NotFoundResponder().makeResponse(context, request);
   }
 }

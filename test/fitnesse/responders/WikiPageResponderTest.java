@@ -2,15 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static util.RegexTestCase.assertDoesntHaveRegexp;
-import static util.RegexTestCase.assertHasRegexp;
-import static util.RegexTestCase.assertNotSubString;
-import static util.RegexTestCase.assertSubString;
-
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.Before;
+import org.junit.Test;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
@@ -20,14 +15,14 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiImportProperty;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
-import fitnesse.wiki.WikiPageUtil;
-import org.junit.Before;
-import org.junit.Test;
+import fitnesse.wiki.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertDoesntHaveRegexp;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
 
 public class WikiPageResponderTest {
   private WikiPage root;
@@ -43,7 +38,7 @@ public class WikiPageResponderTest {
   public void testResponse() throws Exception {
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ChildPage"), "child content");
     PageData data = page.getData();
-    WikiPageProperties properties = data.getProperties();
+    WikiPageProperty properties = data.getProperties();
     properties.set(PageData.PropertySUITES, "Wiki Page tags");
     page.commit(data);
 
@@ -151,7 +146,7 @@ public class WikiPageResponderTest {
     WikiPageUtil.addPage(root, PathParser.parse("SuiteSetUp"), "suite setup ${suiteSetupParam}");
     WikiPageUtil.addPage(root, PathParser.parse("SuiteTearDown"), "suite teardown ${suiteTeardownParam}");
 
-    Map<String,String> urlInputValues = new HashMap<String,String>();
+    Map<String,String> urlInputValues = new HashMap<>();
     urlInputValues.put("normalParam", "normalValue");
     urlInputValues.put("headerParam", "headerValue");
     urlInputValues.put("footerParam", "footerValue");
@@ -163,7 +158,7 @@ public class WikiPageResponderTest {
     assertHasRegexp("footer footerValue", content);
 
 
-    urlInputValues = new HashMap<String,String>();
+    urlInputValues = new HashMap<>();
     urlInputValues.put("headerParam", "headerValue");
     urlInputValues.put("footerParam", "footerValue");
     urlInputValues.put("testPageParam", "testPageValue");

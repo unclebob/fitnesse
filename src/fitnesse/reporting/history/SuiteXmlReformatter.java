@@ -59,7 +59,7 @@ public class SuiteXmlReformatter extends BaseFormatter implements Closeable {
   }
 
   // called from velocity template.
-  public TestExecutionReport.TestResult getTestResult(SuiteExecutionReport.PageHistoryReference reference) throws IOException, SAXException {
+  public TestExecutionReport.TestResult getTestResult(SuiteExecutionReport.PageHistoryReference reference) throws IOException, SAXException, InvalidReportException {
     PageHistory pageHistory = testHistory.getPageHistory(reference.getPageName());
     if(pageHistory == null) {
       LOG.log(Level.WARNING, "Unable to get page history");
@@ -70,7 +70,7 @@ public class SuiteXmlReformatter extends BaseFormatter implements Closeable {
     return makeTestExecutionReport(record.getFile()).getResults().get(0);
   }
 
-  TestExecutionReport makeTestExecutionReport(File file) throws IOException, SAXException {
+  TestExecutionReport makeTestExecutionReport(File file) throws IOException, SAXException, InvalidReportException {
     return new TestExecutionReport(file);
   }
 

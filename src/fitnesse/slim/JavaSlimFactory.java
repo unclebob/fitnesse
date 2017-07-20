@@ -1,19 +1,24 @@
 package fitnesse.slim;
 
+import fitnesse.slim.fixtureInteraction.DefaultInteraction;
+import fitnesse.slim.fixtureInteraction.FixtureInteraction;
+
 public class JavaSlimFactory extends SlimFactory {
 
   private final NameTranslator identityTranslator = new NameTranslatorIdentity();
   private final Integer timeout;
   private final boolean verbose;
+  private final FixtureInteraction interaction;
 
-  private JavaSlimFactory(Integer timeout, boolean verbose) {
+  private JavaSlimFactory(FixtureInteraction interaction, Integer timeout, boolean verbose) {
+    this.interaction = interaction;
     this.timeout = timeout;
     this.verbose = verbose;
   }
 
   @Override
   public StatementExecutorInterface getStatementExecutor() {
-    StatementExecutorInterface statementExecutor = new StatementExecutor();
+    StatementExecutorInterface statementExecutor = new StatementExecutor(new SlimExecutionContext(interaction));
     if (timeout != null) {
       statementExecutor = StatementTimeoutExecutor.decorate(statementExecutor, timeout);
     }
@@ -34,15 +39,24 @@ public class JavaSlimFactory extends SlimFactory {
     return identityTranslator;
   }
 
+  // Called from main
   public static SlimFactory createJavaSlimFactory(SlimService.Options options) {
-    return createJavaSlimFactory(options.statementTimeout, options.verbose);
+    return createJavaSlimFactory(options.interaction, options.statementTimeout, options.verbose);
   }
 
-  public static SlimFactory createJavaSlimFactory(Integer timeout, boolean verbose) {
-    return new JavaSlimFactory(timeout, verbose);
+  public static SlimFactory createJavaSlimFactory(FixtureInteraction interaction, Integer timeout, boolean verbose) {
+    return new JavaSlimFactory(interaction, timeout, verbose);
   }
 
-  public static SlimFactory createJavaSlimFactory() {
-    return new JavaSlimFactory(null, false);
+  @SuppressWarnings("unchecked")
+  public static FixtureInteraction createInteraction(String interactionClassName) {
+    if (interactionClassName == null) {
+      return new DefaultInteraction();
+    }
+    try {
+      return ((Class<FixtureInteraction>) Class.forName(interactionClassName)).newInstance();
+    } catch (Exception e) {
+      throw new SlimError(e);
+    }
   }
 }

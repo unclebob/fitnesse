@@ -27,7 +27,7 @@ public class SlimTableFactoryTest {
   public void setUp() {
     slimTableFactory = new SlimTableFactory();
     table = mock(Table.class);
-    map = new HashMap<String, Class<? extends SlimTable>>();
+    map = new HashMap<>();
     map.put("dt:", DecisionTable.class);
     map.put("dT:", DecisionTable.class);
     map.put("decision:", DecisionTable.class);

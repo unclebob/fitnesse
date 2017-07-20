@@ -29,23 +29,18 @@ public class ExecutionLogResponder implements SecureResponder {
   private FitNesseContext context;
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     this.context = context;
     PageHistory pageHistory = getPageHistory(request);
-
-    return tryToMakeExecutionLog(request, pageHistory);
-  }
-
-  private Response tryToMakeExecutionLog(Request request, PageHistory pageHistory) {
-    Date resultDate;
     String date = request.getInput("resultDate");
+    Date resultDate;
     if (date == null || "latest".equals(date)) {
       resultDate = pageHistory.getLatestDate();
     } else {
       try {
         resultDate = dateFormat.parse(date);
       } catch (ParseException e) {
-        throw new RuntimeException("Invalid date format provided", e);
+        throw new IllegalArgumentException("Invalid date format provided: should be " + PageHistory.TEST_RESULT_FILE_DATE_PATTERN + ".", e);
       }
     }
     TestResultRecord testResultRecord = pageHistory.get(resultDate);
@@ -56,7 +51,7 @@ public class ExecutionLogResponder implements SecureResponder {
     }
   }
 
-  private Response makeCorruptFileResponse(Request request) {
+  private Response makeCorruptFileResponse(Request request) throws Exception {
     return new ErrorResponder("Corrupt Test Result File").makeResponse(context, request);
   }
 

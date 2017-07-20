@@ -19,7 +19,7 @@ import fitnesse.wiki.fs.FileVersion;
 
 public class CreateDirectoryResponder implements SecureResponder {
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) throws IOException {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     SimpleResponse response = new SimpleResponse();
 
     String resource = request.getResource();

@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 public class GenericEnumConverterTest extends AbstractConverterTest<EnumToTest, GenericEnumConverter<EnumToTest>> {
 
   public GenericEnumConverterTest() {
-    super(new GenericEnumConverter<EnumToTest>(EnumToTest.class));
+    super(new GenericEnumConverter<>(EnumToTest.class));
   }
 
   /*

@@ -49,9 +49,17 @@ public class DecisionTableCaller {
   protected ColumnHeaderStore funcStore = new ColumnHeaderStore();
   protected int columnHeaders;
   private final Table table;
+  private final boolean emptyCellsUseValueFromFirstDataRow;
+  private int firstDataRow = 2;
 
   public DecisionTableCaller(Table table) {
     this.table = table;
+    this.emptyCellsUseValueFromFirstDataRow =false;
+  }
+
+  public DecisionTableCaller(Table table, boolean emptyCellsUseValueFromFirstDataRow) {
+	this.table = table;
+	this.emptyCellsUseValueFromFirstDataRow = emptyCellsUseValueFromFirstDataRow;
   }
 
   protected void gatherConstructorParameters() {
@@ -79,6 +87,17 @@ public class DecisionTableCaller {
         varStore.add(cell, col);
       }
     }
+  }
+
+  protected String getDTCellContents(int col, int row){
+    String value = table.getCellContents(col, row);
+    if (shoudUseBaseLineValue(value))
+      value = table.getCellContents(col, firstDataRow );
+    return value;
+  }
+
+  private boolean shoudUseBaseLineValue(String valueToSet) {
+    return emptyCellsUseValueFromFirstDataRow && valueToSet != null &&  valueToSet.isEmpty();
   }
 
   protected void checkRow(int row) throws SyntaxError {

@@ -2,16 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems;
 
-import java.io.IOException;
-
 public interface TestSystemListener {
-  void testSystemStarted(TestSystem testSystem) throws IOException;
+  void testSystemStarted(TestSystem testSystem);
 
-  void testOutputChunk(String output) throws IOException;
+  void testOutputChunk(String output);
 
-  void testStarted(TestPage testPage) throws IOException;
+  void testStarted(TestPage testPage);
 
-  void testComplete(TestPage testPage, TestSummary testSummary) throws IOException;
+  void testComplete(TestPage testPage, TestSummary testSummary);
 
   void testSystemStopped(TestSystem testSystem, Throwable cause /* may be null */);
 

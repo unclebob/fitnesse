@@ -7,10 +7,13 @@ import fitnesse.FitNesseContext;
 import fitnesse.Updater;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.reporting.ExitCodeListener;
+import fitnesse.socketservice.PlainServerSocketFactory;
+import fitnesse.socketservice.SslServerSocketFactory;
 import fitnesse.updates.WikiContentUpdater;
 
 import java.io.*;
 import java.net.BindException;
+import java.net.ServerSocket;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -129,10 +132,24 @@ public class FitNesseMain {
         return exitCodeListener.getFailCount();
       } else {
         LOG.info("Starting FitNesse on port: " + context.port);
-        context.fitNesse.start();
+
+        ServerSocket serverSocket = createServerSocket(context);
+        context.fitNesse.start(serverSocket);
       }
     }
     return null;
+  }
+
+  private ServerSocket createServerSocket(FitNesseContext context) throws IOException {
+    String protocol = context.getProperty(FitNesseContext.WIKI_PROTOCOL_PROPERTY);
+    boolean useHTTPS = (protocol != null && protocol.equalsIgnoreCase("https"));
+    String clientAuth = context.getProperty(FitNesseContext.SSL_CLIENT_AUTH_PROPERTY);
+    final boolean sslClientAuth = (clientAuth != null && clientAuth.equalsIgnoreCase("required"));
+    final String sslParameterClassName = context.getProperty(FitNesseContext.SSL_PARAMETER_CLASS_PROPERTY);
+
+    return (useHTTPS
+      ? new SslServerSocketFactory(sslClientAuth, sslParameterClassName)
+      : new PlainServerSocketFactory()).createServerSocket(context.port);
   }
 
   private void executeSingleCommand(FitNesse fitNesse, String command, String outputFile) throws Exception {
@@ -162,7 +179,7 @@ public class FitNesseMain {
     // This message is on standard output for backward compatibility with Jenkins Fitnesse plugin.
     // (ConsoleHandler of JUL uses standard error output for all messages).
     System.out.println("Bootstrapping FitNesse, the fully integrated standalone wiki and acceptance testing framework.");
-    
+
     LOG.info("root page: " + context.getRootPage());
     LOG.info("logger: " + (context.logger == null ? "none" : context.logger.toString()));
     LOG.info("authenticator: " + context.authenticator);

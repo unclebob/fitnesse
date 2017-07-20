@@ -42,11 +42,6 @@ public class Request {
   private volatile boolean hasBeenParsed;
   private long bytesParsed = 0;
 
-  /**
-   * If SSL is being used the DN of the peer certificate, otherwise null.
-   */
-  private String peerDn;
-
   public static Set<String> buildAllowedMethodList() {
     Set<String> methods = new HashSet<>(20);
     methods.add("GET");
@@ -179,7 +174,7 @@ public class Request {
   protected void parseQueryString(String queryString) {
     Matcher match = queryStringPattern.matcher(queryString);
     while (match.find()) {
-      String key = match.group(1);
+      String key = decodeContent(match.group(1));
       String value = decodeContent(match.group(2));
       addUniqueInputString(key, value);
     }
@@ -306,16 +301,12 @@ public class Request {
     return hasBeenParsed;
   }
 
-  public String getUserpass(String headerValue) {
+  public String getUserpass(String headerValue) throws UnsupportedEncodingException {
     String encodedUserpass = headerValue.substring(6);
-    try {
-      return Base64.decode(encodedUserpass);
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
-    }
+    return Base64.decode(encodedUserpass);
   }
 
-  public void getCredentials() {
+  public void getCredentials() throws UnsupportedEncodingException {
     if (authorizationUsername != null)
       return;
     if (hasHeader("Authorization")) {
@@ -335,14 +326,6 @@ public class Request {
 
   public String getAuthorizationPassword() {
     return authorizationPassword;
-  }
-
-  public String getPeerDn() {
-    return peerDn;
-  }
-
-  public void setPeerDn(String peerDn) {
-    this.peerDn = peerDn;
   }
 
   public long numberOfBytesParsed() {
