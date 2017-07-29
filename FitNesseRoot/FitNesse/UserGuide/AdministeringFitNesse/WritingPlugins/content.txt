@@ -35,3 +35,10 @@ The methods ''getAuthenticator()'' should return one instance. If multiple plugi
 The same rules are applicable for ''getContentFilter()''.
 
 The ''registerXxx'' methods are invoked with the appropriate provider or registry. It is the responsibility of the plugin to register it's plugins with those providers.
+
+!2 Documentation
+Every plugin should provide documentation which should be placed in the .PlugIns folder. 
+Each plugin should add exactly one overview page directly into .PlugIns and further pages as childs to the overview page.
+ * The name of the overview page should match the plugins name.
+ * The overview page should have a lengthy help text which explains what the plugin is used for
+ * The overview page should have a tag which is identical to the current version of the plugin.

@@ -46,6 +46,16 @@ public class FrontMatterTest {
   }
 
   @Test
+  public void parseFrontMatterWithTextAndWindowsLineEndings() {
+    assertParses(
+      "---\r\n" +
+        "test\r\n" +
+        "---\r\n" +
+        "WikiText",
+      "SymbolList[FrontMatter[KeyValue[Text, Text]], Text]");
+  }
+
+  @Test
   public void parseFrontMatterWithKeyValueText() {
     assertParses(
         "---\n" +

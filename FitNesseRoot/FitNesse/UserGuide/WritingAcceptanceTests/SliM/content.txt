@@ -17,8 +17,9 @@ If you want a test page to be run under SLIM, you simply set the TEST_SYSTEM var
 The first cell of a slim table tells you what kind of table it is. Here are the table types so far:
 
 | [[Decision Table][>DecisionTable]] | Supplies the inputs and outputs for decisions. This is similar to the Fit Column Fixture |
-| [[Dynamic Decision Table][>DynamicDecisionTable]] | Has the same syntax as a >DecisionTable, but passes the column headers as parameters to the fixture. |
-| [[Hybrid Decision Table][.FitNesse.SuiteAcceptanceTests.SuiteSlimTests.HybridDecisionTable]]| Combines the advantages of a Decision and a Dynamic Decision Table.|
+| [[Baseline Decision Table][.FitNesse.SuiteAcceptanceTests.SuiteSlimTests.BaseLineDecisionTable]]|Almost identical to a >DecisionTable but more readable for very big tables with many columns as only the changed values from one line to the baseline must be specified. The fixture implementation is identical to >DecisionTable.|
+| [[Dynamic Decision Table][>DynamicDecisionTable]]                                               |Has the same syntax as a >DecisionTable, but differs in the fixture implementation. It passes the column headers as parameters to the fixture.                                                                                     |
+| [[Hybrid Decision Table][.FitNesse.SuiteAcceptanceTests.SuiteSlimTests.HybridDecisionTable]]    |Combines the advantages in the fixture implementation of a Decision and a Dynamic Decision Table. Also supported by a [[Baseline Decision Table][.FitNesse.SuiteAcceptanceTests.SuiteSlimTests.BaseLineDecisionTable]]             |
 | [[Query Table][>QueryTable]] | Supplies the expected results of a query. This is similar to the Fit Row Fixture |
 | [[Subset Query Table][>SubsetQueryTable]] | Supplies a subset of the expected results of a query. |
 | [[Ordered query Table][>OrderedQueryTable]] | Supplies the expected results of a query. The rows are expected to be in order. This is similar to the Fit Row Fixture |

@@ -3,7 +3,6 @@
 package fitnesse.testsystems.slim.tables;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -176,44 +175,31 @@ public class ScriptTable extends SlimTable {
 
   protected List<SlimAssertion> assertionsFromScenario(int row) throws TestExecutionException {
     int lastCol = table.getColumnCountInRow(row) - 1;
-    String actionName = getActionNameStartingAt(0, lastCol, row);
-    ScenarioTable scenario = getTestContext().getScenario(Disgracer.disgraceClassName(
-            actionName.replace(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX, "")));
+    String scenarioName = getScenarioNameFromAlternatingCells(lastCol, row);
+    ScenarioTable scenario = getTestContext().getScenario(scenarioName);
+    String[] args = null;
     List<SlimAssertion> assertions = new ArrayList<>();
     if (scenario != null) {
-      scenario.setCustomComparatorRegistry(customComparatorRegistry);
-      String[] args = getArgumentsStartingAt(1, lastCol, row, assertions);
-      assertions.addAll(scenario.call(args, this, row));
+      args = getArgumentsStartingAt(1, lastCol, row, assertions);
     } else if (lastCol == 0) {
-      String firstNameCell = table.getCellContents(0, row);
-      for (ScenarioTable s : getScenariosWithMostArgumentsFirst()) {
-        s.setCustomComparatorRegistry(customComparatorRegistry);
-        String[] args = s.matchParameters(firstNameCell);
-        if (args != null) {
-          assertions.addAll(s.call(args, this, row));
-          break;
-        }
+      String cellContents = table.getCellContents(0, row);
+      scenario = getTestContext().getScenarioByPattern(cellContents);
+      if (scenario != null) {
+        args = scenario.matchParameters(cellContents);
       }
+    }
+    if (scenario != null) {
+      scenario.setCustomComparatorRegistry(customComparatorRegistry);
+      assertions.addAll(scenario.call(args, this, row));
     }
     return assertions;
   }
 
-  private List<ScenarioTable> getScenariosWithMostArgumentsFirst() {
-    Collection<ScenarioTable> scenarioMap = getTestContext().getScenarios();
-    List<ScenarioTable> scenarios = new ArrayList<>(scenarioMap);
-    Collections.sort(scenarios, new ScenarioTableLengthComparator());
-    return scenarios;
+  protected String getScenarioNameFromAlternatingCells(int endingCol, int row) {
+    String actionName = getActionNameStartingAt(0, endingCol, row);
+    String simpleName = actionName.replace(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX, "");
+    return Disgracer.disgraceClassName(simpleName);
   }
-
-  private static class ScenarioTableLengthComparator implements java.util.Comparator<ScenarioTable> {
-    @Override
-    public int compare(ScenarioTable st1, ScenarioTable st2) {
-      int size1 = st1.getInputs().size();
-      int size2 = st2.getInputs().size();
-      return size2 - size1;
-    }
-  }
-
 
   protected List<SlimAssertion> note(int row) {
     return Collections.emptyList();

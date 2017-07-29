@@ -122,7 +122,7 @@ public class CommandRunningFitClient extends FitClient {
     private void makeCommandRunner(int port, int ticketNumber) throws UnknownHostException {
       String[] fitArguments = { getLocalhostName(), Integer.toString(port), Integer.toString(ticketNumber) };
       String[] commandLine = (String[]) ArrayUtils.addAll(command, fitArguments);
-      commandRunner = new CommandRunner(commandLine, "", environmentVariables, executionLogListener);
+      commandRunner = new CommandRunner(commandLine, environmentVariables, executionLogListener);
     }
 
     @Override
@@ -198,6 +198,7 @@ public class CommandRunningFitClient extends FitClient {
               fitClient.notify();
               Exception e = new Exception(
                       "FitClient: external process terminated before a connection could be established.");
+              // TODO: use executionLogListener.exceptionOccurred(e)
               commandRunner.exceptionOccurred(e);
               fitClient.exceptionOccurred(e);
             }

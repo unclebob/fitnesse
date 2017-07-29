@@ -38,7 +38,10 @@ To reuse one of the existing styles as an entry point, create a custom css file 
 
 {{{
 @import url(fitnesse_straight.css); 
-}}}Now you can simply add custom elements to it.
+}}}
+
+Now you can simply add custom elements to it.
+For example, changing the logo to something fitting your project can be done by placing a 200 x 37 logo file names ''fitnesse-logo-small.png'' file in files/images/ and then shift-f5 reloading the page.
 
 !3 Create a theme based on Bootstrap
 The Bootstrap theme took a slightly different route. It's using a subfolder for it's resources. The skeleton.vm template  ([[files/fitnesse/bootstrap/templates/skeleton.vm][http://files/fitnesse/bootstrap/templates/skeleton.vm]]) contains the general markup and layout. It also contains references to the other resources used. You can find the resources used to compile the bootstrap style (lesscss templates) in fitnesse.jar: fitnesse/resources/bootstrap/less. Use those as a basis for the custom theme. There are a few more template files that are overwritten by the bootstrap theme. If the theme needs to be reusable, refer (''#parse'') the the bootstrap templates for a start and add your own customisations along the way.

@@ -23,7 +23,7 @@ FitNesse is running on port: ${FITNESSE_PORT}
 
 Use a non-default port number, so SLIM tests systems can be run as well:
 
-!define SLIM_PORT {9086}
+!define SLIM_PORT {1}
 ----
 !2 ''Utilities''
  * SuiteAcceptanceTests.PageHeader

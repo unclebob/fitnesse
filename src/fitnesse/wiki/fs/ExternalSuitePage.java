@@ -1,6 +1,6 @@
 package fitnesse.wiki.fs;
 
-import fitnesse.wiki.BaseWikitextPage;
+import fitnesse.wiki.*;
 import fitnesse.wikitext.parser.VariableSource;
 
 import java.io.File;
@@ -9,10 +9,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PageType;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.WikiPage;
 import fitnesse.util.Clock;
 
 public class ExternalSuitePage extends BaseWikitextPage {
@@ -86,10 +82,14 @@ public class ExternalSuitePage extends BaseWikitextPage {
     return children;
   }
 
-  private Boolean hasHtmlChild(File path) {
+  private boolean hasHtmlChild(File path) {
+    return hasHtmlChild(fileSystem, path);
+  }
+
+  static boolean hasHtmlChild(FileSystem fileSystem, File path) {
     if (path.getName().endsWith(HTML)) return true;
     for (String child : fileSystem.list(path)) {
-      if (hasHtmlChild(new File(path, child))) return true;
+      if (hasHtmlChild(fileSystem, new File(path, child))) return true;
     }
     return false;
   }
@@ -97,11 +97,11 @@ public class ExternalSuitePage extends BaseWikitextPage {
   private PageData makePageData() {
     WikiPageProperties properties = new WikiPageProperties();
     properties.set(PageType.SUITE.toString());
-    properties.set(PageData.PropertyWHERE_USED);
-    properties.set(PageData.PropertyRECENT_CHANGES);
-    properties.set(PageData.PropertyFILES);
-    properties.set(PageData.PropertyVERSIONS);
-    properties.set(PageData.PropertySEARCH);
+    properties.set(WikiPageProperty.WHERE_USED);
+    properties.set(WikiPageProperty.RECENT_CHANGES);
+    properties.set(WikiPageProperty.FILES);
+    properties.set(WikiPageProperty.VERSIONS);
+    properties.set(WikiPageProperty.SEARCH);
     properties.setLastModificationTime(Clock.currentDate());
     return new PageData("!contents", properties);
   }

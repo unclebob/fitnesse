@@ -36,7 +36,8 @@ public class WikiFilePageTest {
     final List<WikiPage> children = root.getChildren();
 
     assertThat(children, hasSize(1));
-    assertThat(((WikiFilePage) children.get(0)).getFileSystemPath().getPath(), is("root/testPage"));
+    assertThat(((WikiFilePage) children.get(0)).getFileSystemPath().getPath(),
+        is("root" + File.separator + "testPage"));
     assertThat(children.get(0).getName(), is("testPage"));
   }
 
@@ -50,7 +51,8 @@ public class WikiFilePageTest {
     final List<WikiPage> children = root.getChildren();
 
     assertThat(children, hasSize(1));
-    assertThat(((WikiFilePage) children.get(0)).getFileSystemPath().getPath(), is("root/testPage"));
+    assertThat(((WikiFilePage) children.get(0)).getFileSystemPath().getPath(),
+        is("root" + File.separator + "testPage"));
     assertThat(children.get(0).getName(), is("testPage"));
   }
 

@@ -105,3 +105,30 @@ There are a few things to keep in mind when working from an IDE:
    `Use gradle wrapper task configuration`. Use Java 7 or newer. It should find source and test folders and
     show you two modules: `fitnesse` and `:buildSrc`; import both.
 5. Open the Gradle Build tool, select the task `copyRuntimeLibs` and (right-click) mark it as _Execute After Make_.
+
+### The release process
+
+Software artifacts (the FitNesse jar, the standalone jar and POM files) are uploaded to [Bintray](https://bintray.com/fitnesse). There are two repositories:
+
+* _Edge_ contains snapshot builds
+* _Release_ contains the official release builds. 
+
+In both cases you'll need sufficient permissions to perform a release.
+
+#### Edge builds
+
+Edge builds can be done at any time
+
+   ```
+   $ ./gradlew snapshotRelease
+   ```
+
+#### Release builds
+
+Release builds denote "blessed" releases. Those are tagged in Git along with being released. The releases will be available from
+both Maven Central and JCenter.
+
+   ```
+   $ ./gradlew release
+   ```
+

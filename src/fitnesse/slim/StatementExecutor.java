@@ -7,10 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import fitnesse.slim.fixtureInteraction.DefaultInteraction;
-
-import static fitnesse.slim.SlimException.isStopSuiteException;
-import static fitnesse.slim.SlimException.isStopTestException;
+import static fitnesse.slim.SlimException.*;
 import static java.lang.String.format;
 
 /**
@@ -27,7 +24,7 @@ public class StatementExecutor implements StatementExecutorInterface {
   private Pattern patternOfFixturesHandlingSymbols = null;
 
   public StatementExecutor() {
-    this(new SlimExecutionContext(new DefaultInteraction()));
+    this(new SlimExecutionContext(JavaSlimFactory.createInteraction(null)));
   }
 
   public StatementExecutor(SlimExecutionContext context) {
