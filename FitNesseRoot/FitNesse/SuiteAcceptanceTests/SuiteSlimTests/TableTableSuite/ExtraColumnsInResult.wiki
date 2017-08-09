@@ -1,0 +1,14 @@
+---
+Test
+---
+|import            |
+|fitnesse.slim.test|
+
+!1 A Table Table fixture can return extra columns in the result
+
+Even if the table in the test has only one column, if the rows in the result have two columns, they will be displayed.
+
+|table: Table Table Inc First Col|
+|1          |
+|2          |
+|3          |

@@ -87,7 +87,7 @@ public class TableTable extends SlimTable {
   }
 
   private void extendExistingRows(Table table, List<List<Object>> tableResults) {
-    for (int row = 1; row < tableResults.size(); row++)
+    for (int row = 1; row <= tableResults.size(); row++)
       extendRow(table, row, tableResults.get(row - 1));
   }
 
