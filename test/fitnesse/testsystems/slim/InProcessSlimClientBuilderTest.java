@@ -8,16 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class InProcessSlimClientBuilderTest {
   @Before
@@ -29,7 +23,7 @@ public class InProcessSlimClientBuilderTest {
   @Test
   public void parseInteractionFlags() {
     Descriptor descriptor = mock(Descriptor.class);
-    when(descriptor.getVariable("slim.flags")).thenReturn("-i "+InteractionDemo.class.getName());
+    when(descriptor.getVariable("slim.flags")).thenReturn("-i " + InteractionDemo.class.getName());
 
     InProcessSlimClientBuilder slimClientBuilder = new InProcessSlimClientBuilder(descriptor);
 
@@ -43,9 +37,9 @@ public class InProcessSlimClientBuilderTest {
   }
 
   @Test
-  public void createSlimClientWithFixtureInteraction()  {
+  public void createSlimClientWithFixtureInteraction() {
     Descriptor descriptor = mock(Descriptor.class);
-    when(descriptor.getVariable("slim.flags")).thenReturn("-i "+InteractionDemo.class.getName());
+    when(descriptor.getVariable("slim.flags")).thenReturn("-i " + InteractionDemo.class.getName());
 
     InProcessSlimClientBuilder slimClientBuilder = spy(new InProcessSlimClientBuilder(descriptor));
 
