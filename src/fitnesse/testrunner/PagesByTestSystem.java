@@ -27,7 +27,7 @@ public class PagesByTestSystem {
     Map<WikiPageIdentity, List<WikiPage>> pagesByTestSystem = new HashMap<>(2);
 
     for (WikiPage wikiPage : pages) {
-      if (!SuiteContentsFinder.isSuiteSetupOrTearDown(wikiPage)) {
+      if (!WikiTestPage.isSuiteSetupOrTearDown(wikiPage)) {
         WikiPageIdentity identity = new WikiPageIdentity(wikiPage);
         getOrMakeListWithinMap(pagesByTestSystem, identity).add(wikiPage);
       }

@@ -26,12 +26,12 @@ public class PipeBasedSocketFactory implements ClientSocketFactory {
   private class PipeBasedSocket extends Socket {
     @Override
     public InputStream getInputStream() throws IOException {
-      return commandRunner.getReader();
+      return commandRunner.getInputStream();
     }
 
     @Override
     public OutputStream getOutputStream() throws IOException {
-      return commandRunner.getWriter();
+      return commandRunner.getOutputStream();
     }
 
     @Override

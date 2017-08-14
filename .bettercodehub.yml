@@ -1,0 +1,9 @@
+component_depth: 1
+languages:
+- java
+- javascript
+exclude:
+- /extra/.*
+- /src/fitnesse/resources/codemirror/.*
+- /src/fitnesse/resources/javascript/jquery.*.js
+- /src/fitnesse/resources/bootstrap/js/bootstrap.js

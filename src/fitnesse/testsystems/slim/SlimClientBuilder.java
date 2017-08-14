@@ -15,6 +15,9 @@ import fitnesse.socketservice.PlainServerSocketFactory;
 import fitnesse.socketservice.SslClientSocketFactory;
 import fitnesse.testsystems.*;
 
+import static fitnesse.slim.SlimPipeSocket.STDERR_PREFIX;
+import static fitnesse.slim.SlimPipeSocket.STDOUT_PREFIX;
+
 public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   public static final String SLIM_PORT = "SLIM_PORT";
   public static final String SLIM_HOST = "SLIM_HOST";
@@ -51,6 +54,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
       return new CommandRunner(buildCommand(),
         createClasspathEnvironment(getClassPath()),
           getExecutionLogListener(), determineTimeout()) {
+
         @Override
         protected void redirectOutputs(Process process, final ExecutionLogListener executionLogListener) throws IOException {
           InputStream stderr = process.getErrorStream();
@@ -59,13 +63,11 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
             public void write(String output) {
               // Separate StdOut and StdErr and remove prefix"
               String originalMsg;
-              originalMsg = extractOriginalMessage(output,
-                  SlimPipeSocket.STDOUT_PREFIX);
+              originalMsg = extractOriginalMessage(output, STDOUT_PREFIX);
               if (originalMsg != null) {
                 executionLogListener.stdOut(originalMsg);
               } else {
-                originalMsg = extractOriginalMessage(output,
-                    SlimPipeSocket.STDERR_PREFIX);
+                originalMsg = extractOriginalMessage(output, STDERR_PREFIX);
                 if (originalMsg != null) {
                   executionLogListener.stdErr(originalMsg);
                   setCommandErrorMessage(originalMsg);
@@ -78,7 +80,7 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
             /**
              * This reverts the wrap that the LoggingOutputStream.flush method
              * is doing.
-             * 
+             *
              * @param prefixedMessage
              * @param level
              * @return == null : the message is not prefixed with the given
@@ -92,10 +94,11 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
               return null;
             }
 
-          }), "CommandRunner stdErr").start();
+          }), "CommandRunner stdOutErr").start();
 
         }
       };
+
     } else if (useManualStartForTestSystem()) {
       return new MockCommandRunner(
           "Connection to running SlimService: " + determineSlimHost() + ":"
