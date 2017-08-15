@@ -41,14 +41,7 @@ public class InProcessSlimClientBuilderTest {
     Descriptor descriptor = mock(Descriptor.class);
     when(descriptor.getVariable("slim.flags")).thenReturn("-i " + InteractionDemo.class.getName());
 
-    InProcessSlimClientBuilder slimClientBuilder = spy(new InProcessSlimClientBuilder(descriptor));
-
-    // Capture the interaction to see if it's the right one
-    ArgumentCaptor<FixtureInteraction> interactionCaptor = ArgumentCaptor.forClass(FixtureInteraction.class);
-
-    slimClientBuilder.build();
-    verify(slimClientBuilder).createSlimServer(interactionCaptor.capture(), anyInt(), anyBoolean());
-    FixtureInteraction interaction = interactionCaptor.getValue();
+    FixtureInteraction interaction = captureInteraction(descriptor);
 
     assertNotNull(interaction);
     assertNotEquals(DefaultInteraction.class, interaction.getClass());
@@ -60,16 +53,19 @@ public class InProcessSlimClientBuilderTest {
     Descriptor descriptor = spy(Descriptor.class);
     when(descriptor.getVariable("slim.flags")).thenReturn(null);
 
+    FixtureInteraction interaction = captureInteraction(descriptor);
+
+    assertNotNull(interaction);
+    assertEquals(DefaultInteraction.class, interaction.getClass());
+  }
+
+  private FixtureInteraction captureInteraction(Descriptor descriptor) {
     InProcessSlimClientBuilder slimClientBuilder = spy(new InProcessSlimClientBuilder(descriptor));
 
-    // Capture the interaction to see if it's the right one
     ArgumentCaptor<FixtureInteraction> interactionCaptor = ArgumentCaptor.forClass(FixtureInteraction.class);
 
     slimClientBuilder.build();
     verify(slimClientBuilder).createSlimServer(interactionCaptor.capture(), anyInt(), anyBoolean());
-    FixtureInteraction interaction = interactionCaptor.getValue();
-
-    assertNotNull(interaction);
-    assertEquals(DefaultInteraction.class, interaction.getClass());
+    return interactionCaptor.getValue();
   }
 }
