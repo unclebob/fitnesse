@@ -22,7 +22,9 @@ public class InProcessSlimClientBuilder extends ClientBuilder<SlimClient> {
   public SlimClient build() {
     final SlimService.Options options = SlimService.parseCommandLine(getSlimFlags());
     Integer statementTimeout = options != null ? options.statementTimeout : null;
-    SlimServer slimServer = createSlimServer(statementTimeout, isDebug());
+    FixtureInteraction interaction = options != null ? options.interaction : JavaSlimFactory.createInteraction(null);
+
+    SlimServer slimServer = createSlimServer(interaction, statementTimeout, isDebug());
     return new InProcessSlimClient(getTestSystemName(), slimServer, getExecutionLogListener());
   }
 
@@ -31,8 +33,7 @@ public class InProcessSlimClientBuilder extends ClientBuilder<SlimClient> {
     return "in-process";
   }
 
-  protected SlimServer createSlimServer(Integer timeout, boolean verbose) {
-    FixtureInteraction interaction = JavaSlimFactory.createInteraction(null);
+  protected SlimServer createSlimServer(FixtureInteraction interaction, Integer timeout, boolean verbose) {
     return JavaSlimFactory.createJavaSlimFactory(interaction, timeout, verbose).getSlimServer();
   }
 
