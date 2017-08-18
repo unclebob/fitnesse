@@ -1,18 +1,20 @@
 package fitnesse.wiki.search;
 
-import fitnesse.wiki.WikiPageUtil;
 import fitnesse.components.TraversalListener;
-import fitnesse.wiki.fs.InMemoryPage;
+import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SuiteSpecificationMatchFinderTest implements TraversalListener<WikiPage> {
 
@@ -71,6 +73,14 @@ public class SuiteSpecificationMatchFinderTest implements TraversalListener<Wiki
     assertPagesFound("TestPageOne", "ChildPage");
   }
 
+  @Test
+  public void shouldExcludeSkippedPages() throws Exception {
+    finder = new SuiteSpecificationMatchFinder(null, ".*", this);
+    prunePage("TestPageTwo");
+    finder.search(root);
+    assertPagesFound("RooT", "TestPageOne", "ChildPage");
+  }
+
   @Override
   public void process(WikiPage page) {
     hits.add(page);
@@ -84,4 +94,12 @@ public class SuiteSpecificationMatchFinderTest implements TraversalListener<Wiki
       assertTrue(pageNameList.contains(page.getName()));
     }
   }
+
+  private void prunePage(String pageName) {
+    WikiPage testPageTwo = root.getChildPage(pageName);
+    PageData data = testPageTwo.getData();
+    data.setAttribute(PageData.PropertyPRUNE);
+    testPageTwo.commit(data);
+  }
+
 }
