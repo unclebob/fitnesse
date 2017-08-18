@@ -16,11 +16,11 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class SuiteSpecificationMatchFinderTest implements TraversalListener<WikiPage> {
+public class SuiteSpecificationMatchFinderTest {
 
   WikiPage root;
-  private List<WikiPage> hits = new ArrayList<>();
   SuiteSpecificationMatchFinder finder;
+  HitCollector hits;
 
   @Before
   public void setUp() throws Exception {
@@ -28,71 +28,57 @@ public class SuiteSpecificationMatchFinderTest implements TraversalListener<Wiki
     WikiPageUtil.addPage(root, PathParser.parse("TestPageOne"), "TestPageOne has some testing content and a child\nThe meaning of life, the universe, and evertything is 42");
     WikiPageUtil.addPage(root, PathParser.parse("TestPageOne.ChildPage"), "ChildPage is a child of TestPageOne\nDo you believe in love after life?");
     WikiPageUtil.addPage(root, PathParser.parse("TestPageTwo"), "TestPageTwo has a bit of content too\nThere is no life without death");
-    hits.clear();
+    hits = new HitCollector();
   }
 
   @Test
   public void shouldBeAbleToFindAPageFromItsTitle() throws Exception {
-    finder = new SuiteSpecificationMatchFinder("Test","",this);
+    finder = new SuiteSpecificationMatchFinder("Test","",hits);
     finder.search(root);
-    assertPagesFound("TestPageOne","TestPageTwo");
+    hits.assertPagesFound("TestPageOne","TestPageTwo");
   }
 
   @Test
   public void shouldBeAbleToFindAPageFromItsContent() throws Exception {
-    finder = new SuiteSpecificationMatchFinder("","content",this);
+    finder = new SuiteSpecificationMatchFinder("","content",hits);
     finder.search(root);
-    assertPagesFound("TestPageOne","TestPageTwo");
+    hits.assertPagesFound("TestPageOne","TestPageTwo");
   }
 
   @Test
   public void shouldHandleNullTitle() throws Exception {
-    finder = new SuiteSpecificationMatchFinder(null,"child",this);
+    finder = new SuiteSpecificationMatchFinder(null,"child",hits);
     finder.search(root);
-    assertPagesFound("TestPageOne","ChildPage");
+    hits.assertPagesFound("TestPageOne","ChildPage");
   }
 
   @Test
   public void shouldHandleNullContent() throws Exception {
-    finder = new SuiteSpecificationMatchFinder("Child",null,this);
+    finder = new SuiteSpecificationMatchFinder("Child",null,hits);
     finder.search(root);
-    assertPagesFound("ChildPage");
+    hits.assertPagesFound("ChildPage");
   }
 
   @Test
   public void shouldBeAbleToUseRegExForContent() throws Exception {
-    finder = new SuiteSpecificationMatchFinder(null,"has.*content", this);
+    finder = new SuiteSpecificationMatchFinder(null,"has.*content", hits);
     finder.search(root);
-    assertPagesFound("TestPageOne", "TestPageTwo");
+    hits.assertPagesFound("TestPageOne", "TestPageTwo");
   }
 
   @Test
   public void shouldBeAbleToFindContentOverManyLines() throws Exception {
-    finder = new SuiteSpecificationMatchFinder(null, "child.*life", this);
+    finder = new SuiteSpecificationMatchFinder(null, "child.*life", hits);
     finder.search(root);
-    assertPagesFound("TestPageOne", "ChildPage");
+    hits.assertPagesFound("TestPageOne", "ChildPage");
   }
 
   @Test
   public void shouldExcludeSkippedPages() throws Exception {
-    finder = new SuiteSpecificationMatchFinder(null, ".*", this);
+    finder = new SuiteSpecificationMatchFinder(null, ".*", hits);
     prunePage("TestPageTwo");
     finder.search(root);
-    assertPagesFound("RooT", "TestPageOne", "ChildPage");
-  }
-
-  @Override
-  public void process(WikiPage page) {
-    hits.add(page);
-  }
-
-  private void assertPagesFound(String... pageNames) throws Exception {
-    assertEquals(pageNames.length, hits.size());
-
-    List<String> pageNameList = Arrays.asList(pageNames);
-    for (WikiPage page: hits) {
-      assertTrue(pageNameList.contains(page.getName()));
-    }
+    hits.assertPagesFound("RooT", "TestPageOne", "ChildPage");
   }
 
   private void prunePage(String pageName) {
@@ -101,5 +87,22 @@ public class SuiteSpecificationMatchFinderTest implements TraversalListener<Wiki
     data.setAttribute(PageData.PropertyPRUNE);
     testPageTwo.commit(data);
   }
+}
 
+class HitCollector implements TraversalListener<WikiPage> {
+  private List<WikiPage> hits = new ArrayList<>();
+
+  @Override
+  public void process(WikiPage page) {
+    hits.add(page);
+  }
+
+  public void assertPagesFound(String... pageNames) throws Exception {
+    assertEquals(pageNames.length, hits.size());
+
+    List<String> pageNameList = Arrays.asList(pageNames);
+    for (WikiPage page: hits) {
+      assertTrue(pageNameList.contains(page.getName()));
+    }
+  }
 }
