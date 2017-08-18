@@ -1,21 +1,23 @@
 package fitnesse.testrunner;
 
-import java.util.LinkedList;
-
-import fitnesse.wiki.search.SuiteSpecificationMatchFinder;
 import fitnesse.components.TraversalListener;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.search.SuiteSpecificationMatchFinder;
 
-public class SuiteSpecificationRunner implements TraversalListener<WikiPage> {
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+public class SuiteSpecificationRunner {
   public String titleRegEx;
   public String contentRegEx;
-  public LinkedList<WikiPage> testPageList = new LinkedList<>();
   public WikiPage searchRoot;
   public PageCrawler crawler;
+  private SuiteSpecificationTraverser traverser = new SuiteSpecificationTraverser();
 
 
   public SuiteSpecificationRunner(WikiPage root) {
@@ -27,7 +29,7 @@ public class SuiteSpecificationRunner implements TraversalListener<WikiPage> {
 
 
   public void findPageMatches() {
-    SuiteSpecificationMatchFinder finder = new SuiteSpecificationMatchFinder(titleRegEx, contentRegEx, this);
+    SuiteSpecificationMatchFinder finder = new SuiteSpecificationMatchFinder(titleRegEx, contentRegEx, traverser);
     finder.search(searchRoot);
   }
 
@@ -110,6 +112,25 @@ public class SuiteSpecificationRunner implements TraversalListener<WikiPage> {
   }
 
 
+  public static boolean isASuiteSpecificationsPage(String page) {
+    HtmlTableScanner scanner = new HtmlTableScanner(page);
+    if (scanner.getTableCount() > 0) {
+      Table table = scanner.getTable(0);
+      return isASuiteSpecificationsTable(table);
+    }
+    return false;
+  }
+
+  public List<WikiPage> testPages() {
+    return traverser.testPages();
+  }
+}
+
+
+class SuiteSpecificationTraverser implements TraversalListener<WikiPage> {
+
+  private LinkedList<WikiPage> testPageList = new LinkedList<>();
+
   @Override
   public void process(WikiPage page) {
     for (WikiPage hit : testPageList) {
@@ -120,12 +141,7 @@ public class SuiteSpecificationRunner implements TraversalListener<WikiPage> {
       testPageList.add(page);
   }
 
-  public static boolean isASuiteSpecificationsPage(String page) {
-    HtmlTableScanner scanner = new HtmlTableScanner(page);
-    if (scanner.getTableCount() > 0) {
-      Table table = scanner.getTable(0);
-      return isASuiteSpecificationsTable(table);
-    }
-    return false;
+  public List<WikiPage> testPages() {
+    return new ArrayList<>(testPageList);
   }
 }

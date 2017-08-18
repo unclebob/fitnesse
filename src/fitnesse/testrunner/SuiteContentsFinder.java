@@ -28,7 +28,7 @@ public class SuiteContentsFinder {
     if (SuiteSpecificationRunner.isASuiteSpecificationsPage(content)) {
       SuiteSpecificationRunner runner = new SuiteSpecificationRunner(wikiRootPage);
       if (runner.getPageListFromPageContent(content))
-        testPageList = runner.testPageList;
+        testPageList = runner.testPages();
     } else {
       testPageList = getAllTestPagesUnder();
       List<WikiPage> referencedPages = gatherCrossReferencedTestPages();
