@@ -24,7 +24,7 @@ public abstract class BaseWikiPage implements WikiPage {
 
   @Override
   public PageCrawler getPageCrawler() {
-    return new PageCrawlerImpl(this);
+    return new PageCrawler(this);
   }
 
   @Override

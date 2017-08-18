@@ -20,7 +20,7 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
   private WikiPage child1;
   private WikiPage child2;
   private WikiPage grandChild1;
-  private PageCrawlerImpl crawler;
+  private PageCrawler crawler;
   private WikiPagePath page1Path;
   private WikiPagePath child1FullPath;
   private WikiPagePath page2Path;
@@ -29,7 +29,7 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = new PageCrawlerImpl(root);
+    crawler = new PageCrawler(root);
 
     page1Path = PathParser.parse("PageOne");
     page2Path = PathParser.parse("PageTwo");
@@ -50,7 +50,7 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
 
   @Test
   public void testPageExistsUsingPath() throws Exception {
-    PageCrawler page1Crawler = new PageCrawlerImpl(page1);
+    PageCrawler page1Crawler = new PageCrawler(page1);
     assertTrue(page1Crawler.pageExists(PathParser.parse("ChildOne")));
     assertTrue(crawler.pageExists(child1FullPath));
     assertTrue(crawler.pageExists(grandChild1FullPath));
@@ -174,7 +174,7 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
     data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymLink", "." + page1.getName());
     child1.commit(data);
 
-    crawler = new PageCrawlerImpl(page1);
+    crawler = new PageCrawler(page1);
     crawler.traverse(this);
 
     assertEquals(traversedPages.toString(), 5, traversedPages.size());
