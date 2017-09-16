@@ -97,6 +97,8 @@ task compileBootstrap(type: LessCompiler) {
 task createUpdateLists(type: WikiFileListBuilderTask) {
   outputDirectory = "${sourceSets.main.output.resourcesDir}/Resources"
   doNotReplaceFiles = [
+    "FitNesseRoot/content.txt",
+    "FitNesseRoot/properties.xml",
     "FitNesseRoot/FrontPage/content.txt",
     "FitNesseRoot/FrontPage/properties.xml",
     "FitNesseRoot/PageHeader/content.txt",
@@ -150,6 +152,8 @@ jar {
   dependsOn createUpdateLists
   into('Resources') {
     from('.') {
+      include 'FitNesseRoot/content.txt'
+      include 'FitNesseRoot/properties.xml'
       include 'FitNesseRoot/FitNesse/**/content.txt'
       include 'FitNesseRoot/FitNesse/**/properties.xml'
       include 'FitNesseRoot/FrontPage/**/content.txt'
