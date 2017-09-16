@@ -29,6 +29,8 @@
 		<include name="FrontPage/**"/>
 		<include name="PageHeader/**"/>
 		<include name="PageFooter/**"/>
+		<include name="content.txt"/>
+		<include name="properties.xml"/>
 		<include name="TemplateLibrary/**"/>
 		<exclude name="**/*.zip"/>
 	</zipfileset>
