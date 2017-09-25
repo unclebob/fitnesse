@@ -7,6 +7,8 @@ public class WikiPageIdentity {
   public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
   public static final String TEST_RUNNER = "TEST_RUNNER";
   public static final String TEST_SYSTEM = "TEST_SYSTEM";
+  public static final String MESSAGE_BROKER_ADDRESS = "MESSAGE_BROKER_ADDRESS";
+  public static final String QUEUE_NAME = "QUEUE_NAME";
   private WikiPage page;
 
   public WikiPageIdentity(WikiPage page) {
