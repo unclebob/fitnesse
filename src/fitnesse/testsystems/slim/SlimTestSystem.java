@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import fitnesse.components.IntermediateResultPublisher;
+import fitnesse.responders.run.SuiteResponder;
 import fitnesse.slim.instructions.AssignInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.*;
@@ -88,6 +90,8 @@ public abstract class SlimTestSystem implements TestSystem {
     try {
       processAllTablesOnPage(pageToTest);
       testComplete(pageToTest, testContext.getTestSummary());
+      if (SuiteResponder.publish)
+        IntermediateResultPublisher.publishStatusToRMI(pageToTest, testContext.getTestSummary());
     } catch (Exception e) {
       stopTestSystem(e);
       throw new TestExecutionException(e);

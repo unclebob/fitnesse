@@ -7,15 +7,14 @@ import org.json.JSONObject;
 
 import java.rmi.Naming;
 
-public class MessagePublisher {
-  public static void publishStatusToJMSSend(TestPage sourcePage, TestSummary summary) {
+public class IntermediateResultPublisher {
+  public static void publishStatusToRMI(TestPage sourcePage, TestSummary summary) {
     try {
-
       String serverAddress = sourcePage.getVariable(WikiPageIdentity.INTERMEDIATE_RESULT_PUBLISHER_SERVER_ADDRESS);
-      RMIInterface look_up = (RMIInterface) Naming.lookup(serverAddress);
-      look_up.publish(getStringifiedMessageToPublish(sourcePage, summary));
+      RMIInterface lookUpServer = (RMIInterface) Naming.lookup(serverAddress);
+      lookUpServer.publish(getStringifiedMessageToPublish(sourcePage, summary));
     } catch (Exception e) {
-      System.out.println("Error during publishing result to JMS: " + e.toString());
+      System.out.println("Error during publishing result : " + e.toString());
 
     }
   }
