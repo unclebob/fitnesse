@@ -2,6 +2,7 @@ package fitnesse.wiki.search;
 
 import fitnesse.components.TraversalListener;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiSourcePage;
 import fitnesse.wiki.WikiWordReference;
 import fitnesse.wikitext.parser.*;
 

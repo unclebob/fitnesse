@@ -5,6 +5,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPageProperty;
+import fitnesse.wiki.WikiSourcePage;
 import util.GracefulNamer;
 
 import java.util.ArrayList;

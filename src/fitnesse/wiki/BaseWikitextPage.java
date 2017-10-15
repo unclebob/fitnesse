@@ -12,7 +12,6 @@ import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.VariableSource;
-import fitnesse.wikitext.parser.WikiSourcePage;
 
 import static fitnesse.wiki.PageType.STATIC;
 

@@ -8,6 +8,7 @@ import fitnesse.slim.protocol.SlimDeserializer;
 import fitnesse.slim.protocol.SlimSerializer;
 
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiSourcePage;
 import fitnesse.wikitext.parser.*;
 import org.junit.Test;
 

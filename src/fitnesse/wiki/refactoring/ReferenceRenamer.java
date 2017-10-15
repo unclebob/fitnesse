@@ -5,6 +5,7 @@ package fitnesse.wiki.refactoring;
 import fitnesse.components.TraversalListener;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiSourcePage;
 import fitnesse.wikitext.parser.*;
 
 public abstract class ReferenceRenamer implements TraversalListener<WikiPage>, SymbolTreeWalker {
