@@ -66,10 +66,12 @@ dependencies {
   compile "org.htmlparser:htmlparser:2.1"
   compile "org.htmlparser:htmllexer:2.1"
   compile "org.apache.velocity:velocity:1.7"
+  compile "org.apache.activemq:activemq-all:5.15.0"
   compile "commons-lang:commons-lang:2.6"
   compile "commons-collections:commons-collections:3.2.2"
   compile "org.json:json:20151123"
   compile "com.googlecode.java-diff-utils:diffutils:1.3.0"
+  compile "javax.jms:javax.jms-api:2.0.1"
   optional "org.apache.ant:ant:1.9.6"
   optional "junit:junit:4.12"
 
