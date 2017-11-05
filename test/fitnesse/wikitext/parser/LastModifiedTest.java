@@ -1,19 +1,21 @@
 package fitnesse.wikitext.parser;
 
-import java.util.GregorianCalendar;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import fitnesse.util.Clock;
 import fitnesse.util.DateAlteringClock;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPageProperty;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class LastModifiedTest {
 
     @Before
     public void setUp() {
+      Locale.setDefault(Locale.US);
         new DateAlteringClock(new GregorianCalendar(2002, 2, 4, 5, 6, 7).getTime()).freeze();
     }
 

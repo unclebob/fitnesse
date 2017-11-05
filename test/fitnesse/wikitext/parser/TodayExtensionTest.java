@@ -1,18 +1,20 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.util.Clock;
+import fitnesse.util.DateAlteringClock;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import fitnesse.util.Clock;
-import fitnesse.util.DateAlteringClock;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class TodayExtensionTest {
 
     @Before
     public void setUp() {
+      Locale.setDefault(Locale.US);
         new DateAlteringClock(new GregorianCalendar(2003, 2, 4, 15, 6, 7).getTime()).freeze();
         SymbolProvider.wikiParsingProvider.add(new MonthsFromToday());
         SymbolProvider.tableParsingProvider.add(new MonthsFromToday());
