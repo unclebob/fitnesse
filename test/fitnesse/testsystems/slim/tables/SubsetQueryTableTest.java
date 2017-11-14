@@ -13,11 +13,6 @@ public class SubsetQueryTableTest extends QueryTableTestBase {
     return "subset query";
   }
 
-  @Override
-  protected Class<SubsetQueryTable> queryTableClass() {
-    return SubsetQueryTable.class;
-  }
-
   @Test
   public void twoMatchingRowsOutOfOrder() throws Exception {
     assertQueryResults(

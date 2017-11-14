@@ -99,6 +99,7 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
   private void createSlimTable(List<SlimTable> allTables, Table table) {
     String tableId = "" + allTables.size();
     SlimTable slimTable = slimTableFactory.makeSlimTable(table, tableId, getTestContext());
+    // TODO: should customComparatorRegistry be baked into the slimTableFactory?
     if (slimTable != null) {
       slimTable.setCustomComparatorRegistry(customComparatorRegistry);
       allTables.add(slimTable);

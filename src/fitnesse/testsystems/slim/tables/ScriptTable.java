@@ -14,6 +14,7 @@ import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimTestResult;
+import fitnesse.util.StringUtils;
 
 public class ScriptTable extends SlimTable {
   private static final String SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX = ";";
@@ -106,8 +107,8 @@ public class ScriptTable extends SlimTable {
   @Override
   public List<SlimAssertion> getAssertions() throws TestExecutionException {
     List<SlimAssertion> assertions = new ArrayList<>();
-    ScenarioTable.setDefaultChildClass(getClass());
-    if (table.getCellContents(0, 0).toLowerCase().startsWith(getTableKeyword())) {
+    // TODO: Should take into account here that a table can be assigned as
+    if (isTopLevelTable()) {
       List<SlimAssertion> createAssertions = startActor();
       if (createAssertions != null) {
         assertions.addAll(createAssertions);
@@ -116,6 +117,10 @@ public class ScriptTable extends SlimTable {
     for (int row = 1; row < table.getRowCount(); row++)
       assertions.addAll(instructionsForRow(row));
     return assertions;
+  }
+
+  private boolean isTopLevelTable() {
+    return getParent() == null;
   }
 
   // returns a list of statements
@@ -137,7 +142,7 @@ public class ScriptTable extends SlimTable {
       assertions = show(row);
     else if (firstCell.equalsIgnoreCase(getNoteKeyword()))
       assertions = note(row);
-    else if ((match = ifSymbolAssignment(0, row)) != null)
+    else if ((match = isSymbolAssignment(0, row)) != null)
       assertions = actionAndAssign(match, row);
     else if (firstCell.isEmpty())
       assertions = note(row);
@@ -190,6 +195,8 @@ public class ScriptTable extends SlimTable {
     }
     if (scenario != null) {
       scenario.setCustomComparatorRegistry(customComparatorRegistry);
+      // TODO: ensure our scenario has the right table type
+      scenario.setDefaultChildClass(getClass());
       assertions.addAll(scenario.call(args, this, row));
     }
     return assertions;
@@ -275,11 +282,8 @@ public class ScriptTable extends SlimTable {
   }
 
   protected List<SlimAssertion> startActor() {
-    String firstCellContents = table.getCellContents(0, 0);
-    String keyworkd = getTableKeyword() + ":";
-    int pos = firstCellContents.toLowerCase().indexOf(keyworkd);
-    if (pos == 0) {
-      return startActor(0, firstCellContents.substring(keyworkd.length() ), 0);
+    if (!StringUtils.isBlank(getFixtureName())) {
+      return startActor(0, getFixtureName(), 0);
     } else if (table.getColumnCountInRow(0) > 1) {
       return startActor(0);
     }

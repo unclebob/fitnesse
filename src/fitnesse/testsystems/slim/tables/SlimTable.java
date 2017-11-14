@@ -33,7 +33,6 @@ public abstract class SlimTable {
   private String tableName;
   private int instructionNumber = 0;
   private String fixtureName;
-  private boolean isTearDown;
 
   private List<SlimTable> children = new LinkedList<>();
   private SlimTable parent = null;
@@ -59,8 +58,7 @@ public abstract class SlimTable {
 
   public void addChildTable(SlimTable slimtable, int row) {
     slimtable.id = id + "." + children.size();
-    slimtable.tableName = makeInstructionTag(instructionNumber) + "/" + slimtable.tableName;
-    instructionNumber++;
+    slimtable.tableName = makeInstructionTag() + "/" + slimtable.tableName;
     slimtable.parent = this;
     children.add(slimtable);
 
@@ -82,11 +80,7 @@ public abstract class SlimTable {
   public abstract List<SlimAssertion> getAssertions() throws TestExecutionException;
 
   protected String makeInstructionTag() {
-    return makeInstructionTag(instructionNumber++);
-  }
-
-  protected String makeInstructionTag(int instructionNumber) {
-    return String.format("%s_%d", tableName, instructionNumber);
+    return String.format("%s_%d", tableName, instructionNumber++);
   }
 
   public String getTableName() {
@@ -125,19 +119,11 @@ public abstract class SlimTable {
   }
 
   protected String getFixtureName() {
-    if (fixtureName == null) {
-      String tableHeader = table.getCellContents(0, 0);
-      fixtureName = getFixtureName(tableHeader);
-    }
-    return Disgracer.disgraceClassName(fixtureName);
+    return fixtureName != null ? Disgracer.disgraceClassName(fixtureName) : "";
   }
 
   public boolean isTearDown() {
-    return isTearDown;
-  }
-
-  public void setTearDown(boolean teardown) {
-    isTearDown = teardown;
+    return table.isTearDown();
   }
 
   protected String getFixtureName(String tableHeader) {
@@ -173,17 +159,16 @@ public abstract class SlimTable {
     return new CallAndAssignInstruction(makeInstructionTag(), symbolName, instanceName, Disgracer.disgraceMethodName(functionName), args);
   }
 
-
   protected Instruction assign(String symbolName, String value) {
     return new AssignInstruction(makeInstructionTag(), symbolName, value);
   }
 
-  protected String ifSymbolAssignment(int col, int row) {
+  protected String isSymbolAssignment(int col, int row) {
     String expected = table.getCellContents(col, row);
-    return ifSymbolAssignment(expected);
+    return isSymbolAssignment(expected);
   }
 
-  protected String ifSymbolAssignment(String expected) {
+  protected String isSymbolAssignment(String expected) {
 	return SlimSymbol.isSymbolAssignment(expected);
   }
 
@@ -302,16 +287,10 @@ public abstract class SlimTable {
         return value;
     }
 
-//    @Override
-//    protected String getSymbolValue(String symbolName){
-//      return getSymbol(symbolName);
-//    }
-
     public String replace(){
       return replace(toReplace);
     }
   }
-
 
   class FullExpansionSymbolReplacer extends SymbolReplacer {
     FullExpansionSymbolReplacer(String s) {
