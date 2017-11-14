@@ -1,4 +1,5 @@
 build
+out
 lib/*
 .gradle
 .classpath
