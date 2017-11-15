@@ -1,15 +1,17 @@
 package fitnesse.junit;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.util.TimeMeasurement;
+import fitnesse.wiki.WikiPageDummy;
 import org.junit.Before;
 import org.junit.Test;
-import fitnesse.util.TimeMeasurement;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.wiki.WikiPageDummy;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class JavaFormatterTest {
 
@@ -88,14 +90,20 @@ public class JavaFormatterTest {
   @Test
   public void summaryRowFormatsTestOutputRows(){
     assertEquals("pass, no errors or exceptions",
-            "<tr class=\"pass\"><td><a href=\"TestName.html\">TestName</a></td><td>5</td><td>0</td><td>0</td></tr>",
+            "<tr class=\"pass\"><td><a href=\"TestName.html\">TestName</a></td><td>5</td><td>0</td><td>0</td><td>0</td></tr>",
             new JavaFormatter.TestResultsSummaryTableRow("TestName", new TestSummary(5, 0, 0, 0)).toString());
-    assertEquals("red, 1 error ", 
-        "<tr class=\"fail\"><td><a href=\"TestName.html\">TestName</a></td><td>5</td><td>1</td><td>0</td></tr>",
+    assertEquals("red, 1 error ",
+        "<tr class=\"fail\"><td><a href=\"TestName.html\">TestName</a></td><td>5</td><td>1</td><td>0</td><td>0</td></tr>",
         new JavaFormatter.TestResultsSummaryTableRow("TestName", new TestSummary(5,1,0,0)).toString());
     assertEquals("error,exceptions",
-            "<tr class=\"error\"><td><a href=\"TestName.html\">TestName</a></td><td>5</td><td>6</td><td>7</td></tr>",
+            "<tr class=\"error\"><td><a href=\"TestName.html\">TestName</a></td><td>5</td><td>6</td><td>7</td><td>0</td></tr>",
             new JavaFormatter.TestResultsSummaryTableRow("TestName", new TestSummary(5, 6, 0, 7)).toString());
+
+    TestSummary testSummary = new TestSummary(1,0,0,0);
+    testSummary.setRunTimeInMillis(345);
+    assertEquals("pass, with duration",
+            "<tr class=\"pass\"><td><a href=\"TestName.html\">TestName</a></td><td>1</td><td>0</td><td>0</td><td>345</td></tr>",
+            new JavaFormatter.TestResultsSummaryTableRow("TestName", testSummary).toString());
   }
 
   @Test
@@ -109,7 +117,7 @@ public class JavaFormatterTest {
     TimeMeasurement timeMeasurement = new TimeMeasurement().start();
     jf.testComplete(buildNestedTestPage(), new TestSummary(5,6,7,8));
     jf.close();
-    verify(mockResultsRepository).open(suiteName);     
+    verify(mockResultsRepository).open(suiteName);
   }
 
   @Test
@@ -118,6 +126,6 @@ public class JavaFormatterTest {
     jf.setResultsRepository(mockResultsRepository);
     jf.testComplete(buildNestedTestPage(), new TestSummary(5,6,7,8));
     jf.close();
-    verify(mockResultsRepository,times(0)).open(nestedPageName);     
+    verify(mockResultsRepository,times(0)).open(nestedPageName);
   }
 }

@@ -7,6 +7,7 @@ public class TestSummary {
   private int wrong = 0;
   private int ignores = 0;
   private int exceptions = 0;
+  private long runTimeInMillis = 0;
 
   public TestSummary(int right, int wrong, int ignores, int exceptions) {
     this.right = right;
@@ -20,6 +21,7 @@ public class TestSummary {
     wrong = testSummary.getWrong();
     ignores = testSummary.getIgnores();
     exceptions = testSummary.getExceptions();
+    runTimeInMillis = testSummary.getRunTimeInMillis();
   }
 
   public TestSummary() {
@@ -38,7 +40,7 @@ public class TestSummary {
     TestSummary other = (TestSummary) o;
     return getRight() == other.getRight() && getWrong() == other.getWrong()
     && getIgnores() == other.getIgnores()
-    && getExceptions() == other.getExceptions();
+    && getExceptions() == other.getExceptions() && getRunTimeInMillis() == other.getRunTimeInMillis();
   }
 
   @Override
@@ -46,12 +48,13 @@ public class TestSummary {
     assert false : "hashCode not designed";
     return 42;
   }
-  
+
   public void add(TestSummary testSummary) {
     right = getRight() + testSummary.getRight();
     wrong = getWrong() + testSummary.getWrong();
     ignores = getIgnores() + testSummary.getIgnores();
     exceptions = getExceptions() + testSummary.getExceptions();
+    runTimeInMillis = getRunTimeInMillis() + testSummary.getRunTimeInMillis();
   }
 
   public void clear() {
@@ -59,6 +62,7 @@ public class TestSummary {
     wrong = 0;
     ignores = 0;
     exceptions = 0;
+    runTimeInMillis = 0;
   }
 
   public int getRight() {
@@ -77,6 +81,8 @@ public class TestSummary {
     return exceptions;
   }
 
+  public long getRunTimeInMillis() { return runTimeInMillis; }
+
   public void add(ExecutionResult executionResult) {
     if (executionResult != null) {
      switch (executionResult) {
@@ -94,5 +100,9 @@ public class TestSummary {
          break;
      }
     }
+  }
+
+  public void setRunTimeInMillis(long runTimeInMillis) {
+    this.runTimeInMillis = runTimeInMillis;
   }
 }
