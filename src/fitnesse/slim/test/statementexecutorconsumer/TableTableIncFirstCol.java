@@ -76,7 +76,7 @@ public class TableTableIncFirstCol implements StatementExecutorConsumer {
   private String replaceSymbolInArg(Matcher symbolMatcher, String arg,
       String symbolName) {
     String replacement = "null";
-    Object value = context.getSymbol(symbolName);
+    Object value = context.getSymbolObject(symbolName);
     if (value != null) {
       replacement = value.toString();
     }
