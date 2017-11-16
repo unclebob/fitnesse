@@ -10,7 +10,7 @@ public interface StatementExecutorInterface extends InstructionExecutor {
    * both assign and resolve any symbols on their own.
    *
    * Have a look to this FitNesse page for some examples:
-   * FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TableTableSuite.TestTableTableImplementingStatementExecutorConsumer
+   * FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TableTableSuite.SymbolsInTableTableManagedByTheFixture
    *
    * Please note: this method returns a String version (after conversion by converter as configured in
    * {@link fitnesse.slim.converters.ConverterRegistry}) of the symbol's value, unless it is a List.
@@ -28,7 +28,7 @@ public interface StatementExecutorInterface extends InstructionExecutor {
    * both assign and resolve any symbols on their own.
    *
    * Have a look to this FitNesse page for some examples:
-   * FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TableTableSuite.TestTableTableImplementingStatementExecutorConsumer
+   * FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TableTableSuite.SymbolsInTableTableManagedByTheFixture
    *
    * This method is similar to {@link #getSymbol(String)}, but it always returns the Object for the object, without
    * conversion by converter as configured in {@link fitnesse.slim.converters.ConverterRegistry}.
