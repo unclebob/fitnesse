@@ -33,6 +33,7 @@ public class SlimTableFactory {
     addTableType("table", TableTable.class);
     addTableType("script", ScriptTable.class);
     addTableType("script:", ScriptTable.class);
+    addTableType("verify script", ScriptTableWithVerify.class);
     addTableType("scenario", ScenarioTable.class);
     addTableType("import", ImportTable.class);
     addTableType("library", LibraryTable.class);
