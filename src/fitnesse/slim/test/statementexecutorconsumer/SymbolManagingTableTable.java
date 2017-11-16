@@ -40,6 +40,10 @@ public abstract class SymbolManagingTableTable implements StatementExecutorConsu
     context.assign(StatementExecutor.SLIM_AGENT_FIXTURE_HANDLES_SYMBOLS,"tableTable.*\\.doTable");
   }
 
+  protected StatementExecutorInterface getStatementExecutor() {
+    return context;
+  }
+
   protected String replaceSymbolsInString(String arg) {
     int startingPosition = 0;
     while (true) {
