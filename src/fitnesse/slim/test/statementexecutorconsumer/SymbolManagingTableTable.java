@@ -58,16 +58,21 @@ public abstract class SymbolManagingTableTable implements StatementExecutorConsu
     return arg;
   }
 
-  protected String replaceSymbolInArg(Matcher symbolMatcher, String arg,
-                                      String symbolName) {
+  protected String replaceSymbolInArg(Matcher symbolMatcher, String arg, String symbolName) {
+    String argBeforeSymbol = arg.substring(0, symbolMatcher.start());
+    String replacement = getSymbolReplacement(symbolName);
+    String argAfterSymbol = arg.substring(symbolMatcher.end());
+
+    return argBeforeSymbol + replacement + argAfterSymbol;
+  }
+
+  protected String getSymbolReplacement(String symbolName) {
     String replacement = "null";
     Object value = context.getSymbolObject(symbolName);
     if (value != null) {
       replacement = value.toString();
     }
-    arg = arg.substring(0, symbolMatcher.start()) + replacement
-        + arg.substring(symbolMatcher.end());
-    return arg;
+    return replacement;
   }
 
   protected void assignSymbolIfApplicable(String text, Object value) {
