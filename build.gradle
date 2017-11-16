@@ -67,6 +67,7 @@ dependencies {
   compile "org.htmlparser:htmllexer:2.1"
   compile ("org.apache.velocity:velocity:1.7") {
       exclude group:"commons-collections", module: "commons-collections"
+      exclude group:"commons-lang", module: "commons-lang"
   }
   compile "commons-lang:commons-lang:2.6"
   compile "commons-collections:commons-collections:3.2.2"
