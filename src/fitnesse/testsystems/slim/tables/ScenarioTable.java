@@ -201,7 +201,7 @@ public class ScenarioTable extends SlimTable {
     if (parentTable instanceof ScriptTable) {
       scriptTable = createChild((ScriptTable) parentTable, newTable, testContext);
     } else {
-      scriptTable = createChild(defaultChildClass, newTable, testContext);
+      scriptTable = createChild(getTestContext().getCurrentScriptClass(), newTable, testContext);
     }
     scriptTable.setCustomComparatorRegistry(customComparatorRegistry);
     return scriptTable;
@@ -397,6 +397,21 @@ public class ScenarioTable extends SlimTable {
     @Override
     public TestPage getPageToTest() {
       return testContext.getPageToTest();
+    }
+
+    @Override
+    public void setCurrentScript(Class<? extends ScriptTable> scriptTableClass, String actorName) {
+      testContext.setCurrentScript(scriptTableClass, actorName);
+    }
+
+    @Override
+    public Class<? extends ScriptTable> getCurrentScriptClass() {
+      return testContext.getCurrentScriptClass();
+    }
+
+    @Override
+    public String getCurrentScriptActor() {
+      return testContext.getCurrentScriptActor();
     }
   }
 }

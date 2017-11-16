@@ -299,7 +299,9 @@ public class ScriptTable extends SlimTable {
   protected List<SlimAssertion> startActor(int row, String cellContents, int classNameColumn) {
     List<SlimAssertion> assertions = new ArrayList<>();
     String className = Disgracer.disgraceClassName(cellContents);
-    assertions.add(constructInstance(getTableType() + "Actor", className, classNameColumn, row));
+    String actorName = getTableType() + "Actor";
+    getTestContext().setCurrentScript(getClass(), actorName);
+    assertions.add(constructInstance(actorName, className, classNameColumn, row));
     getArgumentsStartingAt(classNameColumn + 1, table.getColumnCountInRow(row) - 1, row, assertions);
     return assertions;
   }
