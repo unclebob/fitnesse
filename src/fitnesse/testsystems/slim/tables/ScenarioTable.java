@@ -33,8 +33,6 @@ import org.apache.commons.lang.StringUtils;
 public class ScenarioTable extends SlimTable {
   private static final String instancePrefix = "scenarioTable";
   private static final String underscorePattern = "\\W_(?=\\W|$)";
-  // TODO: This property should not be static! This could cause race conditions
-  private Class<? extends ScriptTable> defaultChildClass = ScriptTable.class;
   private String name;
   private List<String> inputs = new ArrayList<>();
   private Set<String> outputs = new HashSet<>();
@@ -213,10 +211,6 @@ public class ScenarioTable extends SlimTable {
 
   protected ScriptTable createChild(Class<? extends ScriptTable> parentTableClass, Table newTable, SlimTestContext testContext) throws TableCreationException {
       return SlimTableFactory.createTable(parentTableClass, newTable, id, testContext);
-  }
-
-  public void setDefaultChildClass(Class<? extends ScriptTable> defaultChildClass) {
-    this.defaultChildClass = defaultChildClass;
   }
 
   public List<SlimAssertion> call(String[] args, ScriptTable parentTable, int row) throws TestExecutionException {
