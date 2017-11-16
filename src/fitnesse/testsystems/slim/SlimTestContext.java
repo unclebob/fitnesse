@@ -37,9 +37,11 @@ public interface SlimTestContext {
 
   TestPage getPageToTest();
 
-  void setCurrentScript(Class<? extends ScriptTable> scriptTableClass, String actorName);
+  void setCurrentScriptClass(Class<? extends ScriptTable> currentScriptClass);
 
   Class<? extends ScriptTable> getCurrentScriptClass();
+
+  void setCurrentScriptActor(String currentScriptActor);
 
   String getCurrentScriptActor();
 }

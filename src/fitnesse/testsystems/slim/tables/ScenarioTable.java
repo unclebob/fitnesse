@@ -400,13 +400,18 @@ public class ScenarioTable extends SlimTable {
     }
 
     @Override
-    public void setCurrentScript(Class<? extends ScriptTable> scriptTableClass, String actorName) {
-      testContext.setCurrentScript(scriptTableClass, actorName);
+    public void setCurrentScriptClass(Class<? extends ScriptTable> currentScriptClass) {
+      testContext.setCurrentScriptClass(currentScriptClass);
     }
 
     @Override
     public Class<? extends ScriptTable> getCurrentScriptClass() {
       return testContext.getCurrentScriptClass();
+    }
+
+    @Override
+    public void setCurrentScriptActor(String currentScriptActor) {
+      testContext.setCurrentScriptActor(currentScriptActor);
     }
 
     @Override

@@ -24,7 +24,7 @@ public class SlimTestContextImpl implements SlimTestContext {
   private List<ScenarioTable> scenariosWithInputs = null;
   private boolean isSorted = true;
   private String currentScriptActor;
-  private Class<? extends ScriptTable> currentScriptClass;
+  private Class<? extends ScriptTable> currentScriptClass = ScriptTable.class;
 
   public SlimTestContextImpl(TestPage pageToTest) {
     this.pageToTest = pageToTest;
@@ -153,14 +153,18 @@ public class SlimTestContextImpl implements SlimTestContext {
   }
 
   @Override
-  public void setCurrentScript(Class<? extends ScriptTable> scriptTableClass, String actorName) {
-    currentScriptActor = actorName;
-    currentScriptClass = scriptTableClass;
+  public void setCurrentScriptClass(Class<? extends ScriptTable> currentScriptClass) {
+    this.currentScriptClass = currentScriptClass;
   }
 
   @Override
   public Class<? extends ScriptTable> getCurrentScriptClass() {
     return currentScriptClass;
+  }
+
+  @Override
+  public void setCurrentScriptActor(String currentScriptActor) {
+    this.currentScriptActor = currentScriptActor;
   }
 
   @Override
