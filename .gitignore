@@ -16,6 +16,7 @@ desktop.ini
 inst.log
 velocity.log*
 fitserverSentinel*
+testHistoryDirectory/
 tmp/*
 FitNesseRoot/properties
 FitNesseRoot/ErrorLogs/*
