@@ -157,6 +157,8 @@ jar {
       include 'FitNesseRoot/PageFooter/**/content.txt'
       include 'FitNesseRoot/PageFooter/**/properties.xml'
       include 'FitNesseRoot/PageHeader/**/content.txt'
+      include 'FitNesseRoot/Plugins/**/properties.xml'
+      include 'FitNesseRoot/Plugins/**/content.txt'
       include 'FitNesseRoot/PageHeader/**/properties.xml'
       include 'FitNesseRoot/TemplateLibrary/**/content.txt'
       include 'FitNesseRoot/TemplateLibrary/**/properties.xml'
