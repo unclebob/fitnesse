@@ -101,8 +101,8 @@ task createUpdateLists(type: WikiFileListBuilderTask) {
     "FitNesseRoot/FrontPage/properties.xml",
     "FitNesseRoot/PageHeader/content.txt",
     "FitNesseRoot/PageHeader/properties.xml",
-    "FitNesseRoot/Plugins/content.txt",
-    "FitNesseRoot/Plugins/properties.xml",
+    "FitNesseRoot/PlugIns/content.txt",
+    "FitNesseRoot/PlugIns/properties.xml",
     "FitNesseRoot/PageFooter/content.txt",
     "FitNesseRoot/PageFooter/properties.xml",
     "FitNesseRoot/TemplateLibrary/content.txt",
@@ -117,7 +117,7 @@ task createUpdateLists(type: WikiFileListBuilderTask) {
     "FitNesseRoot/FitNesse",
     "FitNesseRoot/FrontPage",
     "FitNesseRoot/PageFooter",
-    "FitNesseRoot/Plugins",
+    "FitNesseRoot/PlugIns",
     "FitNesseRoot/PageHeader",
     "FitNesseRoot/TemplateLibrary" ]
 }
@@ -158,8 +158,8 @@ jar {
       include 'FitNesseRoot/FrontPage/**/properties.xml'
       include 'FitNesseRoot/PageFooter/**/content.txt'
       include 'FitNesseRoot/PageFooter/**/properties.xml'
-      include 'FitNesseRoot/Plugins/**/properties.xml'
-      include 'FitNesseRoot/Plugins/**/content.txt'
+      include 'FitNesseRoot/PlugIns/**/properties.xml'
+      include 'FitNesseRoot/PlugIns/**/content.txt'
       include 'FitNesseRoot/PageHeader/**/content.txt'
       include 'FitNesseRoot/Plugins/**/properties.xml'
       include 'FitNesseRoot/Plugins/**/content.txt'
