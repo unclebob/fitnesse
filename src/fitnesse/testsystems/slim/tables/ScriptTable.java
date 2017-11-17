@@ -109,6 +109,7 @@ public class ScriptTable extends SlimTable {
     List<SlimAssertion> assertions = new ArrayList<>();
     // TODO: Should take into account here that a table can be assigned as
     if (isTopLevelTable()) {
+      getTestContext().setCurrentScriptClass(getClass());
       List<SlimAssertion> createAssertions = startActor();
       if (createAssertions != null) {
         assertions.addAll(createAssertions);
@@ -195,8 +196,6 @@ public class ScriptTable extends SlimTable {
     }
     if (scenario != null) {
       scenario.setCustomComparatorRegistry(customComparatorRegistry);
-      // TODO: ensure our scenario has the right table type
-      scenario.setDefaultChildClass(getClass());
       assertions.addAll(scenario.call(args, this, row));
     }
     return assertions;
@@ -299,7 +298,9 @@ public class ScriptTable extends SlimTable {
   protected List<SlimAssertion> startActor(int row, String cellContents, int classNameColumn) {
     List<SlimAssertion> assertions = new ArrayList<>();
     String className = Disgracer.disgraceClassName(cellContents);
-    assertions.add(constructInstance(getTableType() + "Actor", className, classNameColumn, row));
+    String actorName = getTableType() + "Actor";
+    getTestContext().setCurrentScriptActor(actorName);
+    assertions.add(constructInstance(actorName, className, classNameColumn, row));
     getArgumentsStartingAt(classNameColumn + 1, table.getColumnCountInRow(row) - 1, row, assertions);
     return assertions;
   }

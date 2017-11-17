@@ -33,8 +33,6 @@ import org.apache.commons.lang.StringUtils;
 public class ScenarioTable extends SlimTable {
   private static final String instancePrefix = "scenarioTable";
   private static final String underscorePattern = "\\W_(?=\\W|$)";
-  // TODO: This property should not be static! This could cause race conditions
-  private Class<? extends ScriptTable> defaultChildClass = ScriptTable.class;
   private String name;
   private List<String> inputs = new ArrayList<>();
   private Set<String> outputs = new HashSet<>();
@@ -201,7 +199,7 @@ public class ScenarioTable extends SlimTable {
     if (parentTable instanceof ScriptTable) {
       scriptTable = createChild((ScriptTable) parentTable, newTable, testContext);
     } else {
-      scriptTable = createChild(defaultChildClass, newTable, testContext);
+      scriptTable = createChild(getTestContext().getCurrentScriptClass(), newTable, testContext);
     }
     scriptTable.setCustomComparatorRegistry(customComparatorRegistry);
     return scriptTable;
@@ -213,10 +211,6 @@ public class ScenarioTable extends SlimTable {
 
   protected ScriptTable createChild(Class<? extends ScriptTable> parentTableClass, Table newTable, SlimTestContext testContext) throws TableCreationException {
       return SlimTableFactory.createTable(parentTableClass, newTable, id, testContext);
-  }
-
-  public void setDefaultChildClass(Class<? extends ScriptTable> defaultChildClass) {
-    this.defaultChildClass = defaultChildClass;
   }
 
   public List<SlimAssertion> call(String[] args, ScriptTable parentTable, int row) throws TestExecutionException {
@@ -397,6 +391,26 @@ public class ScenarioTable extends SlimTable {
     @Override
     public TestPage getPageToTest() {
       return testContext.getPageToTest();
+    }
+
+    @Override
+    public void setCurrentScriptClass(Class<? extends ScriptTable> currentScriptClass) {
+      testContext.setCurrentScriptClass(currentScriptClass);
+    }
+
+    @Override
+    public Class<? extends ScriptTable> getCurrentScriptClass() {
+      return testContext.getCurrentScriptClass();
+    }
+
+    @Override
+    public void setCurrentScriptActor(String currentScriptActor) {
+      testContext.setCurrentScriptActor(currentScriptActor);
+    }
+
+    @Override
+    public String getCurrentScriptActor() {
+      return testContext.getCurrentScriptActor();
     }
   }
 }

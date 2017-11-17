@@ -121,7 +121,7 @@ public class DecisionTable extends SlimTable {
         String assignedSymbol = isSymbolAssignment(col, row);
         SlimAssertion assertion;
         if (assignedSymbol != null) {
-        	assertion= makeAssertion(callAndAssign(assignedSymbol, "scriptTable" + "Actor", "cloneSymbol", "$"+name),
+        	assertion= makeAssertion(callAndAssign(assignedSymbol, getTestContext().getCurrentScriptActor(), "cloneSymbol", "$"+name),
         			new ReturnedSymbolExpectation(col, row, name, assignedSymbol));
         } else {
           assertion = makeAssertion(Instruction.NOOP_INSTRUCTION, new ReturnedSymbolExpectation(getDTCellContents(col, row), col, row, name));
