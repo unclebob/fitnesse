@@ -105,7 +105,6 @@ task createUpdateLists(type: WikiFileListBuilderTask) {
     "FitNesseRoot/Plugins/properties.xml",
     "FitNesseRoot/PageFooter/content.txt",
     "FitNesseRoot/PageFooter/properties.xml",
-    "FitNesseRoot/PageFooter/properties.xml",
     "FitNesseRoot/TemplateLibrary/content.txt",
     "FitNesseRoot/TemplateLibrary/properties.xml",
     "FitNesseRoot/TemplateLibrary/StaticPage/content.txt",
