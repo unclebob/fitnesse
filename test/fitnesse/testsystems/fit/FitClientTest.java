@@ -52,6 +52,14 @@ public class FitClientTest implements FitClientListener {
     }
   }
 
+  private void doSimpleRun() throws Exception {
+    client.start();
+    Thread.sleep(200);
+    client.send("<html><table><tr><td>fitnesse.testutil.PassFixture</td></tr></table></html>");
+    client.done();
+    client.join();
+  }
+
   @Test
   public void testOneRunUsage() throws Exception {
     doSimpleRun();
@@ -62,31 +70,22 @@ public class FitClientTest implements FitClientListener {
     assertEquals(1, counts.get(0).getRight());
   }
 
-  private void doSimpleRun() throws Exception {
-    client.start();
-    Thread.sleep(100);
-    client.send("<html><table><tr><td>fitnesse.testutil.PassFixture</td></tr></table></html>");
-    client.done();
-    client.join();
-  }
-
   @Test
   public void testStandardError() throws Exception {
-    client = new CommandRunningFitClient(new CommandRunningFitClient.OutOfProcessCommandRunner(new String[] { "java", "-Duser.country=US", "-Duser.language=en", "blah" }, null,
+    client = new CommandRunningFitClient(new CommandRunningFitClient.OutOfProcessCommandRunner(new String[] { "java", "-Duser.country=US", "-Duser.language=en", "e.g.testStandardError" }, null,
             new ConsoleExecutionLogListener()));
     client.addFitClientListener(this);
     client.start();
     Thread.sleep(100);
     client.join();
     assertTrue(exceptionOccurred);
-//    assertSubString("Error", client.getExecutionLog().getCapturedError());
   }
 
   @Test
-  public void testDoesntwaitForTimeoutOnBadCommand() throws Exception {
+  public void testDoesntWaitForTimeoutOnBadCommand() throws Exception {
     CommandRunningFitClient.TIMEOUT = 5000;
     TimeMeasurement measurement = new TimeMeasurement().start();
-    client = new CommandRunningFitClient(new CommandRunningFitClient.OutOfProcessCommandRunner(new String[] { "java", "blah" }, null,
+    client = new CommandRunningFitClient(new CommandRunningFitClient.OutOfProcessCommandRunner(new String[] { "java", "e.g.testDoesntWaitForTimeoutOnBadCommand" }, null,
             new ConsoleExecutionLogListener()));
     client.addFitClientListener(this);
     client.start();

@@ -170,7 +170,7 @@ public class CommandRunningFitClient extends FitClient {
             if (!fitClient.isSuccessfullyStarted()) {
               fitClient.notify();
               fitClient.exceptionOccurred(new Exception(
-                  "FitClient: communication socket was not received on time."));
+                  "FitClient communication socket was not received on time"));
             }
           }
         } catch (InterruptedException e) {
@@ -197,7 +197,7 @@ public class CommandRunningFitClient extends FitClient {
             if (!fitClient.isConnectionEstablished()) {
               fitClient.notify();
               Exception e = new Exception(
-                      "FitClient: external process terminated before a connection could be established.");
+                      "FitClient external process terminated before a connection could be established");
               // TODO: use executionLogListener.exceptionOccurred(e)
               commandRunner.exceptionOccurred(e);
               fitClient.exceptionOccurred(e);
