@@ -25,7 +25,7 @@ public class CommandRunner {
   private static final Logger LOG = Logger.getLogger(CommandRunner.class.getName());
 
   private Process process;
-  protected int exitCode = -1;
+//  protected int exitCode = -1;
   private String[] command;
   private Map<String, String> environmentVariables;
   private final int timeout;
@@ -116,7 +116,7 @@ public class CommandRunner {
     if (process != null) {
       waitForDeathOf(process);
       if (isDead(process)) {
-        exitCode = process.exitValue();
+        int exitCode = process.exitValue();
         executionLogListener.exitCode(exitCode);
       }
     }
@@ -175,11 +175,6 @@ public class CommandRunner {
 
   public List<Throwable> getExceptions() {
     return Collections.emptyList();
-  }
-
-  @Deprecated
-  public int getExitCode() {
-    return exitCode;
   }
 
   // Used to catch exceptions thrown from the read and write threads.
