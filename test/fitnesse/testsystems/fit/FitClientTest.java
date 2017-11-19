@@ -25,7 +25,7 @@ public class FitClientTest implements FitClientListener {
 
   @Before
   public void setUp() throws Exception {
-    CommandRunningFitClient.TIMEOUT = 5000;
+    CommandRunningFitClient.TIMEOUT = 10000;
     client = new CommandRunningFitClient(new CommandRunningFitClient.OutOfProcessCommandRunner(
         new String[] { "java", "-cp", "build/classes/main", "fit.FitServer", "-v" }, null, new ConsoleExecutionLogListener()));
     client.addFitClientListener(this);
