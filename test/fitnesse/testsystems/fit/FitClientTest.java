@@ -16,6 +16,7 @@ import fitnesse.util.MockSocket;
 import org.junit.Before;
 import org.junit.Test;
 import fitnesse.util.TimeMeasurement;
+import util.GradleSupport;
 
 public class FitClientTest implements FitClientListener {
   private List<String> outputs = new ArrayList<>();
@@ -27,7 +28,7 @@ public class FitClientTest implements FitClientListener {
   public void setUp() throws Exception {
     CommandRunningFitClient.TIMEOUT = 10000;
     client = new CommandRunningFitClient(new CommandRunningFitClient.OutOfProcessCommandRunner(
-        new String[] { "java", "-cp", "build/classes/main", "fit.FitServer", "-v" }, null, new ConsoleExecutionLogListener()));
+        new String[] { "java", "-cp", GradleSupport.CLASSES_DIR, "fit.FitServer", "-v" }, null, new ConsoleExecutionLogListener()));
     client.addFitClientListener(this);
   }
 

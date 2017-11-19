@@ -52,7 +52,7 @@ sourceSets {
   main {
     java.srcDir 'src'
     resources.srcDir 'src'
-    output.resourcesDir output.classesDir
+    output.resourcesDir java.outputDir
   }
   test {
     java.srcDir 'test'
@@ -198,7 +198,7 @@ task standaloneJar(type: Jar, dependsOn: jar) {
 
 task acceptanceTest(type: JavaExec) {
   mustRunAfter test
-  onlyIf { dependsOnTaskDidWork() }
+  onlyIf { test.didWork }
   classpath = standaloneJar.outputs.files
   main "fitnesseMain.FitNesseMain"
   args "-o", "-c", "FitNesse.SuiteAcceptanceTests?suite&format=text"
@@ -309,7 +309,7 @@ bintray {
 }
 
 wrapper {
-  gradleVersion = '3.1'
+  gradleVersion = '4.3.1'
 }
 
 
