@@ -26,10 +26,9 @@ public class DefaultInteractionTest {
   public void canExecuteConstructorWhenIntAndDateArgType() throws Throwable {
     //given 
     DefaultInteraction defaultInteraction = new DefaultInteraction();
-    Constructor<?> constructor = null;
     Object args[] = new Object[]{"1", "stringVal", "10-Dec-1981"};
-    //when 
-    constructor = defaultInteraction.getConstructor(Testee.class, args);
+    Constructor<?> constructor = defaultInteraction.getConstructor(Testee.class, args);
+    //when
     Object convertedArgs[] = defaultInteraction.getConvertedConstructorArgsTypes(constructor, args);
     Testee testee = (Testee) constructor.newInstance(convertedArgs);
     //then 
@@ -43,10 +42,9 @@ public class DefaultInteractionTest {
   public void canExecuteConstructorWithDateArgTypePriorityOverString() throws Throwable {
     //given 
     DefaultInteraction defaultInteraction = new DefaultInteraction();
-    Constructor<?> constructor = null;
     Object args[] = new Object[]{"10-Dec-1981"};
-    //when 
-    constructor = defaultInteraction.getConstructor(Testee.class, args);
+    Constructor<?> constructor = defaultInteraction.getConstructor(Testee.class, args);
+    //when
     Object convertedArgs[] = defaultInteraction.getConvertedConstructorArgsTypes(constructor, args);
     Testee testee = (Testee) constructor.newInstance(convertedArgs);
     //then 
@@ -58,10 +56,9 @@ public class DefaultInteractionTest {
   public void canExecuteConstructorWhenDoubleArgType() throws Throwable {
     //given 
     DefaultInteraction defaultInteraction = new DefaultInteraction();
-    Constructor<?> constructor = null;
     Object args[] = new Object[]{"1", "2.0d"};
-    //when 
-    constructor = defaultInteraction.getConstructor(Testee.class, args);
+    Constructor<?> constructor = defaultInteraction.getConstructor(Testee.class, args);
+    //when
     Object convertedArgs[] = defaultInteraction.getConvertedConstructorArgsTypes(constructor, args);
     Testee testee = (Testee) constructor.newInstance(convertedArgs);
     //then 
@@ -73,11 +70,9 @@ public class DefaultInteractionTest {
   public void canExecuteConstructorWhenFloatArgType() throws Throwable {
     //given 
     DefaultInteraction defaultInteraction = new DefaultInteraction();
-    Constructor<?> constructor = null;
-
     Object args[] = new Object[]{"1", "2.0f"};
-    //when 
-    constructor = defaultInteraction.getConstructor(Testee.class, args);
+    Constructor<?> constructor = defaultInteraction.getConstructor(Testee.class, args);
+    //when
     Object convertedArgs[] = defaultInteraction.getConvertedConstructorArgsTypes(constructor, args);
     Testee testee = (Testee) constructor.newInstance(convertedArgs);
     //then 
