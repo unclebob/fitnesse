@@ -14,7 +14,7 @@ public class MockWikiImporter extends WikiImporter {
   @Override
   protected void importRemotePageContent(WikiPage localPage) throws IOException {
     if (fail)
-      importerClient.pageImportError(localPage, new Exception("blah"));
+      importerClient.pageImportError(localPage, new Exception("Import of remote page content failed"));
     else
       setMockContent(localPage);
   }
