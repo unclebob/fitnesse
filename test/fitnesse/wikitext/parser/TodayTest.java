@@ -11,15 +11,19 @@ import java.util.Locale;
 
 public class TodayTest {
 
+  private Locale originalLocale;
+
     @Before
     public void setUp() {
+      originalLocale = Locale.getDefault();
       Locale.setDefault(Locale.US);
-        new DateAlteringClock(new GregorianCalendar(2002, 2, 4, 15, 6, 7).getTime()).freeze();
+      new DateAlteringClock(new GregorianCalendar(2002, 2, 4, 15, 6, 7).getTime()).freeze();
     }
 
     @After
     public void tearDown() {
-        Clock.restoreDefaultClock();
+      Clock.restoreDefaultClock();
+      Locale.setDefault(originalLocale);
     }
 
     @Test

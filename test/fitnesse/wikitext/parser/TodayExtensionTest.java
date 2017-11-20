@@ -12,17 +12,21 @@ import java.util.Locale;
 
 public class TodayExtensionTest {
 
+  private Locale originalLocale;
+
     @Before
     public void setUp() {
+      originalLocale = Locale.getDefault();
       Locale.setDefault(Locale.US);
-        new DateAlteringClock(new GregorianCalendar(2003, 2, 4, 15, 6, 7).getTime()).freeze();
-        SymbolProvider.wikiParsingProvider.add(new MonthsFromToday());
-        SymbolProvider.tableParsingProvider.add(new MonthsFromToday());
+      new DateAlteringClock(new GregorianCalendar(2003, 2, 4, 15, 6, 7).getTime()).freeze();
+      SymbolProvider.wikiParsingProvider.add(new MonthsFromToday());
+      SymbolProvider.tableParsingProvider.add(new MonthsFromToday());
     }
 
     @After
     public void tearDown() {
-        Clock.restoreDefaultClock();
+      Clock.restoreDefaultClock();
+      Locale.setDefault(originalLocale);
     }
 
     @Test
