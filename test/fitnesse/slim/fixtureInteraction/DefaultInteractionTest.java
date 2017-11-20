@@ -4,6 +4,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+
+import org.junit.Before;
 import org.junit.Test;
 
 /*
@@ -12,14 +14,16 @@ import org.junit.Test;
  */
 public class DefaultInteractionTest {
 
-  Class<Testee> testeeClass = Testee.class;
-  Constructor<?> cstr = testeeClass.getConstructor(Integer.TYPE);
-  Method setI;
-  Method getI;
+  private final Class<Testee> testeeClass = Testee.class;
+  private Constructor<?> cstr;
+  private Method setI;
+  private Method getI;
 
-  public DefaultInteractionTest() throws Exception {
-    setI = testeeClass.getMethod("setI", new Class[]{int.class});
-    getI = testeeClass.getMethod("getI");
+  @Before
+  public void setUp() throws Exception {
+    cstr = testeeClass.getConstructor(Integer.TYPE);
+    setI = testeeClass.getMethod("setIntVal", new Class[]{int.class});
+    getI = testeeClass.getMethod("getIntVal");
   }
 
   @Test
@@ -32,7 +36,7 @@ public class DefaultInteractionTest {
     Object convertedArgs[] = defaultInteraction.getConvertedConstructorArgsTypes(constructor, args);
     Testee testee = (Testee) constructor.newInstance(convertedArgs);
     //then 
-    assertEquals(new Integer(1), testee.getIntWrapperVal());
+    assertEquals(1, testee.getIntVal());
     assertEquals("stringVal", testee.getStringVal());
     assertEquals(convertedArgs[2], testee.getDateVal());
   }
@@ -63,7 +67,7 @@ public class DefaultInteractionTest {
     Testee testee = (Testee) constructor.newInstance(convertedArgs);
     //then 
     assertEquals(2.0d, testee.getDoubleVal(), 0.0d);
-    assertEquals(1, testee.getI());
+    assertEquals(1, testee.getIntVal());
   }
 
   @Test
@@ -78,7 +82,7 @@ public class DefaultInteractionTest {
     //then 
     // we have support only for Double convertor in FitNesse
     assertEquals(2.0d, testee.getDoubleVal(), 0.0d);
-    assertEquals(1, testee.getI());
+    assertEquals(1, testee.getIntVal());
   }
 
   @Test

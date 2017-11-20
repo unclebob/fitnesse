@@ -4,32 +4,25 @@ import java.util.Date;
 
 public class Testee {
 
-  int i;
+  int intVal;
   String stringVal;
   Date dateVal;
   double doubleVal;
   float floatVal;
-  Integer intWrapperVal;
 
-  public Testee(int i, float floatVal) {
-    this.i = i;
+  public Testee(int intVal, float floatVal) {
+    this.intVal = intVal;
     this.floatVal = floatVal;
   }
 
-  public Testee(int i, String stringVal, Date dateVal) {
-    this.i = i;
+  public Testee(int intVal, String stringVal, Date dateVal) {
+    this.intVal = intVal;
     this.stringVal = stringVal;
     this.dateVal = dateVal;
   }
 
-  public Testee(Integer intWrapperVal, String stringVal, Date dateVal) {
-    this.stringVal = stringVal;
-    this.dateVal = dateVal;
-    this.intWrapperVal = intWrapperVal;
-  }
-
-  public Testee(int i, double realVal) {
-    this.i = i;
+  public Testee(int intVal, double realVal) {
+    this.intVal = intVal;
     this.doubleVal = realVal;
   }
 
@@ -44,16 +37,16 @@ public class Testee {
   public Testee() {
   }
 
-  public Testee(int i) {
-    this.i = i;
+  public Testee(int intVal) {
+    this.intVal = intVal;
   }
 
-  public int getI() {
-    return i;
+  public int getIntVal() {
+    return intVal;
   }
 
-  public void setI(int i) {
-    this.i = i;
+  public void setIntVal(int intVal) {
+    this.intVal = intVal;
   }
 
   public String getStringVal() {
@@ -71,9 +64,4 @@ public class Testee {
   public float getFloatVal() {
     return floatVal;
   }
-
-  public Integer getIntWrapperVal() {
-    return intWrapperVal;
-  }
-
 }
