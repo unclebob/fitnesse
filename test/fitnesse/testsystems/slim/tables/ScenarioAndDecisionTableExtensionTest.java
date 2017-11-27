@@ -24,6 +24,7 @@ import org.junit.Test;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class ScenarioAndDecisionTableExtensionTest {
   private static final String SCEN_EXTENSION_NAME = "diffScriptScenario";
@@ -232,6 +233,10 @@ public class ScenarioAndDecisionTableExtensionTest {
 
     public DiffScriptTable(Table table, String tableId, SlimTestContext context) {
       super(table, tableId, context);
+
+      ScenarioTable scenarioTable = ((ScenarioTable.ScenarioTestContext) context).getScenarioTable();
+      assertEquals(ScenarioTableWithDifferentScript.class, scenarioTable.getClass());
+      assertEquals(SlimTestContextImpl.class, scenarioTable.getTestContext().getClass());
     }
     @Override
     protected String getTableType() {

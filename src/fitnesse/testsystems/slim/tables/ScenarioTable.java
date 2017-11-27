@@ -322,6 +322,10 @@ public class ScenarioTable extends SlimTable {
       this.testContext = testContext;
     }
 
+    public ScenarioTable getScenarioTable() {
+      return ScenarioTable.this;
+    }
+
     @Override
     public String getSymbol(String symbolName) {
       return testContext.getSymbol(symbolName);
