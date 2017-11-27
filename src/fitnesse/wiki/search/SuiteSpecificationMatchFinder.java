@@ -1,6 +1,7 @@
 package fitnesse.wiki.search;
 
 import fitnesse.components.TraversalListener;
+import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
 import java.util.regex.Matcher;
@@ -18,11 +19,18 @@ public class SuiteSpecificationMatchFinder extends WikiPageFinder {
 
   @Override
   protected boolean pageMatches(WikiPage page) {
+    if(isPruned(page)){
+      return false;
+    }
     if(!nullOrEmpty(titleRegEx) && !nullOrEmpty(contentRegEx))
        return patternMatches(titleRegEx, page.getName()) && patternMatches(contentRegEx,page.getData().getContent());
     else{
       return patternMatches(titleRegEx, page.getName()) || patternMatches(contentRegEx,page.getData().getContent());
     }
+  }
+
+  private boolean isPruned(WikiPage page) {
+    return page.getData().hasAttribute(PageData.PropertyPRUNE);
   }
 
   private boolean patternMatches(String regEx, String subject) {
