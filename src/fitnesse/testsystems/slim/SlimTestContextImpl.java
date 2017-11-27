@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
+import fitnesse.util.TimeMeasurement;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,6 +23,7 @@ public class SlimTestContextImpl implements SlimTestContext {
   private final Map<String, ScenarioTable> scenarios = new HashMap<>(512);
   private final TestSummary testSummary = new TestSummary();
   private final TestPage pageToTest;
+  private final TimeMeasurement timeMeasurement;
   private List<ScenarioTable> scenariosWithInputs = null;
   private boolean isSorted = true;
   private String currentScriptActor;
@@ -28,6 +31,7 @@ public class SlimTestContextImpl implements SlimTestContext {
 
   public SlimTestContextImpl(TestPage pageToTest) {
     this.pageToTest = pageToTest;
+    this.timeMeasurement = new TimeMeasurement().start();
   }
 
   @Override
@@ -144,6 +148,7 @@ public class SlimTestContextImpl implements SlimTestContext {
   }
 
   public TestSummary getTestSummary() {
+    testSummary.setRunTimeInMillis(timeMeasurement.elapsed());
     return testSummary;
   }
 
