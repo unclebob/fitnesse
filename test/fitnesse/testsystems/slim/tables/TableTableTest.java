@@ -277,6 +277,16 @@ public class TableTableTest {
   }
 
   @Test
+  public void surplusExplicitOnLastLinePasses() throws Exception {
+    assertTableResults("|2|4|\n",
+            asList(
+                    asList("pass:x", "pass:y", "pass:z")
+            ),
+      "[[pass(Table:fixture), argument], [pass(x), pass(y), pass(z)]]"
+    );
+  }
+
+  @Test
   public void emptyTableWithResults() throws Exception {
     assertTableResults("",
             asList(
