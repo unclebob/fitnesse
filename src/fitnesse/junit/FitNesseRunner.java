@@ -9,11 +9,14 @@ import java.lang.annotation.Target;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
+import fitnesse.http.Request;
 import fitnesse.plugins.PluginException;
 import fitnesse.slim.instructions.SystemExitSecurityManager;
 import fitnesse.testrunner.MultipleTestsRunner;
@@ -154,6 +157,20 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     String value();
   }
 
+  /**
+   * The <code>UrlPathVariables</code> annotation specifies the variable overrides to
+   * use for the duration of the test. Example: <code>{"ID", "100", "gizmo, "true"}</code>
+   * or <code>ID=100&gizmo=true</code>.
+   */
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.TYPE)
+  public @interface UrlPathVariables {
+
+    public String[] value() default {};
+
+    public String systemProperty() default "";
+  }
+
   private Class<?> suiteClass;
   private String suiteName;
   private String outputDir;
@@ -219,6 +236,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     } catch (Exception e) {
       errors.add(e);
     }
+
     try {
       this.context = createContext(suiteClass);
     } catch (Exception e) {
@@ -231,8 +249,8 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     String fitNesseRoot = getFitNesseRoot(suiteClass);
     int port = getPort(suiteClass);
     File configFile = getConfigFile(rootPath, suiteClass);
-
-    return initContext(configFile, rootPath, fitNesseRoot, port);
+    Map<String, String> urlPathVariables = getUrlPathVariables(suiteClass);
+    return initContext(configFile, rootPath, fitNesseRoot, port, urlPathVariables);
   }
 
   protected String getSuiteName(Class<?> klass) throws InitializationError {
@@ -306,6 +324,26 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     }
     throw new InitializationError(
             "In annotation @ExcludeSuiteFilter you have to specify either 'value' or 'systemProperty'");
+  }
+
+  protected Map<String, String> getUrlPathVariables(Class<?> klass) {
+    UrlPathVariables urlParamsAnnotation = klass.getAnnotation(UrlPathVariables.class);
+    if (urlParamsAnnotation == null) {
+      return null;
+    }
+    if (urlParamsAnnotation.value().length > 0) {
+      String[] urlParams = urlParamsAnnotation.value();
+      Map<String, String> map = new HashMap<>();
+      for (int i = 0; (i + 1) < urlParams.length; i += 2) {
+        map.put(urlParams[i], urlParams[i + 1]);
+      }
+      return map;
+    }
+    if (!"".equals(urlParamsAnnotation.systemProperty())) {
+      String urlParams = System.getProperty(urlParamsAnnotation.systemProperty());
+      return Request.getQueryMap(urlParams);
+    }
+    return null;
   }
 
   protected boolean useDebugMode(Class<?> klass) throws Exception {
@@ -446,7 +484,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     return suiteFilterAndStrategy ? suiteFilter : null;
   }
 
-  static FitNesseContext initContext(File configFile, String rootPath, String fitNesseRoot, int port) throws IOException, PluginException {
+  static FitNesseContext initContext(File configFile, String rootPath, String fitNesseRoot, int port, Map<String, String> urlPathVariables) throws IOException, PluginException {
     ContextConfigurator contextConfigurator = ContextConfigurator.systemDefaults()
       .updatedWith(System.getProperties())
       .updatedWith(ConfigurationParameter.loadProperties(configFile))
@@ -456,6 +494,11 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
             ConfigurationParameter.ROOT_DIRECTORY, fitNesseRoot,
             ConfigurationParameter.OMITTING_UPDATES, true));
 
+    if (urlPathVariables != null) {
+      for (String key : urlPathVariables.keySet()) {
+        contextConfigurator.withParameter(key, urlPathVariables.get(key));
+      }
+    }
     return contextConfigurator.makeFitNesseContext();
   }
 
