@@ -1,5 +1,6 @@
 package fitnesse.wiki.search;
 
+import fitnesse.wiki.HitCollector;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.PathParser;

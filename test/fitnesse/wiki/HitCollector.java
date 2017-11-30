@@ -1,7 +1,6 @@
-package fitnesse.wiki.search;
+package fitnesse.wiki;
 
 import fitnesse.components.TraversalListener;
-import fitnesse.wiki.WikiPage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,7 +9,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-class HitCollector implements TraversalListener<WikiPage> {
+public class HitCollector implements TraversalListener<WikiPage> {
   private List<WikiPage> hits = new ArrayList<>();
 
   @Override
@@ -18,12 +17,13 @@ class HitCollector implements TraversalListener<WikiPage> {
     hits.add(page);
   }
 
-  public void assertPagesFound(String... pageNames) throws Exception {
+  public void assertPagesFound(String... pageNames) {
     assertEquals(pageNames.length, hits.size());
 
-    List<String> pageNameList = Arrays.asList(pageNames);
+    List<String> pageNameList = new ArrayList<>(Arrays.asList(pageNames));
     for (WikiPage page: hits) {
       assertTrue(pageNameList.contains(page.getName()));
+      pageNameList.remove(page.getName()); // to correctly assert multiple entries with the same name
     }
   }
 }
