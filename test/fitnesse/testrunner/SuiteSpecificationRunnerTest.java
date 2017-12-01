@@ -10,7 +10,9 @@ import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 //Proper table format:
 //|suite|
@@ -144,5 +146,31 @@ public class SuiteSpecificationRunnerTest {
     String page = "<table><tr><td>Suite</td></tr><tr><td>Title</td><td>One</td></tr><tr><td>Content</td><td></td></tr></table>";
     assertTrue(runner.getPageListFromPageContent(page));
     assertEquals(1,runner.testPages().size());
+  }
+
+  @Test
+  public void shouldExcludeSkippedPages() throws Exception {
+    prunePage("TestPageTwo");
+    runner.titleRegEx = ".*";
+    runner.findPageMatches();
+    assertEquals(2, runner.testPages().size());
+    assertEquals("TestPageOne", runner.testPages().get(0).getName());
+    assertEquals("ChildPage", runner.testPages().get(1).getName());
+  }
+
+  @Test
+  public void shouldExcludeChildrenOfSkippedPages() throws Exception {
+    prunePage("TestPageOne");
+    runner.titleRegEx = ".*";
+    runner.findPageMatches();
+    assertEquals(1, runner.testPages().size());
+    assertEquals("TestPageTwo", runner.testPages().get(0).getName());
+  }
+
+  private void prunePage(String pageName) {
+    WikiPage childPage = root.getChildPage(pageName);
+    PageData data = childPage.getData();
+    data.setAttribute(PageData.PropertyPRUNE);
+    childPage.commit(data);
   }
 }

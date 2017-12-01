@@ -1,7 +1,6 @@
 package fitnesse.wiki.search;
 
 import fitnesse.wiki.HitCollector;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
@@ -64,21 +63,6 @@ public class SuiteSpecificationMatchFinderTest {
     finder = new SuiteSpecificationMatchFinder(null, "child.*life", hits);
     finder.search(root);
     hits.assertPagesFound("TestPageOne", "ChildPage");
-  }
-
-  @Test
-  public void shouldExcludeSkippedPages() throws Exception {
-    finder = new SuiteSpecificationMatchFinder(null, ".*", hits);
-    prunePage("TestPageTwo");
-    finder.search(root);
-    hits.assertPagesFound("RooT", "TestPageOne", "ChildPage");
-  }
-
-  private void prunePage(String pageName) {
-    WikiPage childPage = root.getChildPage(pageName);
-    PageData data = childPage.getData();
-    data.setAttribute(PageData.PropertyPRUNE);
-    childPage.commit(data);
   }
 }
 

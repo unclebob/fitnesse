@@ -28,6 +28,11 @@ public abstract class BaseWikiPage implements WikiPage {
   }
 
   @Override
+  public PageCrawler getPageCrawler(PagePruningStrategy strategy) {
+    return new PageCrawler(this, strategy);
+  }
+
+  @Override
   public WikiPage getParent() {
     return parent == null ? this : parent;
   }

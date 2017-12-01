@@ -1,15 +1,13 @@
 package fitnesse.testrunner;
 
-import fitnesse.components.TraversalListener;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.PrunedPagePruningStrategy;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.search.SuiteSpecificationMatchFinder;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class SuiteSpecificationRunner {
@@ -30,7 +28,7 @@ public class SuiteSpecificationRunner {
 
   public void findPageMatches() {
     SuiteSpecificationMatchFinder finder = new SuiteSpecificationMatchFinder(titleRegEx, contentRegEx, traverser);
-    finder.search(searchRoot);
+    finder.search(searchRoot, new PrunedPagePruningStrategy());
   }
 
 
