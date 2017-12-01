@@ -127,21 +127,3 @@ public class SuiteSpecificationRunner {
 }
 
 
-class SuiteSpecificationTraverser implements TraversalListener<WikiPage> {
-
-  private LinkedList<WikiPage> testPageList = new LinkedList<>();
-
-  @Override
-  public void process(WikiPage page) {
-    for (WikiPage hit : testPageList) {
-      if (hit.equals(page))
-        return;
-    }
-    if (page.getData().hasAttribute("Test"))
-      testPageList.add(page);
-  }
-
-  public List<WikiPage> testPages() {
-    return new ArrayList<>(testPageList);
-  }
-}
