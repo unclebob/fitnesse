@@ -75,7 +75,6 @@ public class SuiteContentsFinder {
 
   private boolean isPruned(WikiPage page) {
     return page.getData().hasAttribute(PageData.PropertyPRUNE);
-
   }
 
   private boolean isTopPage(WikiPage page) {

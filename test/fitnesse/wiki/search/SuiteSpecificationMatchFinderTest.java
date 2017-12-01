@@ -11,9 +11,9 @@ import org.junit.Test;
 
 public class SuiteSpecificationMatchFinderTest {
 
-  WikiPage root;
-  SuiteSpecificationMatchFinder finder;
-  HitCollector hits;
+  private WikiPage root;
+  private SuiteSpecificationMatchFinder finder;
+  private HitCollector hits;
 
   @Before
   public void setUp() throws Exception {
@@ -75,10 +75,10 @@ public class SuiteSpecificationMatchFinderTest {
   }
 
   private void prunePage(String pageName) {
-    WikiPage testPageTwo = root.getChildPage(pageName);
-    PageData data = testPageTwo.getData();
+    WikiPage childPage = root.getChildPage(pageName);
+    PageData data = childPage.getData();
     data.setAttribute(PageData.PropertyPRUNE);
-    testPageTwo.commit(data);
+    childPage.commit(data);
   }
 }
 
