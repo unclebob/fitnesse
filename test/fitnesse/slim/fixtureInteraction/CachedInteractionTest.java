@@ -148,8 +148,10 @@ public class CachedInteractionTest {
     Method consMethod = interaction.findMatchingMethod(findMethod, consInstance, Collections.emptyList());
 
     assertEquals(findMethod, consMethod.getName());
-    assertEquals("Method returned is defined by the wrong class (i.e. not the class of the instance passed)",
-      consInstance.getClass(), consMethod.getDeclaringClass());
+    assertNotEquals("Method returned is defined by the wrong class (i.e. the class previously found)",
+      method.getDeclaringClass(), consMethod.getDeclaringClass());
+    assertEquals("Method returned is defined by the wrong class (i.e. not the superclass of the instance passed)",
+      consInstance.getClass().getSuperclass(), consMethod.getDeclaringClass());
   }
 
   @Test
