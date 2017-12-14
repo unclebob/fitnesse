@@ -7,7 +7,7 @@ public class WikiFileListBuilder {
 
   private static final Logger LOG = Logger.getLogger(WikiFileListBuilder.class.getName());
 
-  private static final List<String> VALID_FILE_NAMES = Arrays.asList("content.txt", "properties.xml", ".gitignore");
+  private static final List<String> VALID_FILE_NAMES = Arrays.asList("content.txt", "properties.xml");
 
   private List<String> mainDirectories = []
   private List<String> doNotReplaceFiles = []
