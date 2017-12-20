@@ -65,11 +65,6 @@ public class WikiPageDummy extends BaseWikiPage {
   }
 
   @Override
-  public PageCrawler getPageCrawler(PagePruningStrategy strategy) {
-    return new PageCrawler(this, strategy);
-  }
-
-  @Override
   public String getVariable(String name) {
     return null;
   }

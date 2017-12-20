@@ -7,15 +7,9 @@ import fitnesse.components.TraversalListener;
 public class PageCrawler {
 
   private final WikiPage context;
-  private final PagePruningStrategy pruningStrategy;
 
   public PageCrawler(WikiPage context) {
-    this(context, new NoPruningStrategy());
-  }
-
-  public PageCrawler(WikiPage context, PagePruningStrategy pruningStrategy) {
     this.context = context;
-    this.pruningStrategy = pruningStrategy;
   }
 
   public WikiPage getPage(WikiPagePath path) {
@@ -118,17 +112,17 @@ public class PageCrawler {
       return getRoot(page.getParent());
   }
 
-  public void traverse(TraversalListener<? super WikiPage> listener) {
-    traverse(context, listener);
+  public void traverse(TraversalListener<? super WikiPage> listener, PagePruningStrategy strategy) {
+    traverse(this.context, listener, strategy);
   }
 
-  private void traverse(WikiPage page, TraversalListener<? super WikiPage> listener) {
+  private void traverse(WikiPage page, TraversalListener<? super WikiPage> listener, PagePruningStrategy pruningStrategy) {
     // skip a page and its children if the pruning strategy says so:
     if(pruningStrategy.skipPageAndChildren(page)){ return; }
 
     listener.process(page);
     for (WikiPage wikiPage : page.getChildren()) {
-      traverse(wikiPage, listener);
+      traverse(wikiPage, listener, pruningStrategy);
     }
   }
 

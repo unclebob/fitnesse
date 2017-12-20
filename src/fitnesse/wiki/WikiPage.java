@@ -79,8 +79,6 @@ public interface WikiPage extends Comparable<WikiPage> {
 
   PageCrawler getPageCrawler();
 
-  PageCrawler getPageCrawler(PagePruningStrategy strategy);
-
   String getVariable(String name);
 }
 

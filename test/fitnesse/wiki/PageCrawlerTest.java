@@ -148,7 +148,7 @@ public class PageCrawlerTest {
 
   @Test
   public void testTraversal() throws Exception {
-    crawler.traverse(hits);
+    crawler.traverse(hits, new NoPruningStrategy());
     hits.assertPagesFound("RooT", "PageOne", "ChildOne", "GrandChildOne", "ChildTwo", "PageTwo");
   }
 
@@ -158,7 +158,7 @@ public class PageCrawlerTest {
     data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymLink", page2.getName());
     page1.commit(data);
 
-    crawler.traverse(hits);
+    crawler.traverse(hits, new NoPruningStrategy());
     hits.assertPagesFound("RooT", "PageOne", "ChildOne", "GrandChildOne", "ChildTwo",
             "SymLink", "PageTwo");
   }
@@ -170,7 +170,7 @@ public class PageCrawlerTest {
     child1.commit(data);
 
     crawler = new PageCrawler(page1);
-    crawler.traverse(hits);
+    crawler.traverse(hits, new NoPruningStrategy());
     hits.assertPagesFound("PageOne", "ChildOne", "GrandChildOne", "SymLink",
             "ChildOne", "ChildTwo", "ChildTwo");
   }

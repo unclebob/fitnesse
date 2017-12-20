@@ -1,6 +1,7 @@
 package fitnesse.wiki.search;
 
 import fitnesse.components.TraversalListener;
+import fitnesse.wiki.NoPruningStrategy;
 import fitnesse.wiki.PagePruningStrategy;
 import fitnesse.wiki.WikiPage;
 
@@ -16,11 +17,11 @@ public abstract class WikiPageFinder implements PageFinder {
 
   @Override
   public void search(WikiPage page) {
-    page.getPageCrawler().traverse(traverser);
+    page.getPageCrawler().traverse(traverser, new NoPruningStrategy());
   }
 
   public void search(WikiPage page, PagePruningStrategy strategy) {
-    page.getPageCrawler(strategy).traverse(traverser);
+    page.getPageCrawler().traverse(traverser, strategy);
   }
 }
 

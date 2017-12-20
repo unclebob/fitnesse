@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki.refactoring;
 
+import fitnesse.wiki.NoPruningStrategy;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.SymbolTreeWalker;
 
@@ -15,7 +16,7 @@ public abstract class ReferenceRenamer implements SymbolTreeWalker {
     }
 
     public void renameReferences() {
-        root.getPageCrawler().traverse(traverser);
+        root.getPageCrawler().traverse(traverser, new NoPruningStrategy());
     }
 
     WikiPage currentPage(){
