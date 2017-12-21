@@ -1,0 +1,7 @@
+---
+Test
+---
+|script     |echo fixture                             |
+|$myHashMap=|echo|!{key1:value1,key2:!{subkey:subval}}|
+|check      |echo|$myHashMap.key1           |value1   |
+|check      |echo|$myHashMap.key2.subkey    |subval   |

@@ -1,5 +1,7 @@
 package fitnesse.slim;
 
+import fitnesse.slim.converters.MapConverter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -78,15 +80,29 @@ public class VariableStore {
   }
 
   private String getStoreSymbolValue(String symbolName) {
-    if (variables.containsKey(symbolName)) {
-      String replacement = "null";
-      Object value = variables.get(symbolName);
-      if (value != null) {
-        replacement = value.toString();
+    Object value = null;
+    String replacement = "null";
+    if(symbolName.contains(".")) {
+      String[] symbolInfo = symbolName.split("\\.");
+      symbolName = symbolInfo[0];
+      if (variables.containsKey(symbolName)) {
+        value = variables.get(symbolName).toString();
+        for(int i = 1; i < symbolInfo.length; i++) {
+          value = getValueFromMap(value.toString(), symbolInfo[i]);
+        }
       }
-      return replacement;
+    } else if (variables.containsKey(symbolName)) {
+      value = variables.get(symbolName);
     }
-    return null;
+    if (value != null) {
+      replacement = value.toString();
+    }
+    return replacement;
   }
 
+  private Object getValueFromMap(String map, String key) {
+    MapConverter cnv = new MapConverter();
+    Map<String, String> mapObj = cnv.fromString(map);
+    return mapObj.get(key);
+  }
 }
