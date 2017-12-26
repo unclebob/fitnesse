@@ -16,6 +16,7 @@ import fitnesse.socketservice.SocketService;
 import fitnesse.testsystems.CommandRunner;
 import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.MockCommandRunner;
+import fitnesse.util.ClassUtils;
 import org.apache.commons.lang.ArrayUtils;
 
 public class CommandRunningFitClient extends FitClient {
@@ -269,7 +270,7 @@ public class CommandRunningFitClient extends FitClient {
 
     private Method getTestRunnerMethod(String testRunner) {
       try {
-        return Class.forName(testRunner).getDeclaredMethod("main", String[].class);
+        return ClassUtils.forName(testRunner).getDeclaredMethod("main", String[].class);
       } catch (Exception e) {
         throw new IllegalArgumentException(e);
       }

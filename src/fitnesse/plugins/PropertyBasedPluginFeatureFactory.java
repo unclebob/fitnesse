@@ -19,6 +19,7 @@ import fitnesse.testsystems.slim.CustomComparator;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
+import fitnesse.util.ClassUtils;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.WikiPageFactoryRegistry;
 import fitnesse.wikitext.parser.SymbolProvider;
@@ -195,7 +196,9 @@ public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase 
   @SuppressWarnings("unchecked")
   private static <T> Class<T> forName(String className) throws PluginException {
     try {
-      return (Class<T>) Class.forName(className);
+      // TODO: Defer loading to ComponentFactory
+//      return componentFactory.createComponent(className);
+      return ClassUtils.forName(className);
     } catch (ClassNotFoundException e) {
       throw new PluginException("Unable to load class " + className, e);
     }

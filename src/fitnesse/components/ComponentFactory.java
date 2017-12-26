@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import fitnesse.ConfigurationParameter;
+import fitnesse.util.ClassUtils;
 
 /**
  * Create components for FitNesse.
@@ -40,7 +41,7 @@ public class ComponentFactory {
     Class<?> componentClass;
     try {
       if (componentClassName != null)
-        componentClass = Class.forName(componentClassName);
+        componentClass = ClassUtils.forName(componentClassName);
       else
         componentClass = defaultComponent;
     } catch (Exception e) {
