@@ -4,6 +4,7 @@ package fitnesse.plugins;
 
 import java.io.File;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.List;
 import java.util.Properties;
 
@@ -36,6 +37,7 @@ import fitnesse.testsystems.slim.tables.SlimAssertion;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.testutil.SimpleAuthenticator;
+import fitnesse.util.ClassUtils;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.WikiPageFactory;
@@ -55,6 +57,7 @@ import org.htmlparser.tags.TableColumn;
 import org.htmlparser.tags.TableRow;
 import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -81,12 +84,19 @@ public class PluginsLoaderTest {
     testCustomComparatorsRegistry = new CustomComparatorRegistry();
     testTestSystemFactory = new MultipleTestSystemFactory(testSlimTableFactory, testCustomComparatorsRegistry);
 
-    URL sampleUrl = new File("test/fitnesse/plugins").toURI().toURL();
-    PluginsClassLoader.addUrlToClasspath(sampleUrl);
+    URL pluginLoaderTestDirectory = new File("plugin-loader-test").toURI().toURL();
+
+    ClassLoader cl = new URLClassLoader(new URL[] { pluginLoaderTestDirectory }, ClassLoader.getSystemClassLoader());
+    ClassUtils.setClassLoader(cl);
 
     loader = new PluginsLoader(new ComponentFactory(testProperties));
 
     assertSymbolTypeMatch("!today", false);
+  }
+
+  @After
+  public void tearDown() {
+    ClassUtils.setClassLoader(null);
   }
 
   @Test

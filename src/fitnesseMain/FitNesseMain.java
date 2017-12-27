@@ -10,6 +10,7 @@ import fitnesse.reporting.ExitCodeListener;
 import fitnesse.socketservice.PlainServerSocketFactory;
 import fitnesse.socketservice.SslServerSocketFactory;
 import fitnesse.updates.WikiContentUpdater;
+import fitnesse.util.ClassUtils;
 
 import java.io.*;
 import java.net.BindException;
@@ -119,7 +120,8 @@ public class FitNesseMain {
   }
 
   private void loadPlugins(String rootPath) throws Exception {
-    new PluginsClassLoader(rootPath).addPluginsToClassLoader();
+    ClassLoader classLoader = new PluginsClassLoader().loadPlugins(rootPath);
+    ClassUtils.setClassLoader(classLoader);
   }
 
   private Integer launch(FitNesseContext context) throws Exception {

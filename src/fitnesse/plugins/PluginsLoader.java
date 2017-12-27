@@ -19,6 +19,7 @@ import fitnesse.responders.editing.ContentFilter;
 import fitnesse.testrunner.TestSystemFactoryRegistry;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
+import fitnesse.util.ClassUtils;
 import fitnesse.wiki.WikiPageFactoryRegistry;
 import fitnesse.wikitext.parser.SymbolProvider;
 
@@ -37,7 +38,7 @@ public class PluginsLoader {
     List<PluginFeatureFactory> factories = new ArrayList<>();
     factories.addAll(PropertyBasedPluginFeatureFactory.loadFromProperties(componentFactory));
 
-    for (PluginFeatureFactory factory : ServiceLoader.load(PluginFeatureFactory.class)) {
+    for (PluginFeatureFactory factory : ServiceLoader.load(PluginFeatureFactory.class, ClassUtils.getClassLoader())) {
       factories.add(factory);
     }
     return factories;

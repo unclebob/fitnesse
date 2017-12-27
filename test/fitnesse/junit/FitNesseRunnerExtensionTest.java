@@ -41,7 +41,7 @@ public class FitNesseRunnerExtensionTest {
 
     @Override
     protected FitNesseContext createContext(Class<?> suiteClass) throws Exception {
-      new PluginsClassLoader(getFitNesseRoot(suiteClass)).addPluginsToClassLoader();
+      new PluginsClassLoader().loadPlugins(getFitNesseRoot(suiteClass));
 
       return super.createContext(suiteClass);
     }
