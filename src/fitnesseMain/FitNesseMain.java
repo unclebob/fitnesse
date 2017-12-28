@@ -25,7 +25,7 @@ public class FitNesseMain {
 
   private final ExitCodeListener exitCodeListener = new ExitCodeListener();
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) {
     Arguments arguments = null;
     try {
       arguments = new Arguments(args);
@@ -33,7 +33,7 @@ public class FitNesseMain {
       Arguments.printUsage();
       exit(1);
     }
-    Integer exitCode = 0;
+    Integer exitCode;
     try {
         exitCode = new FitNesseMain().launchFitNesse(arguments);
     } catch (Exception e){

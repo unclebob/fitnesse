@@ -115,9 +115,7 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
   private boolean isValidClass(String potentialClass) {
     try {
       return Class.forName(potentialClass) != null;
-    } catch (Exception e) {
-      return false;
-    }catch (NoClassDefFoundError e) {
+    } catch (Exception|NoClassDefFoundError e) {
       return false;
     }
   }
