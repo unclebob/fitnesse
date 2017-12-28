@@ -18,10 +18,11 @@ public class PluginsClassLoader {
     File pluginsDirectory = new File(rootPath, "plugins");
 
     URL[] urls = urlsForPlugins(pluginsDirectory);
-    ClassLoader newCL = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
-
-//    Thread.currentThread().setContextClassLoader(newCL);
-    return newCL;
+    if (urls.length > 0) {
+      return new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
+    } else {
+      return ClassLoader.getSystemClassLoader();
+    }
   }
 
   private static URL[] urlsForPlugins(File pluginsDirectory) throws Exception {

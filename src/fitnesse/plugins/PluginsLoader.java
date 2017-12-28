@@ -27,10 +27,12 @@ public class PluginsLoader {
   private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(PluginsLoader.class.getName());
 
   private final ComponentFactory componentFactory;
+  private final ClassLoader classLoader;
   private final Collection<PluginFeatureFactory> pluginFeatureFactories;
 
-  public PluginsLoader(ComponentFactory componentFactory) throws PluginException {
+  public PluginsLoader(ComponentFactory componentFactory, ClassLoader classLoader) throws PluginException {
     this.componentFactory = componentFactory;
+    this.classLoader = classLoader;
     this.pluginFeatureFactories = findPluginFeatureFactories();
   }
 
@@ -38,7 +40,7 @@ public class PluginsLoader {
     List<PluginFeatureFactory> factories = new ArrayList<>();
     factories.addAll(PropertyBasedPluginFeatureFactory.loadFromProperties(componentFactory));
 
-    for (PluginFeatureFactory factory : ServiceLoader.load(PluginFeatureFactory.class, ClassUtils.getClassLoader())) {
+    for (PluginFeatureFactory factory : ServiceLoader.load(PluginFeatureFactory.class, classLoader)) {
       factories.add(factory);
     }
     return factories;

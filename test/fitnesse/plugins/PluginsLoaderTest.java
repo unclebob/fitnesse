@@ -73,6 +73,7 @@ public class PluginsLoaderTest {
   private SlimTableFactory testSlimTableFactory;
   private CustomComparatorRegistry testCustomComparatorsRegistry;
   private MultipleTestSystemFactory testTestSystemFactory;
+  private URLClassLoader classLoader;
 
   @Before
   public void setUp() throws Exception {
@@ -86,10 +87,10 @@ public class PluginsLoaderTest {
 
     URL pluginLoaderTestDirectory = new File("plugin-loader-test").toURI().toURL();
 
-    ClassLoader cl = new URLClassLoader(new URL[] { pluginLoaderTestDirectory }, ClassLoader.getSystemClassLoader());
-    ClassUtils.setClassLoader(cl);
+    classLoader = new URLClassLoader(new URL[] { pluginLoaderTestDirectory }, ClassLoader.getSystemClassLoader());
+    ClassUtils.setClassLoader(classLoader);
 
-    loader = new PluginsLoader(new ComponentFactory(testProperties));
+    loader = new PluginsLoader(new ComponentFactory(testProperties), classLoader);
 
     assertSymbolTypeMatch("!today", false);
   }
@@ -103,7 +104,7 @@ public class PluginsLoaderTest {
   public void testAddPlugins() throws Exception {
     testProperties.setProperty(ConfigurationParameter.PLUGINS.getKey(), DummyPlugin.class.getName());
 
-    loader = new PluginsLoader(new ComponentFactory(testProperties));
+    loader = new PluginsLoader(new ComponentFactory(testProperties), classLoader);
 
     loader.loadResponders(responderFactory);
     loader.loadSymbolTypes(testProvider);
@@ -121,7 +122,7 @@ public class PluginsLoaderTest {
   public void shouldHandleInstanceMethods() throws Exception {
     testProperties.setProperty(ConfigurationParameter.PLUGINS.getKey(), InstantiableDummyPlugin.class.getName());
     testProperties.setProperty("responderName", "instanceTest");
-    loader = new PluginsLoader(new ComponentFactory(testProperties));
+    loader = new PluginsLoader(new ComponentFactory(testProperties), classLoader);
 
     loader.loadResponders(responderFactory);
 
@@ -137,7 +138,7 @@ public class PluginsLoaderTest {
   public void testAddResponderPlugins() throws Exception {
     String respondersValue = "custom1:" + WikiPageResponder.class.getName() + ",custom2:" + EditResponder.class.getName();
     testProperties.setProperty(ConfigurationParameter.RESPONDERS.getKey(), respondersValue);
-    loader = new PluginsLoader(new ComponentFactory(testProperties));
+    loader = new PluginsLoader(new ComponentFactory(testProperties), classLoader);
 
     loader.loadResponders(responderFactory);
 

@@ -55,6 +55,7 @@ public class ContextConfigurator {
   /** Others as name-value pairs: */
   private final Properties properties = new Properties();
   private TestSystemListener testSystemListener;
+  private ClassLoader classLoader;
 
   private ContextConfigurator() {
   }
@@ -66,6 +67,7 @@ public class ContextConfigurator {
   public static ContextConfigurator systemDefaults() {
     return empty()
       .withRootPath(DEFAULT_PATH)
+      .withClassLoader(ClassLoader.getSystemClassLoader())
       .withParameter(ROOT_DIRECTORY, DEFAULT_ROOT)
       .withParameter(CONTEXT_ROOT, DEFAULT_CONTEXT_ROOT)
       .withParameter(VERSIONS_CONTROLLER_DAYS, Integer.toString(DEFAULT_VERSION_DAYS))
@@ -85,7 +87,7 @@ public class ContextConfigurator {
   }
 
   public FitNesseContext makeFitNesseContext() throws IOException, PluginException {
-    ComponentFactory componentFactory = new ComponentFactory(properties);
+    ComponentFactory componentFactory = new ComponentFactory(properties, classLoader);
 
     if (port == null) {
       port = getPort();
@@ -106,7 +108,7 @@ public class ContextConfigurator {
       recentChanges = componentFactory.createComponent(RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
     }
 
-    PluginsLoader pluginsLoader = new PluginsLoader(componentFactory);
+    PluginsLoader pluginsLoader = new PluginsLoader(componentFactory, classLoader);
 
     if (logger == null) {
       logger = pluginsLoader.makeLogger(get(LOG_DIRECTORY));
@@ -260,6 +262,11 @@ public class ContextConfigurator {
 
   public ContextConfigurator withRecentChanges(RecentChanges recentChanges) {
     this.recentChanges = recentChanges;
+    return this;
+  }
+
+  public ContextConfigurator withClassLoader(ClassLoader classLoader) {
+    this.classLoader = classLoader;
     return this;
   }
 

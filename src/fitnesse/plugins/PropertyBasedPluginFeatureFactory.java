@@ -174,19 +174,18 @@ public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase 
       Class<T> clazz = forName(className);
       registrar.register(prefix, clazz);
     } catch (ComponentInstantiationException e) {
-      throw new PluginException("Can not register plug in " + className, e);
+      throw new PluginException("Can not register plugin " + className, e);
     }
   }
 
-  private static Collection<PluginFeatureFactory> createWrappersForLegacyPlugins(ComponentFactory componentFactory) throws PluginException {
+  private static Collection<PluginFeatureFactory> createWrappersForLegacyPlugins(ComponentFactory componentFactory) {
     String[] pluginNames = getListFromProperties(componentFactory, ConfigurationParameter.PLUGINS);
     if (pluginNames == null) {
       return Collections.emptyList();
     } else {
       List<PluginFeatureFactory> providers = new ArrayList<>(pluginNames.length);
       for (String pluginName : pluginNames) {
-        Class<?> pluginClass = forName(pluginName);
-        Object plugin = componentFactory.createComponent(pluginClass);
+        Object plugin = componentFactory.createComponentForClassName(pluginName);
         providers.add(new LegacyPluginFeatureFactory(plugin));
       }
       return providers;
@@ -194,11 +193,9 @@ public class PropertyBasedPluginFeatureFactory extends PluginFeatureFactoryBase 
   }
 
   @SuppressWarnings("unchecked")
-  private static <T> Class<T> forName(String className) throws PluginException {
+  private <T> Class<T> forName(String className) throws PluginException {
     try {
-      // TODO: Defer loading to ComponentFactory
-//      return componentFactory.createComponent(className);
-      return ClassUtils.forName(className);
+      return componentFactory.lookupComponentClass(className);
     } catch (ClassNotFoundException e) {
       throw new PluginException("Unable to load class " + className, e);
     }

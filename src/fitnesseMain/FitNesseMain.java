@@ -61,7 +61,8 @@ public class FitNesseMain {
 
   public Integer launchFitNesse(ContextConfigurator contextConfigurator) throws Exception {
     configureLogging("verbose".equalsIgnoreCase(contextConfigurator.get(LOG_LEVEL)));
-    loadPlugins(contextConfigurator.get(ConfigurationParameter.ROOT_PATH));
+
+    loadPlugins(contextConfigurator);
 
     if (contextConfigurator.get(COMMAND) != null) {
       contextConfigurator.withTestSystemListener(exitCodeListener);
@@ -119,9 +120,11 @@ public class FitNesseMain {
     return false;
   }
 
-  private void loadPlugins(String rootPath) throws Exception {
-    ClassLoader classLoader = new PluginsClassLoader().loadPlugins(rootPath);
+  private void loadPlugins(ContextConfigurator contextConfigurator) throws Exception {
+    ClassLoader classLoader = PluginsClassLoader.loadPlugins(contextConfigurator.get(ConfigurationParameter.ROOT_PATH));
+
     ClassUtils.setClassLoader(classLoader);
+    contextConfigurator.withClassLoader(classLoader);
   }
 
   private Integer launch(FitNesseContext context) throws Exception {
