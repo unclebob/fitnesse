@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Gets a class loader which extends the class path with jars found in "plugins" directory.
  */
-public class PluginsClassLoader {
+public class PluginsClassLoaderFactory {
 
   public static ClassLoader getClassLoader(String rootPath) throws IOException {
     ClassLoader result = ClassLoader.getSystemClassLoader();

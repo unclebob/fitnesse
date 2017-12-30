@@ -5,12 +5,11 @@ import fitnesse.ContextConfigurator;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.Updater;
-import fitnesse.components.PluginsClassLoader;
+import fitnesse.components.PluginsClassLoaderFactory;
 import fitnesse.reporting.ExitCodeListener;
 import fitnesse.socketservice.PlainServerSocketFactory;
 import fitnesse.socketservice.SslServerSocketFactory;
 import fitnesse.updates.WikiContentUpdater;
-import fitnesse.util.ClassUtils;
 
 import java.io.*;
 import java.net.BindException;
@@ -62,7 +61,7 @@ public class FitNesseMain {
   public Integer launchFitNesse(ContextConfigurator contextConfigurator) throws Exception {
     configureLogging("verbose".equalsIgnoreCase(contextConfigurator.get(LOG_LEVEL)));
 
-    ClassLoader classLoader = PluginsClassLoader.getClassLoader(contextConfigurator.get(ConfigurationParameter.ROOT_PATH));
+    ClassLoader classLoader = PluginsClassLoaderFactory.getClassLoader(contextConfigurator.get(ConfigurationParameter.ROOT_PATH));
     contextConfigurator.withClassLoader(classLoader);
 
     if (contextConfigurator.get(COMMAND) != null) {

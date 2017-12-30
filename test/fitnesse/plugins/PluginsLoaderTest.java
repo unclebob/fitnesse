@@ -14,7 +14,6 @@ import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.ComponentFactory;
-import fitnesse.components.PluginsClassLoader;
 import fitnesse.reporting.BaseFormatter;
 import fitnesse.reporting.FormatterFactory;
 import fitnesse.responders.ResponderFactory;

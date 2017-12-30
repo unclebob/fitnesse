@@ -1,25 +1,24 @@
 package fitnesse.components;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
+import static org.junit.Assert.*;
 
-public class PluginsClassLoaderTest {
+
+public class PluginsClassLoaderFactoryTest {
 
   @Test
   public void whenPluginsDirectoryDoesNotExist() throws Exception {
-    new PluginsClassLoader().getClassLoader("nonExistingRootDirectory");
+    new PluginsClassLoaderFactory().getClassLoader("nonExistingRootDirectory");
 
     assertTrue("didn't cause exception", true);
   }
 
   @Test
   public void addPluginsToClassLoader() throws Exception {
-    String[] dynamicClasses = new String[]{"fitnesse.testing.PluginX", "fitnesse.testing.PluginY"};
-    ClassLoader cl = PluginsClassLoader.getClassLoader(".");
+    ClassLoader cl = PluginsClassLoaderFactory.getClassLoader(".");
 
-    assertLoadingClassWorksNow(cl, dynamicClasses);
+    assertLoadingClassWorksNow(cl, "fitnesse.testing.PluginX", "fitnesse.testing.PluginY");
   }
 
   private void assertLoadingClassWorksNow(ClassLoader cl, String... dynamicClasses) {
