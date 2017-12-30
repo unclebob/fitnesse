@@ -31,24 +31,11 @@ public class PluginsClassLoader {
     if (pluginsDirectory.exists() && pluginsDirectory.isDirectory())
       for (File plugin : pluginsDirectory.listFiles())
         if (plugin.getName().endsWith("jar"))
-          urls.addAll(toUrls(plugin.getCanonicalPath()));
+          urls.add(toUrl(plugin.getCanonicalPath()));
 
     return urls.toArray(new URL[urls.size()]);
   }
-
-  private static List<URL> toUrls(String classpathItems) throws Exception {
-    final String separator = File.pathSeparator;
-    String currentClassPath = System.getProperty("java.class.path");
-    System.setProperty("java.class.path", currentClassPath + separator + classpathItems);
-    String[] items = classpathItems.split(separator);
-    List<URL> urls = new ArrayList<>(items.length);
-
-    for (String item : items) {
-      urls.add(toUrl(item));
-    }
-    return urls;
-  }
-
+  
   private static URL toUrl(String fileName) throws MalformedURLException {
     return new File(fileName).toURI().toURL();
   }
