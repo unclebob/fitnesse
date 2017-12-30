@@ -8,6 +8,7 @@ import fitnesse.Updater;
 import fitnesse.components.PluginsClassLoaderFactory;
 import fitnesse.reporting.ExitCodeListener;
 import fitnesse.socketservice.PlainServerSocketFactory;
+import fitnesse.socketservice.SslParameters;
 import fitnesse.socketservice.SslServerSocketFactory;
 import fitnesse.updates.WikiContentUpdater;
 
@@ -93,7 +94,7 @@ public class FitNesseMain {
     }
 
     try {
-      return launch(context);
+      return launch(context, classLoader);
     } catch (BindException e) {
       LOG.severe("FitNesse cannot be started...");
       LOG.severe("Port " + context.port + " is already in use.");
@@ -120,7 +121,7 @@ public class FitNesseMain {
     return false;
   }
 
-  private Integer launch(FitNesseContext context) throws Exception {
+  private Integer launch(FitNesseContext context, ClassLoader classLoader) throws Exception {
     if (!"true".equalsIgnoreCase(context.getProperty(INSTALL_ONLY.getKey()))) {
       String command = context.getProperty(COMMAND.getKey());
       if (command != null) {
@@ -131,14 +132,14 @@ public class FitNesseMain {
       } else {
         LOG.info("Starting FitNesse on port: " + context.port);
 
-        ServerSocket serverSocket = createServerSocket(context);
+        ServerSocket serverSocket = createServerSocket(context, classLoader);
         context.fitNesse.start(serverSocket);
       }
     }
     return null;
   }
 
-  private ServerSocket createServerSocket(FitNesseContext context) throws IOException {
+  private ServerSocket createServerSocket(FitNesseContext context, ClassLoader classLoader) throws IOException {
     String protocol = context.getProperty(FitNesseContext.WIKI_PROTOCOL_PROPERTY);
     boolean useHTTPS = (protocol != null && protocol.equalsIgnoreCase("https"));
     String clientAuth = context.getProperty(FitNesseContext.SSL_CLIENT_AUTH_PROPERTY);
@@ -146,7 +147,7 @@ public class FitNesseMain {
     final String sslParameterClassName = context.getProperty(FitNesseContext.SSL_PARAMETER_CLASS_PROPERTY);
 
     return (useHTTPS
-      ? new SslServerSocketFactory(sslClientAuth, sslParameterClassName)
+      ? new SslServerSocketFactory(sslClientAuth, SslParameters.createSslParameters(sslParameterClassName, classLoader))
       : new PlainServerSocketFactory()).createServerSocket(context.port);
   }
 

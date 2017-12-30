@@ -9,11 +9,11 @@ import javax.net.ssl.SSLSocketFactory;
 
 
 public class SslParameters {
-	
+
 	private String keyStoreFilename;
 	private String keyStorePassword;
 	private String trustStoreFilename;
-	
+
 	private String keyStoreFilenameOld;
 	private String keyStorePasswordOld;
 	private String trustStoreFilenameOld;
@@ -67,23 +67,27 @@ public class SslParameters {
 	}
 
 
-	public static SslParameters setSslParameters(String sslParameterClassName) {
-		Class<? extends SslParameters> sslParametersInstance;
-	    if (sslParameterClassName == null || "true".equalsIgnoreCase(sslParameterClassName)) {
-	    	sslParametersInstance= SslParameters.class;
-	    }else{
-		    try {
-		       sslParametersInstance=  ClassUtils.forName(sslParameterClassName).asSubclass(SslParameters.class);
-		    } catch (ClassNotFoundException e) {
-		      throw new RuntimeException("Preparing SSL Parameters with Class " + sslParameterClassName + " failed. Class Not Found.", e);
-		    }
-	    }
-	    try{
-	    	return sslParametersInstance.newInstance();
-	    }catch (Exception e) {
-		      throw new RuntimeException("Preparing SSL Parameters with Class " + sslParameterClassName + " failed.", e);
-	    }
+	public static SslParameters createSslParameters(String sslParameterClassName) {
+	  return createSslParameters(sslParameterClassName, ClassLoader.getSystemClassLoader());
 	}
+
+  public static SslParameters createSslParameters(String sslParameterClassName, ClassLoader classLoader) {
+    Class<? extends SslParameters> sslParametersInstance;
+    if (sslParameterClassName == null || "true".equalsIgnoreCase(sslParameterClassName)) {
+      sslParametersInstance = SslParameters.class;
+    }else{
+      try {
+        sslParametersInstance = classLoader.loadClass(sslParameterClassName).asSubclass(SslParameters.class);
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException("Preparing SSL Parameters with Class " + sslParameterClassName + " failed. Class Not Found.", e);
+      }
+    }
+    try{
+      return sslParametersInstance.newInstance();
+    }catch (Exception e) {
+      throw new RuntimeException("Preparing SSL Parameters with Class " + sslParameterClassName + " failed.", e);
+    }
+  }
 
 	public SSLServerSocketFactory createSSLServerSocketFactory(){
 		SSLServerSocketFactory ssf;
@@ -106,6 +110,5 @@ public class SslParameters {
 		}
 	    return ssf;
 	}
-
 
 }

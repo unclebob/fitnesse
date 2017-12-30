@@ -11,10 +11,7 @@ import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.ImportInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.MakeInstruction;
-import fitnesse.socketservice.PlainClientSocketFactory;
-import fitnesse.socketservice.PlainServerSocketFactory;
-import fitnesse.socketservice.ServerSocketFactory;
-import fitnesse.socketservice.SslServerSocketFactory;
+import fitnesse.socketservice.*;
 import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.MockCommandRunner;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
@@ -38,7 +35,7 @@ public abstract class SlimServiceTestBase {
       service.interrupt();
       throw new SlimError("Already an in-process server running: " + service.getName() + " (alive=" + service.isAlive() + ")");
     }
-    ServerSocketFactory serverSocketFactory = options.useSSL ? new SslServerSocketFactory(true, options.sslParameterClassName) : new PlainServerSocketFactory();
+    ServerSocketFactory serverSocketFactory = options.useSSL ? new SslServerSocketFactory(true, SslParameters.createSslParameters(options.sslParameterClassName)) : new PlainServerSocketFactory();
     final SlimService slimservice = new SlimService(slimFactory.getSlimServer(), serverSocketFactory.createServerSocket(options.port), options.daemon);
     service = new Thread() {
       @Override
