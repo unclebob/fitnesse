@@ -88,7 +88,10 @@ public class ContextConfigurator {
   }
 
   public FitNesseContext makeFitNesseContext() throws IOException, PluginException {
+
+    // BIG WARNING: We're setting a static variable here!
     ClassUtils.setClassLoader(classLoader);
+
     ComponentFactory componentFactory = new ComponentFactory(properties, classLoader);
 
     if (port == null) {
