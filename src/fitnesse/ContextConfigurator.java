@@ -15,6 +15,7 @@ import fitnesse.testrunner.MultipleTestSystemFactory;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
+import fitnesse.util.ClassUtils;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.RecentChangesWikiPage;
 import fitnesse.wiki.WikiPageFactory;
@@ -67,7 +68,7 @@ public class ContextConfigurator {
   public static ContextConfigurator systemDefaults() {
     return empty()
       .withRootPath(DEFAULT_PATH)
-      .withClassLoader(ClassLoader.getSystemClassLoader())
+      .withClassLoader(ClassUtils.getClassLoader())
       .withParameter(ROOT_DIRECTORY, DEFAULT_ROOT)
       .withParameter(CONTEXT_ROOT, DEFAULT_CONTEXT_ROOT)
       .withParameter(VERSIONS_CONTROLLER_DAYS, Integer.toString(DEFAULT_VERSION_DAYS))
@@ -87,6 +88,7 @@ public class ContextConfigurator {
   }
 
   public FitNesseContext makeFitNesseContext() throws IOException, PluginException {
+    ClassUtils.setClassLoader(classLoader);
     ComponentFactory componentFactory = new ComponentFactory(properties, classLoader);
 
     if (port == null) {

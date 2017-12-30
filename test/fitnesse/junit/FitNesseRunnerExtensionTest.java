@@ -1,9 +1,10 @@
 package fitnesse.junit;
 
 import fitnesse.FitNesseContext;
-import fitnesse.components.PluginsClassLoader;
+import fitnesse.components.PluginsClassLoaderFactory;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testsystems.*;
+import fitnesse.util.ClassUtils;
 import org.junit.runner.RunWith;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
@@ -41,7 +42,8 @@ public class FitNesseRunnerExtensionTest {
 
     @Override
     protected FitNesseContext createContext(Class<?> suiteClass) throws Exception {
-      PluginsClassLoader.loadPlugins(getFitNesseRoot(suiteClass));
+      ClassLoader classLoader = new PluginsClassLoaderFactory().getClassLoader(getFitNesseRoot(suiteClass));
+      ClassUtils.setClassLoader(classLoader);
 
       return super.createContext(suiteClass);
     }

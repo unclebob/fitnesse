@@ -1,33 +1,24 @@
 package fitnesse.components;
 
-import static org.junit.Assert.*;
-import static util.RegexTestCase.assertMatches;
-import static util.RegexTestCase.assertNotSubString;
-import static util.RegexTestCase.assertSubString;
-
-import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
-import java.io.File;
-import java.net.URL;
-import java.net.URLClassLoader;
+
+import static org.junit.Assert.*;
 
 
-public class PluginsClassLoaderTest {
+public class PluginsClassLoaderFactoryTest {
 
   @Test
   public void whenPluginsDirectoryDoesNotExist() throws Exception {
-    PluginsClassLoader.loadPlugins("nonExistingRootDirectory");
+    new PluginsClassLoaderFactory().getClassLoader("nonExistingRootDirectory");
 
     assertTrue("didn't cause exception", true);
   }
 
   @Test
   public void addPluginsToClassLoader() throws Exception {
-    String[] dynamicClasses = new String[]{"fitnesse.testing.PluginX", "fitnesse.testing.PluginY"};
+    ClassLoader cl = PluginsClassLoaderFactory.getClassLoader(".");
 
-    ClassLoader cl = PluginsClassLoader.loadPlugins(".");
-
-    assertLoadingClassWorksNow(cl, dynamicClasses);
+    assertLoadingClassWorksNow(cl, "fitnesse.testing.PluginX", "fitnesse.testing.PluginY");
   }
 
   private void assertLoadingClassWorksNow(ClassLoader cl, String... dynamicClasses) {
