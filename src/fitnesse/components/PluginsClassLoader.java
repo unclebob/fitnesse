@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class PluginsClassLoader {
 
-  public static ClassLoader loadPlugins(String rootPath) throws Exception {
+  public static ClassLoader getClassLoader(String rootPath) throws Exception {
     File pluginsDirectory = new File(rootPath, "plugins");
 
     URL[] urls = urlsForPlugins(pluginsDirectory);

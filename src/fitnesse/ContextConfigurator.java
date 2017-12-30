@@ -88,6 +88,7 @@ public class ContextConfigurator {
   }
 
   public FitNesseContext makeFitNesseContext() throws IOException, PluginException {
+    ClassUtils.setClassLoader(classLoader);
     ComponentFactory componentFactory = new ComponentFactory(properties, classLoader);
 
     if (port == null) {

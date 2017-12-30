@@ -1,22 +1,15 @@
 package fitnesse.components;
 
 import static org.junit.Assert.*;
-import static util.RegexTestCase.assertMatches;
-import static util.RegexTestCase.assertNotSubString;
-import static util.RegexTestCase.assertSubString;
 
-import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
-import java.io.File;
-import java.net.URL;
-import java.net.URLClassLoader;
 
 
 public class PluginsClassLoaderTest {
 
   @Test
   public void whenPluginsDirectoryDoesNotExist() throws Exception {
-    new PluginsClassLoader().loadPlugins("nonExistingRootDirectory");
+    new PluginsClassLoader().getClassLoader("nonExistingRootDirectory");
 
     assertTrue("didn't cause exception", true);
   }
@@ -25,7 +18,7 @@ public class PluginsClassLoaderTest {
   public void addPluginsToClassLoader() throws Exception {
     String[] dynamicClasses = new String[]{"fitnesse.testing.PluginX", "fitnesse.testing.PluginY"};
     //todo This fails because some other test probably loads plugin path    assertLoadingClassCausesException(dynamicClasses);
-    ClassLoader cl = PluginsClassLoader.loadPlugins(".");
+    ClassLoader cl = PluginsClassLoader.getClassLoader(".");
 
 
     assertLoadingClassWorksNow(cl, dynamicClasses);
