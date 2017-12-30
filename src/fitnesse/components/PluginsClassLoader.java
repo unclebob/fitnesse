@@ -1,7 +1,7 @@
 package fitnesse.components;
 
 import java.io.File;
-import java.lang.reflect.Method;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -10,46 +10,60 @@ import java.util.List;
 
 
 /**
- * Update the current thread class path with jars foundin a "plugins" directory.
+ * Gets a class loader which extends the class path with jars found in "plugins" directory.
  */
 public class PluginsClassLoader {
 
-  public static ClassLoader getClassLoader(String rootPath) throws Exception {
+  public static ClassLoader getClassLoader(String rootPath) throws IOException {
     ClassLoader result = ClassLoader.getSystemClassLoader();
     File pluginsDirectory = new File(rootPath, "plugins");
 
-    URL[] urls = urlsForPlugins(pluginsDirectory);
-    if (urls.length > 0) {
+    List<String> plugins = pluginJars(pluginsDirectory);
+    if (!plugins.isEmpty()) {
+      URL[] urls = urlsForPlugins(plugins);
       result = new URLClassLoader(urls, result);
+      appendPluginsToClassPathProperty(plugins);
     }
     return result;
   }
 
-  private static URL[] urlsForPlugins(File pluginsDirectory) throws Exception {
-    List<URL> urls = new ArrayList<>();
-
-    if (pluginsDirectory.exists() && pluginsDirectory.isDirectory())
-      for (File plugin : pluginsDirectory.listFiles())
-        if (plugin.getName().endsWith("jar"))
-          urls.addAll(toUrls(plugin.getCanonicalPath()));
-
-    return urls.toArray(new URL[urls.size()]);
+  private static List<String> pluginJars(File pluginsDirectory) throws IOException {
+    List<String> result = new ArrayList<>();
+    if (pluginsDirectory.exists() && pluginsDirectory.isDirectory()) {
+      for (File plugin : pluginsDirectory.listFiles()) {
+        if (plugin.getName().endsWith("jar")) {
+          result.add(plugin.getCanonicalPath());
+        }
+      }
+    }
+    return result;
   }
 
-  private static List<URL> toUrls(String classpathItems) throws Exception {
-    final String separator = File.pathSeparator;
-    String currentClassPath = System.getProperty("java.class.path");
-    System.setProperty("java.class.path", currentClassPath + separator + classpathItems);
-    String[] items = classpathItems.split(separator);
-    List<URL> urls = new ArrayList<>(items.length);
+  private static URL[] urlsForPlugins(List<String> plugins) throws MalformedURLException {
+    URL[] urls = new URL[plugins.size()];
 
-    for (String item : items) {
-      urls.add(toUrl(item));
+    int i = 0;
+    for (String plugin : plugins) {
+      urls[i] = toUrl(plugin);
+      i++;
     }
+
     return urls;
   }
 
   private static URL toUrl(String fileName) throws MalformedURLException {
     return new File(fileName).toURI().toURL();
+  }
+
+  private static void appendPluginsToClassPathProperty(List<String> plugins) {
+    String currentClassPath = System.getProperty("java.class.path");
+
+    StringBuilder classpathItems = new StringBuilder();
+    classpathItems.append(currentClassPath);
+    for (String plugin : plugins) {
+      classpathItems.append(File.pathSeparator);
+      classpathItems.append(plugin);
+    }
+    System.setProperty("java.class.path", classpathItems.toString());
   }
 }
