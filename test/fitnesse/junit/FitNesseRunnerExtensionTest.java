@@ -1,5 +1,6 @@
 package fitnesse.junit;
 
+import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
 import fitnesse.components.PluginsClassLoaderFactory;
 import fitnesse.testrunner.MultipleTestsRunner;
@@ -45,7 +46,9 @@ public class FitNesseRunnerExtensionTest {
       ClassLoader classLoader = new PluginsClassLoaderFactory().getClassLoader(getFitNesseRoot(suiteClass));
       ClassUtils.setClassLoader(classLoader);
 
-      return super.createContext(suiteClass);
+      return initContextConfigurator()
+        .withClassLoader(classLoader)
+        .makeFitNesseContext();
     }
   }
 
