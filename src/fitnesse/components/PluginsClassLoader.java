@@ -15,14 +15,14 @@ import java.util.List;
 public class PluginsClassLoader {
 
   public static ClassLoader getClassLoader(String rootPath) throws Exception {
+    ClassLoader result = ClassLoader.getSystemClassLoader();
     File pluginsDirectory = new File(rootPath, "plugins");
 
     URL[] urls = urlsForPlugins(pluginsDirectory);
     if (urls.length > 0) {
-      return new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
-    } else {
-      return ClassLoader.getSystemClassLoader();
+      result = new URLClassLoader(urls, result);
     }
+    return result;
   }
 
   private static URL[] urlsForPlugins(File pluginsDirectory) throws Exception {
