@@ -17,9 +17,7 @@ public class PluginsClassLoaderTest {
   @Test
   public void addPluginsToClassLoader() throws Exception {
     String[] dynamicClasses = new String[]{"fitnesse.testing.PluginX", "fitnesse.testing.PluginY"};
-    //todo This fails because some other test probably loads plugin path    assertLoadingClassCausesException(dynamicClasses);
     ClassLoader cl = PluginsClassLoader.getClassLoader(".");
-
 
     assertLoadingClassWorksNow(cl, dynamicClasses);
   }
