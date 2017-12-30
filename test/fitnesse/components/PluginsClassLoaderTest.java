@@ -16,7 +16,7 @@ public class PluginsClassLoaderTest {
 
   @Test
   public void whenPluginsDirectoryDoesNotExist() throws Exception {
-    new PluginsClassLoader().loadPlugins("nonExistingRootDirectory");
+    PluginsClassLoader.loadPlugins("nonExistingRootDirectory");
 
     assertTrue("didn't cause exception", true);
   }
@@ -24,9 +24,8 @@ public class PluginsClassLoaderTest {
   @Test
   public void addPluginsToClassLoader() throws Exception {
     String[] dynamicClasses = new String[]{"fitnesse.testing.PluginX", "fitnesse.testing.PluginY"};
-    //todo This fails because some other test probably loads plugin path    assertLoadingClassCausesException(dynamicClasses);
-    ClassLoader cl = PluginsClassLoader.loadPlugins(".");
 
+    ClassLoader cl = PluginsClassLoader.loadPlugins(".");
 
     assertLoadingClassWorksNow(cl, dynamicClasses);
   }

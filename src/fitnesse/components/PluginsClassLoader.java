@@ -14,6 +14,9 @@ import java.util.List;
  */
 public class PluginsClassLoader {
 
+  private PluginsClassLoader() {
+  }
+
   public static ClassLoader loadPlugins(String rootPath) throws Exception {
     File pluginsDirectory = new File(rootPath, "plugins");
 
@@ -35,7 +38,7 @@ public class PluginsClassLoader {
 
     return urls.toArray(new URL[urls.size()]);
   }
-  
+
   private static URL toUrl(String fileName) throws MalformedURLException {
     return new File(fileName).toURI().toURL();
   }
