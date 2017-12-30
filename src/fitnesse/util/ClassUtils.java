@@ -15,4 +15,8 @@ public class ClassUtils {
   public static void setClassLoader(ClassLoader classLoader) {
     ClassUtils.classLoader = classLoader;
   }
+
+  public static ClassLoader getClassLoader() {
+    return classLoader == null ? ClassLoader.getSystemClassLoader() : classLoader;
+  }
 }
