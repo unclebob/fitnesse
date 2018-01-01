@@ -59,6 +59,9 @@ public abstract class SlimTestSystem implements TestSystem {
     } catch (IOException e) {
       stopTestSystem(e);
       throw new UnableToStartException("Could not start test system", e);
+    } catch (Exception e) {
+      stopTestSystem(e);
+      throw e;
     }
     testSystemListener.testSystemStarted(this);
   }
