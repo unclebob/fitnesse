@@ -1,10 +1,10 @@
 package fitnesse.wiki.search;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import fitnesse.components.TraversalListener;
 import fitnesse.wiki.WikiPage;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegularExpressionWikiPageFinder extends WikiPageFinder {
 
@@ -16,8 +16,7 @@ public class RegularExpressionWikiPageFinder extends WikiPageFinder {
   }
 
   public RegularExpressionWikiPageFinder(String regularExpression, TraversalListener<? super WikiPage> observer) {
-    super(observer);
-    this.regularExpression = Pattern.compile(regularExpression);
+    this(Pattern.compile(regularExpression), observer);
   }
 
   @Override

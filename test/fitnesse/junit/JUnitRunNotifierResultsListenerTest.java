@@ -5,7 +5,7 @@ import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.results.SlimTestResult;
-import fitnesse.wiki.PageCrawlerImpl;
+import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.fs.WikiPageProperties;
@@ -131,7 +131,7 @@ public class JUnitRunNotifierResultsListenerTest {
     when(test.getParent()).thenReturn(root);
     when(test.getName()).thenReturn("WikiPage");
     when(test.getData()).thenReturn(new PageData("content", new WikiPageProperties()));
-    when(test.getPageCrawler()).thenReturn(new PageCrawlerImpl(test));
+    when(test.getPageCrawler()).thenReturn(new PageCrawler(test));
     return new WikiTestPage(test);
   }
 
