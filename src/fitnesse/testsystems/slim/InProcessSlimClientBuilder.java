@@ -28,7 +28,7 @@ public class InProcessSlimClientBuilder extends ClientBuilder<SlimClient> {
     FixtureInteraction interaction = options != null ? options.interaction : JavaSlimFactory.createInteraction(null, classLoader);
 
     SlimServer slimServer = createSlimServer(interaction, statementTimeout, isDebug());
-    return new InProcessSlimClient(getTestSystemName(), slimServer, getExecutionLogListener());
+    return new InProcessSlimClient(getTestSystemName(), slimServer, getExecutionLogListener(), classLoader);
   }
 
   @Override
