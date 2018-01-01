@@ -21,7 +21,7 @@ public class InProcessFitClientBuilder extends FitClientBuilder {
     Method testRunnerMethod = getTestRunnerMainMethod();
 
     CommandRunningFitClient.CommandRunningStrategy runningStrategy =
-            new CommandRunningFitClient.InProcessCommandRunner(testRunnerMethod, getExecutionLogListener());
+            new CommandRunningFitClient.InProcessCommandRunner(testRunnerMethod, getExecutionLogListener(), classLoader);
 
     return buildFitClient(runningStrategy);
   }

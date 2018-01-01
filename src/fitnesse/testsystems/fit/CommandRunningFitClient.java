@@ -216,12 +216,14 @@ public class CommandRunningFitClient extends FitClient {
   public static class InProcessCommandRunner implements CommandRunningStrategy {
     private final Method testRunnerMethod;
     private final ExecutionLogListener executionLogListener;
+    private ClassLoader classLoader;
     private Thread fastFitServer;
     private MockCommandRunner commandRunner;
 
-    public InProcessCommandRunner(Method testRunnerMethod, ExecutionLogListener executionLogListener) {
+    public InProcessCommandRunner(Method testRunnerMethod, ExecutionLogListener executionLogListener, ClassLoader classLoader) {
       this.testRunnerMethod = testRunnerMethod;
       this.executionLogListener = executionLogListener;
+      this.classLoader = classLoader;
     }
 
     @Override
@@ -259,6 +261,7 @@ public class CommandRunningFitClient extends FitClient {
         }
       };
       Thread fitServerThread = new Thread(fastFitServerRunnable);
+      fitServerThread.setContextClassLoader(classLoader);
       fitServerThread.setDaemon(true);
       return fitServerThread;
     }
