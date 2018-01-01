@@ -11,7 +11,7 @@ import fitnesse.junit.FitNesseRunner.OutputDir;
 
 
 @RunWith(FitNesseSuite.class)
-@Name("FitNesse.SuiteAcceptanceTests.SuiteSlimTests")
+@Name("FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestSystemSlimSuite")
 @FitnesseDir(".")
 @OutputDir(systemProperty = "java.io.tmpdir", pathExtension = "fitnesse")
 @DebugMode(false)
