@@ -125,7 +125,7 @@ public class ContextConfigurator {
     SlimTableFactory slimTableFactory = new SlimTableFactory();
     CustomComparatorRegistry customComparatorRegistry = new CustomComparatorRegistry();
 
-    MultipleTestSystemFactory testSystemFactory = new MultipleTestSystemFactory(slimTableFactory, customComparatorRegistry);
+    MultipleTestSystemFactory testSystemFactory = new MultipleTestSystemFactory(slimTableFactory, customComparatorRegistry, classLoader);
 
     FormatterFactory formatterFactory = new FormatterFactory(componentFactory);
 

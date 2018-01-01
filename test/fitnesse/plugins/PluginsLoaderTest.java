@@ -82,12 +82,13 @@ public class PluginsLoaderTest {
     testWikiPageFactoryRegistry = new FileSystemPageFactory();
     testSlimTableFactory = new SlimTableFactory();
     testCustomComparatorsRegistry = new CustomComparatorRegistry();
-    testTestSystemFactory = new MultipleTestSystemFactory(testSlimTableFactory, testCustomComparatorsRegistry);
 
     URL pluginLoaderTestDirectory = new File("plugin-loader-test").toURI().toURL();
 
     classLoader = new URLClassLoader(new URL[] { pluginLoaderTestDirectory }, ClassLoader.getSystemClassLoader());
     ClassUtils.setClassLoader(classLoader);
+
+    testTestSystemFactory = new MultipleTestSystemFactory(testSlimTableFactory, testCustomComparatorsRegistry, classLoader);
 
     loader = new PluginsLoader(new ComponentFactory(testProperties), classLoader);
 

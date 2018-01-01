@@ -14,10 +14,13 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.*;
 
 public class InProcessSlimClientBuilderTest {
+  private ClassLoader classLoader;
+
   @Before
   public void setUp() throws Exception {
     // Enforce the test runner here, to make sure we're talking to the right system
     SlimClientBuilder.clearSlimPortOffset();
+    classLoader = ClassLoader.getSystemClassLoader();
   }
 
   @Test
@@ -25,7 +28,7 @@ public class InProcessSlimClientBuilderTest {
     Descriptor descriptor = mock(Descriptor.class);
     when(descriptor.getVariable("slim.flags")).thenReturn("-i " + InteractionDemo.class.getName());
 
-    InProcessSlimClientBuilder slimClientBuilder = new InProcessSlimClientBuilder(descriptor);
+    InProcessSlimClientBuilder slimClientBuilder = new InProcessSlimClientBuilder(descriptor, classLoader);
 
     // Check that the arguments were processed correctly and are in the client
     // builder's slim flags
@@ -60,7 +63,7 @@ public class InProcessSlimClientBuilderTest {
   }
 
   private FixtureInteraction captureInteraction(Descriptor descriptor) {
-    InProcessSlimClientBuilder slimClientBuilder = spy(new InProcessSlimClientBuilder(descriptor));
+    InProcessSlimClientBuilder slimClientBuilder = spy(new InProcessSlimClientBuilder(descriptor, classLoader));
 
     ArgumentCaptor<FixtureInteraction> interactionCaptor = ArgumentCaptor.forClass(FixtureInteraction.class);
 
