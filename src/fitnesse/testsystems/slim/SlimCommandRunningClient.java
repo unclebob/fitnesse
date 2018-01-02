@@ -124,14 +124,26 @@ public class SlimCommandRunningClient implements SlimClient {
   }
 
   protected void validateConnection() throws IOException {
-    try{
-    	slimServerVersionMessage = reader.readLine();
-    }catch (SocketTimeoutException e){
-    	throw new SlimError("Timeout while reading slim header from client. Check that you are connecting to the right port and that the slim client is running. You can increase the timeout limit by setting 'slim.timeout' in the fitnesse properties file.");
-    }
-    LOG.finest("Read Slim Header: >" + slimServerVersionMessage + "<");
-    if (!isConnected()) {
-      throw new SlimError("Got invalid slim header from client. Read the following: " + slimServerVersionMessage);
+    long timeOut = Clock.currentTimeInMillis() + connectionTimeout * 1000;
+    LOG.finest("Trying to get SlimHeader: " + " timeout setting: "
+        + connectionTimeout);
+    while (!isConnected()) {
+      if (slimRunner != null && slimRunner.isDead()) {
+        final String slimErrorMessage = "Error SLiM server died before Header Message could be read. "
+            + slimRunner.getCommandErrorMessage();
+        throw new SlimError(slimErrorMessage);
+      }
+      if (Clock.currentTimeInMillis() > timeOut) {
+        throw new SlimError(
+            "Timeout while reading slim header from client. Check that you are connecting to the right port and that the slim client is running. You can increase the timeout limit by setting 'slim.timeout' in the fitnesse properties file.");
+      }
+      try {
+        slimServerVersionMessage = reader.readLine();
+      } catch (SocketTimeoutException e) {
+        throw new SlimError(
+            "Timeout while reading slim header from client. Check that you are connecting to the right port and that the slim client is running. You can increase the timeout limit by setting 'slim.timeout' in the fitnesse properties file.");
+      }
+      LOG.finest("Read Slim Header: >" + slimServerVersionMessage + "<");
     }
     try {
       slimServerVersion = Double.parseDouble(slimServerVersionMessage.replace(SlimVersion.SLIM_HEADER, ""));
