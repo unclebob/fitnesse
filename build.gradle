@@ -156,6 +156,7 @@ jar {
   dependsOn createUpdateLists
   into('Resources') {
     from('.') {
+      setIncludeEmptyDirs(false)
       include 'FitNesseRoot/**/content.txt'
       include 'FitNesseRoot/**/properties.xml'
       include 'FitNesseRoot/**/*.wiki'
