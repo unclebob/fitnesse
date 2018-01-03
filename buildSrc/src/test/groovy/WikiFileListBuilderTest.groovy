@@ -55,10 +55,25 @@ class WikiFileListBuilderTest {
   }
 
   @Test
+  public void skippedFileNotIncluded() throws Exception {
+    String content = runCreateFileAndGetContent(["MasterFolder/TestFolder"], [], ["bla", "content.txt"]);
+    assertDoesntHaveRegexp("content.txt", content);
+  }
+
+  @Test
+  public void skippedWildcardFileNotIncluded() throws Exception {
+    String content = runCreateFileAndGetContent(["MasterFolder"], [], ["bla", "TestFolder2*"]);
+    assertSubString("MasterFolder/content.txt\n", content);
+    assertSubString("MasterFolder/TestFolder/content.txt\n", content);
+    assertDoesntHaveRegexp("TestFolder2.wiki", content);
+    assertDoesntHaveRegexp("MasterFolder/TestFolder2/Page.wiki", content);
+  }
+
+  @Test
   public void shouldPutSpecialFilesInDifferentList() throws Exception {
     String arg1 = "MasterFolder/TestFolder/content.txt";
     String arg2 = "MasterFolder/TestFolder/properties.xml";
-    def updater = new WikiFileListBuilder(["MasterFolder/TestFolder"], [arg1, arg2], updateList, updateDoNotCopyOverList)
+    def updater = new WikiFileListBuilder(["MasterFolder/TestFolder"], [arg1, arg2], [], updateList, updateDoNotCopyOverList)
     File doNotUpdateFile = updater.createDoNotUpdateList();
     String doNotUpdateContent = doNotUpdateFile.text
     doNotUpdateFile.delete()
@@ -84,8 +99,8 @@ class WikiFileListBuilderTest {
     updaterMock.createUpdateLists();
   }
 
-  private String runCreateFileAndGetContent(List<String> mainDirs = [], List<String> doNotCopyDirs = []) throws Exception {
-    WikiFileListBuilder updater = new WikiFileListBuilder(mainDirs, doNotCopyDirs, updateList, updateDoNotCopyOverList);
+  private String runCreateFileAndGetContent(List<String> mainDirs = [], List<String> doNotCopyDirs = [], List<String> skipFiles = []) throws Exception {
+    WikiFileListBuilder updater = new WikiFileListBuilder(mainDirs, doNotCopyDirs, skipFiles, updateList, updateDoNotCopyOverList);
     File resultFile = updater.createUpdateList();
     String content = resultFile.text
     resultFile.delete()

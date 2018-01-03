@@ -11,6 +11,7 @@ public class WikiFileListBuilder {
 
   private List<String> mainDirectories = []
   private List<String> doNotReplaceFiles = []
+  private List<String> skipFiles = []
 
   private File updateListFile
   private File updateDoNotCopyOverListFile
@@ -18,9 +19,10 @@ public class WikiFileListBuilder {
   private String updateListContent = "";
   private String updateDoNotCopyOverContent = "";
 
-  WikiFileListBuilder(List<String> mainDirectories, List<String> doNotReplaceFiles, File updateListFile, File updateDoNotCopyOverListFile) {
+  WikiFileListBuilder(List<String> mainDirectories, List<String> doNotReplaceFiles, List<String> skipFiles, File updateListFile, File updateDoNotCopyOverListFile) {
     this.mainDirectories = mainDirectories
     this.doNotReplaceFiles = doNotReplaceFiles
+    this.skipFiles = skipFiles;
     this.updateListFile = updateListFile
     this.updateDoNotCopyOverListFile = updateDoNotCopyOverListFile
   }
@@ -77,7 +79,22 @@ public class WikiFileListBuilder {
 
   private boolean isWikiFile(File childFile) {
     String name = childFile.getName();
-    return childFile.isDirectory() || VALID_FILE_NAMES.contains(name) || name.endsWith(".wiki");
+    return !isSkipped(childFile) && (childFile.isDirectory() || VALID_FILE_NAMES.contains(name) || name.endsWith(".wiki"));
+  }
+
+  private boolean isSkipped(File childFile) {
+    String name = childFile.getName()
+    boolean skipped = skipFiles.contains(name)
+    if (!skipped)
+      for (String skipFile : skipFiles) {
+        if (skipFile.endsWith("*")) {
+          def skipPrefix = skipFile.substring(0, skipFile.length() - 1)
+          skipped = name.startsWith(skipPrefix)
+        }
+        if (skipped)
+          break
+      }
+    return skipped
   }
 
   private void addFilePathToAppropriateList(String directoryPath, File childFile) {
