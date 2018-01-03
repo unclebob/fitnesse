@@ -38,9 +38,36 @@ public class JUnitRunNotifierResultsListenerTest {
   public void shouldFinishSuccessfully() {
     TestResult testResult = SlimTestResult.ok("-");
 
+    listener.announceNumberTestsToRun(1);
     listener.testAssertionVerified(null, testResult);
     listener.testComplete(mockWikiTestPage(), summary("-"));
+    listener.close();
 
+    verify(notifier).fireTestFinished(description);
+  }
+
+  @Test
+  public void shouldFinishSuccessfullyWithTooManyTests() {
+    TestResult testResult = SlimTestResult.ok("-");
+
+    listener.announceNumberTestsToRun(0);
+    listener.testAssertionVerified(null, testResult);
+    listener.testComplete(mockWikiTestPage(), summary("-"));
+    listener.close();
+
+    verify(notifier).fireTestFinished(description);
+  }
+
+  @Test
+  public void shouldFailOnTooFewTests() {
+    TestResult testResult = SlimTestResult.ok("-");
+
+    listener.announceNumberTestsToRun(2);
+    listener.testAssertionVerified(null, testResult);
+    listener.testComplete(mockWikiTestPage(), summary("-"));
+    listener.close();
+
+    verify(notifier).fireTestFailure(any(Failure.class));
     verify(notifier).fireTestFinished(description);
   }
 
