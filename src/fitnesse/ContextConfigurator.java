@@ -15,6 +15,7 @@ import fitnesse.testrunner.MultipleTestSystemFactory;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
+import fitnesse.util.ClassUtils;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.RecentChangesWikiPage;
 import fitnesse.wiki.WikiPageFactory;
@@ -55,6 +56,7 @@ public class ContextConfigurator {
   /** Others as name-value pairs: */
   private final Properties properties = new Properties();
   private TestSystemListener testSystemListener;
+  private ClassLoader classLoader;
 
   private ContextConfigurator() {
   }
@@ -66,6 +68,7 @@ public class ContextConfigurator {
   public static ContextConfigurator systemDefaults() {
     return empty()
       .withRootPath(DEFAULT_PATH)
+      .withClassLoader(ClassUtils.getClassLoader())
       .withParameter(ROOT_DIRECTORY, DEFAULT_ROOT)
       .withParameter(CONTEXT_ROOT, DEFAULT_CONTEXT_ROOT)
       .withParameter(VERSIONS_CONTROLLER_DAYS, Integer.toString(DEFAULT_VERSION_DAYS))
@@ -85,7 +88,11 @@ public class ContextConfigurator {
   }
 
   public FitNesseContext makeFitNesseContext() throws IOException, PluginException {
-    ComponentFactory componentFactory = new ComponentFactory(properties);
+
+    // BIG WARNING: We're setting a static variable here!
+    ClassUtils.setClassLoader(classLoader);
+
+    ComponentFactory componentFactory = new ComponentFactory(properties, classLoader);
 
     if (port == null) {
       port = getPort();
@@ -106,7 +113,7 @@ public class ContextConfigurator {
       recentChanges = componentFactory.createComponent(RECENT_CHANGES_CLASS, RecentChangesWikiPage.class);
     }
 
-    PluginsLoader pluginsLoader = new PluginsLoader(componentFactory);
+    PluginsLoader pluginsLoader = new PluginsLoader(componentFactory, classLoader);
 
     if (logger == null) {
       logger = pluginsLoader.makeLogger(get(LOG_DIRECTORY));
@@ -118,7 +125,7 @@ public class ContextConfigurator {
     SlimTableFactory slimTableFactory = new SlimTableFactory();
     CustomComparatorRegistry customComparatorRegistry = new CustomComparatorRegistry();
 
-    MultipleTestSystemFactory testSystemFactory = new MultipleTestSystemFactory(slimTableFactory, customComparatorRegistry);
+    MultipleTestSystemFactory testSystemFactory = new MultipleTestSystemFactory(slimTableFactory, customComparatorRegistry, classLoader);
 
     FormatterFactory formatterFactory = new FormatterFactory(componentFactory);
 
@@ -260,6 +267,11 @@ public class ContextConfigurator {
 
   public ContextConfigurator withRecentChanges(RecentChanges recentChanges) {
     this.recentChanges = recentChanges;
+    return this;
+  }
+
+  public ContextConfigurator withClassLoader(ClassLoader classLoader) {
+    this.classLoader = classLoader;
     return this;
   }
 

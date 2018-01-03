@@ -43,7 +43,7 @@ public class PageXmlizer {
   public Document xmlize(PageData data) {
     Document document = XmlUtil.newDocument();
     Element dataElement = document.createElement("data");
-    XmlUtil.addCdataNode(dataElement, "content", data.getContent());
+    XmlUtil.addTextNode(dataElement, "content", data.getContent());
 
     Element propertiesElement = new WikiPageProperties(data.getProperties()).makeRootElement(document);
     dataElement.appendChild(propertiesElement);
