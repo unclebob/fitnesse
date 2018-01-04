@@ -118,13 +118,12 @@ task createUpdateLists(type: WikiFileListBuilderTask) {
     "FitNesseRoot/TemplateLibrary/SuitePage/properties.xml",
     "FitNesseRoot/TemplateLibrary/TestPage/content.txt",
     "FitNesseRoot/TemplateLibrary/TestPage/properties.xml" ]
+  skipFiles = [
+    "ErrorLogs",
+    "RecentChanges*"
+  ]
   mainDirectories = [
-    "FitNesseRoot/FitNesse",
-    "FitNesseRoot/FrontPage",
-    "FitNesseRoot/PageFooter",
-    "FitNesseRoot/PlugIns",
-    "FitNesseRoot/PageHeader",
-    "FitNesseRoot/TemplateLibrary" ]
+    "FitNesseRoot" ]
 }
 
 processResources.dependsOn "fitNesseVersion", "compileBootstrap", "createUpdateLists"
@@ -157,20 +156,13 @@ jar {
   dependsOn createUpdateLists
   into('Resources') {
     from('.') {
-      include 'FitNesseRoot/content.txt'
-      include 'FitNesseRoot/properties.xml'
-      include 'FitNesseRoot/FitNesse/**/content.txt'
-      include 'FitNesseRoot/FitNesse/**/properties.xml'
-      include 'FitNesseRoot/FrontPage/**/content.txt'
-      include 'FitNesseRoot/FrontPage/**/properties.xml'
-      include 'FitNesseRoot/PageFooter/**/content.txt'
-      include 'FitNesseRoot/PageFooter/**/properties.xml'
-      include 'FitNesseRoot/PlugIns/**/properties.xml'
-      include 'FitNesseRoot/PlugIns/**/content.txt'
-      include 'FitNesseRoot/PageHeader/**/content.txt'
-      include 'FitNesseRoot/PageHeader/**/properties.xml'
-      include 'FitNesseRoot/TemplateLibrary/**/content.txt'
-      include 'FitNesseRoot/TemplateLibrary/**/properties.xml'
+      setIncludeEmptyDirs(false)
+      include 'FitNesseRoot/**/content.txt'
+      include 'FitNesseRoot/**/properties.xml'
+      include 'FitNesseRoot/**/*.wiki'
+      exclude 'FitNesseRoot/ErrorLogs*'
+      exclude 'FitNesseRoot/RecentChanges*'
+      exclude 'FitNesseRoot/files/testResults*'
     }
   }
   manifest {

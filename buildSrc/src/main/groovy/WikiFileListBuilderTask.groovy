@@ -1,14 +1,11 @@
-import java.io.File;
-import java.util.List;
-import java.util.Set;
-import org.gradle.api.DefaultTask;
-import org.gradle.api.tasks.InputDirectory;
-import org.gradle.api.tasks.OutputFile;
-import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.TaskAction
 
 public class WikiFileListBuilderTask extends DefaultTask {
   List<String> mainDirectories
   private List<String> doNotReplaceFiles
+  private List<String> skipFiles
 
   @OutputFile
   File updateListFile
@@ -17,12 +14,16 @@ public class WikiFileListBuilderTask extends DefaultTask {
 
   @TaskAction
   public void taskAction() {
-    def updater = new WikiFileListBuilder(mainDirectories, doNotReplaceFiles, updateListFile, updateDoNotCopyOverListFile)
+    def updater = new WikiFileListBuilder(mainDirectories, doNotReplaceFiles, skipFiles, updateListFile, updateDoNotCopyOverListFile)
     updater.createUpdateLists()
   }
 
   public void setDoNotReplaceFiles(final List<String> doNotReplaceFiles) {
     this.doNotReplaceFiles = doNotReplaceFiles
+  }
+
+  public void setSkipFiles(final List<String> skipFiles) {
+    this.skipFiles = skipFiles
   }
 
   public void setMainDirectories(final List<String> mainDirectories) {
