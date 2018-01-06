@@ -7,18 +7,20 @@ Test
 
 Java hashmap symbol's value
 
-|script|echo fixture                                      |
-|check|echo|$`myHashMap.key1`       |value1|
-|check|echo|$`myHashMap.key2.subkey`|subval|
+|script|echo fixture                                    |
+|check |echo|$`myHashMap.key1`       |value1            |
+|check |echo|$`myHashMap.key2.subkey`|subval            |
+|check |echo|$`myHashMap.key3`       |$`myHashMap.key3` |
+|check |echo|$`myHashMap3.key1`      |$`myHashMap3.key1`|
 
 Hashtable symbol (i.e. String) as value
 
-|script|echo fixture                                      |
-|$myHashMap2=|echo       |!{key1:value2,key2:!{subkey:subval1}}|
-|check|echo|$`myHashMap2.key1`       |value2|
-|check|echo|$`myHashMap2.key2.subkey`|subval1|
+|script      |echo fixture                              |
+|$myHashMap2=|echo|!{key1:value2,key2:!{subkey:subval1}}|
+|check       |echo|$`myHashMap2.key1`       |value2     |
+|check       |echo|$`myHashMap2.key2.subkey`|subval1    |
 
 |comment                                   |
-|check |echo|value1                |$`myHashMap.key1`       |
-|check |echo|subval                |$`myHashMap.key2.subkey`|
+|check|echo|value1|$`myHashMap.key1`       |
+|check|echo|subval|$`myHashMap.key2.subkey`|
 

@@ -23,16 +23,36 @@ public class VariableStore {
     if (nameWithDollar == null || !nameWithDollar.startsWith("$"))
       return null;
 
-    String name = nameWithDollar.substring(1);
-    if (!variables.containsKey(name)) {
-      return null;
+    if (nameWithDollar.startsWith("$`") && nameWithDollar.endsWith("`")) {
+      String expr = nameWithDollar.substring(2, nameWithDollar.length() - 1);
+      return evaluate(expr);
+    } else {
+      String name = nameWithDollar.substring(1);
+      if (!variables.containsKey(name)) {
+        return null;
+      }
+      return variables.get(name).getObject();
     }
-    return variables.get(name).getObject();
   }
 
   private boolean containsValueFor(String nameWithDollar) {
-    return nameWithDollar != null && nameWithDollar.startsWith("$")
-      && variables.containsKey(nameWithDollar.substring(1));
+    boolean result = false;
+    if (nameWithDollar != null) {
+      if (nameWithDollar.startsWith("$`") && nameWithDollar.endsWith("`")) {
+        String expr = nameWithDollar.substring(2, nameWithDollar.length() - 1);
+        try {
+          getDotValue(expr);
+          result = true;
+        } catch (IllegalArgumentException e) {
+          // ignore return false
+        }
+      } else if (nameWithDollar.startsWith("$")) {
+        if (variables.containsKey(nameWithDollar.substring(1))) {
+          result = true;
+        }
+      }
+    }
+    return result;
   }
 
   public Object[] replaceSymbols(Object[] args) {
@@ -80,18 +100,21 @@ public class VariableStore {
   }
 
   private String getStoreSymbolValue(String symbolName) {
-    Object value = null;
-    if (symbolName.startsWith("`") && symbolName.endsWith("`")) {
-      String expr = symbolName.substring(1, symbolName.length() - 1);
-      try {
-        value = getDotValue(expr);
-      } catch (IllegalArgumentException e) {
-        // ignore just leave value null
-      }
-    } else if (variables.containsKey(symbolName)) {
-      value = variables.get(symbolName);
+    if (variables.containsKey(symbolName)) {
+      Object value = variables.get(symbolName);
+      return String.valueOf(value);
     }
-    return String.valueOf(value);
+    return null;
+  }
+
+  private Object evaluate(String expr) {
+    Object value = null;
+    try {
+      value = getDotValue(expr);
+    } catch (IllegalArgumentException e) {
+      // ignore just leave value null
+    }
+    return value;
   }
 
   private Object getDotValue(String expr) {
@@ -110,6 +133,8 @@ public class VariableStore {
           value = getValueFromMap(value.toString(), key);
         }
       }
+    } else {
+      throw new IllegalArgumentException("No hash: " + symbolInfo[0]);
     }
     return value;
   }
