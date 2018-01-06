@@ -81,7 +81,6 @@ public class VariableStore {
 
   private String getStoreSymbolValue(String symbolName) {
     Object value = null;
-    String replacement = "null";
     if (symbolName.startsWith("`") && symbolName.endsWith("`")) {
       String expr = symbolName.substring(1, symbolName.length() - 1);
       try {
@@ -92,10 +91,7 @@ public class VariableStore {
     } else if (variables.containsKey(symbolName)) {
       value = variables.get(symbolName);
     }
-    if (value != null) {
-      replacement = value.toString();
-    }
-    return replacement;
+    return String.valueOf(value);
   }
 
   private Object getDotValue(String expr) {
