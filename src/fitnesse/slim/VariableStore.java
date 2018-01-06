@@ -32,7 +32,7 @@ public class VariableStore {
 
   private boolean containsValueFor(String nameWithDollar) {
     return nameWithDollar != null && nameWithDollar.startsWith("$")
-        && variables.containsKey(nameWithDollar.substring(1));
+      && variables.containsKey(nameWithDollar.substring(1));
   }
 
   public Object[] replaceSymbols(Object[] args) {
@@ -82,14 +82,12 @@ public class VariableStore {
   private String getStoreSymbolValue(String symbolName) {
     Object value = null;
     String replacement = "null";
-    if(symbolName.contains(".")) {
-      String[] symbolInfo = symbolName.split("\\.");
-      symbolName = symbolInfo[0];
-      if (variables.containsKey(symbolName)) {
-        value = variables.get(symbolName).toString();
-        for(int i = 1; i < symbolInfo.length; i++) {
-          value = getValueFromMap(value.toString(), symbolInfo[i]);
-        }
+    if (symbolName.startsWith("`") && symbolName.endsWith("`")) {
+      String expr = symbolName.substring(1, symbolName.length() - 1);
+      try {
+        value = getDotValue(expr);
+      } catch (IllegalArgumentException e) {
+        // ignore just leave value null
       }
     } else if (variables.containsKey(symbolName)) {
       value = variables.get(symbolName);
@@ -100,9 +98,36 @@ public class VariableStore {
     return replacement;
   }
 
+  private Object getDotValue(String expr) {
+    Object value = null;
+    String[] symbolInfo = expr.split("\\.");
+    expr = "$" + symbolInfo[0];
+    if (containsValueFor(expr)) {
+      value = getStored(expr);
+      for (int i = 1; i < symbolInfo.length; i++) {
+        String key = symbolInfo[i];
+        if (value instanceof Map) {
+          value = getValueFromMap((Map<String, ?>) value, key);
+        } else if (value == null) {
+          break;
+        } else {
+          value = getValueFromMap(value.toString(), key);
+        }
+      }
+    }
+    return value;
+  }
+
   private Object getValueFromMap(String map, String key) {
     MapConverter cnv = new MapConverter();
     Map<String, String> mapObj = cnv.fromString(map);
-    return mapObj.get(key);
+    return getValueFromMap(mapObj, key);
+  }
+
+  private Object getValueFromMap(Map<String, ?> map, String key) {
+    if (!map.containsKey(key)) {
+      throw new IllegalArgumentException("No key: " + key);
+    }
+    return map.get(key);
   }
 }

@@ -1,7 +1,24 @@
 ---
 Test
 ---
-|script     |echo fixture                             |
-|$myHashMap=|echo|!{key1:value1,key2:!{subkey:subval}}|
-|check      |echo|$myHashMap.key1           |value1   |
-|check      |echo|$myHashMap.key2.subkey    |subval   |
+|script      |hash fixture                        |
+|send as hash|!{key1:value1,key2:!{subkey:subval}}|
+|$myHashMap= |hash                                |
+
+Java hashmap symbol's value
+
+|script|echo fixture                                      |
+|check|echo|$`myHashMap.key1`       |value1|
+|check|echo|$`myHashMap.key2.subkey`|subval|
+
+Hashtable symbol (i.e. String) as value
+
+|script|echo fixture                                      |
+|$myHashMap2=|echo       |!{key1:value2,key2:!{subkey:subval1}}|
+|check|echo|$`myHashMap2.key1`       |value2|
+|check|echo|$`myHashMap2.key2.subkey`|subval1|
+
+|comment                                   |
+|check |echo|value1                |$`myHashMap.key1`       |
+|check |echo|subval                |$`myHashMap.key2.subkey`|
+
