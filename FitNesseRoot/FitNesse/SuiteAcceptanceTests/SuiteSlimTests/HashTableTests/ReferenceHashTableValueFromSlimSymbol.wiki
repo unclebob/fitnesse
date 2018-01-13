@@ -1,17 +1,24 @@
 ---
 Test
 ---
-|script      |hash fixture                        |
-|send as hash|!{key1:value1,key2:!{subkey:subval}}|
-|$myHashMap= |hash                                |
+|script      |hash fixture                         |
+|send as hash|!{subkey:subval}                     |
+|$nested=    |hash                                 |
+|send as hash|!{key1:value1,key2:$nested}          |
+|$myHashMap0=|hash                                 |
+|send as hash|!{key1:value2,key2:!{subkey:subval2}}|
+|$myHashMap= |hash                                 |
 
 Java hashmap symbol's value
 
-|script|echo fixture                                    |
-|check |echo|$`myHashMap.key1`       |value1            |
-|check |echo|$`myHashMap.key2.subkey`|subval            |
-|check |echo|$`myHashMap.key3`       |$`myHashMap.key3` |
-|check |echo|$`myHashMap3.key1`      |$`myHashMap3.key1`|
+|script|echo fixture                                                                                                                                  |
+|check |echo|$`myHashMap0.key1`       |value1                                                                                                         |
+|check |echo|$`myHashMap0.key2.subkey`|subval                                                                                                         |
+|check |echo|$`myHashMap0.key3`       |null                                                                                                           |
+|check |echo|$`myHashMap.key1`        |value2                                                                                                         |
+|check |echo|$`myHashMap.key2.subkey` |subval2                                                                                                        |
+|check |echo|$`myHashMap.key3`        |null                                                                                                           |
+|check |echo|$`myHashMap3.key1`       |!-Unable to evaluate: myHashMap3.key1; ReferenceError: "myHashMap3" is not defined in <eval> at line number 1-!|
 
 Hashtable symbol (i.e. String) as value
 

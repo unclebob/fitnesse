@@ -1,7 +1,5 @@
 package fitnesse.slim;
 
-import fitnesse.slim.converters.MapConverter;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,13 +37,7 @@ public class VariableStore {
     boolean result = false;
     if (nameWithDollar != null) {
       if (nameWithDollar.startsWith("$`") && nameWithDollar.endsWith("`")) {
-        String expr = nameWithDollar.substring(2, nameWithDollar.length() - 1);
-        try {
-          getDotValue(expr);
-          result = true;
-        } catch (IllegalArgumentException e) {
-          // ignore return false
-        }
+        result = true;
       } else if (nameWithDollar.startsWith("$")) {
         if (variables.containsKey(nameWithDollar.substring(1))) {
           result = true;
@@ -108,47 +100,20 @@ public class VariableStore {
   }
 
   private Object evaluate(String expr) {
+    SlimExpressionEvaluator evaluator = getEvaluator();
+
     Object value = null;
     try {
-      value = getDotValue(expr);
+      value = evaluator.evaluate(expr);
     } catch (IllegalArgumentException e) {
-      // ignore just leave value null
+      value = e.getMessage();
     }
     return value;
   }
 
-  private Object getDotValue(String expr) {
-    Object value = null;
-    String[] symbolInfo = expr.split("\\.");
-    expr = "$" + symbolInfo[0];
-    if (containsValueFor(expr)) {
-      value = getStored(expr);
-      for (int i = 1; i < symbolInfo.length; i++) {
-        String key = symbolInfo[i];
-        if (value instanceof Map) {
-          value = getValueFromMap((Map<String, ?>) value, key);
-        } else if (value == null) {
-          break;
-        } else {
-          value = getValueFromMap(value.toString(), key);
-        }
-      }
-    } else {
-      throw new IllegalArgumentException("No hash: " + symbolInfo[0]);
-    }
-    return value;
-  }
-
-  private Object getValueFromMap(String map, String key) {
-    MapConverter cnv = new MapConverter();
-    Map<String, String> mapObj = cnv.fromString(map);
-    return getValueFromMap(mapObj, key);
-  }
-
-  private Object getValueFromMap(Map<String, ?> map, String key) {
-    if (!map.containsKey(key)) {
-      throw new IllegalArgumentException("No key: " + key);
-    }
-    return map.get(key);
+  protected SlimExpressionEvaluator getEvaluator() {
+    SlimExpressionEvaluator evaluator = new SlimExpressionEvaluator();
+    evaluator.setContext(variables);
+    return evaluator;
   }
 }
