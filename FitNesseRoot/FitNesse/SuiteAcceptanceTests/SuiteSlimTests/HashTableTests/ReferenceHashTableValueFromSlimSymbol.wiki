@@ -11,14 +11,14 @@ Test
 
 Java hashmap symbol's value
 
-|script|echo fixture                                                                                                                                  |
-|check |echo|$`myHashMap0.key1`       |value1                                                                                                         |
-|check |echo|$`myHashMap0.key2.subkey`|subval                                                                                                         |
-|check |echo|$`myHashMap0.key3`       |null                                                                                                           |
-|check |echo|$`myHashMap.key1`        |value2                                                                                                         |
-|check |echo|$`myHashMap.key2.subkey` |subval2                                                                                                        |
-|check |echo|$`myHashMap.key3`        |null                                                                                                           |
-|check |echo|$`myHashMap3.key1`       |!-Unable to evaluate: myHashMap3.key1; ReferenceError: "myHashMap3" is not defined in <eval> at line number 1-!|
+|script|echo fixture                                                              |
+|check |echo|$`myHashMap0.key1`       |value1                                     |
+|check |echo|$`myHashMap0.key2.subkey`|subval                                     |
+|check |echo|$`myHashMap0.key3`       |null                                       |
+|check |echo|$`myHashMap.key1`        |value2                                     |
+|check |echo|$`myHashMap.key2.subkey` |subval2                                    |
+|check |echo|$`myHashMap.key3`        |null                                       |
+|check |echo|$`myHashMap3.key1`       |=~/Unable to evaluate: myHashMap3.key1; .+/|
 
 Hashtable symbol (i.e. String) as value
 
