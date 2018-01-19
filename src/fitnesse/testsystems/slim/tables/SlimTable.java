@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import fitnesse.slim.MethodExecutionResult;
+import fitnesse.slim.SlimExpressionEvaluator;
 import fitnesse.slim.SlimSymbol;
 import fitnesse.slim.instructions.AssignInstruction;
 import fitnesse.slim.instructions.CallAndAssignInstruction;
@@ -26,6 +28,7 @@ import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
+
 import static fitnesse.testsystems.slim.tables.ComparatorUtil.approximatelyEqual;
 
 public abstract class SlimTable {
@@ -114,7 +117,7 @@ public abstract class SlimTable {
     return constructInstance(getTableName(), fixtureName, 0, 0);
   }
 
-  public void setFixtureName(String name){
+  public void setFixtureName(String name) {
     fixtureName = name;
   }
 
@@ -135,7 +138,7 @@ public abstract class SlimTable {
   protected SlimAssertion constructInstance(String instanceName, String className, int classNameColumn, int row) {
     RowExpectation expectation = new ConstructionExpectation(classNameColumn, row);
     return makeAssertion(new MakeInstruction(makeInstructionTag(), instanceName, className, gatherConstructorArgumentsStartingAt(classNameColumn + 1, row)),
-            expectation);
+      expectation);
   }
 
   protected final SlimAssertion makeAssertion(Instruction instruction, SlimExpectation expectation) {
@@ -169,7 +172,7 @@ public abstract class SlimTable {
   }
 
   protected String isSymbolAssignment(String expected) {
-	return SlimSymbol.isSymbolAssignment(expected);
+    return SlimSymbol.isSymbolAssignment(expected);
   }
 
   public SlimTestContext getTestContext() {
@@ -200,7 +203,28 @@ public abstract class SlimTable {
     this.customComparatorRegistry = customComparatorRegistry;
   }
 
-  /** SlimExpectation base class for row based expectations. */
+  private String getSlimExpressionResult(String variableNameWithDollar) {
+    SlimExpressionEvaluator evaluator = new SlimExpressionEvaluator();
+    String expr = variableNameWithDollar.substring(2, variableNameWithDollar.length() - 1);
+    String variableName = expr.split("\\.")[0];
+
+    if (getSymbol(variableName) != null) {
+      Map<String, MethodExecutionResult> symbols = new HashMap<>();
+      symbols.put(variableName, new MethodExecutionResult(getSymbol(variableName), Object.class));
+      evaluator.setContext(symbols);
+    }
+    Object value;
+    try {
+      value = evaluator.evaluate(expr);
+    } catch (IllegalArgumentException e) {
+      value = e.getMessage();
+    }
+    return value == null ? "null" : value.toString();
+  }
+
+  /**
+   * SlimExpectation base class for row based expectations.
+   */
   public abstract class RowExpectation implements SlimExpectation, TableCell {
     private final int col;
     private final int row;
@@ -263,23 +287,29 @@ public abstract class SlimTable {
     }
   }
 
-  class SymbolReplacer extends SlimSymbol{
+  class SymbolReplacer extends SlimSymbol {
     private String toReplace;
+
     public SymbolReplacer(String s) {
       super();
-      toReplace=s;
+      toReplace = s;
     }
 
     //TODO: This is only implemented in the SlimServer but not in the Slim Client so it can't work properly :(
     // Should be removed. Would this breaks other SLIM Client implementations .Net ... ?
     @Override
     protected String getSymbolValue(String symbolName) {
+      if (symbolName.endsWith("`")) {
+        String symbolNameWithDollar = symbolName.startsWith("$`") ? symbolName : "$" + symbolName;
+        return getSlimExpressionResult(symbolNameWithDollar);
+      }
+
       String value = getSymbol(symbolName);
       if (value == null) {
         for (int i = symbolName.length() - 1; i > 0; i--) {
           String str = symbolName.substring(0, i);
           if ((value = getSymbol(str)) != null)
-          return value + symbolName.substring(i, symbolName.length());
+            return value + symbolName.substring(i, symbolName.length());
         }
 
         return null;
@@ -287,7 +317,7 @@ public abstract class SlimTable {
         return value;
     }
 
-    public String replace(){
+    public String replace() {
       return replace(toReplace);
     }
   }
@@ -375,8 +405,8 @@ public abstract class SlimTable {
     }
 
     public ReturnedValueExpectation(int col, int row, String expected) {
-        super(col, row, expected);
-	}
+      super(col, row, expected);
+    }
 
     @Override
     protected SlimTestResult createEvaluationMessage(String actual, String expected) {
@@ -407,6 +437,7 @@ public abstract class SlimTable {
   class ReturnedSymbolExpectation extends ReturnedValueExpectation {
     private String symbolName;
     private String assignToName = null;
+
     public ReturnedSymbolExpectation(int col, int row, String symbolName) {
       super(col, row);
       this.symbolName = symbolName;
@@ -434,7 +465,7 @@ public abstract class SlimTable {
       if (assignToName != null) {
         setSymbol(assignToName, actual);
         return SlimTestResult.plain(String.format("$%s<-[%s]", assignToName, actual));
-      }else{
+      } else {
         return super.createEvaluationMessage(actual, expected);
       }
     }

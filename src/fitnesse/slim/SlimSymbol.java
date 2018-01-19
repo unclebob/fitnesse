@@ -24,9 +24,6 @@ public abstract class SlimSymbol {
     return matcher.find() ? matcher.group(1) : null;
   }
 
-
-
-
   public String replace(String s) {
     if(null == s) return null;
 
