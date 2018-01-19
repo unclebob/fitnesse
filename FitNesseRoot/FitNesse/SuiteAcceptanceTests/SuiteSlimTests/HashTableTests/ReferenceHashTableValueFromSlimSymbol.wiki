@@ -1,0 +1,35 @@
+---
+Test
+---
+|script      |hash fixture                         |
+|send as hash|!{subkey:subval}                     |
+|$nested=    |hash                                 |
+|send as hash|!{key1:value1,key2:$nested}          |
+|$myHashMap0=|hash                                 |
+|send as hash|!{key1:value2,key2:!{subkey:subval2}}|
+|$myHashMap= |hash                                 |
+
+Java hashmap symbol's value
+
+|script|echo fixture                                                              |
+|check |echo|$`myHashMap0.key1`       |value1                                     |
+|check |echo|$`myHashMap0.key2.subkey`|subval                                     |
+|check |echo|$`myHashMap0.key3`       |null                                       |
+|check |echo|$`myHashMap.key1`        |value2                                     |
+|check |echo|$`myHashMap.key2.subkey` |subval2                                    |
+|check |echo|$`myHashMap.key3`        |null                                       |
+|check |echo|$`myHashMap3.key1`       |=~/Unable to evaluate: myHashMap3.key1; .+/|
+
+Hashtable symbol (i.e. String) as value
+
+|script      |echo fixture                              |
+|$myHashMap2=|echo|!{key1:value2,key2:!{subkey:subval1}}|
+|check       |echo|$`myHashMap2.key1`       |value2     |
+|check       |echo|$`myHashMap2.key2.subkey`|subval1    |
+
+Other expressions
+
+|script|echo fixture                      |
+|check |echo|$`10+20`                 |30 |
+|check |echo|$`myHashMap.size() * 1.5`|3.0|
+
