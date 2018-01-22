@@ -40,6 +40,11 @@ public class SlimTestContextImpl implements SlimTestContext {
   }
 
   @Override
+  public Map<String, String> getSymbols() {
+    return symbols;
+  }
+
+  @Override
   public void setSymbol(String symbolName, String value) {
     symbols.put(symbolName, value);
   }

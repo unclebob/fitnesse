@@ -44,11 +44,13 @@ Hashtable symbol (i.e. String) as value
 
 Other expressions
 
-|script |echo fixture                                            |
-|check  |echo|$`10+20`                 |30                       |
-|check  |echo|$`myHashMap.size() * 1.5`|3.0                      |
-|check  |echo|30                       |$`10+20`                 |
-|check  |echo|3.0                      |$`myHashMap.size() * 1.5`|
-|$myStr=|echo|This is a test                                     |
-|check  |echo|$`myStr.toUpperCase()`   |THIS IS A TEST           |
-|check  |echo|$`myStr.substr(2,5)`     |is is                    |
+|script |echo fixture                                                          |
+|check  |echo|$`10+20`                               |30                       |
+|check  |echo|$`myHashMap.size() * 1.5`              |3.0                      |
+|check  |echo|$`1.5 * myHashMap.size()`              |3.0                      |
+|check  |echo|$`myHashMap2.size() * myHashMap.size()`|4.0                      |
+|check  |echo|30                                     |$`10+20`                 |
+|check  |echo|3.0                                    |$`myHashMap.size() * 1.5`|
+|$myStr=|echo|This is a test                                                   |
+|check  |echo|$`myStr.toUpperCase()`                 |THIS IS A TEST           |
+|check  |echo|$`myStr.substr(2,5)`                   |is is                    |

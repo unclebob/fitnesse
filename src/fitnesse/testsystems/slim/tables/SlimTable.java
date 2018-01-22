@@ -206,13 +206,16 @@ public abstract class SlimTable {
   private String getSlimExpressionResult(String variableNameWithDollar) {
     SlimExpressionEvaluator evaluator = new SlimExpressionEvaluator();
     String expr = variableNameWithDollar.substring(2, variableNameWithDollar.length() - 1);
-    String variableName = expr.split("\\.")[0];
+    Map<String, MethodExecutionResult> symbols = new HashMap<>();
 
-    if (getSymbol(variableName) != null) {
-      Map<String, MethodExecutionResult> symbols = new HashMap<>();
-      symbols.put(variableName, new MethodExecutionResult(getSymbol(variableName), Object.class));
-      evaluator.setContext(symbols);
+    for (Map.Entry<String, String> symbol : testContext.getSymbols().entrySet()) {
+      if (symbol.getValue().startsWith("!{")) {
+        symbol.setValue(HtmlValueOfSymbol(symbol.getValue()));
+      }
+      symbols.put(symbol.getKey(), new MethodExecutionResult(symbol.getValue(), Object.class));
     }
+    evaluator.setContext(symbols);
+
     Object value;
     try {
       value = evaluator.evaluate(expr);
@@ -220,6 +223,10 @@ public abstract class SlimTable {
       value = e.getMessage();
     }
     return value == null ? "null" : value.toString();
+  }
+
+  private String HtmlValueOfSymbol(String symbol) {
+    return new WikiSymbolTranslateUtil().getHtmlFor(symbol);
   }
 
   /**
