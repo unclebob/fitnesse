@@ -37,18 +37,9 @@ public class HeaderLine extends SymbolType implements Translation {
 
   private void addAttributeId(final HtmlTag result, final Translator translator,
                               final Symbol symbol) {
-    String text = getText(symbol);
-    final String value = HtmlUtil.remainRfc3986UnreservedCharacters(text);
+    final String textFromHeaderLine = Headings.extractTextFromHeaderLine(symbol);
+    final String value = Headings.buildIdOfHeaderLine(textFromHeaderLine);
     result.addAttribute("id", value);
-  }
-
-  private String getText(final Symbol symbol) {
-    final List<Symbol> textSymbols = SymbolUtil.findSymbolsByType(symbol, Text, true);
-    final StringBuilder stringBuilder = new StringBuilder(textSymbols.size());
-    for (final Symbol texts : textSymbols) {
-      stringBuilder.append(texts.getContent());
-    }
-    return stringBuilder.toString();
   }
 
 }
