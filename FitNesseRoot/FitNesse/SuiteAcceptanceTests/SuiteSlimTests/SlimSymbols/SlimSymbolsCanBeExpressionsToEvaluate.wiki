@@ -54,3 +54,5 @@ Other expressions
 |check  |echo|$`myStr.toUpperCase()`                 |THIS IS A TEST           |
 |check  |echo|$`myStr.substr(2,5)`                   |is is                    |
 
+
+
