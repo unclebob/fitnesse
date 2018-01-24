@@ -31,7 +31,7 @@ import fitnesse.testsystems.slim.tables.SyntaxError;
 public class HtmlTable implements Table {
   private static final Logger LOG = Logger.getLogger(HtmlTable.class.getName());
 
-  private static final String SYMBOL_ASSIGNMENT = "\\$[A-Za-z]\\w*<?->?\\[|\\$`.+`<?->?\\[";
+  private static final String SYMBOL_ASSIGNMENT = "\\$[A-Za-z]\\w*<?->?\\[|\\$`[^`]+`<?->?\\[";
   private static final String SYMBOL_ASSIGNMENT_SUFFIX = "\\]";
 
   private static final Pattern HTML_PATTERN = Pattern.compile("^(?:" + SYMBOL_ASSIGNMENT + ")?" +
