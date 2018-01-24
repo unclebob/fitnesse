@@ -22,7 +22,6 @@ Java hashmap symbol's value
 |check |echo|$`myHashMap3.key1`       |=~/Unable to evaluate: myHashMap3.key1; .+/|
 
 Reverse (use expression value as expected value)
-
 |script   |echo fixture                          |
 |check    |echo|value1 |$`myHashMap0.key1`       |
 |check    |echo|subval |$`myHashMap0.key2.subkey`|
@@ -32,7 +31,6 @@ Reverse (use expression value as expected value)
 |check    |echo|null   |$`myHashMap.key3`        |
 
 Hashtable symbol (i.e. String) as value
-
 |script      |echo fixture                                            |
 |$myHashMap2=|echo|!{key1:value2,key2:!{subkey:subval1}}              |
 |check       |echo|$`myHashMap2.key1`       |value2                   |
@@ -42,17 +40,17 @@ Hashtable symbol (i.e. String) as value
 
 Other expressions
 
-|script |echo fixture                                                          |
-|check  |echo|$`10+20`                               |30                       |
-|check  |echo|$`myHashMap.size() * 1.5`              |3.0                      |
-|check  |echo|$`1.5 * myHashMap.size()`              |3.0                      |
-|check  |echo|$`myHashMap2.size() * myHashMap.size()`|4.0                      |
-|check  |echo|30                                     |$`10+20`                 |
-|check  |echo|$`10+20`                               |30                       |
-|check  |echo|3.0                                    |$`myHashMap.size() * 1.5`|
-|$myStr=|echo|This is a test                                                   |
-|check  |echo|$`myStr.toUpperCase()`                 |THIS IS A TEST           |
-|check  |echo|$`myStr.substr(2,5)`                   |is is                    |
+|script |echo fixture                                                            |
+|check  |echo|$`10+20`                               |30                         |
+|check  |echo|$`myHashMap.size() * 1.5`              |3.0                        |
+|check  |echo|$`1.5 * myHashMap.size()`              |3.0                        |
+|check  |echo|$`myHashMap2.size() * myHashMap.size()`|4.0                        |
+|check  |echo|302                                    |$`10+20`$`myHashMap.size()`|
+|check  |echo|$`10+20`                               |30                         |
+|check  |echo|3.0                                    |$`myHashMap.size() * 1.5`  |
+|$myStr=|echo|This is a test                                                     |
+|check  |echo|$`myStr.toUpperCase()`                 |THIS IS A TEST             |
+|check  |echo|$`myStr.substr(2,5)`                   |is is                      |
 
 
 
