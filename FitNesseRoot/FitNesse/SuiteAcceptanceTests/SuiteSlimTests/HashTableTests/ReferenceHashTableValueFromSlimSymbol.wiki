@@ -9,8 +9,6 @@ Test
 |send as hash|!{key1:value2,key2:!{subkey:subval2}}|
 |$myHashMap= |hash                                 |
 
-|script|echo fixture    |
-|show  |echo|$myHashMap0|
 
 Java hashmap symbol's value
 
@@ -25,13 +23,13 @@ Java hashmap symbol's value
 
 Reverse (use expression value as expected value)
 
-|script|echo fixture                          |
-|check |echo|value1 |$`myHashMap0.key1`       |
-|check |echo|subval |$`myHashMap0.key2.subkey`|
-|check |echo|null   |$`myHashMap0.key3`       |
-|check |echo|value2 |$`myHashMap.key1`        |
-|check |echo|subval2|$`myHashMap.key2.subkey` |
-|check |echo|null   |$`myHashMap.key3`        |
+|script   |echo fixture                          |
+|check    |echo|value1 |$`myHashMap0.key1`       |
+|check    |echo|subval |$`myHashMap0.key2.subkey`|
+|check    |echo|null   |$`myHashMap0.key3`       |
+|check not|echo|value3 |$`myHashMap.key1`        |
+|check    |echo|subval2|$`myHashMap.key2.subkey` |
+|check    |echo|null   |$`myHashMap.key3`        |
 
 Hashtable symbol (i.e. String) as value
 
@@ -50,7 +48,9 @@ Other expressions
 |check  |echo|$`1.5 * myHashMap.size()`              |3.0                      |
 |check  |echo|$`myHashMap2.size() * myHashMap.size()`|4.0                      |
 |check  |echo|30                                     |$`10+20`                 |
+|check  |echo|$`10+20`                               |30                       |
 |check  |echo|3.0                                    |$`myHashMap.size() * 1.5`|
 |$myStr=|echo|This is a test                                                   |
 |check  |echo|$`myStr.toUpperCase()`                 |THIS IS A TEST           |
 |check  |echo|$`myStr.substr(2,5)`                   |is is                    |
+

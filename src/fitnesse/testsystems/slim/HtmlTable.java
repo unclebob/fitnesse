@@ -358,7 +358,20 @@ public class HtmlTable implements Table {
               : originalContent;
       switch (testResult.getExecutionResult()) {
         case PASS:
-          return String.format("<span class=\"pass\">%s</span>", message);
+          if (testResult.hasExpected()) {
+            if (qualifiesAsHtml(testResult.getActual()) || qualifiesAsHtml(testResult.getExpected())) {
+              return String.format("<span class=\"pass\">%s</span>",
+                asHtml(testResult.getExpected()));
+            } else {
+              String[] expected = parseSymbol(testResult.getExpected());
+              return String.format("<span class=\"pass\">%s</span>",
+                HtmlUtil.escapeHTML(expected[0]) +
+                  HtmlUtil.escapeHTML(expected[1]) +
+                  HtmlUtil.escapeHTML(expected[2]));
+            }
+          } else {
+            return String.format("<span class=\"pass\">%s</span>", message);
+          }
         case FAIL:
           if (testResult.hasActual() && testResult.hasExpected()) {
             if (qualifiesAsHtml(testResult.getActual()) || qualifiesAsHtml(testResult.getExpected())) {
