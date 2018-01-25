@@ -40,17 +40,20 @@ Hashtable symbol (i.e. String) as value
 
 Other expressions
 
-|script |echo fixture                                                            |
-|check  |echo|$`10+20`                               |30                         |
-|check  |echo|$`myHashMap.size() * 1.5`              |3.0                        |
-|check  |echo|$`1.5 * myHashMap.size()`              |3.0                        |
-|check  |echo|$`myHashMap2.size() * myHashMap.size()`|4.0                        |
-|check  |echo|302                                    |$`10+20`$`myHashMap.size()`|
-|check  |echo|$`10+20`                               |30                         |
-|check  |echo|3.0                                    |$`myHashMap.size() * 1.5`  |
-|$myStr=|echo|This is a test                                                     |
-|check  |echo|$`myStr.toUpperCase()`                 |THIS IS A TEST             |
-|check  |echo|$`myStr.substr(2,5)`                   |is is                      |
+|script |echo fixture                                 |
+|check  |echo|$`10+20`                 |30            |
+|check  |echo|$`myHashMap.size() * 1.5`|3.0           |
+|$myStr=|echo|This is a test                          |
+|check  |echo|$`myStr.toUpperCase()`   |THIS IS A TEST|
+|check  |echo|$`myStr.substr(2,5)`     |is is         |
+
+Concatenating expressions
+
+|script|echo fixture                                  |
+|check |echo|$`1+1` a      |2 a                       |
+|check |echo|$`1+1`a       |2a                        |
+|check |echo|a$`1+1`a      |a2a                       |
+|check |echo|this is value1|this is $`myHashMap0.key1`|
 
 
 

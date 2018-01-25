@@ -92,7 +92,10 @@ public class VariableStore {
   }
 
   private String getStoreSymbolValue(String symbolName) {
-    if (variables.containsKey(symbolName)) {
+    if (symbolName.startsWith("`") && symbolName.endsWith("`")) {
+      Object value = getStored("$" + symbolName);
+      return String.valueOf(value);
+    } else if (variables.containsKey(symbolName)) {
       Object value = variables.get(symbolName);
       return String.valueOf(value);
     }
