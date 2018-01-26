@@ -58,6 +58,7 @@ Those properties can be either provided by a wiki page, on the command line (e.g
 !4 Extra Goodies that are consistent throughout all Slim tables and ports.
 | [[''Exception Handling''][>ExceptionHandling]] |
 | [[''Symbols in tables''][>SymbolsInTables]] |
+| [[''Expressions in tables''][>ExpressionsInTables]] |
 | [[''Constructor arguments''][>ConstructorArguments]] |
 | [[''Value comparisons''][>ValueComparisons]] |
 | [[''Graceful names''][>GracefulNames]] |
