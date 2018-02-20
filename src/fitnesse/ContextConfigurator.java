@@ -91,6 +91,7 @@ public class ContextConfigurator {
 
     // BIG WARNING: We're setting a static variable here!
     ClassUtils.setClassLoader(classLoader);
+    Thread.currentThread().setContextClassLoader(classLoader);
 
     ComponentFactory componentFactory = new ComponentFactory(properties, classLoader);
 

@@ -74,8 +74,18 @@ public class FileResponder implements SecureResponder {
       return createNotModifiedResponse();
 
     String classpathResource = "/fitnesse/resources/" + resource.substring("files/fitnesse/".length());
+    InputStream input;
 
-    InputStream input = getClass().getResourceAsStream(classpathResource);
+    input = Thread.currentThread().getContextClassLoader().getResourceAsStream(classpathResource);
+
+    if (input == null) {
+      //remove leading slash so path will work with resources inside a JAR file
+      while (classpathResource.startsWith("/"))
+      {
+        classpathResource = classpathResource.substring(1);
+      }
+      input = Thread.currentThread().getContextClassLoader().getResourceAsStream(classpathResource);
+    }
     if (input == null) {
       return new NotFoundResponder().makeResponse(context, request);
     }
