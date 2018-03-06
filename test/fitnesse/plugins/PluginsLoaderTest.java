@@ -4,6 +4,7 @@ package fitnesse.plugins;
 
 import java.io.File;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.List;
 import java.util.Properties;
 
@@ -13,7 +14,6 @@ import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.ComponentFactory;
-import fitnesse.components.PluginsClassLoader;
 import fitnesse.reporting.BaseFormatter;
 import fitnesse.reporting.FormatterFactory;
 import fitnesse.responders.ResponderFactory;
@@ -36,6 +36,7 @@ import fitnesse.testsystems.slim.tables.SlimAssertion;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.testutil.SimpleAuthenticator;
+import fitnesse.util.ClassUtils;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.WikiPageFactory;
@@ -55,6 +56,7 @@ import org.htmlparser.tags.TableColumn;
 import org.htmlparser.tags.TableRow;
 import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -70,6 +72,7 @@ public class PluginsLoaderTest {
   private SlimTableFactory testSlimTableFactory;
   private CustomComparatorRegistry testCustomComparatorsRegistry;
   private MultipleTestSystemFactory testTestSystemFactory;
+  private URLClassLoader classLoader;
 
   @Before
   public void setUp() throws Exception {
@@ -79,21 +82,29 @@ public class PluginsLoaderTest {
     testWikiPageFactoryRegistry = new FileSystemPageFactory();
     testSlimTableFactory = new SlimTableFactory();
     testCustomComparatorsRegistry = new CustomComparatorRegistry();
-    testTestSystemFactory = new MultipleTestSystemFactory(testSlimTableFactory, testCustomComparatorsRegistry);
 
-    URL sampleUrl = new File("test/fitnesse/plugins").toURI().toURL();
-    PluginsClassLoader.addUrlToClasspath(sampleUrl);
+    URL pluginLoaderTestDirectory = new File("plugin-loader-test").toURI().toURL();
 
-    loader = new PluginsLoader(new ComponentFactory(testProperties));
+    classLoader = new URLClassLoader(new URL[] { pluginLoaderTestDirectory }, ClassLoader.getSystemClassLoader());
+    ClassUtils.setClassLoader(classLoader);
+
+    testTestSystemFactory = new MultipleTestSystemFactory(testSlimTableFactory, testCustomComparatorsRegistry, classLoader);
+
+    loader = new PluginsLoader(new ComponentFactory(testProperties), classLoader);
 
     assertSymbolTypeMatch("!today", false);
+  }
+
+  @After
+  public void tearDown() {
+    ClassUtils.setClassLoader(null);
   }
 
   @Test
   public void testAddPlugins() throws Exception {
     testProperties.setProperty(ConfigurationParameter.PLUGINS.getKey(), DummyPlugin.class.getName());
 
-    loader = new PluginsLoader(new ComponentFactory(testProperties));
+    loader = new PluginsLoader(new ComponentFactory(testProperties), classLoader);
 
     loader.loadResponders(responderFactory);
     loader.loadSymbolTypes(testProvider);
@@ -111,7 +122,7 @@ public class PluginsLoaderTest {
   public void shouldHandleInstanceMethods() throws Exception {
     testProperties.setProperty(ConfigurationParameter.PLUGINS.getKey(), InstantiableDummyPlugin.class.getName());
     testProperties.setProperty("responderName", "instanceTest");
-    loader = new PluginsLoader(new ComponentFactory(testProperties));
+    loader = new PluginsLoader(new ComponentFactory(testProperties), classLoader);
 
     loader.loadResponders(responderFactory);
 
@@ -127,7 +138,7 @@ public class PluginsLoaderTest {
   public void testAddResponderPlugins() throws Exception {
     String respondersValue = "custom1:" + WikiPageResponder.class.getName() + ",custom2:" + EditResponder.class.getName();
     testProperties.setProperty(ConfigurationParameter.RESPONDERS.getKey(), respondersValue);
-    loader = new PluginsLoader(new ComponentFactory(testProperties));
+    loader = new PluginsLoader(new ComponentFactory(testProperties), classLoader);
 
     loader.loadResponders(responderFactory);
 

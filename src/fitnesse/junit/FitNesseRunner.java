@@ -44,8 +44,8 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Target(ElementType.TYPE)
   public @interface Suite {
 
-    public String value() default "";
-    public String systemProperty() default "";
+    String value() default "";
+    String systemProperty() default "";
   }
   /**
    * The <code>DebugMode</code> annotation specifies whether the test is run
@@ -55,7 +55,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Target(ElementType.TYPE)
   public @interface DebugMode {
 
-    public boolean value();
+    boolean value();
   }
 
   /**
@@ -65,7 +65,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Target(ElementType.TYPE)
   public @interface PreventSystemExit {
 
-    public boolean value() default true;
+    boolean value() default true;
   }
 
   /**
@@ -76,9 +76,9 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Target(ElementType.TYPE)
   public @interface SuiteFilter {
 
-    public String value() default "";
-    public String systemProperty() default "";
-    public boolean andStrategy() default false;
+    String value() default "";
+    String systemProperty() default "";
+    boolean andStrategy() default false;
   }
   /**
    * The <code>ExcludeSuiteFilter</code> annotation specifies a filter for excluding tests from the Fitnesse suite
@@ -88,7 +88,8 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Target(ElementType.TYPE)
   public @interface ExcludeSuiteFilter {
 
-    public String value();
+    String value();
+    String systemProperty() default "";
   }
   /**
    * The <code>FitnesseDir</code> annotation specifies the absolute or relative
@@ -105,9 +106,9 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Target(ElementType.TYPE)
   public @interface FitnesseDir {
 
-    public String value() default "";
-    public String systemProperty() default "";
-    public String fitNesseRoot() default ContextConfigurator.DEFAULT_ROOT;
+    String value() default "";
+    String systemProperty() default "";
+    String fitNesseRoot() default ContextConfigurator.DEFAULT_ROOT;
   }
   /**
    * The <code>OutputDir</code> annotation specifies where the html reports of
@@ -124,10 +125,10 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Target(ElementType.TYPE)
   public @interface OutputDir {
 
-    public String value() default "";
-    public String systemProperty() default "";
+    String value() default "";
+    String systemProperty() default "";
 
-    public String pathExtension() default "";
+    String pathExtension() default "";
 
   }
   /**
@@ -139,8 +140,8 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Deprecated
   public @interface Port {
 
-    public int value() default 0;
-    public String systemProperty() default "";
+    int value() default 0;
+    String systemProperty() default "";
 
   }
   /**
@@ -150,7 +151,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Target(ElementType.TYPE)
   public @interface ConfigFile {
 
-    public String value();
+    String value();
   }
 
   private Class<?> suiteClass;
@@ -226,12 +227,8 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   }
 
   protected FitNesseContext createContext(Class<?> suiteClass) throws Exception {
-    String rootPath = getFitNesseDir(suiteClass);
-    String fitNesseRoot = getFitNesseRoot(suiteClass);
-    int port = getPort(suiteClass);
-    File configFile = getConfigFile(rootPath, suiteClass);
 
-    return initContext(configFile, rootPath, fitNesseRoot, port);
+    return initContextConfigurator().makeFitNesseContext();
   }
 
   protected String getSuiteName(Class<?> klass) throws InitializationError {
@@ -297,7 +294,14 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     if (excludeSuiteFilterAnnotation == null) {
       return null;
     }
-    return excludeSuiteFilterAnnotation.value();
+    if (!"".equals(excludeSuiteFilterAnnotation.value())) {
+      return excludeSuiteFilterAnnotation.value();
+    }
+    if (!"".equals(excludeSuiteFilterAnnotation.systemProperty())) {
+      return System.getProperty(excludeSuiteFilterAnnotation.systemProperty());
+    }
+    throw new InitializationError(
+            "In annotation @ExcludeSuiteFilter you have to specify either 'value' or 'systemProperty'");
   }
 
   protected boolean useDebugMode(Class<?> klass) throws Exception {
@@ -339,7 +343,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     return fitnesseDirAnnotation.fitNesseRoot();
   }
 
-  public int getPort(Class<?> klass) throws Exception {
+  public int getPort(Class<?> klass) {
     Port portAnnotation = klass.getAnnotation(Port.class);
     if (null == portAnnotation) {
       return 0;
@@ -351,7 +355,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     return lport;
   }
 
-  protected File getConfigFile(String rootPath, Class<?> klass) throws Exception {
+  protected File getConfigFile(String rootPath, Class<?> klass) {
     ConfigFile configFileAnnotation = klass.getAnnotation(ConfigFile.class);
     if (null == configFileAnnotation) {
       return new File(rootPath, ContextConfigurator.DEFAULT_CONFIG_FILE);
@@ -438,8 +442,13 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     return suiteFilterAndStrategy ? suiteFilter : null;
   }
 
-  static FitNesseContext initContext(File configFile, String rootPath, String fitNesseRoot, int port) throws IOException, PluginException {
-    ContextConfigurator contextConfigurator = ContextConfigurator.systemDefaults()
+  protected ContextConfigurator initContextConfigurator() throws InitializationError {
+    String rootPath = getFitNesseDir(suiteClass);
+    String fitNesseRoot = getFitNesseRoot(suiteClass);
+    int port = getPort(suiteClass);
+    File configFile = getConfigFile(rootPath, suiteClass);
+
+    return ContextConfigurator.systemDefaults()
       .updatedWith(System.getProperties())
       .updatedWith(ConfigurationParameter.loadProperties(configFile))
       .updatedWith(ConfigurationParameter.makeProperties(
@@ -447,8 +456,6 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
             ConfigurationParameter.ROOT_PATH, rootPath,
             ConfigurationParameter.ROOT_DIRECTORY, fitNesseRoot,
             ConfigurationParameter.OMITTING_UPDATES, true));
-
-    return contextConfigurator.makeFitNesseContext();
   }
 
   private WikiPage getSuiteRootPage() {

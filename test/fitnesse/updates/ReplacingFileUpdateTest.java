@@ -8,12 +8,13 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
 import util.FileUtil;
+import util.GradleSupport;
 
 import java.io.File;
 import java.io.FileOutputStream;
 
 public class ReplacingFileUpdateTest extends UpdateTestCase {
-  public final File sourceFile = new File("build/classes/test", "testFile");
+  public final File sourceFile = new File(GradleSupport.TEST_CLASSES_DIR, "testFile");
 
   public final String destDirName = "subDir";
   public File destFile;

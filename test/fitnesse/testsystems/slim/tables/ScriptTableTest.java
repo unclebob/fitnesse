@@ -38,6 +38,7 @@ public class ScriptTableTest {
   private WikiPage root;
   private List<SlimAssertion> assertions;
   public ScriptTable st;
+  private SlimTableFactory slimTableFactory;
 
   static class LocalizedScriptTable extends ScriptTable {
 
@@ -78,6 +79,8 @@ public class ScriptTableTest {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     assertions = new ArrayList<>();
+    slimTableFactory = new SlimTableFactory();
+    slimTableFactory.addTableType("localized script", LocalizedScriptTable.class);
   }
 
   private ScriptTable buildInstructionsForWholeTable(String pageContents, boolean localized) throws Exception {
@@ -91,8 +94,7 @@ public class ScriptTableTest {
     TableScanner ts = new HtmlTableScanner(root.getHtml());
     Table t = ts.getTable(0);
     SlimTestContextImpl testContext = new SlimTestContextImpl(new WikiTestPage(root));
-    if (localized) return new LocalizedScriptTable(t, "id", testContext);
-    else return new ScriptTable(t, "id", testContext);
+    return (ScriptTable) slimTableFactory.makeSlimTable(t, "id", testContext);
   }
 
   private void assertScriptResults(String scriptStatements, List<List<String>> scriptResults, String table, boolean localized) throws Exception {
@@ -105,7 +107,8 @@ public class ScriptTableTest {
 
   private void buildInstructionsFor(String scriptStatements, boolean localized) throws Exception {
     String scriptTableHeader = "|Script|\n";
-    buildInstructionsForWholeTable(scriptTableHeader + scriptStatements, localized);
+    String localizedScriptTableHeader = "|localized script|\n";
+    buildInstructionsForWholeTable((localized ? localizedScriptTableHeader : scriptTableHeader) + scriptStatements, localized);
   }
 
   private List<Instruction> instructions() {
@@ -516,7 +519,7 @@ public class ScriptTableTest {
             asList(
                     asList("localizedScriptTable_id_0", "3")
             ),
-      "[[Script], [localized check, func, pass(3)]]", true
+      "[[localized script], [localized check, func, pass(3)]]", true
     );
   }
 
@@ -536,7 +539,7 @@ public class ScriptTableTest {
             asList(
                     asList("localizedScriptTable_id_0", "3")
             ),
-      "[[Script], [localized check not, func, fail(3)]]", true
+      "[[localized script], [localized check not, func, fail(3)]]", true
     );
   }
 
@@ -556,7 +559,7 @@ public class ScriptTableTest {
             asList(
                     asList("localizedScriptTable_id_0", "4")
             ),
-      "[[Script], [localized check, func, fail(a=4;e=3)]]", true
+      "[[localized script], [localized check, func, fail(a=4;e=3)]]", true
     );
   }
 
@@ -576,7 +579,7 @@ public class ScriptTableTest {
             asList(
                     asList("localizedScriptTable_id_0", "4")
             ),
-      "[[Script], [localized check not, func, pass(a=4;e=3)]]", true
+      "[[localized script], [localized check not, func, pass(a=4;e=3)]]", true
     );
   }
 
@@ -596,7 +599,7 @@ public class ScriptTableTest {
             asList(
                     asList("localizedScriptTable_id_0", BooleanConverter.TRUE)
             ),
-      "[[Script], [pass(localized ensure), func, 3]]", true
+      "[[localized script], [pass(localized ensure), func, 3]]", true
     );
   }
 
@@ -616,7 +619,7 @@ public class ScriptTableTest {
             asList(
                     asList("localizedScriptTable_id_0", BooleanConverter.FALSE)
             ),
-      "[[Script], [fail(localized ensure), func, 3]]", true
+      "[[localized script], [fail(localized ensure), func, 3]]", true
     );
   }
 
@@ -636,7 +639,7 @@ public class ScriptTableTest {
             asList(
                     asList("localizedScriptTable_id_0", BooleanConverter.FALSE)
             ),
-      "[[Script], [pass(localized reject), func, 3]]", true
+      "[[localized script], [pass(localized reject), func, 3]]", true
     );
   }
 
@@ -656,7 +659,7 @@ public class ScriptTableTest {
             asList(
                     asList("localizedScriptTable_id_0", BooleanConverter.TRUE)
             ),
-      "[[Script], [fail(localized reject), func, 3]]", true
+      "[[localized script], [fail(localized reject), func, 3]]", true
     );
   }
 
@@ -742,7 +745,7 @@ String newLine = System.getProperty("line.separator");
             asList(
                     asList("localizedScriptTable_id_0", "kawabunga")
             ),
-      "[[Script], [localized show, func, 3, kawabunga]]", true
+      "[[localized script], [localized show, func, 3, kawabunga]]", true
     );
   }
 

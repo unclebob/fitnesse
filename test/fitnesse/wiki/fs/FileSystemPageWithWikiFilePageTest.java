@@ -1,20 +1,14 @@
 package fitnesse.wiki.fs;
 
 import java.io.File;
-import java.io.IOException;
-import org.hamcrest.Matcher;
-import org.junit.After;
+
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wikitext.parser.Maybe;
-import util.FileUtil;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;

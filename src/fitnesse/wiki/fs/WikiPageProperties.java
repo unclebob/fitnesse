@@ -14,7 +14,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPageLoadException;
 import fitnesse.wiki.WikiPageProperty;
 

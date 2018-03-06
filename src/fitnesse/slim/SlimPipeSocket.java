@@ -42,12 +42,10 @@ public class SlimPipeSocket extends ServerSocket {
     this.stdin = System.in;
 
     // bind System.stdout/System.stderr to original stderr
-    System.setOut(new PrintStream(new LoggingOutputStream(this.stderr,
-        STDOUT_PREFIX),
-        true));
-    System.setErr(new PrintStream(new LoggingOutputStream(this.stderr,
-        STDERR_PREFIX),
-        true));
+    System.setOut(new PrintStream(new LoggingOutputStream(this.stderr, STDOUT_PREFIX),
+        true, FileUtil.CHARENCODING));
+    System.setErr(new PrintStream(new LoggingOutputStream(this.stderr, STDERR_PREFIX),
+        true, FileUtil.CHARENCODING));
 
     LOG.log(Level.FINER, "Creating Slim Server with pipe socket.");
 

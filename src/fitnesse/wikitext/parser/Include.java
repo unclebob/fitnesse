@@ -1,7 +1,7 @@
 package fitnesse.wikitext.parser;
 
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPageProperty;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -54,7 +54,7 @@ public class Include extends SymbolType implements Rule, Translation {
           current.add("").add(new Symbol(SymbolType.Style, "error").add(includedPage.because()));
         }
         else if (includeHelpOption.equals(option)) {
-        	String helpText = includedPage.getValue().getProperty(PageData.PropertyHELP);
+        	String helpText = includedPage.getValue().getProperty(WikiPageProperty.HELP);
         	current.add("").add(Parser.make(
         			parser.getPage(),helpText).parse());
         } else {

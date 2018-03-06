@@ -1,9 +1,14 @@
 package fitnesse.wiki.search;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static fitnesse.wiki.PageType.*;
-import static fitnesse.wiki.PageData.*;
+import fitnesse.wiki.HitCollector;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PageType;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.fs.InMemoryPage;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,39 +16,33 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.components.TraversalListener;
-import fitnesse.wiki.*;
-import org.junit.Before;
-import org.junit.Test;
+import static fitnesse.wiki.PageData.PropertySUITES;
+import static fitnesse.wiki.PageType.STATIC;
+import static fitnesse.wiki.PageType.SUITE;
+import static fitnesse.wiki.PageType.TEST;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import fitnesse.wiki.fs.InMemoryPage;
-
-public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> {
+public class AttributeWikiPageFinderTest {
 
   private WikiPage root;
   private WikiPage page;
   private AttributeWikiPageFinder searcher;
 
-  private List<WikiPage> hits = new ArrayList<>();
-
-  @Override
-  public void process(WikiPage page) {
-    hits.add(page);
-  }
+  private HitCollector hits = new HitCollector();
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    searcher = new AttributeWikiPageFinder(this, Arrays.asList(TEST),
+    searcher = new AttributeWikiPageFinder(hits, Arrays.asList(TEST),
         new HashMap<String, Boolean>(), new ArrayList<String>());
     page = WikiPageUtil.addPage(root, PathParser.parse("TestPage"));
-    hits.clear();
   }
 
   @Test
   public void testPageMatchesQueryWithSingleAttribute() throws Exception {
     Map<String, Boolean> attributes = new HashMap<>();
-    searcher = new AttributeWikiPageFinder(this, Arrays.asList(TEST),
+    searcher = new AttributeWikiPageFinder(hits, Arrays.asList(TEST),
         attributes, new ArrayList<String>());
     attributes.put(TEST.toString(), true);
     assertTrue(searcher.pageMatches(page));
@@ -62,7 +61,7 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
 
   private AttributeWikiPageFinder generateSearcherByPageTypesAndSearchAttributes(List<PageType> pageTypes,
       Map<String, Boolean> attributes) {
-    return new AttributeWikiPageFinder(this, pageTypes, attributes, new ArrayList<String>());
+    return new AttributeWikiPageFinder(hits, pageTypes, attributes, new ArrayList<String>());
   }
 
   private void removePageProperty(WikiPage page, String attributeName)
@@ -210,7 +209,7 @@ public class AttributeWikiPageFinderTest implements TraversalListener<WikiPage> 
   }
 
   private AttributeWikiPageFinder generateSearcherByPagesTypesAndSuites(List<PageType> pageTypes, List<String> suites) {
-    return new AttributeWikiPageFinder(this, pageTypes, new HashMap<String, Boolean>(), suites);
+    return new AttributeWikiPageFinder(hits, pageTypes, new HashMap<String, Boolean>(), suites);
   }
 
   @Test

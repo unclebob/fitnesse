@@ -1,4 +1,15 @@
 !2 ${FITNESSE_VERSION}
+ * Improve stability for non pipe based SUT connection ([[197][https://github.com/unclebob/fitnesse/pull/997]])
+ * Fix new style wiki pages for Windows (line ending) ([[1058][https://github.com/unclebob/fitnesse/pull/1058]])
+ * SLiM now better handles parameter types in fixture constructors ([[1024][https://github.com/unclebob/fitnesse/pull/1024]])
+ * New wiki element: [[''!-!headings-!''][UserGuide.FitNesseWiki.MarkupLanguageReference.MarkupHeadings]] ([[1025][https://github.com/unclebob/fitnesse/pull/1025]])
+ * Define table type now work for Script table ([[1029][https://github.com/unclebob/fitnesse/pull/1029]], [[1099][https://github.com/unclebob/fitnesse/pull/1099]])
+ * JUnit runner supports system property based ''excludeSuiteFilter'' annotation ([[1033][https://github.com/unclebob/fitnesse/pull/1033]])
+ * A SuiteQuery no longer runs test pages that are excluded ([[1079][https://github.com/unclebob/fitnesse/pull/1079]])
+ * Root file pages are now included in the default wiki content by default ([[1084][https://github.com/unclebob/fitnesse/pull/1084]])
+ * Table:Table now resizes when the last line contains more results than expected ([[1055][https://github.com/unclebob/fitnesse/pull/1055]])
+ * Various documentation updates
+ * Various small improvements
 
 For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=16&state=closed.
 

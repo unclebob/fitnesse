@@ -17,7 +17,7 @@ import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.Paths;
 import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.WikiSourcePage;
+import fitnesse.wiki.WikiSourcePage;
 
 public class ClassPathBuilder {
 

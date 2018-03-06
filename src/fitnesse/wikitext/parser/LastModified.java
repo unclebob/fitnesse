@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import fitnesse.util.Clock;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPageProperty;
 
 public class LastModified extends SymbolType implements Translation {
@@ -17,7 +16,7 @@ public class LastModified extends SymbolType implements Translation {
 
     @Override
     public String toTarget(Translator translator, Symbol symbol) {
-        String user = translator.getPage().getProperty(PageData.LAST_MODIFYING_USER);
+        String user = translator.getPage().getProperty(WikiPageProperty.LAST_MODIFYING_USER);
         String date = translator.getPage().getProperty(WikiPageProperty.LAST_MODIFIED);
         return translator.formatMessage(
                 "Last modified " +

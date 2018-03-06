@@ -219,7 +219,9 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
       sb.append("<tr class=\"").append(getCssClass(testSummary)).append("\"><td>").append(
               "<a href=\"").append(testName).append(".html\">").append(testName).append("</a>").append(
               "</td><td>").append(testSummary.getRight()).append("</td><td>").append(testSummary.getWrong())
-              .append("</td><td>").append(testSummary.getExceptions()).append("</td></tr>");
+              .append("</td><td>").append(testSummary.getExceptions())
+              .append("</td><td>").append(testSummary.getRunTimeInMillis())
+              .append("</td></tr>");
       return sb.toString();
     }
 
@@ -236,7 +238,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
 
   public static class TestResultsSummaryTable {
     public static final String SUMMARY_FOOTER = "</table>";
-    public static final String SUMMARY_HEADER = "<table><tr><td>Name</td><td>Right</td><td>Wrong</td><td>Exceptions</td></tr>";
+    public static final String SUMMARY_HEADER = "<table><tr><td>Name</td><td>Right</td><td>Wrong</td><td>Exceptions</td><td>Runtime (in milliseconds)</td></tr>";
     private List<String> visitedTestPages;
     private Map<String, TestSummary> testSummaries;
 

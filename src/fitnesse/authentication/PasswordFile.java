@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.util.ClassUtils;
 import util.FileUtil;
 
 public class PasswordFile {
@@ -71,7 +72,7 @@ public class PasswordFile {
   }
 
   public PasswordCipher instantiateCipher(String cipherClassName) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-    cipher = (PasswordCipher) Class.forName(cipherClassName).newInstance();
+    cipher = (PasswordCipher) ClassUtils.forName(cipherClassName).newInstance();
     return cipher;
   }
 

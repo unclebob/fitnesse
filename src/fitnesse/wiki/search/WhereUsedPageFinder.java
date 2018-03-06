@@ -1,7 +1,9 @@
 package fitnesse.wiki.search;
 
 import fitnesse.components.TraversalListener;
+import fitnesse.wiki.NoPruningStrategy;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiSourcePage;
 import fitnesse.wiki.WikiWordReference;
 import fitnesse.wikitext.parser.*;
 
@@ -36,7 +38,7 @@ public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFin
   @Override
   public void search(WikiPage page) {
     hits.clear();
-    page.getPageCrawler().traverse(this);
+    page.getPageCrawler().traverse(this, new NoPruningStrategy());
   }
 
   @Override

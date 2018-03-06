@@ -1,14 +1,13 @@
 package fitnesse.wikitext.parser;
 
-import fitnesse.util.StringUtils;
-
 import static fitnesse.util.StringUtils.isBlank;
 
 public class FrontMatter extends SymbolType implements Rule, Translation {
   public static final FrontMatter symbolType = new FrontMatter();
   public static final SymbolType keyValueSymbolType = new SymbolType("KeyValue");
 
-  private static final String FRONT_MATTER_DELIMITER = "---\n";
+  private static final String FRONT_MATTER_DELIMITER_LF = "---\n";
+  private static final String FRONT_MATTER_DELIMITER_CRLF = "---\r\n";
 
   private static SymbolProvider SYMBOL_PROVIDER = new SymbolProvider(new SymbolType[] {
     CloseFrontMatter.symbolType, SymbolType.Colon, SymbolType.Whitespace, SymbolType.Newline, SymbolType.Text
@@ -16,7 +15,8 @@ public class FrontMatter extends SymbolType implements Rule, Translation {
 
   FrontMatter() {
     super("FrontMatter");
-    wikiMatcher(new Matcher().startLine().string(FRONT_MATTER_DELIMITER));
+    wikiMatcher(new Matcher().startLine().string(FRONT_MATTER_DELIMITER_LF));
+    wikiMatcher(new Matcher().startLine().string(FRONT_MATTER_DELIMITER_CRLF));
     wikiRule(this);
     htmlTranslation(this);
   }
@@ -81,7 +81,8 @@ public class FrontMatter extends SymbolType implements Rule, Translation {
 
     private CloseFrontMatter() {
       super("EndOfFrontMatter");
-      wikiMatcher(new Matcher().startLine().string(FRONT_MATTER_DELIMITER));
+      wikiMatcher(new Matcher().startLine().string(FRONT_MATTER_DELIMITER_LF));
+      wikiMatcher(new Matcher().startLine().string(FRONT_MATTER_DELIMITER_CRLF));
     }
 
   }
