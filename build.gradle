@@ -9,6 +9,7 @@
    - fitnesse, the wiki server
  - Move file creation to plugin
 */
+apply plugin: "jacoco"
 
 buildscript {
     repositories {
@@ -26,7 +27,6 @@ plugins {
 }
 
 apply plugin: "info.solidsoft.pitest"
-apply plugin: "jacoco"
 
 
 version = new Date().format('yyyyMMdd')
