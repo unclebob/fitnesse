@@ -23,16 +23,18 @@ public class InProcessSlimClient implements SlimClient {
   private final String testSystemName;
   private final SlimServer slimServer;
   private final ExecutionLogListener executionLogListener;
+  private ClassLoader classLoader;
   private MockSocket socket;
   private PipedOutputStream clientOutput;
   private Thread slimServerThread;
   private SlimStreamReader reader;
   private double slimServerVersion;
 
-  public InProcessSlimClient(String testSystemName, SlimServer slimServer, ExecutionLogListener executionLogListener) {
+  public InProcessSlimClient(String testSystemName, SlimServer slimServer, ExecutionLogListener executionLogListener, ClassLoader classLoader) {
     this.testSystemName = testSystemName;
     this.slimServer = slimServer;
     this.executionLogListener = executionLogListener;
+    this.classLoader = classLoader;
   }
 
   @Override
@@ -58,6 +60,7 @@ public class InProcessSlimClient implements SlimClient {
         }
       }
     });
+    slimServerThread.setContextClassLoader(classLoader);
     slimServerThread.start();
     connect();
   }

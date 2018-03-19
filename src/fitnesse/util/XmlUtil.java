@@ -121,6 +121,7 @@ public class XmlUtil {
 
   public static String xmlAsString(Document doc) throws IOException {
     TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    transformerFactory.setAttribute("indent-number", 0);
 
     StringWriter sw = new StringWriter();
     try {

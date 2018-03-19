@@ -21,7 +21,7 @@ public class MovedPageReferenceRenamer extends ReferenceRenamer {
     @Override
     public boolean visit(Symbol node) {
       if (node.isType(WikiWord.symbolType)) {
-        new WikiWordReference(currentPage, node.getContent()).wikiWordRenameMovedPageIfReferenced(node, pageToBeMoved, newParentName);
+        new WikiWordReference(currentPage(), node.getContent()).wikiWordRenameMovedPageIfReferenced(node, pageToBeMoved, newParentName);
       }
       return true;
     }

@@ -232,6 +232,10 @@ public class ScenarioAndDecisionTableExtensionTest {
 
     public DiffScriptTable(Table table, String tableId, SlimTestContext context) {
       super(table, tableId, context);
+
+      ScenarioTable scenarioTable = ((ScenarioTable.ScenarioTestContext) context).getScenarioTable();
+      assertEquals(ScenarioTableWithDifferentScript.class, scenarioTable.getClass());
+      assertEquals(SlimTestContextImpl.class, scenarioTable.getTestContext().getClass());
     }
     @Override
     protected String getTableType() {

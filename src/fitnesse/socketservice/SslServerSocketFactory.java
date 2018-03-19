@@ -11,11 +11,11 @@ public class SslServerSocketFactory implements ServerSocketFactory {
   private static final Logger LOG = Logger.getLogger(SslServerSocketFactory.class.getName());
 
   private final boolean needClientAuth;
-  private final String sslParameterClassName;
+  private final SslParameters sslParameters;
 
-  public SslServerSocketFactory(boolean needClientAuth, String sslParameterClassName) {
+  public SslServerSocketFactory(boolean needClientAuth, SslParameters sslParameters) {
     this.needClientAuth = needClientAuth;
-    this.sslParameterClassName = sslParameterClassName;
+    this.sslParameters = sslParameters;
   }
 
   @Override
@@ -23,7 +23,7 @@ public class SslServerSocketFactory implements ServerSocketFactory {
     ServerSocket socket;
     LOG.log(Level.FINER, "Creating SSL socket on port: " + port);
 
-    SSLServerSocketFactory ssf = SslParameters.setSslParameters(sslParameterClassName).createSSLServerSocketFactory();
+    SSLServerSocketFactory ssf = sslParameters.createSSLServerSocketFactory();
     socket = ssf.createServerSocket(port);
     if (needClientAuth) {
       ((SSLServerSocket) socket).setNeedClientAuth(true);

@@ -3,6 +3,8 @@
 
 package fitnesse.components;
 
+import org.apache.commons.lang.ClassUtils;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

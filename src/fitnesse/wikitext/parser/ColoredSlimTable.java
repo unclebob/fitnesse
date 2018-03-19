@@ -12,6 +12,7 @@ import fitnesse.testsystems.slim.tables.ScenarioTable;
 import fitnesse.testsystems.slim.tables.ScriptTable;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
+import fitnesse.util.ClassUtils;
 
 public class ColoredSlimTable extends SymbolTypeDecorator{
 
@@ -114,10 +115,8 @@ public class ColoredSlimTable extends SymbolTypeDecorator{
 
   private boolean isValidClass(String potentialClass) {
     try {
-      return Class.forName(potentialClass) != null;
-    } catch (Exception e) {
-      return false;
-    }catch (NoClassDefFoundError e) {
+      return ClassUtils.forName(potentialClass) != null;
+    } catch (Exception|NoClassDefFoundError e) {
       return false;
     }
   }

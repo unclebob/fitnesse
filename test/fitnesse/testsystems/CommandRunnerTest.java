@@ -12,6 +12,7 @@ import static util.RegexTestCase.assertHasRegexp;
 import org.junit.Test;
 
 import fitnesse.testutil.Echo;
+import util.GradleSupport;
 
 public class CommandRunnerTest {
 
@@ -19,7 +20,7 @@ public class CommandRunnerTest {
 
   @Test
   public void testBasics() throws Exception {
-    CommandRunner runner = new CommandRunner(new String[] { "java", "-cp", "build/classes/main", "fitnesse.testutil.Echo" }, null, executionLogListener);
+    CommandRunner runner = new CommandRunner(new String[] { "java", "-cp", GradleSupport.CLASSES_DIR, "fitnesse.testutil.Echo" }, null, executionLogListener);
     runner.asynchronousStart();
     runner.join();
     assertHasRegexp(Echo.ECHO_THIS, executionLogListener.stdOut.toString());
