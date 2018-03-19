@@ -21,13 +21,20 @@ buildscript {
 
 plugins {
   id 'java'
-  id "maven-publish"
+  id "maven"
+  id "signing"
   id "com.jfrog.bintray" version "1.6"
 }
 
 apply plugin: "info.solidsoft.pitest"
+apply plugin: "maven"
+apply plugin: "signing"
 
 version = new Date().format('yyyyMMdd')
+
+group = "com.github.tcnh"
+archivesBaseName = "fitnesse"
+version = "${project.version}"
 
 println "Building FitNesse v${project.version}..."
 
@@ -238,31 +245,52 @@ clean {
   delete "lib"
 }
 
-publishing {
-  publications {
-    FitNesseRelease(MavenPublication) {
-      from components.java
-      artifact sourcesJar
-      artifact javadocJar
-      artifact standaloneJar
-      groupId 'org.fitnesse'
-      artifactId 'fitnesse'
-      pom.withXml {
-        asNode().get('version') + {
-          resolveStrategy = Closure.DELEGATE_FIRST
-          name('FitNesse')
-          description('The fully integrated standalone wiki, and acceptance testing framework.')
-          url('http://fitnesse.org')
-          packaging('jar')
-        }
-        asNode().append(pomLicenses())
-        asNode().append(pomScm())
-        asNode().append(pomDevelopers())
+artifacts {
+  archives javadocJar, sourcesJar, standaloneJar
+}
 
-        // Clean up scope entries added by the pom generator:
-        asNode().dependencies.'*'.findAll() {
-          if (it.scope.text() == 'runtime') {
-            it.remove(it.scope)
+signing {
+  sign configurations.archives
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      pom.project {
+        name 'FitNesse'
+        packaging 'jar'
+        // optionally artifactId can be defined here
+        description 'The fully integrated standalone wiki, and acceptance testing framework.'
+        url 'http://www.fitnesse.org'
+
+        scm {
+          connection 'scm:git:https://github.com/tcnh/fitnesse.git'
+          developerConnection 'scm:git:https://github.com/tcnh/fitnesse.git'
+          url 'https://github.com/tcnh/fitnesse/'
+        }
+
+        licenses {
+          license {
+            name 'Common Public License version 1.0'
+            url 'http://www.opensource.org/licenses/cpl1.0'
+          }
+        }
+
+        developers {
+          developer {
+            id 'tcnh'
+            name 'Tom Heintzberger'
+            email 'tom.heintzberger@gmail.com'
           }
         }
       }
@@ -270,29 +298,62 @@ publishing {
   }
 }
 
-bintray {
-  user = System.getenv("BINTRAY_USER") ?: 'Define your Bintray user name in BINTRAY_USER'
-  key = System.getenv("BINTRAY_API_KEY") ?: 'Define your Bintray BINTRAY_API_KEY'
-  publications = ['FitNesseRelease']
-  publish = true
-  pkg {
-    name = 'fitnesse'
-    userOrg = 'fitnesse'
-    licenses = ['CPL-1.0']
-    websiteUrl = 'http://fitnesse.org'
-    vcsUrl = 'https://github.com/unclebob/fitnesse.git'
-    publicDownloadNumbers = true
-    githubRepo = 'unclebob/fitnesse'
-    version {
-      name = project.version
-      desc = "FitNesse release ${project.version}"
-      vcsTag = project.version
-      gpg {
-        sign = true
-      }
-    }
-  }
-}
+
+//publishing {
+//  publications {
+//    FitNesseRelease(MavenPublication) {
+//      from components.java
+//      artifact sourcesJar
+//      artifact javadocJar
+//      artifact standaloneJar
+//      groupId 'org.fitnesse'
+//      artifactId 'fitnesse'
+//      pom.withXml {
+//        asNode().get('version') + {
+//          resolveStrategy = Closure.DELEGATE_FIRST
+//          name('FitNesse')
+//          description('The fully integrated standalone wiki, and acceptance testing framework.')
+//          url('http://fitnesse.org')
+//          packaging('jar')
+//        }
+//        asNode().append(pomLicenses())
+//        asNode().append(pomScm())
+//        asNode().append(pomDevelopers())
+//
+//        // Clean up scope entries added by the pom generator:
+//        asNode().dependencies.'*'.findAll() {
+//          if (it.scope.text() == 'runtime') {
+//            it.remove(it.scope)
+//          }
+//        }
+//      }
+//    }
+//  }
+//}
+
+//bintray {
+//  user = System.getenv("BINTRAY_USER") ?: 'Define your Bintray user name in BINTRAY_USER'
+//  key = System.getenv("BINTRAY_API_KEY") ?: 'Define your Bintray BINTRAY_API_KEY'
+//  publications = ['FitNesseRelease']
+//  publish = true
+//  pkg {
+//    name = 'fitnesse'
+//    userOrg = 'fitnesse'
+//    licenses = ['CPL-1.0']
+//    websiteUrl = 'http://fitnesse.org'
+//    vcsUrl = 'https://github.com/unclebob/fitnesse.git'
+//    publicDownloadNumbers = true
+//    githubRepo = 'unclebob/fitnesse'
+//    version {
+//      name = project.version
+//      desc = "FitNesse release ${project.version}"
+//      vcsTag = project.version
+//      gpg {
+//        sign = true
+//      }
+//    }
+//  }
+//}
 
 wrapper {
   gradleVersion = '4.3.1'
@@ -326,3 +387,4 @@ def pomDevelopers() {
     }
   }
 }
+
