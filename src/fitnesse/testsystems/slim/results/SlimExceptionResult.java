@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionResult;
-
+import fitnesse.testsystems.TestResult;
 import static fitnesse.slim.SlimServer.*;
 
 public class SlimExceptionResult implements ExceptionResult {
@@ -13,10 +13,12 @@ public class SlimExceptionResult implements ExceptionResult {
 
   private final String resultKey;
   private final String exceptionValue;
+  private TestResult catchException;
 
   public SlimExceptionResult(String resultKey, String exceptionValue) {
     this.resultKey = resultKey;
     this.exceptionValue = exceptionValue;
+    catchException = null;
   }
 
   @Override
@@ -51,6 +53,18 @@ public class SlimExceptionResult implements ExceptionResult {
 
   public String getException() {
     return exceptionValue;
+  }
+
+  public boolean isCatchException() {
+    return catchException != null;
+  }
+
+  public TestResult catchTestResult() {
+    return catchException;
+  }
+
+  public void setCatchException(TestResult testResult) {
+    this.catchException = testResult;
   }
 
   public boolean isStopTestException() {
