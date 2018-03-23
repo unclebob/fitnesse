@@ -10,6 +10,7 @@ import static fitnesse.slim.SlimServer.*;
 
 public class SlimExceptionResult implements ExceptionResult {
   public static final Pattern EXCEPTION_MESSAGE_PATTERN = Pattern.compile("message:<<(.*)>>", Pattern.DOTALL);
+  public static final String DEFAULT_SLIM_EXCEPTION_COMPARATOR = "EXCEPTION:";
 
   private final String resultKey;
   private final String exceptionValue;

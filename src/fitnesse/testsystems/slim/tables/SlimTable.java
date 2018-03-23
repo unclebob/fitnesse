@@ -108,6 +108,13 @@ public abstract class SlimTable {
     }
   }
 
+  protected String getConfigurationVariable(String variableName,
+      String defaultValue) {
+    String value = this.getTestContext().getPageToTest()
+        .getVariable(variableName);
+    return (value == null || value.isEmpty()) ? defaultValue : value;
+  }
+
   public Map<String, String> getSymbolsToStore() {
     return symbolsToStore;
   }
@@ -426,9 +433,13 @@ public abstract class SlimTable {
     @Override
     public SlimExceptionResult evaluateException(
         SlimExceptionResult exceptionResult) {
-      if (this.getExpected().startsWith("EXCEPTION:")) {
+      final String exceptionComparatorPrefix = getConfigurationVariable(
+          "SLIM_EXCEPTION_COMPARATOR",
+          SlimExceptionResult.DEFAULT_SLIM_EXCEPTION_COMPARATOR);
+      if (this.getExpected().startsWith(exceptionComparatorPrefix)) {
         TestResult testResult = new ReturnedValueExpectation(this.getCol(),
-            this.getRow(), this.getExpected().replaceFirst("EXCEPTION:", ""))
+            this.getRow(), this.getExpected().replaceFirst(
+                exceptionComparatorPrefix, ""))
             .evaluateExpectation(exceptionResult.getException());
         exceptionResult.setCatchException(testResult);
       } else {

@@ -9,7 +9,7 @@ If your exception indicates an error that cannot be recovered from, then you may
 By throwing an exception with "!-StopSuite-!" in the class name you can stop both current test and the suite execution. Tear down procedure for the running test and the suite will still be executed, but all the consequent tests in the suite will not run.
 
 !2 Testing for an exception
-If you require to test that your code throwns an exception in a given scenario then start the expected text with '''EXCEPTION:''' followed by a regular expression which matches the exception text and stacktrace 
+You can validate that your code throws an exception in a given scenario. Start the expected text with '''EXCEPTION:''' followed by a regular expression which matches the exception text or stacktrace 
 
 !|DT:fitnesse.slim.test.TestSlim|
 |throwNormal?| 
