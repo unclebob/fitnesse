@@ -28,12 +28,14 @@ public class SlimExpressionEvaluator {
   }
 
   public void setContext(Map<String, MethodExecutionResult> variables) {
-    Converter<Map> cnv = ConverterRegistry.getConverterForClass(Map.class);
+    Converter<Map> mapCnv = ConverterRegistry.getConverterForClass(Map.class);
+    Converter<List> listCnv = ConverterRegistry.getConverterForClass(List.class);
 
     for (Map.Entry<String, MethodExecutionResult> entry : variables.entrySet()) {
       String key = entry.getKey();
       Object value = entry.getValue().getObject();
-      value = convertWikiHashes(cnv, value);
+      value = convertWikiHashes(mapCnv, value);
+      value = convertWikiLists(listCnv, value);
       engine.put(key, value);
     }
   }
@@ -42,6 +44,13 @@ public class SlimExpressionEvaluator {
     value = convertWikiHash(cnv, value);
     if (value instanceof Map) {
       value = convertNestedWikiHashes(cnv, (Map<String, ?>) value);
+    }
+    return value;
+  }
+
+  private Object convertWikiLists(Converter<List> cnv, Object value) {
+    if (value.toString().startsWith("[")) {
+      value = convertWikiList(cnv, value);
     }
     return value;
   }
@@ -67,6 +76,16 @@ public class SlimExpressionEvaluator {
     return value;
   }
 
+  private Object convertWikiList(Converter<List> cnv, Object value) {
+    if (value instanceof String) {
+      List listObj = cnv.fromString((String) value);
+      if (!listObj.isEmpty()) {
+        value = listObj;
+      }
+    }
+    return value;
+  }
+
   public Object evaluate(String expression) {
     try {
       return engine.eval(expression);
@@ -74,7 +93,6 @@ public class SlimExpressionEvaluator {
       throw new IllegalArgumentException("Unable to evaluate: " + expression + "; " + e.getMessage(), e);
     }
   }
-
 
 
 }
