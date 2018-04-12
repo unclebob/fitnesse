@@ -49,7 +49,7 @@ public class SlimExpressionEvaluator {
   }
 
   private Object convertWikiLists(Converter<List> cnv, Object value) {
-    if (value.toString().startsWith("[")) {
+    if (value.toString().startsWith("[") && value.toString().endsWith("]")) {
       value = convertWikiList(cnv, value);
     }
     return value;
