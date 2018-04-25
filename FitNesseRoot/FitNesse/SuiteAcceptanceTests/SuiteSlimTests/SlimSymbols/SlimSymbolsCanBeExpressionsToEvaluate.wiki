@@ -56,4 +56,14 @@ Concatenating expressions
 |check |echo|this is value1|this is $`myHashMap0.key1`|
 
 
+Lists
+|import            |
+|fitnesse.slim.test|
+
+|script  |Test Slim With Converter                      |
+|$myList=|getList                                       |
+|start   |echo fixture                                  |
+|check   |echo|$`myList.size()`    |3                   |
+|check   |echo|$`myList.getClass()`|$`myList.getClass()`|
+
 
