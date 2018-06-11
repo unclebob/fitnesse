@@ -355,6 +355,15 @@ public class HtmlSlimResponderTest {
   }
 
   @Test
+  public void customComparatorMultilineReturnsPass() throws Exception {
+    customComparatorRegistry.addCustomComparator("equalsIgnoreCase", new EqualsIgnoreCaseComparator());
+    getResultsForPageContents("!|script|\n"
+        + "|start|fitnesse.slim.test.TestSlim|\n"
+        + "|check|echo string|{{{!-hello\nworld-!}}}|equalsIgnoreCase:{{{!-HELLO\nWORLD-!}}}|\n");
+    assertTestResultsContain("<td><span class=\"pass\">{{{HELLO\nWORLD}}} matches {{{hello\nworld}}}</span></td>");
+  }
+
+  @Test
   public void customComparatorReturnsFail() throws Exception {
     customComparatorRegistry.addCustomComparator("equalsIgnoreCase", new EqualsIgnoreCaseComparator());
     getResultsForPageContents("!|script|\n"

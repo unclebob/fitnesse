@@ -466,7 +466,7 @@ public abstract class SlimTable {
     );
 
     private Pattern regexPattern = Pattern.compile("\\s*=~/(.*)/");
-    private Pattern customComparatorPattern = Pattern.compile("\\s*(\\w*):(.*)");
+    private Pattern customComparatorPattern = Pattern.compile("\\s*(\\w*):(.*)", Pattern.DOTALL);
     private double v;
     private double arg1;
     private double arg2;
