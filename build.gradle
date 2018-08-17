@@ -255,6 +255,7 @@ signing {
 
 uploadArchives {
   repositories {
+    mavenLocal()
     mavenDeployer {
       beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
