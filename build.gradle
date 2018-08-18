@@ -135,6 +135,9 @@ task copyRuntimeLibs(type: Copy) {
 test {
   dependsOn copyRuntimeLibs
   maxParallelForks 1
+  afterTest { desc, result -> 
+      logger.quiet "Executing test ${desc.name} [${desc.className}] with result: ${result.resultType}"
+  }
 }
 
 pitest {
