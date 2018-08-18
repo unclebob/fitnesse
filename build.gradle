@@ -23,6 +23,8 @@ plugins {
   id 'java'
   id "maven-publish"
   id "com.jfrog.bintray" version "1.6"
+  id "jacoco"
+  id "org.sonarqube" version "2.6"
 }
 
 apply plugin: "info.solidsoft.pitest"
