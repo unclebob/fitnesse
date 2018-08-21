@@ -2,7 +2,7 @@
 
 Welcome to FitNesse, the fully integrated stand-alone acceptance testing framework and wiki.
 
-To get started, check out this awesome and useful [http://fitnesse.org](http://fitnesse.org)!!!
+To get started, check out this awesome and useful [http://fitnesse.org](http://fitnesse.org)!
 
 
 
