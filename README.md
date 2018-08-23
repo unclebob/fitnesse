@@ -49,7 +49,7 @@ NB. On windows call `gradlew.bat` instead of `./gradlew`.
 
 ### Running
 
-To start the FitNesse wiki locally, for example to browse the local version of the User Guide
+To start the FitNesse wiki locally, for example to browse the local version of the User Guide:
 
 ```
 $ ./gradlew run
