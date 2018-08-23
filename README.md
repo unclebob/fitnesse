@@ -98,7 +98,7 @@ There are a few things to keep in mind when working from an IDE:
 
 #### Import FitNesse in IntelliJ IDEA (16)
 
-1. Clone the FitNesse Git repository from https://github.com/unclebob/fitnesse.
+1. Clone the fitnesse Git repository from https://github.com/unclebob/fitnesse.
 2. From the welcome screen (the one you get when all projects are closed), click _Import Project_.
 3. Select the file `build.gradle` in the fitnesse folder.
 4. Follow the wizard. Deselect the option `Create separate module per source set`. You can use the
