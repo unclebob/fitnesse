@@ -1,6 +1,6 @@
 # [FitNesse](http://fitnesse.org/)  [![maven central](https://maven-badges.herokuapp.com/maven-central/org.fitnesse/fitnesse/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.fitnesse/fitnesse) [![SonarQube Tech Debt](https://img.shields.io/sonar/http/nemo.sonarqube.org/org.fitnesse:fitnesse/tech_debt.svg)](http://nemo.sonarqube.org/dashboard/index?id=org.fitnesse%3Afitnesse)
 
-Welcome to FitNesse, the fully integrated stand-alone acceptance testing framework and wiki..
+Welcome to FitNesse, the fully integrated stand-alone acceptance testing framework and wiki.
 
 
 To get started, check out this awesome and useful [http://fitnesse.org](http://fitnesse.org)!
@@ -50,7 +50,7 @@ NB. On windows call `gradlew.bat` instead of `./gradlew`.
 
 ### Running
 
-To start the FitNesse wiki locally, for instance to browse the local version of the User Guide:
+To start the FitNesse wiki locally, for example to browse the local version of the User Guide:
 
 ```
 $ ./gradlew run
