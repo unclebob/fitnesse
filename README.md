@@ -81,7 +81,7 @@ There are a few things to keep in mind when working from an IDE:
     * It sets the FitNesse version in a META-INF/FitNesseVersion.txt
     * It copies the dependencies to the lib folder so they can be used by the acceptance tests.
 
-   Perform a
+   Perform a:
    ```
    $ ./gradlew copyRuntimeLibs
    ```
