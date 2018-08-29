@@ -111,7 +111,7 @@ There are a few things to keep in mind when working from an IDE:
 
 Software artifacts (the FitNesse jar, the standalone jar and POM files) are uploaded to [Bintray](https://bintray.com/fitnesse). There are two repositories:
 
-* _Edge_ contains snapshot builds
+* _Edge_ contains snapshot builds.
 * _Release_ contains the official release builds. 
 
 In both cases you'll need sufficient permissions to perform a release.
