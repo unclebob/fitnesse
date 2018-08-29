@@ -17,7 +17,7 @@ To get started, check out this awesome and useful [http://fitnesse.org](http://f
 
 ## Bug tracker
 
-Have a bug or a feature request? [Please open a new issue](https://github.com/unclebob/fitnesse/issues).
+Have a bug or a feature request? [Please open a new issue](https://github.com/unclebob/fitnesse/issues).!!!
 
 
 ## Community
@@ -118,7 +118,7 @@ In both cases you'll need sufficient permissions to perform a release.
 
 #### Edge builds
 
-Edge builds can be done at any time
+Edge builds can be done at any time.
 
    ```
    $ ./gradlew snapshotRelease
