@@ -118,7 +118,7 @@ In both cases you'll need sufficient permissions to perform a release.
 
 #### Edge builds
 
-Edge builds can be done at any time
+Edge builds can be done at any time.
 
    ```
    $ ./gradlew snapshotRelease
