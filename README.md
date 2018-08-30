@@ -38,7 +38,7 @@ Issues and pull requests are administered at [GitHub](https://github.com/unclebo
 
 A proper internet connection is sufficient to build FitNesse. The build process will bootstrap itself by downloading [Gradle](http://gradle.org) and from there will download the dependencies required to build and test FitNesse.
 
-To build and run all tests, run the command
+To build and run all tests, run the command:
 
 ```
 $ ./gradlew
