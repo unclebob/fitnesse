@@ -10,6 +10,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
@@ -68,6 +69,16 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     boolean value() default true;
   }
 
+  /**
+   * The <code>CustomVariableProviderClass</code> annotation specifies an optional {@link CustomVariableProvider} to overwrite page variables
+   */
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.TYPE)
+  public @interface CustomVariableProviderClass {
+
+    Class<? extends CustomVariableProvider> value();
+  }
+  
   /**
    * The <code>SuiteFilter</code> annotation specifies the suite filter of the Fitnesse suite
    * to be run, e.g.: fasttests
@@ -165,6 +176,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   private FitNesseContext context;
   private DescriptionFactory descriptionFactory;
   private List<WikiPage> children;
+  private Map<String,String> customVariables;
 
   public FitNesseRunner(Class<?> suiteClass) throws InitializationError {
     super(suiteClass);
@@ -219,6 +231,13 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     } catch (Exception e) {
       errors.add(e);
     }
+
+    try {
+      this.customVariables = getCustomVariables(suiteClass);
+    } catch (Exception e) {
+      errors.add(e);
+    }
+    
     try {
       this.context = createContext(suiteClass);
     } catch (Exception e) {
@@ -320,6 +339,15 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     return preventSystemExitAnnotation.value();
   }
 
+
+  protected Map<String,String> getCustomVariables(Class<?> klass) throws Exception {
+	CustomVariableProviderClass customVariableProviderClass = klass.getAnnotation(CustomVariableProviderClass.class);
+    if (null == customVariableProviderClass) {
+      return null;
+    }
+    return customVariableProviderClass.value().newInstance().getCustomVariables();
+  }
+  
   protected String getFitNesseDir(Class<?> klass)
           throws InitializationError {
     FitnesseDir fitnesseDirAnnotation = klass.getAnnotation(FitnesseDir.class);
@@ -417,7 +445,10 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   }
 
   protected WikiPage getRootPage() {
-	  return context.getRootPage();
+	  if (this.customVariables==null) {
+		  return context.getRootPage();
+	  }
+	  return context.getRootPage(customVariables);
   }
   
   protected List<WikiPage> initChildren() {
