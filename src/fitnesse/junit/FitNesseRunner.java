@@ -416,6 +416,10 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     testRunner.addExecutionLogListener(new ConsoleExecutionLogListener());
   }
 
+  protected WikiPage getRootPage() {
+	  return context.getRootPage();
+  }
+  
   protected List<WikiPage> initChildren() {
     WikiPage suiteRoot = getSuiteRootPage();
     if (suiteRoot == null) {
@@ -423,7 +427,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     }
     List<WikiPage> children;
     if (suiteRoot.getData().hasAttribute("Suite")) {
-      children = new SuiteContentsFinder(suiteRoot, getSuiteFilter(), context.getRootPage()).getAllPagesToRunForThisSuite();
+      children = new SuiteContentsFinder(suiteRoot, getSuiteFilter(), getRootPage()).getAllPagesToRunForThisSuite();
     } else {
       children = Collections.singletonList(suiteRoot);
     }
@@ -460,12 +464,12 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
 
   private WikiPage getSuiteRootPage() {
     WikiPagePath path = PathParser.parse(this.suiteName);
-    PageCrawler crawler = context.getRootPage().getPageCrawler();
+    PageCrawler crawler = getRootPage().getPageCrawler();
     return crawler.getPage(path);
   }
 
   private MultipleTestsRunner createTestRunner(List<WikiPage> pages) {
-    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.getRootPage());
+    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, getRootPage());
 
     MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem,
             context.testSystemFactory);
