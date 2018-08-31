@@ -138,16 +138,18 @@ public class ResponderFactory {
     String resource = request.getResource();
     String responderKey = getResponderKey(request);
 
-    final Responder responder;
+    Responder responder=matchResponder(resource);
 
-    if (usingResponderKey(responderKey)) {
-      responder = wrapWithFilters(responderKey, lookupResponder(responderKey));
-    } else if (resource.startsWith("files/") || resource.equals("files")) {
-      responder = wrapWithFilters("files", new FileResponder());
-    } else if (StringUtils.isBlank(resource) || PathParser.parse(resource) != null) {
-      responder = wrapWithFilters("wiki", new WikiPageResponder());
-    } else {
-      responder = new NotFoundResponder();
+    if (responder==null) {
+      if (usingResponderKey(responderKey)) {
+        responder = wrapWithFilters(responderKey, lookupResponder(responderKey));
+      } else if (resource.startsWith("files/") || resource.equals("files")) {
+        responder = wrapWithFilters("files", new FileResponder());
+      } else if (StringUtils.isBlank(resource) || PathParser.parse(resource) != null) {
+        responder = wrapWithFilters("wiki", new WikiPageResponder());
+      } else {
+        responder = new NotFoundResponder();
+      }
     }
     return responder;
   }
@@ -167,8 +169,8 @@ public class ResponderFactory {
   }
 
   private Responder newResponderInstance(Class<?> responderClass)
-      throws InstantiationException, IllegalAccessException, InvocationTargetException,
-      NoSuchMethodException {
+    throws InstantiationException, IllegalAccessException, InvocationTargetException,
+    NoSuchMethodException {
     try {
       Constructor<?> constructor = responderClass.getConstructor(String.class);
       return (Responder) constructor.newInstance(rootPath);
@@ -189,6 +191,32 @@ public class ResponderFactory {
 
   public Class<?> getResponderClass(String responderKey) {
     return responderMap.get(responderKey);
+  }
+
+  /**
+   * find responder matcher from Fatcory
+   *
+   * @param url request url
+   * @return Responder
+   */
+  public Responder matchResponder(String url) {
+    for (String key : responderMap.keySet()) {
+      if (key.contains("/") && url.contains(key)) {
+        Class clazz = responderMap.get(key);
+        try {
+          return newResponderInstance(clazz);
+        } catch (InstantiationException e) {
+          e.printStackTrace();
+        } catch (IllegalAccessException e) {
+          e.printStackTrace();
+        } catch (InvocationTargetException e) {
+          e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+    return null;
   }
 
   private boolean usingResponderKey(String responderKey) {
