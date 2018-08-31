@@ -3,12 +3,12 @@
 
 package fitnesse.wiki;
 
+import fitnesse.util.Clock;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import fitnesse.util.Clock;
 
 public class WikiPageDummy extends BaseWikiPage {
 
@@ -61,7 +61,7 @@ public class WikiPageDummy extends BaseWikiPage {
 
   @Override
   public PageCrawler getPageCrawler() {
-    return new PageCrawlerImpl(this);
+    return new PageCrawler(this);
   }
 
   @Override

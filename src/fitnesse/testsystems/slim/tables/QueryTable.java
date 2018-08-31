@@ -12,8 +12,6 @@ import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.util.StringUtils;
 
-import static fitnesse.slim.SlimSymbol.isSymbolAssignment;
-
 public class QueryTable extends SlimTable {
   private static final String COMMENT_COLUMN_MARKER = "#";
   protected List<String> fieldNames = new ArrayList<>();
@@ -220,7 +218,7 @@ public class QueryTable extends SlimTable {
     else if (expectedValue == null || expectedValue.isEmpty())
       testResult = SlimTestResult.ignore(actualValue);
     else {
-      String symbolName = ifSymbolAssignment(expectedValue);
+      String symbolName = isSymbolAssignment(expectedValue);
       if (symbolName != null) {
         setSymbol(symbolName, actualValue, true);
         testResult = SlimTestResult.ignore(String.format("$%s<-[%s]", symbolName, actualValue));

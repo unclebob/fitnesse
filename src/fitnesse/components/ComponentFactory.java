@@ -24,10 +24,16 @@ import fitnesse.ConfigurationParameter;
 public class ComponentFactory {
 
   private final Properties properties;
+  private final ClassLoader classLoader;
   private Map<String, Object> components;
 
   public ComponentFactory(Properties properties) {
+    this(properties, ClassLoader.getSystemClassLoader());
+  }
+
+  public ComponentFactory(Properties properties, ClassLoader classLoader) {
     this.properties = properties;
+    this.classLoader = classLoader;
     this.components = new HashMap<>();
   }
 
@@ -40,7 +46,7 @@ public class ComponentFactory {
     Class<?> componentClass;
     try {
       if (componentClassName != null)
-        componentClass = Class.forName(componentClassName);
+        componentClass = lookupComponentClass(componentClassName);
       else
         componentClass = defaultComponent;
     } catch (Exception e) {
@@ -76,12 +82,26 @@ public class ComponentFactory {
     }
   }
 
+  public <T> T createComponentForClassName(String className) {
+    Class<T> clazz;
+    try {
+      clazz = lookupComponentClass(className);
+    } catch (ClassNotFoundException e) {
+      throw new ComponentInstantiationException("Unable to load class named " + className, e);
+    }
+    return createComponent(clazz);
+  }
+
+  public <T> Class<T> lookupComponentClass(String className) throws ClassNotFoundException {
+    return (Class<T>) classLoader.loadClass(className);
+  }
+
   public <T> T createComponent(ConfigurationParameter componentType, Class<T> defaultComponent) {
     return createComponent(componentType.getKey(), defaultComponent);
   }
 
   public <T> T createComponent(ConfigurationParameter componentType) {
-    return createComponent(componentType, (Class<T>) null);
+    return createComponent(componentType, null);
   }
 
   public String getProperty(String key) {
@@ -91,4 +111,6 @@ public class ComponentFactory {
   public String getProperty(String key, String defaultValue) {
     return properties.getProperty(key, defaultValue);
   }
+
+
 }

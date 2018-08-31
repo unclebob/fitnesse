@@ -27,7 +27,6 @@ plugins {
 
 apply plugin: "info.solidsoft.pitest"
 
-
 version = new Date().format('yyyyMMdd')
 
 println "Building FitNesse v${project.version}..."
@@ -52,7 +51,7 @@ sourceSets {
   main {
     java.srcDir 'src'
     resources.srcDir 'src'
-    output.resourcesDir output.classesDir
+    output.resourcesDir java.outputDir
   }
   test {
     java.srcDir 'test'
@@ -65,7 +64,10 @@ targetCompatibility = '1.7'
 dependencies {
   compile "org.htmlparser:htmlparser:2.1"
   compile "org.htmlparser:htmllexer:2.1"
-  compile "org.apache.velocity:velocity:1.7"
+  compile ("org.apache.velocity:velocity:1.7") {
+      exclude group:"commons-collections", module: "commons-collections"
+      exclude group:"commons-lang", module: "commons-lang"
+  }
   compile "commons-lang:commons-lang:2.6"
   compile "commons-collections:commons-collections:3.2.2"
   compile "org.json:json:20151123"
@@ -96,13 +98,22 @@ task compileBootstrap(type: LessCompiler) {
 
 task createUpdateLists(type: WikiFileListBuilderTask) {
   outputDirectory = "${sourceSets.main.output.resourcesDir}/Resources"
+
+  files = {
+    // Make sure only files in version control are added to the default wiki contents
+    "git ls-files FitNesseRoot".execute().text.readLines()
+  }
+
   doNotReplaceFiles = [
+    "FitNesseRoot/content.txt",
+    "FitNesseRoot/properties.xml",
     "FitNesseRoot/FrontPage/content.txt",
     "FitNesseRoot/FrontPage/properties.xml",
     "FitNesseRoot/PageHeader/content.txt",
     "FitNesseRoot/PageHeader/properties.xml",
+    "FitNesseRoot/PlugIns/content.txt",
+    "FitNesseRoot/PlugIns/properties.xml",
     "FitNesseRoot/PageFooter/content.txt",
-    "FitNesseRoot/PageFooter/properties.xml",
     "FitNesseRoot/PageFooter/properties.xml",
     "FitNesseRoot/TemplateLibrary/content.txt",
     "FitNesseRoot/TemplateLibrary/properties.xml",
@@ -112,12 +123,6 @@ task createUpdateLists(type: WikiFileListBuilderTask) {
     "FitNesseRoot/TemplateLibrary/SuitePage/properties.xml",
     "FitNesseRoot/TemplateLibrary/TestPage/content.txt",
     "FitNesseRoot/TemplateLibrary/TestPage/properties.xml" ]
-  mainDirectories = [
-    "FitNesseRoot/FitNesse",
-    "FitNesseRoot/FrontPage",
-    "FitNesseRoot/PageFooter",
-    "FitNesseRoot/PageHeader",
-    "FitNesseRoot/TemplateLibrary" ]
 }
 
 processResources.dependsOn "fitNesseVersion", "compileBootstrap", "createUpdateLists"
@@ -150,16 +155,7 @@ jar {
   dependsOn createUpdateLists
   into('Resources') {
     from('.') {
-      include 'FitNesseRoot/FitNesse/**/content.txt'
-      include 'FitNesseRoot/FitNesse/**/properties.xml'
-      include 'FitNesseRoot/FrontPage/**/content.txt'
-      include 'FitNesseRoot/FrontPage/**/properties.xml'
-      include 'FitNesseRoot/PageFooter/**/content.txt'
-      include 'FitNesseRoot/PageFooter/**/properties.xml'
-      include 'FitNesseRoot/PageHeader/**/content.txt'
-      include 'FitNesseRoot/PageHeader/**/properties.xml'
-      include 'FitNesseRoot/TemplateLibrary/**/content.txt'
-      include 'FitNesseRoot/TemplateLibrary/**/properties.xml'
+      include createUpdateLists.wikiFiles as String[]
     }
   }
   manifest {
@@ -168,7 +164,8 @@ jar {
   }
 }
 
-task standaloneJar(type: Jar, dependsOn: jar) {
+task standaloneJar(type: Jar) {
+  dependsOn jar
   baseName = 'fitnesse'
   classifier = 'standalone'
   from {
@@ -187,7 +184,7 @@ task standaloneJar(type: Jar, dependsOn: jar) {
 
 task acceptanceTest(type: JavaExec) {
   mustRunAfter test
-  onlyIf { dependsOnTaskDidWork() }
+  onlyIf { test.didWork }
   classpath = standaloneJar.outputs.files
   main "fitnesseMain.FitNesseMain"
   args "-o", "-c", "FitNesse.SuiteAcceptanceTests?suite&format=text"
@@ -298,7 +295,7 @@ bintray {
 }
 
 wrapper {
-  gradleVersion = '3.1'
+  gradleVersion = '4.3.1'
 }
 
 

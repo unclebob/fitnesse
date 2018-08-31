@@ -29,4 +29,18 @@ public abstract class SlimGetSymbolTestBase {
     assertEquals("thisisassigned", symbol);
   }
 
+  @Test
+  public void getSetSymbolInteger() throws Exception {
+    caller.assign("vavavar", 12);
+    Object symbol = caller.getSymbol("vavavar");
+    assertEquals("12", symbol);
+  }
+
+  @Test
+  public void getSetSymbolObjectInteger() throws Exception {
+    caller.assign("vavavar", 12);
+    Object symbol = caller.getSymbolObject("vavavar");
+    assertEquals(12, symbol);
+  }
+
 }

@@ -50,8 +50,6 @@ public abstract class QueryTableTestBase {
 
   protected abstract String tableType();
 
-  protected abstract Class<? extends QueryTable> queryTableClass();
-
   protected QueryTable makeQueryTableAndBuildInstructions(String pageContents) throws Exception {
     qt = makeQueryTable(pageContents);
     assertions.addAll(qt.getAssertions());
@@ -67,9 +65,7 @@ public abstract class QueryTableTestBase {
   }
 
   private QueryTable constructQueryTable(Table t) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-    Class<? extends QueryTable> queryTableClass = queryTableClass();
-    Constructor<? extends QueryTable> constructor = queryTableClass.getConstructor(Table.class, String.class, SlimTestContext.class);
-    return constructor.newInstance(t, "id", testContext);
+    return (QueryTable) new SlimTableFactory().makeSlimTable(t, "id", testContext);
   }
 
   protected void assertQueryResults(String queryRows, List<List<List<String>>> queryResults, String table) throws Exception {
@@ -413,7 +409,7 @@ public abstract class QueryTableTestBase {
 
   @Test
   public void anErrorShouldBeRegisteredIfQueryDoesNotReturnAList() throws Exception {
-    makeQueryTableAndBuildInstructions("|a|\n|b|\n");
+    makeQueryTableAndBuildInstructions("|" + tableType() + ": a|\n|b|\n");
     QueryTable.QueryTableExpectation expectation = qt.new QueryTableExpectation();
     TestResult result = expectation.evaluateExpectation("String result");
 
@@ -423,7 +419,7 @@ public abstract class QueryTableTestBase {
 
   @Test
   public void ShouldBeIgnoredIfQueryResultIsNull() throws Exception {
-    makeQueryTableAndBuildInstructions("|a|\n|b|\n");
+    makeQueryTableAndBuildInstructions("|" + tableType() + ": a|\n|b|\n");
     QueryTable.QueryTableExpectation expectation = qt.new QueryTableExpectation();
     TestResult result = expectation.evaluateExpectation(null);
 

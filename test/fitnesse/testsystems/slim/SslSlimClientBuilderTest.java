@@ -9,6 +9,7 @@ import fitnesse.wiki.fs.InMemoryPage;
 
 import org.junit.Before;
 import org.junit.Test;
+import util.GradleSupport;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -53,7 +54,7 @@ public class SslSlimClientBuilderTest {
         "!define slim.pool.size {1}\n" +
         "!define wiki.protocol.ssl.parameter.class {"+ clientParameters + "}\n"
     );
-    WikiPageDescriptor descriptor = new WikiPageDescriptor(testPage, false, false, "build/classes/test", "classes");
+    WikiPageDescriptor descriptor = new WikiPageDescriptor(testPage, false, false, GradleSupport.TEST_CLASSES_DIR, "classes");
     descriptor.getExecutionLogListener().addExecutionLogListener(new ConsoleExecutionLogListener());
     SlimClientBuilder clientBuilder = new SlimClientBuilder(descriptor);
     String testSystemName = clientBuilder.getTestSystemName();

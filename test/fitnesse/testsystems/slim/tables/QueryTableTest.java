@@ -16,11 +16,6 @@ public class QueryTableTest extends QueryTableTestBase {
     return "query";
   }
 
-  @Override
-  protected Class<QueryTable> queryTableClass() {
-    return QueryTable.class;
-  }
-
   @Test
   public void twoMatchingRowsOutOfOrder() throws Exception {
     assertQueryResults(

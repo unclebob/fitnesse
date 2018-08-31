@@ -25,10 +25,14 @@ import fitnesse.testsystems.slim.results.SlimTestResult;
 import org.apache.commons.lang.StringUtils;
 
 
+/**
+ * Scenario table acts as a factory for script tables. Those tables are created
+ * where ever a scenario table is invoked. The type of table used to actually execute
+ * the scenario may vary, depending on from which table a scenario is invoked.
+ */
 public class ScenarioTable extends SlimTable {
   private static final String instancePrefix = "scenarioTable";
   private static final String underscorePattern = "\\W_(?=\\W|$)";
-  private static Class<? extends ScriptTable> defaultChildClass = ScriptTable.class;
   private String name;
   private List<String> inputs = new ArrayList<>();
   private Set<String> outputs = new HashSet<>();
@@ -124,14 +128,14 @@ public class ScenarioTable extends SlimTable {
     }
   }
 
-  public static boolean isNameParameterized(String firstNameCell) {
+  private boolean isNameParameterized(String firstNameCell) {
     Pattern regPat = Pattern.compile(underscorePattern);
     Matcher underscoreMatcher = regPat.matcher(firstNameCell);
 
     return underscoreMatcher.find();
   }
 
-  public static String unparameterize(String firstNameCell) {
+  private String unparameterize(String firstNameCell) {
     String name = firstNameCell.replaceAll(underscorePattern, " ").trim();
 
     return Disgracer.disgraceClassName(name);
@@ -195,7 +199,7 @@ public class ScenarioTable extends SlimTable {
     if (parentTable instanceof ScriptTable) {
       scriptTable = createChild((ScriptTable) parentTable, newTable, testContext);
     } else {
-      scriptTable = createChild(defaultChildClass, newTable, testContext);
+      scriptTable = createChild(getTestContext().getCurrentScriptClass(), newTable, testContext);
     }
     scriptTable.setCustomComparatorRegistry(customComparatorRegistry);
     return scriptTable;
@@ -207,14 +211,6 @@ public class ScenarioTable extends SlimTable {
 
   protected ScriptTable createChild(Class<? extends ScriptTable> parentTableClass, Table newTable, SlimTestContext testContext) throws TableCreationException {
       return SlimTableFactory.createTable(parentTableClass, newTable, id, testContext);
-  }
-
-  public static void setDefaultChildClass(Class<? extends ScriptTable> defaultChildClass) {
-    ScenarioTable.defaultChildClass = defaultChildClass;
-  }
-
-  public static Class<? extends ScriptTable> getDefaultChildClass() {
-    return defaultChildClass;
   }
 
   public List<SlimAssertion> call(String[] args, ScriptTable parentTable, int row) throws TestExecutionException {
@@ -317,13 +313,17 @@ public class ScenarioTable extends SlimTable {
 
   // This context is mainly used to determine if the scenario table evaluated successfully
   // This determines the execution result for the "calling" table row.
-  protected final class ScenarioTestContext implements SlimTestContext {
+  public final class ScenarioTestContext implements SlimTestContext {
 
     private final SlimTestContext testContext;
     private final TestSummary testSummary = new TestSummary();
 
     public ScenarioTestContext(SlimTestContext testContext) {
       this.testContext = testContext;
+    }
+
+    public ScenarioTable getScenarioTable() {
+      return ScenarioTable.this;
     }
 
     @Override
@@ -395,6 +395,26 @@ public class ScenarioTable extends SlimTable {
     @Override
     public TestPage getPageToTest() {
       return testContext.getPageToTest();
+    }
+
+    @Override
+    public void setCurrentScriptClass(Class<? extends ScriptTable> currentScriptClass) {
+      testContext.setCurrentScriptClass(currentScriptClass);
+    }
+
+    @Override
+    public Class<? extends ScriptTable> getCurrentScriptClass() {
+      return testContext.getCurrentScriptClass();
+    }
+
+    @Override
+    public void setCurrentScriptActor(String currentScriptActor) {
+      testContext.setCurrentScriptActor(currentScriptActor);
+    }
+
+    @Override
+    public String getCurrentScriptActor() {
+      return testContext.getCurrentScriptActor();
     }
   }
 }

@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MultiUserAuthenticator extends Authenticator {
-  private Map<String, String> users = new HashMap<>();
+  private Map<String, String> users;
   private PasswordCipher cipher;
 
   public MultiUserAuthenticator(String passwdFile) throws IOException, ReflectiveOperationException {

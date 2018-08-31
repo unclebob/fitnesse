@@ -15,8 +15,8 @@ public class WikiFileListBuilder {
 
   private static final List<String> VALID_FILE_NAMES = Arrays.asList("content.txt", "properties.xml", ".gitignore");
 
-  private List<String> mainDirectories = []
-  private List<String> doNotReplaceFiles = []
+  private Collection<String> files = []
+  private Collection<String> doNotReplaceFiles = []
 
   private File updateListFile
   private File updateDoNotCopyOverListFile
@@ -24,41 +24,21 @@ public class WikiFileListBuilder {
   private String updateListContent = "";
   private String updateDoNotCopyOverContent = "";
 
-  WikiFileListBuilder(List<String> mainDirectories, List<String> doNotReplaceFiles, File updateListFile, File updateDoNotCopyOverListFile) {
-    this.mainDirectories = mainDirectories
+  WikiFileListBuilder(Collection<String> files, Collection<String> doNotReplaceFiles, File updateListFile, File updateDoNotCopyOverListFile) {
+    this.files = files
     this.doNotReplaceFiles = doNotReplaceFiles
     this.updateListFile = updateListFile
     this.updateDoNotCopyOverListFile = updateDoNotCopyOverListFile
-  }
-
-  WikiFileListBuilder(List<String> mainDirectories) {
-    // for testing mainly
-    this.mainDirectories = mainDirectories
+    for (String file : files)
+      addFilePathsToList(file);
   }
 
   public void createUpdateLists() {
-    if (directoriesAreValid()) {
-      createUpdateList();
-      createDoNotUpdateList();
-    } else {
-      throw new RuntimeException("Some directories are invalid. Aborting.");
-    }
-  }
-
-  public boolean directoriesAreValid() {
-    for (String dirName : mainDirectories) {
-      File checkFile = new File(dirName);
-      if (!checkFile.exists()) {
-        return false;
-      }
-    }
-    return true;
+    createUpdateList();
+    createDoNotUpdateList();
   }
 
   public File createUpdateList() {
-    for (String dirName : mainDirectories)
-      addFilePathsToList(dirName);
-
     updateListFile.parentFile.mkdirs()
     updateListFile.text = updateListContent
     updateListFile

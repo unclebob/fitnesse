@@ -8,6 +8,7 @@ import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.tables.ScenarioTable;
+import fitnesse.testsystems.slim.tables.ScriptTable;
 
 public interface SlimTestContext {
   String getSymbol(String symbolName);
@@ -35,4 +36,12 @@ public interface SlimTestContext {
   void increment(TestSummary testSummary);
 
   TestPage getPageToTest();
+
+  void setCurrentScriptClass(Class<? extends ScriptTable> currentScriptClass);
+
+  Class<? extends ScriptTable> getCurrentScriptClass();
+
+  void setCurrentScriptActor(String currentScriptActor);
+
+  String getCurrentScriptActor();
 }

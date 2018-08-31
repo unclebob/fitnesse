@@ -10,12 +10,17 @@ import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.components.TraversalListener;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.html.template.HtmlPage;
-import fitnesse.html.template.PageTitle;
-import fitnesse.wiki.*;
+import fitnesse.wiki.NoPruningStrategy;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperty;
 
 public class RefactorPageResponder implements SecureResponder {
 
@@ -66,7 +71,7 @@ public class RefactorPageResponder implements SecureResponder {
             pageNames.add(pagePath.toString());
           }
         }
-      });
+      }, new NoPruningStrategy());
     }
     return pageNames;
   }

@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
+import fitnesse.util.TimeMeasurement;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,17 +16,22 @@ import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.tables.ScenarioTable;
+import fitnesse.testsystems.slim.tables.ScriptTable;
 
 public class SlimTestContextImpl implements SlimTestContext {
   private final Map<String, String> symbols = new HashMap<>();
   private final Map<String, ScenarioTable> scenarios = new HashMap<>(512);
   private final TestSummary testSummary = new TestSummary();
   private final TestPage pageToTest;
+  private final TimeMeasurement timeMeasurement;
   private List<ScenarioTable> scenariosWithInputs = null;
   private boolean isSorted = true;
+  private String currentScriptActor;
+  private Class<? extends ScriptTable> currentScriptClass = ScriptTable.class;
 
   public SlimTestContextImpl(TestPage pageToTest) {
     this.pageToTest = pageToTest;
+    this.timeMeasurement = new TimeMeasurement().start();
   }
 
   @Override
@@ -141,11 +148,32 @@ public class SlimTestContextImpl implements SlimTestContext {
   }
 
   public TestSummary getTestSummary() {
+    testSummary.setRunTimeInMillis(timeMeasurement.elapsed());
     return testSummary;
   }
 
   @Override
   public TestPage getPageToTest() {
     return pageToTest;
+  }
+
+  @Override
+  public void setCurrentScriptClass(Class<? extends ScriptTable> currentScriptClass) {
+    this.currentScriptClass = currentScriptClass;
+  }
+
+  @Override
+  public Class<? extends ScriptTable> getCurrentScriptClass() {
+    return currentScriptClass;
+  }
+
+  @Override
+  public void setCurrentScriptActor(String currentScriptActor) {
+    this.currentScriptActor = currentScriptActor;
+  }
+
+  @Override
+  public String getCurrentScriptActor() {
+    return currentScriptActor;
   }
 }

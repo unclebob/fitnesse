@@ -28,26 +28,22 @@ public class ScenarioAndScriptTableTest {
   private WikiPage root;
   private List<SlimAssertion> assertions;
   private ScriptTable script;
+  private SlimTableFactory slimTableFactory;
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     assertions = new ArrayList<>();
-    ScenarioTable.setDefaultChildClass(ScriptTable.class);
+    slimTableFactory = new SlimTableFactory();
+    slimTableFactory.addTableType("localizedScript", ScriptTableTest.LocalizedScriptTable.class);
   }
 
   private SlimTestContextImpl makeTables(String tableText) throws Exception {
     SlimTestContextImpl testContext = new SlimTestContextImpl(new WikiTestPage(root));
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getHtml());
-    Table t = ts.getTable(0);
-    ScenarioTable st = new ScenarioTable(t, "s_id", testContext);
-    t = ts.getTable(1);
-    if (t.getCellContents(0,0).equals("script")) {
-      script = new ScriptTable(t, "id", testContext);
-    } else {
-      script = new ScriptTableTest.LocalizedScriptTable(t, "id", testContext);
-    }
+    ScenarioTable st = (ScenarioTable) slimTableFactory.makeSlimTable(ts.getTable(0), "s_id", testContext);
+    script = (ScriptTable) slimTableFactory.makeSlimTable(ts.getTable(1), "id", testContext);
     assertions.addAll(st.getAssertions());
     assertions.addAll(script.getAssertions());
     return testContext;
@@ -77,7 +73,7 @@ public class ScenarioAndScriptTableTest {
             "!|scenario|myScenario|input|\n" +
                     "|function|@input|\n" +
                     "\n" +
-                    "!|localisedScript|\n" +
+                    "!|localizedScript|\n" +
                     "|myScenario|7|\n"
     );
     List<CallInstruction> expectedInstructions =
@@ -146,7 +142,7 @@ public class ScenarioAndScriptTableTest {
             "!|scenario|echo|input|giving|output|\n" +
                     "|localized check|echo|@input|@output|\n" +
                     "\n" +
-                    "!|localisedScript|\n" +
+                    "!|localizedScript|\n" +
                     "|echo|7|giving|7|\n"
     );
     Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(

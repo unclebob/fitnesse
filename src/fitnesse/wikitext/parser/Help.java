@@ -1,6 +1,6 @@
 package fitnesse.wikitext.parser;
 
-import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPageProperty;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class Help extends SymbolType implements Rule, Translation {
 
     @Override
     public String toTarget(Translator translator, Symbol symbol) {
-        String helpText = translator.getPage().getProperty(PageData.PropertyHELP);
+        String helpText = translator.getPage().getProperty(WikiPageProperty.HELP);
         String editText = helpText.isEmpty() ? "edit help text" : "edit";
         if (symbol.hasProperty(editableOption)) {
           helpText += " <a href=\"" + translator.getPage().getFullPath() + "?properties\">(" + editText + ")</a>";

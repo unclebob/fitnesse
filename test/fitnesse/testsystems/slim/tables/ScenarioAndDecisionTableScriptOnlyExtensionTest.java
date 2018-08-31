@@ -20,11 +20,13 @@ import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.InMemoryPage;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
+@Ignore
 public class ScenarioAndDecisionTableScriptOnlyExtensionTest {
   private static final String SCRIPT_EXTENSION_NAME = "diffScript2";
   private static final String DIFF_SCRIPT_TABLE2_TYPE = "diffScriptTable2";

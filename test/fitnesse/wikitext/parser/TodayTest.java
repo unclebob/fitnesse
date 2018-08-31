@@ -1,23 +1,29 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.util.Clock;
+import fitnesse.util.DateAlteringClock;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import fitnesse.util.Clock;
-import fitnesse.util.DateAlteringClock;
 
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class TodayTest {
 
+  private Locale originalLocale;
+
     @Before
     public void setUp() {
-        new DateAlteringClock(new GregorianCalendar(2002, 2, 4, 15, 6, 7).getTime()).freeze();
+      originalLocale = Locale.getDefault();
+      Locale.setDefault(Locale.US);
+      new DateAlteringClock(new GregorianCalendar(2002, 2, 4, 15, 6, 7).getTime()).freeze();
     }
 
     @After
     public void tearDown() {
-        Clock.restoreDefaultClock();
+      Clock.restoreDefaultClock();
+      Locale.setDefault(originalLocale);
     }
 
     @Test

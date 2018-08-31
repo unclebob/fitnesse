@@ -24,7 +24,7 @@ public class HtmlSlimResponder extends SlimResponder {
 
     SlimClient slimClient;
     if (fastTest) {
-      slimClient = new InProcessSlimClientBuilder(getDescriptor()).build();
+      slimClient = new InProcessSlimClientBuilder(getDescriptor(), ClassLoader.getSystemClassLoader()).build();
     } else {
       slimClient = new SlimClientBuilder(getDescriptor()).build();
     }

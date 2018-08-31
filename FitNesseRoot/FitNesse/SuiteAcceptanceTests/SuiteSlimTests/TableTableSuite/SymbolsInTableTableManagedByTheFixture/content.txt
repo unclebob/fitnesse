@@ -3,7 +3,7 @@
 
 !1 Symbol Handling by Fixtures
 
-If you need advanced symbol handling in your TableTable fixtures than your fixture code must handle this.
+If you need advanced symbol handling in your [[!-TableTable-!][.FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.SliM.TableTable]] fixtures than your fixture code must handle this.
 Advanced means that you assign to a symbol a value and need to reference this new value again in the same table.
 Think if you really need this as it makes your code more complicated.
 
@@ -11,8 +11,8 @@ Think if you really need this as it makes your code more complicated.
 !3 Load the symbol aware fixture
 |import                                      |
 |fitnesse.slim.test.statementexecutorconsumer|
- 
- 
+
+
 !include SymbolAssignmentAndReferenceOfTheSameInOneTable
 
 
@@ -24,7 +24,7 @@ Think if you really need this as it makes your code more complicated.
 
 
 
-!3 The fixture handles a chain of assignments 
+!3 The fixture handles a chain of assignments
 
 |script     |
 |$X=|echo|99|

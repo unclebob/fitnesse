@@ -5,7 +5,7 @@ package fitnesse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.ServerSocket;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadFactory;
@@ -38,7 +38,7 @@ public class FitNesse {
         LOG.log(Level.WARNING, "Could not handle request. Thread pool is exhausted.");
       }
     };
-    this.executorService = new ThreadPoolExecutor(5, 100, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(2),
+    this.executorService = new ThreadPoolExecutor(5, 100, 10, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(),
             new DaemonThreadFactory(), rejectionHandler);
   }
 

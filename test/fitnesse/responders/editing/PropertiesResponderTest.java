@@ -14,8 +14,6 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 
-import static fitnesse.wiki.PageData.PropertyHELP;
-import static fitnesse.wiki.PageData.PropertySUITES;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

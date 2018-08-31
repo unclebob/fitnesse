@@ -20,16 +20,6 @@ class WikiFileListBuilderTest {
   }
 
   @Test
-  public void shouldKnowIfAGivenDirectoryExists() throws Exception {
-    File testFolder = new File("TestFolder");
-    testFolder.mkdir();
-    WikiFileListBuilder updater = new WikiFileListBuilder(["TestFolder"]);
-    assertTrue(updater.directoriesAreValid());
-    testFolder.deleteDir();
-    assertFalse(updater.directoriesAreValid());
-  }
-
-  @Test
   public void shouldMakeUpdateListWithMultiLevelFolders() throws Exception {
     String content = runCreateFileAndGetContent(["MasterFolder"]);
     assertSubString("MasterFolder/content.txt\n", content);
@@ -65,15 +55,11 @@ class WikiFileListBuilderTest {
   }
 
   class MockedWikiFileListBuilder extends WikiFileListBuilder {
-    def exitCalled = false
 
     MockedWikiFileListBuilder() {
-      super([])
+      super([], [], null, null)
     }
 
-    @Override
-    public boolean directoriesAreValid() { false }
-    void exit() { exitCalled = true }
   }
 
   @Test(expected = RuntimeException)

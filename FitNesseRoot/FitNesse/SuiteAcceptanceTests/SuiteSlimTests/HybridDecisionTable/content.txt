@@ -67,17 +67,17 @@ Example
 !3 Based on your test cases you might expect or need to add a varying number of properties to a collection.
 !4 Test Case with 2 properties
 |Properties                                                                                                                                                                 |
-|#|property a|property b                    |size?|key set?|property a?|property b?|to string?                                                      |has Value '123456789' ?|
-| |$S1       |123456789                     |2    |[b, a]  |$S1        |123456789  |{b=123456789, a=abcdefghijklmnopqrstuvwxyz}                     |true                   |
-| |$S2       |"The fox jumps over the wall."|2    |[b, a]  |123456789  |$S3        |{b="The fox jumps over the wall.", a=123456789}                 |true                   |
-| |$S3       |abcdefghijklmnopqrstuvwxyz    |2    |[b, a]  |$S3        |$S1        |{b=abcdefghijklmnopqrstuvwxyz, a="The fox jumps over the wall."}|false                  |
+|#|property a|property b                    |size?|property a?|property b?|has Value '123456789' ?|
+| |$S1       |123456789                     |2    |$S1        |123456789  |true                   |
+| |$S2       |"The fox jumps over the wall."|2    |123456789  |$S3        |true                   |
+| |$S3       |abcdefghijklmnopqrstuvwxyz    |2    |$S3        |$S1        |false                  |
 
 !4 Test Case with 3 properties added and 2 expected
 |Properties                                                                                                                                                                                                 |
-|#|property NEW|property a|property b|size?|key set?|property NEW?|property b?|to string?                                                                 |has Value '123456789' ?|has Value '!-FitNesse-!'?|
-| |Hello       |$S1       |$S2       |3    |        |Hello        |123456789  |                                                                           |true                   |false                    |
-| |!-FitNesse-!|$S2       |$S3       |3    |        |             |$S3        |                                                                           |true                   |true                     |
-| |World       |$S3       |$S1       |3    |        |World        |$S1        |{b=abcdefghijklmnopqrstuvwxyz, a="The fox jumps over the wall.", NEW=World}|false                  |false                    |
+|#|property NEW|property a|property b|size?|property NEW?|property b?|has Value '123456789' ?|has Value '!-FitNesse-!'?|
+| |Hello       |$S1       |$S2       |3    |Hello        |123456789  |true                   |false                    |
+| |!-FitNesse-!|$S2       |$S3       |3    |             |$S3        |true                   |true                     |
+| |World       |$S3       |$S1       |3    |World        |$S1        |false                  |false                    |
 
 
 !4 Look in the collapsed setup how the mapping between column names and method names is done.

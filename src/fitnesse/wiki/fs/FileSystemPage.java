@@ -119,6 +119,7 @@ public class FileSystemPage extends BaseWikitextPage implements FileBasedWikiPag
     return new PageData(pageData);
   }
 
+  @Override
   public File getFileSystemPath() {
     return this.path;
   }
