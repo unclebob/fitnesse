@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /*
@@ -56,6 +57,7 @@ public class DefaultInteractionTest {
     assertEquals(convertedArgs[0], testee.getDateVal());
   }
 
+  @Ignore
   @Test
   public void canExecuteConstructorWhenDoubleArgType() throws Throwable {
     //given 
@@ -70,6 +72,7 @@ public class DefaultInteractionTest {
     assertEquals(1, testee.getIntVal());
   }
 
+  @Ignore
   @Test
   public void canExecuteConstructorWhenFloatArgType() throws Throwable {
     //given 

@@ -2,7 +2,8 @@
 
 Welcome to FitNesse, the fully integrated stand-alone acceptance testing framework and wiki.
 
-To get started, check out [http://fitnesse.org](http://fitnesse.org)!
+
+To get started, check out this awesome and useful [http://fitnesse.org](http://fitnesse.org)!
 
 
 
@@ -37,7 +38,7 @@ Issues and pull requests are administered at [GitHub](https://github.com/unclebo
 
 A proper internet connection is sufficient to build FitNesse. The build process will bootstrap itself by downloading [Gradle](http://gradle.org) and from there will download the dependencies required to build and test FitNesse.
 
-To build and run all tests, run the command
+To build and run all tests, run the command:
 
 ```
 $ ./gradlew
@@ -80,7 +81,7 @@ There are a few things to keep in mind when working from an IDE:
     * It sets the FitNesse version in a META-INF/FitNesseVersion.txt
     * It copies the dependencies to the lib folder so they can be used by the acceptance tests.
 
-   Perform a
+   Perform a:
    ```
    $ ./gradlew copyRuntimeLibs
    ```
@@ -98,7 +99,7 @@ There are a few things to keep in mind when working from an IDE:
 
 #### Import FitNesse in IntelliJ IDEA (16)
 
-1. Clone the FitNesse Git repository from https://github.com/unclebob/fitnesse.
+1. Clone the fitnesse Git repository from https://github.com/unclebob/fitnesse.
 2. From the welcome screen (the one you get when all projects are closed), click _Import Project_.
 3. Select the file `build.gradle` in the fitnesse folder.
 4. Follow the wizard. Deselect the option `Create separate module per source set`. You can use the
@@ -110,14 +111,14 @@ There are a few things to keep in mind when working from an IDE:
 
 Software artifacts (the FitNesse jar, the standalone jar and POM files) are uploaded to [Bintray](https://bintray.com/fitnesse). There are two repositories:
 
-* _Edge_ contains snapshot builds
+* _Edge_ contains snapshot builds.
 * _Release_ contains the official release builds. 
 
 In both cases you'll need sufficient permissions to perform a release.
 
 #### Edge builds
 
-Edge builds can be done at any time
+Edge builds can be done at any time.
 
    ```
    $ ./gradlew snapshotRelease
