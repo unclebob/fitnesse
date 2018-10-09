@@ -1,10 +1,12 @@
-# [FitNesse](http://fitnesse.org/)  [![maven central](https://maven-badges.herokuapp.com/maven-central/org.fitnesse/fitnesse/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.fitnesse/fitnesse) [![SonarQube Tech Debt](https://img.shields.io/sonar/http/nemo.sonarqube.org/org.fitnesse:fitnesse/tech_debt.svg)](http://nemo.sonarqube.org/dashboard/index?id=org.fitnesse%3Afitnesse)
+# [FitNesse (forked)](http://fitnesse.org/)  [![maven central](https://maven-badges.herokuapp.com/maven-central/com.github.tcnh/fitnesse/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.tcnh/fitnesse)
 
 Welcome to FitNesse, the fully integrated stand-alone acceptance testing framework and wiki.
 
 To get started, check out [http://fitnesse.org](http://fitnesse.org)!
 
-
+## Why this fork?
+* Our projects make use of functionalitiy that was broken in the 20180127 release
+* The activity in the original repository is very low. PR's with fixes are not being merged
 
 ## Quick start
 
@@ -22,12 +24,8 @@ Have a bug or a feature request? [Please open a new issue](https://github.com/un
 ## Community
 
 Have a question that's not a feature request or bug report? [Ask on the mailing list.](http://groups.yahoo.com/group/fitnesse)
+If you are using this fork (com.github.tcnh group id), please make sure your question is about 'vanilla FitNesse' before posting to the mailing list. Otherwise open an issue in this repository.
 
-## Edge builds
-
-The latest stable build of FitNesse can be [downloaded here](https://cleancoder.ci.cloudbees.com/job/fitnesse/lastStableBuild/).
-
-**Note**: the edge Jenkins build produces 2 jars. `fitnesse.jar` is for use in Maven or Ivy. Users who just want to run FitNesse by itself should download `fitnesse-standalone.jar` instead of `fitnesse.jar`.
 
 ## Developers
 
