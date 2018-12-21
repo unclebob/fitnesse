@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+ * Issues fixed:
+   * Allow plugins to contain Velocity templates (used when rendering pages) ([[1127][https://github.com/unclebob/fitnesse/pull/1127]])
 
 !2 20180127
  * Improve stability for non pipe based SUT connection ([[197][https://github.com/unclebob/fitnesse/pull/997]])
