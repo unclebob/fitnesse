@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+
+!2 20180127
  * Improve stability for non pipe based SUT connection ([[197][https://github.com/unclebob/fitnesse/pull/997]])
  * Fix new style wiki pages for Windows (line ending) ([[1058][https://github.com/unclebob/fitnesse/pull/1058]])
  * SLiM now better handles parameter types in fixture constructors ([[1024][https://github.com/unclebob/fitnesse/pull/1024]])
