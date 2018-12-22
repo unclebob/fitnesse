@@ -103,6 +103,18 @@ public class SlimTestSystemTableProcessingTest {
   }
 
   @Test
+  public void nextPageAndItsTeardownShouldBeSkippedOnStopTestInSuiteSetUp() throws TestExecutionException {
+    String exceptionId = SlimServer.EXCEPTION_STOP_TEST_TAG + "StopTestException";
+    slimTestSystem.newTestPage("SuiteSetUp");
+    slimTestSystem.processTable(table(exceptionId), false);
+    slimTestSystem.newTestPage();
+    slimTestSystem.processTable(table("NextPage"), false);
+    slimTestSystem.processTable(tearDownTable("NextPageTearDown"), false);
+
+    assertTestRecords(fail(exceptionId), ignore("NextPage"), ignore("NextPageTearDown"));
+  }
+
+  @Test
   public void suiteTearDownAlsoOnSuiteStopExceptionExecuted() throws TestExecutionException {
     String exceptionId = SlimServer.EXCEPTION_STOP_SUITE_TAG + "StopSuiteException";
     slimTestSystem.processTable(table(exceptionId), false);
@@ -269,6 +281,10 @@ public class SlimTestSystemTableProcessingTest {
 
     public void newTestPage() {
       initializeTest(new WikiTestPage(new WikiPageDummy()));
+    }
+
+    public void newTestPage(String pageName) {
+      initializeTest(new WikiTestPage(new WikiPageDummy(pageName, "", null)));
     }
   }
 

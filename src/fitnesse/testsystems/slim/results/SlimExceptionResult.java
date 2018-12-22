@@ -21,7 +21,7 @@ public class SlimExceptionResult implements ExceptionResult {
 
   @Override
   public ExecutionResult getExecutionResult() {
-    return exceptionValue.contains(EXCEPTION_STOP_TEST_TAG) ? ExecutionResult.FAIL : ExecutionResult.ERROR;
+    return isStopTestException() ? ExecutionResult.FAIL : ExecutionResult.ERROR;
   }
 
   public boolean hasMessage() {
