@@ -3,6 +3,8 @@
  * Improve finding of methods in Java classes (first letter may be a capital) ([[992][https://github.com/unclebob/fitnesse/pull/992]])
  * Allow today's date and expressions to be evaluated inside preformatted blocks ([[1017][https://github.com/unclebob/fitnesse/pull/1017]])
  * Allow tests which expect an exception ([[1131][https://github.com/unclebob/fitnesse/pull/1131]])
+ * Issues fixed
+   * Remove non-standard transformer attribute when writing XML ([[1129][https://github.com/unclebob/fitnesse/pull/1129]])
 
 !2 20181221
  * Issues fixed:
