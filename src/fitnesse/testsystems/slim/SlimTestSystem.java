@@ -147,7 +147,10 @@ public abstract class SlimTestSystem implements TestSystem {
         }
         exceptionResult = a.getExpectation().evaluateException(exceptionResult);
         if (exceptionResult != null) {
-          testExceptionOccurred(a, exceptionResult);
+          if (!exceptionResult.isCatchException())
+            testExceptionOccurred(a, exceptionResult);
+          else
+            testAssertionVerified(a, exceptionResult.catchTestResult());
         }
       } else {
         //Normal results

@@ -102,6 +102,13 @@ public abstract class SlimTable {
     }
   }
 
+  protected String getConfigurationVariable(String variableName,
+      String defaultValue) {
+    String value = this.getTestContext().getPageToTest()
+        .getVariable(variableName);
+    return (value == null || value.isEmpty()) ? defaultValue : value;
+  }
+
   public Map<String, String> getSymbolsToStore() {
     return symbolsToStore;
   }
@@ -334,7 +341,7 @@ public abstract class SlimTable {
       if (exceptionResult.isNoMethodInClassException() || exceptionResult.isNoInstanceException()) {
         return null;
       }
-      table.updateContent(col, row, exceptionResult);
+      table.updateContent(-1, row, exceptionResult);
       getTestContext().incrementErroredTestsCount();
       return exceptionResult;
     }
@@ -402,8 +409,45 @@ public abstract class SlimTable {
       return originalValue.isEmpty() ? "BLANK" : originalValue;
     }
 
+    @Override
+    public SlimExceptionResult evaluateException(
+        SlimExceptionResult exceptionResult) {
+      final String exceptionComparatorPrefix = getConfigurationVariable(
+          "SLIM_EXCEPTION_COMPARATOR",
+          SlimExceptionResult.DEFAULT_SLIM_EXCEPTION_COMPARATOR);
+      if (this.getExpected().startsWith(exceptionComparatorPrefix)) {
+        TestResult testResult = new ReturnedValueExpectation(this.getCol(),
+            this.getRow(), this.getExpected().replaceFirst(
+                exceptionComparatorPrefix, ""))
+            .evaluateExpectation(exceptionResult.getException());
+        exceptionResult.setCatchException(testResult);
+      } else {
+        exceptionResult = super.evaluateException(exceptionResult);
+      }
+      return exceptionResult;
+    }
   }
+  class SilentAssignExpectation implements SlimExpectation {
+    private final String symbolName;
 
+    public SilentAssignExpectation( String symbolName) {
+      this.symbolName = symbolName;
+    }
+
+    @Override
+    public TestResult evaluateExpectation(Object returnValue) {
+      setSymbol(symbolName, returnValue == null ? null : returnValue.toString());
+      return null;
+    }
+
+    @Override
+    public SlimExceptionResult evaluateException(
+        SlimExceptionResult exceptionResult) {
+      // TODO Auto-generated method stub
+      return null;
+    }
+  }
+  
   class ReturnedSymbolExpectation extends ReturnedValueExpectation {
     private String symbolName;
     private String assignToName = null;
@@ -624,6 +668,4 @@ public abstract class SlimTable {
       return null;
     }
   }
-
-
 }
