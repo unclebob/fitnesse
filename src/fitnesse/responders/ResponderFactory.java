@@ -24,10 +24,7 @@ import org.apache.commons.lang.StringUtils;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -193,21 +190,12 @@ public class ResponderFactory {
     for (String key : responderMap.keySet()) {
       if (key.startsWith("/")) {
         String pureKey = key.replaceAll("/", "");
-        if (isArrayContainString(sepUrls, pureKey)) {
+        if (Arrays.asList(sepUrls).contains(pureKey)) {
           return key;
         }
       }
     }
-
     return null;
-  }
-
-  private boolean isArrayContainString(String[] arr, String target) {
-    for (String tmp : arr) {
-      if (tmp.equals(target))
-        return true;
-    }
-    return false;
   }
 
   private boolean usingResponderKey(String responderKey) {
