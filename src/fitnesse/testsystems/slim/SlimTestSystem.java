@@ -15,6 +15,7 @@ import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.tables.SlimAssertion;
 import fitnesse.testsystems.slim.tables.SlimTable;
+import fitnesse.wiki.PageData;
 
 import static fitnesse.slim.SlimServer.*;
 
@@ -139,6 +140,7 @@ public abstract class SlimTestSystem implements TestSystem {
         SlimExceptionResult exceptionResult = new SlimExceptionResult(key, (String) returnValue);
         if (exceptionResult.isStopTestException()) {
           stopTestCalled = true;
+          stopSuiteCalled = PageData.SUITE_SETUP_NAME.equals(testContext.getPageToTest().getName());
         }
         if (exceptionResult.isStopSuiteException()) {
           stopTestCalled = stopSuiteCalled = true;
