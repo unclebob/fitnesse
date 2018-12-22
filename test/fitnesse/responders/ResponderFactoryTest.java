@@ -43,6 +43,7 @@ import org.junit.Test;
 import util.FileUtil;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class ResponderFactoryTest {
   private ResponderFactory factory;
@@ -311,5 +312,24 @@ public class ResponderFactoryTest {
   @Test
   public void testHistoryComparerResponder() throws Exception {
     assertResponderTypeMatchesInput("compareHistory", HistoryComparerResponder.class);
+  }
+
+  @Test
+  public void isUrlMatched() {
+    String key="/abc";
+    factory.addResponder(key, WikiPageResponder.class);
+    factory.addResponder("/abc/xxx", WikiPageResponder.class); //do not support this.
+
+    // http://127.0.0.1:8001/abc  ==>  /abc
+    assertEquals(key,factory.findMatchKeyByUrl("abc"));
+    // http://127.0.0.1:8001/abcd  ==>  null
+    assertNotEquals(key,factory.findMatchKeyByUrl("abcd")); // not match
+    // http://127.0.0.1:8001/abc/efg  ==>  /abc
+    assertEquals(key ,factory.findMatchKeyByUrl("abc/efg"));
+
+    assertEquals(key ,factory.findMatchKeyByUrl("efg/abc"));
+
+    assertEquals(key, factory.findMatchKeyByUrl("efg/abc/cde")); //match true
+
   }
 }

@@ -146,9 +146,15 @@ public class ResponderFactory {
       responder = wrapWithFilters("files", new FileResponder());
     } else if (StringUtils.isBlank(resource) || PathParser.parse(resource) != null) {
       responder = wrapWithFilters("wiki", new WikiPageResponder());
-    } else {
-      responder = new NotFoundResponder();
+    } else  {
+      String urlResponderKey=findMatchKeyByUrl(resource);
+      if(urlResponderKey!=null){
+        responder= wrapWithFilters("url", lookupResponder(urlResponderKey));
+      }else{
+        responder = new NotFoundResponder();
+      }
     }
+
     return responder;
   }
 
@@ -189,6 +195,34 @@ public class ResponderFactory {
 
   public Class<?> getResponderClass(String responderKey) {
     return responderMap.get(responderKey);
+  }
+
+  /**
+   * find responder matcher from url
+   *
+   * @param url request url
+   * @return Responder
+   */
+  public  String findMatchKeyByUrl(String url){
+
+    String[] sepUrls=url.split("/");
+    for (String key : responderMap.keySet()) {
+      if (key.startsWith("/") ){
+        String pureKey=key.replaceAll("/","");
+        if(isArrayContainString(sepUrls,pureKey)){
+          return key;
+        }
+      }
+    }
+
+    return null;
+  }
+  private boolean isArrayContainString(String[] arr,String target){
+    for(String tmp:arr){
+      if(tmp.equals(target))
+        return true;
+    }
+    return false;
   }
 
   private boolean usingResponderKey(String responderKey) {
