@@ -1,4 +1,9 @@
 !2 ${FITNESSE_VERSION}
+ * "StopTestException" is SuiteSetUp is handled as SuiteStopException ([[1128][https://github.com/unclebob/fitnesse/pull/1128]])
+ * Improve finding of methods in Java classes (first letter may be a capital) ([[992][https://github.com/unclebob/fitnesse/pull/992]])
+ * Allow today's date and expressions to be evaluated inside preformatted blocks ([[1017][https://github.com/unclebob/fitnesse/pull/1017]])
+
+!2 20181221
  * Issues fixed:
    * Allow plugins to contain Velocity templates (used when rendering pages) ([[1127][https://github.com/unclebob/fitnesse/pull/1127]])
 
