@@ -6,6 +6,7 @@
  * Allow Slim custom comparators to use values containing line endings ([[1142][https://github.com/unclebob/fitnesse/pull/1142]])
  * Issues fixed
    * Remove non-standard transformer attribute when writing XML ([[1129][https://github.com/unclebob/fitnesse/pull/1129]])
+   * Fix !headings when an heading contains literal macro ([[1121][https://github.com/unclebob/fitnesse/pull/1121]])
 
 !2 20181221
  * Issues fixed:
