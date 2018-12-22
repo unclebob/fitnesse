@@ -5,12 +5,14 @@ import fitnesse.slim.SlimServer;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.InstructionExecutor;
 import fitnesse.slim.instructions.InstructionResult;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.testsystems.slim.tables.SlimAssertion;
 import fitnesse.testsystems.slim.tables.SlimExpectation;
 import fitnesse.testsystems.slim.tables.SlimTable;
+import fitnesse.wiki.WikiPageDummy;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 /**
- * See also FitNesseRoot/FitNesse/SuiteAcceptanceTests/SuiteSlimTests, StopSuite and StopTest in particular
+ * See also FitNesseRoot/FitNesse/SuiteAcceptanceTests/SuiteSlimTests, StopSuite, StopTestInSuiteSetUp and StopTest in particular
  */
 public class SlimTestSystemTableProcessingTest {
 
@@ -32,6 +34,7 @@ public class SlimTestSystemTableProcessingTest {
   @Before
   public void setup() {
     slimTestSystem.addTestSystemListener(listener);
+    slimTestSystem.newTestPage();
   }
 
   @Test
@@ -265,7 +268,7 @@ public class SlimTestSystemTableProcessingTest {
     }
 
     public void newTestPage() {
-      stopTestCalled = false;
+      initializeTest(new WikiTestPage(new WikiPageDummy()));
     }
   }
 

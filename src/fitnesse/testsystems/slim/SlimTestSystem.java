@@ -103,7 +103,7 @@ public abstract class SlimTestSystem implements TestSystem {
     testSystemListener.addTestSystemListener(listener);
   }
 
-  private void initializeTest(TestPage testPage) {
+  protected void initializeTest(TestPage testPage) {
     testContext = createTestContext(testPage);
     stopTestCalled = false;
   }
