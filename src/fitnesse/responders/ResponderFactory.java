@@ -2,6 +2,25 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import fitnesse.Responder;
+import fitnesse.http.Request;
+import fitnesse.responders.editing.*;
+import fitnesse.responders.files.*;
+import fitnesse.responders.refactoring.*;
+import fitnesse.responders.run.StopTestResponder;
+import fitnesse.responders.run.SuiteResponder;
+import fitnesse.responders.run.TestResponder;
+import fitnesse.responders.search.SearchPropertiesResponder;
+import fitnesse.responders.search.SearchResponder;
+import fitnesse.responders.search.WhereUsedResponder;
+import fitnesse.responders.testHistory.*;
+import fitnesse.responders.versions.RollbackResponder;
+import fitnesse.responders.versions.VersionComparerResponder;
+import fitnesse.responders.versions.VersionResponder;
+import fitnesse.responders.versions.VersionSelectionResponder;
+import fitnesse.wiki.PathParser;
+import org.apache.commons.lang.StringUtils;
+
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -11,40 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import fitnesse.responders.run.SuiteResponder;
-import fitnesse.responders.run.TestResponder;
-import fitnesse.responders.testHistory.ExecutionLogResponder;
-import fitnesse.wiki.PathParser;
-import org.apache.commons.lang.StringUtils;
-import fitnesse.Responder;
-import fitnesse.http.Request;
-import fitnesse.responders.editing.AddChildPageResponder;
-import fitnesse.responders.editing.EditResponder;
-import fitnesse.responders.editing.NewPageResponder;
-import fitnesse.responders.editing.PropertiesResponder;
-import fitnesse.responders.editing.SavePropertiesResponder;
-import fitnesse.responders.editing.SaveResponder;
-import fitnesse.responders.editing.SymbolicLinkResponder;
-import fitnesse.responders.files.CreateDirectoryResponder;
-import fitnesse.responders.files.DeleteConfirmationResponder;
-import fitnesse.responders.files.DeleteFileResponder;
-import fitnesse.responders.files.FileResponder;
-import fitnesse.responders.files.RenameFileConfirmationResponder;
-import fitnesse.responders.files.RenameFileResponder;
-import fitnesse.responders.files.UploadResponder;
-import fitnesse.responders.refactoring.*;
-import fitnesse.responders.run.StopTestResponder;
-import fitnesse.responders.search.*;
-import fitnesse.responders.testHistory.HistoryComparerResponder;
-import fitnesse.responders.testHistory.PageHistoryResponder;
-import fitnesse.responders.testHistory.PurgeHistoryResponder;
-import fitnesse.responders.testHistory.SuiteOverviewResponder;
-import fitnesse.responders.testHistory.TestHistoryResponder;
-import fitnesse.responders.versions.RollbackResponder;
-import fitnesse.responders.versions.VersionComparerResponder;
-import fitnesse.responders.versions.VersionResponder;
-import fitnesse.responders.versions.VersionSelectionResponder;
 
 public class ResponderFactory {
   private static final Logger LOG = Logger.getLogger(ResponderFactory.class.getName());
@@ -148,9 +133,9 @@ public class ResponderFactory {
       responder = wrapWithFilters("wiki", new WikiPageResponder());
     } else  {
       String urlResponderKey=findMatchKeyByUrl(resource);
-      if(urlResponderKey!=null){
-        responder= wrapWithFilters("url", lookupResponder(urlResponderKey));
-      }else{
+      if (urlResponderKey != null) {
+        responder = wrapWithFilters("url", lookupResponder(urlResponderKey));
+      } else {
         responder = new NotFoundResponder();
       }
     }
@@ -203,13 +188,12 @@ public class ResponderFactory {
    * @param url request url
    * @return Responder
    */
-  public  String findMatchKeyByUrl(String url){
-
-    String[] sepUrls=url.split("/");
+  public String findMatchKeyByUrl(String url) {
+    String[] sepUrls = url.split("/");
     for (String key : responderMap.keySet()) {
-      if (key.startsWith("/") ){
-        String pureKey=key.replaceAll("/","");
-        if(isArrayContainString(sepUrls,pureKey)){
+      if (key.startsWith("/")) {
+        String pureKey = key.replaceAll("/", "");
+        if (isArrayContainString(sepUrls, pureKey)) {
           return key;
         }
       }
@@ -217,9 +201,10 @@ public class ResponderFactory {
 
     return null;
   }
-  private boolean isArrayContainString(String[] arr,String target){
-    for(String tmp:arr){
-      if(tmp.equals(target))
+
+  private boolean isArrayContainString(String[] arr, String target) {
+    for (String tmp : arr) {
+      if (tmp.equals(target))
         return true;
     }
     return false;
