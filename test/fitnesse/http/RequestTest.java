@@ -92,6 +92,18 @@ public class RequestTest {
   }
 
   @Test
+  public void testEmptyLinesBeforeRequestIsIgnored() throws Exception {
+    appendToMessage("\r\n");
+    appendToMessage("\r\n");
+    appendToMessage("\r\n");
+    appendToMessage("GET /request-uri HTTP/1.1\r\n");
+    appendToMessage("\r\n");
+    parseMessage();
+    assertTrue(request.hasBeenParsed());
+    assertEquals("/request-uri", request.getRequestUri());
+  }
+
+  @Test
   public void testBadMethod() throws Exception {
     appendToMessage("DELETE /resource HTTP/1.1\r\n");
     appendToMessage("\r\n");
