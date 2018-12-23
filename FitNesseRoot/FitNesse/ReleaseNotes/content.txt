@@ -7,6 +7,7 @@
  * Issues fixed
    * Remove non-standard transformer attribute when writing XML ([[1129][https://github.com/unclebob/fitnesse/pull/1129]])
    * Fix !headings when an heading contains literal macro ([[1121][https://github.com/unclebob/fitnesse/pull/1121]])
+   * Fix exception in log "The request string is malformed and can not be parsed" ([[1042][https://github.com/unclebob/fitnesse/issues/1042]])
 
 !2 20181221
  * Issues fixed:
