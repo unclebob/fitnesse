@@ -1,10 +1,4 @@
-import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.InputDirectory
-import org.gradle.api.tasks.OutputFile
-import org.gradle.api.tasks.TaskAction
-import org.gradle.api.tasks.TaskExecutionException
-
-import java.util.logging.Logger;
+import java.util.logging.Logger
 
 /**
  * Little utility to assemble the updateLists, used from build script.
@@ -63,7 +57,7 @@ public class WikiFileListBuilder {
 
   private boolean isWikiFile(File childFile) {
     String name = childFile.getName();
-    return childFile.isDirectory() || VALID_FILE_NAMES.contains(name);
+    return childFile.isDirectory() || VALID_FILE_NAMES.contains(name) || name.endsWith(".wiki");
   }
 
   private void addFilePathToAppropriateList(String directoryPath, File childFile) {
