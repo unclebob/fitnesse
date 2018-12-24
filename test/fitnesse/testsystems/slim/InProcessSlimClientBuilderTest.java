@@ -10,7 +10,6 @@ import org.mockito.ArgumentCaptor;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.*;
 
 public class InProcessSlimClientBuilderTest {
@@ -68,7 +67,7 @@ public class InProcessSlimClientBuilderTest {
     ArgumentCaptor<FixtureInteraction> interactionCaptor = ArgumentCaptor.forClass(FixtureInteraction.class);
 
     slimClientBuilder.build();
-    verify(slimClientBuilder).createSlimServer(interactionCaptor.capture(), anyInt(), anyBoolean());
+    verify(slimClientBuilder).createSlimServer(interactionCaptor.capture(), isNull(), anyBoolean());
     return interactionCaptor.getValue();
   }
 }

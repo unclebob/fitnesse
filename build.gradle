@@ -15,14 +15,15 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.1.9'
+        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.3.0'
     }
 }
 
 plugins {
   id 'java'
   id "maven-publish"
-  id "com.jfrog.bintray" version "1.6"
+  id "com.jfrog.bintray" version "1.8.4"
+  id "com.github.ben-manes.versions" version "0.20.0"
 }
 
 apply plugin: "info.solidsoft.pitest"
@@ -70,17 +71,17 @@ dependencies {
   }
   compile "commons-lang:commons-lang:2.6"
   compile "commons-collections:commons-collections:3.2.2"
-  compile "org.json:json:20151123"
+  compile "org.json:json:20180813"
   compile "com.googlecode.java-diff-utils:diffutils:1.3.0"
-  optional "org.apache.ant:ant:1.9.6"
+  optional "org.apache.ant:ant:1.10.5"
   optional "junit:junit:4.12"
 
   testCompile "junit:junit:4.12"
-  testCompile "org.mockito:mockito-core:1.10.19"
+  testCompile "org.mockito:mockito-core:2.23.4"
   testCompile "org.hamcrest:hamcrest-all:1.3"
-  testCompile "net.javacrumbs.json-unit:json-unit:1.1.6"
+  testCompile "net.javacrumbs.json-unit:json-unit:2.2.0"
 
-  lesscss "org.mozilla:rhino:1.7.7.1"
+  lesscss "org.mozilla:rhino:1.7.10"
 }
 
 task fitNesseVersion {
@@ -139,7 +140,7 @@ test {
 
 pitest {
   targetClasses = ['fit.*', 'fitnesse.*']
-  pitestVersion = "1.1.10"
+  pitestVersion = "1.4.3"
   threads = 1 // We can not deal with parallel execution yet
   outputFormats = ['XML', 'HTML']
 }
