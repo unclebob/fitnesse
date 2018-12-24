@@ -1,4 +1,7 @@
 !2 ${FITNESSE_VERSION}
+ * Fixed issue where accessing wiki using Firefox caused very high CPU usage ([[1173][https://github.com/unclebob/fitnesse/issues/1173]])
+
+!2 20181223
  * "StopTestException" is SuiteSetUp is handled as SuiteStopException ([[1128][https://github.com/unclebob/fitnesse/pull/1128]])
  * Improve finding of methods in Java classes (first letter may be a capital) ([[992][https://github.com/unclebob/fitnesse/pull/992]])
  * Allow today's date and expressions to be evaluated inside preformatted blocks ([[1017][https://github.com/unclebob/fitnesse/pull/1017]])
