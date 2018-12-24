@@ -68,14 +68,9 @@ public class Request {
   }
 
   private void readAndParseRequestLine() throws IOException, HttpException {
-    String request = "";
-    while ("".equals(request)) {
-      // https://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html states:
-
-      // servers SHOULD ignore any empty line(s) received where a Request-Line is expected.
-      // In other words, if the server is reading the protocol stream at the beginning of
-      // a message and receives a CRLF first, it should ignore the CRLF.
-      request = input.readLine();
+    String request = input.readLine();
+    if ("".equals(request)) {
+      throw new EmptyRequestException("Received request that started with empty line");
     }
     requestLine = request;
 

@@ -96,11 +96,9 @@ public class RequestTest {
     appendToMessage("\r\n");
     appendToMessage("\r\n");
     appendToMessage("\r\n");
-    appendToMessage("GET /request-uri HTTP/1.1\r\n");
-    appendToMessage("\r\n");
     parseMessage();
-    assertTrue(request.hasBeenParsed());
-    assertEquals("/request-uri", request.getRequestUri());
+    assertNotNull("no exception was thrown", exception);
+    assertEquals("Received request that started with empty line", exception.getMessage());
   }
 
   @Test
