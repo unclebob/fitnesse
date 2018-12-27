@@ -8,6 +8,7 @@ import fitnesse.authentication.SecureWriteOperation;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
+import fitnesse.http.Request;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -63,7 +64,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
   }
 
   private HtmlPage makeHtml() throws Exception {
-    HtmlPage html = context.pageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage(request);
     String title = "Wiki Import";
     if (wikiImportingTraverser.isUpdate())
       title += " Update";

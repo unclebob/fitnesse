@@ -30,11 +30,13 @@ import fitnesse.wiki.WikiPageUtil;
 public class VersionResponder implements SecureResponder {
   private String version;
   private String resource;
+  private Request requestData;
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception{
     resource = request.getResource();
     version = request.getInput("version");
+    requestData = request;
     if (version == null)
       return new ErrorResponder("No version specified.").makeResponse(context, request);
 
@@ -55,7 +57,7 @@ public class VersionResponder implements SecureResponder {
 
   private HtmlPage makeHtml(String name, WikiPage page, FitNesseContext context) {
     WikiPage pageVersion = page.getVersion(version);
-    HtmlPage html = context.pageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage(requestData);
     html.setTitle("Version " + version + ": " + name);
     html.setPageTitle(new PageTitle("Version " + version, PathParser.parse(resource), pageVersion.getData().getAttribute(PageData.PropertySUITES)));
     // TODO: subclass actions for specific rollback behaviour.

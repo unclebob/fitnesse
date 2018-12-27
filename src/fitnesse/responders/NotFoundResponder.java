@@ -14,10 +14,12 @@ import fitnesse.wiki.PathParser;
 // scenarios (we skip directly to an EditResponder...).
 public class NotFoundResponder implements Responder {
   private String resource;
+  private Request requestData;
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     SimpleResponse response = new SimpleResponse(404);
+    requestData = request;
     resource = request.getResource();
 
     response.setContent(makeHtml(context));
@@ -25,7 +27,7 @@ public class NotFoundResponder implements Responder {
   }
 
   private String makeHtml(FitNesseContext context) {
-    HtmlPage page = context.pageFactory.newPage();
+    HtmlPage page = context.pageFactory.newPage(requestData);
     page.addTitles("Not Found:" + resource);
     page.put("name", resource);
     page.put("shouldCreate", PathParser.isWikiPath(resource));

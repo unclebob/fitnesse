@@ -3,6 +3,7 @@
 package fitnesse.html.template;
 
 import fitnesse.FitNesseContext;
+import fitnesse.http.Request;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -28,8 +29,8 @@ public class PageFactory {
     this.contextRoot = context.contextRoot;
   }
 
-  public HtmlPage newPage() {
-    return new HtmlPage(getVelocityEngine(), "skeleton.vm", theme, contextRoot);
+  public HtmlPage newPage(Request request) {
+    return new HtmlPage(getVelocityEngine(), "skeleton.vm", theme, contextRoot, request);
   }
 
   public String render(VelocityContext context, String templateName) {

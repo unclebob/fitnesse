@@ -114,7 +114,7 @@ public class PropertiesResponder implements SecureResponder {
   }
 
   private String makeHtml(FitNesseContext context, Request request) {
-    html = context.pageFactory.newPage();
+    html = context.pageFactory.newPage(request);
     html.setNavTemplate("viewNav");
     html.put("viewLocation", request.getResource());
     html.setTitle("Properties: " + resource);

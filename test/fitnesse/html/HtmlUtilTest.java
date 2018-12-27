@@ -84,7 +84,7 @@ public class HtmlUtilTest {
 
   private String getActionsHtml(String pageName) {
     WikiPageUtil.addPage(context.getRootPage(), PathParser.parse(pageName), "");
-    HtmlPage htmlPage = context.pageFactory.newPage();
+    HtmlPage htmlPage = context.pageFactory.newPage(null);
     htmlPage.setNavTemplate("wikiNav.vm");
     htmlPage.put("actions", new WikiPageActions(context.getRootPage().getChildPage(pageName)));
     return htmlPage.html();

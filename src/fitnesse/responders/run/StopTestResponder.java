@@ -14,11 +14,12 @@ import fitnesse.http.SimpleResponse;
 public class StopTestResponder implements SecureResponder {
 
   String testId = null;
+  private Request requestData;
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     SimpleResponse response = new SimpleResponse();
-
+    requestData = request;
     if (request.hasInput("id")) {
       testId = request.getInput("id");
     }
@@ -29,7 +30,7 @@ public class StopTestResponder implements SecureResponder {
   }
 
   private String html(FitNesseContext context) {
-    HtmlPage page = context.pageFactory.newPage();
+    HtmlPage page = context.pageFactory.newPage(requestData);
     page.addTitles("Stopping tests");
     page.put("testId", testId);
     page.put("runningTestingTracker", SuiteResponder.runningTestingTracker);

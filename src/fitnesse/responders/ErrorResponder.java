@@ -31,7 +31,7 @@ public class ErrorResponder implements Responder {
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     SimpleResponse response = new SimpleResponse(statusCode);
-    HtmlPage html = context.pageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage(request);
     html.addTitles("Error Occurred");
     html.setMainTemplate("error");
     html.put("exception", exception);

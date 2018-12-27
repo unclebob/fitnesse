@@ -22,7 +22,7 @@ public class ShutdownResponder implements SecureResponder {
   public Response makeResponse(final FitNesseContext context, Request request) throws Exception {
     SimpleResponse response = new SimpleResponse();
 
-    HtmlPage html = context.pageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage(request);
     html.setTitle("Shutdown");
     html.setPageTitle(new PageTitle("Shutdown"));
 

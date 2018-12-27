@@ -39,10 +39,10 @@ public class VersionSelectionResponder implements SecureResponder {
     PageData pageData = page.getData();
     List<VersionInfo> versions = getVersionsList(page);
 
-    HtmlPage html = context.pageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage(request);
     html.setTitle("Version Selection: " + resource);
     html.setPageTitle(new PageTitle("Version Selection", PathParser.parse(resource), pageData.getAttribute(PageData.PropertySUITES)));
-  html.put("lastModified", makeLastModifiedTag(pageData));
+    html.put("lastModified", makeLastModifiedTag(pageData));
     html.put("versions", versions);
     html.setNavTemplate("viewNav");
     html.put("viewLocation", request.getResource());

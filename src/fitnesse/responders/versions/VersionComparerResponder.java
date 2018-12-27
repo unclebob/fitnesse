@@ -98,7 +98,7 @@ public class VersionComparerResponder implements Responder {
   }
 
   private Response makeValidResponse(Request request) throws IOException {
-    HtmlPage page = context.pageFactory.newPage();
+    HtmlPage page = context.pageFactory.newPage(request);
     page.setTitle("Version Comparison");
     page.setPageTitle(makePageTitle(request.getResource()));
     page.setNavTemplate("compareVersionsNav.vm");

@@ -43,7 +43,7 @@ public class MergeResponder implements Responder {
   }
 
   private String makePageHtml(FitNesseContext context) {
-    HtmlPage page = context.pageFactory.newPage();
+    HtmlPage page = context.pageFactory.newPage(request);
     page.setTitle("Merge " + resource);
     page.setPageTitle(new PageTitle("Merge Changes", PathParser.parse(resource)));
     page.setMainTemplate("mergePage");

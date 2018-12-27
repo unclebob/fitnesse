@@ -64,7 +64,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
 
     PageTitle pageTitle = new PageTitle(page.getPageCrawler().getFullPath() );
 
-    HtmlPage htmlPage = context.pageFactory.newPage();
+    HtmlPage htmlPage = context.pageFactory.newPage(request);
     htmlPage.setTitle(getTitle());
     htmlPage.setPageTitle(pageTitle);
     htmlPage.setMainTemplate(getTemplate());

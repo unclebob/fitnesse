@@ -14,13 +14,14 @@ import fitnesse.wiki.PathParser;
 public class ContentFilterResponder implements Responder {
 
   private final ContentFilter contentFilter;
-
+  private Request requestData;
   public ContentFilterResponder(ContentFilter contentFilter) {
     this.contentFilter = contentFilter;
   }
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    requestData = request;
     String resource = request.getResource();
     String content = request.getInput(EditResponder.CONTENT_INPUT_NAME);
 
@@ -31,7 +32,7 @@ public class ContentFilterResponder implements Responder {
 
   private Response makeBannedContentResponse(FitNesseContext context, String resource) throws IOException {
     SimpleResponse response = new SimpleResponse();
-    HtmlPage html = context.pageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage(requestData);
     html.setTitle("Edit " + resource);
     html.setPageTitle(new PageTitle("Banned Content", PathParser.parse(resource)));
     html.setMainTemplate("bannedPage.vm");

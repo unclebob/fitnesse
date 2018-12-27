@@ -116,7 +116,7 @@ public class HistoryComparerResponder implements Responder {
 
   private Response makeValidResponse(Request request) throws UnsupportedEncodingException {
     int count = 0;
-    HtmlPage page = context.pageFactory.newPage();
+    HtmlPage page = context.pageFactory.newPage(request);
     page.setTitle("History Comparison");
     page.setPageTitle(makePageTitle(request.getResource()));
     if (!testing) {

@@ -25,9 +25,11 @@ public class DeletePageResponder implements SecureResponder {
   private String qualifiedPageName;
   private WikiPagePath path;
   private FitNesseContext context;
+  private Request requestData;
 
   @Override
   public Response makeResponse(final FitNesseContext context, final Request request) throws Exception {
+    requestData = request;
     this.context = context;
     intializeResponse(request);
 
@@ -73,7 +75,7 @@ public class DeletePageResponder implements SecureResponder {
   }
 
   private String buildConfirmationHtml(final WikiPage root, final String qualifiedPageName, final FitNesseContext context) {
-    HtmlPage html = context.pageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage(requestData);
 
     String tags = "";
 

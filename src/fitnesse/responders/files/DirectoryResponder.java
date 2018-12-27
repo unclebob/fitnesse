@@ -28,6 +28,7 @@ class DirectoryResponder implements SecureResponder {
   private File requestedDirectory;
   private FitNesseContext context;
   private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy, hh:mm a");
+  private Request requestData;
 
   public DirectoryResponder(String resource, File requestedFile) {
     this.resource = resource;
@@ -37,7 +38,7 @@ class DirectoryResponder implements SecureResponder {
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     this.context = context;
-
+    requestData = request;
     if (!resource.endsWith("/")) {
       return setRedirectForDirectory(request.getQueryString());
     } else if ("json".equals(request.getInput("format"))) {
@@ -54,7 +55,7 @@ class DirectoryResponder implements SecureResponder {
   }
 
   private Response makeDirectoryListingPage() throws UnsupportedEncodingException {
-    HtmlPage page = context.pageFactory.newPage();
+    HtmlPage page = context.pageFactory.newPage(requestData);
     page.setTitle("Files: " + resource);
     //page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "/", "Files Section"));
     page.setPageTitle(new PageTitle("Files Section", resource, "/"));

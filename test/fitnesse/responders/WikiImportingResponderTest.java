@@ -331,7 +331,7 @@ public class WikiImportingResponderTest {
   }
 
   private String getContentAfterSpecialImportHandling() {
-    HtmlPage html = new PageFactory(FitNesseUtil.makeTestContext()).newPage();
+    HtmlPage html = new PageFactory(FitNesseUtil.makeTestContext()).newPage(null);
     WikiImportingResponder.handleImportProperties(html, page);
     html.setNavTemplate("wikiNav.vm");
     html.put("actions", new WikiPageActions(page));

@@ -179,7 +179,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     PageCrawler pageCrawler = page.getPageCrawler();
     WikiPagePath fullPath = pageCrawler.getFullPath();
     String fullPathName = PathParser.render(fullPath);
-    HtmlPage htmlPage = context.pageFactory.newPage();
+    HtmlPage htmlPage = context.pageFactory.newPage(request);
     htmlPage.setTitle(getTitle() + ": " + fullPathName);
     htmlPage.setPageTitle(new PageTitle(getTitle(), fullPath, data.getAttribute(PageData.PropertySUITES)));
     htmlPage.setNavTemplate("testNav.vm");

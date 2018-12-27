@@ -16,11 +16,12 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public abstract class BasicResponder implements SecureResponder {
+  protected Request requestData;
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     WikiPage requestedPage = getRequestedPage(request, context);
-
+    requestData = request;
     Response response;
     if (requestedPage == null)
       response = pageNotFoundResponse(context, request);
