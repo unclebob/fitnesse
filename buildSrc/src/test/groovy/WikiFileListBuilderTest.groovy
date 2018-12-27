@@ -5,7 +5,7 @@ import org.junit.Test
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-import static org.junit.Assert.*
+import static org.junit.Assert.fail
 
 class WikiFileListBuilderTest {
 
@@ -24,6 +24,8 @@ class WikiFileListBuilderTest {
     String content = runCreateFileAndGetContent(["MasterFolder"]);
     assertSubString("MasterFolder/content.txt\n", content);
     assertSubString("MasterFolder/TestFolder/content.txt\n", content);
+    assertSubString("MasterFolder/TestFolder2.wiki\n", content);
+    assertSubString("MasterFolder/TestFolder2/Page.wiki\n", content);
   }
 
   @Test
@@ -77,6 +79,9 @@ class WikiFileListBuilderTest {
   }
 
   private static void createMultiLevelDirectory() throws IOException {
+    new File("MasterFolder/TestFolder2").mkdirs()
+    new File("MasterFolder/TestFolder2.wiki").text = ""
+    new File("MasterFolder/TestFolder2/Page.wiki").text = ""
     new File("MasterFolder/TestFolder").mkdirs()
     new File("MasterFolder/content.txt").text = ""
     new File("MasterFolder/TestFolder/content.txt").text = ""

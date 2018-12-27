@@ -1,4 +1,22 @@
 !2 ${FITNESSE_VERSION}
+ * Fixed issue where accessing wiki using Firefox caused very high CPU usage ([[1173][https://github.com/unclebob/fitnesse/issues/1173]])
+
+!2 20181223
+ * "StopTestException" is SuiteSetUp is handled as SuiteStopException ([[1128][https://github.com/unclebob/fitnesse/pull/1128]])
+ * Improve finding of methods in Java classes (first letter may be a capital) ([[992][https://github.com/unclebob/fitnesse/pull/992]])
+ * Allow today's date and expressions to be evaluated inside preformatted blocks ([[1017][https://github.com/unclebob/fitnesse/pull/1017]])
+ * Allow tests which expect an exception ([[1131][https://github.com/unclebob/fitnesse/pull/1131]])
+ * Allow Slim custom comparators to use values containing line endings ([[1142][https://github.com/unclebob/fitnesse/pull/1142]])
+ * Issues fixed
+   * Remove non-standard transformer attribute when writing XML ([[1129][https://github.com/unclebob/fitnesse/pull/1129]])
+   * Fix !headings when an heading contains literal macro ([[1121][https://github.com/unclebob/fitnesse/pull/1121]])
+   * Fix exception in log "The request string is malformed and can not be parsed" ([[1042][https://github.com/unclebob/fitnesse/issues/1042]])
+
+!2 20181221
+ * Issues fixed:
+   * Allow plugins to contain Velocity templates (used when rendering pages) ([[1127][https://github.com/unclebob/fitnesse/pull/1127]])
+
+!2 20180127
  * Improve stability for non pipe based SUT connection ([[197][https://github.com/unclebob/fitnesse/pull/997]])
  * Fix new style wiki pages for Windows (line ending) ([[1058][https://github.com/unclebob/fitnesse/pull/1058]])
  * SLiM now better handles parameter types in fixture constructors ([[1024][https://github.com/unclebob/fitnesse/pull/1024]])

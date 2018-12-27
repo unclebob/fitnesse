@@ -221,8 +221,8 @@ public class HtmlSlimResponderTest {
         + "!|DT:fitnesse.slim.test.ThrowException|\n" + "|throwNormal?|\n"
         + "| should fail2|\n");
     assertTestResultsContain("<tr class=\"exception closed\">");
-    assertTestResultsContain("<td class=\"fail\">first</td>");
-    assertTestResultsContain("<td class=\"fail\">second</td>");
+    assertTestResultsContain("<td> <span class=\"error\">first</span></td>");
+    assertTestResultsContain("<td> <span class=\"fail\">second</span></td>");
     assertTestResultsContain("<tr class=\"exception-detail closed-detail\">");
     assertTestResultsContain("<td>should fail1 <span class=\"ignore\">Test not run</span></td>");
     assertTestResultsContain("<td>should fail2 <span class=\"ignore\">Test not run</span></td>");
@@ -352,6 +352,15 @@ public class HtmlSlimResponderTest {
         + "|start|fitnesse.slim.test.TestSlim|\n"
         + "|check|return string|equalsIgnoreCase:STRING|\n");
     assertTestResultsContain("<td><span class=\"pass\">STRING matches string</span></td>");
+  }
+
+  @Test
+  public void customComparatorMultilineReturnsPass() throws Exception {
+    customComparatorRegistry.addCustomComparator("equalsIgnoreCase", new EqualsIgnoreCaseComparator());
+    getResultsForPageContents("!|script|\n"
+        + "|start|fitnesse.slim.test.TestSlim|\n"
+        + "|check|echo string|{{{!-hello\nworld-!}}}|equalsIgnoreCase:{{{!-HELLO\nWORLD-!}}}|\n");
+    assertTestResultsContain("<td><span class=\"pass\">{{{HELLO\nWORLD}}} matches {{{hello\nworld}}}</span></td>");
   }
 
   @Test

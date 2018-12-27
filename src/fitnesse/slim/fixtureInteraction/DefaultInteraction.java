@@ -10,6 +10,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import static fitnesse.util.StringUtils.swapCaseOfFirstLetter;
+
 public class DefaultInteraction implements FixtureInteraction {
 
   private static final Method AROUND_METHOD;
@@ -48,22 +50,39 @@ public class DefaultInteraction implements FixtureInteraction {
   protected Class<?> searchPathsForClass(List<String> paths, String className) {
     Class<?> k = getClass(className);
 
-    if (k != null) {
+    if (k == null)
+      k = findClassInPaths(paths, className, swapCaseOfFirstLetter(className));
+
+    if (k != null)
       return k;
-    }
-    for (String path : paths) {
-      k = getClass(path + "." + className);
-      if (k != null) {
-        return k;
-      }
-    }
-    throw new SlimError(String.format("message:<<%s %s>>", SlimServer.NO_CLASS, className));
+    else
+      throw new SlimError(String.format("message:<<%s %s>>", SlimServer.NO_CLASS, className));
+  }
+
+  private Class<?> findClassInPaths(List<String> paths, String... classNames) {
+    Class<?> k = null;
+
+    for (int i = 0; i < classNames.length && k == null; i++)
+      k = findClassInPaths(paths, classNames[i]);
+
+    return k;
+  }
+
+  private Class<?> findClassInPaths(List<String> paths, String className) {
+    Class<?> k = null;
+
+    for (int i = 0; i < paths.size() && k == null; i++)
+      k = getClass(paths.get(i) + "." + className);
+
+    return k;
   }
 
   protected Class<?> getClass(String className) {
     try {
       return Class.forName(className);
     } catch (ClassNotFoundException e) {
+      return null;
+    } catch (NoClassDefFoundError e) {
       return null;
     }
   }
@@ -79,12 +98,12 @@ public class DefaultInteraction implements FixtureInteraction {
   protected Constructor<?> getConstructor(Class<?> clazz,
           Object... args) {
     /*in case no constructor has the args types, then return the first constructor which
-    * matches as args number, and not as args types
+     * matches as args number, and not as args types
      */
     Constructor<?> defaultConstructor = null;
     Constructor<?> constructorSelectedByType = null;
     int diffCounter = 0;
-    
+
     for (Constructor<?> constructor : clazz.getConstructors()) {
       int currentDiffCounter;
       Class<?>[] constructorArgs = constructor.getParameterTypes();
@@ -92,7 +111,7 @@ public class DefaultInteraction implements FixtureInteraction {
         if (defaultConstructor == null) {
           defaultConstructor = constructor;
         }
-        
+
         final Object[] convertedArgs = getConvertedConstructorArgsTypes(constructor, args);
         final boolean matchedConstructorArgsTypes = hasConstructorArgsTypes(constructorArgs, convertedArgs);
         if (matchedConstructorArgsTypes) {
@@ -116,7 +135,7 @@ public class DefaultInteraction implements FixtureInteraction {
       if (convertedArgs[i] == null) {
         continue;
       }
-      
+
       Class<?> classArg = constructorArgs[i];
       Class<?> classInputArg = convertedArgs[i].getClass();
       if (!constructorArgs[i].isAssignableFrom(convertedArgs[i].getClass())) {
@@ -169,18 +188,34 @@ public class DefaultInteraction implements FixtureInteraction {
   }
 
   protected Method findMatchingMethod(String methodName, Object instance, Object... args) {
-    Class<?> k = instance.getClass();
-    Method[] methods = k.getMethods();
+    String[] methodNames = new String[]{methodName, swapCaseOfFirstLetter(methodName)};
 
-    int nArgs = args.length;
-    for (Method method : methods) {
-      boolean hasMatchingName = method.getName().equals(methodName);
-      boolean hasMatchingArguments = method.getParameterTypes().length == nArgs;
-      if (hasMatchingName && hasMatchingArguments) {
-        return method;
-      }
-    }
-    return null;
+    return findMatchingMethod(methodNames, instance.getClass().getMethods(), args.length);
+  }
+
+  private Method findMatchingMethod(String[] methodNames, Method[] methods, int nArgs) {
+    Method method = null;
+
+    for (int i = 0; i < methodNames.length && method == null; i++)
+      method = findMatchingMethod(methodNames[i], methods, nArgs);
+
+    return method;
+  }
+
+  private Method findMatchingMethod(String methodName, Method[] methods, int nArgs) {
+    Method method = null;
+
+    for (int i = 0; i < methods.length && method == null; i++)
+      if (isMatchingMethod(methods[i], methodName, nArgs))
+        method = methods[i];
+
+    return method;
+  }
+
+  private boolean isMatchingMethod(Method method, String methodName, int nArgs) {
+    boolean hasMatchingName = method.getName().equals(methodName);
+    boolean hasMatchingArguments = method.getParameterTypes().length == nArgs;
+    return hasMatchingName && hasMatchingArguments;
   }
 
   protected MethodExecutionResult invokeMethod(Object instance, Method method, Object[] args) throws Throwable {

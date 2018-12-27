@@ -68,7 +68,12 @@ public class Request {
   }
 
   private void readAndParseRequestLine() throws IOException, HttpException {
-    requestLine = input.readLine();
+    String request = input.readLine();
+    if ("".equals(request)) {
+      throw new EmptyRequestException("Received request that started with empty line");
+    }
+    requestLine = request;
+
     Matcher match = requestLinePattern.matcher(requestLine);
     checkRequestLine(match);
     requestURI = match.group(2);
@@ -157,7 +162,7 @@ public class Request {
   private void checkRequestLine(Matcher match) throws HttpException {
     if (!match.find())
       throw new HttpException(
-      "The request string is malformed and can not be parsed");
+      "The request string is malformed and can not be parsed: '" + requestLine + "'");
     if (!allowedMethods.contains(match.group(1)))
       throw new HttpException("The " + match.group(1)
           + " method is not currently supported");

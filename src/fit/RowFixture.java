@@ -8,13 +8,13 @@ package fit;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class RowFixture extends ColumnFixture {
 
@@ -85,7 +85,7 @@ public abstract class RowFixture extends ColumnFixture {
 
   protected Map<Object, Object> eSort(List<?> list, int col) {
     TypeAdapter a = columnBindings[col].adapter;
-    Map<Object, Object> result = new ConcurrentHashMap<>(list.size());
+    Map<Object, Object> result = new HashMap<>(list.size());
     for (Object o : list) {
       Parse row = (Parse) o;
       Parse cell = row.parts.at(col);
@@ -105,7 +105,7 @@ public abstract class RowFixture extends ColumnFixture {
 
   protected Map<Object, Object> cSort(List<?> list, int col) {
     TypeAdapter a = columnBindings[col].adapter;
-    Map<Object, Object> result = new ConcurrentHashMap<>(list.size());
+    Map<Object, Object> result = new HashMap<>(list.size());
     for (Object row : list) {
       try {
         a.target = row;
@@ -121,7 +121,7 @@ public abstract class RowFixture extends ColumnFixture {
   }
 
   protected void bin(Map<Object, Object> result, Object key, Object row) {
-    if (key.getClass().isArray()) {
+    if (key != null && key.getClass().isArray()) {
       key = Arrays.asList((Object[]) key);
     }
     if (result.containsKey(key)) {

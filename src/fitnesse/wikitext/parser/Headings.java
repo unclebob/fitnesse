@@ -74,6 +74,30 @@ public class Headings extends SymbolType implements Rule, Translation {
 
   }
 
+  static String extractTextFromHeaderLine(final Symbol headerLine) {
+    final StringBuilder sb = new StringBuilder();
+    headerLine.walkPreOrder(new SymbolTreeWalker() {
+      @Override
+      public boolean visit(final Symbol node) {
+        if (node.isType(SymbolType.Text) || node.isType(Literal.symbolType) ||
+          node.isType(Whitespace)) {
+          sb.append(node.getContent());
+        }
+        return true;
+      }
+
+      @Override
+      public boolean visitChildren(final Symbol node) {
+        return true;
+      }
+    });
+    return sb.toString();
+  }
+  
+  static String buildIdOfHeaderLine(final String textFromHeaderLine) {
+	  return HtmlUtil.remainRfc3986UnreservedCharacters(textFromHeaderLine);
+  }
+
   class HeadingContentBuilder {
 
     private final List<Symbol> headerLines;
@@ -130,7 +154,7 @@ public class Headings extends SymbolType implements Rule, Translation {
         final String textFromHeaderLine = extractTextFromHeaderLine(headerLine);
         final HtmlTag anchorElement = new HtmlTag("a", textFromHeaderLine);
         anchorElement.addAttribute("href",
-          "#" + HtmlUtil.remainRfc3986UnreservedCharacters(textFromHeaderLine));
+          "#" + buildIdOfHeaderLine(textFromHeaderLine));
         listitemElement.add(anchorElement);
         stack.peek().add(listitemElement);
         processed = true;
@@ -143,26 +167,6 @@ public class Headings extends SymbolType implements Rule, Translation {
 
     private int getLevel(final Symbol headerLine) {
       return Integer.parseInt(headerLine.getProperty(LineRule.Level));
-    }
-
-    private String extractTextFromHeaderLine(final Symbol headerLine) {
-      final StringBuilder sb = new StringBuilder();
-      headerLine.walkPreOrder(new SymbolTreeWalker() {
-        @Override
-        public boolean visit(final Symbol node) {
-          if (node.isType(SymbolType.Text) || node.isType(Literal.symbolType) ||
-            node.isType(Whitespace)) {
-            sb.append(node.getContent());
-          }
-          return true;
-        }
-
-        @Override
-        public boolean visitChildren(final Symbol node) {
-          return true;
-        }
-      });
-      return sb.toString();
     }
 
   }
