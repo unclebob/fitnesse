@@ -22,11 +22,11 @@ import fitnesse.wiki.*;
 
 public class WikiPageResponder implements SecureResponder {
 
-  private Request requestData;
+  private Request request;
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-    requestData = request;
+    this.request = request;
     WikiPage page = loadPage(context, request.getResource(), request.getMap());
     if (page == null)
       return notFoundResponse(context, request);
@@ -68,7 +68,7 @@ public class WikiPageResponder implements SecureResponder {
 
   public String makeHtml(FitNesseContext context, WikiPage page) {
     PageData pageData = page.getData();
-    HtmlPage html = context.pageFactory.newPage(requestData);
+    HtmlPage html = context.pageFactory.newPage();
     WikiPagePath fullPath = page.getPageCrawler().getFullPath();
     String fullPathName = PathParser.render(fullPath);
     PageTitle pt = new PageTitle(fullPath);
@@ -96,7 +96,7 @@ public class WikiPageResponder implements SecureResponder {
     html.setFooterTemplate("wikiFooter");
     html.put("footerContent", new WikiPageFooterRenderer(page));
     handleSpecialProperties(html, page);
-    return html.html();
+    return html.html(request);
   }
 
   private void handleSpecialProperties(HtmlPage html, WikiPage page) {

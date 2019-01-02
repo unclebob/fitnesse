@@ -114,7 +114,7 @@ public class PropertiesResponder implements SecureResponder {
   }
 
   private String makeHtml(FitNesseContext context, Request request) {
-    html = context.pageFactory.newPage(request);
+    html = context.pageFactory.newPage();
     html.setNavTemplate("viewNav");
     html.put("viewLocation", request.getResource());
     html.setTitle("Properties: " + resource);
@@ -130,7 +130,7 @@ public class PropertiesResponder implements SecureResponder {
     makeLastModifiedTag();
     makeFormSections();
 
-    return html.html();
+    return html.html(request);
   }
 
   private void makeLastModifiedTag() {

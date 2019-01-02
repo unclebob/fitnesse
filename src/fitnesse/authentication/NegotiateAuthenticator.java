@@ -114,13 +114,13 @@ public class NegotiateAuthenticator extends Authenticator {
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
       SimpleResponse response = new SimpleResponse(401);
       response.addHeader("WWW-Authenticate", token == null ? NEGOTIATE : NEGOTIATE + " " + token);
-      HtmlPage html = context.pageFactory.newPage(request);
+      HtmlPage html = context.pageFactory.newPage();
       html.addTitles("Negotiated authentication required");
       if (request == null)
         html.setMainTemplate("authRequired.vm");
       else
         html.setMainTemplate("authFailed.vm");
-      response.setContent(html.html());
+      response.setContent(html.html(request));
       return response;
     }
   }

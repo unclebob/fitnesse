@@ -81,7 +81,7 @@ public class EditResponder implements SecureResponder {
   }
 
   private String doMakeHtml(String resource, FitNesseContext context, boolean firstTimeForNewPage) {
-    HtmlPage html = context.pageFactory.newPage(request);
+    HtmlPage html = context.pageFactory.newPage();
     String title = firstTimeForNewPage ? "Page doesn't exist. Edit: " : "Edit: ";
     html.setTitle(title + resource);
 
@@ -89,7 +89,7 @@ public class EditResponder implements SecureResponder {
     html.setMainTemplate("editPage");
     makeEditForm(html, resource, firstTimeForNewPage, NewPageResponder.getDefaultContent(page));
 
-    return html.html();
+    return html.html(request);
   }
 
   private void makeEditForm(HtmlPage html, String resource, boolean firstTimeForNewPage, String defaultNewPageContent) {

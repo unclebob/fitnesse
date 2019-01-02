@@ -45,13 +45,13 @@ public class SuiteOverviewResponder implements Responder {
   private SimpleResponse makeResponse(SuiteOverviewTree treeview, WikiPagePath path, Request request) throws UnsupportedEncodingException {
     SimpleResponse response = new SimpleResponse();
 
-    HtmlPage page = context.pageFactory.newPage(request);
+    HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Suite Overview");
     page.setPageTitle(new PageTitle("Suite Overview", path));
     page.put("treeRoot", treeview.getTreeRoot());
     page.put("viewLocation", request.getResource());
     page.setMainTemplate("suiteOverview");
-    response.setContent(page.html());
+    response.setContent(page.html(request));
     return response;
   }
 }

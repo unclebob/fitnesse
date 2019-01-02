@@ -16,27 +16,25 @@ import fitnesse.html.template.PageTitle;
 
 public class DeleteConfirmationResponder implements SecureResponder {
   private String resource;
-  private Request requestData;
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-    requestData = request;
     SimpleResponse response = new SimpleResponse();
     resource = request.getResource();
     String filename = request.getInput("filename");
-    response.setContent(makeDirectoryListingPage(resource, filename, context));
+    response.setContent(makeDirectoryListingPage(resource, filename, context, request));
     return response;
   }
 
-  private String makeDirectoryListingPage(String pageName, String filename, FitNesseContext context) {
-    HtmlPage page = context.pageFactory.newPage(requestData);
+  private String makeDirectoryListingPage(String pageName, String filename, FitNesseContext context, Request request) {
+    HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Delete File(s)");
     page.setPageTitle(new PageTitle("Delete File", resource + filename, "/"));
     page.put("resource", resource);
     makeConfirmationHTML(page, filename, context);
     page.setMainTemplate("deleteConfirmation");
 
-    return page.html();
+    return page.html(request);
   }
 
   private void makeConfirmationHTML(HtmlPage page, String filename, FitNesseContext context) {

@@ -25,11 +25,9 @@ public class DeletePageResponder implements SecureResponder {
   private String qualifiedPageName;
   private WikiPagePath path;
   private FitNesseContext context;
-  private Request requestData;
 
   @Override
   public Response makeResponse(final FitNesseContext context, final Request request) throws Exception {
-    requestData = request;
     this.context = context;
     intializeResponse(request);
 
@@ -44,7 +42,7 @@ public class DeletePageResponder implements SecureResponder {
   private void tryToDeletePage(Request request) throws UnsupportedEncodingException {
     String confirmedString = request.getInput("confirmed");
     if (!"yes".equalsIgnoreCase(confirmedString)) {
-      response.setContent(buildConfirmationHtml(context.getRootPage(), qualifiedPageName, context));
+      response.setContent(buildConfirmationHtml(context.getRootPage(), qualifiedPageName, context, request));
     } else {
       WikiPage parentOfPageToBeDeleted = context.getRootPage().getPageCrawler().getPage(path);
       if (parentOfPageToBeDeleted != null) {
@@ -74,8 +72,8 @@ public class DeletePageResponder implements SecureResponder {
     }
   }
 
-  private String buildConfirmationHtml(final WikiPage root, final String qualifiedPageName, final FitNesseContext context) {
-    HtmlPage html = context.pageFactory.newPage(requestData);
+  private String buildConfirmationHtml(final WikiPage root, final String qualifiedPageName, final FitNesseContext context, Request request) {
+    HtmlPage html = context.pageFactory.newPage();
 
     String tags = "";
 
@@ -92,7 +90,7 @@ public class DeletePageResponder implements SecureResponder {
 
     makeMainContent(html, root, qualifiedPageName);
     html.setMainTemplate("deletePage");
-    return html.html();
+    return html.html(request);
   }
 
   private void makeMainContent(final HtmlPage html, final WikiPage root, final String qualifiedPageName) {

@@ -331,11 +331,11 @@ public class WikiImportingResponderTest {
   }
 
   private String getContentAfterSpecialImportHandling() {
-    HtmlPage html = new PageFactory(FitNesseUtil.makeTestContext()).newPage(null);
+    HtmlPage html = new PageFactory(FitNesseUtil.makeTestContext()).newPage();
     WikiImportingResponder.handleImportProperties(html, page);
     html.setNavTemplate("wikiNav.vm");
     html.put("actions", new WikiPageActions(page));
-    return html.html();
+    return html.html(null);
   }
 
 }

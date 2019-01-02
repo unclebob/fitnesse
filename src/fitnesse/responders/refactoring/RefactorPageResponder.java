@@ -38,7 +38,7 @@ public class RefactorPageResponder implements SecureResponder {
       }
     }
 
-    HtmlPage page = context.pageFactory.newPage(request);
+    HtmlPage page = context.pageFactory.newPage();
     String type = request.getInput("type");
 
     page.setMainTemplate("refactorForm");
@@ -52,7 +52,7 @@ public class RefactorPageResponder implements SecureResponder {
       page.put("suiteMap", collectPageNames(wikiPage, context.getRootPage()));
     }
     SimpleResponse response = new SimpleResponse();
-    response.setContent(page.html());
+    response.setContent(page.html(request));
     return response;
   }
 

@@ -34,14 +34,14 @@ public class NewPageResponder implements Responder {
   }
 
   private String doMakeHtml(FitNesseContext context, Request request) {
-    HtmlPage html = context.pageFactory.newPage(request);
+    HtmlPage html = context.pageFactory.newPage();
     html.setTitle("New page");
 
     html.setPageTitle(new PageTitle("New Page", PathParser.parse(request.getResource())));
     html.setMainTemplate("editPage");
     makeEditForm(html, context, request);
 
-    return html.html();
+    return html.html(request);
   }
 
   private void makeEditForm(HtmlPage html, FitNesseContext context, Request request) {

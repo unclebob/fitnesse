@@ -39,7 +39,7 @@ public class VersionSelectionResponder implements SecureResponder {
     PageData pageData = page.getData();
     List<VersionInfo> versions = getVersionsList(page);
 
-    HtmlPage html = context.pageFactory.newPage(request);
+    HtmlPage html = context.pageFactory.newPage();
     html.setTitle("Version Selection: " + resource);
     html.setPageTitle(new PageTitle("Version Selection", PathParser.parse(resource), pageData.getAttribute(PageData.PropertySUITES)));
     html.put("lastModified", makeLastModifiedTag(pageData));
@@ -48,7 +48,7 @@ public class VersionSelectionResponder implements SecureResponder {
     html.put("viewLocation", request.getResource());
     html.setMainTemplate("versionSelection");
 
-    response.setContent(html.html());
+    response.setContent(html.html(request));
 
     return response;
   }

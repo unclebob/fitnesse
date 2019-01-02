@@ -19,7 +19,7 @@ public class HtmlPage {
 
   private String templateFileName;
 
-  public HtmlPage(VelocityEngine velocityEngine, String templateFileName, String theme, String contextRoot, Request request) {
+  public HtmlPage(VelocityEngine velocityEngine, String templateFileName, String theme, String contextRoot) {
     super();
 
     this.velocityEngine = velocityEngine;
@@ -31,7 +31,6 @@ public class HtmlPage {
     setTitle(TITLE);
     velocityContext.put("theme", theme);
     velocityContext.put("contextRoot", contextRoot);
-    velocityContext.put("request", request);
   }
 
   public void setHeaderTemplate(String headerTemplate) {
@@ -72,14 +71,15 @@ public class HtmlPage {
     velocityContext.put(key, value);
   }
 
-  public String html() {
+  public String html(Request request) {
     StringWriter writer = new StringWriter();
-    render(writer);
+    render(writer, request);
     return writer.toString();
   }
 
-  public void render(Writer writer) {
+  public void render(Writer writer, Request request) {
     Template template = velocityEngine.getTemplate(templateFileName);
+    put("request", request);
     template.merge(velocityContext, writer);
   }
 

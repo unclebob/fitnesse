@@ -19,7 +19,7 @@ public class RenameFileConfirmationResponder implements SecureResponder {
     String resource = request.getResource();
     String filename = request.getInput("filename");
     
-    HtmlPage page = context.pageFactory.newPage(request);
+    HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Rename " + filename);
     page.setPageTitle(new PageTitle("Rename File", resource + filename, "/"));
     page.setMainTemplate("renameFileConfirmation");
@@ -27,7 +27,7 @@ public class RenameFileConfirmationResponder implements SecureResponder {
     page.put("resource", resource);
 
     SimpleResponse response = new SimpleResponse();
-    response.setContent(page.html());
+    response.setContent(page.html(request));
     return response;
   }
 

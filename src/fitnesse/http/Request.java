@@ -68,18 +68,18 @@ public class Request {
   }
 
   public String getCookie(String name) {
-    String cookies = headers.get("cookie");
-    if(null != cookies) {
-      String[] rawCookies = cookies.split(";");
-      for(String cookie : rawCookies) {
+    if (hasHeader("cookie")) {
+      String[] rawCookies = getHeader("cookie").split(";");
+      for (String cookie : rawCookies) {
         String[] pair = cookie.split("=");
-        if(pair[0].trim().equalsIgnoreCase(name) && pair.length == 2) {
+        if (pair.length == 2 && pair[0].trim().equalsIgnoreCase(name)) {
           return pair[1].trim();
         }
       }
     }
     return "";
   }
+
 
   private void readAndParseRequestLine() throws IOException, HttpException {
     String request = input.readLine();

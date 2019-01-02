@@ -22,12 +22,12 @@ public class ShutdownResponder implements SecureResponder {
   public Response makeResponse(final FitNesseContext context, Request request) throws Exception {
     SimpleResponse response = new SimpleResponse();
 
-    HtmlPage html = context.pageFactory.newPage(request);
+    HtmlPage html = context.pageFactory.newPage();
     html.setTitle("Shutdown");
     html.setPageTitle(new PageTitle("Shutdown"));
 
     html.setMainTemplate("shutdownPage.vm");
-    response.setContent(html.html());
+    response.setContent(html.html(request));
 
     Thread shutdownThread = new Thread() {
       @Override

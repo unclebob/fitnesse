@@ -64,7 +64,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
 
     PageTitle pageTitle = new PageTitle(page.getPageCrawler().getFullPath() );
 
-    HtmlPage htmlPage = context.pageFactory.newPage(request);
+    HtmlPage htmlPage = context.pageFactory.newPage();
     htmlPage.setTitle(getTitle());
     htmlPage.setPageTitle(pageTitle);
     htmlPage.setMainTemplate(getTemplate());
@@ -82,7 +82,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
     htmlPage.put("specialAttributes", SPECIAL_ATTRIBUTES);
     htmlPage.put("request", request);
 
-    htmlPage.render(response.getWriter());
+    htmlPage.render(response.getWriter(), request);
 
     response.close();
   }

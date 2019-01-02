@@ -44,7 +44,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     wikiImportingTraverser = initializeImporter();
     HtmlPage htmlPage = makeHtml();
 
-    htmlPage.render(response.getWriter());
+    htmlPage.render(response.getWriter(), request);
 
     response.close();
   }
@@ -64,7 +64,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
   }
 
   private HtmlPage makeHtml() throws Exception {
-    HtmlPage html = context.pageFactory.newPage(request);
+    HtmlPage html = context.pageFactory.newPage();
     String title = "Wiki Import";
     if (wikiImportingTraverser.isUpdate())
       title += " Update";

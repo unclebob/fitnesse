@@ -58,7 +58,7 @@ public class ExecutionLogResponder implements SecureResponder {
   private Response makeExecutionLogResponse(Request request, Date resultDate, TestResultRecord testResultRecord) throws Exception {
     String content = FileUtil.getFileContent(testResultRecord.getFile());
     ExecutionReport report = ExecutionReport.makeReport(content);
-    HtmlPage page = context.pageFactory.newPage(request);
+    HtmlPage page = context.pageFactory.newPage();
     String tags = "";
     if (report instanceof TestExecutionReport && !((TestExecutionReport) report).getResults().isEmpty()) {
       tags = ((TestExecutionReport) report).getResults().get(0).getTags();
@@ -75,7 +75,7 @@ public class ExecutionLogResponder implements SecureResponder {
     page.put("logs", report.getExecutionLogs());
     page.setMainTemplate("executionLog");
     SimpleResponse response = new SimpleResponse();
-    response.setContent(page.html());
+    response.setContent(page.html(request));
     return response;
   }
 

@@ -116,7 +116,7 @@ public class HistoryComparerResponder implements Responder {
 
   private Response makeValidResponse(Request request) throws UnsupportedEncodingException {
     int count = 0;
-    HtmlPage page = context.pageFactory.newPage(request);
+    HtmlPage page = context.pageFactory.newPage();
     page.setTitle("History Comparison");
     page.setPageTitle(makePageTitle(request.getResource()));
     if (!testing) {
@@ -132,7 +132,7 @@ public class HistoryComparerResponder implements Responder {
     page.setMainTemplate("compareHistory");
 
     SimpleResponse response = new SimpleResponse();
-    response.setContent(page.html());
+    response.setContent(page.html(request));
     return response;
   }
 

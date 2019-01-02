@@ -29,8 +29,8 @@ public class PageFactory {
     this.contextRoot = context.contextRoot;
   }
 
-  public HtmlPage newPage(Request request) {
-    return new HtmlPage(getVelocityEngine(), "skeleton.vm", theme, contextRoot, request);
+  public HtmlPage newPage() {
+    return new HtmlPage(getVelocityEngine(), "skeleton.vm", theme, contextRoot);
   }
 
   public String render(VelocityContext context, String templateName) {
