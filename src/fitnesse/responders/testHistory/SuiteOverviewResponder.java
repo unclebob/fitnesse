@@ -51,7 +51,7 @@ public class SuiteOverviewResponder implements Responder {
     page.put("treeRoot", treeview.getTreeRoot());
     page.put("viewLocation", request.getResource());
     page.setMainTemplate("suiteOverview");
-    response.setContent(page.html());
+    response.setContent(page.html(request));
     return response;
   }
 }

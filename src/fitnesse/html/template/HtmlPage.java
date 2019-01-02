@@ -5,6 +5,7 @@ package fitnesse.html.template;
 import java.io.StringWriter;
 import java.io.Writer;
 
+import fitnesse.http.Request;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -27,7 +28,7 @@ public class HtmlPage {
     velocityContext =  new VelocityContext();
 
     setHeaderTemplate(HEADER_TEMPLATE);
-    setTitle("FitNesse");
+    setTitle(TITLE);
     velocityContext.put("theme", theme);
     velocityContext.put("contextRoot", contextRoot);
   }
@@ -70,14 +71,15 @@ public class HtmlPage {
     velocityContext.put(key, value);
   }
 
-  public String html() {
+  public String html(Request request) {
     StringWriter writer = new StringWriter();
-    render(writer);
+    render(writer, request);
     return writer.toString();
   }
 
-  public void render(Writer writer) {
+  public void render(Writer writer, Request request) {
     Template template = velocityEngine.getTemplate(templateFileName);
+    put("request", request);
     template.merge(velocityContext, writer);
   }
 

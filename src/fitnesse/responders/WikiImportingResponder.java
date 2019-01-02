@@ -8,6 +8,7 @@ import fitnesse.authentication.SecureWriteOperation;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
+import fitnesse.http.Request;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -43,7 +44,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     wikiImportingTraverser = initializeImporter();
     HtmlPage htmlPage = makeHtml();
 
-    htmlPage.render(response.getWriter());
+    htmlPage.render(response.getWriter(), request);
 
     response.close();
   }

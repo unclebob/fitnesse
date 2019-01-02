@@ -30,7 +30,7 @@ public class UnauthorizedResponder implements Responder {
     page.addTitles("401 Unauthorized");
     page.put("resource", request.getResource());
     page.setMainTemplate("unauthorized.vm");
-    response.setContent(page.html());
+    response.setContent(page.html(request));
 
     return response;
   }

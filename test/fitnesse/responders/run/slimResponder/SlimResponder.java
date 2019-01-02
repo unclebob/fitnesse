@@ -44,7 +44,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
     HtmlPage html = context.pageFactory.newPage();
     html.setMainTemplate("render.vm");
     html.put("content", new SlimRenderer());
-    response.setContent(html.html());
+    response.setContent(html.html(request));
     return response;
   }
 

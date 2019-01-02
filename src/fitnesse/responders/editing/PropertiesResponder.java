@@ -130,7 +130,7 @@ public class PropertiesResponder implements SecureResponder {
     makeLastModifiedTag();
     makeFormSections();
 
-    return html.html();
+    return html.html(request);
   }
 
   private void makeLastModifiedTag() {

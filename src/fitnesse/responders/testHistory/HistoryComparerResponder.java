@@ -132,7 +132,7 @@ public class HistoryComparerResponder implements Responder {
     page.setMainTemplate("compareHistory");
 
     SimpleResponse response = new SimpleResponse();
-    response.setContent(page.html());
+    response.setContent(page.html(request));
     return response;
   }
 
