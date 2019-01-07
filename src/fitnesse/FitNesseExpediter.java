@@ -5,7 +5,7 @@ package fitnesse;
 import fitnesse.components.LogData;
 import fitnesse.http.*;
 import fitnesse.responders.ErrorResponder;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

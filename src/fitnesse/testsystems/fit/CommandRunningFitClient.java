@@ -2,6 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.fit;
 
+import fitnesse.socketservice.PlainServerSocketFactory;
+import fitnesse.socketservice.SocketService;
+import fitnesse.testsystems.CommandRunner;
+import fitnesse.testsystems.ExecutionLogListener;
+import fitnesse.testsystems.MockCommandRunner;
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -11,14 +18,6 @@ import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import fitnesse.socketservice.PlainServerSocketFactory;
-import fitnesse.socketservice.SocketService;
-import fitnesse.testsystems.CommandRunner;
-import fitnesse.testsystems.ExecutionLogListener;
-import fitnesse.testsystems.MockCommandRunner;
-import fitnesse.util.ClassUtils;
-import org.apache.commons.lang.ArrayUtils;
 
 public class CommandRunningFitClient extends FitClient {
   private static final Logger LOG = Logger.getLogger(CommandRunningFitClient.class.getName());
@@ -123,7 +122,7 @@ public class CommandRunningFitClient extends FitClient {
 
     private void makeCommandRunner(int port, int ticketNumber) throws UnknownHostException {
       String[] fitArguments = { getLocalhostName(), Integer.toString(port), Integer.toString(ticketNumber) };
-      String[] commandLine = (String[]) ArrayUtils.addAll(command, fitArguments);
+      String[] commandLine = ArrayUtils.addAll(command, fitArguments);
       commandRunner = new CommandRunner(commandLine, environmentVariables, executionLogListener);
     }
 

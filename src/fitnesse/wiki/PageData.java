@@ -2,13 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import java.io.Serializable;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
-import static fitnesse.wiki.PageType.STATIC;
-import static fitnesse.wiki.PageType.SUITE;
-import static fitnesse.wiki.PageType.TEST;
+import java.io.Serializable;
+
+import static fitnesse.wiki.PageType.*;
 
 public class PageData implements ReadOnlyPageData, Serializable {
 
@@ -50,7 +49,7 @@ public class PageData implements ReadOnlyPageData, Serializable {
   public static final String[] NAVIGATION_ATTRIBUTES = {
       WikiPageProperty.RECENT_CHANGES, WikiPageProperty.FILES, WikiPageProperty.SEARCH };
 
-  public static final String[] NON_SECURITY_ATTRIBUTES = (String[]) ArrayUtils.addAll(ACTION_ATTRIBUTES, NAVIGATION_ATTRIBUTES);
+  public static final String[] NON_SECURITY_ATTRIBUTES = ArrayUtils.addAll(ACTION_ATTRIBUTES, NAVIGATION_ATTRIBUTES);
 
   @Deprecated
   public static final String PropertySECURE_READ = WikiPageProperty.SECURE_READ;

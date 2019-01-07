@@ -1,12 +1,12 @@
 package fitnesse.util;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
+
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-
-import org.apache.commons.lang.time.DateFormatUtils;
-import org.apache.commons.lang.time.DateUtils;
 
 public class DateTimeUtil {
   private static final String DATE_FORMAT = "MM/dd/yyyy HH:mm:ss";
