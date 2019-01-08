@@ -4,6 +4,7 @@ package fitnesse.html;
 
 import fitnesse.FitNesseContext;
 import fitnesse.html.template.HtmlPage;
+import fitnesse.http.Request;
 import fitnesse.reporting.JavascriptUtil;
 import fitnesse.responders.WikiPageActions;
 import fitnesse.testutil.FitNesseUtil;
@@ -87,7 +88,7 @@ public class HtmlUtilTest {
     HtmlPage htmlPage = context.pageFactory.newPage();
     htmlPage.setNavTemplate("wikiNav.vm");
     htmlPage.put("actions", new WikiPageActions(context.getRootPage().getChildPage(pageName)));
-    return htmlPage.html();
+    return htmlPage.html(null);
   }
 
   private void verifyDefaultLinks(String html, String pageName) {

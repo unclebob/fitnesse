@@ -27,7 +27,6 @@ public class RefactorPageResponder implements SecureResponder {
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     String resource = request.getResource();
-
     String tags = "";
     WikiPage wikiPage = null;
     if(context.getRootPage() != null){
@@ -53,7 +52,7 @@ public class RefactorPageResponder implements SecureResponder {
       page.put("suiteMap", collectPageNames(wikiPage, context.getRootPage()));
     }
     SimpleResponse response = new SimpleResponse();
-    response.setContent(page.html());
+    response.setContent(page.html(request));
     return response;
   }
 

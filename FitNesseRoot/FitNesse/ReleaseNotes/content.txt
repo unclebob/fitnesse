@@ -1,4 +1,7 @@
 !2 ${FITNESSE_VERSION}
+ * Allow templates to access the current request ([[1174][https://github.com/unclebob/fitnesse/pull/1174]])
+
+!2 20181224
  * Fixed issue where accessing wiki using Firefox caused very high CPU usage ([[1173][https://github.com/unclebob/fitnesse/issues/1173]])
 
 !2 20181223

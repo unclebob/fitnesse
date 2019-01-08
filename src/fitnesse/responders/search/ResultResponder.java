@@ -82,7 +82,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
     htmlPage.put("specialAttributes", SPECIAL_ATTRIBUTES);
     htmlPage.put("request", request);
 
-    htmlPage.render(response.getWriter());
+    htmlPage.render(response.getWriter(), request);
 
     response.close();
   }

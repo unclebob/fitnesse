@@ -83,6 +83,8 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   private boolean includeHtml = false;
   private int exitCode;
 
+  private Request request;
+
   public SuiteResponder() {
     this(new WikiImporter());
   }
@@ -98,6 +100,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    this.request = request;
     Response result = super.makeResponse(context, request);
     if (result != response){
         return result;
@@ -117,7 +120,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     createMainFormatter();
 
     if (isInteractive()) {
-      makeHtml().render(response.getWriter());
+      makeHtml().render(response.getWriter(), request);
     } else {
       doExecuteTests();
     }

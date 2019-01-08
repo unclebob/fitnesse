@@ -52,7 +52,7 @@ public class MergeResponder implements Responder {
     page.put("oldContent", HtmlUtil.escapeHTML(existingContent));
     page.put("newContent", newContent);
     addHiddenAttributes(page);
-    return page.html();
+    return page.html(request);
   }
 
 

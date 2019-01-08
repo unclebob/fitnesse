@@ -20,16 +20,16 @@ public class NotFoundResponder implements Responder {
     SimpleResponse response = new SimpleResponse(404);
     resource = request.getResource();
 
-    response.setContent(makeHtml(context));
+    response.setContent(makeHtml(context, request));
     return response;
   }
 
-  private String makeHtml(FitNesseContext context) {
+  private String makeHtml(FitNesseContext context, Request request) {
     HtmlPage page = context.pageFactory.newPage();
     page.addTitles("Not Found:" + resource);
     page.put("name", resource);
     page.put("shouldCreate", PathParser.isWikiPath(resource));
     page.setMainTemplate("notFoundPage.vm");
-    return page.html();
+    return page.html(request);
   }
 }

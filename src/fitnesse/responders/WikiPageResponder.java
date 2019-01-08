@@ -22,8 +22,11 @@ import fitnesse.wiki.*;
 
 public class WikiPageResponder implements SecureResponder {
 
+  private Request request;
+
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    this.request = request;
     WikiPage page = loadPage(context, request.getResource(), request.getMap());
     if (page == null)
       return notFoundResponse(context, request);
@@ -93,7 +96,7 @@ public class WikiPageResponder implements SecureResponder {
     html.setFooterTemplate("wikiFooter");
     html.put("footerContent", new WikiPageFooterRenderer(page));
     handleSpecialProperties(html, page);
-    return html.html();
+    return html.html(request);
   }
 
   private void handleSpecialProperties(HtmlPage html, WikiPage page) {
