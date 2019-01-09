@@ -24,13 +24,9 @@ public class SystemExitSecurityManager extends SecurityManager {
    * {@link SystemExitSecurityManager}.
    */
   public static void activateIfWanted() {
-    if (isPreventSystemExit()) {
+    if (isPreventSystemExit() && !isAndroid()) {
       SecurityManager currentSecMgr = System.getSecurityManager();
-      if (currentSecMgr != null) {
-        SystemExitSecurityManager systemExitSecurityManager = new SystemExitSecurityManager(
-          currentSecMgr);
-        tryUpdateSecurityManager(systemExitSecurityManager);
-      }
+      tryUpdateSecurityManager(new SystemExitSecurityManager(currentSecMgr));
     }
   }
 
@@ -44,10 +40,8 @@ public class SystemExitSecurityManager extends SecurityManager {
 
   public static void restoreOriginalSecurityManager() {
     SecurityManager currentSecMgr = System.getSecurityManager();
-    if (currentSecMgr != null
-        && currentSecMgr instanceof SystemExitSecurityManager) {
-      SecurityManager originalSecurityManager = ((SystemExitSecurityManager) currentSecMgr).delegate;
-      tryUpdateSecurityManager(originalSecurityManager);
+    if (currentSecMgr instanceof SystemExitSecurityManager) {
+      tryUpdateSecurityManager(((SystemExitSecurityManager) currentSecMgr).delegate);
     }
   }
 
@@ -58,6 +52,11 @@ public class SystemExitSecurityManager extends SecurityManager {
     } else {
       return true;
     }
+  }
+
+  private static boolean isAndroid() {
+    String vendorUrl = System.getProperty("java.vendor.url", "");
+    return vendorUrl.toLowerCase().contains("android");
   }
 
   @Override
