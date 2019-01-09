@@ -1,7 +1,7 @@
 package fitnesse.slim.converters;
 
 import fitnesse.slim.Converter;
-import fitnesse.slim.converters.beans.JavaBeansPropertyEditorConverterFactory;
+import fitnesse.slim.converters.beans.PropertyEditorConverter;
 import fitnesse.slim.test.AnEnum;
 import fitnesse.slim.test.AnotherEnum;
 import org.junit.AfterClass;
@@ -53,7 +53,7 @@ public class ConverterRegistryTest {
 
     Converter<AnotherEnum> actual = ConverterRegistry.getConverterForClass(value);
 
-    assertTrue(JavaBeansPropertyEditorConverterFactory.PropertyEditorConverter.class.isInstance(actual));
+    assertTrue(PropertyEditorConverter.class.isInstance(actual));
     assertConverts("enum property editor called with \"some value\"", actual, "some value");
   }
 

@@ -12,6 +12,7 @@ import java.beans.PropertyEditorManager;
  * is not available on Android. It should only be called via reflection)
  */
 public class JavaBeansPropertyEditorConverterFactory {
+
   public static <T> Converter<T> getConverter(Class<?> clazz) {
     PropertyEditor pe = PropertyEditorManager.findEditor(clazz);
     if (pe != null && !"EnumEditor".equals(pe.getClass().getSimpleName())) {
@@ -19,26 +20,5 @@ public class JavaBeansPropertyEditorConverterFactory {
       return new PropertyEditorConverter<>(pe);
     }
     return null;
-  }
-
-  public static class PropertyEditorConverter<T> implements Converter<T> {
-    private PropertyEditor editor;
-
-    public PropertyEditorConverter(PropertyEditor editor) {
-      this.editor = editor;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public T fromString(String arg) {
-      editor.setAsText(arg);
-      return (T) editor.getValue();
-    }
-
-    @Override
-    public String toString(Object o) {
-      editor.setValue(o);
-      return editor.getAsText();
-    }
   }
 }
