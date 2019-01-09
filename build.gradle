@@ -193,6 +193,7 @@ task slimJar(type: Jar) {
     include 'fitnesse/socketservice/*.class'
     include 'util/*.class'
     include 'fitnesse/util/StringUtils.class'
+    exclude 'fitnesse/slim/converters/beans/*.class'
   }
   manifest {
     attributes("Implementation-Version": version)
