@@ -167,8 +167,8 @@ jar {
 
 task standaloneJar(type: Jar) {
   dependsOn jar
-  baseName = 'fitnesse'
-  classifier = 'standalone'
+  archiveBaseName = 'fitnesse'
+  archiveClassifier = 'standalone'
   from {
     (configurations.compile - configurations.optional).collect { zipTree(it) }
   } {
@@ -185,8 +185,8 @@ task standaloneJar(type: Jar) {
 
 task slimJar(type: Jar) {
   dependsOn jar
-  baseName = 'fitnesse'
-  classifier = 'slim'
+  archiveBaseName = 'fitnesse'
+  archiveClassifier = 'slim'
   from { jar.outputs.files.collect { zipTree(it) } }
     {
     include 'fitnesse/html/*.class'
@@ -212,13 +212,13 @@ check.dependsOn acceptanceTest
 
 task javadocJar(type: Jar) {
   mustRunAfter check
-  classifier = 'javadoc'
+  archiveClassifier = 'javadoc'
   from javadoc
 }
 
 task sourcesJar(type: Jar) {
   mustRunAfter check
-  classifier = 'sources'
+  archiveClassifier = 'sources'
   from sourceSets.main.allSource
 }
 
