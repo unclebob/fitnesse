@@ -1,6 +1,7 @@
 package fitnesse.slim.converters;
 
 import fitnesse.slim.Converter;
+import fitnesse.slim.converters.beans.JavaBeansConverterGateway;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
@@ -75,11 +76,10 @@ public class ConverterRegistry {
       return converterForInterface;
     }
 
-    //use property editor
-    PropertyEditor pe = PropertyEditorManager.findEditor(clazz);
-    if (pe != null && !"EnumEditor".equals(pe.getClass().getSimpleName())) {
-      // com.sun.beans.EnumEditor and sun.beans.EnumEditor seem to be used in different usages.
-      return new PropertyEditorConverter<>(pe);
+    //use java beans property editor (does not work on Android)
+    Converter<T> javaBeansConverter = JavaBeansConverterGateway.getConverter(clazz);
+    if (javaBeansConverter != null) {
+      return javaBeansConverter;
     }
 
     //for enum, use generic enum converter
