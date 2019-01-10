@@ -11,7 +11,7 @@ import java.beans.PropertyEditorManager;
  * (This class should not be referenced directly since java.beans package
  * is not available on Android. It should only be called via reflection)
  */
-public class JavaBeansPropertyEditorConverterFactory {
+public class PropertyEditorConverterFactory {
 
   public static <T> Converter<T> getConverter(Class<?> clazz) {
     PropertyEditor pe = PropertyEditorManager.findEditor(clazz);

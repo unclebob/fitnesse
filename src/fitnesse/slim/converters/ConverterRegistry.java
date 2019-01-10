@@ -1,9 +1,8 @@
 package fitnesse.slim.converters;
 
 import fitnesse.slim.Converter;
+import fitnesse.slim.converters.beans.JavaBeansConverterGateway;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
 
@@ -11,19 +10,9 @@ public class ConverterRegistry {
 
   private static final Map<Class<?>, Converter<?>> converters = new HashMap<>();
   private static Converter<Object> defaultConverter = new DefaultConverter();
-  private static Method javaBeansGetConverterMethod;
 
   static {
     addStandardConverters();
-
-    // java.beans is not available on Android, so we cannot use JavaBeansPropertyEditorConverterFactory
-    // directly but only via reflection
-    try {
-      Class<?> factory = Class.forName("fitnesse.slim.converters.beans.JavaBeansPropertyEditorConverterFactory");
-      javaBeansGetConverterMethod = factory.getMethod("getConverter", Class.class);
-    } catch (ClassNotFoundException e) {
-    } catch (NoSuchMethodException e) {
-    }
   }
 
   private ConverterRegistry() {
@@ -88,7 +77,7 @@ public class ConverterRegistry {
     }
 
     //use java beans property editor (does not work on Android)
-    Converter<T> javaBeansConverter = getJavaBeansBasedConverter(clazz);
+    Converter<T> javaBeansConverter = JavaBeansConverterGateway.getConverter(clazz);
     if (javaBeansConverter != null) {
       return javaBeansConverter;
     }
@@ -114,18 +103,6 @@ public class ConverterRegistry {
 
     // last resort, see if there is a converter for Object
     return (Converter<T>) converters.get(Object.class);
-  }
-
-  @SuppressWarnings("unchecked")
-  private static <T> Converter<T> getJavaBeansBasedConverter(Class<? extends T> clazz) {
-    if (javaBeansGetConverterMethod != null) {
-      try {
-        return (Converter<T>) javaBeansGetConverterMethod.invoke(null, clazz);
-      } catch (IllegalAccessException e) {
-      } catch (InvocationTargetException e) {
-      }
-    }
-    return null;
   }
 
   protected static <T> Converter<T> getConverterForInterface(Class<?> clazz) {
