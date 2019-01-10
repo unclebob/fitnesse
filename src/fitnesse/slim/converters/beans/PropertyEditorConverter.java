@@ -1,8 +1,8 @@
-package fitnesse.slim.converters;
-
-import java.beans.PropertyEditor;
+package fitnesse.slim.converters.beans;
 
 import fitnesse.slim.Converter;
+
+import java.beans.PropertyEditor;
 
 public class PropertyEditorConverter<T> implements Converter<T> {
   private PropertyEditor editor;

@@ -182,6 +182,23 @@ task standaloneJar(type: Jar) {
   }
 }
 
+task slimJar(type: Jar) {
+  dependsOn jar
+  baseName = 'fitnesse'
+  classifier = 'slim'
+  from { jar.outputs.files.collect { zipTree(it) } }
+    {
+    include 'fitnesse/html/*.class'
+    include 'fitnesse/slim/**/*.class'
+    include 'fitnesse/socketservice/*.class'
+    include 'util/*.class'
+    include 'fitnesse/util/StringUtils.class'
+  }
+  manifest {
+    attributes("Implementation-Version": version)
+  }
+}
+
 task acceptanceTest(type: JavaExec) {
   mustRunAfter test
   onlyIf { test.didWork }
@@ -245,6 +262,7 @@ publishing {
       artifact sourcesJar
       artifact javadocJar
       artifact standaloneJar
+      artifact slimJar
       groupId 'org.fitnesse'
       artifactId 'fitnesse'
       pom.withXml {
