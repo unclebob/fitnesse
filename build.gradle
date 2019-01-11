@@ -314,7 +314,7 @@ bintray {
 }
 
 wrapper {
-  gradleVersion = '4.3.1'
+  gradleVersion = '5.1'
 }
 
 
