@@ -159,6 +159,7 @@ jar {
       include createUpdateLists.wikiFiles as String[]
     }
   }
+  duplicatesStrategy = 'exclude'
   manifest {
     attributes("Main-Class": "fitnesseMain.FitNesseMain",
         "Implementation-Version": version)
