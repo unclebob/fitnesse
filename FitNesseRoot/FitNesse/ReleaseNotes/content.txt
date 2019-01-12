@@ -1,7 +1,11 @@
 !2 ${FITNESSE_VERSION}
  * Issues fixed:
    * fitnesse.jar was too big (bigger than fitnesse-standalone.jar) because of duplicated files
+* Under the hood:
    * Build upgraded to Gradle 5.1
+   * Now targetting Java 8
+   * Dependencies updated to latest versions (including: commons-lang3, Velocity 2.0 (which includes slf4j, configured to log using java.util.logging))
+   * Dependencies from the 'optional' configuration (i.e. junit and ant) are now also marked as optional in the pom.xml (which means they are no longer automatically added to the classpath of projects using !-FitNesse-!)
 
 !2 20190110
  * Add support for Android Slim client ([[602][https://github.com/unclebob/fitnesse/pull/602]])
