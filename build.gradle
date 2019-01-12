@@ -282,8 +282,13 @@ publishing {
 
         // Clean up scope entries added by the pom generator:
         asNode().dependencies.'*'.findAll() {
-          if (it.scope.text() == 'runtime') {
-            it.remove(it.scope)
+          if (project.configurations.optional.allDependencies
+              .find { dep -> dep.name == it.artifactId.text()}) {
+            def xmlOptional = it.optional[0]
+            if ( !xmlOptional ) {
+              xmlOptional = it.appendNode('optional')
+            }
+            xmlOptional.value = 'true'
           }
         }
       }
