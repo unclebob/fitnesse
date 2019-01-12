@@ -71,6 +71,7 @@ dependencies {
   }
   compile "org.apache.commons:commons-lang3:3.8.1"
   compile "org.slf4j:slf4j-api:1.7.25"
+  compile "org.slf4j:slf4j-jdk14:1.7.25"
   compile "org.json:json:20180813"
   compile "com.googlecode.java-diff-utils:diffutils:1.3.0"
   optional "org.apache.ant:ant:1.10.5"
