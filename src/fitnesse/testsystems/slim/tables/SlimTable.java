@@ -470,6 +470,10 @@ public abstract class SlimTable {
     @Override
     public TestResult evaluateExpectation(Object returnValue) {
       String value = getSymbol(this.symbolName);
+      // if value == null 'test not run' will be reported
+      // this is good for this handles the case one of the methods
+      // of the scenario threw a stop test exception before the symbol
+      // was assigned
       return super.evaluateExpectation(value);
     }
 
@@ -478,7 +482,7 @@ public abstract class SlimTable {
       if (assignToName != null) {
         setSymbol(assignToName, actual);
         return SlimTestResult.plain(String.format("$%s<-[%s]", assignToName, actual));
-      }else{
+      } else {
         return super.createEvaluationMessage(actual, expected);
       }
     }
