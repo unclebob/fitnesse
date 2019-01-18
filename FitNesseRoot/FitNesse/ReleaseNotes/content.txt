@@ -1,5 +1,6 @@
 !2 ${FITNESSE_VERSION}
  * Issues fixed:
+   * Raise error if decisions table (based on scenario) has output column which is not an output of the scenario ([[1178][https://github.com/unclebob/fitnesse/pull/1178]])
    * fitnesse.jar was too big (bigger than fitnesse-standalone.jar) because of duplicated files
    * Build upgraded to Gradle 5.1
 
