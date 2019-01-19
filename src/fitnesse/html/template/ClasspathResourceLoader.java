@@ -1,14 +1,14 @@
 package fitnesse.html.template;
 
-import java.io.InputStream;
-
-import org.apache.commons.collections.ExtendedProperties;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.resource.Resource;
 import org.apache.velocity.runtime.resource.loader.ResourceLoader;
 import org.apache.velocity.util.ClassUtils;
-import org.apache.velocity.util.ExceptionUtils;
+import org.apache.velocity.util.ExtProperties;
+
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 /**
  * Resource loader for Velocity. It loads resources rooted in a base directory.
@@ -24,8 +24,8 @@ public class ClasspathResourceLoader extends ResourceLoader {
   }
 
   @Override
-  public InputStream getResourceStream(String name) throws ResourceNotFoundException {
-    InputStream result = null;
+  public Reader getResourceReader(String name, String encoding) throws ResourceNotFoundException {
+    InputStreamReader result = null;
 
     if (StringUtils.isEmpty(name)) {
       throw new ResourceNotFoundException("No template name provided");
@@ -33,10 +33,9 @@ public class ClasspathResourceLoader extends ResourceLoader {
 
     String path = base + name;
     try {
-      result = ClassUtils.getResourceAsStream(getClass(), path);
+      result = new InputStreamReader(ClassUtils.getResourceAsStream(getClass(), path), encoding);
     } catch (Exception fnfe) {
-      throw (ResourceNotFoundException) ExceptionUtils.createWithCause(
-          ResourceNotFoundException.class, "problem with template: " + path, fnfe);
+      throw new ResourceNotFoundException("problem with template: " + path, fnfe);
     }
 
     if (result == null) {
@@ -47,7 +46,7 @@ public class ClasspathResourceLoader extends ResourceLoader {
   }
 
   @Override
-  public void init(ExtendedProperties configuration) {
+  public void init(ExtProperties configuration) {
     base = configuration.getString("base");
     if (!base.endsWith("/")) {
       base = base + "/";

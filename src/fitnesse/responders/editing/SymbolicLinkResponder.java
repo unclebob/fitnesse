@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
-import java.io.File;
-
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.html.HtmlUtil;
@@ -15,7 +13,9 @@ import fitnesse.responders.NotFoundResponder;
 import fitnesse.wiki.*;
 import fitnesse.wiki.fs.DiskFileSystem;
 import fitnesse.wiki.fs.FileSystem;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
 
 public class SymbolicLinkResponder implements Responder {
   private final FileSystem fileSystem;

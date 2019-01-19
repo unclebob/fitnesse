@@ -1,8 +1,8 @@
 package fitnesse.plugins.slimcoverage;
 
-import java.util.*;
+import org.apache.commons.lang3.StringUtils;
 
-import org.apache.commons.lang.StringUtils;
+import java.util.*;
 
 public class SlimScenarioUsage {
     private final Map<String, SlimScenarioUsagePer> usagePerPage = new LinkedHashMap<>();

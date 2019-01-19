@@ -15,7 +15,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.1.9'
+        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.3.0'
     }
 }
 
@@ -23,6 +23,7 @@ plugins {
   id 'java'
   id "maven-publish"
   id "com.jfrog.bintray" version "1.8.4"
+  id "com.github.ben-manes.versions" version "0.20.0"
 }
 
 apply plugin: "info.solidsoft.pitest"
@@ -58,29 +59,30 @@ sourceSets {
   }
 }
 
-sourceCompatibility = '1.7'
-targetCompatibility = '1.7'
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
 
 dependencies {
   compile "org.htmlparser:htmlparser:2.1"
   compile "org.htmlparser:htmllexer:2.1"
-  compile ("org.apache.velocity:velocity:1.7") {
-      exclude group:"commons-collections", module: "commons-collections"
-      exclude group:"commons-lang", module: "commons-lang"
+  compile ("org.apache.velocity:velocity-engine-core:2.0") {
+    exclude group:"org.apache.commons", module: "commons-lang3"
+    exclude group: 'org.slf4j', module: 'slf4j-api'
   }
-  compile "commons-lang:commons-lang:2.6"
-  compile "commons-collections:commons-collections:3.2.2"
-  compile "org.json:json:20151123"
+  compile "org.apache.commons:commons-lang3:3.8.1"
+  compile "org.slf4j:slf4j-api:1.7.25"
+  compile "org.slf4j:slf4j-jdk14:1.7.25"
+  compile "org.json:json:20180813"
   compile "com.googlecode.java-diff-utils:diffutils:1.3.0"
-  optional "org.apache.ant:ant:1.9.6"
+  optional "org.apache.ant:ant:1.10.5"
   optional "junit:junit:4.12"
 
   testCompile "junit:junit:4.12"
-  testCompile "org.mockito:mockito-core:1.10.19"
+  testCompile "org.mockito:mockito-core:2.23.4"
   testCompile "org.hamcrest:hamcrest-all:1.3"
-  testCompile "net.javacrumbs.json-unit:json-unit:1.1.6"
+  testCompile "net.javacrumbs.json-unit:json-unit:2.2.0"
 
-  lesscss "org.mozilla:rhino:1.7.7.1"
+  lesscss "org.mozilla:rhino:1.7.10"
 }
 
 task fitNesseVersion {
@@ -139,7 +141,7 @@ test {
 
 pitest {
   targetClasses = ['fit.*', 'fitnesse.*']
-  pitestVersion = "1.1.10"
+  pitestVersion = "1.4.3"
   threads = 1 // We can not deal with parallel execution yet
   outputFormats = ['XML', 'HTML']
 }
@@ -167,8 +169,8 @@ jar {
 
 task standaloneJar(type: Jar) {
   dependsOn jar
-  baseName = 'fitnesse'
-  classifier = 'standalone'
+  archiveBaseName = 'fitnesse'
+  archiveClassifier = 'standalone'
   from {
     (configurations.compile - configurations.optional).collect { zipTree(it) }
   } {
@@ -185,8 +187,8 @@ task standaloneJar(type: Jar) {
 
 task slimJar(type: Jar) {
   dependsOn jar
-  baseName = 'fitnesse'
-  classifier = 'slim'
+  archiveBaseName = 'fitnesse'
+  archiveClassifier = 'slim'
   from { jar.outputs.files.collect { zipTree(it) } }
     {
     include 'fitnesse/html/*.class'
@@ -212,13 +214,13 @@ check.dependsOn acceptanceTest
 
 task javadocJar(type: Jar) {
   mustRunAfter check
-  classifier = 'javadoc'
+  archiveClassifier = 'javadoc'
   from javadoc
 }
 
 task sourcesJar(type: Jar) {
   mustRunAfter check
-  classifier = 'sources'
+  archiveClassifier = 'sources'
   from sourceSets.main.allSource
 }
 
@@ -280,8 +282,13 @@ publishing {
 
         // Clean up scope entries added by the pom generator:
         asNode().dependencies.'*'.findAll() {
-          if (it.scope.text() == 'runtime') {
-            it.remove(it.scope)
+          if (project.configurations.optional.allDependencies
+              .find { dep -> dep.name == it.artifactId.text()}) {
+            def xmlOptional = it.optional[0]
+            if ( !xmlOptional ) {
+              xmlOptional = it.appendNode('optional')
+            }
+            xmlOptional.value = 'true'
           }
         }
       }

@@ -1,4 +1,8 @@
 !2 ${FITNESSE_VERSION}
+ * Under the hood:
+  * Now targetting Java 8
+  * Dependencies updated to latest versions (including: commons-lang3, Velocity 2.0 (which includes slf4j, configured to log using java.util.logging))
+  * Dependencies from the 'optional' configuration (i.e. junit and ant) are now also marked as optional in the pom.xml (which means they are no longer automatically added to the classpath of projects using !-FitNesse-!)
 
 !2 20190118
  * Issues fixed:
