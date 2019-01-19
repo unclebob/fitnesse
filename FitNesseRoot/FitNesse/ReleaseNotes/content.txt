@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+
+!2 20190119
  * Under the hood:
   * Now targetting Java 8
   * Dependencies updated to latest versions (including: commons-lang3, Velocity 2.0 (which includes slf4j, configured to log using java.util.logging))
