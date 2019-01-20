@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+ * Under the hood:
+  * Improved speed of Slim's calls to Java fixtures
 
 !2 20190119
  * Under the hood:

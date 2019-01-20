@@ -4,7 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class LoggingInteraction extends DefaultInteraction {
+public class LoggingInteraction extends SimpleInteraction {
   @Override
   public Object methodInvoke(Method method, Object instance, Object... convertedArgs) throws Throwable {
     long startTime = System.nanoTime();
