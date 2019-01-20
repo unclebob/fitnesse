@@ -1,6 +1,6 @@
 !2 ${FITNESSE_VERSION}
  * Under the hood:
-  * Improved speed of Slim's calls to Java fixtures
+  * Improved speed of Slim's calls to Java fixtures ([[1179][https://github.com/unclebob/fitnesse/pull/1179]])
 
 !2 20190119
  * Under the hood:
