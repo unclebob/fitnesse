@@ -115,9 +115,9 @@ public class SimpleInteraction implements FixtureInteraction {
         final Object[] convertedArgs = getConvertedConstructorArgsTypes(constructor, args);
         final boolean matchedConstructorArgsTypes = hasConstructorArgsTypes(constructorArgs, convertedArgs);
         if (matchedConstructorArgsTypes) {
-          //the constructor with most convertion changes should be more eligible for picking-up
+          //the constructor with most conversion changes should be more eligible for picking-up
           currentDiffCounter = getConstructorArgsConvertionDiff(args, convertedArgs);
-          //pick-up the constructor with the most explicitly args typess
+          //pick-up the constructor with the most explicit args types
           if (currentDiffCounter >= diffCounter) {
             diffCounter = currentDiffCounter;
             constructorSelectedByType = constructor;
@@ -270,7 +270,7 @@ public class SimpleInteraction implements FixtureInteraction {
     int diffCounter = 0;
     for (int i = 0; i < args.length; i++) {
       if (args[i] != null) {
-        //this implies that a conversation was made
+        //this implies that a conversion was made
         if (!args[i].equals(convertedArgs[i])) {
           diffCounter++;
         }
