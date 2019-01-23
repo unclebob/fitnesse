@@ -3,6 +3,7 @@
 package fitnesse.html.template;
 
 import fitnesse.FitNesseContext;
+import fitnesse.http.Request;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -54,9 +55,8 @@ public class PageFactory {
 
   private VelocityEngine newVelocityEngine(FitNesseContext context, String theme) {
     Properties properties = new Properties();
-
+    properties.setProperty(VelocityEngine.CHECK_EMPTY_OBJECTS, "false");
     properties.setProperty(VelocityEngine.INPUT_ENCODING, FileUtil.CHARENCODING);
-    properties.setProperty(VelocityEngine.OUTPUT_ENCODING, FileUtil.CHARENCODING);
 
     properties.setProperty(VelocityEngine.RESOURCE_LOADER, "file,themepath,classpath");
 
@@ -72,9 +72,6 @@ public class PageFactory {
         ClasspathResourceLoader.class.getName());
     properties.setProperty("classpath." + VelocityEngine.RESOURCE_LOADER + ".base",
         "/fitnesse/resources/templates");
-
-    properties.setProperty(VelocityEngine.RUNTIME_LOG_LOGSYSTEM_CLASS,
-            VelocityLogger.class.getName());
 
     VelocityEngine engine = new VelocityEngine();
     engine.init(properties);

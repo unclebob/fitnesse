@@ -6,11 +6,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import util.GradleSupport;
 
 import java.io.File;
 
 public class FileUpdateTest extends UpdateTestCase {
-  public final File testFile = new File("build/classes/test/testFile");
+  public final File testFile = new File(GradleSupport.TEST_CLASSES_DIR, "testFile");
 
   @Override
   protected Update makeUpdate() throws Exception {

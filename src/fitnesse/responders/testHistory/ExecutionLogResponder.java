@@ -75,7 +75,7 @@ public class ExecutionLogResponder implements SecureResponder {
     page.put("logs", report.getExecutionLogs());
     page.setMainTemplate("executionLog");
     SimpleResponse response = new SimpleResponse();
-    response.setContent(page.html());
+    response.setContent(page.html(request));
     return response;
   }
 

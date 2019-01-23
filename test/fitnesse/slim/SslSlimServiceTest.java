@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import fitnesse.socketservice.SslParameters;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,7 +34,11 @@ public class SslSlimServiceTest extends SlimServiceTestBase {
   @Before
   public void setUp() throws InterruptedException, IOException {
     createSlimService();
-    slimClient = new SlimCommandRunningClient(new MockCommandRunner(new CompositeExecutionLogListener()), "localhost", 8099, 1, SlimCommandRunningClient.MINIMUM_REQUIRED_SLIM_VERSION, new SslClientSocketFactory("fitnesse.socketservice.SslParametersWiki"));
+    slimClient = new SlimCommandRunningClient(
+      new MockCommandRunner(new CompositeExecutionLogListener()),
+      "localhost", 8099, 1,
+      SlimCommandRunningClient.MINIMUM_REQUIRED_SLIM_VERSION,
+      new SslClientSocketFactory(SslParameters.createSslParameters("fitnesse.socketservice.SslParametersWiki")));
     statements = new ArrayList<>();
     slimClient.connect();
   }

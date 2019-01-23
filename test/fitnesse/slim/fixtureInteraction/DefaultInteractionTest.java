@@ -1,15 +1,18 @@
 package fitnesse.slim.fixtureInteraction;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.*;
+
 /*
- * Note regarding  <Object args[] > creation: 
+ * Note regarding  <Object args[] > creation:
  *  - the client fixture call will send to the server String values
  */
 public class DefaultInteractionTest {
@@ -28,58 +31,58 @@ public class DefaultInteractionTest {
 
   @Test
   public void canExecuteConstructorWhenIntAndDateArgType() throws Throwable {
-    //given 
+    //given
     DefaultInteraction defaultInteraction = new DefaultInteraction();
     Object args[] = new Object[]{"1", "stringVal", "10-Dec-1981"};
     Constructor<?> constructor = defaultInteraction.getConstructor(Testee.class, args);
     //when
     Object convertedArgs[] = defaultInteraction.getConvertedConstructorArgsTypes(constructor, args);
     Testee testee = (Testee) constructor.newInstance(convertedArgs);
-    //then 
+    //then
     assertEquals(1, testee.getIntVal());
     assertEquals("stringVal", testee.getStringVal());
     assertEquals(convertedArgs[2], testee.getDateVal());
   }
-  
-  
+
+
   @Test
   public void canExecuteConstructorWithDateArgTypePriorityOverString() throws Throwable {
-    //given 
+    //given
     DefaultInteraction defaultInteraction = new DefaultInteraction();
     Object args[] = new Object[]{"10-Dec-1981"};
     Constructor<?> constructor = defaultInteraction.getConstructor(Testee.class, args);
     //when
     Object convertedArgs[] = defaultInteraction.getConvertedConstructorArgsTypes(constructor, args);
     Testee testee = (Testee) constructor.newInstance(convertedArgs);
-    //then 
+    //then
     assertNull(testee.getStringVal());
     assertEquals(convertedArgs[0], testee.getDateVal());
   }
 
   @Test
   public void canExecuteConstructorWhenDoubleArgType() throws Throwable {
-    //given 
+    //given
     DefaultInteraction defaultInteraction = new DefaultInteraction();
     Object args[] = new Object[]{"1", "2.0d"};
     Constructor<?> constructor = defaultInteraction.getConstructor(Testee.class, args);
     //when
     Object convertedArgs[] = defaultInteraction.getConvertedConstructorArgsTypes(constructor, args);
     Testee testee = (Testee) constructor.newInstance(convertedArgs);
-    //then 
+    //then
     assertEquals(2.0d, testee.getDoubleVal(), 0.0d);
     assertEquals(1, testee.getIntVal());
   }
 
   @Test
   public void canExecuteConstructorWhenFloatArgType() throws Throwable {
-    //given 
+    //given
     DefaultInteraction defaultInteraction = new DefaultInteraction();
     Object args[] = new Object[]{"1", "2.0f"};
     Constructor<?> constructor = defaultInteraction.getConstructor(Testee.class, args);
     //when
     Object convertedArgs[] = defaultInteraction.getConvertedConstructorArgsTypes(constructor, args);
     Testee testee = (Testee) constructor.newInstance(convertedArgs);
-    //then 
+    //then
     // we have support only for Double convertor in FitNesse
     assertEquals(2.0d, testee.getDoubleVal(), 0.0d);
     assertEquals(1, testee.getIntVal());
@@ -107,5 +110,37 @@ public class DefaultInteractionTest {
 
     String expectedMockingOnlyString = "----mockingOnly----";
     assertEquals("should be able create, and call setters and getters. These won't work", expectedMockingOnlyString, gotI);
+  }
+
+  @Test
+  public void createInstanceWithValidClassName() throws Exception{
+    DefaultInteraction interaction = new DefaultInteraction();
+
+    Object testee = interaction.createInstance(Arrays.asList("fitnesse.slim.fixtureInteraction"), "Testee", new Object[0]);
+    assertThat(testee, is(notNullValue()));
+  }
+
+  @Test
+  public void createInstanceWithInvalidCapitalizedClassName() throws Exception{
+    DefaultInteraction interaction = new DefaultInteraction();
+
+    Object testee = interaction.createInstance(Arrays.asList("fitnesse.slim.fixtureInteraction"), "testee", new Object[0]);
+    assertThat(testee, is(notNullValue()));
+  }
+
+  @Test
+  public void findMatchingMethodWithCorrectCapitalization() {
+    DefaultInteraction interaction = new DefaultInteraction();
+
+    Method setI = interaction.findMatchingMethod("setIntVal", new Testee(), new Integer(1));
+    assertThat(setI, is(notNullValue()));
+  }
+
+  @Test
+  public void findMatchingMethodWithIncorrectCapitalizationShouldReturnCorrectMethod() {
+    DefaultInteraction interaction = new DefaultInteraction();
+
+    Method setI = interaction.findMatchingMethod("SetIntVal", new Testee(), new Integer(1));
+    assertThat(setI, is(notNullValue()));
   }
 }

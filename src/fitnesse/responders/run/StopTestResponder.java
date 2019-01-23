@@ -18,23 +18,22 @@ public class StopTestResponder implements SecureResponder {
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     SimpleResponse response = new SimpleResponse();
-
     if (request.hasInput("id")) {
       testId = request.getInput("id");
     }
 
-    response.setContent(html(context));
+    response.setContent(html(context, request));
 
     return response;
   }
 
-  private String html(FitNesseContext context) {
+  private String html(FitNesseContext context, Request request) {
     HtmlPage page = context.pageFactory.newPage();
     page.addTitles("Stopping tests");
     page.put("testId", testId);
     page.put("runningTestingTracker", SuiteResponder.runningTestingTracker);
     page.setMainTemplate("stopTestPage.vm");
-    return page.html();
+    return page.html(request);
   }
 
   @Override

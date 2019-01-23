@@ -2,17 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
-import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import org.apache.commons.lang.StringUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -25,29 +14,23 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
 import fitnesse.wiki.*;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import static fitnesse.wiki.PageData.ACTION_ATTRIBUTES;
-import static fitnesse.wiki.PageData.NAVIGATION_ATTRIBUTES;
-import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTES;
-import static fitnesse.wiki.PageData.SECURITY_ATTRIBUTES;
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import static fitnesse.wiki.PageData.*;
 import static fitnesse.wiki.PageType.SUITE;
 import static fitnesse.wiki.PageType.TEST;
-import static fitnesse.wiki.WikiPageProperty.EDIT;
-import static fitnesse.wiki.WikiPageProperty.FILES;
-import static fitnesse.wiki.WikiPageProperty.HELP;
-import static fitnesse.wiki.WikiPageProperty.LAST_MODIFIED;
 import static fitnesse.wiki.WikiPageProperty.LAST_MODIFYING_USER;
-import static fitnesse.wiki.WikiPageProperty.PROPERTIES;
-import static fitnesse.wiki.WikiPageProperty.PRUNE;
-import static fitnesse.wiki.WikiPageProperty.RECENT_CHANGES;
-import static fitnesse.wiki.WikiPageProperty.REFACTOR;
-import static fitnesse.wiki.WikiPageProperty.SEARCH;
-import static fitnesse.wiki.WikiPageProperty.SECURE_READ;
-import static fitnesse.wiki.WikiPageProperty.SECURE_TEST;
-import static fitnesse.wiki.WikiPageProperty.SECURE_WRITE;
-import static fitnesse.wiki.WikiPageProperty.SUITES;
-import static fitnesse.wiki.WikiPageProperty.VERSIONS;
-import static fitnesse.wiki.WikiPageProperty.WHERE_USED;
+import static fitnesse.wiki.WikiPageProperty.*;
 
 public class PropertiesResponder implements SecureResponder {
   private WikiPage page;
@@ -130,7 +113,7 @@ public class PropertiesResponder implements SecureResponder {
     makeLastModifiedTag();
     makeFormSections();
 
-    return html.html();
+    return html.html(request);
   }
 
   private void makeLastModifiedTag() {

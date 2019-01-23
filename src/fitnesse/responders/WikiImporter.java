@@ -13,11 +13,18 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import fitnesse.util.XmlUtil;
 import fitnesse.components.TraversalListener;
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.ResponseParser;
-import fitnesse.wiki.*;
+import fitnesse.util.XmlUtil;
+import fitnesse.wiki.NoPruningStrategy;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiImportProperty;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperty;
+import fitnesse.wiki.XmlizerPageHandler;
 import fitnesse.wiki.fs.PageXmlizer;
 
 public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiPage> {
@@ -94,7 +101,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
   private void catalogLocalTree(WikiPage page) {
     contextPath = page.getPageCrawler().getFullPath();
     pageCatalog = new HashSet<>();
-    page.getPageCrawler().traverse(this);
+    page.getPageCrawler().traverse(this, new NoPruningStrategy());
     WikiPagePath relativePathOfContext = contextPath.subtractFromFront(contextPath);
     pageCatalog.remove(relativePathOfContext);
   }

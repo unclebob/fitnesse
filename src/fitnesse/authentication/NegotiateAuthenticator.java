@@ -120,7 +120,7 @@ public class NegotiateAuthenticator extends Authenticator {
         html.setMainTemplate("authRequired.vm");
       else
         html.setMainTemplate("authFailed.vm");
-      response.setContent(html.html());
+      response.setContent(html.html(request));
       return response;
     }
   }

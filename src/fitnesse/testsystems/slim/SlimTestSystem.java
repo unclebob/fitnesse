@@ -15,6 +15,7 @@ import fitnesse.testsystems.*;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.tables.SlimAssertion;
 import fitnesse.testsystems.slim.tables.SlimTable;
+import fitnesse.wiki.PageData;
 
 import static fitnesse.slim.SlimServer.*;
 
@@ -59,6 +60,9 @@ public abstract class SlimTestSystem implements TestSystem {
     } catch (IOException e) {
       stopTestSystem(e);
       throw new UnableToStartException("Could not start test system", e);
+    } catch (Exception e) {
+      stopTestSystem(e);
+      throw e;
     }
     testSystemListener.testSystemStarted(this);
   }
@@ -99,7 +103,7 @@ public abstract class SlimTestSystem implements TestSystem {
     testSystemListener.addTestSystemListener(listener);
   }
 
-  private void initializeTest(TestPage testPage) {
+  protected void initializeTest(TestPage testPage) {
     testContext = createTestContext(testPage);
     stopTestCalled = false;
   }
@@ -136,13 +140,17 @@ public abstract class SlimTestSystem implements TestSystem {
         SlimExceptionResult exceptionResult = new SlimExceptionResult(key, (String) returnValue);
         if (exceptionResult.isStopTestException()) {
           stopTestCalled = true;
+          stopSuiteCalled = PageData.SUITE_SETUP_NAME.equals(testContext.getPageToTest().getName());
         }
         if (exceptionResult.isStopSuiteException()) {
           stopTestCalled = stopSuiteCalled = true;
         }
         exceptionResult = a.getExpectation().evaluateException(exceptionResult);
         if (exceptionResult != null) {
-          testExceptionOccurred(a, exceptionResult);
+          if (!exceptionResult.isCatchException())
+            testExceptionOccurred(a, exceptionResult);
+          else
+            testAssertionVerified(a, exceptionResult.catchTestResult());
         }
       } else {
         //Normal results

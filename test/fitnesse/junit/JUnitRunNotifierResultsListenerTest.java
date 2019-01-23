@@ -5,7 +5,7 @@ import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.results.SlimTestResult;
-import fitnesse.wiki.PageCrawlerImpl;
+import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.fs.WikiPageProperties;
@@ -38,9 +38,36 @@ public class JUnitRunNotifierResultsListenerTest {
   public void shouldFinishSuccessfully() {
     TestResult testResult = SlimTestResult.ok("-");
 
+    listener.announceNumberTestsToRun(1);
     listener.testAssertionVerified(null, testResult);
     listener.testComplete(mockWikiTestPage(), summary("-"));
+    listener.close();
 
+    verify(notifier).fireTestFinished(description);
+  }
+
+  @Test
+  public void shouldFinishSuccessfullyWithTooManyTests() {
+    TestResult testResult = SlimTestResult.ok("-");
+
+    listener.announceNumberTestsToRun(0);
+    listener.testAssertionVerified(null, testResult);
+    listener.testComplete(mockWikiTestPage(), summary("-"));
+    listener.close();
+
+    verify(notifier).fireTestFinished(description);
+  }
+
+  @Test
+  public void shouldFailOnTooFewTests() {
+    TestResult testResult = SlimTestResult.ok("-");
+
+    listener.announceNumberTestsToRun(2);
+    listener.testAssertionVerified(null, testResult);
+    listener.testComplete(mockWikiTestPage(), summary("-"));
+    listener.close();
+
+    verify(notifier).fireTestFailure(any(Failure.class));
     verify(notifier).fireTestFinished(description);
   }
 
@@ -131,7 +158,7 @@ public class JUnitRunNotifierResultsListenerTest {
     when(test.getParent()).thenReturn(root);
     when(test.getName()).thenReturn("WikiPage");
     when(test.getData()).thenReturn(new PageData("content", new WikiPageProperties()));
-    when(test.getPageCrawler()).thenReturn(new PageCrawlerImpl(test));
+    when(test.getPageCrawler()).thenReturn(new PageCrawler(test));
     return new WikiTestPage(test);
   }
 

@@ -28,9 +28,9 @@ import fitnesse.responders.NotFoundResponder;
 
 public class FileResponder implements SecureResponder {
   // 1000-trick: remove milliseconds.
-  private static final Date LAST_MODIFIED_FOR_RESOURCES = new Date((Clock.currentTimeInMillis() / 1000) * 1000 );
+  private static final Date LAST_MODIFIED_FOR_RESOURCES = new Date((Clock.currentTimeInMillis() / 1000) * 1000);
 
-  private static final int RESOURCE_SIZE_LIMIT = 262144*2;
+  private static final int RESOURCE_SIZE_LIMIT = 262144 * 2;
   private static final FileNameMap fileNameMap = URLConnection.getFileNameMap();
   String resource;
   File requestedFile;
@@ -74,8 +74,17 @@ public class FileResponder implements SecureResponder {
       return createNotModifiedResponse();
 
     String classpathResource = "/fitnesse/resources/" + resource.substring("files/fitnesse/".length());
+    InputStream input;
 
-    InputStream input = getClass().getResourceAsStream(classpathResource);
+    input = Thread.currentThread().getContextClassLoader().getResourceAsStream(classpathResource);
+
+    if (input == null) {
+      //remove leading slash so path will work with resources inside a JAR file
+      while (classpathResource.startsWith("/")) {
+        classpathResource = classpathResource.substring(1);
+      }
+      input = Thread.currentThread().getContextClassLoader().getResourceAsStream(classpathResource);
+    }
     if (input == null) {
       return new NotFoundResponder().makeResponse(context, request);
     }
@@ -112,8 +121,7 @@ public class FileResponder implements SecureResponder {
         Date queryDate = Response.makeStandardHttpDateFormat().parse(queryDateString);
         if (!queryDate.before(lastModifiedDate))
           return true;
-      }
-      catch (ParseException e) {
+      } catch (ParseException e) {
         //Some browsers use local date formats that we can't parse.
         //So just ignore this exception if we can't parse the date.
       }
@@ -147,11 +155,11 @@ public class FileResponder implements SecureResponder {
       } else if (filename.endsWith(".jar")) {
         contentType = "application/x-java-archive";
       } else if ((filename.endsWith(".jpg")) || (filename.endsWith(".jpeg"))) {
-          contentType = "image/jpeg";
+        contentType = "image/jpeg";
       } else if (filename.endsWith(".png")) {
-          contentType = "image/png";
+        contentType = "image/png";
       } else if (filename.endsWith(".gif")) {
-          contentType = "image/gif";
+        contentType = "image/gif";
       } else if (filename.endsWith(".svg")) {
         contentType = "image/svg+xml";
       } else {
@@ -163,12 +171,12 @@ public class FileResponder implements SecureResponder {
 
   public static boolean isInFilesDirectory(File rootPath, File file) throws IOException {
     return isInSubDirectory(new File(rootPath, "files").getCanonicalFile(),
-            file.getCanonicalFile());
+      file.getCanonicalFile());
   }
 
   public static boolean isInFilesFitNesseDirectory(File rootPath, File file) throws IOException {
     return isInSubDirectory(new File(new File(rootPath, "files"), "fitnesse").getCanonicalFile(),
-            file.getCanonicalFile());
+      file.getCanonicalFile());
   }
 
   private static boolean isInSubDirectory(File dir, File file) {

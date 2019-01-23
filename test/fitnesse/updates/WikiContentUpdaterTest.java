@@ -14,6 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
+import util.GradleSupport;
 
 import static org.junit.Assert.*;
 import static util.RegexTestCase.assertSubString;
@@ -52,16 +53,16 @@ public class WikiContentUpdaterTest {
   }
 
   private void createFakeUpdateListFiles() throws IOException {
-    updateList = new File("build/classes/test/Resources/updateList");
-    updateDoNotCopyOver = new File("build/classes/test/Resources/updateDoNotCopyOverList");
+    updateList = new File(GradleSupport.TEST_CLASSES_DIR + "/Resources/updateList");
+    updateDoNotCopyOver = new File(GradleSupport.TEST_CLASSES_DIR +"/Resources/updateDoNotCopyOverList");
     FileUtil.createFile(updateList, "FitNesseRoot/files/TestFile\nFitNesseRoot/files/BestFile\n");
     FileUtil.createFile(updateDoNotCopyOver, "FitNesseRoot/SpecialFile");
   }
 
   private void createFakeJarFileResources() throws IOException {
-    FileUtil.createFile("build/classes/test/Resources/FitNesseRoot/files/TestFile","") ;
-    FileUtil.createFile("build/classes/test/Resources/FitNesseRoot/files/BestFile","") ;
-    FileUtil.createFile("build/classes/test/Resources/FitNesseRoot/SpecialFile","");
+    FileUtil.createFile(GradleSupport.TEST_CLASSES_DIR + "/Resources/FitNesseRoot/files/TestFile","") ;
+    FileUtil.createFile(GradleSupport.TEST_CLASSES_DIR + "/Resources/FitNesseRoot/files/BestFile","") ;
+    FileUtil.createFile(GradleSupport.TEST_CLASSES_DIR + "/Resources/FitNesseRoot/SpecialFile","");
   }
 
   @Test
@@ -76,8 +77,8 @@ public class WikiContentUpdaterTest {
 
   @Test
   public void shouldBeAbleToGetThePathOfJustTheParent() throws Exception {
-    File filePath = updater.getCorrectPathForTheDestination("build/classes/test/files/moreFiles/TestFile");
-    assertSubString(portablePath("build/classes/test/files/moreFiles"), filePath.getPath());
+    File filePath = updater.getCorrectPathForTheDestination(GradleSupport.TEST_CLASSES_DIR + "/files/moreFiles/TestFile");
+    assertSubString(portablePath(GradleSupport.TEST_CLASSES_DIR + "/files/moreFiles"), filePath.getPath());
   }
 
   private String portablePath(String path) {
@@ -174,12 +175,12 @@ public class WikiContentUpdaterTest {
   @Test(expected = RuntimeException.class)
   public void shouldThrowExceptionInNoUpdateFileExists() throws Exception {
     FileUtil.deleteFile(updateList);
-    updater.parseResource("build/classes/test/Resources/updateList");
+    updater.parseResource(GradleSupport.TEST_CLASSES_DIR + "/Resources/updateList");
   }
 
   @After
   public void tearDown() throws IOException {
-    FileUtil.deleteFileSystemDirectory("build/classes/test/Resources");
+    FileUtil.deleteFileSystemDirectory(GradleSupport.TEST_CLASSES_DIR + "/Resources");
     FileUtil.deleteFileSystemDirectory(testDir);
   }
 
