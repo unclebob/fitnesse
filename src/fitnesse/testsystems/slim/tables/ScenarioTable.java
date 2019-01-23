@@ -321,6 +321,11 @@ public class ScenarioTable extends SlimTable {
     }
 
     @Override
+    public Map<String, String> getSymbols() {
+      return testContext.getSymbols();
+    }
+
+    @Override
     public void setSymbol(String symbolName, String value) {
       testContext.setSymbol(symbolName, value);
     }

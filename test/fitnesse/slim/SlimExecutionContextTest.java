@@ -29,4 +29,13 @@ public class SlimExecutionContextTest {
     assertArrayEquals(new Object[] {"test", "var1", "foo", "bar", "var2"}, context.replaceSymbols(new Object[] {
         "test", "$first", "foo", "bar", "$second"}));
   }
+
+  @Test
+  public void shouldEvaluateExpressions() {
+    SlimExecutionContext context = new SlimExecutionContext(new DefaultInteraction());
+    context.setVariable("first", "var1");
+
+    assertArrayEquals(new Object[] {"test", "VAR1", 3, "bar"}, context.replaceSymbols(new Object[] {
+      "test", "$`first.toUpperCase()`", "$`1+2`", "bar"}));
+  }
 }
