@@ -19,16 +19,16 @@ public class SslClientSocketFactory implements ClientSocketFactory {
   private static final Logger LOG = Logger.getLogger(SslClientSocketFactory.class.getName());
   private static final String COMMONNAME = "CN";
 
-  private final String sslParameterClassName;
+  private final SslParameters sslParameters;
 
-  public SslClientSocketFactory(final String sslParameterClassName) {
-    this.sslParameterClassName = sslParameterClassName;
+  public SslClientSocketFactory(final SslParameters sslParameters) {
+    this.sslParameters = sslParameters;
   }
 
   @Override
   public Socket createSocket(final String hostName, final int port) throws IOException {
     LOG.log(Level.FINER, "Creating SSL client: " + hostName + ":" + port);
-    SSLSocketFactory ssf = SslParameters.setSslParameters(sslParameterClassName).createSSLSocketFactory();
+    SSLSocketFactory ssf = sslParameters.createSSLSocketFactory();
     SSLSocket socket = (SSLSocket) ssf.createSocket(hostName, port);
     LOG.log(Level.FINER, "Starting SSL Handshake.");
     //socket.setSoTimeout(1000);
@@ -36,7 +36,6 @@ public class SslClientSocketFactory implements ClientSocketFactory {
     printSocketInfo(socket);
 
     return socket;
-
   }
 
 

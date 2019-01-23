@@ -1,11 +1,14 @@
 package fitnesse.slim;
 
 import fitnesse.slim.converters.ConverterRegistry;
+import fitnesse.slim.converters.GenericCollectionConverter;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Evaluates slim expressions.
@@ -40,7 +43,7 @@ public class SlimExpressionEvaluator {
     }
   }
 
-  private Object convertWikiHashes(Converter<Map> cnv, Object value) {
+  protected Object convertWikiHashes(Converter<Map> cnv, Object value) {
     value = convertWikiHash(cnv, value);
     if (value instanceof Map) {
       value = convertNestedWikiHashes(cnv, (Map<String, ?>) value);
@@ -48,14 +51,23 @@ public class SlimExpressionEvaluator {
     return value;
   }
 
-  private Object convertWikiLists(Converter<List> cnv, Object value) {
-    if (value.toString().startsWith("[") && value.toString().endsWith("]")) {
-      value = convertWikiList(cnv, value);
+  protected Object convertWikiLists(Converter<List> cnv, Object value) {
+    boolean mightBeList = value instanceof String;
+    if (mightBeList) {
+      String v = (String) value;
+      if (GenericCollectionConverter.class.equals(cnv.getClass())) {
+        // generic converter also create (single item) list when no brackets are
+        // present, that's not what we want here
+        mightBeList = v.startsWith("[") && v.endsWith("]");
+      }
+      if (mightBeList) {
+        value = convertWikiList(cnv, v);
+      }
     }
     return value;
   }
 
-  private Object convertWikiHash(Converter<Map> cnv, Object value) {
+  protected Object convertWikiHash(Converter<Map> cnv, Object value) {
     if (value instanceof String) {
       Map mapObj = cnv.fromString((String) value);
       if (!mapObj.isEmpty()) {
@@ -65,7 +77,7 @@ public class SlimExpressionEvaluator {
     return value;
   }
 
-  private Object convertNestedWikiHashes(Converter<Map> cnv, Map<String, ?> value) {
+  protected Object convertNestedWikiHashes(Converter<Map> cnv, Map<String, ?> value) {
     Map<String, Object> newValue = new LinkedHashMap<>();
     newValue.putAll(value);
     for (Map.Entry<String, Object> nestedEntry : newValue.entrySet()) {
@@ -76,14 +88,8 @@ public class SlimExpressionEvaluator {
     return value;
   }
 
-  private Object convertWikiList(Converter<List> cnv, Object value) {
-    if (value instanceof String) {
-      List listObj = cnv.fromString((String) value);
-      if (!listObj.isEmpty()) {
-        value = listObj;
-      }
-    }
-    return value;
+  protected Object convertWikiList(Converter<List> cnv, String value) {
+    return cnv.fromString(value);
   }
 
   public Object evaluate(String expression) {

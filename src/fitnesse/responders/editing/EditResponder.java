@@ -89,7 +89,7 @@ public class EditResponder implements SecureResponder {
     html.setMainTemplate("editPage");
     makeEditForm(html, resource, firstTimeForNewPage, NewPageResponder.getDefaultContent(page));
 
-    return html.html();
+    return html.html(request);
   }
 
   private void makeEditForm(HtmlPage html, String resource, boolean firstTimeForNewPage, String defaultNewPageContent) {

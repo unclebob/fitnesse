@@ -39,7 +39,7 @@ public class ErrorResponder implements Responder {
       html.put("exception", exception);
     if (message != null)
       html.put("message", message);
-    response.setContent(html.html());
+    response.setContent(html.html(request));
 
     return response;
   }

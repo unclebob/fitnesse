@@ -2,14 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.util.concurrent.Executors;
-
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.UnauthorizedResponder;
 import fitnesse.http.MockRequest;
@@ -21,6 +13,14 @@ import fitnesse.util.MockSocket;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.util.concurrent.Executors;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.*;
 
 public class FitNesseExpediterTest {
   public static final int REQUEST_PARSING_TIME_LIMIT = 200;
@@ -100,6 +100,25 @@ public class FitNesseExpediterTest {
     parseResponseThread.join();
 
     assertEquals(200, response.getStatus());
+  }
+
+  @Test
+  public void testBadRequest() throws Exception {
+    final FitNesseExpediter sender = preparePipedFitNesseExpediter();
+
+    Thread senderThread = makeSendingThread(sender);
+    senderThread.start();
+    Thread parseResponseThread = makeParsingThread();
+    parseResponseThread.start();
+
+    clientOutput.write("\r\n\r\n".getBytes());
+    clientOutput.flush();
+
+    parseResponseThread.join();
+
+    assertEquals(400, response.getStatus());
+    assertFalse("Body contained exception which should have been removed",
+      response.getBody().contains("java.util.concurrent.ExecutionException"));
   }
 
   @Test

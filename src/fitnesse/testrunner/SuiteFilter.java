@@ -3,21 +3,17 @@
  */
 package fitnesse.testrunner;
 
+import fitnesse.wiki.*;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PageType;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-import org.apache.commons.lang.StringUtils;
-
-import static org.apache.commons.lang.StringUtils.equalsIgnoreCase;
-import static org.apache.commons.lang.StringUtils.trim;
+import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.trim;
 
 public class SuiteFilter {
   private static final Logger LOG = Logger.getLogger(SuiteFilter.class.getName());

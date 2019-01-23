@@ -10,7 +10,9 @@ import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 //Proper table format:
 //|suite|
@@ -40,25 +42,25 @@ public class SuiteSpecificationRunnerTest {
   public void shouldBeAbleToGetAListOfTestPagesGivenATitleAndRootPage() throws Exception {
     runner.titleRegEx = "Test";
     runner.findPageMatches();
-    assertEquals(2, runner.testPageList.size());
+    assertEquals(2, runner.testPages().size());
   }
 
   @Test
   public void shouldBeAbleToGetAListOfTestPagesGivenAContentAndRootPage() throws Exception {
     runner.contentRegEx = "child";
     runner.findPageMatches();
-    assertEquals(2, runner.testPageList.size());
+    assertEquals(2, runner.testPages().size());
   }
 
   @Test
   public void shouldNotGetAPageMoreThanOnce() throws Exception {
     runner.titleRegEx = "Test";
     runner.findPageMatches();
-    assertEquals(2, runner.testPageList.size());
+    assertEquals(2, runner.testPages().size());
     runner.titleRegEx = "";
     runner.contentRegEx = "child";
     runner.findPageMatches();
-    assertEquals(3, runner.testPageList.size());
+    assertEquals(3, runner.testPages().size());
   }
 
   @Test
@@ -88,7 +90,7 @@ public class SuiteSpecificationRunnerTest {
     Table table = scanner.getTable(0);
     assertTrue(runner.getImportantTableInformation(table));
     assertEquals("TestPageOne",runner.searchRoot.getName());
-    assertEquals(0,runner.testPageList.size());
+    assertEquals(0,runner.testPages().size());
   }
 
   @Test
@@ -124,7 +126,7 @@ public class SuiteSpecificationRunnerTest {
   public void shouldGetPagesFromPageContent() throws Exception {
     String page = "<table><tr><td>Suite</td></tr><tr><td>Title</td><td>Test</td></tr><tr><td>Content</td><td>has.*content</td></tr></table>";
     assertTrue(runner.getPageListFromPageContent(page));
-    assertEquals(2, runner.testPageList.size());
+    assertEquals(2, runner.testPages().size());
   }
 
   @Test
@@ -132,7 +134,7 @@ public class SuiteSpecificationRunnerTest {
     String page = "<table><tr><td>Suite</td></tr><tr><td>Title</td><td>Test</td></tr><tr><td></td><td></td></tr></table>";
     page += "<table><tr><td>Suite</td></tr><tr><td>Content</td><td>child</td></tr><tr><td></td><td></td></tr></table>";
     assertTrue(runner.getPageListFromPageContent(page));
-    assertEquals(3, runner.testPageList.size());
+    assertEquals(3, runner.testPages().size());
   }
 
   @Test
@@ -143,6 +145,32 @@ public class SuiteSpecificationRunnerTest {
     testSuitePage.commit(data);
     String page = "<table><tr><td>Suite</td></tr><tr><td>Title</td><td>One</td></tr><tr><td>Content</td><td></td></tr></table>";
     assertTrue(runner.getPageListFromPageContent(page));
-    assertEquals(1,runner.testPageList.size());
+    assertEquals(1,runner.testPages().size());
+  }
+
+  @Test
+  public void shouldExcludeSkippedPages() throws Exception {
+    prunePage("TestPageTwo");
+    runner.titleRegEx = ".*";
+    runner.findPageMatches();
+    assertEquals(2, runner.testPages().size());
+    assertEquals("TestPageOne", runner.testPages().get(0).getName());
+    assertEquals("ChildPage", runner.testPages().get(1).getName());
+  }
+
+  @Test
+  public void shouldExcludeChildrenOfSkippedPages() throws Exception {
+    prunePage("TestPageOne");
+    runner.titleRegEx = ".*";
+    runner.findPageMatches();
+    assertEquals(1, runner.testPages().size());
+    assertEquals("TestPageTwo", runner.testPages().get(0).getName());
+  }
+
+  private void prunePage(String pageName) {
+    WikiPage childPage = root.getChildPage(pageName);
+    PageData data = childPage.getData();
+    data.setAttribute(PageData.PropertyPRUNE);
+    childPage.commit(data);
   }
 }

@@ -22,13 +22,13 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
   private final Map<String, TestSystemFactory> testSystemFactories = new HashMap<>(4);
   private final Map<String, TestSystemFactory> inProcessTestSystemFactories = new HashMap<>(4);
 
-  public MultipleTestSystemFactory(SlimTableFactory slimTableFactory, CustomComparatorRegistry customComparatorRegistry) {
+  public MultipleTestSystemFactory(SlimTableFactory slimTableFactory, CustomComparatorRegistry customComparatorRegistry, ClassLoader classLoader) {
     registerTestSystemFactory("slim", new HtmlSlimTestSystemFactory(slimTableFactory, customComparatorRegistry));
     registerTestSystemFactory("fit", new FitTestSystemFactory());
 
     // This is basically the legacy: we want to be able to run slim and fit both in process and out of process.
-    registerInProcessTestSystemFactory("slim", new InProcessHtmlSlimTestSystemFactory(slimTableFactory, customComparatorRegistry));
-    registerInProcessTestSystemFactory("fit", new InProcessFitTestSystemFactory());
+    registerInProcessTestSystemFactory("slim", new InProcessHtmlSlimTestSystemFactory(slimTableFactory, customComparatorRegistry, classLoader));
+    registerInProcessTestSystemFactory("fit", new InProcessFitTestSystemFactory(classLoader));
   }
 
   @Override
@@ -79,16 +79,18 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
   static class InProcessHtmlSlimTestSystemFactory implements TestSystemFactory {
     private final SlimTableFactory slimTableFactory;
     private final CustomComparatorRegistry customComparatorRegistry;
+    private ClassLoader classLoader;
 
     public InProcessHtmlSlimTestSystemFactory(SlimTableFactory slimTableFactory,
-                                              CustomComparatorRegistry customComparatorRegistry) {
+                                              CustomComparatorRegistry customComparatorRegistry, ClassLoader classLoader) {
       this.slimTableFactory = slimTableFactory;
       this.customComparatorRegistry = customComparatorRegistry;
+      this.classLoader = classLoader;
     }
 
     @Override
     public TestSystem create(Descriptor descriptor) {
-      InProcessSlimClientBuilder clientBuilder = new InProcessSlimClientBuilder(descriptor);
+      InProcessSlimClientBuilder clientBuilder = new InProcessSlimClientBuilder(descriptor, classLoader);
       SlimClient slimClient = clientBuilder.build();
       HtmlSlimTestSystem testSystem = new HtmlSlimTestSystem(clientBuilder.getTestSystemName(), slimClient,
               slimTableFactory.copy(), customComparatorRegistry);
@@ -110,9 +112,15 @@ public class MultipleTestSystemFactory implements TestSystemFactory, TestSystemF
 
   static class InProcessFitTestSystemFactory implements TestSystemFactory {
 
+    private final ClassLoader classLoader;
+
+    public InProcessFitTestSystemFactory(ClassLoader classLoader) {
+      this.classLoader = classLoader;
+    }
+
     @Override
     public FitTestSystem create(Descriptor descriptor) {
-      InProcessFitClientBuilder clientBuilder = new InProcessFitClientBuilder(descriptor);
+      InProcessFitClientBuilder clientBuilder = new InProcessFitClientBuilder(descriptor, classLoader);
       CommandRunningFitClient fitClient = clientBuilder.build();
 
       return new FitTestSystem(clientBuilder.getTestSystemName(), fitClient);

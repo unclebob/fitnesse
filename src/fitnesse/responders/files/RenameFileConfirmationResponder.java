@@ -27,7 +27,7 @@ public class RenameFileConfirmationResponder implements SecureResponder {
     page.put("resource", resource);
 
     SimpleResponse response = new SimpleResponse();
-    response.setContent(page.html());
+    response.setContent(page.html(request));
     return response;
   }
 

@@ -2,6 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import fitnesse.components.LogData;
+import fitnesse.http.*;
+import fitnesse.responders.ErrorResponder;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -9,21 +14,9 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.GregorianCalendar;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import fitnesse.components.LogData;
-import fitnesse.http.HttpException;
-import fitnesse.http.Request;
-import fitnesse.http.Response;
-import fitnesse.http.ResponseSender;
-import fitnesse.http.SimpleResponse;
-import fitnesse.responders.ErrorResponder;
-import org.apache.commons.lang.StringUtils;
 
 public class FitNesseExpediter implements ResponseSender, Runnable {
   private static final Logger LOG = Logger.getLogger(FitNesseExpediter.class.getName());
@@ -96,13 +89,20 @@ public class FitNesseExpediter implements ResponseSender, Runnable {
   private Response makeResponse(final Request request) throws Exception {
     Response response;
     try {
-      executorService.submit(new Callable<Request>() {
-        @Override
-        public Request call() throws Exception {
-          request.parse();
-          return request;
+      try {
+        executorService.submit(new Callable<Request>() {
+          @Override
+          public Request call() throws Exception {
+            request.parse();
+            return request;
+          }
+        }).get(requestParsingTimeLimit, TimeUnit.MILLISECONDS);
+      } catch (ExecutionException e) {
+        if (e.getCause() instanceof Exception) {
+          throw (Exception) e.getCause();
         }
-      }).get(requestParsingTimeLimit, TimeUnit.MILLISECONDS);
+        throw e;
+      }
 
       if (request.hasBeenParsed()) {
         if (context.contextRoot.equals(request.getRequestUri() + "/")) {
@@ -120,6 +120,9 @@ public class FitNesseExpediter implements ResponseSender, Runnable {
       String message = "The client request has been unproductive for too long. It has timed out and will no longer be processed.";
       LOG.log(Level.FINE, message, e);
       response = reportError(request, 408, message);
+    } catch (EmptyRequestException e) {
+      LOG.log(Level.FINER, "Browser 'keep alive' request, will be ignored", e);
+      response = reportError(request, 400, e.getMessage());
     } catch (HttpException e) {
       LOG.log(Level.FINE, "An error occured while fulfilling user request", e);
       response = reportError(request, 400, e.getMessage());

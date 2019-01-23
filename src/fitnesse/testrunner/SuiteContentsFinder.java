@@ -14,25 +14,23 @@ public class SuiteContentsFinder {
   private final WikiPage pageToRun;
   private final WikiPage wikiRootPage;
   private final SuiteFilter suiteFilter;
-  private List<WikiPage> testPageList;
 
   public SuiteContentsFinder(final WikiPage pageToRun, final SuiteFilter suiteFilter, WikiPage root) {
     this.pageToRun = pageToRun;
     wikiRootPage = root;
     this.suiteFilter = (suiteFilter != null) ? suiteFilter : SuiteFilter.MATCH_ALL;
-    testPageList = new LinkedList<>();
   }
 
   public List<WikiPage> getAllPagesToRunForThisSuite() {
+    List<WikiPage> testPageList = new LinkedList<>();
     String content = pageToRun.getHtml();
     if (SuiteSpecificationRunner.isASuiteSpecificationsPage(content)) {
       SuiteSpecificationRunner runner = new SuiteSpecificationRunner(wikiRootPage);
       if (runner.getPageListFromPageContent(content))
-        testPageList = runner.testPageList;
+        testPageList = runner.testPages();
     } else {
       testPageList = getAllTestPagesUnder();
-      List<WikiPage> referencedPages = gatherCrossReferencedTestPages();
-      testPageList.addAll(referencedPages);
+      testPageList.addAll(gatherCrossReferencedTestPages());
     }
     return testPageList;
   }
@@ -77,7 +75,6 @@ public class SuiteContentsFinder {
 
   private boolean isPruned(WikiPage page) {
     return page.getData().hasAttribute(PageData.PropertyPRUNE);
-
   }
 
   private boolean isTopPage(WikiPage page) {

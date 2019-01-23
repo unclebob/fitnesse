@@ -1,6 +1,8 @@
 package fitnesse.junit;
 
 import java.io.Closeable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fitnesse.testrunner.TestsRunnerListener;
 import fitnesse.testsystems.Assertion;
@@ -17,6 +19,7 @@ import org.junit.runner.notification.RunNotifier;
 
 public class JUnitRunNotifierResultsListener
         implements TestSystemListener, TestsRunnerListener, Closeable {
+  private static final Logger LOG = Logger.getLogger(JUnitRunNotifierResultsListener.class.getName());
 
   private final Class<?> mainClass;
   private final RunNotifier notifier;
@@ -91,12 +94,20 @@ public class JUnitRunNotifierResultsListener
 
   @Override
   public void close() {
-    if (completedTests != totalNumberOfTests) {
+    if (completedTests < totalNumberOfTests) {
       String msg = String.format(
               "Not all tests executed. Completed %s of %s tests.",
               completedTests, totalNumberOfTests);
       Exception e = new Exception(msg);
       notifier.fireTestFailure(new Failure(suiteDescription(), e));
+    }
+    if (completedTests > totalNumberOfTests) {
+      if (LOG.isLoggable(Level.WARNING)) {
+        String msg = String.format(
+          "Too many tests completed. Completed %s of %s tests.",
+          completedTests, totalNumberOfTests);
+        LOG.log(Level.WARNING, msg);
+      }
     }
   }
 

@@ -1,34 +1,23 @@
 package fitnesse.wiki.search;
 
-import fitnesse.components.TraversalListener;
-import fitnesse.wiki.*;
+import fitnesse.wiki.HitCollector;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.InMemoryPage;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
-import org.hamcrest.TypeSafeMatcher;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
-public class RegularExpressionWikiPageFinderTest implements TraversalListener<WikiPage> {
+public class RegularExpressionWikiPageFinderTest {
 
   private WikiPage root;
   private WikiPage pageOne;
   private WikiPage childPage;
   private WikiPage virtualPage;
 
-  List<WikiPage> foundPages = new ArrayList<>();
+  HitCollector hits = new HitCollector();
   private WikiPageFinder pageFinder;
-
-  @Override
-  public void process(WikiPage page) {
-    foundPages.add(page);
-  }
 
   @Before
   public void setUp() throws Exception {
@@ -40,71 +29,62 @@ public class RegularExpressionWikiPageFinderTest implements TraversalListener<Wi
             "PageTwo has a bit of content too\n^PageOneChild");
     PageData data = virtualPage.getData();
     virtualPage.commit(data);
-    foundPages.clear();
   }
 
   @Test
   public void searcher() throws Exception {
     pageFinder = pageFinder("has");
     pageFinder.search(root);
-    assertThat(foundPages, found(pageOne, virtualPage));
+    hits.assertPagesFound(pageOne.getName(), virtualPage.getName());
   }
 
   @Test
   public void searcherAgain() throws Exception {
     pageFinder = pageFinder("a");
     pageFinder.search(root);
-    assertThat(foundPages, found(pageOne, childPage, virtualPage));
+    hits.assertPagesFound(pageOne.getName(), childPage.getName(), virtualPage.getName());
   }
 
   @Test
   public void dontSearchProxyPages() throws Exception {
     pageFinder = pageFinder("a");
     pageFinder.search(virtualPage);
-    assertEquals(1, foundPages.size());
+    hits.assertPagesFound(virtualPage.getName());
   }
 
   @Test
   public void observing() throws Exception {
     pageFinder = pageFinder("has");
     pageFinder.search(root);
-    assertEquals(2, foundPages.size());
+    hits.assertPagesFound(pageOne.getName(), virtualPage.getName());
   }
 
   @Test
   public void pagesNotMatching() throws Exception {
     pageFinder = pageFinder(notMatchingSearchText());
-
     pageFinder.search(root);
-
-    assertThat(foundPages, isEmpty());
+    hits.assertPagesFound();
   }
 
   @Test
   public void singlePageMatches() throws Exception {
     pageFinder = pageFinder(matchTextForPageOne());
-
     pageFinder.search(root);
-
-    assertThat(foundPages, found(pageOne));
+    hits.assertPagesFound(pageOne.getName());
   }
 
   @Test
   public void multiplePageMatch() throws Exception {
     pageFinder = pageFinder(matchAll());
-
     pageFinder.search(root);
-
-    assertThat(foundPages, found(root, pageOne, childPage, virtualPage));
+    hits.assertPagesFound(root.getName(), pageOne.getName(), childPage.getName(), virtualPage.getName());
   }
 
   @Test
   public void matchesSublevels() throws Exception {
     pageFinder = pageFinder(matchAll());
-
     pageFinder.search(pageOne);
-
-    assertThat(foundPages, found(pageOne, childPage));
+    hits.assertPagesFound(pageOne.getName(), childPage.getName());
   }
 
   private String matchAll() {
@@ -120,42 +100,7 @@ public class RegularExpressionWikiPageFinderTest implements TraversalListener<Wi
   }
 
   private WikiPageFinder pageFinder(String searchText) {
-    return new RegularExpressionWikiPageFinder(searchText, this);
+    return new RegularExpressionWikiPageFinder(searchText, hits);
   }
 
-  private Matcher<List<WikiPage>> found(final WikiPage... pages) {
-    return new TypeSafeMatcher<List<WikiPage>>() {
-
-      @Override
-      public boolean matchesSafely(List<WikiPage> foundPages) {
-        if (foundPages.size() != pages.length) return false;
-
-        for (WikiPage expectedPage: pages) {
-          if (!foundPages.contains(expectedPage)) return false;
-        }
-        return true;
-      }
-
-      @Override
-      public void describeTo(Description description) {
-        description.appendText("a list containing ").appendValue(pages);
-      }
-    };
-  }
-
-  private Matcher<List<WikiPage>> isEmpty() {
-    return new EmptyListMatcher();
-  }
-
-  private static class EmptyListMatcher extends TypeSafeMatcher<List<WikiPage>> {
-    @Override
-    public boolean matchesSafely(List<WikiPage> pages) {
-      return pages.isEmpty();
-    }
-
-    @Override
-    public void describeTo(Description description) {
-      description.appendText("an empty list");
-    }
-  }
 }

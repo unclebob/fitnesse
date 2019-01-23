@@ -56,7 +56,7 @@ public class PageHistoryResponder implements SecureResponder {
     page.setNavTemplate("viewNav");
     page.put("viewLocation", request.getResource());
     page.setMainTemplate("pageHistory");
-    return makeResponse();
+    return makeResponse(request);
   }
 
   private Response makePageHistoryXmlResponse() throws UnsupportedEncodingException {
@@ -120,7 +120,7 @@ public class PageHistoryResponder implements SecureResponder {
     PageTitle pageTitle = new PageTitle("Suite History", PathParser.parse(request.getResource()), "");
     page.setPageTitle(pageTitle);
 
-    return makeResponse();
+    return makeResponse(request);
   }
 
   private Response generateHtmlTestExecutionResponse(Request request, TestExecutionReport report) throws Exception {
@@ -138,7 +138,7 @@ public class PageHistoryResponder implements SecureResponder {
     PageTitle pageTitle = new PageTitle("Test History", PathParser.parse(request.getResource()), tags);
     page.setPageTitle(pageTitle);
 
-    return makeResponse();
+    return makeResponse(request);
   }
 
   private Response generateXMLResponse(File file) throws UnsupportedEncodingException {
@@ -151,8 +151,8 @@ public class PageHistoryResponder implements SecureResponder {
     return response;
   }
 
-  private Response makeResponse() throws UnsupportedEncodingException {
-    response.setContent(page.html());
+  private Response makeResponse(Request request) throws UnsupportedEncodingException {
+    response.setContent(page.html(request));
     return response;
   }
 

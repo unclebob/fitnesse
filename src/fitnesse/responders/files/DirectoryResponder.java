@@ -37,13 +37,12 @@ class DirectoryResponder implements SecureResponder {
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     this.context = context;
-
     if (!resource.endsWith("/")) {
       return setRedirectForDirectory(request.getQueryString());
     } else if ("json".equals(request.getInput("format"))) {
       return makeDirectoryListingJsonPage();
     } else {
-      return makeDirectoryListingPage();
+      return makeDirectoryListingPage(request);
     }
   }
 
@@ -53,7 +52,7 @@ class DirectoryResponder implements SecureResponder {
     return simpleResponse;
   }
 
-  private Response makeDirectoryListingPage() throws UnsupportedEncodingException {
+  private Response makeDirectoryListingPage(Request request) throws UnsupportedEncodingException {
     HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Files: " + resource);
     //page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "/", "Files Section"));
@@ -61,7 +60,7 @@ class DirectoryResponder implements SecureResponder {
     page.put("fileInfoList", makeFileInfo(FileUtil.getDirectoryListing(requestedDirectory)));
     page.setMainTemplate("directoryPage");
     SimpleResponse simpleResponse = new SimpleResponse();
-    simpleResponse.setContent(page.html());
+    simpleResponse.setContent(page.html(request));
     return simpleResponse;
   }
 

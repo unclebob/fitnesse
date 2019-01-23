@@ -1,4 +1,52 @@
 !2 ${FITNESSE_VERSION}
+ * Add support to evaluate expression in/on Slim symbols (Java-only) ([[1123][https://github.com/unclebob/fitnesse/pull/1123]])
+
+!2 20190119
+ * Under the hood:
+  * Now targetting Java 8
+  * Dependencies updated to latest versions (including: commons-lang3, Velocity 2.0 (which includes slf4j, configured to log using java.util.logging))
+  * Dependencies from the 'optional' configuration (i.e. junit and ant) are now also marked as optional in the pom.xml (which means they are no longer automatically added to the classpath of projects using !-FitNesse-!)
+
+!2 20190118
+ * Issues fixed:
+   * Raise error if decisions table (based on scenario) has output column which is not an output of the scenario ([[1178][https://github.com/unclebob/fitnesse/pull/1178]])
+   * fitnesse.jar was too big (bigger than fitnesse-standalone.jar) because of duplicated files
+   * Build upgraded to Gradle 5.1
+
+!2 20190110
+ * Add support for Android Slim client ([[602][https://github.com/unclebob/fitnesse/pull/602]])
+ * Allow templates to access the current request ([[1174][https://github.com/unclebob/fitnesse/pull/1174]])
+
+!2 20181224
+ * Fixed issue where accessing wiki using Firefox caused very high CPU usage ([[1173][https://github.com/unclebob/fitnesse/issues/1173]])
+
+!2 20181223
+ * "StopTestException" is SuiteSetUp is handled as SuiteStopException ([[1128][https://github.com/unclebob/fitnesse/pull/1128]])
+ * Improve finding of methods in Java classes (first letter may be a capital) ([[992][https://github.com/unclebob/fitnesse/pull/992]])
+ * Allow today's date and expressions to be evaluated inside preformatted blocks ([[1017][https://github.com/unclebob/fitnesse/pull/1017]])
+ * Allow tests which expect an exception ([[1131][https://github.com/unclebob/fitnesse/pull/1131]])
+ * Allow Slim custom comparators to use values containing line endings ([[1142][https://github.com/unclebob/fitnesse/pull/1142]])
+ * Issues fixed
+   * Remove non-standard transformer attribute when writing XML ([[1129][https://github.com/unclebob/fitnesse/pull/1129]])
+   * Fix !headings when an heading contains literal macro ([[1121][https://github.com/unclebob/fitnesse/pull/1121]])
+   * Fix exception in log "The request string is malformed and can not be parsed" ([[1042][https://github.com/unclebob/fitnesse/issues/1042]])
+
+!2 20181221
+ * Issues fixed:
+   * Allow plugins to contain Velocity templates (used when rendering pages) ([[1127][https://github.com/unclebob/fitnesse/pull/1127]])
+
+!2 20180127
+ * Improve stability for non pipe based SUT connection ([[197][https://github.com/unclebob/fitnesse/pull/997]])
+ * Fix new style wiki pages for Windows (line ending) ([[1058][https://github.com/unclebob/fitnesse/pull/1058]])
+ * SLiM now better handles parameter types in fixture constructors ([[1024][https://github.com/unclebob/fitnesse/pull/1024]])
+ * New wiki element: [[''!-!headings-!''][UserGuide.FitNesseWiki.MarkupLanguageReference.MarkupHeadings]] ([[1025][https://github.com/unclebob/fitnesse/pull/1025]])
+ * Define table type now work for Script table ([[1029][https://github.com/unclebob/fitnesse/pull/1029]], [[1099][https://github.com/unclebob/fitnesse/pull/1099]])
+ * JUnit runner supports system property based ''excludeSuiteFilter'' annotation ([[1033][https://github.com/unclebob/fitnesse/pull/1033]])
+ * A SuiteQuery no longer runs test pages that are excluded ([[1079][https://github.com/unclebob/fitnesse/pull/1079]])
+ * Root file pages are now included in the default wiki content by default ([[1084][https://github.com/unclebob/fitnesse/pull/1084]])
+ * Table:Table now resizes when the last line contains more results than expected ([[1055][https://github.com/unclebob/fitnesse/pull/1055]])
+ * Various documentation updates
+ * Various small improvements
 
 For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=16&state=closed.
 

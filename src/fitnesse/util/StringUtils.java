@@ -18,4 +18,18 @@ public class StringUtils {
 
     return true;
   }
+
+  public static String swapCaseOfFirstLetter(String str) {
+    StringBuilder sb = new StringBuilder(str);
+    char ch = str.charAt(0);
+    if (Character.isUpperCase(ch)) {
+      ch = Character.toLowerCase(ch);
+    } else if (Character.isTitleCase(ch)) {
+      ch = Character.toLowerCase(ch);
+    } else if (Character.isLowerCase(ch)) {
+      ch = Character.toUpperCase(ch);
+    }
+    sb.setCharAt(0, ch);
+    return sb.toString();
+  }
 }

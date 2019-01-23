@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testrunner;
 
-import java.io.Closeable;
-import java.io.IOException;
 import fitnesse.FitNesseContext;
 import fitnesse.testsystems.*;
 import fitnesse.testutil.FitNesseUtil;
@@ -14,6 +12,9 @@ import fitnesse.wiki.WikiPageUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
+
+import java.io.Closeable;
+import java.io.IOException;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
@@ -73,16 +74,17 @@ public class MultipleTestsRunnerTest {
     return argThat(new ForTestSystem(type));
   }
 
-  class ForTestSystem extends ArgumentMatcher<Descriptor> {
+  class ForTestSystem implements ArgumentMatcher<Descriptor> {
 
     private final String testSystemType;
 
     public ForTestSystem(String testSystemType) {
       this.testSystemType = testSystemType;
     }
+
     @Override
-    public boolean matches(Object descriptor) {
-      return testSystemType.equals(((Descriptor) descriptor).getTestSystemType());
+    public boolean matches(Descriptor descriptor) {
+      return testSystemType.equals(descriptor.getTestSystemType());
     }
   }
 

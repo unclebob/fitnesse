@@ -1,29 +1,25 @@
 package fitnesse.responders.search;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import org.apache.commons.lang.StringUtils;
-import org.junit.Before;
-import org.junit.Test;
-
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import static fitnesse.responders.search.SearchPropertiesResponder.ACTION;
 import static fitnesse.responders.search.SearchPropertiesResponder.SPECIAL;
 import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTE;
 import static fitnesse.wiki.PageData.PropertyPRUNE;
-import static fitnesse.wiki.PageType.STATIC;
-import static fitnesse.wiki.PageType.SUITE;
-import static fitnesse.wiki.PageType.TEST;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static fitnesse.wiki.PageType.*;
+import static org.junit.Assert.*;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
 

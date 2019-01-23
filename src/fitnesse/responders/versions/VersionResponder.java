@@ -48,7 +48,7 @@ public class VersionResponder implements SecureResponder {
     HtmlPage html = makeHtml(fullPathName, page, context);
 
     SimpleResponse response = new SimpleResponse();
-    response.setContent(html.html());
+    response.setContent(html.html(request));
 
     return response;
   }

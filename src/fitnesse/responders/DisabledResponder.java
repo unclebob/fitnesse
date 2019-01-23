@@ -7,7 +7,6 @@ import fitnesse.http.Response;
 import fitnesse.wiki.WikiPage;
 
 public class DisabledResponder extends BasicResponder {
-
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     return responseWith(contentFrom(context, request, null));
@@ -15,7 +14,7 @@ public class DisabledResponder extends BasicResponder {
 
   @Override
   protected String contentFrom(FitNesseContext context, Request request, WikiPage requestedPage) {
-    return prepareResponseDocument(context).html();
+    return prepareResponseDocument(context).html(request);
   }
 
   private HtmlPage prepareResponseDocument(FitNesseContext context) {

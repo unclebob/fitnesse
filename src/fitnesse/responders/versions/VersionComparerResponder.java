@@ -110,7 +110,7 @@ public class VersionComparerResponder implements Responder {
       page.setMainTemplate("compareVersions");
     }
     SimpleResponse response = new SimpleResponse();
-    response.setContent(page.html());
+    response.setContent(page.html(request));
     return response;
   }
 

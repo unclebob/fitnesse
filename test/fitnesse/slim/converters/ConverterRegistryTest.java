@@ -1,16 +1,17 @@
 package fitnesse.slim.converters;
 
-import java.lang.reflect.ParameterizedType;
-import java.util.*;
-import java.util.regex.Pattern;
-
+import fitnesse.slim.Converter;
+import fitnesse.slim.converters.beans.PropertyEditorConverter;
+import fitnesse.slim.test.AnEnum;
+import fitnesse.slim.test.AnotherEnum;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
-import fitnesse.slim.Converter;
-import fitnesse.slim.test.AnEnum;
-import fitnesse.slim.test.AnotherEnum;
+import java.lang.reflect.ParameterizedType;
+import java.util.*;
+import java.util.regex.Pattern;
+
 import static org.junit.Assert.*;
 
 public class ConverterRegistryTest {
