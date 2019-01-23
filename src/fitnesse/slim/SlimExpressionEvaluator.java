@@ -51,11 +51,14 @@ public class SlimExpressionEvaluator {
 
   protected Object convertWikiLists(Converter<List> cnv, Object value) {
     boolean mightBeList = value instanceof String;
-    if (mightBeList && cnv instanceof GenericCollectionConverter) {
-      // generic converter also create (single item) list when no brackets are
-      // present, that's not what we want here
+    if (mightBeList) {
       String v = (String) value;
-      if (v.startsWith("[") && v.endsWith("]")) {
+      if (GenericCollectionConverter.class.equals(cnv.getClass())) {
+        // generic converter also create (single item) list when no brackets are
+        // present, that's not what we want here
+        mightBeList = v.startsWith("[") && v.endsWith("]");
+      }
+      if (mightBeList) {
         value = convertWikiList(cnv, v);
       }
     }
@@ -85,7 +88,7 @@ public class SlimExpressionEvaluator {
 
   protected Object convertWikiList(Converter<List> cnv, String value) {
     List listObj = cnv.fromString(value);
-    if (listObj.isEmpty()) {
+    if (listObj == null || listObj.isEmpty()) {
       return value;
     } else {
       return listObj;
