@@ -3,6 +3,7 @@
 package fitnesse.testsystems.slim;
 
 import java.util.Collection;
+import java.util.Map;
 
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestPage;
@@ -12,6 +13,8 @@ import fitnesse.testsystems.slim.tables.ScriptTable;
 
 public interface SlimTestContext {
   String getSymbol(String symbolName);
+
+  Map<String, String> getSymbols();
 
   void setSymbol(String symbolName, String value);
 

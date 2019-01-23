@@ -21,6 +21,10 @@ public class TestSlimWithConverter {
         ConverterRegistry.addConverter(List.class, standardConverter);
     }
 
+    public void resetConverters() {
+      ConverterRegistry.resetToStandardConverters();
+    }
+
     public Object getObject() {
         return getArrayList();
     }

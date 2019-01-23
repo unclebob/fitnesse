@@ -10,6 +10,7 @@ Whether a converter is applied to a method's result depends on its declared retu
 |fitnesse.slim.test|
 
 |script   |!-TestSlimWithConverter-!|
+|reset converters                   |
 |check    |get object     |[a, b, c]|
 |check    |get list       |[a, b, c]|
 |check    |get array list |[a, b, c]|
