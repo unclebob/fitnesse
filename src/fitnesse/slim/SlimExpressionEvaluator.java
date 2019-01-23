@@ -1,6 +1,7 @@
 package fitnesse.slim;
 
 import fitnesse.slim.converters.ConverterRegistry;
+import fitnesse.slim.converters.GenericCollectionConverter;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -40,7 +41,7 @@ public class SlimExpressionEvaluator {
     }
   }
 
-  private Object convertWikiHashes(Converter<Map> cnv, Object value) {
+  protected Object convertWikiHashes(Converter<Map> cnv, Object value) {
     value = convertWikiHash(cnv, value);
     if (value instanceof Map) {
       value = convertNestedWikiHashes(cnv, (Map<String, ?>) value);
@@ -48,14 +49,20 @@ public class SlimExpressionEvaluator {
     return value;
   }
 
-  private Object convertWikiLists(Converter<List> cnv, Object value) {
-    if (value.toString().startsWith("[") && value.toString().endsWith("]")) {
-      value = convertWikiList(cnv, value);
+  protected Object convertWikiLists(Converter<List> cnv, Object value) {
+    boolean mightBeList = value instanceof String;
+    if (mightBeList && cnv instanceof GenericCollectionConverter) {
+      // generic converter also create (single item) list when no brackets are
+      // present, that's not what we want here
+      String v = (String) value;
+      if (v.startsWith("[") && v.endsWith("]")) {
+        value = convertWikiList(cnv, v);
+      }
     }
     return value;
   }
 
-  private Object convertWikiHash(Converter<Map> cnv, Object value) {
+  protected Object convertWikiHash(Converter<Map> cnv, Object value) {
     if (value instanceof String) {
       Map mapObj = cnv.fromString((String) value);
       if (!mapObj.isEmpty()) {
@@ -65,7 +72,7 @@ public class SlimExpressionEvaluator {
     return value;
   }
 
-  private Object convertNestedWikiHashes(Converter<Map> cnv, Map<String, ?> value) {
+  protected Object convertNestedWikiHashes(Converter<Map> cnv, Map<String, ?> value) {
     Map<String, Object> newValue = new LinkedHashMap<>();
     newValue.putAll(value);
     for (Map.Entry<String, Object> nestedEntry : newValue.entrySet()) {
@@ -76,14 +83,13 @@ public class SlimExpressionEvaluator {
     return value;
   }
 
-  private Object convertWikiList(Converter<List> cnv, Object value) {
-    if (value instanceof String) {
-      List listObj = cnv.fromString((String) value);
-      if (!listObj.isEmpty()) {
-        value = listObj;
-      }
+  protected Object convertWikiList(Converter<List> cnv, String value) {
+    List listObj = cnv.fromString(value);
+    if (listObj.isEmpty()) {
+      return value;
+    } else {
+      return listObj;
     }
-    return value;
   }
 
   public Object evaluate(String expression) {
