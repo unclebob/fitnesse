@@ -6,7 +6,9 @@ import fitnesse.slim.converters.GenericCollectionConverter;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Evaluates slim expressions.
@@ -87,12 +89,7 @@ public class SlimExpressionEvaluator {
   }
 
   protected Object convertWikiList(Converter<List> cnv, String value) {
-    List listObj = cnv.fromString(value);
-    if (listObj == null || listObj.isEmpty()) {
-      return value;
-    } else {
-      return listObj;
-    }
+    return cnv.fromString(value);
   }
 
   public Object evaluate(String expression) {
