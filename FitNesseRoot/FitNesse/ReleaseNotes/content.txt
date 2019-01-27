@@ -1,5 +1,7 @@
 !2 ${FITNESSE_VERSION}
  * Add support to evaluate expression in/on Slim symbols (Java-only) ([[1123][https://github.com/unclebob/fitnesse/pull/1123]])
+ * Under the hood:
+  * Improved speed of Slim's calls to Java fixtures ([[1179][https://github.com/unclebob/fitnesse/pull/1179]])
 
 !2 20190119
  * Under the hood:
