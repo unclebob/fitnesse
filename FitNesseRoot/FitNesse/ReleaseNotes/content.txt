@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+
+!2 20190127
  * Add support to evaluate expression in/on Slim symbols (Java-only) ([[1123][https://github.com/unclebob/fitnesse/pull/1123]])
  * Improve message on exception when test is run via jUnit ([[1134][https://github.com/unclebob/fitnesse/issues/1134]])
  * Under the hood:
