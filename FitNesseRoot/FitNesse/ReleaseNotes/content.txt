@@ -1,4 +1,5 @@
 !2 ${FITNESSE_VERSION}
+ * Bugfix: Allow Git version plugin to work when running via standalone.jar ([[1179][https://github.com/unclebob/fitnesse/pull/1179]])
 
 !2 20190127
  * Add support to evaluate expression in/on Slim symbols (Java-only) ([[1123][https://github.com/unclebob/fitnesse/pull/1123]])
