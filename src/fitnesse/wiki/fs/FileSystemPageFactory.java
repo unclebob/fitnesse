@@ -33,8 +33,12 @@ public class FileSystemPageFactory implements WikiPageFactory, WikiPageFactoryRe
   }
 
   public FileSystemPageFactory(Properties properties) {
-    this(new DiskFileSystem(), new ComponentFactory(properties).createComponent(
-            ConfigurationParameter.VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class));
+    this(new ComponentFactory(properties));
+  }
+
+  public FileSystemPageFactory(ComponentFactory componentFactory) {
+    this(new DiskFileSystem(), componentFactory.createComponent(
+      ConfigurationParameter.VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class));
   }
 
   public FileSystemPageFactory(FileSystem fileSystem, VersionsController versionsController) {
