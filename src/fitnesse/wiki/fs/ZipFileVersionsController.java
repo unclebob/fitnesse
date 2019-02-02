@@ -1,5 +1,6 @@
 package fitnesse.wiki.fs;
 
+import fitnesse.components.ComponentFactory;
 import fitnesse.wiki.NoSuchVersionException;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiImportProperty;
@@ -10,7 +11,10 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import java.util.zip.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import static fitnesse.ConfigurationParameter.VERSIONS_CONTROLLER_DAYS;
 import static java.lang.String.format;
@@ -25,8 +29,8 @@ public class ZipFileVersionsController implements VersionsController {
 
   private VersionsController persistence;
 
-  public ZipFileVersionsController(Properties properties) {
-    this(getVersionDays(properties));
+  public ZipFileVersionsController(ComponentFactory componentFactory) {
+    this(getVersionDays(componentFactory));
   }
   public ZipFileVersionsController() {
     this(14);
@@ -38,8 +42,8 @@ public class ZipFileVersionsController implements VersionsController {
     persistence = new SimpleFileVersionsController(new DiskFileSystem());
   }
 
-  private static int getVersionDays(Properties properties) {
-    String days = properties.getProperty(VERSIONS_CONTROLLER_DAYS.getKey());
+  private static int getVersionDays(ComponentFactory componentFactory) {
+    String days = componentFactory.getProperty(VERSIONS_CONTROLLER_DAYS.getKey());
     return days == null ? 14 : Integer.parseInt(days);
   }
 

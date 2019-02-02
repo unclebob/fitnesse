@@ -1,10 +1,8 @@
 package fitnesse.wiki.fs;
 
 import fitnesse.ConfigurationParameter;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.SystemVariableSource;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.WikiPage;
+import fitnesse.components.ComponentFactory;
+import fitnesse.wiki.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +12,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;
 
+import static fitnesse.ConfigurationParameter.VERSIONS_CONTROLLER_CLASS;
+import static fitnesse.ConfigurationParameter.WIKI_PAGE_FACTORY_CLASS;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 public class FileSystemPageFactoryTest {
   private FileSystem fileSystem;
@@ -27,6 +28,17 @@ public class FileSystemPageFactoryTest {
     fileSystemPageFactory = new FileSystemPageFactory(fileSystem, new ZipFileVersionsController());
     fileSystem.makeFile(new File("./somepath/content.txt"), "");
     rootPage = fileSystemPageFactory.makePage(new File("./somepath"), "somepath", null, new SystemVariableSource());
+  }
+
+  @Test
+  public void getVersionControllerFromComponentFactoryWhenCreatedByComponentFactory() {
+    ComponentFactory c = new ComponentFactory(new Properties());
+
+    VersionsController vc = c.createComponent(VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class);
+    FileSystemPageFactory f = c.createComponent(WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
+
+    assertSame("Did not use the version controller instance present in component factory",
+      vc, f.getVersionsController());
   }
 
   @Test
