@@ -11,7 +11,7 @@ import static fitnesse.ContextConfigurator.*;
 public class Arguments {
 
   private final CommandLine commandLine = new CommandLine(
-          "[-v][-p port][-d dir][-r root][-l logDir][-f config][-e days][-o][-i][-a credentials][-c command][-b output]");
+          "[-v][-p port][-d dir][-r root][-l logDir][-f config][-e days][-o][-i][-a credentials][-c command][-b output][-lh]");
 
   private final String rootPath;
   private final Integer port;
@@ -25,6 +25,7 @@ public class Arguments {
   private final String output;
   private final String configFile;
   private final boolean verboseLogging;
+  private final boolean localhostOnly;
 
   public Arguments(String... args) {
     if (!commandLine.parse(args)) {
@@ -44,12 +45,13 @@ public class Arguments {
     this.verboseLogging = commandLine.hasOption("v");
     this.omitUpdate = commandLine.hasOption("o");
     this.installOnly = commandLine.hasOption("i");
+    this.localhostOnly = commandLine.hasOption("lh");
   }
 
   static void printUsage() {
     ContextConfigurator defaults = ContextConfigurator.systemDefaults();
 
-    System.err.println("Usage: java -jar fitnesse.jar [-vpdrlfeoaicb]");
+    System.err.println("Usage: java -jar fitnesse.jar [-vpdrlfeoaicblh]");
     System.err.println("\t-p <port number> {" + DEFAULT_PORT + "}");
     System.err.println("\t-d <working directory> {" +
       defaults.get(ROOT_PATH) + "}");
@@ -67,6 +69,7 @@ public class Arguments {
     System.err.println("\t-c <command> execute single command.");
     System.err.println("\t-b <filename> redirect command output.");
     System.err.println("\t-v {off} Verbose logging");
+    System.err.println("\t-lh {off} Only bind to loopback interface (localhost only access)");
   }
 
   public String getRootPath(ContextConfigurator configurator) {
@@ -103,6 +106,8 @@ public class Arguments {
       result = result.withParameter(COMMAND, command);
     if (credentials != null)
       result = result.withParameter(CREDENTIALS, credentials);
+    if (localhostOnly)
+      result = result.withParameter(LOCALHOST_ONLY, "true");
 
     return result;
   }
