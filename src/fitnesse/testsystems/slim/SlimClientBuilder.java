@@ -1,16 +1,15 @@
 package fitnesse.testsystems.slim;
 
+import fitnesse.FitNesseContext;
+import fitnesse.slim.SlimPipeSocket;
+import fitnesse.socketservice.*;
+import fitnesse.testsystems.*;
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import fitnesse.socketservice.*;
-import org.apache.commons.lang.ArrayUtils;
-
-import fitnesse.FitNesseContext;
-import fitnesse.slim.SlimPipeSocket;
-import fitnesse.testsystems.*;
 
 import static fitnesse.slim.SlimPipeSocket.STDERR_PREFIX;
 import static fitnesse.slim.SlimPipeSocket.STDOUT_PREFIX;
@@ -150,11 +149,11 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
   protected String[] buildCommand() {
     String[] slimArguments = buildArguments();
     String[] slimCommandPrefix = super.buildCommand(getCommandPattern(), getTestRunner(), getClassPath());
-    return (String[]) ArrayUtils.addAll(slimCommandPrefix, slimArguments);
+    return ArrayUtils.addAll(slimCommandPrefix, slimArguments);
   }
 
   protected String[] buildArguments() {
-    Object[] arguments = new String[] {};
+    String[] arguments = new String[] {};
     String useSSL =  determineClientSSLParameterClass();
     if (useSSL != null){
     	arguments = ArrayUtils.add(arguments, "-ssl");
@@ -165,9 +164,9 @@ public class SlimClientBuilder extends ClientBuilder<SlimCommandRunningClient> {
     	for (String flag : slimFlags)
     		arguments = ArrayUtils.add(arguments, flag);
 
-	arguments = ArrayUtils.add(arguments, Integer.toString(getSlimPort()));
+  	arguments = ArrayUtils.add(arguments, Integer.toString(getSlimPort()));
 
-    return (String[]) arguments;
+    return arguments;
   }
 
   public int getSlimPort() {

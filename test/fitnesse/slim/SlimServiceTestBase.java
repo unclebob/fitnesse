@@ -2,11 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import fitnesse.slim.instructions.CallInstruction;
 import fitnesse.slim.instructions.ImportInstruction;
 import fitnesse.slim.instructions.Instruction;
@@ -15,10 +10,15 @@ import fitnesse.socketservice.*;
 import fitnesse.testsystems.CompositeExecutionLogListener;
 import fitnesse.testsystems.MockCommandRunner;
 import fitnesse.testsystems.slim.SlimCommandRunningClient;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 

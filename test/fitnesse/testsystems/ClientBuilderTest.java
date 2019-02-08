@@ -1,17 +1,17 @@
 package fitnesse.testsystems;
 
-import java.io.IOException;
-import java.util.Arrays;
-
 import fitnesse.testrunner.WikiPageDescriptor;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.InMemoryPage;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.Arrays;
 
 import static fitnesse.testsystems.ClientBuilder.replace;
 import static org.junit.Assert.assertEquals;

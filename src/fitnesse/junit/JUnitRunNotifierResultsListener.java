@@ -4,6 +4,8 @@ import java.io.Closeable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import fitnesse.slim.SlimException;
+import fitnesse.slim.SlimServer;
 import fitnesse.testrunner.TestsRunnerListener;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
@@ -13,6 +15,7 @@ import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemListener;
+import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
@@ -80,7 +83,11 @@ public class JUnitRunNotifierResultsListener
 
   @Override
   public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
-    firstFailure(exceptionResult.getExecutionResult(), exceptionResult.getMessage());
+    String message = exceptionResult.getMessage();
+    if (message == null && exceptionResult instanceof SlimExceptionResult) {
+      message = extractMessageFromSlimException((SlimExceptionResult) exceptionResult);
+    }
+    firstFailure(exceptionResult.getExecutionResult(), message);
   }
 
   @Override
@@ -109,6 +116,16 @@ public class JUnitRunNotifierResultsListener
         LOG.log(Level.WARNING, msg);
       }
     }
+  }
+
+  protected String extractMessageFromSlimException(SlimExceptionResult slimExceptionResult) {
+    String slimExceptionMessage = slimExceptionResult.getException();
+    String result = slimExceptionMessage.replace(SlimServer.EXCEPTION_TAG, "");
+    int index = result.indexOf("\n\tat fitnesse.slim.MethodExecutor.findAndInvoke(");
+    if (index > 0) {
+      result = result.substring(0, index);
+    }
+    return result;
   }
 
   protected void notifyOfTestSystemException(String testSystemName, Throwable cause) {
@@ -145,6 +162,8 @@ public class JUnitRunNotifierResultsListener
     }
     if (executionResult == ExecutionResult.ERROR) {
       firstFailure = new Exception(message);
+    } else if (message == null) {
+      firstFailure = new AssertionError();
     } else {
       firstFailure = new AssertionError(message);
     }

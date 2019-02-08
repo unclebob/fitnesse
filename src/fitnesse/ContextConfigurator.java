@@ -104,7 +104,7 @@ public class ContextConfigurator {
     updateFitNesseProperties(version);
 
     if (wikiPageFactory == null) {
-      wikiPageFactory = (WikiPageFactory) componentFactory.createComponent(WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
+      wikiPageFactory = componentFactory.createComponent(WIKI_PAGE_FACTORY_CLASS, FileSystemPageFactory.class);
     }
 
     if (versionsController == null) {

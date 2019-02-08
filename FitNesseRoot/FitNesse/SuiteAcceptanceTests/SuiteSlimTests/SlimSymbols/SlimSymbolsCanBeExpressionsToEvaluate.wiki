@@ -60,10 +60,21 @@ Lists
 |import            |
 |fitnesse.slim.test|
 
-|script  |Test Slim With Converter                      |
-|$myList=|getList                                       |
-|start   |echo fixture                                  |
-|check   |echo|$`myList.size()`    |3                   |
-|check   |echo|$`myList.getClass()`|$`myList.getClass()`|
+|script  |Test Slim With Converter                           |
+|$myList=|getList                                            |
+|start   |echo fixture                                       |
+|check   |echo|$`myList.size()`    |3                        |
+|check   |echo|$`myList.getClass()`|$`myList.getClass()`     |
+|check   |echo|$`myList.getClass()`|class java.util.ArrayList|
 
+|script   |Test Slim With Converter                            |
+|set list converter                                            |
+|$myList2=|getArrayList                                        |
+|start    |echo fixture                                        |
+|check    |echo|$`myList2.size()`    |3                        |
+|check    |echo|$`myList2.getClass()`|class java.util.ArrayList|
 
+Reset list converter to standard one after test
+
+|script   |Test Slim With Converter                            |
+|remove list converter                                         |

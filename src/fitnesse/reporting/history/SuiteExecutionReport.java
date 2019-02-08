@@ -2,17 +2,16 @@ package fitnesse.reporting.history;
 
 import fitnesse.FitNesseVersion;
 import fitnesse.testsystems.TestSummary;
-
+import fitnesse.util.DateTimeUtil;
+import fitnesse.util.XmlUtil;
 import fitnesse.wiki.PathParser;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import fitnesse.util.DateTimeUtil;
-import fitnesse.util.XmlUtil;
 
 import java.io.Writer;
 import java.text.ParseException;

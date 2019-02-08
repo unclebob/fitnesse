@@ -3,22 +3,18 @@
 
 package fitnesse.testsystems;
 
-import static java.util.Arrays.asList;
-import static util.FileUtil.CHARENCODING;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static java.util.Arrays.asList;
+import static util.FileUtil.CHARENCODING;
 
 
 public class CommandRunner {

@@ -1,5 +1,21 @@
 !2 ${FITNESSE_VERSION}
+ * Bugfix: Allow Git version plugin to work when running via standalone.jar ([[1179][https://github.com/unclebob/fitnesse/pull/1179]])
+
+!2 20190127
+ * Add support to evaluate expression in/on Slim symbols (Java-only) ([[1123][https://github.com/unclebob/fitnesse/pull/1123]])
+ * Improve message on exception when test is run via jUnit ([[1134][https://github.com/unclebob/fitnesse/issues/1134]])
+ * Under the hood:
+  * Improved speed of Slim's calls to Java fixtures ([[1179][https://github.com/unclebob/fitnesse/pull/1179]])
+
+!2 20190119
+ * Under the hood:
+  * Now targetting Java 8
+  * Dependencies updated to latest versions (including: commons-lang3, Velocity 2.0 (which includes slf4j, configured to log using java.util.logging))
+  * Dependencies from the 'optional' configuration (i.e. junit and ant) are now also marked as optional in the pom.xml (which means they are no longer automatically added to the classpath of projects using !-FitNesse-!)
+
+!2 20190118
  * Issues fixed:
+   * Raise error if decisions table (based on scenario) has output column which is not an output of the scenario ([[1178][https://github.com/unclebob/fitnesse/pull/1178]])
    * fitnesse.jar was too big (bigger than fitnesse-standalone.jar) because of duplicated files
    * Build upgraded to Gradle 5.1
 
