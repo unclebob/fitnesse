@@ -125,7 +125,7 @@ public class FitNesseMainTest {
   public void localhostOnlyFlagResultsInConnectableFitnesseOnLocalHost() throws Exception {
     String[] args = {"-p", "1999", "-lh"};
     new FitNesseMain().launchFitNesse(new Arguments(args));
-    URL url = new URL("http://localhost:1999");
+    URL url = new URL("http://localhost:1999/?shutdown");
     HttpURLConnection con = (HttpURLConnection) url.openConnection();
     con.setRequestMethod("GET");
     int responseCode = con.getResponseCode();
