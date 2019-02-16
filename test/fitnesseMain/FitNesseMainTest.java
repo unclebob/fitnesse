@@ -6,7 +6,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
 import java.net.ServerSocket;
+import java.net.URL;
 
 import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
@@ -32,9 +34,9 @@ public class FitNesseMainTest {
   @Before
   public void setUp() throws Exception {
     context = ContextConfigurator.systemDefaults()
-            .withRootPath(".")
-            .withRootDirectoryName("testFitnesseRoot")
-            .withPort(80);
+      .withRootPath(".")
+      .withRootDirectoryName("testFitnesseRoot")
+      .withPort(80);
   }
 
   @After
@@ -96,7 +98,7 @@ public class FitNesseMainTest {
 
   @Test
   public void canRunSingleCommand() throws Exception {
-    String response = runFitnesseMainWith("-o",  "-c", "/root");
+    String response = runFitnesseMainWith("-o", "-c", "/root");
     assertThat(response, containsString("Executing command:"));
     assertThat(response, not(containsString("Starting FitNesse on port:")));
   }
@@ -112,11 +114,23 @@ public class FitNesseMainTest {
     String[] args = {"-o", "-a", "user:pwd", "-c", "user:pwd:/FitNesse.NonExistentTestCase?test"};
     Arguments arguments = new Arguments(args);
     try {
-        Integer exitCode = new FitNesseMain().launchFitNesse(arguments);
-    } catch (Exception e){
-        assertEquals("error loading page: 404", e.getMessage());
-        throw e;
+      Integer exitCode = new FitNesseMain().launchFitNesse(arguments);
+    } catch (Exception e) {
+      assertEquals("error loading page: 404", e.getMessage());
+      throw e;
     }
+  }
+
+  @Test
+  public void localhostOnlyFlagResultsInConnectableFitnesseOnLocalHost() throws Exception {
+    String[] args = {"-p", "1999", "-lh"};
+    new FitNesseMain().launchFitNesse(new Arguments(args));
+    URL url = new URL("http://localhost:1999");
+    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+    con.setRequestMethod("GET");
+    int responseCode = con.getResponseCode();
+    con.disconnect();
+    assertEquals(200, responseCode);
   }
 
   @Test
