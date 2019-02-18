@@ -337,7 +337,6 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
       setClosed();
       response.closeChunks();
       response.addTrailingHeader("Exit-Code", String.valueOf(exitCode));
-      response.closeTrailer();
       response.close();
     }
   }
