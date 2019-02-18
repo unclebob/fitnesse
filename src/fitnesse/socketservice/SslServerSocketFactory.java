@@ -1,6 +1,7 @@
 package fitnesse.socketservice;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,6 +26,19 @@ public class SslServerSocketFactory implements ServerSocketFactory {
 
     SSLServerSocketFactory ssf = sslParameters.createSSLServerSocketFactory();
     socket = ssf.createServerSocket(port);
+    if (needClientAuth) {
+      ((SSLServerSocket) socket).setNeedClientAuth(true);
+    }
+    return socket;
+  }
+
+  @Override
+  public ServerSocket createLocalOnlyServerSocket(int port) throws IOException {
+    ServerSocket socket;
+    LOG.log(Level.FINER, "Creating Local-only SSL socket on port: " + port);
+
+    SSLServerSocketFactory ssf = sslParameters.createSSLServerSocketFactory();
+    socket = ssf.createServerSocket(port, 50, InetAddress.getLoopbackAddress());
     if (needClientAuth) {
       ((SSLServerSocket) socket).setNeedClientAuth(true);
     }
