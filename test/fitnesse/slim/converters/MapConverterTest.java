@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class MapConverterTest {
   private MapConverter converter;
@@ -132,6 +133,13 @@ public class MapConverterTest {
 
     assertEquals(StringUtils.join(Arrays.asList("<table class=\"hash_table\">", "\t<tr class=\"hash_row\">", "\t\t<td class=\"hash_key\">a</td>", "\t\t<td class=\"hash_value\">b</td>", "\t</tr>",
         "\t<tr class=\"hash_row\">", "\t\t<td class=\"hash_key\">c</td>", "\t\t<td class=\"hash_value\">d</td>", "\t</tr>", "</table>"), HtmlTag.endl), editor.toString(aMap()));
+  }
+
+  @Test
+  public void nonHtmlStringWithPercentageReturnsEmptyMap() {
+    //See https://github.com/unclebob/fitnesse/issues/1190
+    MapConverter cnv = new MapConverter();
+    assertEquals(new HashMap<>(), cnv.fromString("1%"));
   }
 
   private Map<Object, Object> aMap() {
