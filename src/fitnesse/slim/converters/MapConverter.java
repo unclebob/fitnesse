@@ -137,7 +137,7 @@ public class MapConverter implements Converter<Map> {
     try {
       Parser parser = new Parser(possibleTable);
       return parser.parse(null);
-    } catch (ParserException | IndexOutOfBoundsException e) {
+    } catch (ParserException | StringIndexOutOfBoundsException e) {
       return null;
     }
   }
