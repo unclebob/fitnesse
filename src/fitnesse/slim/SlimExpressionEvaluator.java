@@ -38,7 +38,7 @@ public class SlimExpressionEvaluator {
       String key = entry.getKey();
       Object value = entry.getValue().getObject();
         value = convertWikiHashes(mapCnv, value);
-        value = convertWikiLists(listCnv, value);
+      value = convertWikiLists(listCnv, value);
       engine.put(key, value);
     }
   }
