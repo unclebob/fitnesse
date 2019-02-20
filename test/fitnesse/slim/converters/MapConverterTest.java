@@ -137,8 +137,8 @@ public class MapConverterTest {
   @Test
   public void nonHtmlStringWithPercentageReturnsEmptyMap() {
     //See https://github.com/unclebob/fitnesse/issues/1190
-    MapConverter cnv = new MapConverter();
-    assertEquals(new HashMap<>(), cnv.fromString("1%"));
+    makeMap("1%");
+    assertEquals(0, result.size());
   }
 
   private Map<Object, Object> aMap() {
