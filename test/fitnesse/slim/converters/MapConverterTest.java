@@ -134,6 +134,13 @@ public class MapConverterTest {
         "\t<tr class=\"hash_row\">", "\t\t<td class=\"hash_key\">c</td>", "\t\t<td class=\"hash_value\">d</td>", "\t</tr>", "</table>"), HtmlTag.endl), editor.toString(aMap()));
   }
 
+  @Test
+  public void nonHtmlStringWithPercentageReturnsEmptyMap() {
+    //See https://github.com/unclebob/fitnesse/issues/1190
+    makeMap("1%");
+    assertEquals(0, result.size());
+  }
+
   private Map<Object, Object> aMap() {
     Map<Object, Object> map = new TreeMap<>();
     map.put("a", "b");
