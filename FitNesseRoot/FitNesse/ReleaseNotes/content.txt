@@ -1,4 +1,7 @@
 !2 ${FITNESSE_VERSION}
+ * Issues fixed:
+  * Don't display 'Broken pipe' exception when running tests on Debian with Firefox ([[1187][https://github.com/unclebob/fitnesse/issues/1187]])
+  * Slim symbols containing '%' cannot be used in Slim (javascript) expressions ([[1190][https://github.com/unclebob/fitnesse/issues/1190]])
 
 !2 20190216
  * New argument '-lh': just bind to the local loopback interface. Effectively preventing wiki-access from other machines in the network ([[1183][https://github.com/unclebob/fitnesse/pull/1183]])
