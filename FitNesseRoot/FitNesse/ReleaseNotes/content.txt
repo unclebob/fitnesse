@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+
+!2 20190224
  * Issues fixed:
   * Don't display 'Broken pipe' exception when running tests on Debian with Firefox ([[1187][https://github.com/unclebob/fitnesse/issues/1187]])
   * Slim symbols containing '%' cannot be used in Slim (javascript) expressions ([[1190][https://github.com/unclebob/fitnesse/issues/1190]])
