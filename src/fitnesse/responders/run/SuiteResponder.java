@@ -275,7 +275,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   }
 
   protected BaseFormatter newHtmlFormatter() {
-    return new SuiteHtmlFormatter(page, response.getWriter());
+    return new SuiteHtmlFormatter(page, isMultipleTestsRun(), response.getWriter());
   }
 
   protected void performExecution() throws TestExecutionException {

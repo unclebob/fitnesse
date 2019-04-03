@@ -34,7 +34,7 @@ public class SuiteHtmlFormatterTest {
     clock = new DateAlteringClock(new Date()).freeze();
     WikiPage root = InMemoryPage.makeRoot("RooT");
     pageBuffer = new StringWriter();
-    formatter = new SuiteHtmlFormatter(root, pageBuffer);
+    formatter = new SuiteHtmlFormatter(root, true, pageBuffer);
   }
 
   @After
