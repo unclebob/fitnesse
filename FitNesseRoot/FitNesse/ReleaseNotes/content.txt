@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+ * Issues fixed:
+  * Slim symbols containing '%' cannot be used in Slim (javascript) expressions, on Java 9+ ([[1200][https://github.com/unclebob/fitnesse/issues/1200]])
 
 !2 20190224
  * Issues fixed:
