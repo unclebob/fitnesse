@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.reporting;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Date;
 
@@ -9,8 +10,7 @@ import static fitnesse.reporting.DecimalSeparatorUtil.getDecimalSeparator;
 import static fitnesse.reporting.DecimalSeparatorUtil.getDecimalSeparatorForRegExp;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static util.RegexTestCase.assertHasRegexp;
-import static util.RegexTestCase.assertSubString;
+import static util.RegexTestCase.*;
 
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestSummary;
@@ -32,9 +32,8 @@ public class SuiteHtmlFormatterTest {
   @Before
   public void setUp() throws Exception {
     clock = new DateAlteringClock(new Date()).freeze();
-    WikiPage root = InMemoryPage.makeRoot("RooT");
     pageBuffer = new StringWriter();
-    formatter = new SuiteHtmlFormatter(root, true, pageBuffer);
+    createFormatter(true);
   }
 
   @After
@@ -108,7 +107,33 @@ public class SuiteHtmlFormatterTest {
   }
 
   @Test
-  public void testResultsHtml() throws Exception {
+  public void testResultsHtml() {
+    sendTwoSystemRunToFormatter();
+
+    assertPageBufferContains("document.getElementById(\"test-summaries\")");
+    assertPageBufferContains("document.getElementById(\"test-system-Fit:laughing.fit\").innerHTML");
+    assertPageBufferContains("document.getElementById(\"test-system-Slim:very.slim\").innerHTML");
+
+    assertPageBufferContains("<h2>Test System: Slim:very.slim</h2>");
+    assertPageBufferContains("<h2>Test System: Fit:laughing.fit</h2>");
+  }
+
+  @Test
+  public void testResultsHtmlNoSummaries() {
+    createFormatter(false);
+
+    sendTwoSystemRunToFormatter();
+
+    String output = pageBuffer.toString();
+    assertNotSubString("document.getElementById(\"test-summaries\")", output);
+    assertNotSubString("document.getElementById(\"test-system-Fit:laughing.fit\").innerHTML", output);
+    assertNotSubString("document.getElementById(\"test-system-Slim:very.slim\").innerHTML", output);
+
+    assertNotSubString("<h2>Test System: Slim:very.slim</h2>", output);
+    assertNotSubString("<h2>Test System: Fit:laughing.fit</h2>", output);
+  }
+
+  private void sendTwoSystemRunToFormatter() {
     TestSystem fitMock = mock(TestSystem.class);
     when(fitMock.getName()).thenReturn("Fit:laughing.fit");
     TestSystem slimMock = mock(TestSystem.class);
@@ -127,8 +152,6 @@ public class SuiteHtmlFormatterTest {
     formatter.processTestResults("NewRelativeName", new TestSummary(0, 1, 0, 0));
     formatter.finishWritingOutput();
 
-    assertPageBufferContains("<h2>Test System: Slim:very.slim</h2>");
-
     assertPageBufferContains("<a href=\"FullName\" class=\"test_name\">RelativeName</a>");
     assertPageBufferContains("<a name=\"RelativeName1\"/>");
     assertPageBufferContains("<div class=\"alternating_block\">starting output</div>");
@@ -138,7 +161,7 @@ public class SuiteHtmlFormatterTest {
   }
 
   @Test
-  public void testTestingProgressIndicator() throws Exception {
+  public void testTestingProgressIndicator() {
     TestSystem fitMock = mock(TestSystem.class);
     when(fitMock.getName()).thenReturn("Fit:laughing.fit");
 
@@ -181,6 +204,28 @@ public class SuiteHtmlFormatterTest {
 
   @Test
   public void testIndividualTestTimingsShouldAppearInSummary() throws Exception {
+    sendTwoPageRunToFormatter();
+
+    assertPageBufferContains("document.getElementById(\"test-summaries\")");
+
+    String output = pageBuffer.toString();
+    assertHasRegexp("<li.*\\(page1\\).*<span.*>\\(0(" + getDecimalSeparatorForRegExp() + "){1}670 seconds\\)</span>.*</li>", output);
+    assertHasRegexp("<li.*\\(page2\\).*<span.*>\\(0(" + getDecimalSeparatorForRegExp() + "){1}890 seconds\\)</span>.*</li>", output);
+  }
+
+  @Test
+  public void testNoIndividualTestTimingsWithoutSummaries() throws Exception {
+    createFormatter(false);
+
+    sendTwoPageRunToFormatter();
+
+    String output = pageBuffer.toString();
+    assertNotSubString("document.getElementById(\"test-summaries\")", output);
+    assertDoesntHaveRegexp("<li.*\\(page1\\).*<span.*>.*</span>.*</li>", output);
+    assertDoesntHaveRegexp("<li.*\\(page2\\).*<span.*>.*</span>.*</li>", output);
+  }
+
+  private void sendTwoPageRunToFormatter() throws IOException {
     formatter.announceNumberTestsToRun(2);
     WikiTestPage firstPage = new WikiTestPage(new WikiPageDummy("page1", "content", null));
     WikiTestPage secondPage = new WikiTestPage(new WikiPageDummy("page2", "content", null));
@@ -191,11 +236,14 @@ public class SuiteHtmlFormatterTest {
     clock.elapse(890);
     formatter.testComplete(secondPage, new TestSummary(5, 6, 7, 8));
     formatter.close();
-    assertHasRegexp("<li.*\\(page1\\).*<span.*>\\(0(" + getDecimalSeparatorForRegExp() + "){1}670 seconds\\)</span>.*</li>", pageBuffer.toString());
-    assertHasRegexp("<li.*\\(page2\\).*<span.*>\\(0(" + getDecimalSeparatorForRegExp() + "){1}890 seconds\\)</span>.*</li>", pageBuffer.toString());
   }
 
   private void assertPageBufferContains(String substring) {
     assertSubString(substring, pageBuffer.toString());
+  }
+
+  private void createFormatter(boolean testSummariesPresent) {
+    WikiPage root = InMemoryPage.makeRoot("RooT");
+    formatter = new SuiteHtmlFormatter(root, testSummariesPresent, pageBuffer);
   }
 }
