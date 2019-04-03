@@ -26,7 +26,7 @@ import fitnesse.util.DateAlteringClock;
 
 public class SuiteHtmlFormatterTest {
   private SuiteHtmlFormatter formatter;
-  private StringWriter pageBuffer = new StringWriter();
+  private StringWriter pageBuffer;
   private DateAlteringClock clock;
 
   @Before
@@ -49,17 +49,17 @@ public class SuiteHtmlFormatterTest {
     formatter.processTestResults("TestName3", new TestSummary(1, 1, 0, 0));
     formatter.finishWritingOutput();
 
-    assertSubString("<strong>Test Pages:</strong> 2 right, 1 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
-    assertSubString("<strong>Assertions:</strong> 51 right, 1 wrong, 2 ignored, 0 exceptions", pageBuffer.toString());
+    assertPageBufferContains("<strong>Test Pages:</strong> 2 right, 1 wrong, 0 ignored, 0 exceptions");
+    assertPageBufferContains("<strong>Assertions:</strong> 51 right, 1 wrong, 2 ignored, 0 exceptions");
   }
 
   private void testSuiteMetaTestSummaryWithTestResults(String pageName) throws Exception {
     formatter.processTestResults(pageName, new TestSummary(2, 0, 0, 0));
     formatter.finishWritingOutput();
 
-    assertSubString("<span class=\\\"results pass\\\">2 right, 0 wrong, 0 ignored, 0 exceptions</span>", pageBuffer.toString());
-    assertSubString("<strong>Test Pages:</strong> 1 right, 0 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
-    assertSubString("<strong>Assertions:</strong> 2 right, 0 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
+    assertPageBufferContains("<span class=\\\"results pass\\\">2 right, 0 wrong, 0 ignored, 0 exceptions</span>");
+    assertPageBufferContains("<strong>Test Pages:</strong> 1 right, 0 wrong, 0 ignored, 0 exceptions");
+    assertPageBufferContains("<strong>Assertions:</strong> 2 right, 0 wrong, 0 ignored, 0 exceptions");
   }
 
   @Test
@@ -76,9 +76,9 @@ public class SuiteHtmlFormatterTest {
     formatter.processTestResults(pageName, new TestSummary(0, 0, 0, 0));
     formatter.finishWritingOutput();
 
-    assertSubString("<span class=\\\"results pass\\\">0 right, 0 wrong, 0 ignored, 0 exceptions</span>", pageBuffer.toString());
-    assertSubString("<strong>Test Pages:</strong> 1 right, 0 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
-    assertSubString("<strong>Assertions:</strong> 0 right, 0 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
+    assertPageBufferContains("<span class=\\\"results pass\\\">0 right, 0 wrong, 0 ignored, 0 exceptions</span>");
+    assertPageBufferContains("<strong>Test Pages:</strong> 1 right, 0 wrong, 0 ignored, 0 exceptions");
+    assertPageBufferContains("<strong>Assertions:</strong> 0 right, 0 wrong, 0 ignored, 0 exceptions");
   }
 
   @Test
@@ -95,16 +95,16 @@ public class SuiteHtmlFormatterTest {
   public void testCountsRightHtml() throws Exception {
     formatter.processTestResults("RelativePageName", new TestSummary(1, 0, 0, 0));
 
-    assertSubString("<span class=\\\"results pass\\\">1 right, 0 wrong, 0 ignored, 0 exceptions</span>", pageBuffer.toString());
-    assertSubString("<a href=\\\"#RelativePageName0\\\" class=\\\"link\\\">RelativePageName</a>", pageBuffer.toString());
+    assertPageBufferContains("<span class=\\\"results pass\\\">1 right, 0 wrong, 0 ignored, 0 exceptions</span>");
+    assertPageBufferContains("<a href=\\\"#RelativePageName0\\\" class=\\\"link\\\">RelativePageName</a>");
   }
 
   @Test
   public void testCountsWrongHtml() throws Exception {
     formatter.processTestResults("AnotherPageName", new TestSummary(0, 1, 0, 0));
 
-    assertSubString("<span class=\\\"results fail\\\">0 right, 1 wrong, 0 ignored, 0 exceptions</span>", pageBuffer.toString());
-    assertSubString("<a href=\\\"#AnotherPageName0\\\" class=\\\"link\\\">AnotherPageName</a>", pageBuffer.toString());
+    assertPageBufferContains("<span class=\\\"results fail\\\">0 right, 1 wrong, 0 ignored, 0 exceptions</span>");
+    assertPageBufferContains("<a href=\\\"#AnotherPageName0\\\" class=\\\"link\\\">AnotherPageName</a>");
   }
 
   @Test
@@ -127,16 +127,14 @@ public class SuiteHtmlFormatterTest {
     formatter.processTestResults("NewRelativeName", new TestSummary(0, 1, 0, 0));
     formatter.finishWritingOutput();
 
-    String results = pageBuffer.toString();
+    assertPageBufferContains("<h2>Test System: Slim:very.slim</h2>");
 
-    assertSubString("<h2>Test System: Slim:very.slim</h2>", results);
+    assertPageBufferContains("<a href=\"FullName\" class=\"test_name\">RelativeName</a>");
+    assertPageBufferContains("<a name=\"RelativeName1\"/>");
+    assertPageBufferContains("<div class=\"alternating_block\">starting output</div>");
 
-    assertSubString("<a href=\"FullName\" class=\"test_name\">RelativeName</a>", results);
-    assertSubString("<a name=\"RelativeName1\"/>", results);
-    assertSubString("<div class=\"alternating_block\">starting output</div>", results);
-
-    assertSubString("<a href=\"NewFullName\" class=\"test_name\">NewRelativeName</a>", results);
-    assertSubString("<div class=\"alternating_block\">second test</div>", results);
+    assertPageBufferContains("<a href=\"NewFullName\" class=\"test_name\">NewRelativeName</a>");
+    assertPageBufferContains("<div class=\"alternating_block\">second test</div>");
   }
 
   @Test
@@ -148,26 +146,26 @@ public class SuiteHtmlFormatterTest {
     formatter.announceNumberTestsToRun(20);
     formatter.announceStartNewTest("RelativeName", "FullName");
 
-    assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =" +
-    		" \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:0.0%\\\">", pageBuffer.toString());
-    assertSubString("Running&nbsp;tests&nbsp;...&nbsp;(1/20)", pageBuffer.toString());
+    assertPageBufferContains("<script>document.getElementById(\"test-summary\").innerHTML =" +
+    		" \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:0.0%\\\">");
+    assertPageBufferContains("Running&nbsp;tests&nbsp;...&nbsp;(1/20)");
     pageBuffer.getBuffer().setLength(0);
 
     formatter.processTestResults("RelativeName", new TestSummary(1, 0, 0, 0));
     formatter.announceStartNewTest("RelativeName", "FullName");
 
-    assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =" +
-        " \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:5.0%\\\">", pageBuffer.toString());
-    assertSubString("(2/20)", pageBuffer.toString());
+    assertPageBufferContains("<script>document.getElementById(\"test-summary\").innerHTML =" +
+        " \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:5.0%\\\">");
+    assertPageBufferContains("(2/20)");
     pageBuffer.getBuffer().setLength(0);
 
 
     formatter.processTestResults("RelativeName", new TestSummary(1, 0, 0, 0));
     formatter.announceStartNewTest("RelativeName", "FullName");
 
-    assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =" +
-        " \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:10.0%\\\">", pageBuffer.toString());
-    assertSubString("(3/20)", pageBuffer.toString());
+    assertPageBufferContains("<script>document.getElementById(\"test-summary\").innerHTML =" +
+        " \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:10.0%\\\">");
+    assertPageBufferContains("(3/20)");
   }
 
   @Test
@@ -178,7 +176,7 @@ public class SuiteHtmlFormatterTest {
     formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4));
     clock.elapse(900);
     formatter.close();
-    assertSubString("<strong>Assertions:</strong> 1 right, 2 wrong, 3 ignored, 4 exceptions (0" + getDecimalSeparator() + "900 seconds)", pageBuffer.toString());
+    assertPageBufferContains("<strong>Assertions:</strong> 1 right, 2 wrong, 3 ignored, 4 exceptions (0" + getDecimalSeparator() + "900 seconds)");
   }
 
   @Test
@@ -197,4 +195,7 @@ public class SuiteHtmlFormatterTest {
     assertHasRegexp("<li.*\\(page2\\).*<span.*>\\(0(" + getDecimalSeparatorForRegExp() + "){1}890 seconds\\)</span>.*</li>", pageBuffer.toString());
   }
 
+  private void assertPageBufferContains(String substring) {
+    assertSubString(substring, pageBuffer.toString());
+  }
 }
