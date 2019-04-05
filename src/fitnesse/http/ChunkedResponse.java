@@ -78,8 +78,8 @@ public class ChunkedResponse extends Response implements Closeable {
 
   @Override
   public void close() throws IOException {
-    closeChunks();
     closeTrailer();
+    closeChunks();
     sender.close();
   }
 
