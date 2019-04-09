@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+
+!2 20190409
  * Issues fixed:
   * Ensure version information is available inside .jar ([[1206][https://github.com/unclebob/fitnesse/issues/1206]])
 
