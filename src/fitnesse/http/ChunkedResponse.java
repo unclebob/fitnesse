@@ -68,7 +68,7 @@ public class ChunkedResponse extends Response implements Closeable {
         throw new IllegalStateException("Cannot add headers after closing trailer");
       }
       closeChunks();
-      String header = key + ": " + value + CRLF;
+      String header = appendHeader(new StringBuilder(), key, value).toString();
       sender.send(header.getBytes());
     }
   }
