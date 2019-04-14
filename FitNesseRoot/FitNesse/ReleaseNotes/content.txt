@@ -1,4 +1,5 @@
 !2 ${FITNESSE_VERSION}
+ * Allow rerun of failed tests (only) from suite results page ([[1209][https://github.com/unclebob/fitnesse/pull/1209]])
  * Issues fixed:
   * Fix search page ([[1207][https://github.com/unclebob/fitnesse/issues/1207]])
 
