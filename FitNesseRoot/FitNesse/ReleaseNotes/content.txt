@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+ * Issues fixed:
+  * Fix search page ([[1207][https://github.com/unclebob/fitnesse/issues/1207]])
 
 !2 20190409
  * Issues fixed:
