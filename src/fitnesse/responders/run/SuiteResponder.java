@@ -335,7 +335,6 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   void closeHtmlResponse(int exitCode) throws IOException {
     if (!isClosed()) {
       setClosed();
-      response.closeChunks();
       response.addTrailingHeader("Exit-Code", String.valueOf(exitCode));
       response.close();
     }

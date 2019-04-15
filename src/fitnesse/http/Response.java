@@ -112,11 +112,15 @@ public abstract class Response {
     if (hasContent()) {
       addContentHeaders();
     }
-    StringBuffer text = new StringBuffer();
+    StringBuilder text = new StringBuilder();
     if (!Format.TEXT.contentType.equals(contentType)) {
       text.append("HTTP/1.1 ").append(status).append(" ").append(
         getReasonPhrase()).append(CRLF);
-      makeHeaders(text);
+
+      for (Entry<String, String> entry: headers.entrySet()) {
+        appendHeader(text, entry.getKey(), entry.getValue());
+      }
+
       text.append(CRLF);
     }
     return text.toString();
@@ -172,10 +176,9 @@ public abstract class Response {
     return value.getBytes(FileUtil.CHARENCODING);
   }
 
-  void makeHeaders(StringBuffer text) {
-    for (Entry<String, String> entry: headers.entrySet()) {
-      text.append(entry.getKey()).append(": ").append(entry.getValue()).append(CRLF);
-    }
+  protected StringBuilder appendHeader(StringBuilder builder, String header, String value) {
+    builder.append(header).append(": ").append(value).append(CRLF);
+    return builder;
   }
 
   protected void addContentHeaders() {
