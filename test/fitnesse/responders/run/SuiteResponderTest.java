@@ -28,6 +28,7 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import util.FileUtil;
 
 import static org.junit.Assert.*;
 import static util.RegexTestCase.*;
@@ -133,6 +134,26 @@ public class SuiteResponderTest {
     assertSubString("name=\"TestTwo2\"", results);
     assertSubString("PassFixture", results);
     assertSubString("FailFixture", results);
+
+    assertSubString("RerunLastFailures", results);
+    assertSubString("Rerun Failed", results);
+    File rerunPage = responder.getRerunPageFile();
+    assertTrue(rerunPage.exists());
+    String rerunPageContent = FileUtil.getFileContent(rerunPage);
+    assertSubString("SuitePage.TestTwo", rerunPageContent);
+    assertNotSubString("TestOne", rerunPageContent);
+
+    // execute rerun suite
+    String rerunPageName = responder.getRerunPageName();
+    request = new MockRequest();
+    request.setResource(rerunPageName);
+    responder = new SuiteResponder();
+    suite = WikiPageUtil.addPage(root, PathParser.parse(rerunPageName), rerunPageContent);
+    responder.page = suite;
+
+    String rerunresults = runSuite();
+    assertSubString("href=\\\"#SuitePage.TestTwo1\\\"", rerunresults);
+    assertNotSubString("TestOne", rerunresults);
   }
 
   @Test
@@ -153,6 +174,9 @@ public class SuiteResponderTest {
     assertNotSubString("id=\"TestTwo2\"", results);
     assertSubString("PassFixture", results);
     assertNotSubString("FailFixture", results);
+
+    File rerunPage = responder.getRerunPageFile();
+    assertFalse(rerunPage.exists());
   }
 
   @Test
