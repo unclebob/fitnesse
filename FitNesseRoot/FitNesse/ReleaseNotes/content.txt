@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+ * Issues fixed:
+  * Prevent NullPointerException when fixture method returns 'null' Long ([[1211][https://github.com/unclebob/fitnesse/issues/1211]])
 
 !2 20190417
  * Allow rerun of failed tests (only) from suite results page ([[1209][https://github.com/unclebob/fitnesse/pull/1209]])
