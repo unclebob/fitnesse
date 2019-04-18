@@ -1,19 +1,10 @@
 package fitnesse.slim.converters;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Set;
-
 import fitnesse.slim.Converter;
-import fitnesse.util.StringUtils;
 
-public class GenericCollectionConverter<T, C extends Collection<T>> implements Converter<C> {
+import java.util.*;
+
+public class GenericCollectionConverter<T, C extends Collection<T>> extends ConverterBase<C> {
 
   public static final Map<Class<?>, Class<?>> DEFAULT_COLLECTION_IMPL = new HashMap<>();
   static {
@@ -36,10 +27,7 @@ public class GenericCollectionConverter<T, C extends Collection<T>> implements C
   }
 
   @Override
-  public String toString(C collection) {
-    if (collection == null)
-      return NULL_VALUE;
-
+  public String getString(C collection) {
     int size = collection.size();
     List<String> ret = new ArrayList<>(size);
     for (T item : collection) {
@@ -59,10 +47,7 @@ public class GenericCollectionConverter<T, C extends Collection<T>> implements C
   }
 
   @Override
-  public C fromString(String arg) {
-    if (StringUtils.isBlank(arg))
-      return null;
-
+  public C getObject(String arg) {
     C collection;
     try {
       collection = collectionClass.newInstance();
