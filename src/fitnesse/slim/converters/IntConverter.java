@@ -3,20 +3,13 @@
 package fitnesse.slim.converters;
 
 import fitnesse.slim.SlimError;
-import fitnesse.util.StringUtils;
 
-import fitnesse.slim.Converter;
-
-public class IntConverter implements Converter<Integer> {
-  @Override
-  public String toString(Integer o) {
-    return o != null ? o.toString() : NULL_VALUE;
-  }
+public class IntConverter extends ConverterBase<Integer> {
 
   @Override
-  public Integer fromString(String arg) {
+  protected Integer getObject(String arg) {
     try {
-      return !StringUtils.isBlank(arg) ? Integer.valueOf(arg) : null;
+      return Integer.valueOf(arg);
     } catch (NumberFormatException e) {
       throw new SlimError(String.format("message:<<Can't convert %s to integer.>>", arg), e);
     }

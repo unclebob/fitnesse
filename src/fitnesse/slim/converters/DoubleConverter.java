@@ -3,20 +3,13 @@
 package fitnesse.slim.converters;
 
 import fitnesse.slim.SlimError;
-import fitnesse.util.StringUtils;
 
-import fitnesse.slim.Converter;
-
-public class DoubleConverter implements Converter<Double> {
-  @Override
-  public String toString(Double o) {
-    return o != null ? o.toString() : NULL_VALUE;
-  }
+public class DoubleConverter extends ConverterBase<Double> {
 
   @Override
-  public Double fromString(String arg) {
+  public Double getObject(String arg) {
     try {
-      return !StringUtils.isBlank(arg) ? Double.valueOf(arg) : null;
+      return Double.valueOf(arg);
     } catch (NumberFormatException e) {
       throw new SlimError(String.format("message:<<Can't convert %s to double.>>", arg), e);
     }
