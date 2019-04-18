@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+
+!2 20190418
  * Issues fixed:
   * Prevent NullPointerException when fixture method returns 'null' Long ([[1211][https://github.com/unclebob/fitnesse/issues/1211]])
 
