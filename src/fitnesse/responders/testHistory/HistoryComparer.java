@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.xml.sax.SAXException;
 
@@ -59,7 +60,7 @@ public class HistoryComparer {
 
   public String findScoreByFirstTableIndexAsStringAsPercent(int firstIndex) {
     double score = findScoreByFirstTableIndex(firstIndex);
-    return String.format("%10.2f", (score / MAX_MATCH_SCORE) * 100);
+    return String.format(Locale.US, "%10.2f", (score / MAX_MATCH_SCORE) * 100);
   }
 
   public boolean allTablesMatch() {
