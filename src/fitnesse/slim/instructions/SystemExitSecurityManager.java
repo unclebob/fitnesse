@@ -1,5 +1,6 @@
 package fitnesse.slim.instructions;
 
+import java.awt.AWTPermission;
 import java.security.Permission;
 
 public class SystemExitSecurityManager extends SecurityManager {
@@ -199,13 +200,22 @@ public class SystemExitSecurityManager extends SecurityManager {
     }
   }
 
-  @Override
+  /**
+   * was removed in JDK 11, left for JDK 8 compatibility
+   */
+  @Deprecated
   public boolean checkTopLevelWindow(Object window) {
+    
     if (delegate != null) {
-      return delegate.checkTopLevelWindow(window);
-    } else {
-      return false;
+      try {
+        delegate.checkPermission(
+            new AWTPermission("showWindowWithoutWarningBanner"));
+        return true;
+      } catch (SecurityException se) {
+        // just return false
+      }
     }
+    return false;
   }
 
   @Override
@@ -216,19 +226,25 @@ public class SystemExitSecurityManager extends SecurityManager {
     }
   }
 
-  @Override
+  /**
+   * was removed in JDK 11, left for JDK 8 compatibility
+   */
+  @Deprecated
   public void checkSystemClipboardAccess() {
 
     if (delegate != null) {
-      delegate.checkSystemClipboardAccess();
+      delegate.checkPermission(new AWTPermission("accessClipboard"));
     }
   }
 
-  @Override
+  /**
+   * was removed in JDK 11, left for JDK 8 compatibility
+   */
+  @Deprecated
   public void checkAwtEventQueueAccess() {
 
     if (delegate != null) {
-      delegate.checkAwtEventQueueAccess();
+      delegate.checkPermission(new AWTPermission("accessEventQueue"));
     }
   }
 
@@ -255,11 +271,13 @@ public class SystemExitSecurityManager extends SecurityManager {
     }
   }
 
-  @Override
+  /**
+   * was removed in JDK 11, left for JDK 8 compatibility
+   */
+  @Deprecated
   public void checkMemberAccess(Class<?> clazz, int which) {
-
     if (delegate != null) {
-      delegate.checkMemberAccess(clazz, which);
+      delegate.checkPermission(new RuntimePermission("accessDeclaredMembers"));
     }
   }
 
