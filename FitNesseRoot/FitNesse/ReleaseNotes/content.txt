@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+
+!2 20190421
  * Issues fixed:
   * Fix table of contents for suites containing symbolic links to multiple external roots ([[1218][https://github.com/unclebob/fitnesse/pull/1218]])
 
