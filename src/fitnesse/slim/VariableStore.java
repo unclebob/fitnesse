@@ -103,7 +103,7 @@ public class VariableStore {
   }
 
   private Object evaluate(String expr) {
-    SlimExpressionEvaluator evaluator = getEvaluator();
+    SlimExpressionEvaluator evaluator = getEvaluatorForExpression(expr);
 
     Object value = null;
     try {
@@ -114,9 +114,9 @@ public class VariableStore {
     return value;
   }
 
-  protected SlimExpressionEvaluator getEvaluator() {
+  protected SlimExpressionEvaluator getEvaluatorForExpression(String expr) {
     SlimExpressionEvaluator evaluator = new SlimExpressionEvaluator();
-    evaluator.setContext(variables);
+    evaluator.setContext(expr, variables);
     return evaluator;
   }
 }

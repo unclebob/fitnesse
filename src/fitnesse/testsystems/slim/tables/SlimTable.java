@@ -221,7 +221,7 @@ public abstract class SlimTable {
       }
       symbols.put(symbol.getKey(), new MethodExecutionResult(symbol.getValue(), Object.class));
     }
-    evaluator.setContext(symbols);
+    evaluator.setContext(expr, symbols);
 
     Object value;
     try {
