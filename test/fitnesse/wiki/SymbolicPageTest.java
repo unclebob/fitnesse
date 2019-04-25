@@ -50,6 +50,28 @@ public class SymbolicPageTest {
   }
 
   @Test
+  public void equalsAnotherSymbolicPageWithTheSameRealPage() {
+    assertEquals(symPage, new SymbolicPage("SymPage2", pageTwo, pageOne));
+  }
+  
+  @Test
+  public void doesNotEqualAnotherSymbolicPageWithDifferentRealPage() {
+    WikiPage childPage = WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildOne"), "child one");
+    assertNotEquals(symPage, new SymbolicPage("SymPage2", childPage, pageOne));
+  }
+
+  @Test
+  public void doesNotEqualAnotherSymbolicPageWithDifferentExternalRoot() throws Exception {
+    createExternalRoot();
+    
+    FileUtil.createDir("testDir/ExternalRoot2");
+    WikiPage externalRoot2 = new FileSystemPageFactory().makePage(new File("testDir/ExternalRoot2"), "ExternalRoot2", null, new SystemVariableSource());
+    WikiPage symPage2 = new SymbolicPage("SymPage2", externalRoot2, pageOne);
+  
+    assertNotEquals(symPage, symPage2);
+  }
+  
+  @Test
   public void testInternalData() throws Exception {
     PageData data = symPage.getData();
     assertEquals(pageTwoContent, data.getContent());

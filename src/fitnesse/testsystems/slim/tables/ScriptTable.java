@@ -17,7 +17,6 @@ import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.util.StringUtils;
 
 public class ScriptTable extends SlimTable {
-  private static final String SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX = ";";
 
   public ScriptTable(Table table, String tableId, SlimTestContext context) {
     super(table, tableId, context);
@@ -202,9 +201,7 @@ public class ScriptTable extends SlimTable {
   }
 
   protected String getScenarioNameFromAlternatingCells(int endingCol, int row) {
-    String actionName = getActionNameStartingAt(0, endingCol, row);
-    String simpleName = actionName.replace(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX, "");
-    return Disgracer.disgraceClassName(simpleName);
+    return RowHelper.getScenarioNameFromAlternatingCells(table, endingCol, row);
   }
 
   protected List<SlimAssertion> note(int row) {
@@ -254,15 +251,7 @@ public class ScriptTable extends SlimTable {
   }
 
   protected String getActionNameStartingAt(int startingCol, int endingCol, int row) {
-    StringBuilder actionName = new StringBuilder();
-    actionName.append(table.getCellContents(startingCol, row));
-    int actionNameCol = startingCol + 2;
-    while (actionNameCol <= endingCol &&
-    !invokesSequentialArgumentProcessing(actionName.toString())) {
-      actionName.append(" ").append(table.getCellContents(actionNameCol, row));
-      actionNameCol += 2;
-    }
-    return actionName.toString().trim();
+    return RowHelper.getActionNameStartingAt(table, startingCol, endingCol, row);
   }
 
   // Adds extra assertions to the "assertions" list!
@@ -277,7 +266,7 @@ public class ScriptTable extends SlimTable {
   }
 
   protected boolean invokesSequentialArgumentProcessing(String cellContents) {
-    return cellContents.endsWith(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX);
+    return RowHelper.invokesSequentialArgumentProcessing(cellContents);
   }
 
   protected List<SlimAssertion> startActor() {
@@ -303,6 +292,32 @@ public class ScriptTable extends SlimTable {
     assertions.add(constructInstance(actorName, className, classNameColumn, row));
     getArgumentsStartingAt(classNameColumn + 1, table.getColumnCountInRow(row) - 1, row, assertions);
     return assertions;
+  }
+
+  public static class RowHelper {
+    private static final String SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX = ";";
+
+    public static String getScenarioNameFromAlternatingCells(Table table, int endingCol, int row) {
+      String actionName = getActionNameStartingAt(table, 0, endingCol, row);
+      String simpleName = actionName.replace(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX, "");
+      return Disgracer.disgraceClassName(simpleName);
+    }
+
+    public static String getActionNameStartingAt(Table table, int startingCol, int endingCol, int row) {
+      StringBuilder actionName = new StringBuilder();
+      actionName.append(table.getCellContents(startingCol, row));
+      int actionNameCol = startingCol + 2;
+      while (actionNameCol <= endingCol &&
+        !invokesSequentialArgumentProcessing(actionName.toString())) {
+        actionName.append(" ").append(table.getCellContents(actionNameCol, row));
+        actionNameCol += 2;
+      }
+      return actionName.toString().trim();
+    }
+
+    public static boolean invokesSequentialArgumentProcessing(String cellContents) {
+      return cellContents.endsWith(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX);
+    }
   }
 
   class ArgumentExtractor {

@@ -69,8 +69,12 @@ public abstract class BaseWikiPage implements WikiPage {
     if (!(other instanceof WikiPage))
       return false;
     try {
+      WikiPage otherPage = (WikiPage) other;
+      if (isRoot() && otherPage.isRoot()) {
+        return getName().equals(otherPage.getName());
+      }
       WikiPagePath path1 = getPageCrawler().getFullPath();
-      WikiPagePath path2 = ((WikiPage) other).getPageCrawler().getFullPath();
+      WikiPagePath path2 = otherPage.getPageCrawler().getFullPath();
       return path1.equals(path2);
     } catch (Exception e) {
       return false;

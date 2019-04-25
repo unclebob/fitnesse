@@ -49,6 +49,8 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   private final WikiImporter wikiImporter;
   private SuiteHistoryFormatter suiteHistoryFormatter;
 
+  private Formatter rerunFormatter;
+
   private PageData data;
   private String testRunId;
   private BaseFormatter mainFormatter;
@@ -94,6 +96,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     data = page.getData();
 
     createMainFormatter();
+    rerunFormatter = createRerunFormatter();
 
     if (isInteractive()) {
       makeHtml().render(response.getWriter(), request);
@@ -171,6 +174,9 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     htmlPage.setErrorNavTemplate("errorNavigator");
     htmlPage.put("multipleTestsRun", isMultipleTestsRun());
     WikiImportingResponder.handleImportProperties(htmlPage, page);
+    if (rerunFormatter != null) {
+      htmlPage.put("rerunPage", getRerunPageName());
+    }
 
     return htmlPage;
   }
@@ -211,6 +217,9 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   protected void addFormatters(MultipleTestsRunner runner) {
     runner.addTestSystemListener(mainFormatter);
+    if (rerunFormatter != null) {
+      runner.addTestSystemListener(rerunFormatter);
+    }
     if (withSuiteHistoryFormatter()) {
       addHistoryFormatter(runner);
     } else {
@@ -249,6 +258,18 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     }
   }
 
+  protected Formatter createRerunFormatter() throws IOException {
+    return new RerunSuiteFormatter(getRerunPageFile());
+  }
+
+  protected File getRerunPageFile() {
+    return new File(context.getRootPagePath(), getRerunPageName() + ".wiki");
+  }
+
+  protected String getRerunPageName() {
+    return "RerunLastFailures";
+  }
+
   protected String getTitle() {
     return "Test Results";
   }
@@ -275,7 +296,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   }
 
   protected BaseFormatter newHtmlFormatter() {
-    return new SuiteHtmlFormatter(page, response.getWriter());
+    return new SuiteHtmlFormatter(page, isMultipleTestsRun(), response.getWriter());
   }
 
   protected void performExecution() throws TestExecutionException {
@@ -335,7 +356,6 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   void closeHtmlResponse(int exitCode) throws IOException {
     if (!isClosed()) {
       setClosed();
-      response.closeChunks();
       response.addTrailingHeader("Exit-Code", String.valueOf(exitCode));
       response.close();
     }

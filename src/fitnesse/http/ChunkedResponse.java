@@ -12,6 +12,8 @@ public class ChunkedResponse extends Response implements Closeable {
   private int bytesSent = 0;
   private boolean dontChunk = false;
   private ChunkedDataProvider chunckedDataProvider;
+  private boolean chunksClosed = false;
+  private boolean trailerClosed = false;
 
   public ChunkedResponse(String format, ChunkedDataProvider chunckedDataProvider) {
     super(format);
@@ -49,6 +51,9 @@ public class ChunkedResponse extends Response implements Closeable {
     if (dontChunk) {
       sender.send(bytes);
     } else {
+      if (chunksClosed) {
+        throw new IllegalStateException("Cannot add bytes after closing chunks");
+      }
       String sizeLine = asHex(bytes.length) + CRLF;
       ByteBuffer chunk = ByteBuffer.allocate(sizeLine.length() + bytes.length + 2);
       chunk.put(sizeLine.getBytes()).put(bytes).put(CRLF.getBytes());
@@ -59,20 +64,30 @@ public class ChunkedResponse extends Response implements Closeable {
 
   public void addTrailingHeader(String key, String value) throws IOException {
     if (!dontChunk) {
-      String header = key + ": " + value + CRLF;
+      if (trailerClosed) {
+        throw new IllegalStateException("Cannot add headers after closing trailer");
+      }
+      closeChunks();
+      String header = appendHeader(new StringBuilder(), key, value).toString();
       sender.send(header.getBytes());
     }
   }
 
   public void closeChunks() throws IOException {
     if (!dontChunk) {
-      sender.send(("0" + CRLF).getBytes());
+      if (!chunksClosed) {
+        chunksClosed = true;
+        sender.send(("0" + CRLF).getBytes());
+      }
     }
   }
 
   public void closeTrailer() throws IOException {
     if (!dontChunk) {
-      sender.send(CRLF.getBytes());
+      if (!trailerClosed) {
+        trailerClosed = true;
+        sender.send(CRLF.getBytes());
+      }
     }
   }
 

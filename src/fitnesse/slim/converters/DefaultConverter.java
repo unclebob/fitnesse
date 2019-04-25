@@ -1,15 +1,14 @@
 package fitnesse.slim.converters;
 
-import fitnesse.slim.Converter;
-
-public class DefaultConverter implements Converter<Object> {
+public class DefaultConverter extends ConverterBase<Object> {
   @Override
-  public String toString(Object o) {
-    return o == null ? NULL_VALUE : o.toString();
+  public Object fromString(String arg) {
+    return arg;
   }
 
   @Override
-  public Object fromString(String arg) {
+  protected Object getObject(String arg) {
+    // we don't expect this to be called
     return arg;
   }
 }

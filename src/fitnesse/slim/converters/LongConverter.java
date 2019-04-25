@@ -1,13 +1,15 @@
 package fitnesse.slim.converters;
 
-import fitnesse.slim.Converter;
+import fitnesse.slim.SlimError;
 
-public class LongConverter implements Converter<Long> {
-  public String toString(Long o) {
-    return o.toString();
-  }
+public class LongConverter extends ConverterBase<Long> {
 
-  public Long fromString(String arg) {
-    return Long.parseLong(arg);
+  @Override
+  protected Long getObject(String arg) {
+    try {
+      return Long.valueOf(arg);
+    } catch (NumberFormatException e) {
+      throw new SlimError(String.format("message:<<Can't convert %s to long.>>", arg), e);
+    }
   }
 }
