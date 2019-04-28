@@ -41,7 +41,7 @@ public class ScriptTableExtensionTest {
     protected String getTableType() { return "htmlScriptTable"; }
 
     @Override
-    protected List<SlimAssertion> show(int row) {
+    protected List<SlimAssertion> show(int row) throws SyntaxError {
       int lastCol = table.getColumnCountInRow(row) - 1;
       return invokeAction(1, lastCol, row,
               new ShowHtmlActionExpectation(0, row));

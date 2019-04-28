@@ -173,7 +173,7 @@ public class ScenarioTableExtensionTest {
       }
     }
 
-    private Set<String> findArguments(Pattern pattern) {
+    private Set<String> findArguments(Pattern pattern) throws SyntaxError {
       Set<String> found = new LinkedHashSet<>();
       int rowCount = table.getRowCount();
       for (int row = 0; row < rowCount; row++) {
@@ -191,7 +191,7 @@ public class ScenarioTableExtensionTest {
       return found;
     }
 
-    private ScenarioTable getCalledScenario(int lastCol, int row) {
+    private ScenarioTable getCalledScenario(int lastCol, int row) throws SyntaxError {
       String scenarioName = ScriptTable.RowHelper.getScenarioNameFromAlternatingCells(table, lastCol, row);
       ScenarioTable scenario = getScenarioByName(scenarioName);
       if (scenario == null && lastCol == 0) {
