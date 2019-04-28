@@ -309,7 +309,7 @@ public class ScriptTable extends SlimTable {
       try {
         actionName.append(table.getCellContents(startingCol, row));
       } catch (IndexOutOfBoundsException e) {
-        throw new SyntaxError("badly formatted table: Expected an action name to be found at (" + row + "," + startingCol + ")");
+        throw new SyntaxError("Too few columns in row " + (row + 1) + ". Expected a function in column " + (startingCol + 1) + ".");
       }
       int actionNameCol = startingCol + 2;
       while (actionNameCol <= endingCol &&
