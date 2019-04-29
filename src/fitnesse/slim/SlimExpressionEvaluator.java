@@ -36,7 +36,7 @@ public class SlimExpressionEvaluator {
 
     for (Map.Entry<String, MethodExecutionResult> entry : variables.entrySet()) {
       String key = entry.getKey();
-      if(expr.contains(key)) {
+      if (expr.contains(key)) {
         Object value = entry.getValue().getObject();
         value = convertWikiHashes(mapCnv, value);
         value = convertWikiLists(listCnv, value);
