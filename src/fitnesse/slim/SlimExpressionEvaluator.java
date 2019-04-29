@@ -30,16 +30,18 @@ public class SlimExpressionEvaluator {
     this.engine = engine;
   }
 
-  public void setContext(Map<String, MethodExecutionResult> variables) {
+  public void setContext(String expr, Map<String, MethodExecutionResult> variables) {
     Converter<Map> mapCnv = ConverterRegistry.getConverterForClass(Map.class);
     Converter<List> listCnv = ConverterRegistry.getConverterForClass(List.class);
 
     for (Map.Entry<String, MethodExecutionResult> entry : variables.entrySet()) {
       String key = entry.getKey();
-      Object value = entry.getValue().getObject();
-      value = convertWikiHashes(mapCnv, value);
-      value = convertWikiLists(listCnv, value);
-      engine.put(key, value);
+      if (expr.contains(key)) {
+        Object value = entry.getValue().getObject();
+        value = convertWikiHashes(mapCnv, value);
+        value = convertWikiLists(listCnv, value);
+        engine.put(key, value);
+      }
     }
   }
 
