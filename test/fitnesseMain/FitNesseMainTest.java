@@ -2,14 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.PrintStream;
-import java.lang.reflect.Field;
-import java.net.HttpURLConnection;
-import java.net.ServerSocket;
-import java.net.URL;
-
 import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesse;
@@ -18,14 +10,30 @@ import fitnesse.testutil.FitNesseUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-
 import util.FileUtil;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.PrintStream;
+import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.ServerSocket;
+import java.net.URL;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 public class FitNesseMainTest {
 
@@ -54,7 +62,7 @@ public class FitNesseMainTest {
     context = spy(context);
     doAnswer(fitNesseContextWith(fitNesse)).when(context).makeFitNesseContext();
     new FitNesseMain().launchFitNesse(context);
-    verify(fitNesse, never()).start(org.mockito.Matchers.any(ServerSocket.class));
+    verify(fitNesse, never()).start(any());
   }
 
   @Test
@@ -69,9 +77,9 @@ public class FitNesseMainTest {
 
     int exitCode = new FitNesseMain().launchFitNesse(context);
     assertThat(exitCode, is(0));
-    verify(fitNesse, never()).start(org.mockito.Matchers.any(ServerSocket.class));
-    verify(fitNesse, times(1)).executeSingleCommand("command", System.out);
-    verify(fitNesse, times(1)).stop();
+    verify(fitNesse, never()).start(any());
+    verify(fitNesse).executeSingleCommand("command", System.out);
+    verify(fitNesse).stop();
   }
 
   @Test
@@ -161,15 +169,12 @@ public class FitNesseMainTest {
   }
 
   private Answer<FitNesseContext> fitNesseContextWith(final FitNesse fitNesse) {
-    return new Answer<FitNesseContext>() {
-      @Override
-      public FitNesseContext answer(InvocationOnMock invocation) throws Throwable {
-        FitNesseContext fitNesseContext = (FitNesseContext) invocation.callRealMethod();
-        Field aField = fitNesseContext.getClass().getDeclaredField("fitNesse");
-        aField.setAccessible(true);
-        aField.set(fitNesseContext, fitNesse);
-        return fitNesseContext;
-      }
+    return invocation -> {
+      FitNesseContext fitNesseContext = (FitNesseContext) invocation.callRealMethod();
+      Field aField = fitNesseContext.getClass().getDeclaredField("fitNesse");
+      aField.setAccessible(true);
+      aField.set(fitNesseContext, fitNesse);
+      return fitNesseContext;
     };
   }
 
