@@ -64,8 +64,9 @@ public class FitNesse {
     Request request = new MockRequestBuilder(command).noChunk().build();
     FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(), context, new SerialExecutorService());
     Response response = expediter.createGoodResponse(request);
-    if (response.getStatus() != 200){
-        throw new Exception("error loading page: " + response.getStatus());
+    int responseStatus = response.getStatus();
+    if (responseStatus >= 400 && responseStatus <= 599){
+        throw new Exception("error loading page: " + responseStatus);
     }
     response.withoutHttpHeaders();
     MockResponseSender sender = new MockResponseSender(out);

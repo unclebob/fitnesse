@@ -37,19 +37,21 @@ import static org.mockito.Mockito.verify;
 
 public class FitNesseMainTest {
 
+  private static final String TEST_FITNESSE_ROOT = "testFitnesseRoot";
+
   private ContextConfigurator context;
 
   @Before
   public void setUp() throws Exception {
     context = ContextConfigurator.systemDefaults()
       .withRootPath(".")
-      .withRootDirectoryName("testFitnesseRoot")
+      .withRootDirectoryName(TEST_FITNESSE_ROOT)
       .withPort(80);
   }
 
   @After
   public void tearDown() throws Exception {
-    FileUtil.deleteFileSystemDirectory("testFitnesseRoot");
+    FileUtil.deleteFileSystemDirectory(TEST_FITNESSE_ROOT);
   }
 
   @Test
@@ -84,10 +86,10 @@ public class FitNesseMainTest {
 
   @Test
   public void testDirCreations() throws Exception {
-    runFitnesseMainWith("-o", "-c", "/root", "-r", "testFitnesseRoot");
+    runFitnesseMainWith("-o", "-c", "/root", "-r", TEST_FITNESSE_ROOT);
 
-    assertTrue(new File("testFitnesseRoot").exists());
-    assertTrue(new File("testFitnesseRoot/files").exists());
+    assertTrue(new File(TEST_FITNESSE_ROOT).exists());
+    assertTrue(new File(TEST_FITNESSE_ROOT, "files").exists());
   }
 
   @Test
@@ -122,11 +124,21 @@ public class FitNesseMainTest {
     String[] args = {"-o", "-a", "user:pwd", "-c", "user:pwd:/FitNesse.NonExistentTestCase?test"};
     Arguments arguments = new Arguments(args);
     try {
-      Integer exitCode = new FitNesseMain().launchFitNesse(arguments);
+      new FitNesseMain().launchFitNesse(arguments);
     } catch (Exception e) {
       assertEquals("error loading page: 404", e.getMessage());
       throw e;
     }
+  }
+
+  @Test
+  public void canUseSingleCommandToCreateSymbolicLink() throws Exception {
+    // create page to link to in test root
+    FileUtil.createFile(TEST_FITNESSE_ROOT + "/LinkTarget.wiki", "Target for symbolic link unit test");
+
+    String response = runFitnesseMainWith("-o", "-r", TEST_FITNESSE_ROOT, "-c", "?responder=symlink&linkName=MyLink&linkPath=LinkTarget");
+    assertThat(response, containsString("Executing command:"));
+    assertThat(response, not(containsString("Starting FitNesse on port:")));
   }
 
   @Test
