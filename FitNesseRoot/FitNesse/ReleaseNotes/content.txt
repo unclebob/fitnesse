@@ -1,5 +1,7 @@
 !2 ${FITNESSE_VERSION}
  * Optimized performance of Slim (javascript) expressions ([[1220][https://github.com/unclebob/fitnesse/pull/1220]])
+ * Issues fixed:
+   * Do not set exit code to error when creating a symbolic link from command line ([[1223][https://github.com/unclebob/fitnesse/issues/1223]])
 
 !2 20190428
  * Issues fixed:
