@@ -1,6 +1,5 @@
 package fitnesse.slim.instructions;
 
-import fitnesse.slim.NameTranslator;
 import fitnesse.slim.SlimException;
 
 import java.util.Arrays;
@@ -13,7 +12,7 @@ abstract class CallAndOptionalAssignInstruction extends Instruction {
   private String methodName;
   private Object[] args;
 
-  protected CallAndOptionalAssignInstruction (String instructionName, String id, Optional<String> symbolName, String instanceName, String methodName, Object[] args) {
+  protected CallAndOptionalAssignInstruction(String instructionName, String id, Optional<String> symbolName, String instanceName, String methodName, Object[] args) {
     super(id);
     this.instructionName = instructionName;
     this.symbolName = symbolName;
@@ -24,11 +23,12 @@ abstract class CallAndOptionalAssignInstruction extends Instruction {
 
   @Override
   protected InstructionResult executeInternal(InstructionExecutor executor) throws SlimException {
+    Object result;
     if (symbolName.isPresent()) {
-      Object result = executor.callAndAssign(symbolName.get(), instanceName, methodName, args);
-      return new InstructionResult(getId(), result);
+      result = executor.callAndAssign(symbolName.get(), instanceName, methodName, args);
+    } else {
+      result = executor.call(this.instanceName, this.methodName, this.args);
     }
-    Object result = executor.call(this.instanceName, this.methodName, this.args);
     return new InstructionResult(getId(), result);
   }
 
@@ -37,12 +37,10 @@ abstract class CallAndOptionalAssignInstruction extends Instruction {
     final StringBuilder sb = new StringBuilder();
     sb.append("{id='").append(getId()).append('\'');
     sb.append(", instruction='").append(instructionName).append('\'');
-    symbolName.ifPresent(sn -> {
-      sb.append(", symbolName='").append(sn).append('\'');
-    });
+    symbolName.ifPresent(sn -> sb.append(", symbolName='").append(sn).append('\''));
     sb.append(", instanceName='").append(instanceName).append('\'');
     sb.append(", methodName='").append(methodName).append('\'');
-    sb.append(", args=").append(args == null ? "null" : Arrays.asList(args).toString());
+    sb.append(", args=").append(Arrays.toString(args));
     sb.append('}');
     return sb.toString();
   }

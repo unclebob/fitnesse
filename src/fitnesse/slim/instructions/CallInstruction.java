@@ -1,9 +1,7 @@
 package fitnesse.slim.instructions;
 
 import fitnesse.slim.NameTranslator;
-import fitnesse.slim.SlimException;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 public class CallInstruction extends CallAndOptionalAssignInstruction {
