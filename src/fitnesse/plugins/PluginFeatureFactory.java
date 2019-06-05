@@ -16,6 +16,8 @@ public interface PluginFeatureFactory {
 
   ContentFilter getContentFilter();
 
+  String getDefaultTheme();
+
   void registerResponders(ResponderFactory responderFactory) throws PluginException;
 
   void registerSymbolTypes(SymbolProvider symbolProvider) throws PluginException;

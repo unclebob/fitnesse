@@ -16,6 +16,11 @@ public class DummyPluginFeatureFactory extends PluginFeatureFactoryBase {
   private TestSystemFactoryRegistry testSystemFactoryRegistry;
 
   @Override
+  public String getDefaultTheme() {
+    return "dummy-theme";
+  }
+
+  @Override
   public void registerSymbolTypes(SymbolProvider symbolProvider) throws PluginException {
     symbolProvider.add(new MonthsFromToday2());
   }

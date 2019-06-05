@@ -18,6 +18,7 @@ import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.util.ClassUtils;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.RecentChangesWikiPage;
+import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.WikiPageFactoryRegistry;
 import fitnesse.wiki.fs.FileSystemPageFactory;
@@ -42,6 +43,7 @@ public class ContextConfigurator {
   private static final int DEFAULT_COMMAND_PORT = 9123;
   public static final int DEFAULT_PORT = 80;
   public static final String DEFAULT_CONFIG_FILE = "plugins.properties";
+  public static final String DEFAULT_THEME = "bootstrap";
 
   /** Some properties are stored in typed fields: */
   private WikiPageFactory wikiPageFactory;
@@ -123,6 +125,16 @@ public class ContextConfigurator {
       authenticator = pluginsLoader.makeAuthenticator(get(CREDENTIALS));
     }
 
+    SystemVariableSource variableSource = new SystemVariableSource(properties);
+
+    String theme = variableSource.getProperty(THEME.getKey());
+    if (theme == null) {
+      theme = pluginsLoader.getDefaultTheme();
+      if (theme == null) {
+        theme = DEFAULT_THEME;
+      }
+    }
+
     SlimTableFactory slimTableFactory = new SlimTableFactory();
     CustomComparatorRegistry customComparatorRegistry = new CustomComparatorRegistry();
 
@@ -143,7 +155,9 @@ public class ContextConfigurator {
           testSystemFactory,
           testSystemListener,
           formatterFactory,
-          properties);
+          properties,
+          variableSource,
+          theme);
 
     SymbolProvider symbolProvider = SymbolProvider.wikiParsingProvider;
 

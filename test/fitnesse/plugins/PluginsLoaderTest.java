@@ -223,6 +223,23 @@ public class PluginsLoaderTest {
   }
 
   @Test
+  public void noDefaultTheme() throws PluginException {
+    classLoader = new URLClassLoader(new URL[0], ClassLoader.getSystemClassLoader());
+    ClassUtils.setClassLoader(classLoader);
+
+    loader = new PluginsLoader(new ComponentFactory(testProperties), classLoader);
+
+    String theme = loader.getDefaultTheme();
+    assertNull(theme);
+  }
+
+  @Test
+  public void testDefaultThemeFromPlugin() {
+    String theme = loader.getDefaultTheme();
+    assertEquals("dummy-theme", theme);
+  }
+
+  @Test
   public void testWikiPageFactoryCreation() throws Exception {
     testProperties.setProperty(ConfigurationParameter.WIKI_PAGE_FACTORIES.getKey(), FooWikiPageFactory.class.getName());
 

@@ -24,6 +24,11 @@ public class PluginFeatureFactoryBase implements PluginFeatureFactory {
   }
 
   @Override
+  public String getDefaultTheme() {
+    return null;
+  }
+
+  @Override
   public void registerResponders(ResponderFactory responderFactory) throws PluginException {
   }
 

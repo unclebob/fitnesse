@@ -85,6 +85,17 @@ public class PluginsLoader {
     return authenticator == null ? defaultAuthenticator : authenticator;
   }
 
+  public String getDefaultTheme() {
+    String theme = null;
+    for (PluginFeatureFactory pff : pluginFeatureFactories) {
+      theme = pff.getDefaultTheme();
+      if (theme != null) {
+        break;
+      }
+    }
+    return theme;
+  }
+
   public void loadSymbolTypes(SymbolProvider symbolProvider) throws PluginException {
     for (PluginFeatureFactory pff : pluginFeatureFactories) {
       pff.registerSymbolTypes(symbolProvider);

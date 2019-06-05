@@ -3,7 +3,6 @@
 package fitnesse.html.template;
 
 import fitnesse.FitNesseContext;
-import fitnesse.http.Request;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -14,18 +13,13 @@ import java.io.Writer;
 import java.util.Properties;
 
 public class PageFactory {
-  public static final String THEME_PROPERTY = "Theme";
-  public static final String DEFAULT_THEME = "bootstrap";
-
   private final String theme;
   private final String contextRoot;
   private VelocityEngine velocityEngine = null;
 
   public PageFactory(FitNesseContext context) {
-    super();
-    String theme = context.getProperty(THEME_PROPERTY);
-    this.theme = theme != null ? theme : DEFAULT_THEME;
-    this.velocityEngine = newVelocityEngine(context, this.theme);
+    this.theme = context.theme;
+    this.velocityEngine = newVelocityEngine(context.getRootPagePath(), this.theme);
     this.contextRoot = context.contextRoot;
   }
 
@@ -53,7 +47,7 @@ public class PageFactory {
     return getClass().getName();
   }
 
-  private VelocityEngine newVelocityEngine(FitNesseContext context, String theme) {
+  private VelocityEngine newVelocityEngine(String rootPagePath, String theme) {
     Properties properties = new Properties();
     properties.setProperty(VelocityEngine.CHECK_EMPTY_OBJECTS, "false");
     properties.setProperty(VelocityEngine.INPUT_ENCODING, FileUtil.CHARENCODING);
@@ -61,7 +55,7 @@ public class PageFactory {
     properties.setProperty(VelocityEngine.RESOURCE_LOADER, "file,themepath,classpath");
 
     properties.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH,
-        String.format("%s/files/fitnesse/templates", context.getRootPagePath()));
+        String.format("%s/files/fitnesse/templates", rootPagePath));
 
     properties.setProperty("themepath." + VelocityEngine.RESOURCE_LOADER + ".class",
         ClasspathResourceLoader.class.getName());

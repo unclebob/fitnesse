@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
 
+import fitnesse.ConfigurationParameter;
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
@@ -22,7 +23,7 @@ public class HtmlPageTest {
   @Before
   public void setUp() throws Exception {
     Properties properties = new Properties();
-    properties.setProperty("Theme", "fitnesse_straight");
+    properties.setProperty(ConfigurationParameter.THEME.getKey(), "fitnesse_straight");
     FitNesseContext context = FitNesseUtil.makeTestContext(properties);
     page = new HtmlPage(context.pageFactory.getVelocityEngine(), "skeleton.vm", "fitnesse_theme", "/");
     html = page.html(null);
