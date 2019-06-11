@@ -2,16 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
+import fitnesse.util.ClassUtils;
+import util.FileUtil;
+
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import fitnesse.util.ClassUtils;
-import util.FileUtil;
 
 public class PasswordFile {
   private final File passwordFile;
@@ -40,7 +39,7 @@ public class PasswordFile {
     return cipher;
   }
 
-  public void savePassword(String user, String password) throws FileNotFoundException {
+  public void savePassword(String user, String password) throws IOException {
     passwordMap.put(user, cipher.encrypt(password));
     savePasswords();
   }
@@ -76,7 +75,7 @@ public class PasswordFile {
     return cipher;
   }
 
-  private void savePasswords() throws FileNotFoundException {
+  private void savePasswords() throws IOException {
     List<String> lines = new LinkedList<>();
     lines.add("!" + cipher.getClass().getName());
     for (Map.Entry<String, String> entry : passwordMap.entrySet()) {
@@ -90,7 +89,7 @@ public class PasswordFile {
   private LinkedList<String> getPasswordFileLines() throws IOException {
     LinkedList<String> lines = new LinkedList<>();
     if (passwordFile.exists())
-      lines = FileUtil.getFileLines(passwordFile);
+      lines.addAll(FileUtil.getFileLines(passwordFile));
     return lines;
   }
 }
