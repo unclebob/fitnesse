@@ -1,89 +1,63 @@
 package fitnesse.testrunner;
 
-import java.util.Collections;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPage;
+
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-
-import static java.util.Arrays.asList;
+import java.util.Optional;
+import java.util.Set;
 
 public class PageListSetUpTearDownSurrounder {
-  private final WikiPage root;
-
-  public PageListSetUpTearDownSurrounder(WikiPage root) {
-    this.root = root;
-  }
 
   public List<WikiPage> surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(List<WikiPage> pageList) {
-    Map<String, List<WikiPage>> pageSetUpTearDownGroups = createPageSetUpTearDownGroups(pageList);
-    return reinsertPagesViaSetUpTearDownGroups(pageSetUpTearDownGroups);
-  }
+    List<WikiPage> pagesToRun = new LinkedList<>();
 
-  private Map<String, List<WikiPage>> createPageSetUpTearDownGroups(List<WikiPage> pageList) {
-    Map<String, List<WikiPage>> pageSetUpTearDownGroups = new HashMap<>();
+    Map<WikiPage, WikiPage> tearDownAfter = findPagesBeforeTearDown(pageList);
+    Set<WikiPage> setupsAdded = new HashSet<>();
     for (WikiPage page : pageList) {
-      makeSetUpTearDownPageGroupForPage(page, pageSetUpTearDownGroups);
+      addSetUpIfNeeded(pagesToRun, setupsAdded, page);
+      pagesToRun.add(page);
+      addTearDownIfPossible(pagesToRun, tearDownAfter, page);
     }
-    return pageSetUpTearDownGroups;
+
+    return pagesToRun;
   }
 
-  private void makeSetUpTearDownPageGroupForPage(WikiPage page, Map<String, List<WikiPage>> pageSetUpTearDownGroups) {
-    String group = getSetUpTearDownGroup(page);
-    List<WikiPage> pageGroup;
-    if (pageSetUpTearDownGroups.get(group) != null) {
-      pageGroup = pageSetUpTearDownGroups.get(group);
-      pageGroup.add(page);
-    } else {
-      pageGroup = new LinkedList<>();
-      pageGroup.add(page);
-      pageSetUpTearDownGroups.put(group, pageGroup);
+  private Map<WikiPage, WikiPage> findPagesBeforeTearDown(List<WikiPage> pages) {
+    Map<WikiPage, WikiPage> pageBeforeSuiteTearDown = new HashMap<>();
+    for (WikiPage page : pages) {
+      getClosestInheritedPage(page, PageData.SUITE_TEARDOWN_NAME).ifPresent(suiteTearDown -> {
+          pageBeforeSuiteTearDown.put(suiteTearDown, page);
+        });
+    }
+    Map<WikiPage, WikiPage> tearDownAfter = new IdentityHashMap<>();
+    for (Map.Entry<WikiPage, WikiPage> entry : pageBeforeSuiteTearDown.entrySet()) {
+      tearDownAfter.put(entry.getValue(), entry.getKey());
+    }
+    return tearDownAfter;
+  }
+
+  private void addSetUpIfNeeded(List<WikiPage> pagesToRun, Set<WikiPage> setupsAdded, WikiPage page) {
+    getClosestInheritedPage(page, PageData.SUITE_SETUP_NAME).ifPresent(suiteSetUp -> {
+      if (setupsAdded.add(suiteSetUp)) {
+        pagesToRun.add(suiteSetUp);
+      }
+    });
+  }
+
+  private void addTearDownIfPossible(List<WikiPage> pagesToRun, Map<WikiPage, WikiPage> tearDownAfter, WikiPage page) {
+    WikiPage tearDown = tearDownAfter.get(page);
+    if (tearDown != null) {
+      pagesToRun.add(tearDown);
     }
   }
 
-  private String getSetUpTearDownGroup(WikiPage page) {
-    String setUpPath = getPathForSetUpTearDown(page, PageData.SUITE_SETUP_NAME);
-    String tearDownPath = getPathForSetUpTearDown(page, PageData.SUITE_TEARDOWN_NAME);
-    return setUpPath + "," + tearDownPath;
-  }
-
-  private String getPathForSetUpTearDown(WikiPage page, String setUpTearDownName) {
-    String path = null;
-    WikiPage suiteSetUpTearDown = page.getPageCrawler().getClosestInheritedPage(setUpTearDownName);
-    if (suiteSetUpTearDown != null)
-      path = suiteSetUpTearDown.getPageCrawler().getFullPath().toString();
-    return path;
-  }
-
-  private List<WikiPage> reinsertPagesViaSetUpTearDownGroups(Map<String, List<WikiPage>> pageSetUpTearDownGroups) {
-    List<WikiPage> pageList = new LinkedList<>();
-    for (Map.Entry<String, List<WikiPage>> entry : pageSetUpTearDownGroups.entrySet()) {
-      pageList.addAll(insertSetUpTearDownPageGroup(entry.getKey(), entry.getValue()));
-    }
-    return pageList;
-  }
-
-  private List<WikiPage> insertSetUpTearDownPageGroup(String setUpAndTearDownGroupKey, List<WikiPage> pageGroup) {
-    List<WikiPage> pageList = new LinkedList<>();
-    pageList.addAll(setUpForThisGroup(setUpAndTearDownGroupKey));
-    pageList.addAll(pageGroup);
-    pageList.addAll(tearDownForThisGroup(setUpAndTearDownGroupKey));
-    return pageList;
-  }
-
-  private List<WikiPage> setUpForThisGroup(String setUpAndTearDown) {
-    String setUpPath = setUpAndTearDown.split(",")[0];
-    WikiPage setUpPage = root.getPageCrawler().getPage(PathParser.parse(setUpPath));
-    return setUpPage != null ? asList(setUpPage) : Collections.<WikiPage>emptyList();
-  }
-
-  private List<WikiPage>  tearDownForThisGroup(String setUpAndTearDownGroupKey) {
-    String tearDownPath = setUpAndTearDownGroupKey.split(",")[1];
-    WikiPage tearDownPage = root.getPageCrawler().getPage(PathParser.parse(tearDownPath));
-    return tearDownPage != null ? asList(tearDownPage) : Collections.<WikiPage>emptyList();
+  private Optional<WikiPage> getClosestInheritedPage(WikiPage page, String pageName) {
+    return Optional.ofNullable(page.getPageCrawler().getClosestInheritedPage(pageName));
   }
 }

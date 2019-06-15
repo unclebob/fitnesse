@@ -1,5 +1,8 @@
 package fitnesse.testrunner;
 
+import fitnesse.testsystems.TestPage;
+import fitnesse.wiki.WikiPage;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,9 +10,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import fitnesse.testsystems.TestPage;
-import fitnesse.wiki.WikiPage;
 
 /**
  * Organize pages by test system in an appropriate order.
@@ -50,7 +50,7 @@ public class PagesByTestSystem {
     Map<WikiPageIdentity, List<TestPage>> orderedPagesByTestSystem = new HashMap<>(pagesByTestSystem.size());
 
     if (!pagesByTestSystem.isEmpty()) {
-      PageListSetUpTearDownSurrounder surrounder = new PageListSetUpTearDownSurrounder(root);
+      PageListSetUpTearDownSurrounder surrounder = new PageListSetUpTearDownSurrounder();
 
       for (Map.Entry<WikiPageIdentity, List<WikiPage>> pages : pagesByTestSystem.entrySet())
         orderedPagesByTestSystem.put(pages.getKey(), asTestPages(surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(pages.getValue())));
