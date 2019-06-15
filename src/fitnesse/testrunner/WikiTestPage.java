@@ -1,9 +1,5 @@
 package fitnesse.testrunner;
 
-import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
-
 import fitnesse.components.TraversalListener;
 import fitnesse.testsystems.ClassPath;
 import fitnesse.testsystems.TestPage;
@@ -13,11 +9,15 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiSourcePage;
 import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wiki.WikiSourcePage;
+
+import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 
 // TODO: need 2 implementations, one for wiki text pages (Fit, Slim) and one for non-wiki text pages. See PagesByTestSystem
 public class WikiTestPage implements TestPage {
@@ -64,7 +64,7 @@ public class WikiTestPage implements TestPage {
 
   @Override
   public String getFullPath() {
-    return PathParser.render(sourcePage.getPageCrawler().getFullPath());
+    return PathParser.render(sourcePage.getFullPath());
   }
 
   @Override
@@ -150,7 +150,7 @@ public class WikiTestPage implements TestPage {
   }
 
   private String getPathNameForPage(WikiPage page) {
-    WikiPagePath pagePath = page.getPageCrawler().getFullPath();
+    WikiPagePath pagePath = page.getFullPath();
     return PathParser.render(pagePath);
   }
 

@@ -11,15 +11,40 @@ import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
-import fitnesse.reporting.*;
-import fitnesse.reporting.history.*;
-import fitnesse.responders.*;
-import fitnesse.testrunner.*;
+import fitnesse.reporting.BaseFormatter;
+import fitnesse.reporting.Formatter;
+import fitnesse.reporting.InteractiveFormatter;
+import fitnesse.reporting.RerunSuiteFormatter;
+import fitnesse.reporting.SuiteHtmlFormatter;
+import fitnesse.reporting.TestTextFormatter;
+import fitnesse.reporting.history.HistoryPurger;
+import fitnesse.reporting.history.JunitReFormatter;
+import fitnesse.reporting.history.PageHistory;
+import fitnesse.reporting.history.SuiteHistoryFormatter;
+import fitnesse.reporting.history.SuiteXmlReformatter;
+import fitnesse.reporting.history.TestXmlFormatter;
+import fitnesse.responders.ChunkingResponder;
+import fitnesse.responders.WikiImporter;
+import fitnesse.responders.WikiImportingResponder;
+import fitnesse.responders.WikiImportingTraverser;
+import fitnesse.responders.WikiPageActions;
+import fitnesse.testrunner.MultipleTestsRunner;
+import fitnesse.testrunner.PagesByTestSystem;
+import fitnesse.testrunner.RunningTestingTracker;
+import fitnesse.testrunner.SuiteContentsFinder;
+import fitnesse.testrunner.SuiteFilter;
 import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.TestExecutionException;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PageType;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiImportProperty;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageUtil;
 import org.apache.commons.lang3.StringUtils;
 import util.FileUtil;
 
@@ -313,7 +338,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   }
 
   protected List<WikiPage> getPagesToRun() {
-    SuiteFilter filter = createSuiteFilter(request, page.getPageCrawler().getFullPath().toString());
+    SuiteFilter filter = createSuiteFilter(request, page.getFullPath().toString());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
     return suiteTestFinder.getAllPagesToRunForThisSuite();
   }
@@ -430,7 +455,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   public static String makePageHistoryFileName(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
     return String.format("%s/%s/%s",
             context.getTestHistoryDirectory(),
-            page.getPageCrawler().getFullPath().toString(),
+            page.getFullPath().toString(),
             makeResultFileName(counts, time));
   }
 

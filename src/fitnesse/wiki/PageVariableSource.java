@@ -17,7 +17,7 @@ public class PageVariableSource implements VariableSource {
     if (key.equals("RUNNING_PAGE_NAME"))
       value = page.getName();
     else if (key.equals("RUNNING_PAGE_PATH"))
-      value = page.getPageCrawler().getFullPath().parentPath().toString();
+      value = page.getFullPath().parentPath().toString();
     else
       return Maybe.noString;
 

@@ -2,9 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import java.io.File;
-import java.util.List;
-
 import fitnesse.wiki.fs.FileSystemPageFactory;
 import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.After;
@@ -12,7 +9,16 @@ import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
 
-import static org.junit.Assert.*;
+import java.io.File;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class SymbolicPageTest {
@@ -186,7 +192,7 @@ public class SymbolicPageTest {
     WikiPagePath fullPath = PathParser.parse(pageOnePath + ".SymOne.SymTwo");
     WikiPage deepPage = pageCrawler.getPage(fullPath);
 
-    assertEquals(deepPage.getPageCrawler().getFullPath(), fullPath);
+    assertEquals(deepPage.getFullPath(), fullPath);
   }
 
   @Test

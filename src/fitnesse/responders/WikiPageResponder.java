@@ -2,23 +2,29 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Map;
-
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.editing.EditResponder;
-import fitnesse.html.template.HtmlPage;
-import fitnesse.html.template.PageTitle;
 import fitnesse.testrunner.TestPageWithSuiteSetUpAndTearDown;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testrunner.WikiTestPageUtil;
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.RecentChanges;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageUtil;
+
+import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 public class WikiPageResponder implements SecureResponder {
 
@@ -69,7 +75,7 @@ public class WikiPageResponder implements SecureResponder {
   public String makeHtml(FitNesseContext context, WikiPage page) {
     PageData pageData = page.getData();
     HtmlPage html = context.pageFactory.newPage();
-    WikiPagePath fullPath = page.getPageCrawler().getFullPath();
+    WikiPagePath fullPath = page.getFullPath();
     String fullPathName = PathParser.render(fullPath);
     PageTitle pt = new PageTitle(fullPath);
 

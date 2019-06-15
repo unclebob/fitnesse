@@ -2,21 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static util.RegexTestCase.assertSubString;
-
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.util.Clock;
+import fitnesse.util.XmlUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiImportProperty;
@@ -28,8 +19,17 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
-import fitnesse.util.Clock;
-import fitnesse.util.XmlUtil;
+
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static util.RegexTestCase.assertSubString;
 
 public class WikiImporterTest implements WikiImporterClient {
   public WikiPage pageOne;
@@ -267,7 +267,7 @@ public class WikiImporterTest implements WikiImporterClient {
     WikiPage page = parentPage.addChildPage(pageName);
     PageData data = page.getData();
 
-    WikiPagePath pagePath = page.getPageCrawler().getFullPath();
+    WikiPagePath pagePath = page.getFullPath();
     WikiImportProperty importProps = new WikiImportProperty("http://localhost:" + FitNesseUtil.PORT + "/" + PathParser.render(pagePath));
     if (isRoot)
       importProps.setRoot(true);

@@ -83,10 +83,10 @@ public class PageCrawlerTest {
 
   @Test
   public void testGetFullPath() throws Exception {
-    assertEquals(page1Path, page1.getPageCrawler().getFullPath());
-    assertEquals(page2Path, page2.getPageCrawler().getFullPath());
-    assertEquals(child1FullPath, child1.getPageCrawler().getFullPath());
-    assertEquals(grandChild1FullPath, grandChild1.getPageCrawler().getFullPath());
+    assertEquals(page1Path, page1.getFullPath());
+    assertEquals(page2Path, page2.getFullPath());
+    assertEquals(child1FullPath, child1.getFullPath());
+    assertEquals(grandChild1FullPath, grandChild1.getFullPath());
     assertEquals(PathParser.parse(""), crawler.getFullPath());
   }
 
@@ -115,7 +115,7 @@ public class PageCrawlerTest {
   @Test
   public void testAddPage() throws Exception {
     WikiPage page = WikiPageUtil.addPage(page1, PathParser.parse("SomePage"));
-    assertEquals(PathParser.parse("PageOne.SomePage"), page.getPageCrawler().getFullPath());
+    assertEquals(PathParser.parse("PageOne.SomePage"), page.getFullPath());
     assertEquals(page1, page.getParent());
   }
 
@@ -134,7 +134,7 @@ public class PageCrawlerTest {
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("WikiMail.BadSubject0123"), "");
     assertNotNull(page);
     assertEquals("BadSubject0123", page.getName());
-    assertEquals(PathParser.parse("WikiMail.BadSubject0123"), page.getPageCrawler().getFullPath());
+    assertEquals(PathParser.parse("WikiMail.BadSubject0123"), page.getFullPath());
   }
 
   @Test

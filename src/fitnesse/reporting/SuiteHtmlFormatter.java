@@ -37,7 +37,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
     super(page, writer);
     this.testSummariesPresent = testSummariesPresent;
     totalTimeMeasurement = new TimeMeasurement().start();
-    testBasePathName = PathParser.render(page.getPageCrawler().getFullPath());
+    testBasePathName = PathParser.render(page.getFullPath());
   }
 
   @Override

@@ -13,7 +13,15 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.wiki.*;
+import fitnesse.wiki.MockingPageCrawler;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.SymbolicPage;
+import fitnesse.wiki.WikiImportProperty;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperty;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,11 +34,28 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import static fitnesse.wiki.PageData.*;
+import static fitnesse.wiki.PageData.ACTION_ATTRIBUTES;
+import static fitnesse.wiki.PageData.NAVIGATION_ATTRIBUTES;
+import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTES;
+import static fitnesse.wiki.PageData.SECURITY_ATTRIBUTES;
 import static fitnesse.wiki.PageType.SUITE;
 import static fitnesse.wiki.PageType.TEST;
+import static fitnesse.wiki.WikiPageProperty.EDIT;
+import static fitnesse.wiki.WikiPageProperty.FILES;
+import static fitnesse.wiki.WikiPageProperty.HELP;
+import static fitnesse.wiki.WikiPageProperty.LAST_MODIFIED;
 import static fitnesse.wiki.WikiPageProperty.LAST_MODIFYING_USER;
-import static fitnesse.wiki.WikiPageProperty.*;
+import static fitnesse.wiki.WikiPageProperty.PROPERTIES;
+import static fitnesse.wiki.WikiPageProperty.PRUNE;
+import static fitnesse.wiki.WikiPageProperty.RECENT_CHANGES;
+import static fitnesse.wiki.WikiPageProperty.REFACTOR;
+import static fitnesse.wiki.WikiPageProperty.SEARCH;
+import static fitnesse.wiki.WikiPageProperty.SECURE_READ;
+import static fitnesse.wiki.WikiPageProperty.SECURE_TEST;
+import static fitnesse.wiki.WikiPageProperty.SECURE_WRITE;
+import static fitnesse.wiki.WikiPageProperty.SUITES;
+import static fitnesse.wiki.WikiPageProperty.VERSIONS;
+import static fitnesse.wiki.WikiPageProperty.WHERE_USED;
 
 public class PropertiesResponder implements SecureResponder {
   private WikiPage page;
@@ -211,7 +236,7 @@ public class PropertiesResponder implements SecureResponder {
       WikiPage target = crawler.getPage(wikiPagePath);
       WikiPagePath fullPath;
       if (target != null) {
-        fullPath = target.getPageCrawler().getFullPath();
+        fullPath = target.getFullPath();
         fullPath.makeAbsolute();
       } else
         fullPath = new WikiPagePath();

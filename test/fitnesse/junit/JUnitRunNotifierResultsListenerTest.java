@@ -7,7 +7,6 @@ import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.fs.WikiPageProperties;
@@ -20,8 +19,14 @@ import org.mockito.ArgumentCaptor;
 
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class JUnitRunNotifierResultsListenerTest {
   private RunNotifier notifier = mock(RunNotifier.class);
@@ -236,7 +241,8 @@ public class JUnitRunNotifierResultsListenerTest {
     when(test.getParent()).thenReturn(root);
     when(test.getName()).thenReturn("WikiPage");
     when(test.getData()).thenReturn(new PageData("content", new WikiPageProperties()));
-    when(test.getPageCrawler()).thenReturn(new PageCrawler(test));
+    when(test.getPageCrawler()).thenCallRealMethod();
+    when(test.getFullPath()).thenCallRealMethod();
     return new WikiTestPage(test);
   }
 

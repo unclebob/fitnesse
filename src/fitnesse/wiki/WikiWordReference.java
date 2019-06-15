@@ -31,7 +31,7 @@ public class WikiWordReference {
         String target = pathElements[0];
         for (WikiPage current = wikiPage.getParent(); !current.isRoot(); current = current.getParent()) {
           if (current.getName().equals(target)) {
-            pathElements[0] = PathParser.render(current.getPageCrawler().getFullPath());
+            pathElements[0] = PathParser.render(current.getFullPath());
             return "." + StringUtils.join(Arrays.asList(pathElements), ".");
           }
         }
@@ -41,7 +41,7 @@ public class WikiWordReference {
     }
 
     public void wikiWordRenameMovedPageIfReferenced(Symbol wikiWord, WikiPage pageToBeMoved, String newParentName) {
-      WikiPagePath pathOfPageToBeMoved = pageToBeMoved.getPageCrawler().getFullPath();
+      WikiPagePath pathOfPageToBeMoved = pageToBeMoved.getFullPath();
       pathOfPageToBeMoved.makeAbsolute();
       String qualifiedNameOfPageToBeMoved = PathParser.render(pathOfPageToBeMoved);
       String reference = getQualifiedWikiWord(wikiWord.getContent());
@@ -75,7 +75,7 @@ public class WikiWordReference {
 
     public void wikiWordRenamePageIfReferenced(Symbol wikiWord, WikiPage pageToRename, String newName) {
       String fullPathToReferent = getQualifiedWikiWord(wikiWord.getContent());
-      WikiPagePath pathToPageBeingRenamed = pageToRename.getPageCrawler().getFullPath();
+      WikiPagePath pathToPageBeingRenamed = pageToRename.getFullPath();
       pathToPageBeingRenamed.makeAbsolute();
       String absolutePathToPageBeingRenamed = PathParser.render(pathToPageBeingRenamed);
 
@@ -102,7 +102,7 @@ public class WikiWordReference {
 
     private String makeRenamedRelativeReference(String wikiWordText, WikiPagePath renamedPathToReferent) {
       WikiPage parent = currentPage.getParent();
-      WikiPagePath parentPath = parent.getPageCrawler().getFullPath();
+      WikiPagePath parentPath = parent.getFullPath();
       parentPath.makeAbsolute();
 
       if (wikiWordText.startsWith("."))

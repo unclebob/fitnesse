@@ -4,12 +4,12 @@ package fitnesse.responders.refactoring;
 
 
 import fitnesse.FitNesseContext;
-import fitnesse.wiki.refactoring.MovedPageReferenceRenamer;
-import fitnesse.wiki.refactoring.ReferenceRenamer;
 import fitnesse.http.Request;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.refactoring.MovedPageReferenceRenamer;
+import fitnesse.wiki.refactoring.ReferenceRenamer;
 
 public class MovePageResponder extends PageMovementResponder {
   private String newParentName;
@@ -38,8 +38,8 @@ public class MovePageResponder extends PageMovementResponder {
 
   @Override
   protected boolean getAndValidateRefactoringParameters(Request request) {
-    WikiPagePath pageToBeMovedPath = oldRefactoredPage.getPageCrawler().getFullPath();
-    WikiPagePath newParentPath = newParentPage.getPageCrawler().getFullPath();
+    WikiPagePath pageToBeMovedPath = oldRefactoredPage.getFullPath();
+    WikiPagePath newParentPath = newParentPage.getFullPath();
 
     return !pageToBeMovedPath.equals(newParentPath) &&
     !selfPage(pageToBeMovedPath, newParentPath) &&

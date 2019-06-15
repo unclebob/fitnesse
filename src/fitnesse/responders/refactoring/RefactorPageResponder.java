@@ -2,9 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -21,6 +18,9 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperty;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RefactorPageResponder implements SecureResponder {
 
@@ -59,12 +59,12 @@ public class RefactorPageResponder implements SecureResponder {
   List<String> collectPageNames(final WikiPage thisPage, WikiPage rootPage) {
     final List<String> pageNames = new ArrayList<>();
     if (thisPage != null) {
-      final WikiPagePath thisPagePath = thisPage.getPageCrawler().getFullPath();
+      final WikiPagePath thisPagePath = thisPage.getFullPath();
       rootPage.getPageCrawler().traverse(new TraversalListener<WikiPage>() {
 
         @Override
         public void process(WikiPage page) {
-          WikiPagePath pagePath = page.getPageCrawler().getFullPath();
+          WikiPagePath pagePath = page.getFullPath();
           pagePath.makeAbsolute();
           if (!thisPagePath.equals(pagePath) && !pagePath.isEmpty()) {
             pageNames.add(pagePath.toString());
