@@ -12,22 +12,37 @@ import fitnesse.wikitext.parser.SymbolProvider;
 
 public interface PluginFeatureFactory {
 
-  Authenticator getAuthenticator();
+  default Authenticator getAuthenticator() {
+    return null;
+  }
 
-  ContentFilter getContentFilter();
+  default ContentFilter getContentFilter() {
+    return null;
+  }
 
-  void registerResponders(ResponderFactory responderFactory) throws PluginException;
+  default String getDefaultTheme() {
+    return null;
+  }
 
-  void registerSymbolTypes(SymbolProvider symbolProvider) throws PluginException;
+  default void registerResponders(ResponderFactory responderFactory) throws PluginException {
+  }
 
-  void registerWikiPageFactories(WikiPageFactoryRegistry wikiPageFactoryRegistry) throws PluginException;
+  default void registerSymbolTypes(SymbolProvider symbolProvider) throws PluginException {
+  }
 
-  void registerFormatters(FormatterRegistry registrar) throws PluginException;
+  default void registerWikiPageFactories(WikiPageFactoryRegistry wikiPageFactoryRegistry) throws PluginException {
+  }
 
-  void registerTestSystemFactories(TestSystemFactoryRegistry testSystemFactoryRegistry) throws PluginException;
+  default void registerFormatters(FormatterRegistry registrar) throws PluginException {
+  }
 
-  void registerSlimTables(SlimTableFactory slimTableFactory) throws PluginException;
+  default void registerTestSystemFactories(TestSystemFactoryRegistry testSystemFactoryRegistry) throws PluginException {
+  }
 
-  void registerCustomComparators(CustomComparatorRegistry customComparatorRegistry) throws PluginException;
+  default void registerSlimTables(SlimTableFactory slimTableFactory) throws PluginException {
+  }
+
+  default void registerCustomComparators(CustomComparatorRegistry customComparatorRegistry) throws PluginException {
+  }
 
 }

@@ -156,15 +156,16 @@ public class FitNesseMainTest {
   @Test
   public void systemPropertiesTakePrecedenceOverConfiguredProperties() throws Exception {
     final String configFileName = "systemPropertiesTakePrecedenceOverConfiguredProperties.properties";
-    FileUtil.createFile(configFileName, "Theme=example");
+    String themeKey = ConfigurationParameter.THEME.getKey();
+    FileUtil.createFile(configFileName, themeKey + "=example");
 
-    System.setProperty("Theme", "othertheme");
+    System.setProperty(themeKey, "othertheme");
     try {
       // Checked via logging:
       String output = runFitnesseMainWith("-o", "-c", "/root", "-f", configFileName);
       assertThat(output, containsString("othertheme"));
     } finally {
-      System.getProperties().remove("Theme");
+      System.getProperties().remove(themeKey);
       FileUtil.deleteFile(configFileName);
     }
   }

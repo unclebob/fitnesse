@@ -41,7 +41,8 @@ public enum ConfigurationParameter {
   VERSIONS_CONTROLLER_DAYS("VersionsController.days"),
   RECENT_CHANGES_CLASS("RecentChanges"),
   CONTEXT_ROOT("ContextRoot"),
-  LOCALHOST_ONLY("LocalhostOnly");
+  LOCALHOST_ONLY("LocalhostOnly"),
+  THEME("Theme");
 
   private static final Logger LOG = Logger.getLogger(ConfigurationParameter.class.getName());
 
