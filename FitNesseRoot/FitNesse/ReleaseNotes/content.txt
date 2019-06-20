@@ -1,5 +1,5 @@
 !2 ${FITNESSE_VERSION}
- * Allow plugins to override the default wiki theme (i.e. bootstrap).
+ * Allow plugins to override the default wiki theme (i.e. bootstrap) ([[1227][https://github.com/unclebob/fitnesse/pull/1227]])
 
 !2 20190508
  * Optimized performance of Slim (javascript) expressions ([[1220][https://github.com/unclebob/fitnesse/pull/1220]])
