@@ -28,15 +28,7 @@ public class PageListSetUpTearDownSurrounder {
 
   private void makeSetUpTearDownPageGroupForPage(WikiPage page, Map<String, List<WikiPage>> pageSetUpTearDownGroups) {
     String group = getSetUpTearDownGroup(page);
-    List<WikiPage> pageGroup;
-    if (pageSetUpTearDownGroups.get(group) != null) {
-      pageGroup = pageSetUpTearDownGroups.get(group);
-      pageGroup.add(page);
-    } else {
-      pageGroup = new LinkedList<>();
-      pageGroup.add(page);
-      pageSetUpTearDownGroups.put(group, pageGroup);
-    }
+    pageSetUpTearDownGroups.computeIfAbsent(group, g -> new LinkedList<>()).add(page);
   }
 
   private String getSetUpTearDownGroup(WikiPage page) {
