@@ -5,6 +5,7 @@ import fitnesse.wiki.WikiPage;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,7 @@ public class PageListSetUpTearDownSurrounder {
   }
 
   private Map<String, List<WikiPage>> createPageSetUpTearDownGroups(List<WikiPage> pageList) {
-    Map<String, List<WikiPage>> pageSetUpTearDownGroups = new HashMap<>();
+    Map<String, List<WikiPage>> pageSetUpTearDownGroups = new LinkedHashMap<>();
     for (WikiPage page : pageList) {
       makeSetUpTearDownPageGroupForPage(page, pageSetUpTearDownGroups);
     }
