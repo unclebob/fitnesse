@@ -1,18 +1,21 @@
-package fitnesse.testrunner;
-
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+package fitnesse.testrunner.run;
 
 import fitnesse.FitNesseContext;
+import fitnesse.testrunner.WikiPageIdentity;
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -44,7 +47,7 @@ public class PagesByTestSystemTest{
     testPages.add(testPage);
     testPages.add(tearDown);
 
-    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(testPages, context.getRootPage());
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(testPages);
     Collection<WikiPageIdentity> descriptors = pagesByTestSystem.identities();
     WikiPageIdentity fitDescriptor = new WikiPageIdentity(testPage);
     WikiPageIdentity slimDescriptor = new WikiPageIdentity(slimPage);
@@ -58,7 +61,7 @@ public class PagesByTestSystemTest{
     assertEquals(3, fitList.size());
     assertEquals(3, slimList.size());
 
-    assertEquals(setUp, ((WikiTestPage) fitList.get(0)).getSourcePage());
+    Assert.assertEquals(setUp, ((WikiTestPage) fitList.get(0)).getSourcePage());
     assertEquals(testPage, ((WikiTestPage) fitList.get(1)).getSourcePage());
     assertEquals(tearDown, ((WikiTestPage) fitList.get(2)).getSourcePage());
 

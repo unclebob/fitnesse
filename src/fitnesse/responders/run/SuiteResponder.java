@@ -29,7 +29,6 @@ import fitnesse.responders.WikiImportingResponder;
 import fitnesse.responders.WikiImportingTraverser;
 import fitnesse.responders.WikiPageActions;
 import fitnesse.testrunner.MultipleTestsRunner;
-import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.RunningTestingTracker;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testrunner.SuiteFilter;
@@ -345,9 +344,8 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
     // Add test url inputs to context's variableSource.
-    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, root);
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.testSystemFactory);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pages, context.testSystemFactory);
     runner.setRunInProcess(debug);
     runner.setEnableRemoteDebug(remoteDebug);
     addFormatters(runner);
