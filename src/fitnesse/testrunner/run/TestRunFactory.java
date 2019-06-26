@@ -8,33 +8,33 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public class TestRunFactory {
-    private static TestRunFactory ourInstance = new TestRunFactory();
+  private static TestRunFactory ourInstance = new TestRunFactory();
 
-    public static TestRunFactory getInstance() {
-        return ourInstance;
-    }
+  public static TestRunFactory getInstance() {
+    return ourInstance;
+  }
 
-    private final List<Function<List<WikiPage>, Optional<TestRun>>> runProviders = new ArrayList<>();
+  private final List<Function<List<WikiPage>, Optional<TestRun>>> runProviders = new ArrayList<>();
 
-    private TestRunFactory() {
-    }
+  private TestRunFactory() {
+  }
 
-    public void resetProviders() {
-      runProviders.clear();
-    }
+  public void resetProviders() {
+    runProviders.clear();
+  }
 
-    public void addProvider(Function<List<WikiPage>, Optional<TestRun>> provider) {
-      runProviders.add(0, provider);
-    }
+  public void addProvider(Function<List<WikiPage>, Optional<TestRun>> provider) {
+    runProviders.add(0, provider);
+  }
 
-    public TestRun createRun(List<WikiPage> pages) {
-      Optional<TestRun> run;
-      for (Function<List<WikiPage>, Optional<TestRun>> provider : runProviders) {
-        run = provider.apply(pages);
-        if (run.isPresent()) {
-          return run.get();
-        }
+  public TestRun createRun(List<WikiPage> pages) {
+    Optional<TestRun> run;
+    for (Function<List<WikiPage>, Optional<TestRun>> provider : runProviders) {
+      run = provider.apply(pages);
+      if (run.isPresent()) {
+        return run.get();
       }
-      return new PerTestSystemTestRun(pages);
     }
+    return new PerTestSystemTestRun(pages);
+  }
 }
