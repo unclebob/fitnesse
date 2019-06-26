@@ -1,39 +1,35 @@
 package fitnesse.junit;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
-import fitnesse.plugins.PluginException;
 import fitnesse.slim.instructions.SystemExitSecurityManager;
 import fitnesse.testrunner.MultipleTestsRunner;
-import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.TestExecutionException;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
 
-import static org.junit.Assert.*;
+import java.io.File;
+import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static fitnesse.junit.JUnitHelper.createTestRunner;
+import static fitnesse.junit.JUnitHelper.getSuiteRootPage;
+import static fitnesse.junit.JUnitHelper.msgAtLeastOneTest;
+import static org.junit.Assert.assertTrue;
 
 public class FitNesseRunner extends ParentRunner<WikiPage> {
   /**
@@ -394,8 +390,8 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     runPages(listOf(page), notifier);
   }
 
-  protected void runPages(List<WikiPage>pages, final RunNotifier notifier) {
-    MultipleTestsRunner testRunner = createTestRunner(pages);
+  protected void runPages(List<WikiPage> pages, final RunNotifier notifier) {
+    MultipleTestsRunner testRunner = createTestRunner(pages, context, debugMode);
     addTestSystemListeners(notifier, testRunner, suiteClass, getDescriptionFactory());
     addExecutionLogListener(notifier, testRunner, suiteClass);
     System.setProperty(SystemExitSecurityManager.PREVENT_SYSTEM_EXIT, String.valueOf(preventSystemExit));
@@ -417,7 +413,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   }
 
   protected List<WikiPage> initChildren() {
-    WikiPage suiteRoot = getSuiteRootPage();
+    WikiPage suiteRoot = getSuiteRootPage(suiteName, context);
     if (suiteRoot == null) {
       throw new IllegalArgumentException("No page " + this.suiteName);
     }
@@ -458,21 +454,6 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
             ConfigurationParameter.OMITTING_UPDATES, true));
   }
 
-  private WikiPage getSuiteRootPage() {
-    WikiPagePath path = PathParser.parse(this.suiteName);
-    PageCrawler crawler = context.getRootPage().getPageCrawler();
-    return crawler.getPage(path);
-  }
-
-  private MultipleTestsRunner createTestRunner(List<WikiPage> pages) {
-    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.getRootPage());
-
-    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem,
-            context.testSystemFactory);
-    runner.setRunInProcess(debugMode);
-    return runner;
-  }
-
   private void executeTests(MultipleTestsRunner testRunner) throws IOException, TestExecutionException {
     JavaFormatter testFormatter = new JavaFormatter(suiteName);
     testFormatter.setResultsRepository(new JavaFormatter.FolderResultsRepository(outputDir));
@@ -482,11 +463,6 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     TestSummary summary = testFormatter.getTotalSummary();
 
     assertTrue(msgAtLeastOneTest(suiteName, summary), summary.getRight() > 0 || summary.getWrong() > 0 || summary.getExceptions() > 0);
-  }
-
-  private String msgAtLeastOneTest(String pageName, TestSummary summary) {
-    return MessageFormat.format("at least one test executed in {0}\n{1}",
-            pageName, summary.toString());
   }
 
   private List<WikiPage> listOf(WikiPage page) {
