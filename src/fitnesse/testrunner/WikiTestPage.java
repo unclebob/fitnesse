@@ -1,6 +1,5 @@
 package fitnesse.testrunner;
 
-import fitnesse.components.TraversalListener;
 import fitnesse.testsystems.ClassPath;
 import fitnesse.testsystems.TestPage;
 import fitnesse.wiki.BaseWikitextPage;
@@ -11,13 +10,16 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiSourcePage;
 import fitnesse.wikitext.parser.HtmlTranslator;
+import fitnesse.wikitext.parser.Include;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.Symbol;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 // TODO: need 2 implementations, one for wiki text pages (Fit, Slim) and one for non-wiki text pages. See PagesByTestSystem
 public class WikiTestPage implements TestPage {
@@ -97,11 +99,11 @@ public class WikiTestPage implements TestPage {
     StringBuilder decoratedContent = new StringBuilder(1024);
     includeScenarioLibraries(decoratedContent);
 
-    includePage(getSetUp(), "-setup", decoratedContent);
+    includeSetUps(decoratedContent);
 
     addPageContent(decoratedContent);
 
-    includePage(getTearDown(), "-teardown", decoratedContent);
+    includeTearDowns(decoratedContent);
 
     return decoratedContent.toString();
   }
@@ -116,25 +118,47 @@ public class WikiTestPage implements TestPage {
 
   protected void includeScenarioLibraries(StringBuilder decoratedContent) {
     final List<WikiPage> libraries = getScenarioLibraries();
-    if (!libraries.isEmpty()) {
-      if (libraries.size() > 1) {
-        decoratedContent.append("!*> Scenario Libraries\n");
-      }
+    includePages("Scenario Libraries", libraries, this::includeScenarioLibrary, decoratedContent);
+  }
 
-      for (WikiPage scenarioLibrary : libraries) {
-        includeScenarioLibrary(scenarioLibrary, decoratedContent);
-      }
+  protected void includeSetUps(StringBuilder decoratedContent) {
+    includeSetUp(getSetUp(), decoratedContent);
+  }
 
-      if (libraries.size() > 1) {
-        decoratedContent.append("*!\n");
-      }
-    }
+  protected void includeTearDowns(StringBuilder decoratedContent) {
+    includeTearDown(getTearDown(), decoratedContent);
   }
 
   protected void includeScenarioLibrary(WikiPage scenarioLibrary, StringBuilder newPageContent) {
-    newPageContent.append("!include -c .");
-    newPageContent.append(getPathNameForPage(scenarioLibrary));
-    newPageContent.append("\n");
+    includePage(scenarioLibrary, Include.COLLAPSE_ARG, newPageContent);
+  }
+
+  protected void includeSetUp(WikiPage suiteSetUp, StringBuilder newPageContent) {
+    includePage(suiteSetUp, Include.SETUP_ARG, newPageContent);
+  }
+
+  protected void includeTearDown(WikiPage suiteTearDown, StringBuilder newPageContent) {
+    includePage(suiteTearDown, Include.TEARDOWN_ARG, newPageContent);
+  }
+
+  protected void includePages(String name, List<WikiPage> pages, BiConsumer<WikiPage, StringBuilder> includePage,
+                              StringBuilder decoratedContent) {
+    if (!pages.isEmpty()) {
+      boolean multiplePages = pages.size() > 1;
+      if (multiplePages) {
+        decoratedContent.append("!*> ");
+        decoratedContent.append(name);
+        decoratedContent.append("\n");
+      }
+
+      for (WikiPage page : pages) {
+        includePage.accept(page, decoratedContent);
+      }
+
+      if (multiplePages) {
+        decoratedContent.append("*!\n");
+      }
+    }
   }
 
   protected void includePage(WikiPage wikiPage, String arg, StringBuilder newPageContent) {
@@ -205,15 +229,18 @@ public class WikiTestPage implements TestPage {
   }
 
   private List<WikiPage> findScenarioLibraries() {
-    final LinkedList<WikiPage> uncles = new LinkedList<>();
+    List<WikiPage> uncles;
     if (shouldIncludeScenarioLibraries()) {
-      sourcePage.getPageCrawler().traverseUncles("ScenarioLibrary", new TraversalListener<WikiPage>() {
-        @Override
-        public void process(WikiPage page) {
-          uncles.addFirst(page);
-        }
-      });
+      uncles = findUncles("ScenarioLibrary");
+    } else {
+      uncles = Collections.emptyList();
     }
+    return uncles;
+  }
+
+  private List<WikiPage> findUncles(String uncleName) {
+    LinkedList<WikiPage> uncles = new LinkedList<>();
+    sourcePage.getPageCrawler().traverseUncles(uncleName, uncles::addFirst);
     return uncles;
   }
 

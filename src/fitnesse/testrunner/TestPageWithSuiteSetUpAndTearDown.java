@@ -1,6 +1,5 @@
 package fitnesse.testrunner;
 
-import fitnesse.testrunner.WikiTestPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
@@ -14,19 +13,15 @@ public class TestPageWithSuiteSetUpAndTearDown extends WikiTestPage {
   }
 
   @Override
-  protected String getDecoratedContent() {
-    StringBuilder decoratedContent = new StringBuilder(1024);
-    includeScenarioLibraries(decoratedContent);
+  protected void includeSetUps(StringBuilder decoratedContent) {
+    includeSetUp(getSuiteSetUp(), decoratedContent);
+    super.includeSetUps(decoratedContent);
+  }
 
-    includePage(getSuiteSetUp(), "-setup", decoratedContent);
-    includePage(getSetUp(), "-setup", decoratedContent);
-
-    addPageContent(decoratedContent);
-
-    includePage(getTearDown(), "-teardown", decoratedContent);
-    includePage(getSuiteTearDown(), "-teardown", decoratedContent);
-
-    return decoratedContent.toString();
+  @Override
+  protected void includeTearDowns(StringBuilder decoratedContent) {
+    super.includeTearDowns(decoratedContent);
+    includeTearDown(getSuiteTearDown(), decoratedContent);
   }
 
   public WikiPage getSuiteSetUp() {
@@ -42,6 +37,5 @@ public class TestPageWithSuiteSetUpAndTearDown extends WikiTestPage {
     }
     return suiteTearDown;
   }
-
 
 }

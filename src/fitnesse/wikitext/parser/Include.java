@@ -7,11 +7,15 @@ import java.util.Collection;
 import java.util.Collections;
 
 public class Include extends SymbolType implements Rule, Translation {
-    private static final String[] setUpSymbols = new String[] {"COLLAPSE_SETUP"};
-    private static final String includeHelpOption = "-h";
-    public static final String TEARDOWN = "teardown";
+  private static final String[] setUpSymbols = new String[] {"COLLAPSE_SETUP"};
+  public static final String TEARDOWN = "teardown";
+  public static final String HELP_ARG = "-h";
+  public static final String SETUP_ARG = "-setup";
+  public static final String TEARDOWN_ARG = "-teardown";
+  public static final String COLLAPSE_ARG = "-c";
+  public static final String SEAMLESS_ARG = "-seamless";
 
-    public Include() {
+  public Include() {
         super("Include");
         wikiMatcher(new Matcher().startLineOrCell().string("!include"));
         wikiRule(this);
@@ -53,20 +57,20 @@ public class Include extends SymbolType implements Rule, Translation {
         if (includedPage.isNothing()) {
           current.add("").add(new Symbol(SymbolType.Style, "error").add(includedPage.because()));
         }
-        else if (includeHelpOption.equals(option)) {
+        else if (HELP_ARG.equals(option)) {
         	String helpText = includedPage.getValue().getProperty(WikiPageProperty.HELP);
         	current.add("").add(Parser.make(
         			parser.getPage(),helpText).parse());
         } else {
             current.childAt(1).putProperty(WikiWord.WITH_EDIT, "true");
-            ParsingPage included = option.equals("-setup") || option.equals("-teardown")
+            ParsingPage included = option.equals(SETUP_ARG) || option.equals(TEARDOWN_ARG)
                     ? parser.getPage()
                     : parser.getPage().copyForNamedPage(includedPage.getValue());
             current.add("").add(Parser.make(
                             included,
                             includedPage.getValue().getContent())
                             .parse());
-            if (option.equals("-setup")) current.evaluateVariables(setUpSymbols, parser.getVariableSource());
+            if (option.equals(SETUP_ARG)) current.evaluateVariables(setUpSymbols, parser.getVariableSource());
         }
 
       // Remove trailing newline so we do not introduce excessive whitespace in the page.
@@ -83,23 +87,23 @@ public class Include extends SymbolType implements Rule, Translation {
             return translator.translate(symbol.childAt(2));
         }
         String option = symbol.childAt(0).getContent();
-        if (option.equals("-seamless")) {
+        if (option.equals(SEAMLESS_ARG)) {
             return translator.translate(symbol.childAt(3));
-        } else if (includeHelpOption.equals(option)) {
+        } else if (HELP_ARG.equals(option)) {
         	return translator.translate(symbol.childAt(3));
         } else {
             String collapseState = stateForOption(option, symbol);
             String title = "Included page: "
                     + translator.translate(symbol.childAt(1));
             Collection<String> extraCollapsibleClass =
-                    option.equals("-teardown") ? Collections.singleton(TEARDOWN) : Collections.<String>emptySet();
+                    option.equals(TEARDOWN_ARG) ? Collections.singleton(TEARDOWN) : Collections.emptySet();
             return Collapsible.generateHtml(collapseState, title, translator.translate(symbol.childAt(3)), extraCollapsibleClass);
         }
     }
 
     private String stateForOption(String option, Symbol symbol) {
-        return ((option.equals("-setup") || option.equals("-teardown")) && symbol.getVariable("COLLAPSE_SETUP", "true").equals("true"))
-                || option.equals("-c")
+        return ((option.equals(SETUP_ARG) || option.equals(TEARDOWN_ARG)) && symbol.getVariable("COLLAPSE_SETUP", "true").equals("true"))
+                || option.equals(COLLAPSE_ARG)
                 ? Collapsible.CLOSED
                 : "";
     }
