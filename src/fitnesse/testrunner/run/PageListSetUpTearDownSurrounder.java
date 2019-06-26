@@ -10,9 +10,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class PageListSetUpTearDownSurrounder {
+/**
+ * Groups tests that have same SuiteSetUp and SuiteTearDown.
+ * Ensure each of these groups are added to the final list of tests to run, directly surrounded by the appropriate
+ * SuiteSetUp and -TearDown. This can mean a single SuiteSetUp or -TearDown is added multiple times: once for each
+ * group that requires it.
+ */
+public class PageListSetUpTearDownSurrounder implements PageListSetUpTearDownProcessor {
   private final Map<String, WikiPage> setUpsAndTearDowns = new HashMap<>();
 
+  @Override
   public List<WikiPage> addSuiteSetUpsAndTearDowns(List<WikiPage> pageList) {
     Map<String, List<WikiPage>> pageSetUpTearDownGroups = createPageSetUpTearDownGroups(pageList);
     return reinsertPagesViaSetUpTearDownGroups(pageSetUpTearDownGroups);

@@ -17,9 +17,15 @@ import java.util.Map;
  * Organize pages by test system in an appropriate order.
  */
 public class PagesByTestSystem {
+  private final PageListSetUpTearDownProcessor processor;
   private final Map<WikiPageIdentity, List<TestPage>> pagesByTestSystem;
 
   public PagesByTestSystem(List<WikiPage> pages) {
+    this(new PageListSetUpTearDownSurrounder(), pages);
+  }
+
+  public PagesByTestSystem(PageListSetUpTearDownProcessor processor, List<WikiPage> pages) {
+    this.processor = processor;
     Map<WikiPageIdentity, List<WikiPage>> testsPerSystem = mapWithAllPagesButSuiteSetUpAndTearDown(pages);
     this.pagesByTestSystem = addSuiteSetUpAndTearDownToAllTestSystems(testsPerSystem);
   }
@@ -40,12 +46,10 @@ public class PagesByTestSystem {
     Map<WikiPageIdentity, List<TestPage>> orderedPagesByTestSystem = new HashMap<>();
 
     if (!testsPerSystem.isEmpty()) {
-      PageListSetUpTearDownSurrounder surrounder = new PageListSetUpTearDownSurrounder();
-
       for (Map.Entry<WikiPageIdentity, List<WikiPage>> entry : testsPerSystem.entrySet()) {
         WikiPageIdentity system = entry.getKey();
         List<WikiPage> testPages = entry.getValue();
-        List<WikiPage> allPages = surrounder.addSuiteSetUpsAndTearDowns(testPages);
+        List<WikiPage> allPages = processor.addSuiteSetUpsAndTearDowns(testPages);
         orderedPagesByTestSystem.put(system, asTestPages(allPages));
       }
     }

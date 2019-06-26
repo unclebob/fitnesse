@@ -14,7 +14,11 @@ public class PerTestSystemTestRun implements TestRun {
   private RunCoordinator coordinator;
 
   public PerTestSystemTestRun(List<WikiPage> pages) {
-    this.pagesByTestSystem = new PagesByTestSystem(pages);
+    this(new PagesByTestSystem(pages));
+  }
+
+  public PerTestSystemTestRun(PagesByTestSystem pagesByTestSystem) {
+    this.pagesByTestSystem = pagesByTestSystem;
   }
 
   @Override
