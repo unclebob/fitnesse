@@ -238,7 +238,7 @@ public class WikiTestPage implements TestPage {
     return uncles;
   }
 
-  private List<WikiPage> findUncles(String uncleName) {
+  protected List<WikiPage> findUncles(String uncleName) {
     LinkedList<WikiPage> uncles = new LinkedList<>();
     sourcePage.getPageCrawler().traverseUncles(uncleName, uncles::addFirst);
     return uncles;
