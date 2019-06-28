@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+
+!2 20190620
  * Allow plugins to override the default wiki theme (i.e. bootstrap) ([[1227][https://github.com/unclebob/fitnesse/pull/1227]])
 
 !2 20190508
