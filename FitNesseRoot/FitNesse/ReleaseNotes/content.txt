@@ -1,4 +1,5 @@
 !2 ${FITNESSE_VERSION}
+ * Allow all uncle !-SuiteSetUp-! and !-SuiteTearDown-! pages to be run, instead of only the nearest one, by setting ALL_UNCLE_SUITE_SETUPS ([[1233][https://github.com/unclebob/fitnesse/pull/1233]]). This also ensures that all tests are executed in order, fixing ([[1229][https://github.com/unclebob/fitnesse/issues/1229]]).
 
 !2 20190620
  * Allow plugins to override the default wiki theme (i.e. bootstrap) ([[1227][https://github.com/unclebob/fitnesse/pull/1227]])

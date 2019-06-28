@@ -1,5 +1,6 @@
 package fitnesse.testrunner.run;
 
+import fitnesse.testrunner.TestPageWithSuiteSetUpAndTearDown;
 import fitnesse.testrunner.WikiPageIdentity;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestPage;
@@ -21,7 +22,9 @@ public class PagesByTestSystem {
   private final Map<WikiPageIdentity, List<TestPage>> pagesByTestSystem;
 
   public PagesByTestSystem(List<WikiPage> pages) {
-    this(new PageListSetUpTearDownSurrounder(), pages);
+    this(pages.isEmpty() || !TestPageWithSuiteSetUpAndTearDown.includeAllSetupsAndTearDowns(pages.get(0)) ?
+        new PageListSetUpTearDownSurrounder() : new PageListSetUpTearDownInserter(),
+      pages);
   }
 
   public PagesByTestSystem(PageListSetUpTearDownProcessor processor, List<WikiPage> pages) {
