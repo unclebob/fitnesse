@@ -46,7 +46,7 @@ public class WikiWordReference {
       .ifPresent(wikiWord::setContent);
   }
 
-  private Optional<String> getMovedPageRenamedContent(String content, WikiPage pageToBeMoved, String newParentName) {
+  public Optional<String> getMovedPageRenamedContent(String content, WikiPage pageToBeMoved, String newParentName) {
     WikiPagePath pathOfPageToBeMoved = pageToBeMoved.getFullPath();
     pathOfPageToBeMoved.makeAbsolute();
     String qualifiedNameOfPageToBeMoved = PathParser.render(pathOfPageToBeMoved);
@@ -89,7 +89,7 @@ public class WikiWordReference {
       .ifPresent(wikiWord::setContent);
   }
 
-  private Optional<String> getRenamedContent(String content, WikiPage pageToRename, String newName) {
+  public Optional<String> getRenamedContent(String content, WikiPage pageToRename, String newName) {
     String fullPathToReferent = getQualifiedWikiWord(content);
     WikiPagePath pathToPageBeingRenamed = pageToRename.getFullPath();
     pathToPageBeingRenamed.makeAbsolute();

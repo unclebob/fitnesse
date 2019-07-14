@@ -6,13 +6,15 @@ import fitnesse.wiki.NoPruningStrategy;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.SymbolTreeWalker;
 
+import java.util.Optional;
+
 public abstract class ReferenceRenamer implements SymbolTreeWalker {
     protected WikiPage root;
     protected ReferenceRenamingTraverser traverser;
 
     ReferenceRenamer(WikiPage root) {
         this.root = root;
-        this.traverser = new ReferenceRenamingTraverser(this);
+        this.traverser = new ReferenceRenamingTraverser(this, this::renameSymbolicLinkIfNeeded);
     }
 
     public void renameReferences() {
@@ -22,5 +24,7 @@ public abstract class ReferenceRenamer implements SymbolTreeWalker {
     WikiPage currentPage(){
         return traverser.currentPage();
     }
+
+    abstract Optional<String> renameSymbolicLinkIfNeeded(String linkTarget);
 }
 
