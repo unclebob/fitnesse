@@ -12,35 +12,47 @@ import fitnesse.wikitext.parser.SymbolTreeWalker;
 import fitnesse.wikitext.parser.WikiTranslator;
 
 class ReferenceRenamingTraverser implements TraversalListener<WikiPage> {
-    private final SymbolTreeWalker walker;
-    private WikiPage currentPage;
+  private final SymbolTreeWalker walker;
+  private WikiPage currentPage;
 
-    ReferenceRenamingTraverser(SymbolTreeWalker walker) {
-        this.walker = walker;
+  ReferenceRenamingTraverser(SymbolTreeWalker walker) {
+    this.walker = walker;
+  }
+
+  @Override
+  public void process(WikiPage currentPage) {
+    this.currentPage = currentPage;
+    PageData data = currentPage.getData();
+    boolean pageHasChanged = updatePageContent(data);
+
+    if (pageHasChanged) {
+      currentPage.commit(data);
     }
+  }
 
-    @Override
-    public void process(WikiPage currentPage) {
-        PageData data = currentPage.getData();
-        String content = data.getContent();
+  private boolean updatePageContent(PageData data) {
+    String content = data.getContent();
 
-        Symbol syntaxTree = Parser.make(
-                new ParsingPage(new WikiSourcePage(currentPage)),
-                content,
-                SymbolProvider.refactoringProvider)
-                .parse();
-        this.currentPage = currentPage;
-        syntaxTree.walkPreOrder(walker);
-        String newContent = new WikiTranslator(new WikiSourcePage(currentPage)).translateTree(syntaxTree);
+    String newContent = getUpdatedPageContent(content);
 
-        boolean pageHasChanged = !newContent.equals(content);
-        if (pageHasChanged) {
-            data.setContent(newContent);
-            currentPage.commit(data);
-        }
+    boolean pageHasChanged = !newContent.equals(content);
+    if (pageHasChanged) {
+      data.setContent(newContent);
     }
+    return pageHasChanged;
+  }
 
-    WikiPage currentPage() {
-        return currentPage;
-    }
+  private String getUpdatedPageContent(String content) {
+    Symbol syntaxTree = Parser.make(
+      new ParsingPage(new WikiSourcePage(currentPage)),
+      content,
+      SymbolProvider.refactoringProvider)
+      .parse();
+    syntaxTree.walkPreOrder(walker);
+    return new WikiTranslator(new WikiSourcePage(currentPage)).translateTree(syntaxTree);
+  }
+
+  WikiPage currentPage() {
+    return currentPage;
+  }
 }

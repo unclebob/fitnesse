@@ -18,16 +18,16 @@ public class MovedPageReferenceRenamer extends ReferenceRenamer {
     this.newParentName = newParentName;
   }
 
-    @Override
-    public boolean visit(Symbol node) {
-      if (node.isType(WikiWord.symbolType)) {
-        new WikiWordReference(currentPage(), node.getContent()).wikiWordRenameMovedPageIfReferenced(node, pageToBeMoved, newParentName);
-      }
-      return true;
+  @Override
+  public boolean visit(Symbol node) {
+    if (node.isType(WikiWord.symbolType)) {
+      new WikiWordReference(currentPage(), node.getContent()).wikiWordRenameMovedPageIfReferenced(node, pageToBeMoved, newParentName);
     }
+    return true;
+  }
 
-    @Override
-    public boolean visitChildren(Symbol node) {
-        return !node.isType(Alias.symbolType);
-    }
+  @Override
+  public boolean visitChildren(Symbol node) {
+    return !node.isType(Alias.symbolType);
+  }
 }
