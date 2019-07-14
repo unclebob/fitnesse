@@ -46,45 +46,64 @@ public class SymbolicPageTest {
   }
 
   @Test
-  public void testCreation() throws Exception {
+  public void testCreation() {
     assertEquals("SymPage", symPage.getName());
   }
 
   @Test
-  public void testLinkage() throws Exception {
+  public void testLinkage() {
     assertSame(pageTwo, symPage.getRealPage());
   }
 
   @Test
-  public void equalsAnotherSymbolicPageWithTheSameRealPage() {
-    assertEquals(symPage, new SymbolicPage("SymPage2", pageTwo, pageOne));
-  }
-  
-  @Test
-  public void doesNotEqualAnotherSymbolicPageWithDifferentRealPage() {
-    WikiPage childPage = WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildOne"), "child one");
-    assertNotEquals(symPage, new SymbolicPage("SymPage2", childPage, pageOne));
+  public void doesNotEqualAnotherSymbolicPageWithOtherNameAndTheSameRealPage() {
+    assertNotEquals(symPage, new SymbolicPage("SymPage2", pageTwo, pageOne));
   }
 
   @Test
-  public void doesNotEqualAnotherSymbolicPageWithDifferentExternalRoot() throws Exception {
+  public void equalAnotherSymbolicPageWithTheSameNameAndRealPage() {
+    assertEquals(symPage, new SymbolicPage(symPage.getName(), pageTwo, pageOne));
+  }
+
+  @Test
+  public void equalsItSelf() {
+    assertEquals(symPage, symPage);
+    assertEquals(symPage.hashCode(), symPage.hashCode());
+  }
+
+  @Test
+  public void equalsRealPage() {
+    assertEquals(symPage, pageTwo);
+    assertEquals(pageTwo, symPage);
+    assertEquals(symPage.hashCode(), pageTwo.hashCode());
+    assertEquals(pageTwo.hashCode(), symPage.hashCode());
+  }
+
+  @Test
+  public void doesNotEqualAnotherSymbolicPageWithDifferentRealPage() {
+    WikiPage childPage = WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildOne"), "child one");
+    assertNotEquals(symPage, new SymbolicPage(symPage.getName(), childPage, pageOne));
+  }
+
+  @Test
+  public void doesNotEqualAnotherSymbolicPageWithDifferentExternalRoot() {
     createExternalRoot();
     
     FileUtil.createDir("testDir/ExternalRoot2");
     WikiPage externalRoot2 = new FileSystemPageFactory().makePage(new File("testDir/ExternalRoot2"), "ExternalRoot2", null, new SystemVariableSource());
-    WikiPage symPage2 = new SymbolicPage("SymPage2", externalRoot2, pageOne);
+    WikiPage symPage2 = new SymbolicPage(symPage.getName(), externalRoot2, pageOne);
   
     assertNotEquals(symPage, symPage2);
   }
   
   @Test
-  public void testInternalData() throws Exception {
+  public void testInternalData() {
     PageData data = symPage.getData();
     assertEquals(pageTwoContent, data.getContent());
   }
 
   @Test
-  public void testCommitInternal() throws Exception {
+  public void testCommitInternal() {
     commitNewContent(symPage);
 
     PageData data = pageTwo.getData();
@@ -95,7 +114,7 @@ public class SymbolicPageTest {
   }
 
   @Test
-  public void testGetChild() throws Exception {
+  public void testGetChild() {
     WikiPage childPage = WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildPage"), "child page");
     WikiPage page = symPage.getChildPage("ChildPage");
     assertNotNull(page);
@@ -105,13 +124,13 @@ public class SymbolicPageTest {
   }
 
   @Test
-  public void canDetermineIfOriginalPageIsWikiTextPage() throws Exception {
+  public void canDetermineIfOriginalPageIsWikiTextPage() {
     WikiPage symSymPage = new SymbolicPage("SymSymPage", symPage, pageOne);
     assertTrue(SymbolicPage.containsWikitext(symSymPage));
   }
 
   @Test
-  public void canDetermineIfOriginalPageIsNotWikiTextPage() throws Exception {
+  public void canDetermineIfOriginalPageIsNotWikiTextPage() {
     WikiPage wikiPage = mock(WikiPage.class);
     WikiPage symPage = new SymbolicPage("SymPage", wikiPage, pageOne);
     WikiPage symSymPage = new SymbolicPage("SymSymPage", symPage, pageOne);
@@ -119,13 +138,27 @@ public class SymbolicPageTest {
   }
 
   @Test
-  public void testGetChildren() throws Exception {
+  public void testGetChildren() {
     WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildOne"), "child one");
     WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildTwo"), "child two");
     List<?> children = symPage.getChildren();
     assertEquals(2, children.size());
     assertEquals(SymbolicPage.class, children.get(0).getClass());
     assertEquals(SymbolicPage.class, children.get(1).getClass());
+  }
+
+  @Test
+  public void canCreateMultipleLinksToSamePage() {
+    PageData data = pageOne.getData();
+    WikiPageProperty suiteProperty = data.getProperties().set(SymbolicPage.PROPERTY_NAME);
+    suiteProperty.set("SymOne", pageTwoPath);
+    suiteProperty.set("SymTwo", pageTwoPath);
+    pageOne.commit(data);
+
+    PageCrawler pageCrawler = root.getPageCrawler();
+    WikiPage deepPage = pageCrawler.getPage(PathParser.parse(pageOnePath));
+    List<WikiPage> children = deepPage.getChildren();
+    assertEquals(2, children.size());
   }
 
   @Test
@@ -146,7 +179,7 @@ public class SymbolicPageTest {
   }
 
   @Test
-  public void testCyclicSymbolicLinks() throws Exception {
+  public void testCyclicSymbolicLinks() {
     createCycle();
     PageCrawler pageCrawler = root.getPageCrawler();
 
@@ -196,7 +229,7 @@ public class SymbolicPageTest {
   }
 
   @Test
-  public void testSymbolicPageUsingExternalDirectory() throws Exception {
+  public void testSymbolicPageUsingExternalDirectory() {
     createExternalRoot();
 
     assertEquals(2, symPage.getChildren().size());
@@ -214,7 +247,7 @@ public class SymbolicPageTest {
     assertEquals("external child", symChild.getData().getContent());
   }
 
-  private void createExternalRoot() throws Exception {
+  private void createExternalRoot() {
     FileUtil.createDir("testDir");
     FileUtil.createDir("testDir/ExternalRoot");
     externalRoot = new FileSystemPageFactory().makePage(new File("testDir/ExternalRoot"), "ExternalRoot", null, new SystemVariableSource());
@@ -226,7 +259,7 @@ public class SymbolicPageTest {
   }
 
   @Test
-  public void testCommittingToExternalRoot() throws Exception {
+  public void testCommittingToExternalRoot() {
     createExternalRoot();
 
     commitNewContent(symPage);
@@ -238,7 +271,7 @@ public class SymbolicPageTest {
     assertEquals("new content", externalRoot.getChildPage("ExternalPageOne").getData().getContent());
   }
 
-  private void commitNewContent(WikiPage wikiPage) throws Exception {
+  private void commitNewContent(WikiPage wikiPage) {
     PageData data = wikiPage.getData();
     data.setContent("new content");
     wikiPage.commit(data);

@@ -1,4 +1,5 @@
 !2 ${FITNESSE_VERSION}
+ * Fixed issue allowing multiple symbolic links to point from a single page the same target page ([[1234][https://github.com/unclebob/fitnesse/issues/1234]])
  * Allow 'Where Used' to also find pages having a symbolic link to the current page.
 
 !2 20190628

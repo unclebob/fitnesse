@@ -140,10 +140,13 @@ public class SymbolicPage extends BaseWikitextPage {
   }
 
   @Override
-  @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
   public boolean equals(Object other) {
-    // Wrong! If Other is also a symbolicPage, the comparison is not valid
-    return ((other instanceof SymbolicPage) && realPage.equals(((SymbolicPage) other).realPage)) || realPage.equals(other);
+    if (other instanceof SymbolicPage) {
+      SymbolicPage symbolicOther = (SymbolicPage) other;
+      return getName().equals(symbolicOther.getName()) && getRealPage().equals(symbolicOther.getRealPage());
+    } else {
+      return getRealPage().equals(other);
+    }
   }
 
   @Override
