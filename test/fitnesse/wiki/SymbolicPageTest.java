@@ -68,11 +68,15 @@ public class SymbolicPageTest {
   @Test
   public void equalsItSelf() {
     assertEquals(symPage, symPage);
+    assertEquals(symPage.hashCode(), symPage.hashCode());
   }
 
   @Test
   public void equalsRealPage() {
     assertEquals(symPage, pageTwo);
+    assertEquals(pageTwo, symPage);
+    assertEquals(symPage.hashCode(), pageTwo.hashCode());
+    assertEquals(pageTwo.hashCode(), symPage.hashCode());
   }
 
   @Test
