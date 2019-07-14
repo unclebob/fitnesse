@@ -19,22 +19,22 @@ public class PageReferenceRenamer extends ReferenceRenamer {
     this.newName = newName;
   }
 
-    @Override
-    public boolean visit(Symbol node) {
-      if (node.isType(WikiWord.symbolType)) {
-          new WikiWordReference(currentPage(), node.getContent()).wikiWordRenamePageIfReferenced(node, subjectPage, newName);
+  @Override
+  public boolean visit(Symbol node) {
+    if (node.isType(WikiWord.symbolType)) {
+      new WikiWordReference(currentPage(), node.getContent()).wikiWordRenamePageIfReferenced(node, subjectPage, newName);
+    } else if (node.isType(Alias.symbolType)) {
+      Symbol wikiWord = node.childAt(1).childAt(0);
+      String aliasReference = wikiWord.getContent();
+      if (PathParser.isWikiPath(aliasReference)) {
+        new WikiWordReference(currentPage(), aliasReference).wikiWordRenamePageIfReferenced(wikiWord, subjectPage, newName);
       }
-      else if (node.isType(Alias.symbolType)) {
-          String aliasReference = node.childAt(1).childAt(0).getContent();
-          if (PathParser.isWikiPath(aliasReference)) {
-             new WikiWordReference(currentPage(), aliasReference).wikiWordRenamePageIfReferenced(node.childAt(1).childAt(0), subjectPage, newName);
-          }
-      }
-      return true;
     }
+    return true;
+  }
 
-    @Override
-    public boolean visitChildren(Symbol node) {
-        return !node.isType(Alias.symbolType);
-    }
+  @Override
+  public boolean visitChildren(Symbol node) {
+    return !node.isType(Alias.symbolType);
+  }
 }
