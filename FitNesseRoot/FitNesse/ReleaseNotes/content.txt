@@ -1,6 +1,7 @@
 !2 ${FITNESSE_VERSION}
  * Fixed issue allowing multiple symbolic links to point from a single page the same target page ([[1234][https://github.com/unclebob/fitnesse/issues/1234]])
- * Allow 'Where Used' to also find pages having a symbolic link to the current page.
+ * Allow 'Where Used' to also find pages having a symbolic link to the current page. ([[1237][https://github.com/unclebob/fitnesse/pull/1237]])
+ * Make page 'Rename' and 'Move' also update symbolic links affected by the change. ([[1238][https://github.com/unclebob/fitnesse/pull/1238]])
 
 !2 20190628
  * Allow all uncle !-SuiteSetUp-! and !-SuiteTearDown-! pages to be run, instead of only the nearest one, by setting ALL_UNCLE_SUITE_SETUPS ([[1233][https://github.com/unclebob/fitnesse/pull/1233]]). This also ensures that all tests are executed in order, fixing ([[1229][https://github.com/unclebob/fitnesse/issues/1229]]).

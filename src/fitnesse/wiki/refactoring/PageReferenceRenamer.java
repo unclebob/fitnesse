@@ -9,6 +9,8 @@ import fitnesse.wikitext.parser.Alias;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.WikiWord;
 
+import java.util.Optional;
+
 public class PageReferenceRenamer extends ReferenceRenamer {
   private WikiPage subjectPage;
   private String newName;
@@ -36,5 +38,10 @@ public class PageReferenceRenamer extends ReferenceRenamer {
   @Override
   public boolean visitChildren(Symbol node) {
     return !node.isType(Alias.symbolType);
+  }
+
+  @Override
+  Optional<String> renameSymbolicLinkIfNeeded(String linkTarget) {
+    return new WikiWordReference(currentPage(), linkTarget).getRenamedContent(linkTarget, subjectPage, newName);
   }
 }
