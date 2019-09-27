@@ -63,7 +63,7 @@ public class ScenarioTable extends SlimTable {
     return isNameParameterized(firstNameCell);
   }
 
-    protected void getScenarioArguments() {
+  protected void getScenarioArguments() {
     if (parameterized) {
       getArgumentsForParameterizedName();
     } else {
@@ -95,7 +95,7 @@ public class ScenarioTable extends SlimTable {
     String[] arguments = argumentString.split(",");
 
     for (String argument : arguments) {
-        splitInputAndOutputArguments(argument);
+      splitInputAndOutputArguments(argument);
     }
   }
 
@@ -166,8 +166,8 @@ public class ScenarioTable extends SlimTable {
           String arg = scenarioArgument.getKey();
           if (getInputs().contains(arg)) {
             String argument = scenarioArguments.get(arg);
-            content = StringUtils.replace(content, "@" + arg, argument);
-            content = StringUtils.replace(content, "@{" + arg + "}", argument);
+            content = StringUtils.replace(content, "@" + arg, replaceSymbols(argument));
+            content = StringUtils.replace(content, "@{" + arg + "}", replaceSymbols(argument));
           } else {
             throw new SyntaxError(String.format("The argument %s is not an input to the scenario.", arg));
           }
@@ -199,7 +199,7 @@ public class ScenarioTable extends SlimTable {
   }
 
   protected ScriptTable createChild(Class<? extends ScriptTable> parentTableClass, Table newTable, SlimTestContext testContext) throws TableCreationException {
-      return SlimTableFactory.createTable(parentTableClass, newTable, id, testContext);
+    return SlimTableFactory.createTable(parentTableClass, newTable, id, testContext);
   }
 
   public List<SlimAssertion> call(String[] args, ScriptTable parentTable, int row) throws TestExecutionException {
@@ -215,7 +215,7 @@ public class ScenarioTable extends SlimTable {
     return parameterized;
   }
 
-///// scriptTable matcher logic:
+  ///// scriptTable matcher logic:
   private void setParameterMatchingPattern() {
     String parameterizedName = null;
     if (parameterized) {
@@ -286,10 +286,10 @@ public class ScenarioTable extends SlimTable {
       SlimTable parent = scriptTable.getParent();
       ExecutionResult testStatus = ((ScenarioTestContext) scriptTable.getTestContext()).getExecutionResult();
       if (outputs.isEmpty() || testStatus != ExecutionResult.PASS){
-    	  // if the scenario has no output parameters
-    	  // or the scenario failed
-    	  // then the whole line should be flagged
-    	  parent.getTable().updateContent(getRow(), new SlimTestResult(testStatus));
+        // if the scenario has no output parameters
+        // or the scenario failed
+        // then the whole line should be flagged
+        parent.getTable().updateContent(getRow(), new SlimTestResult(testStatus));
       }
       return null;
     }
