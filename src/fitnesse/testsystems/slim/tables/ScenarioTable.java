@@ -165,9 +165,9 @@ public class ScenarioTable extends SlimTable {
         for (Map.Entry<String, String> scenarioArgument : scenarioArguments.entrySet()) {
           String arg = scenarioArgument.getKey();
           if (getInputs().contains(arg)) {
-            String argument = scenarioArguments.get(arg);
-            content = StringUtils.replace(content, "@" + arg, replaceSymbols(argument));
-            content = StringUtils.replace(content, "@{" + arg + "}", replaceSymbols(argument));
+            String argument = replaceSymbols(scenarioArguments.get(arg));
+            content = StringUtils.replace(content, "@" + arg, argument);
+            content = StringUtils.replace(content, "@{" + arg + "}", argument);
           } else {
             throw new SyntaxError(String.format("The argument %s is not an input to the scenario.", arg));
           }
