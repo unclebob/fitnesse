@@ -1,0 +1,18 @@
+---
+Test
+---
+|Library    |
+|eg.Division|
+
+|scenario     |Mydivision _|firstMethod,numerator,secondMethod,denominator,quotient?|
+|@firstMethod |@numerator                                                           |
+|@secondMethod|@denominator                                                         |
+|$quotient=   |quotient                                                             |
+
+|script                                 |
+|$numeratorSetter=  |echo|setNumerator  |
+|$denominatorSetter=|echo|setDenominator|
+
+|Mydivision                                                         |
+|firstMethod     |numerator|secondMethod      |denominator|quotient?|
+|$numeratorSetter|35       |$denominatorSetter|5          |~=7      |
