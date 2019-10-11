@@ -159,21 +159,18 @@ public class ScenarioTable extends SlimTable {
 
   public List<SlimAssertion> call(final Map<String, String> scenarioArguments,
                    SlimTable parentTable, int row) throws TestExecutionException {
-    Table newTable = getTable().asTemplate(new Table.CellContentSubstitution() {
-      @Override
-      public String substitute(String content) throws SyntaxError {
-        for (Map.Entry<String, String> scenarioArgument : scenarioArguments.entrySet()) {
-          String arg = scenarioArgument.getKey();
-          if (getInputs().contains(arg)) {
-            String argument = replaceSymbols(scenarioArguments.get(arg));
-            content = StringUtils.replace(content, "@" + arg, argument);
-            content = StringUtils.replace(content, "@{" + arg + "}", argument);
-          } else {
-            throw new SyntaxError(String.format("The argument %s is not an input to the scenario.", arg));
-          }
+    Table newTable = getTable().asTemplate(content -> {
+      for (Map.Entry<String, String> scenarioArgument : scenarioArguments.entrySet()) {
+        String arg = scenarioArgument.getKey();
+        if (getInputs().contains(arg)) {
+          String argument = scenarioArguments.get(arg);
+          content = StringUtils.replace(content, "@" + arg, argument);
+          content = StringUtils.replace(content, "@{" + arg + "}", argument);
+        } else {
+          throw new SyntaxError(String.format("The argument %s is not an input to the scenario.", arg));
         }
-        return content;
       }
+      return content;
     });
     ScenarioTestContext testContext = new ScenarioTestContext(parentTable.getTestContext());
     ScriptTable t = createChild(testContext, parentTable, newTable);

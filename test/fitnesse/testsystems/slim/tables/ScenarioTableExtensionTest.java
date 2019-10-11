@@ -192,7 +192,8 @@ public class ScenarioTableExtensionTest {
     }
 
     private ScenarioTable getCalledScenario(int lastCol, int row) throws SyntaxError {
-      String scenarioName = ScriptTable.RowHelper.getScenarioNameFromAlternatingCells(table, lastCol, row);
+      ScriptTable scriptTable = new ScriptTable (table, "testTable", getTestContext());
+      String scenarioName = scriptTable.getRowHelper().getScenarioNameFromAlternatingCells(table, lastCol, row);
       ScenarioTable scenario = getScenarioByName(scenarioName);
       if (scenario == null && lastCol == 0) {
         String cellContents = table.getCellContents(0, row);

@@ -203,4 +203,5 @@ public class ScenarioTableTest {
         assertTrue(inputs.contains("name"));
         assertFalse(st.isParameterized());
     }
+
 }

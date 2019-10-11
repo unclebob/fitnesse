@@ -18,6 +18,8 @@ import fitnesse.util.StringUtils;
 
 public class ScriptTable extends SlimTable {
 
+  private final RowHelper rowHelper = new RowHelper();
+
   public ScriptTable(Table table, String tableId, SlimTestContext context) {
     super(table, tableId, context);
   }
@@ -102,6 +104,10 @@ public class ScriptTable extends SlimTable {
    */
   protected String getNoteKeyword() {
     return "note";
+  }
+
+  public RowHelper getRowHelper() {
+    return rowHelper;
   }
 
   @Override
@@ -202,7 +208,7 @@ public class ScriptTable extends SlimTable {
   }
 
   protected String getScenarioNameFromAlternatingCells(int endingCol, int row) throws SyntaxError {
-    return RowHelper.getScenarioNameFromAlternatingCells(table, endingCol, row);
+    return rowHelper.getScenarioNameFromAlternatingCells(table, endingCol, row);
   }
 
   protected List<SlimAssertion> note(int row) {
@@ -252,7 +258,7 @@ public class ScriptTable extends SlimTable {
   }
 
   protected String getActionNameStartingAt(int startingCol, int endingCol, int row) throws SyntaxError {
-    return RowHelper.getActionNameStartingAt(table, startingCol, endingCol, row);
+    return rowHelper.getActionNameStartingAt(table, startingCol, endingCol, row);
   }
 
   // Adds extra assertions to the "assertions" list!
@@ -267,7 +273,7 @@ public class ScriptTable extends SlimTable {
   }
 
   protected boolean invokesSequentialArgumentProcessing(String cellContents) {
-    return RowHelper.invokesSequentialArgumentProcessing(cellContents);
+    return rowHelper.invokesSequentialArgumentProcessing(cellContents);
   }
 
   protected List<SlimAssertion> startActor() {
@@ -295,16 +301,16 @@ public class ScriptTable extends SlimTable {
     return assertions;
   }
 
-  public static class RowHelper {
+  public class RowHelper {
     private static final String SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX = ";";
 
-    public static String getScenarioNameFromAlternatingCells(Table table, int endingCol, int row) throws SyntaxError {
+    public String getScenarioNameFromAlternatingCells(Table table, int endingCol, int row) throws SyntaxError {
       String actionName = getActionNameStartingAt(table, 0, endingCol, row);
       String simpleName = actionName.replace(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX, "");
       return Disgracer.disgraceClassName(simpleName);
     }
 
-    public static String getActionNameStartingAt(Table table, int startingCol, int endingCol, int row) throws SyntaxError {
+    public String getActionNameStartingAt(Table table, int startingCol, int endingCol, int row) throws SyntaxError {
       StringBuilder actionName = new StringBuilder();
       try {
         actionName.append(table.getCellContents(startingCol, row));
@@ -317,10 +323,10 @@ public class ScriptTable extends SlimTable {
         actionName.append(" ").append(table.getCellContents(actionNameCol, row));
         actionNameCol += 2;
       }
-      return actionName.toString().trim();
+      return replaceSymbols(actionName.toString().trim());
     }
 
-    public static boolean invokesSequentialArgumentProcessing(String cellContents) {
+    public boolean invokesSequentialArgumentProcessing(String cellContents) {
       return cellContents.endsWith(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX);
     }
   }

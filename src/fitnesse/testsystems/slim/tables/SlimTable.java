@@ -269,6 +269,13 @@ public abstract class SlimTable {
         if (testResult.doesCount())
           getTestContext().increment(testResult.getExecutionResult());
       }
+
+      for(int i = 0; i < table.getColumnCountInRow(getRow()); i++) {
+        if(!table.getCellContents(i, getRow()).matches(ALREADY_REPLACED_SYMBOL.pattern())) {
+          table.substitute(i, getRow(), replaceSymbolsWithFullExpansion(table.getCellContents(i, getRow())));
+        }
+
+      }
       return testResult;
     }
 
@@ -354,7 +361,6 @@ public abstract class SlimTable {
 
     @Override
     protected SlimTestResult createEvaluationMessage(String actual, String expected) {
-      table.substitute(getCol(), getRow(), replaceSymbolsWithFullExpansion(expected));
       return SlimTestResult.plain();
     }
   }
@@ -392,7 +398,7 @@ public abstract class SlimTable {
     @Override
     protected SlimTestResult createEvaluationMessage(String actual, String expected) {
       if ("OK".equalsIgnoreCase(actual))
-        return SlimTestResult.ok(replaceSymbolsWithFullExpansion(expected));
+        return SlimTestResult.ok(expected);
       else
         return SlimTestResult.error("Unknown construction message", actual);
     }
@@ -430,13 +436,13 @@ public abstract class SlimTable {
       if (actual == null)
         testResult = SlimTestResult.fail("null", replacedExpected); //todo can't be right message.
       else if (actual.equals(replacedExpected))
-        testResult = SlimTestResult.pass(announceBlank(replaceSymbolsWithFullExpansion(expected)));
+        testResult = SlimTestResult.pass(announceBlank(expected));
       else if (replacedExpected.isEmpty())
         testResult = SlimTestResult.ignore(actual);
       else {
         testResult = new Comparator(replacedExpected, actual, expected).evaluate();
         if (testResult == null)
-          testResult = SlimTestResult.fail(actual, replaceSymbolsWithFullExpansion(expected));
+          testResult = SlimTestResult.fail(actual, expected);
       }
 
       return testResult;
@@ -484,7 +490,7 @@ public abstract class SlimTable {
       return null;
     }
   }
-  
+
   class ReturnedSymbolExpectation extends ReturnedValueExpectation {
     private String symbolName;
     private String assignToName = null;
@@ -652,7 +658,6 @@ public abstract class SlimTable {
     private SlimTestResult rangeMessage(boolean pass) {
       String[] fragments = expected.trim().replaceAll("( )+", " ").split("_");
       String message = String.format("%s%s%s", fragments[0], actual, fragments[1]);
-      message = replaceSymbolsWithFullExpansion(message);
       return pass ? SlimTestResult.pass(message) : SlimTestResult.fail(message);
     }
 
@@ -690,7 +695,6 @@ public abstract class SlimTable {
 
     private SlimTestResult simpleComparisonMessage(boolean pass) {
       String message = String.format("%s%s", actual, expected.trim().replaceAll("( )+", " "));
-      message = replaceSymbolsWithFullExpansion(message);
       return pass ? SlimTestResult.pass(message) : SlimTestResult.fail(message);
 
     }
