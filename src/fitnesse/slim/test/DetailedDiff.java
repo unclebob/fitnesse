@@ -15,8 +15,8 @@ public class DetailedDiff {
     return actualString;
   }
   
-  public void setActualInt(int acutalInt) {
-    this.actualInt = acutalInt;
+  public void setActualInt(int actualInt) {
+    this.actualInt = actualInt;
   }
   
   public int expectedInt() {
