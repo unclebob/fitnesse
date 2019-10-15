@@ -1,5 +1,10 @@
 language: java
+
 jdk:
- - oraclejdk8
- - openjdk8
- - oraclejdk9
+  - openjdk8
+  - oraclejdk9
+
+matrix:
+  include:
+    - dist: trusty
+      jdk: oraclejdk8
