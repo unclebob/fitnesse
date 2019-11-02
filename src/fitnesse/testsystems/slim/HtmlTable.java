@@ -31,7 +31,7 @@ import fitnesse.testsystems.slim.tables.SyntaxError;
 public class HtmlTable implements Table {
   private static final Logger LOG = Logger.getLogger(HtmlTable.class.getName());
 
-  private static final String SYMBOL_ASSIGNMENT = "\\$[A-Za-z]\\w*<?->?\\[";
+  private static final String SYMBOL_ASSIGNMENT = "\\$[A-Za-z]\\w*<?->?\\[|\\$`[^`]+`<?->?\\[";
   private static final String SYMBOL_ASSIGNMENT_SUFFIX = "\\]";
 
   private static final Pattern HTML_PATTERN = Pattern.compile("^(?:" + SYMBOL_ASSIGNMENT + ")?" +
@@ -135,6 +135,24 @@ public class HtmlTable implements Table {
     insertRowAfter(row, childRow);
   }
 
+  private void addChildTableInCell(int colIndex, int rowIndex, String childText) {
+    Row row = rows.get(rowIndex);
+
+    Cell cell = row.getColumn(colIndex);
+    String originalContent = cell.getContent();
+    cell.addChildTable(originalContent, "error", childText);
+  }
+
+  private void insertRow(int rowIndex, String childText,
+      String rowType, ExecutionResult executionResult) {
+    Row row = rows.get(rowIndex);
+    Row childRow = makeChildRow(row,
+        new TextNode("<pre>" + HtmlUtil.escapeHTML(childText) + "</pre>"),
+        rowType);
+    insertRowAfter(row, childRow);
+    row.setExecutionResult(executionResult);
+  }
+
   private Row makeChildRow(Row row, Node contents, String type) {
     Row childRow = new Row();
     TableColumn column = (TableColumn) newTag(TableColumn.class);
@@ -198,15 +216,12 @@ public class HtmlTable implements Table {
   @Override
   public void updateContent(int colIndex, int rowIndex, SlimExceptionResult exceptionResult) {
     Row row = rows.get(rowIndex);
-    Cell cell = row.getColumn(colIndex);
-    if (exceptionResult.hasMessage()) {
-      cell.setExceptionResult(exceptionResult);
+    if (colIndex < 0) { // Row Exception
+      insertRow(rowIndex, exceptionResult.getException(), "exception",
+          exceptionResult.getExecutionResult());
     } else {
-      Row childRow = makeChildRow(row,
-              new TextNode("<pre>" + HtmlUtil.escapeHTML(exceptionResult.getException()) + "</pre>"),
-              "exception");
-      insertRowAfter(row, childRow);
-      row.setExecutionResult(exceptionResult.getExecutionResult());
+      Cell cell = row.getColumn(colIndex);
+      cell.setExceptionResult(exceptionResult);
     }
   }
 
@@ -335,17 +350,35 @@ public class HtmlTable implements Table {
       return columnNode;
     }
 
+    public void addChildTable(String headerText, String classType,
+        String childText) {
+      String childTable = "<table><tr class=\"exception closed\"><td> <span class=\""
+          + classType + "\">" + headerText
+          + "</span></td></tr><tr class=\"exception-detail closed-detail\"><td>"
+          + childText + "</td</tr></table>";
+      this.setContent(childTable);
+    }
+
     public void setTestResult(SlimTestResult testResult) {
       this.testResult = testResult;
     }
 
-    public void setExceptionResult(ExceptionResult exceptionResult) {
+    public void setExceptionResult(SlimExceptionResult exceptionResult) {
       if (this.exceptionResult == null) {
         this.exceptionResult = exceptionResult;
-        setContent(String.format("%s <span class=\"%s\">%s</span>",
-                originalContent,
-                exceptionResult.getExecutionResult().toString(),
-                asHtml(exceptionResult.getMessage())));
+        String exceptionText = exceptionResult.getMessage();
+        if (exceptionText != null) {
+          setContent(String.format("%s <span class=\"%s\">%s</span>",
+              originalContent, exceptionResult.getExecutionResult().toString(),
+              asHtml(exceptionText)));
+        } else {
+          exceptionText = exceptionResult.getException();
+          addChildTable(
+              originalContent,
+              exceptionResult.getExecutionResult().toString(),
+              asHtml(exceptionText)
+          );
+        }
       }
     }
 
@@ -358,7 +391,20 @@ public class HtmlTable implements Table {
               : originalContent;
       switch (testResult.getExecutionResult()) {
         case PASS:
-          return String.format("<span class=\"pass\">%s</span>", message);
+          if (testResult.hasExpected()) {
+            if (qualifiesAsHtml(testResult.getActual()) || qualifiesAsHtml(testResult.getExpected())) {
+              return String.format("<span class=\"pass\">%s</span>",
+                asHtml(testResult.getExpected()));
+            } else {
+              String[] expected = parseSymbol(testResult.getExpected());
+              return String.format("<span class=\"pass\">%s</span>",
+                HtmlUtil.escapeHTML(expected[0]) +
+                  HtmlUtil.escapeHTML(expected[1]) +
+                  HtmlUtil.escapeHTML(expected[2]));
+            }
+          } else {
+            return String.format("<span class=\"pass\">%s</span>", message);
+          }
         case FAIL:
           if (testResult.hasActual() && testResult.hasExpected()) {
             if (qualifiesAsHtml(testResult.getActual()) || qualifiesAsHtml(testResult.getExpected())) {

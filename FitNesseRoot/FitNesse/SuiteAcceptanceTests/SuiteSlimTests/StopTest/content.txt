@@ -1,3 +1,5 @@
+Raising an exception with the term "StopTest" in it will make sure test is stopped, but "TearDown" and rest of suite is executed.
+
 !| script |
 | given page | MySuite | with content | ${SUT_PATH} !-
 !define TEST_SYSTEM {slim}

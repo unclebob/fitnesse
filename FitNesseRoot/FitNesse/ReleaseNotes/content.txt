@@ -1,5 +1,114 @@
 !2 ${FITNESSE_VERSION}
 
+!2 20190716
+ * Fixed issue allowing multiple symbolic links to point from a single page the same target page ([[1234][https://github.com/unclebob/fitnesse/issues/1234]])
+ * Allow 'Where Used' to also find pages having a symbolic link to the current page. ([[1237][https://github.com/unclebob/fitnesse/pull/1237]])
+ * Make page 'Rename' and 'Move' also update symbolic links affected by the change. ([[1238][https://github.com/unclebob/fitnesse/pull/1238]])
+
+!2 20190628
+ * Allow all uncle !-SuiteSetUp-! and !-SuiteTearDown-! pages to be run, instead of only the nearest one, by setting ALL_UNCLE_SUITE_SETUPS ([[1233][https://github.com/unclebob/fitnesse/pull/1233]]). This also ensures that all tests are executed in order, fixing ([[1229][https://github.com/unclebob/fitnesse/issues/1229]]).
+
+!2 20190620
+ * Allow plugins to override the default wiki theme (i.e. bootstrap) ([[1227][https://github.com/unclebob/fitnesse/pull/1227]])
+
+!2 20190508
+ * Optimized performance of Slim (javascript) expressions ([[1220][https://github.com/unclebob/fitnesse/pull/1220]])
+ * Issues fixed:
+   * Do not set exit code to error when creating a symbolic link from command line ([[1223][https://github.com/unclebob/fitnesse/issues/1223]])
+
+!2 20190428
+ * Issues fixed:
+  * Improved error message when Slim 'script' table has row with too few columns ([[1221][https://github.com/unclebob/fitnesse/issues/1221]])
+
+!2 20190421
+ * Issues fixed:
+  * Fix table of contents for suites containing symbolic links to multiple external roots ([[1218][https://github.com/unclebob/fitnesse/pull/1218]])
+
+!2 20190418
+ * Issues fixed:
+  * Prevent NullPointerException when fixture method returns 'null' Long ([[1211][https://github.com/unclebob/fitnesse/issues/1211]])
+
+!2 20190417
+ * Allow rerun of failed tests (only) from suite results page ([[1209][https://github.com/unclebob/fitnesse/pull/1209]])
+
+!2 20190416
+ * Issues fixed:
+  * Fix search page ([[1207][https://github.com/unclebob/fitnesse/issues/1207]])
+
+!2 20190409
+ * Issues fixed:
+  * Ensure version information is available inside .jar ([[1206][https://github.com/unclebob/fitnesse/issues/1206]])
+
+!2 20190406
+ * Issues fixed:
+  * Allow running tests from the wiki using Internet Explorer 11 ([[1196][https://github.com/unclebob/fitnesse/issues/1196]])
+  * !-JavaScript-! console errors when running a single test page ([[1199][https://github.com/unclebob/fitnesse/issues/1199]])
+  * Slim symbols containing '%' cannot be used in Slim (javascript) expressions, on Java 9+ ([[1200][https://github.com/unclebob/fitnesse/issues/1200]])
+
+!2 20190224
+ * Issues fixed:
+  * Don't display 'Broken pipe' exception when running tests on Debian with Firefox ([[1187][https://github.com/unclebob/fitnesse/issues/1187]])
+  * Slim symbols containing '%' cannot be used in Slim (javascript) expressions ([[1190][https://github.com/unclebob/fitnesse/issues/1190]])
+
+!2 20190216
+ * New argument '-lh': just bind to the local loopback interface. Effectively preventing wiki-access from other machines in the network ([[1183][https://github.com/unclebob/fitnesse/pull/1183]])
+
+!2 20190202
+ * Bugfix: Allow Git version plugin to work when running via standalone.jar ([[1179][https://github.com/unclebob/fitnesse/pull/1179]])
+
+!2 20190127
+ * Add support to evaluate expression in/on Slim symbols (Java-only) ([[1123][https://github.com/unclebob/fitnesse/pull/1123]])
+ * Improve message on exception when test is run via jUnit ([[1134][https://github.com/unclebob/fitnesse/issues/1134]])
+ * Under the hood:
+  * Improved speed of Slim's calls to Java fixtures ([[1179][https://github.com/unclebob/fitnesse/pull/1179]])
+
+!2 20190119
+ * Under the hood:
+  * Now targetting Java 8
+  * Dependencies updated to latest versions (including: commons-lang3, Velocity 2.0 (which includes slf4j, configured to log using java.util.logging))
+  * Dependencies from the 'optional' configuration (i.e. junit and ant) are now also marked as optional in the pom.xml (which means they are no longer automatically added to the classpath of projects using !-FitNesse-!)
+
+!2 20190118
+ * Issues fixed:
+   * Raise error if decisions table (based on scenario) has output column which is not an output of the scenario ([[1178][https://github.com/unclebob/fitnesse/pull/1178]])
+   * fitnesse.jar was too big (bigger than fitnesse-standalone.jar) because of duplicated files
+   * Build upgraded to Gradle 5.1
+
+!2 20190110
+ * Add support for Android Slim client ([[602][https://github.com/unclebob/fitnesse/pull/602]])
+ * Allow templates to access the current request ([[1174][https://github.com/unclebob/fitnesse/pull/1174]])
+
+!2 20181224
+ * Fixed issue where accessing wiki using Firefox caused very high CPU usage ([[1173][https://github.com/unclebob/fitnesse/issues/1173]])
+
+!2 20181223
+ * "StopTestException" is SuiteSetUp is handled as SuiteStopException ([[1128][https://github.com/unclebob/fitnesse/pull/1128]])
+ * Improve finding of methods in Java classes (first letter may be a capital) ([[992][https://github.com/unclebob/fitnesse/pull/992]])
+ * Allow today's date and expressions to be evaluated inside preformatted blocks ([[1017][https://github.com/unclebob/fitnesse/pull/1017]])
+ * Allow tests which expect an exception ([[1131][https://github.com/unclebob/fitnesse/pull/1131]])
+ * Allow Slim custom comparators to use values containing line endings ([[1142][https://github.com/unclebob/fitnesse/pull/1142]])
+ * Issues fixed
+   * Remove non-standard transformer attribute when writing XML ([[1129][https://github.com/unclebob/fitnesse/pull/1129]])
+   * Fix !headings when an heading contains literal macro ([[1121][https://github.com/unclebob/fitnesse/pull/1121]])
+   * Fix exception in log "The request string is malformed and can not be parsed" ([[1042][https://github.com/unclebob/fitnesse/issues/1042]])
+
+!2 20181221
+ * Issues fixed:
+   * Allow plugins to contain Velocity templates (used when rendering pages) ([[1127][https://github.com/unclebob/fitnesse/pull/1127]])
+
+!2 20180127
+ * Improve stability for non pipe based SUT connection ([[197][https://github.com/unclebob/fitnesse/pull/997]])
+ * Fix new style wiki pages for Windows (line ending) ([[1058][https://github.com/unclebob/fitnesse/pull/1058]])
+ * SLiM now better handles parameter types in fixture constructors ([[1024][https://github.com/unclebob/fitnesse/pull/1024]])
+ * New wiki element: [[''!-!headings-!''][UserGuide.FitNesseWiki.MarkupLanguageReference.MarkupHeadings]] ([[1025][https://github.com/unclebob/fitnesse/pull/1025]])
+ * Define table type now work for Script table ([[1029][https://github.com/unclebob/fitnesse/pull/1029]], [[1099][https://github.com/unclebob/fitnesse/pull/1099]])
+ * JUnit runner supports system property based ''excludeSuiteFilter'' annotation ([[1033][https://github.com/unclebob/fitnesse/pull/1033]])
+ * A SuiteQuery no longer runs test pages that are excluded ([[1079][https://github.com/unclebob/fitnesse/pull/1079]])
+ * Root file pages are now included in the default wiki content by default ([[1084][https://github.com/unclebob/fitnesse/pull/1084]])
+ * Table:Table now resizes when the last line contains more results than expected ([[1055][https://github.com/unclebob/fitnesse/pull/1055]])
+ * Various documentation updates
+ * Various small improvements
+
 For a complete list of closed issues and merged pull requests see https://github.com/unclebob/fitnesse/issues?milestone=16&state=closed.
 
 

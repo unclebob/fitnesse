@@ -14,7 +14,6 @@ import fitnesse.wiki.PathParser;
 public class ContentFilterResponder implements Responder {
 
   private final ContentFilter contentFilter;
-
   public ContentFilterResponder(ContentFilter contentFilter) {
     this.contentFilter = contentFilter;
   }
@@ -25,17 +24,17 @@ public class ContentFilterResponder implements Responder {
     String content = request.getInput(EditResponder.CONTENT_INPUT_NAME);
 
     if (!contentFilter.isContentAcceptable(content, resource))
-      return makeBannedContentResponse(context, resource);
+      return makeBannedContentResponse(context, resource, request);
     return null;
   }
 
-  private Response makeBannedContentResponse(FitNesseContext context, String resource) throws IOException {
+  private Response makeBannedContentResponse(FitNesseContext context, String resource, Request request) throws IOException {
     SimpleResponse response = new SimpleResponse();
     HtmlPage html = context.pageFactory.newPage();
     html.setTitle("Edit " + resource);
     html.setPageTitle(new PageTitle("Banned Content", PathParser.parse(resource)));
     html.setMainTemplate("bannedPage.vm");
-    response.setContent(html.html());
+    response.setContent(html.html(request));
     return response;
   }
 

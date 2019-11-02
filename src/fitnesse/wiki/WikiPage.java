@@ -77,9 +77,15 @@ public interface WikiPage extends Comparable<WikiPage> {
    */
   VersionInfo commit(PageData data);
 
-  PageCrawler getPageCrawler();
+  default PageCrawler getPageCrawler() {
+    return new PageCrawler(this);
+  }
 
   String getVariable(String name);
+
+  default WikiPagePath getFullPath() {
+    return getPageCrawler().getFullPath();
+  }
 }
 
 

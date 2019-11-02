@@ -1,11 +1,12 @@
 package fitnesse.junit;
 
+import fitnesse.slim.SlimServer;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
-import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.fs.WikiPageProperties;
@@ -18,8 +19,14 @@ import org.mockito.ArgumentCaptor;
 
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class JUnitRunNotifierResultsListenerTest {
   private RunNotifier notifier = mock(RunNotifier.class);
@@ -38,9 +45,36 @@ public class JUnitRunNotifierResultsListenerTest {
   public void shouldFinishSuccessfully() {
     TestResult testResult = SlimTestResult.ok("-");
 
+    listener.announceNumberTestsToRun(1);
     listener.testAssertionVerified(null, testResult);
     listener.testComplete(mockWikiTestPage(), summary("-"));
+    listener.close();
 
+    verify(notifier).fireTestFinished(description);
+  }
+
+  @Test
+  public void shouldFinishSuccessfullyWithTooManyTests() {
+    TestResult testResult = SlimTestResult.ok("-");
+
+    listener.announceNumberTestsToRun(0);
+    listener.testAssertionVerified(null, testResult);
+    listener.testComplete(mockWikiTestPage(), summary("-"));
+    listener.close();
+
+    verify(notifier).fireTestFinished(description);
+  }
+
+  @Test
+  public void shouldFailOnTooFewTests() {
+    TestResult testResult = SlimTestResult.ok("-");
+
+    listener.announceNumberTestsToRun(2);
+    listener.testAssertionVerified(null, testResult);
+    listener.testComplete(mockWikiTestPage(), summary("-"));
+    listener.close();
+
+    verify(notifier).fireTestFailure(any(Failure.class));
     verify(notifier).fireTestFinished(description);
   }
 
@@ -109,6 +143,20 @@ public class JUnitRunNotifierResultsListenerTest {
   }
 
   @Test
+  public void shouldProvideFirstFailureNoMessage() {
+    TestResult testResult = SlimTestResult.fail();
+
+    listener.testAssertionVerified(null, testResult);
+    listener.testComplete(mockWikiTestPage(), summary("-"));
+
+    verify(notifier).fireTestFailure(arguments.capture());
+    Failure failure = arguments.getValue();
+
+    assertThat(failure.getException(), instanceOf(AssertionError.class));
+    assertNull(failure.getMessage());
+  }
+
+  @Test
   public void shouldProvideFirstException() {
     TestResult testResult = SlimTestResult.error("Message", "Actual");
 
@@ -122,6 +170,68 @@ public class JUnitRunNotifierResultsListenerTest {
     assertThat(failure.getMessage(), is("[Actual] Message"));
   }
 
+  @Test
+  public void shouldProvideFirstExceptionWithMessage() {
+    listener.testExceptionOccurred(null, new SlimExceptionResult("ex",
+      SlimServer.EXCEPTION_TAG + "message:<<Bad>>"));
+    listener.testComplete(mockWikiTestPage(), summary("-"));
+
+    verify(notifier).fireTestFailure(arguments.capture());
+    Failure failure = arguments.getValue();
+
+    assertThat(failure.getException(), instanceOf(Exception.class));
+    assertThat(failure.getMessage(), is("Bad"));
+  }
+
+  @Test
+  public void shouldProvideFirstExceptionWithoutMessage() {
+    listener.testExceptionOccurred(null, new SlimExceptionResult("ex",
+      SlimServer.EXCEPTION_TAG + "Bad"));
+    listener.testComplete(mockWikiTestPage(), summary("-"));
+
+    verify(notifier).fireTestFailure(arguments.capture());
+    Failure failure = arguments.getValue();
+
+    assertThat(failure.getException(), instanceOf(Exception.class));
+    assertThat(failure.getMessage(), is("Bad"));
+  }
+
+  @Test
+  public void shouldProvideFirstExceptionWithoutMessageTrimsStacktrace() {
+    listener.testExceptionOccurred(null, new SlimExceptionResult("ex",
+      SlimServer.EXCEPTION_TAG
+    + "java.lang.NullPointerException\n" +
+        "\tat fitnesse.fixtures.EchoFixture.nameContains(EchoFixture.java:17) [file:/Users/fitnesse/build/classes/java/main/]\n" +
+        "\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) [rt.jar:1.8.0_192]\n" +
+        "\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) [rt.jar:1.8.0_192]\n" +
+        "\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) [rt.jar:1.8.0_192]\n" +
+        "\tat java.lang.reflect.Method.invoke(Method.java:498) [rt.jar:1.8.0_192]\n" +
+        "\tat fitnesse.slim.fixtureInteraction.SimpleInteraction.methodInvoke(SimpleInteraction.java:256) [file:/Users/fitnesse/build/classes/java/main/]\n" +
+        "\tat fitnesse.slim.fixtureInteraction.SimpleInteraction.callMethod(SimpleInteraction.java:241) [file:/Users/fitnesse/build/classes/java/main/]\n" +
+        "\tat fitnesse.slim.fixtureInteraction.SimpleInteraction.invokeMethod(SimpleInteraction.java:223) [file:/Users/fitnesse/build/classes/java/main/]\n" +
+        "\tat fitnesse.slim.fixtureInteraction.SimpleInteraction.findAndInvoke(SimpleInteraction.java:185) [file:/Users/fitnesse/build/classes/java/main/]\n" +
+        "\tat fitnesse.slim.MethodExecutor.findAndInvoke(MethodExecutor.java:18) [file:/Users/fitnesse/build/classes/java/main/]\n" +
+        "\tat fitnesse.slim.FixtureMethodExecutor.execute(FixtureMethodExecutor.java:18) [file:/Users/fitnesse/build/classes/java/main/]\n" +
+        "\tat fitnesse.slim.StatementExecutor.getMethodExecutionResult(StatementExecutor.java:139) [file:/Users/fitnesse/build/classes/java/main/]"));
+    listener.testComplete(mockWikiTestPage(), summary("-"));
+
+    verify(notifier).fireTestFailure(arguments.capture());
+    Failure failure = arguments.getValue();
+
+    assertThat(failure.getException(), instanceOf(Exception.class));
+    assertEquals("java.lang.NullPointerException\n" +
+      "\tat fitnesse.fixtures.EchoFixture.nameContains(EchoFixture.java:17) [file:/Users/fitnesse/build/classes/java/main/]\n" +
+      "\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) [rt.jar:1.8.0_192]\n" +
+      "\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) [rt.jar:1.8.0_192]\n" +
+      "\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) [rt.jar:1.8.0_192]\n" +
+      "\tat java.lang.reflect.Method.invoke(Method.java:498) [rt.jar:1.8.0_192]\n" +
+      "\tat fitnesse.slim.fixtureInteraction.SimpleInteraction.methodInvoke(SimpleInteraction.java:256) [file:/Users/fitnesse/build/classes/java/main/]\n" +
+      "\tat fitnesse.slim.fixtureInteraction.SimpleInteraction.callMethod(SimpleInteraction.java:241) [file:/Users/fitnesse/build/classes/java/main/]\n" +
+      "\tat fitnesse.slim.fixtureInteraction.SimpleInteraction.invokeMethod(SimpleInteraction.java:223) [file:/Users/fitnesse/build/classes/java/main/]\n" +
+      "\tat fitnesse.slim.fixtureInteraction.SimpleInteraction.findAndInvoke(SimpleInteraction.java:185) [file:/Users/fitnesse/build/classes/java/main/]",
+      failure.getMessage());
+  }
+
   static WikiTestPage mockWikiTestPage() {
     WikiPage root = mock(WikiPage.class);
     when(root.isRoot()).thenReturn(true);
@@ -131,7 +241,8 @@ public class JUnitRunNotifierResultsListenerTest {
     when(test.getParent()).thenReturn(root);
     when(test.getName()).thenReturn("WikiPage");
     when(test.getData()).thenReturn(new PageData("content", new WikiPageProperties()));
-    when(test.getPageCrawler()).thenReturn(new PageCrawlerImpl(test));
+    when(test.getPageCrawler()).thenCallRealMethod();
+    when(test.getFullPath()).thenCallRealMethod();
     return new WikiTestPage(test);
   }
 

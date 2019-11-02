@@ -2,16 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -24,6 +14,7 @@ import fitnesse.http.Response;
 import fitnesse.reporting.BaseFormatter;
 import fitnesse.reporting.Formatter;
 import fitnesse.reporting.InteractiveFormatter;
+import fitnesse.reporting.RerunSuiteFormatter;
 import fitnesse.reporting.SuiteHtmlFormatter;
 import fitnesse.reporting.TestTextFormatter;
 import fitnesse.reporting.history.HistoryPurger;
@@ -38,7 +29,6 @@ import fitnesse.responders.WikiImportingResponder;
 import fitnesse.responders.WikiImportingTraverser;
 import fitnesse.responders.WikiPageActions;
 import fitnesse.testrunner.MultipleTestsRunner;
-import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.RunningTestingTracker;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testrunner.SuiteFilter;
@@ -54,8 +44,18 @@ import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import util.FileUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static fitnesse.responders.WikiImportingTraverser.ImportError;
 import static fitnesse.wiki.WikiImportProperty.isAutoUpdated;
@@ -73,6 +73,8 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   private final WikiImporter wikiImporter;
   private SuiteHistoryFormatter suiteHistoryFormatter;
 
+  private Formatter rerunFormatter;
+
   private PageData data;
   private String testRunId;
   private BaseFormatter mainFormatter;
@@ -82,6 +84,8 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   private boolean remoteDebug = false;
   private boolean includeHtml = false;
   private int exitCode;
+
+  private Request request;
 
   public SuiteResponder() {
     this(new WikiImporter());
@@ -98,6 +102,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    this.request = request;
     Response result = super.makeResponse(context, request);
     if (result != response){
         return result;
@@ -115,9 +120,10 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     data = page.getData();
 
     createMainFormatter();
+    rerunFormatter = createRerunFormatter();
 
     if (isInteractive()) {
-      makeHtml().render(response.getWriter());
+      makeHtml().render(response.getWriter(), request);
     } else {
       doExecuteTests();
     }
@@ -192,6 +198,9 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     htmlPage.setErrorNavTemplate("errorNavigator");
     htmlPage.put("multipleTestsRun", isMultipleTestsRun());
     WikiImportingResponder.handleImportProperties(htmlPage, page);
+    if (rerunFormatter != null) {
+      htmlPage.put("rerunPage", getRerunPageName());
+    }
 
     return htmlPage;
   }
@@ -232,6 +241,9 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   protected void addFormatters(MultipleTestsRunner runner) {
     runner.addTestSystemListener(mainFormatter);
+    if (rerunFormatter != null) {
+      runner.addTestSystemListener(rerunFormatter);
+    }
     if (withSuiteHistoryFormatter()) {
       addHistoryFormatter(runner);
     } else {
@@ -270,6 +282,18 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     }
   }
 
+  protected Formatter createRerunFormatter() throws IOException {
+    return new RerunSuiteFormatter(getRerunPageFile());
+  }
+
+  protected File getRerunPageFile() {
+    return new File(context.getRootPagePath(), getRerunPageName() + ".wiki");
+  }
+
+  protected String getRerunPageName() {
+    return "RerunLastFailures";
+  }
+
   protected String getTitle() {
     return "Test Results";
   }
@@ -296,7 +320,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   }
 
   protected BaseFormatter newHtmlFormatter() {
-    return new SuiteHtmlFormatter(page, response.getWriter());
+    return new SuiteHtmlFormatter(page, isMultipleTestsRun(), response.getWriter());
   }
 
   protected void performExecution() throws TestExecutionException {
@@ -313,16 +337,15 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   }
 
   protected List<WikiPage> getPagesToRun() {
-    SuiteFilter filter = createSuiteFilter(request, page.getPageCrawler().getFullPath().toString());
+    SuiteFilter filter = createSuiteFilter(request, page.getFullPath().toString());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
     return suiteTestFinder.getAllPagesToRunForThisSuite();
   }
 
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
     // Add test url inputs to context's variableSource.
-    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, root);
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem, context.testSystemFactory);
+    MultipleTestsRunner runner = new MultipleTestsRunner(pages, context.testSystemFactory);
     runner.setRunInProcess(debug);
     runner.setEnableRemoteDebug(remoteDebug);
     addFormatters(runner);
@@ -356,9 +379,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   void closeHtmlResponse(int exitCode) throws IOException {
     if (!isClosed()) {
       setClosed();
-      response.closeChunks();
       response.addTrailingHeader("Exit-Code", String.valueOf(exitCode));
-      response.closeTrailer();
       response.close();
     }
   }
@@ -432,7 +453,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   public static String makePageHistoryFileName(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
     return String.format("%s/%s/%s",
             context.getTestHistoryDirectory(),
-            page.getPageCrawler().getFullPath().toString(),
+            page.getFullPath().toString(),
             makeResultFileName(counts, time));
   }
 

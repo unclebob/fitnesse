@@ -35,6 +35,11 @@ public class StatementTimeoutExecutor implements StatementExecutorInterface {
   }
 
   @Override
+  public Object getSymbolObject(String symbolName) {
+    return inner.getSymbolObject(symbolName);
+  }
+
+  @Override
   public Object getInstance(String instanceName) {
     return inner.getInstance(instanceName);
   }

@@ -2,17 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
-import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import org.apache.commons.lang.StringUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -24,7 +13,26 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.wiki.*;
+import fitnesse.wiki.MockingPageCrawler;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.SymbolicPage;
+import fitnesse.wiki.WikiImportProperty;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperty;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import static fitnesse.wiki.PageData.ACTION_ATTRIBUTES;
 import static fitnesse.wiki.PageData.NAVIGATION_ATTRIBUTES;
@@ -130,7 +138,7 @@ public class PropertiesResponder implements SecureResponder {
     makeLastModifiedTag();
     makeFormSections();
 
-    return html.html();
+    return html.html(request);
   }
 
   private void makeLastModifiedTag() {
@@ -228,7 +236,7 @@ public class PropertiesResponder implements SecureResponder {
       WikiPage target = crawler.getPage(wikiPagePath);
       WikiPagePath fullPath;
       if (target != null) {
-        fullPath = target.getPageCrawler().getFullPath();
+        fullPath = target.getFullPath();
         fullPath.makeAbsolute();
       } else
         fullPath = new WikiPagePath();

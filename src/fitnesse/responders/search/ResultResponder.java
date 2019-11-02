@@ -2,6 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
+import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureReadOperation;
+import fitnesse.authentication.SecureResponder;
+import fitnesse.components.TraversalListener;
+import fitnesse.components.Traverser;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
+import fitnesse.responders.ChunkingResponder;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageType;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.search.PageFinder;
+
 import java.io.IOException;
 
 import static fitnesse.wiki.PageData.PropertyEDIT;
@@ -14,18 +27,6 @@ import static fitnesse.wiki.PageData.PropertySEARCH;
 import static fitnesse.wiki.PageData.PropertyVERSIONS;
 import static fitnesse.wiki.PageData.PropertyWHERE_USED;
 import static fitnesse.wiki.PageData.SECURITY_ATTRIBUTES;
-import fitnesse.authentication.SecureOperation;
-import fitnesse.authentication.SecureReadOperation;
-import fitnesse.authentication.SecureResponder;
-import fitnesse.components.TraversalListener;
-import fitnesse.components.Traverser;
-import fitnesse.responders.ChunkingResponder;
-import fitnesse.html.template.HtmlPage;
-import fitnesse.html.template.PageTitle;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageType;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.search.PageFinder;
 
 
 public abstract class ResultResponder extends ChunkingResponder implements
@@ -62,7 +63,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
       page = root;
     String queryString = request.getQueryString() == null ? "" : request.getQueryString();
 
-    PageTitle pageTitle = new PageTitle(page.getPageCrawler().getFullPath() );
+    PageTitle pageTitle = new PageTitle(page.getFullPath() );
 
     HtmlPage htmlPage = context.pageFactory.newPage();
     htmlPage.setTitle(getTitle());
@@ -82,7 +83,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
     htmlPage.put("specialAttributes", SPECIAL_ATTRIBUTES);
     htmlPage.put("request", request);
 
-    htmlPage.render(response.getWriter());
+    htmlPage.render(response.getWriter(), request);
 
     response.close();
   }

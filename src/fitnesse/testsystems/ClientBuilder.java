@@ -1,5 +1,7 @@
 package fitnesse.testsystems;
 
+import org.apache.commons.lang3.SystemUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,8 +10,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang.SystemUtils;
 
 public abstract class ClientBuilder<T> {
   static final String COMMAND_PATTERN = "COMMAND_PATTERN";

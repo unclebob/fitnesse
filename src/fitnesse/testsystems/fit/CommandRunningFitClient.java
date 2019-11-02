@@ -2,7 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.fit;
 
+import fitnesse.socketservice.PlainServerSocketFactory;
+import fitnesse.socketservice.SocketService;
+import fitnesse.testsystems.CommandRunner;
+import fitnesse.testsystems.ExecutionLogListener;
+import fitnesse.testsystems.MockCommandRunner;
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -10,13 +18,6 @@ import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import fitnesse.socketservice.PlainServerSocketFactory;
-import fitnesse.socketservice.SocketService;
-import fitnesse.testsystems.CommandRunner;
-import fitnesse.testsystems.ExecutionLogListener;
-import fitnesse.testsystems.MockCommandRunner;
-import org.apache.commons.lang.ArrayUtils;
 
 public class CommandRunningFitClient extends FitClient {
   private static final Logger LOG = Logger.getLogger(CommandRunningFitClient.class.getName());
@@ -121,7 +122,7 @@ public class CommandRunningFitClient extends FitClient {
 
     private void makeCommandRunner(int port, int ticketNumber) throws UnknownHostException {
       String[] fitArguments = { getLocalhostName(), Integer.toString(port), Integer.toString(ticketNumber) };
-      String[] commandLine = (String[]) ArrayUtils.addAll(command, fitArguments);
+      String[] commandLine = ArrayUtils.addAll(command, fitArguments);
       commandRunner = new CommandRunner(commandLine, environmentVariables, executionLogListener);
     }
 
@@ -170,7 +171,7 @@ public class CommandRunningFitClient extends FitClient {
             if (!fitClient.isSuccessfullyStarted()) {
               fitClient.notify();
               fitClient.exceptionOccurred(new Exception(
-                  "FitClient: communication socket was not received on time."));
+                  "FitClient communication socket was not received on time"));
             }
           }
         } catch (InterruptedException e) {
@@ -197,7 +198,7 @@ public class CommandRunningFitClient extends FitClient {
             if (!fitClient.isConnectionEstablished()) {
               fitClient.notify();
               Exception e = new Exception(
-                      "FitClient: external process terminated before a connection could be established.");
+                      "FitClient external process terminated before a connection could be established");
               // TODO: use executionLogListener.exceptionOccurred(e)
               commandRunner.exceptionOccurred(e);
               fitClient.exceptionOccurred(e);
@@ -212,20 +213,22 @@ public class CommandRunningFitClient extends FitClient {
 
   /** Runs commands in fast mode (in-process). */
   public static class InProcessCommandRunner implements CommandRunningStrategy {
-    private final String testRunner;
+    private final Method testRunnerMethod;
     private final ExecutionLogListener executionLogListener;
+    private ClassLoader classLoader;
     private Thread fastFitServer;
     private MockCommandRunner commandRunner;
 
-    public InProcessCommandRunner(String testRunner, ExecutionLogListener executionLogListener) {
-      this.testRunner = testRunner;
+    public InProcessCommandRunner(Method testRunnerMethod, ExecutionLogListener executionLogListener, ClassLoader classLoader) {
+      this.testRunnerMethod = testRunnerMethod;
       this.executionLogListener = executionLogListener;
+      this.classLoader = classLoader;
     }
 
     @Override
     public void start(CommandRunningFitClient fitClient, int port, int ticketNumber) throws IOException {
       String[] arguments = new String[] { "-x", getLocalhostName(), Integer.toString(port), Integer.toString(ticketNumber) };
-      this.fastFitServer = createTestRunnerThread(testRunner, arguments);
+      this.fastFitServer = createTestRunnerThread(testRunnerMethod, arguments);
       this.fastFitServer.start();
       commandRunner = new MockCommandRunner(executionLogListener);
       commandRunner.asynchronousStart();
@@ -245,36 +248,22 @@ public class CommandRunningFitClient extends FitClient {
       commandRunner.kill();
     }
 
-    protected Thread createTestRunnerThread(final String testRunner, final String[] args) {
-      final Method testRunnerMethod = getTestRunnerMethod(testRunner);
+    protected Thread createTestRunnerThread(final Method testRunnerMethod, final String[] args) {
       Runnable fastFitServerRunnable = new Runnable() {
         @Override
         public void run() {
-          tryCreateTestRunner(testRunnerMethod, args);
+          try {
+            testRunnerMethod.invoke(null, (Object) args);
+          } catch (IllegalAccessException|InvocationTargetException e) {
+            LOG.log(Level.WARNING, "Could not start in-process test runner", e);
+          }
         }
       };
       Thread fitServerThread = new Thread(fastFitServerRunnable);
+      fitServerThread.setContextClassLoader(classLoader);
       fitServerThread.setDaemon(true);
       return fitServerThread;
     }
-
-    private boolean tryCreateTestRunner(Method testRunnerMethod, String[] args) {
-      try {
-        testRunnerMethod.invoke(null, (Object) args);
-        return true;
-      } catch (Exception e) {
-        return false;
-      }
-    }
-
-    private Method getTestRunnerMethod(String testRunner) {
-      try {
-        return Class.forName(testRunner).getDeclaredMethod("main", String[].class);
-      } catch (Exception e) {
-        throw new IllegalArgumentException(e);
-      }
-    }
-
   }
 
   private static String getLocalhostName() throws UnknownHostException {

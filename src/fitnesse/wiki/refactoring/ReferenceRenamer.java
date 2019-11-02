@@ -2,41 +2,29 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki.refactoring;
 
-import fitnesse.components.TraversalListener;
-import fitnesse.wiki.PageData;
+import fitnesse.wiki.NoPruningStrategy;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.*;
+import fitnesse.wikitext.parser.SymbolTreeWalker;
 
-public abstract class ReferenceRenamer implements TraversalListener<WikiPage>, SymbolTreeWalker {
-  protected WikiPage root;
-    protected WikiPage currentPage;
+import java.util.Optional;
 
-  public ReferenceRenamer(WikiPage root) {
-    this.root = root;
-  }
+public abstract class ReferenceRenamer implements SymbolTreeWalker {
+    protected WikiPage root;
+    protected ReferenceRenamingTraverser traverser;
 
-  public void renameReferences() {
-    root.getPageCrawler().traverse(this);
-  }
-
-  @Override
-  public void process(WikiPage currentPage) {
-    PageData data = currentPage.getData();
-    String content = data.getContent();
-
-      Symbol syntaxTree = Parser.make(
-              new ParsingPage(new WikiSourcePage(currentPage)),
-              content,
-              SymbolProvider.refactoringProvider)
-              .parse();
-      this.currentPage = currentPage;
-      syntaxTree.walkPreOrder(this);
-      String newContent = new WikiTranslator(new WikiSourcePage(currentPage)).translateTree(syntaxTree);
-
-    boolean pageHasChanged = !newContent.equals(content);
-    if (pageHasChanged) {
-      data.setContent(newContent);
-      currentPage.commit(data);
+    ReferenceRenamer(WikiPage root) {
+        this.root = root;
+        this.traverser = new ReferenceRenamingTraverser(this, this::renameSymbolicLinkIfNeeded);
     }
-  }
+
+    public void renameReferences() {
+        root.getPageCrawler().traverse(traverser, new NoPruningStrategy());
+    }
+
+    WikiPage currentPage(){
+        return traverser.currentPage();
+    }
+
+    abstract Optional<String> renameSymbolicLinkIfNeeded(String linkTarget);
 }
+

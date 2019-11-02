@@ -41,7 +41,7 @@ public class NewPageResponder implements Responder {
     html.setMainTemplate("editPage");
     makeEditForm(html, context, request);
 
-    return html.html();
+    return html.html(request);
   }
 
   private void makeEditForm(HtmlPage html, FitNesseContext context, Request request) {

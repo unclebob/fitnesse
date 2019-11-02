@@ -6,4 +6,7 @@
   <span class="btn-text"><input id="error-nav-text" type="text" size="3"> of <span id="error-nav-max"></span></span>
   <button id="error-nav-next" class="btn btn-default">&raquo;</button>
  </div>
+#if ($rerunPage)
+ <a class="btn btn-default" href="$rerunPage?suite">Rerun Failed</a>
+#end
 </div>

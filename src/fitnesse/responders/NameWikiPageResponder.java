@@ -3,19 +3,15 @@
 package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
-import fitnesse.http.Request;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.PageData;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
-import org.apache.commons.lang.StringUtils;
+import fitnesse.http.Request;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPage;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class NameWikiPageResponder extends BasicResponder {
   @Override

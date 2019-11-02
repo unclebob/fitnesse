@@ -5,9 +5,10 @@ import fitnesse.ContextConfigurator;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.Updater;
-import fitnesse.components.PluginsClassLoader;
+import fitnesse.components.PluginsClassLoaderFactory;
 import fitnesse.reporting.ExitCodeListener;
 import fitnesse.socketservice.PlainServerSocketFactory;
+import fitnesse.socketservice.SslParameters;
 import fitnesse.socketservice.SslServerSocketFactory;
 import fitnesse.updates.WikiContentUpdater;
 
@@ -25,7 +26,7 @@ public class FitNesseMain {
 
   private final ExitCodeListener exitCodeListener = new ExitCodeListener();
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) {
     Arguments arguments = null;
     try {
       arguments = new Arguments(args);
@@ -33,7 +34,7 @@ public class FitNesseMain {
       Arguments.printUsage();
       exit(1);
     }
-    Integer exitCode = 0;
+    Integer exitCode;
     try {
         exitCode = new FitNesseMain().launchFitNesse(arguments);
     } catch (Exception e){
@@ -60,7 +61,9 @@ public class FitNesseMain {
 
   public Integer launchFitNesse(ContextConfigurator contextConfigurator) throws Exception {
     configureLogging("verbose".equalsIgnoreCase(contextConfigurator.get(LOG_LEVEL)));
-    loadPlugins(contextConfigurator.get(ConfigurationParameter.ROOT_PATH));
+
+    ClassLoader classLoader = PluginsClassLoaderFactory.getClassLoader(contextConfigurator.get(ConfigurationParameter.ROOT_PATH));
+    contextConfigurator.withClassLoader(classLoader);
 
     if (contextConfigurator.get(COMMAND) != null) {
       contextConfigurator.withTestSystemListener(exitCodeListener);
@@ -91,7 +94,7 @@ public class FitNesseMain {
     }
 
     try {
-      return launch(context);
+      return launch(context, classLoader);
     } catch (BindException e) {
       LOG.severe("FitNesse cannot be started...");
       LOG.severe("Port " + context.port + " is already in use.");
@@ -118,11 +121,7 @@ public class FitNesseMain {
     return false;
   }
 
-  private void loadPlugins(String rootPath) throws Exception {
-    new PluginsClassLoader(rootPath).addPluginsToClassLoader();
-  }
-
-  private Integer launch(FitNesseContext context) throws Exception {
+  private Integer launch(FitNesseContext context, ClassLoader classLoader) throws Exception {
     if (!"true".equalsIgnoreCase(context.getProperty(INSTALL_ONLY.getKey()))) {
       String command = context.getProperty(COMMAND.getKey());
       if (command != null) {
@@ -131,25 +130,33 @@ public class FitNesseMain {
 
         return exitCodeListener.getFailCount();
       } else {
-        LOG.info("Starting FitNesse on port: " + context.port);
-
-        ServerSocket serverSocket = createServerSocket(context);
+        if("true".equalsIgnoreCase(context.getProperty(LOCALHOST_ONLY.getKey()))) {
+          LOG.info("Starting FitNesse on port: " + context.port + " (loopback only)");
+        } else {
+          LOG.info("Starting FitNesse on port: " + context.port);
+        }
+        ServerSocket serverSocket = createServerSocket(context, classLoader);
         context.fitNesse.start(serverSocket);
       }
     }
     return null;
   }
 
-  private ServerSocket createServerSocket(FitNesseContext context) throws IOException {
+  private ServerSocket createServerSocket(FitNesseContext context, ClassLoader classLoader) throws IOException {
     String protocol = context.getProperty(FitNesseContext.WIKI_PROTOCOL_PROPERTY);
     boolean useHTTPS = (protocol != null && protocol.equalsIgnoreCase("https"));
     String clientAuth = context.getProperty(FitNesseContext.SSL_CLIENT_AUTH_PROPERTY);
     final boolean sslClientAuth = (clientAuth != null && clientAuth.equalsIgnoreCase("required"));
     final String sslParameterClassName = context.getProperty(FitNesseContext.SSL_PARAMETER_CLASS_PROPERTY);
-
-    return (useHTTPS
-      ? new SslServerSocketFactory(sslClientAuth, sslParameterClassName)
-      : new PlainServerSocketFactory()).createServerSocket(context.port);
+    if ("true".equalsIgnoreCase(context.getProperty(LOCALHOST_ONLY.getKey()))) {
+      return (useHTTPS
+        ? new SslServerSocketFactory(sslClientAuth, SslParameters.createSslParameters(sslParameterClassName, classLoader))
+        : new PlainServerSocketFactory()).createLocalOnlyServerSocket(context.port);
+    } else {
+      return (useHTTPS
+        ? new SslServerSocketFactory(sslClientAuth, SslParameters.createSslParameters(sslParameterClassName, classLoader))
+        : new PlainServerSocketFactory()).createServerSocket(context.port);
+    }
   }
 
   private void executeSingleCommand(FitNesse fitNesse, String command, String outputFile) throws Exception {

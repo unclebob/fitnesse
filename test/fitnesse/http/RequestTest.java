@@ -2,22 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import fitnesse.util.Base64;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import util.FileUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import util.FileUtil;
-import fitnesse.util.Base64;
+import static org.junit.Assert.*;
 
 public class RequestTest {
   PipedOutputStream output;
@@ -92,7 +88,17 @@ public class RequestTest {
     appendToMessage("\r\n");
     parseMessage();
     assertNotNull("no exception was thrown", exception);
-    assertEquals("The request string is malformed and can not be parsed", exception.getMessage());
+    assertEquals("The request string is malformed and can not be parsed: '/resource HTTP/1.1'", exception.getMessage());
+  }
+
+  @Test
+  public void testEmptyLinesBeforeRequestIsIgnored() throws Exception {
+    appendToMessage("\r\n");
+    appendToMessage("\r\n");
+    appendToMessage("\r\n");
+    parseMessage();
+    assertNotNull("no exception was thrown", exception);
+    assertEquals("Received request that started with empty line", exception.getMessage());
   }
 
   @Test

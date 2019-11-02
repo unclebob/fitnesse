@@ -4,14 +4,11 @@ package fitnesse.wiki;
 
 import java.io.File;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import fitnesse.wikitext.parser.Alias;
-import fitnesse.wikitext.parser.See;
 import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.SymbolTreeWalker;
+import fitnesse.wikitext.parser.SymbolType;
 
 public class WikiPageUtil {
 
@@ -88,26 +85,14 @@ public class WikiPageUtil {
 
   public static List<String> getXrefPages(WikiPage page) {
     if (page instanceof WikitextPage) {
-      final List<String> xrefPages = new ArrayList<>();
-      ((WikitextPage) page).getSyntaxTree().walkPreOrder(new SymbolTreeWalker() {
-        @Override
-        public boolean visit(Symbol node) {
-          if (node.isType(See.symbolType)) {
-            if(node.childAt(0).isType(Alias.symbolType)) {
-              xrefPages.add(node.childAt(0).lastChild().childAt(0).getContent());
-            } else {
-              xrefPages.add(node.childAt(0).getContent());
-            }
-          }
-          return true;
-        }
+      return WikitextPageUtil.getXrefPages((WikitextPage) page);
+    }
+    return Collections.emptyList();
+  }
 
-        @Override
-        public boolean visitChildren(Symbol node) {
-          return true;
-        }
-      });
-      return xrefPages;
+  public static List<Symbol> getSymbols(final WikiPage page, final SymbolType symbolType) {
+    if (page instanceof WikitextPage) {
+      return WikitextPageUtil.getSymbols((WikitextPage) page, symbolType);
     }
     return Collections.emptyList();
   }

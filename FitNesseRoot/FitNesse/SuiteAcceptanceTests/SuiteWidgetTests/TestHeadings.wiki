@@ -1,0 +1,40 @@
+This page tests the headings on a wiki page.
+
+First create a page with some headings.
+
+!|Page Creator                                                                                                    |
+|page name   |page contents                                                                |page attributes|valid?|
+|HeadingsPage|!-!headings
+!1 Title of Page
+!2 Heading
+!3 Bla Bla Bla
+!4 Foo
+!5 Bar
+!6 Baz
+!6 41 !-NotFormatted Title-!-!|               |true  |
+
+Then request the page.
+
+!|Response Requester|
+|uri         |valid?|
+|HeadingsPage|true  |
+
+Examine the page to be sure it contains the headings list.
+
+!|Response Examiner                                                                                            |
+|type    |pattern                                                                               |matches?|value|
+|contents|Contents:                                                                             |true    |     |
+|contents|<li class="heading1">.*<a href="#TitleofPage">Title of Page</a>.*</li>                |true    |     |
+|contents|<h1 id="TitleofPage">Title of Page</h1>                                               |true    |     |
+|contents|<li class="heading2">.*<a href="#Heading">Heading</a>.*</li>                          |true    |     |
+|contents|<h2 id="Heading">Heading</h2>                                                         |true    |     |
+|contents|<li class="heading3">.*<a href="#BlaBlaBla">Bla Bla Bla</a>.*</li>                    |true    |     |
+|contents|<h3 id="BlaBlaBla">Bla Bla Bla</h3>                                                   |true    |     |
+|contents|<li class="heading4">.*<a href="#Foo">Foo</a>.*</li>                                  |true    |     |
+|contents|<h4 id="Foo">Foo</h4>                                                                 |true    |     |
+|contents|<li class="heading5">.*<a href="#Bar">Bar</a>.*</li>                                  |true    |     |
+|contents|<h5 id="Bar">Bar</h5>                                                                 |true    |     |
+|contents|<li class="heading6">.*<a href="#Baz">Baz</a>.*</li>                                  |true    |     |
+|contents|<h6 id="Baz">Baz</h6>                                                                 |true    |     |
+|contents|<li class="heading6">.*<a href="#41NotFormattedTitle">41 NotFormatted Title</a>.*</li>|true    |     |
+|contents|<h6 id="41NotFormattedTitle">41 NotFormatted Title</h6>                               |true    |     |

@@ -4,6 +4,7 @@ package fitnesse.responders;
 
 import java.io.IOException;
 
+import fitnesse.wiki.NoPruningStrategy;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
@@ -14,7 +15,7 @@ public class MockWikiImporter extends WikiImporter {
   @Override
   protected void importRemotePageContent(WikiPage localPage) throws IOException {
     if (fail)
-      importerClient.pageImportError(localPage, new Exception("blah"));
+      importerClient.pageImportError(localPage, new Exception("Import of remote page content failed"));
     else
       setMockContent(localPage);
   }
@@ -28,7 +29,7 @@ public class MockWikiImporter extends WikiImporter {
   @Override
   public void importWiki(WikiPage page) {
     for (WikiPage child : page.getChildren()) {
-      child.getPageCrawler().traverse(this);
+      child.getPageCrawler().traverse(this, new NoPruningStrategy());
     }
   }
 

@@ -24,20 +24,24 @@ public class SystemExitSecurityManager extends SecurityManager {
    * {@link SystemExitSecurityManager}.
    */
   public static void activateIfWanted() {
-    if (isPreventSystemExit()) {
+    if (isPreventSystemExit() && !isAndroid()) {
       SecurityManager currentSecMgr = System.getSecurityManager();
-      SystemExitSecurityManager systemExitSecurityManager = new SystemExitSecurityManager(
-          currentSecMgr);
-      System.setSecurityManager(systemExitSecurityManager);
+      tryUpdateSecurityManager(new SystemExitSecurityManager(currentSecMgr));
+    }
+  }
+
+  private static void tryUpdateSecurityManager(SecurityManager securityManager) {
+    try {
+      System.setSecurityManager(securityManager);
+    } catch (SecurityException e) {
+      System.err.println("Security manager could not be updated");
     }
   }
 
   public static void restoreOriginalSecurityManager() {
     SecurityManager currentSecMgr = System.getSecurityManager();
-    if (currentSecMgr != null
-        && currentSecMgr instanceof SystemExitSecurityManager) {
-      SecurityManager originalSecurityManager = ((SystemExitSecurityManager) currentSecMgr).delegate;
-      System.setSecurityManager(originalSecurityManager);
+    if (currentSecMgr instanceof SystemExitSecurityManager) {
+      tryUpdateSecurityManager(((SystemExitSecurityManager) currentSecMgr).delegate);
     }
   }
 
@@ -48,6 +52,11 @@ public class SystemExitSecurityManager extends SecurityManager {
     } else {
       return true;
     }
+  }
+
+  private static boolean isAndroid() {
+    String vendorUrl = System.getProperty("java.vendor.url", "");
+    return vendorUrl.toLowerCase().contains("android");
   }
 
   @Override

@@ -74,4 +74,9 @@ public class HtmlUtil {
         result = result.replace(originalStrings[i], replacementStrings[i]);
     return result;
   }
+
+  public static String remainRfc3986UnreservedCharacters(final String heading) {
+    return heading.replaceAll("[^A-Za-z0-9\\-._~]", "");
+  }
+
 }

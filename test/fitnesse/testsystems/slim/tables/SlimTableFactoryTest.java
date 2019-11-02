@@ -53,7 +53,7 @@ public class SlimTableFactoryTest {
   }
 
   @Test
-  public void tableTypeStartingWithcommentColonShouldReturnNull() {
+  public void tableTypeStartingWithCommentColonShouldReturnNull() {
     when(table.getCellContents(0, 0)).thenReturn("comment: a comment table");
     SlimTable slimTable = slimTableFactory.makeSlimTable(table, "0", new SlimTestContextImpl(new WikiTestPage(new WikiPageDummy())));
     assertThat(slimTable, nullValue());

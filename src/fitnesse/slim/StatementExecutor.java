@@ -74,6 +74,15 @@ public class StatementExecutor implements StatementExecutorInterface {
   }
 
   @Override
+  public Object getSymbolObject(String symbolName) {
+    MethodExecutionResult result = context.getVariable(symbolName);
+    if (result == null) {
+      return null;
+    }
+    return result.getObject();
+  }
+
+  @Override
   public void create(String instanceName, String className, Object... args) throws SlimException {
     try {
       context.create(instanceName, className, args);

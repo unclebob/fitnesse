@@ -2,12 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import fitnesse.wikitext.parser.ParsingPage;
+import fitnesse.wikitext.parser.Symbol;
+
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-
-import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.Symbol;
 
 public class SymbolicPage extends BaseWikitextPage {
 
@@ -71,7 +71,7 @@ public class SymbolicPage extends BaseWikitextPage {
   private WikiPage createChildPage(WikiPage child) {
     WikiPage cyclicReference = findCyclicReference(child);
     if (cyclicReference != null) {
-      return new WikiPageDummy(child.getName(), String.format(SHORT_CIRCUIT_BREAK_MESSAGE, cyclicReference.getPageCrawler().getFullPath().toString()), this);
+      return new WikiPageDummy(child.getName(), String.format(SHORT_CIRCUIT_BREAK_MESSAGE, cyclicReference.getFullPath().toString()), this);
     } else {
       return new SymbolicPage(child.getName(), child, this);
     }
@@ -140,10 +140,13 @@ public class SymbolicPage extends BaseWikitextPage {
   }
 
   @Override
-  @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
   public boolean equals(Object other) {
-    // Wrong! If Other is also a symbolicPage, the comparison is not valid
-    return ((other instanceof SymbolicPage) && realPage.equals(((SymbolicPage) other).realPage)) || realPage.equals(other);
+    if (other instanceof SymbolicPage) {
+      SymbolicPage symbolicOther = (SymbolicPage) other;
+      return getName().equals(symbolicOther.getName()) && getRealPage().equals(symbolicOther.getRealPage());
+    } else {
+      return getRealPage().equals(other);
+    }
   }
 
   @Override

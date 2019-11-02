@@ -85,7 +85,7 @@ public class SuiteResponderWikiImportingTest {
 
     testResponder.importWikiPages();
 
-    assertEquals("Updating imported content... fitnesse.responders.WikiImportingTraverser$ImportError: blah. Done.", sentMessages);
+    assertEquals("Updating imported content... fitnesse.responders.WikiImportingTraverser$ImportError: Import of remote page content failed. Done.", sentMessages);
     assertEquals("", pageOne.getData().getContent());
   }
 

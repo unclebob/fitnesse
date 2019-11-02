@@ -114,19 +114,19 @@ public class CachedInteractionTest {
   @Test
   public void canFindMethodWithArguments() {
     String findMethod = "createInstance";
-    DefaultInteraction instance = new DefaultInteraction();
+    SimpleInteraction instance = new SimpleInteraction();
 
     Method method = interaction.findMatchingMethod(findMethod, instance, null, null, null);
 
     assertEquals(findMethod, method.getName());
-    assertEquals(DefaultInteraction.class, method.getDeclaringClass());
+    assertEquals(SimpleInteraction.class, method.getDeclaringClass());
     verify(interaction, times(1)).handleMethodCacheMiss(findMethod, instance, new Object[3]);
 
     //2nd call
     method = interaction.findMatchingMethod(findMethod, instance, null, null, null);
 
     assertEquals(findMethod, method.getName());
-    assertEquals(DefaultInteraction.class, method.getDeclaringClass());
+    assertEquals(SimpleInteraction.class, method.getDeclaringClass());
     // cache hit, no 2nd call
     verify(interaction, times(1)).handleMethodCacheMiss(findMethod, instance, new Object[3]);
   }
@@ -148,8 +148,10 @@ public class CachedInteractionTest {
     Method consMethod = interaction.findMatchingMethod(findMethod, consInstance, Collections.emptyList());
 
     assertEquals(findMethod, consMethod.getName());
-    assertEquals("Method returned is defined by the wrong class (i.e. not the class of the instance passed)",
-      consInstance.getClass(), consMethod.getDeclaringClass());
+    assertNotEquals("Method returned is defined by the wrong class (i.e. the class previously found)",
+      method.getDeclaringClass(), consMethod.getDeclaringClass());
+    assertEquals("Method returned is defined by the wrong class (i.e. not the superclass of the instance passed)",
+      consInstance.getClass().getSuperclass(), consMethod.getDeclaringClass());
   }
 
   @Test

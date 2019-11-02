@@ -24,6 +24,7 @@ public class SymbolProvider {
             SymbolType.CloseParenthesis, SymbolType.CloseBrace, SymbolType.ClosePlainTextTable, SymbolType.CloseBracket, SymbolType.CloseLiteral,
             SymbolType.Bold, SymbolType.DateFormatOption,
             SymbolType.Italic, SymbolType.Strike, new AnchorReference(), WikiWord.symbolType, SymbolType.EMail, SymbolType.Text,
+            new Headings()
     });
 
     public static final SymbolProvider tableParsingProvider = new SymbolProvider(wikiParsingProvider).add(SymbolType.EndCell);
@@ -48,8 +49,10 @@ public class SymbolProvider {
     });
 
     static final SymbolProvider preformatProvider = new SymbolProvider(
-          new SymbolType[] {SymbolType.ClosePreformat, SymbolType.CloseBrace, SymbolType.CloseLiteral, Literal.symbolType, Variable.symbolType});
-
+          new SymbolType[] {SymbolType.ClosePreformat, SymbolType.CloseBrace, SymbolType.CloseLiteral, Literal.symbolType, Variable.symbolType, 
+                            new Today(), SymbolType.Delta, SymbolType.Whitespace, SymbolType.OpenParenthesis, SymbolType.CloseParenthesis, SymbolType.DateFormatOption,
+                            Evaluator.symbolType, SymbolType.CloseEvaluator});
+ 
     private static final char defaultMatch = '\0';
 
     private Map<Character, ArrayList<Matchable>> currentDispatch;

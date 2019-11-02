@@ -2,24 +2,34 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.reporting.history;
 
+import fitnesse.FitNesseContext;
+import fitnesse.reporting.BaseFormatter;
+import fitnesse.testrunner.WikiTestPageUtil;
+import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.ExecutionLogListener;
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.Expectation;
+import fitnesse.testsystems.Instruction;
+import fitnesse.testsystems.TableCell;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestResult;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
+import fitnesse.util.DateTimeUtil;
+import fitnesse.util.TimeMeasurement;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-
-import fitnesse.FitNesseContext;
-import fitnesse.reporting.BaseFormatter;
-import fitnesse.testrunner.WikiTestPageUtil;
-import fitnesse.testsystems.*;
-import fitnesse.util.DateTimeUtil;
-import fitnesse.util.TimeMeasurement;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageUtil;
 
 public class TestXmlFormatter extends BaseFormatter implements ExecutionLogListener, Closeable {
   private static final Logger LOG = Logger.getLogger(TestXmlFormatter.class.getName());
@@ -37,7 +47,7 @@ public class TestXmlFormatter extends BaseFormatter implements ExecutionLogListe
     this.context = context;
     this.writerFactory = writerFactory;
     totalTimeMeasurement = new TimeMeasurement().start();
-    testResponse = new TestExecutionReport(context.version, page.getPageCrawler().getFullPath().toString());
+    testResponse = new TestExecutionReport(context.version, page.getFullPath().toString());
     resetTimer();
   }
 

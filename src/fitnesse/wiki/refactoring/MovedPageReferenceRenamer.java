@@ -8,6 +8,8 @@ import fitnesse.wikitext.parser.Alias;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.WikiWord;
 
+import java.util.Optional;
+
 public class MovedPageReferenceRenamer extends ReferenceRenamer {
   private WikiPage pageToBeMoved;
   private String newParentName;
@@ -18,16 +20,21 @@ public class MovedPageReferenceRenamer extends ReferenceRenamer {
     this.newParentName = newParentName;
   }
 
-    @Override
-    public boolean visit(Symbol node) {
-      if (node.isType(WikiWord.symbolType)) {
-        new WikiWordReference(currentPage, node.getContent()).wikiWordRenameMovedPageIfReferenced(node, pageToBeMoved, newParentName);
-      }
-      return true;
+  @Override
+  public boolean visit(Symbol node) {
+    if (node.isType(WikiWord.symbolType)) {
+      new WikiWordReference(currentPage(), node.getContent()).wikiWordRenameMovedPageIfReferenced(node, pageToBeMoved, newParentName);
     }
+    return true;
+  }
 
-    @Override
-    public boolean visitChildren(Symbol node) {
-        return !node.isType(Alias.symbolType);
-    }
+  @Override
+  public boolean visitChildren(Symbol node) {
+    return !node.isType(Alias.symbolType);
+  }
+
+  @Override
+  Optional<String> renameSymbolicLinkIfNeeded(String linkTarget) {
+    return new WikiWordReference(currentPage(), linkTarget).getMovedPageRenamedContent(linkTarget, pageToBeMoved, newParentName);
+  }
 }

@@ -1,8 +1,5 @@
 package fitnesse.slim.converters;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.slim.Converter;
@@ -12,6 +9,9 @@ import org.htmlparser.filters.TagNameFilter;
 import org.htmlparser.tags.CompositeTag;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MapConverter implements Converter<Map> {
 
@@ -134,12 +134,12 @@ public class MapConverter implements Converter<Map> {
   }
 
   private NodeList parseHtml(String possibleTable) {
-    try {
-      Parser parser = new Parser(possibleTable);
-      return parser.parse(null);
-    } catch (ParserException e) {
-      return null;
-    }
+      try {
+        Parser parser = Parser.createParser(possibleTable, null);
+        return parser.parse(null);
+      } catch (Exception e) {
+        return null;
+      }
   }
 
 }

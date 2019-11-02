@@ -7,6 +7,7 @@ import fitnesse.html.HtmlElement;
 import fitnesse.wiki.BaseWikitextPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
+import fitnesse.wiki.WikiSourcePage;
 
 public class ParserTestHelper {
   public static final String newLineRendered = "<br/>";

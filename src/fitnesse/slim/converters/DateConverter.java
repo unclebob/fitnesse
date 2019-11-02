@@ -2,27 +2,23 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim.converters;
 
+import fitnesse.slim.SlimError;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import fitnesse.slim.Converter;
-import fitnesse.slim.SlimError;
-import fitnesse.util.StringUtils;
-
-public class DateConverter implements Converter<Date> {
+public class DateConverter extends ConverterBase<Date> {
   public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
 
   @Override
-  public String toString(Date o) {
-    return o != null ? DATE_FORMAT.format(o) : NULL_VALUE;
+  public String getString(Date o) {
+    return DATE_FORMAT.format(o);
   }
 
   @Override
-  public Date fromString(String arg) {
-    if (StringUtils.isBlank(arg))
-      return null;
+  public Date getObject(String arg) {
     try {
       return DATE_FORMAT.parse(arg);
     } catch (ParseException e) {

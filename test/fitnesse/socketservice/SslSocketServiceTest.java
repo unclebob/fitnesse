@@ -51,11 +51,12 @@ public class SslSocketServiceTest {
   }
 
   private ServerSocket createServerSocket() throws IOException {
-    return new SslServerSocketFactory(false, "fitnesse.socketservice.SslParametersWiki").createServerSocket(RANDOM_PORT);
+    return new SslServerSocketFactory(false,
+      SslParameters.createSslParameters("fitnesse.socketservice.SslParametersWiki")).createServerSocket(RANDOM_PORT);
   }
 
   private Socket createClientSocket(int port) throws IOException {
-    return new SslClientSocketFactory("fitnesse.socketservice.SslParametersWiki").createSocket("localhost", port);
+    return new SslClientSocketFactory(SslParameters.createSslParameters("fitnesse.socketservice.SslParametersWiki")).createSocket("localhost", port);
   }
 
   @Test

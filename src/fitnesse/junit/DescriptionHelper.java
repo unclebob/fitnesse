@@ -1,14 +1,14 @@
 package fitnesse.junit;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import fitnesse.testsystems.TestPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.runner.Description;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Helper to deal with jUnit descriptions.

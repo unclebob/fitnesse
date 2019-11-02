@@ -1,17 +1,28 @@
 package fitnesse.wiki.search;
 
 import fitnesse.components.TraversalListener;
+import fitnesse.wiki.NoPruningStrategy;
+import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperty;
+import fitnesse.wiki.WikiSourcePage;
 import fitnesse.wiki.WikiWordReference;
-import fitnesse.wikitext.parser.*;
+import fitnesse.wikitext.parser.Alias;
+import fitnesse.wikitext.parser.Parser;
+import fitnesse.wikitext.parser.ParsingPage;
+import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.parser.SymbolProvider;
+import fitnesse.wikitext.parser.SymbolTreeWalker;
+import fitnesse.wikitext.parser.WikiWord;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFinder, SymbolTreeWalker {
 
-  private WikiPage subjectPage;
-  private TraversalListener<? super WikiPage> observer;
+  private final WikiPage subjectPage;
+  private final TraversalListener<? super WikiPage> observer;
   private WikiPage currentPage;
 
   private List<WikiPage> hits = new ArrayList<>();
@@ -24,19 +35,42 @@ public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFin
   @Override
   public void process(WikiPage currentPage) {
     this.currentPage = currentPage;
+
+    checkSymbolicLinks();
+    if (!hits.contains(currentPage)) {
+      checkContent();
+    }
+  }
+
+  private void checkSymbolicLinks() {
+    WikiPageProperty suiteProperty = currentPage.getData().getProperties().getProperty(SymbolicPage.PROPERTY_NAME);
+    if (suiteProperty != null) {
+      Set<String> links = suiteProperty.keySet();
+      for (String link : links) {
+        WikiPage linkTarget = currentPage.getChildPage(link);
+        if (linkTarget instanceof SymbolicPage
+          && ((SymbolicPage) linkTarget).getRealPage().equals(subjectPage)) {
+          addHit();
+          break;
+        }
+      }
+    }
+  }
+
+  private void checkContent() {
     String content = currentPage.getData().getContent();
     Symbol syntaxTree = Parser.make(
-              new ParsingPage(new WikiSourcePage(currentPage)),
-              content,
-              SymbolProvider.refactoringProvider)
-              .parse();
-      syntaxTree.walkPreOrder(this);
+      new ParsingPage(new WikiSourcePage(currentPage)),
+      content,
+      SymbolProvider.refactoringProvider)
+      .parse();
+    syntaxTree.walkPreOrder(this);
   }
 
   @Override
   public void search(WikiPage page) {
     hits.clear();
-    page.getPageCrawler().traverse(this);
+    page.getPageCrawler().traverse(this, new NoPruningStrategy());
   }
 
   @Override
@@ -45,8 +79,7 @@ public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFin
     if (node.isType(WikiWord.symbolType)) {
       WikiPage referencedPage = new WikiWordReference(currentPage, node.getContent()).getReferencedPage();
       if (referencedPage != null && referencedPage.equals(subjectPage)) {
-        hits.add(currentPage);
-        observer.process(currentPage);
+        addHit();
       }
     }
     if (node.isType(Alias.symbolType)) {
@@ -56,8 +89,7 @@ public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFin
       }
       WikiPage referencedPage = new WikiWordReference(currentPage, linkText).getReferencedPage();
       if (referencedPage != null && referencedPage.equals(subjectPage)) {
-        hits.add(currentPage);
-        observer.process(currentPage);
+        addHit();
       }
     }
     return true;
@@ -66,5 +98,10 @@ public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFin
   @Override
   public boolean visitChildren(Symbol node) {
     return true;
+  }
+
+  private void addHit() {
+    hits.add(currentPage);
+    observer.process(currentPage);
   }
 }

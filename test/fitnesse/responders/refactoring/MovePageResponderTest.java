@@ -2,24 +2,26 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static util.RegexTestCase.assertSubString;
-
-import java.util.List;
-
 import fitnesse.Responder;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ResponderTestCase;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertSubString;
 
 public class MovePageResponderTest extends ResponderTestCase {
   private WikiPage pageOne;
@@ -67,8 +69,8 @@ public class MovePageResponderTest extends ResponderTestCase {
   }
 
   private boolean isAncestor(WikiPage ancestor, WikiPage descendent) {
-    return moveResponder.pageIsAncestorOfNewParent(ancestor.getPageCrawler().getFullPath(),
-            descendent.getPageCrawler().getFullPath());
+    return moveResponder.pageIsAncestorOfNewParent(ancestor.getFullPath(),
+            descendent.getFullPath());
   }
 
   @Test
@@ -117,10 +119,22 @@ public class MovePageResponderTest extends ResponderTestCase {
 
   @Test
   public void testReferenceToSubPageChanged() throws Exception {
-    WikiPageUtil.addPage(root, PathParser.parse("ReferingPage"), "PageOne.PageA");
+    WikiPage newPage = WikiPageUtil.addPage(root, PathParser.parse("ReferingPage"), "PageOne.PageA");
+    PageData data = newPage.getData();
+    WikiPageProperty linksProperty = new WikiPageProperty();
+    data.getProperties().set(SymbolicPage.PROPERTY_NAME, linksProperty);
+    linksProperty.set("SymLink", "PageOne.PageA");
+    linksProperty.set("SymLink2", "PageOne");
+    newPage.commit(data);
+
     movePage("PageOne", "PageTwo", true);
     WikiPage referingPage = root.getChildPage("ReferingPage");
     assertEquals(".PageTwo.PageOne.PageA", referingPage.getData().getContent());
+
+    PageData pageOneDataAfter = referingPage.getData();
+    linksProperty = pageOneDataAfter.getProperties().getProperty(SymbolicPage.PROPERTY_NAME);
+    assertEquals(".PageTwo.PageOne.PageA", linksProperty.get("SymLink"));
+    assertEquals(".PageTwo.PageOne", linksProperty.get("SymLink2"));
   }
 
   @Test
@@ -205,7 +219,7 @@ public class MovePageResponderTest extends ResponderTestCase {
     WikiPage movedPage = root.getChildPage(pageA.getName());
     assertFalse(crawler.pageExists(originalPath));
     assertEquals("content", movedPage.getData().getContent());
-    assertEquals(PathParser.parse("PageA"), movedPage.getPageCrawler().getFullPath());
+    assertEquals(PathParser.parse("PageA"), movedPage.getFullPath());
     pageOne = root.getChildPage(pageOne.getName());
     assertEquals(".PageA", pageOne.getData().getContent());
   }
@@ -217,7 +231,7 @@ public class MovePageResponderTest extends ResponderTestCase {
     WikiPage movedPage = pageTwo.getChildPage("PageOne");
     assertFalse(crawler.pageExists(PathParser.parse("PageOne")));
     assertEquals(".PageTwo.PageOne.PageA", movedPage.getData().getContent());
-    assertEquals("PageTwo.PageOne", PathParser.render(movedPage.getPageCrawler().getFullPath()));
+    assertEquals("PageTwo.PageOne", PathParser.render(movedPage.getFullPath()));
   }
 
   @Test

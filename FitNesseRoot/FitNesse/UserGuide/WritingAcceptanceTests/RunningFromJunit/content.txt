@@ -3,7 +3,7 @@ You can run FitNesse Java (Fit and Slim) tests from a developer IDE without star
 The !-FitNese-! runner will report about individual test pages being executed by JUnit. For IDE's this means that the JUnit report window and give you detailed statistics for individual tests in a suite.
 
 !2 Using the !-FitNese-! runner
-To use the !-FitNese-! runner, Define !-fitnesse.junit.FitNesseSuite-! as the runner for a specific test class, using @org.junit.runner.RunWith(). Set the test or suite name to run using the @Name attribute, the root FitNesse path using !-@FitNesseDir-! attribute and the result directory using !-@OutputDir-! attribute.[[Here's a full example.][https://github.com/unclebob/fitnesse/blob/master/test/fitnesse/junit/FitNesseRunnerTest.java]]
+To use the !-FitNese-! runner, Define !-fitnesse.junit.FitNesseRunner-! as the runner for a specific test class, using @org.junit.runner.RunWith(). Set the test or suite name to run using the @Name attribute, the root FitNesse path using !-@FitNesseDir-! attribute and the result directory using !-@OutputDir-! attribute.[[Here's a full example.][https://github.com/unclebob/fitnesse/blob/master/test/fitnesse/junit/FitNesseRunnerTest.java]]
 
 !2 What about JUnitHelper?
 JUitHelper is no more. Main reason for this is that FitNesse has become more modular. Now it's possible to execute a set of tests with only a few lines of code. The basics are:

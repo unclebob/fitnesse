@@ -21,7 +21,7 @@ public class ChunkedResponseTest implements ResponseSender {
   private ChunkedResponse response;
   private boolean closed = false;
 
-  public StringBuffer buffer;
+  public StringBuilder buffer;
 
   @Override
   public void send(byte[] bytes) {
@@ -39,7 +39,7 @@ public class ChunkedResponseTest implements ResponseSender {
 
   @Before
   public void setUp() throws Exception {
-    buffer = new StringBuffer();
+    buffer = new StringBuilder();
 
     response = new ChunkedResponse("html", new MockChunkedDataProvider());
     response.sendTo(this);
@@ -70,16 +70,22 @@ public class ChunkedResponseTest implements ResponseSender {
 
   @Test
   public void testOneChunk() throws Exception {
-    buffer = new StringBuffer();
+    buffer = new StringBuilder();
     response.add("some more text");
 
     String text = buffer.toString();
     assertEquals("e\r\nsome more text\r\n", text);
+
+    assertFalse(closed);
+    buffer = new StringBuilder();
+    response.close();
+    assertEquals("0\r\n\r\n", buffer.toString());
+    assertTrue(closed);
   }
 
   @Test
   public void testTwoChunks() throws Exception {
-    buffer = new StringBuffer();
+    buffer = new StringBuilder();
     response.add("one");
     response.add("two");
 
@@ -90,7 +96,7 @@ public class ChunkedResponseTest implements ResponseSender {
   @Test
   public void testSimpleClosing() throws Exception {
     assertFalse(closed);
-    buffer = new StringBuffer();
+    buffer = new StringBuilder();
     response.close();
     String text = buffer.toString();
     assertEquals("0\r\n\r\n", text);
@@ -100,16 +106,30 @@ public class ChunkedResponseTest implements ResponseSender {
   @Test
   public void testClosingInSteps() throws Exception {
     assertFalse(closed);
-    buffer = new StringBuffer();
+    buffer = new StringBuilder();
     response.closeChunks();
     assertEquals("0\r\n", buffer.toString());
     assertFalse(closed);
-    buffer = new StringBuffer();
+    buffer = new StringBuilder();
     response.closeTrailer();
     assertEquals("\r\n", buffer.toString());
     assertFalse(closed);
+    buffer = new StringBuilder();
+    response.close();
+    assertEquals("", buffer.toString());
+    assertTrue(closed);
+  }
+
+  @Test
+  public void testTrailerAndClose() throws Exception {
+    assertFalse(closed);
+    buffer = new StringBuilder();
+    response.add("a chunk");
+    response.addTrailingHeader("Some-Header", "someValue");
+    response.addTrailingHeader("Other-Header", "a value");
     response.close();
     assertTrue(closed);
+    assertEquals("7\r\na chunk\r\n0\r\nSome-Header: someValue\r\nOther-Header: a value\r\n\r\n", buffer.toString());
   }
 
   @Test
@@ -133,12 +153,14 @@ public class ChunkedResponseTest implements ResponseSender {
   @Test
   public void testTrailingHeaders() throws Exception {
     response.closeChunks();
-    buffer = new StringBuffer();
+    buffer = new StringBuilder();
     response.addTrailingHeader("Some-Header", "someValue");
     assertEquals("Some-Header: someValue\r\n", buffer.toString());
+    buffer = new StringBuilder();
     response.closeTrailer();
     response.close();
     assertTrue(closed);
+    assertEquals("\r\n", buffer.toString());
   }
 
   @Test

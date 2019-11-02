@@ -2,22 +2,22 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.TestExecutionException;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DecisionTable extends SlimTable {
   private static final String instancePrefix = "decisionTable";
   protected MethodExtractor setterMethodExtractor;
   protected MethodExtractor getterMethodExtractor;
   protected boolean baselineDecisionTable = false;
-  
+
 
   public DecisionTable(Table table, String id, SlimTestContext context) {
     super(table, id, context);
@@ -97,7 +97,7 @@ public class DecisionTable extends SlimTable {
       ArrayList<SlimAssertion> assertions = new ArrayList<>();
       for (int row = 2; row < table.getRowCount(); row++){
         assertions.addAll(callScenarioForRow(scenario, row));
-        assertions.addAll(callFunctions(row));
+        assertions.addAll(callFunctions(scenario, row));
       }
       return assertions;
     }
@@ -107,21 +107,24 @@ public class DecisionTable extends SlimTable {
       return scenario.call(getArgumentsForRow(row), DecisionTable.this, row);
     }
 
-    private List<SlimAssertion> callFunctions(int row) {
+    private List<SlimAssertion> callFunctions(ScenarioTable scenario, int row) throws SyntaxError {
         List<SlimAssertion> instructions = new ArrayList<>();
         for (String functionName : funcStore.getLeftToRightAndResetColumnNumberIterator()) {
-          instructions.add(callFunctionInRow(functionName, row));
+          instructions.add(callFunctionInRow(scenario, functionName, row));
         }
         return instructions;
       }
 
-      private SlimAssertion callFunctionInRow(String functionName, int row) {
+      private SlimAssertion callFunctionInRow(ScenarioTable scenario, String functionName, int row) throws SyntaxError {
         int col = funcStore.getColumnNumber(functionName);
         String name = Disgracer.disgraceMethodName(functionName);
-        String assignedSymbol = ifSymbolAssignment(col, row);
+        if (!scenario.getOutputs().contains(name)) {
+          throw new SyntaxError(String.format("The argument %s is not an output of the scenario.", name));
+        }
+        String assignedSymbol = isSymbolAssignment(col, row);
         SlimAssertion assertion;
         if (assignedSymbol != null) {
-        	assertion= makeAssertion(callAndAssign(assignedSymbol, "scriptTable" + "Actor", "cloneSymbol", "$"+name),
+        	assertion= makeAssertion(callAndAssign(assignedSymbol, getTestContext().getCurrentScriptActor(), "cloneSymbol", "$"+name),
         			new ReturnedSymbolExpectation(col, row, name, assignedSymbol));
         } else {
           assertion = makeAssertion(Instruction.NOOP_INSTRUCTION, new ReturnedSymbolExpectation(getDTCellContents(col, row), col, row, name));
@@ -206,7 +209,7 @@ public class DecisionTable extends SlimTable {
 
     private SlimAssertion callFunctionInRow(String functionName, int row) {
       int col = funcStore.getColumnNumber(functionName);
-      String assignedSymbol = ifSymbolAssignment(col, row);
+      String assignedSymbol = isSymbolAssignment(col, row);
       SlimAssertion assertion;
 
       Object[] args = new Object[] {};

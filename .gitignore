@@ -1,4 +1,6 @@
+bin
 build
+out
 lib/*
 .gradle
 .classpath
@@ -15,11 +17,13 @@ desktop.ini
 inst.log
 velocity.log*
 fitserverSentinel*
+testHistoryDirectory/
 tmp/*
 FitNesseRoot/properties
 FitNesseRoot/ErrorLogs/*
 FitNesseRoot/files/testResults/*
 FitNesseRoot/RecentChanges*
+FitNesseRoot/RerunLastFailures.wiki
 junit*.properties
 FitNesseRoot/updateDoNotCopyOverList
 FitNesseRoot/updateList

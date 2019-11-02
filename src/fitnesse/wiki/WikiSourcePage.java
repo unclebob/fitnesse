@@ -1,11 +1,15 @@
-package fitnesse.wikitext.parser;
+package fitnesse.wiki;
 
-import fitnesse.wiki.*;
-import org.apache.commons.lang.StringUtils;
+import fitnesse.wikitext.parser.Maybe;
+import fitnesse.wikitext.parser.SourcePage;
+import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.parser.SymbolType;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 public class WikiSourcePage implements SourcePage {
     private WikiPage page;
@@ -17,17 +21,17 @@ public class WikiSourcePage implements SourcePage {
 
     @Override
     public String getFullName() {
-        return page.getPageCrawler().getFullPath().toString();
+        return page.getFullPath().toString();
     }
 
     @Override
     public String getPath() {
-        return page.getPageCrawler().getFullPath().parentPath().toString();
+        return page.getFullPath().parentPath().toString();
     }
 
     @Override
     public String getFullPath() {
-        return page.getPageCrawler().getFullPath().toString();
+        return page.getFullPath().toString();
     }
 
     @Override
@@ -57,7 +61,7 @@ public class WikiSourcePage implements SourcePage {
         PageCrawler crawler = page.getPageCrawler();
         WikiPage ancestor = crawler.findAncestorWithName(target);
         if (ancestor != null) {
-            pathElements[0] = PathParser.render(ancestor.getPageCrawler().getFullPath());
+            pathElements[0] = PathParser.render(ancestor.getFullPath());
           return "." + StringUtils.join(Arrays.asList(pathElements), ".");
         }
         return "." + targetName;
@@ -127,4 +131,10 @@ public class WikiSourcePage implements SourcePage {
     public int compareTo(SourcePage other) {
         return getName().compareTo(other.getName());
     }
+
+  @Override
+  public List<Symbol> getSymbols(final SymbolType symbolType) {
+    return WikiPageUtil.getSymbols(page, symbolType);
+  }
+
 }

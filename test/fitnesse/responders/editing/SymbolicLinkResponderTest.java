@@ -14,7 +14,6 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import fitnesse.wiki.fs.FileBasedWikiPage;
-import fitnesse.wiki.fs.FileSystemPage;
 import fitnesse.wiki.fs.MemoryFileSystem;
 import fitnesse.wiki.fs.WikiFilePage;
 

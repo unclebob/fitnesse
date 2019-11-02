@@ -27,7 +27,7 @@ public class ShutdownResponder implements SecureResponder {
     html.setPageTitle(new PageTitle("Shutdown"));
 
     html.setMainTemplate("shutdownPage.vm");
-    response.setContent(html.html());
+    response.setContent(html.html(request));
 
     Thread shutdownThread = new Thread() {
       @Override

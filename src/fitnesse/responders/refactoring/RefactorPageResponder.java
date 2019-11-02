@@ -2,27 +2,31 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.components.TraversalListener;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.html.template.HtmlPage;
-import fitnesse.html.template.PageTitle;
-import fitnesse.wiki.*;
+import fitnesse.wiki.NoPruningStrategy;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperty;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RefactorPageResponder implements SecureResponder {
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     String resource = request.getResource();
-
     String tags = "";
     WikiPage wikiPage = null;
     if(context.getRootPage() != null){
@@ -48,25 +52,25 @@ public class RefactorPageResponder implements SecureResponder {
       page.put("suiteMap", collectPageNames(wikiPage, context.getRootPage()));
     }
     SimpleResponse response = new SimpleResponse();
-    response.setContent(page.html());
+    response.setContent(page.html(request));
     return response;
   }
 
   List<String> collectPageNames(final WikiPage thisPage, WikiPage rootPage) {
     final List<String> pageNames = new ArrayList<>();
     if (thisPage != null) {
-      final WikiPagePath thisPagePath = thisPage.getPageCrawler().getFullPath();
+      final WikiPagePath thisPagePath = thisPage.getFullPath();
       rootPage.getPageCrawler().traverse(new TraversalListener<WikiPage>() {
 
         @Override
         public void process(WikiPage page) {
-          WikiPagePath pagePath = page.getPageCrawler().getFullPath();
+          WikiPagePath pagePath = page.getFullPath();
           pagePath.makeAbsolute();
           if (!thisPagePath.equals(pagePath) && !pagePath.isEmpty()) {
             pageNames.add(pagePath.toString());
           }
         }
-      });
+      }, new NoPruningStrategy());
     }
     return pageNames;
   }

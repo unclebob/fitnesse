@@ -1,127 +1,170 @@
 package fitnesse.wiki.search;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import fitnesse.components.TraversalListener;
+import fitnesse.wiki.HitCollector;
+import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.InMemoryPage;
-
 import org.junit.Before;
 import org.junit.Test;
 
 
-public class WhereUsedPageFinderTest implements TraversalListener<WikiPage> {
+public class WhereUsedPageFinderTest {
   private WikiPage root;
   private WikiPage pageOne;
   private WikiPage pageTwo;
   private WikiPage pageThree;
   private WikiPage pageTwoChild;
+  private WikiPage pageTwoChild2;
 
-  private List<WikiPage> hits = new ArrayList<>();
-
-  @Override
-  public void process(WikiPage page) {
-    hits.add(page);
-  }
+  private HitCollector hits = new HitCollector();
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     root = InMemoryPage.makeRoot("RooT");
     pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "this is page one, uncle of PageTwo.ChildPage");
     pageTwo = WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "I am Page Two my brother is PageOne. I have a >ChildPage. (and SomeMissingPage)");
     pageThree = WikiPageUtil.addPage(root, PathParser.parse("PageThree"), "This is !-PageThree-!, I Have \n!include PageTwo");
     pageTwoChild = WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildPage"), "I am Child page, my uncle is .PageOne ");
-
-    hits.clear();
+    pageTwoChild2 = WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildPage2"), "I am another Child page");
   }
 
   @Test
-  public void testFindReferencingPagesOnSiblingAndChild() throws Exception {
-    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageOne, this);
+  public void testFindReferencingPagesOnSiblingAndChild() {
+    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageOne, hits);
     whereUsed.search(root);
-    assertEquals(2, hits.size());
-    assertTrue(hits.contains(pageTwo));
-    assertTrue(hits.contains(pageTwoChild));
+    hits.assertPagesFound(pageTwo.getName(), pageTwoChild.getName());
   }
 
   @Test
-  public void testFindReferencingPagesOnSibling() throws Exception {
-    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageTwo, this);
+  public void testFindReferencingPagesOnSibling() {
+    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageTwo, hits);
     whereUsed.search(root);
-    assertEquals(1, hits.size());
-    assertEquals(pageThree, hits.get(0));
+    hits.assertPagesFound(pageThree.getName());
   }
 
   @Test
-  public void testFindReferencingPagesNotReferenced() throws Exception {
-    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, this);
+  public void testFindReferencingPagesNotReferenced() {
+    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, hits);
     whereUsed.search(root);
-    assertEquals(0, hits.size());
+    hits.assertPagesFound();
   }
 
   @Test
-  public void testFindReferencingPagesFromChild() throws Exception {
-    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageTwoChild, this);
+  public void testFindReferencingPagesFromChild() {
+    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageTwoChild, hits);
     whereUsed.search(root);
-    assertEquals(2, hits.size());
-    assertTrue(hits.contains(pageOne));
-    assertTrue(hits.contains(pageTwo));
+    hits.assertPagesFound(pageOne.getName(), pageTwo.getName());
   }
 
   @Test
-  public void testObserving() throws Exception {
-    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageOne, this);
+  public void testObserving() {
+    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageOne, hits);
     whereUsed.search(root);
-    assertEquals(2, hits.size());
+    hits.assertPagesFound(pageTwo.getName(), pageTwoChild.getName());
   }
 
   @Test
-  public void testOnlyOneReferencePerPage() throws Exception {
-    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, this);
+  public void testOnlyOneReferencePerPage() {
+    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, hits);
     WikiPage newPage = WikiPageUtil.addPage(root, PathParser.parse("NewPage"), "one reference to PageThree.  Two reference to PageThree");
     whereUsed.search(root);
-    assertEquals(1, hits.size());
-    assertEquals(newPage, hits.get(0));
+    hits.assertPagesFound(newPage.getName());
   }
 
   @Test
-  public void testWordsNotFoundInPreprocessedText() throws Exception {
-    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, this);
+  public void testWordsNotFoundInPreprocessedText() {
+    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, hits);
     WikiPageUtil.addPage(root, PathParser.parse("NewPage"), "{{{ PageThree }}}");
     whereUsed.search(root);
-    assertEquals(0, hits.size());
+    hits.assertPagesFound();
   }
 
   @Test
-  public void testFindReferencingPagesWithLinksWithAlternateText() throws Exception {
-    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, this);
+  public void testFindReferencingPagesWithLinksWithAlternateText() {
+    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, hits);
     WikiPage newPage = WikiPageUtil.addPage(root, PathParser.parse("NewPage"), "I enjoy being a sibling of [[the third page][PageThree]]");
     whereUsed.search(root);
-    assertEquals(1, hits.size());
-    assertEquals(newPage, hits.get(0));
+    hits.assertPagesFound(newPage.getName());
   }
 
   @Test
-  public void pleaseMindPagesWithSuffixAreNotFound() throws Exception {
-    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, this);
+  public void pleaseMindPagesWithSuffixAreNotFound() {
+    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, hits);
     WikiPage newPage = WikiPageUtil.addPage(root, PathParser.parse("NewPage"), "I enjoy being a sibling of [[the third page][PageThree?edit]]");
     whereUsed.search(root);
-    assertEquals(1, hits.size());
-    assertEquals(newPage, hits.get(0));
+    hits.assertPagesFound(newPage.getName());
   }
 
   @Test
-  public void testFinderShouldDealWithOtherLinks() throws Exception {
-    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, this);
+  public void testFinderShouldDealWithOtherLinks() {
+    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, hits);
     WikiPage newPage = WikiPageUtil.addPage(root, PathParser.parse("NewPage"), "I enjoy being a sibling of [[the third page][http://fitnesse.org]]");
     whereUsed.search(root);
-    assertEquals(0, hits.size());
+    hits.assertPagesFound();
   }
 
+  @Test
+  public void testFinderShouldFindFullSymbolicLinks() {
+    PageData data = pageOne.getData();
+    WikiPageProperty suiteProperty = data.getProperties().set(SymbolicPage.PROPERTY_NAME);
+    suiteProperty.set("SymbThree", "." + pageThree.getFullPath().toString());
+    pageOne.commit(data);
 
+    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, hits);
+    whereUsed.search(root);
+    hits.assertPagesFound(pageOne.getName());
+  }
+
+  @Test
+  public void testFinderShouldFindSibilingSymbolicLinks() {
+    PageData data = pageTwoChild2.getData();
+    WikiPageProperty suiteProperty = data.getProperties().set(SymbolicPage.PROPERTY_NAME);
+    suiteProperty.set("SymbThree", pageTwoChild.getName());
+    pageTwoChild2.commit(data);
+
+    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageTwoChild, hits);
+    whereUsed.search(root);
+    hits.assertPagesFound(pageOne.getName(), pageTwo.getName(), pageTwoChild2.getName());
+  }
+
+  @Test
+  public void testFinderShouldFindUncleSymbolicLinks() {
+    PageData data = pageTwoChild.getData();
+    WikiPageProperty suiteProperty = data.getProperties().set(SymbolicPage.PROPERTY_NAME);
+    suiteProperty.set("SymbThree", "<" + pageThree.getFullPath().toString());
+    pageTwoChild.commit(data);
+
+    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, hits);
+    whereUsed.search(root);
+    hits.assertPagesFound(pageTwoChild.getName());
+  }
+
+  @Test
+  public void testFinderCanHandleBrokenLinks() {
+    PageData data = pageTwoChild.getData();
+    WikiPageProperty suiteProperty = data.getProperties().set(SymbolicPage.PROPERTY_NAME);
+    suiteProperty.set("SymbThree", "NonExistingPage");
+    pageTwoChild.commit(data);
+
+    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, hits);
+    whereUsed.search(root);
+    hits.assertPagesFound();
+  }
+
+  @Test
+  public void testFinderShouldFindUncleSymbolicLinksOnce() {
+    PageData data = pageTwoChild.getData();
+    WikiPageProperty suiteProperty = data.getProperties().set(SymbolicPage.PROPERTY_NAME);
+    suiteProperty.set("SymbThree", "<" + pageThree.getFullPath().toString());
+    suiteProperty.set("SymbThree2", "<" + pageThree.getFullPath().toString());
+    pageTwoChild.commit(data);
+
+    WhereUsedPageFinder whereUsed = new WhereUsedPageFinder(pageThree, hits);
+    whereUsed.search(root);
+    hits.assertPagesFound(pageTwoChild.getName());
+  }
 }

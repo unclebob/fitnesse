@@ -2,9 +2,10 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.WikiImportProperty;
+import fitnesse.wiki.WikiPageProperty;
+import fitnesse.wiki.WikiSourcePage;
 import util.GracefulNamer;
 
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class ContentsItemBuilder {
         link.addAttribute("href", buildReference(page));
         link.addAttribute("class", getBooleanPropertiesClasses(page));
         listItem.add(link);
-        String help = page.getProperty(PageData.PropertyHELP);
+        String help = page.getProperty(WikiPageProperty.HELP);
         if (!help.isEmpty()) {
             if (hasOption("-h", Contents.HELP_TOC)) {
                 listItem.add(HtmlUtil.makeSpanTag("pageHelp", ": " + help));
@@ -89,7 +90,7 @@ public class ContentsItemBuilder {
         }
 
         if (hasOption("-f", Contents.FILTER_TOC)) {
-            String filters = page.getProperty(PageData.PropertySUITES);
+            String filters = page.getProperty(WikiPageProperty.SUITES);
             if (!filters.isEmpty()) itemText += " (" + filters + ")";
         }
 
@@ -137,7 +138,7 @@ public class ContentsItemBuilder {
         if (page != null && page instanceof WikiSourcePage){
             if (((WikiSourcePage)page).hasSymbolicLinkChild(sourcePage.getName())) result += propChars.charAt(3);
         }
-        if (sourcePage.hasProperty(PageData.PropertyPRUNE)) result += propChars.charAt(4);
+        if (sourcePage.hasProperty(WikiPageProperty.PRUNE)) result += propChars.charAt(4);
         return result;
     }
     private String getBooleanPropertiesClasses(SourcePage sourcePage) {
@@ -152,7 +153,7 @@ public class ContentsItemBuilder {
         	result += "static";
         }
         if (sourcePage.hasProperty(WikiImportProperty.PROPERTY_NAME)) result += " linked";
-        if (sourcePage.hasProperty(PageData.PropertyPRUNE)) result += " pruned";
+        if (sourcePage.hasProperty(WikiPageProperty.PRUNE)) result += " pruned";
         return result;
     }
 }

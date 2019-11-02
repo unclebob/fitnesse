@@ -2,34 +2,34 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.List;
-
-import fitnesse.components.TraversalListener;
 import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
-public class PageCrawlerTest implements TraversalListener<WikiPage> {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+public class PageCrawlerTest {
   private WikiPage root;
   private WikiPage page1;
   private WikiPage page2;
   private WikiPage child1;
   private WikiPage child2;
   private WikiPage grandChild1;
-  private PageCrawlerImpl crawler;
+  private PageCrawler crawler;
   private WikiPagePath page1Path;
   private WikiPagePath child1FullPath;
   private WikiPagePath page2Path;
   private WikiPagePath grandChild1FullPath;
 
+  private HitCollector hits = new HitCollector();
+
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    crawler = new PageCrawlerImpl(root);
+    crawler = new PageCrawler(root);
 
     page1Path = PathParser.parse("PageOne");
     page2Path = PathParser.parse("PageTwo");
@@ -50,7 +50,7 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
 
   @Test
   public void testPageExistsUsingPath() throws Exception {
-    PageCrawler page1Crawler = new PageCrawlerImpl(page1);
+    PageCrawler page1Crawler = new PageCrawler(page1);
     assertTrue(page1Crawler.pageExists(PathParser.parse("ChildOne")));
     assertTrue(crawler.pageExists(child1FullPath));
     assertTrue(crawler.pageExists(grandChild1FullPath));
@@ -83,10 +83,10 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
 
   @Test
   public void testGetFullPath() throws Exception {
-    assertEquals(page1Path, page1.getPageCrawler().getFullPath());
-    assertEquals(page2Path, page2.getPageCrawler().getFullPath());
-    assertEquals(child1FullPath, child1.getPageCrawler().getFullPath());
-    assertEquals(grandChild1FullPath, grandChild1.getPageCrawler().getFullPath());
+    assertEquals(page1Path, page1.getFullPath());
+    assertEquals(page2Path, page2.getFullPath());
+    assertEquals(child1FullPath, child1.getFullPath());
+    assertEquals(grandChild1FullPath, grandChild1.getFullPath());
     assertEquals(PathParser.parse(""), crawler.getFullPath());
   }
 
@@ -115,7 +115,7 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
   @Test
   public void testAddPage() throws Exception {
     WikiPage page = WikiPageUtil.addPage(page1, PathParser.parse("SomePage"));
-    assertEquals(PathParser.parse("PageOne.SomePage"), page.getPageCrawler().getFullPath());
+    assertEquals(PathParser.parse("PageOne.SomePage"), page.getFullPath());
     assertEquals(page1, page.getParent());
   }
 
@@ -134,7 +134,7 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("WikiMail.BadSubject0123"), "");
     assertNotNull(page);
     assertEquals("BadSubject0123", page.getName());
-    assertEquals(PathParser.parse("WikiMail.BadSubject0123"), page.getPageCrawler().getFullPath());
+    assertEquals(PathParser.parse("WikiMail.BadSubject0123"), page.getFullPath());
   }
 
   @Test
@@ -146,14 +146,10 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
     assertEquals("ChildOne.GrandChildOne", page1.getPageCrawler().getRelativeName(grandChild1));
   }
 
-  Set<String> traversedPages = new HashSet<>();
-
   @Test
   public void testTraversal() throws Exception {
-    crawler.traverse(this);
-    assertEquals(6, traversedPages.size());
-    assertTrue(traversedPages.contains("PageOne"));
-    assertTrue(traversedPages.contains("ChildOne"));
+    crawler.traverse(hits, new NoPruningStrategy());
+    hits.assertPagesFound("RooT", "PageOne", "ChildOne", "GrandChildOne", "ChildTwo", "PageTwo");
   }
 
   @Test
@@ -162,10 +158,9 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
     data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymLink", page2.getName());
     page1.commit(data);
 
-    crawler.traverse(this);
-    assertEquals(7, traversedPages.size());
-
-    assertTrue(traversedPages.contains("SymLink"));
+    crawler.traverse(hits, new NoPruningStrategy());
+    hits.assertPagesFound("RooT", "PageOne", "ChildOne", "GrandChildOne", "ChildTwo",
+            "SymLink", "PageTwo");
   }
 
   @Test
@@ -174,12 +169,10 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
     data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymLink", "." + page1.getName());
     child1.commit(data);
 
-    crawler = new PageCrawlerImpl(page1);
-    crawler.traverse(this);
-
-    assertEquals(traversedPages.toString(), 5, traversedPages.size());
-
-    assertTrue(traversedPages.contains("SymLink"));
+    crawler = new PageCrawler(page1);
+    crawler.traverse(hits, new NoPruningStrategy());
+    hits.assertPagesFound("PageOne", "ChildOne", "GrandChildOne", "SymLink",
+            "ChildOne", "ChildTwo", "ChildTwo");
   }
 
   @Test
@@ -187,21 +180,7 @@ public class PageCrawlerTest implements TraversalListener<WikiPage> {
     WikiPage grandUnclePage = WikiPageUtil.addPage(root, PathParser.parse("UnclePage"), "");
     WikiPage unclePage = WikiPageUtil.addPage(root, PathParser.parse("PageOne.UnclePage"), "");
     WikiPage brotherPage = WikiPageUtil.addPage(root, PathParser.parse("PageOne.ChildOne.UnclePage"), "");
-    final List<WikiPage> uncles = new ArrayList<>();
-    grandChild1.getPageCrawler().traverseUncles("UnclePage", new TraversalListener<WikiPage>() {
-      @Override
-      public void process(WikiPage page) {
-        uncles.add(page);
-      }
-    });
-    assertTrue(uncles.contains(grandUnclePage));
-    assertTrue(uncles.contains(unclePage));
-    assertTrue(uncles.contains(brotherPage));
-
-  }
-
-  @Override
-  public void process(WikiPage page) {
-    traversedPages.add(page.getName());
+    grandChild1.getPageCrawler().traverseUncles("UnclePage", hits);
+    hits.assertPagesFound(grandUnclePage.getName(), unclePage.getName(), brotherPage.getName());
   }
 }

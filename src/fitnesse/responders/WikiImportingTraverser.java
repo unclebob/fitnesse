@@ -1,13 +1,13 @@
 package fitnesse.responders;
 
-import java.io.IOException;
-
 import fitnesse.components.TraversalListener;
 import fitnesse.components.Traverser;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+
+import java.io.IOException;
 
 public class WikiImportingTraverser implements WikiImporterClient, Traverser<Object> {
   private final WikiImporter importer;
@@ -23,7 +23,7 @@ public class WikiImportingTraverser implements WikiImporterClient, Traverser<Obj
     this.importer = wikiImporter;
     this.page = page;
     this.data = page.getData();
-    this.pagePath = page.getPageCrawler().getFullPath();
+    this.pagePath = page.getFullPath();
     WikiImportProperty importProperty = WikiImportProperty.createFrom(data.getProperties());
     if (importProperty != null) {
       this.remoteWikiUrl = importProperty.getSourceUrl();

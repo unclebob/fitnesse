@@ -11,6 +11,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -31,14 +32,14 @@ public class ContentFilterResponderTest {
 
   @Test
   public void passThroughIfContentIsAcceptable() throws Exception {
-    when(contentFilter.isContentAcceptable(anyString(), anyString())).thenReturn(true);
+    when(contentFilter.isContentAcceptable(isNull(), anyString())).thenReturn(true);
     Response response = filter.makeResponse(context, request);
     assertThat(response, is(nullValue()));
   }
 
   @Test
   public void errorResponseIfContentIsNotAcceptable() throws Exception {
-    when(contentFilter.isContentAcceptable(anyString(), anyString())).thenReturn(false);
+    when(contentFilter.isContentAcceptable(isNull(), anyString())).thenReturn(false);
     Response response = filter.makeResponse(context, request);
 
     assertThat(response, instanceOf(SimpleResponse.class));

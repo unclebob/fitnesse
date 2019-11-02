@@ -44,6 +44,7 @@ public class FitNesseContext {
   private final String rootDirectoryName;
   public final String contextRoot;
   public final ResponderFactory responderFactory;
+  public final String theme;
   public final PageFactory pageFactory;
 
   public final SystemVariableSource variableSource;
@@ -59,7 +60,9 @@ public class FitNesseContext {
                             Authenticator authenticator, Logger logger,
                             TestSystemFactory testSystemFactory, TestSystemListener testSystemListener,
                             FormatterFactory formatterFactory,
-                            Properties properties) {
+                            Properties properties,
+                            SystemVariableSource variableSource,
+                            String theme) {
     super();
     this.version = version;
     this.wikiPageFactory = wikiPageFactory;
@@ -75,8 +78,9 @@ public class FitNesseContext {
     this.testSystemListener = testSystemListener;
     this.formatterFactory = formatterFactory;
     this.properties = properties;
+    this.theme = theme;
     responderFactory = new ResponderFactory(getRootPagePath());
-    variableSource = new SystemVariableSource(properties);
+    this.variableSource = variableSource;
     fitNesse = new FitNesse(this);
     pageFactory = new PageFactory(this);
   }

@@ -1,13 +1,12 @@
 package fitnesse.slim.converters;
 
+import fitnesse.slim.Converter;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-import fitnesse.slim.Converter;
-import fitnesse.util.StringUtils;
-
-public class GenericArrayConverter<T> implements Converter<Object> {
+public class GenericArrayConverter<T> extends ConverterBase<Object> {
   private final Class<T> componentClass;
   private final Converter<T> componentConverter;
 
@@ -18,10 +17,7 @@ public class GenericArrayConverter<T> implements Converter<Object> {
 
   @Override
   @SuppressWarnings("unchecked")
-  public String toString(Object array) {
-    if (array == null)
-      return NULL_VALUE;
-
+  public String getString(Object array) {
     int size = Array.getLength(array);
     List<String> ret = new ArrayList<>(size);
     for (int i = 0; i < size; i++) {
@@ -43,10 +39,7 @@ public class GenericArrayConverter<T> implements Converter<Object> {
   }
 
   @Override
-  public Object fromString(String arg) {
-    if (StringUtils.isBlank(arg))
-      return null;
-
+  public Object getObject(String arg) {
     String[] strings = ListConverterHelper.fromStringToArrayOfStrings(arg);
     Object array = Array.newInstance(componentClass, strings.length);
     for (int i = 0; i < strings.length; i++) {

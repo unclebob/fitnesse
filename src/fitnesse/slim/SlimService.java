@@ -13,6 +13,7 @@ import java.util.concurrent.Executors;
 import fitnesse.slim.fixtureInteraction.FixtureInteraction;
 import fitnesse.socketservice.PlainServerSocketFactory;
 import fitnesse.socketservice.ServerSocketFactory;
+import fitnesse.socketservice.SslParameters;
 import fitnesse.socketservice.SslServerSocketFactory;
 import util.CommandLine;
 
@@ -82,7 +83,7 @@ public class SlimService {
       }
     } else {
       ServerSocketFactory serverSocketFactory = options.useSSL ? new SslServerSocketFactory(
-          true, options.sslParameterClassName) : new PlainServerSocketFactory();
+          true, SslParameters.createSslParameters(options.sslParameterClassName)) : new PlainServerSocketFactory();
       socket = serverSocketFactory.createServerSocket(options.port);
     }
     try {
