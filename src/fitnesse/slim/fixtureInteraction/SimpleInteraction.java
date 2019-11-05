@@ -3,11 +3,15 @@ package fitnesse.slim.fixtureInteraction;
 import fitnesse.slim.ConverterSupport;
 import fitnesse.slim.MethodExecutionResult;
 import fitnesse.slim.SlimError;
+import fitnesse.slim.SlimException;
 import fitnesse.slim.SlimServer;
+import fitnesse.slim.StackTraceEnricher;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import static fitnesse.util.StringUtils.swapCaseOfFirstLetter;
@@ -23,19 +27,35 @@ public class SimpleInteraction implements FixtureInteraction {
       throw new RuntimeException(e);
     }
   }
+  
+// path cache is required for invoking static methods
+private List<String> pathsCache = new ArrayList<>();
 
   @Override
   public Object createInstance(List<String> paths, String className, Object[] args)
           throws IllegalArgumentException, InstantiationException,
-          IllegalAccessException, InvocationTargetException {
-    Class<?> k = searchPathsForClass(paths, className);
-    Constructor<?> constructor = getConstructor(k, args);
-    if (constructor == null) {
-      throw new SlimError(String.format("message:<<%s %s>>",
-              SlimServer.NO_CONSTRUCTOR, className));
+          IllegalAccessException, InvocationTargetException{
+    pathsCache = paths;
+    Class<?> k = null;
+    try{
+      k = searchPathsForClass(paths, className);
+    }
+    catch (SlimError errorClassNotFound){
+      try {
+        MethodExecutionResult mER = invokeStaticMethod(className, paths, args);
+        if(mER != null) return mER.getObject();
+      } catch (Throwable e) {
+        throw new InstantiationException(String.format("Failed to call static method '%s': %s", className,  new StringBuilder().append("\nCaused by: ").append(e.getClass().getName()).append(": ").append(e.getMessage()) + new StackTraceEnricher().getStackTraceAsString(e)));
+      }
+      throw errorClassNotFound;
     }
 
-    return newInstance(args, constructor);
+	Constructor<?> constructor = getConstructor(k, args);
+	if (constructor == null) {
+		throw new SlimError(String.format("message:<<%s %s>>",
+          SlimServer.NO_CONSTRUCTOR, className));
+	}
+	return newInstance(args, constructor);
   }
 
   private Object newInstance(Object[] args, Constructor<?> constructor)
@@ -70,7 +90,8 @@ public class SimpleInteraction implements FixtureInteraction {
 
   private Class<?> findClassInPaths(List<String> paths, String className) {
     Class<?> k = null;
-
+    
+    if (paths == null) return null;
     for (int i = 0; i < paths.size() && k == null; i++)
       k = getClass(paths.get(i) + "." + className);
 
@@ -157,8 +178,10 @@ public class SimpleInteraction implements FixtureInteraction {
     try {
       //from fixture call we get only String values
       return ConverterSupport.convertArgs(args, argumentTypes);
-    } catch (SlimError ex) {
+    } catch (Throwable ex) {
+      // Conversion failed, either no converter or data is not correctly formatted
       //swallow the exception silently, as for this step it's not relevant
+      // return the not converted args list, this ensures this constructor will only be picked if no better constructor is found
       return args;
     }
   }
@@ -184,8 +207,29 @@ public class SimpleInteraction implements FixtureInteraction {
     if (method != null) {
       return this.invokeMethod(instance, method, args);
     }
+    else{
+    	MethodExecutionResult mER = invokeStaticMethod(methodName, pathsCache, args );
+    	if (mER != null) return mER;
+    }
     return MethodExecutionResult.noMethod(methodName, instance.getClass(), args.length);
   }
+
+private MethodExecutionResult invokeStaticMethod(String methodName, List<String> paths, Object... args) throws Throwable {
+	Method method;
+	int i = methodName.lastIndexOf('.');
+	if (i >=0){
+		// Static Method
+		String className = methodName.substring(0, i);
+		String staticMethodName = methodName.substring(i+1);
+
+		Class<?> clazz = searchPathsForClass(paths, className);
+		if (clazz != null){
+			method = findMatchingMethod(new String[]{staticMethodName}, clazz.getMethods(), args.length);
+			return this.invokeMethod(null, method, args);
+		}
+	}
+	return null;
+}
 
   protected Method findMatchingMethod(String methodName, Object instance, Object... args) {
     String[] methodNames = new String[]{methodName, swapCaseOfFirstLetter(methodName)};
@@ -262,7 +306,7 @@ public class SimpleInteraction implements FixtureInteraction {
       }
     } catch (IllegalArgumentException e) {
       throw new RuntimeException("Bad call of: " + method.getDeclaringClass().getName() + "." + method.getName()
-              + ". On instance of: " + instance.getClass().getName(), e);
+              + ". On instance of: " + ((instance == null) ? "null" : instance.getClass().getName()), e);
     }
   }
 
