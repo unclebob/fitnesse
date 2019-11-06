@@ -3,7 +3,6 @@ package fitnesse.slim.fixtureInteraction;
 import fitnesse.slim.ConverterSupport;
 import fitnesse.slim.MethodExecutionResult;
 import fitnesse.slim.SlimError;
-import fitnesse.slim.SlimException;
 import fitnesse.slim.SlimServer;
 import fitnesse.slim.StackTraceEnricher;
 
@@ -40,12 +39,16 @@ private List<String> pathsCache = new ArrayList<>();
     try{
       k = searchPathsForClass(paths, className);
     }
-    catch (SlimError errorClassNotFound){
+    catch (SlimError errorClassNotFound) {
       try {
         MethodExecutionResult mER = invokeStaticMethod(className, paths, args);
-        if(mER != null) return mER.getObject();
+        if (mER != null) {
+            return mER.getObject();
+        }
       } catch (Throwable e) {
-        throw new InstantiationException(String.format("Failed to call static method '%s': %s", className,  new StringBuilder().append("\nCaused by: ").append(e.getClass().getName()).append(": ").append(e.getMessage()) + new StackTraceEnricher().getStackTraceAsString(e)));
+        throw new InstantiationException(new StringBuilder().append("Failed to call static method '").append(className).append("': ")
+          .append("\nCaused by: ").append(e.getClass().getName()).append(": ")
+          .append(e.getMessage()).append( new StackTraceEnricher().getStackTraceAsString(e)).toString());
       }
       throw errorClassNotFound;
     }
@@ -91,7 +94,9 @@ private List<String> pathsCache = new ArrayList<>();
   private Class<?> findClassInPaths(List<String> paths, String className) {
     Class<?> k = null;
     
-    if (paths == null) return null;
+    if (paths == null) {
+      return null;
+    }
     for (int i = 0; i < paths.size() && k == null; i++)
       k = getClass(paths.get(i) + "." + className);
 
@@ -206,29 +211,29 @@ private List<String> pathsCache = new ArrayList<>();
     Method method = findMatchingMethod(methodName, instance, args);
     if (method != null) {
       return this.invokeMethod(instance, method, args);
-    }
-    else{
-    	MethodExecutionResult mER = invokeStaticMethod(methodName, pathsCache, args );
-    	if (mER != null) return mER;
+    } else {
+      MethodExecutionResult mER = invokeStaticMethod(methodName, pathsCache, args );
+      if (mER != null) {
+        return mER;
+      }
     }
     return MethodExecutionResult.noMethod(methodName, instance.getClass(), args.length);
   }
 
-private MethodExecutionResult invokeStaticMethod(String methodName, List<String> paths, Object... args) throws Throwable {
-	Method method;
-	int i = methodName.lastIndexOf('.');
-	if (i >=0){
-		// Static Method
-		String className = methodName.substring(0, i);
-		String staticMethodName = methodName.substring(i+1);
-
-		Class<?> clazz = searchPathsForClass(paths, className);
-		if (clazz != null){
-			method = findMatchingMethod(new String[]{staticMethodName}, clazz.getMethods(), args.length);
-			return this.invokeMethod(null, method, args);
-		}
-	}
-	return null;
+  private MethodExecutionResult invokeStaticMethod(String methodName, List<String> paths, Object... args) throws Throwable {
+    Method method;
+    int i = methodName.lastIndexOf('.');
+    if (i >=0) {
+      // Static Method
+      String className = methodName.substring(0, i);
+      String staticMethodName = methodName.substring(i+1);
+      Class<?> clazz = searchPathsForClass(paths, className);
+      if (clazz != null) {
+        method = findMatchingMethod(new String[]{staticMethodName}, clazz.getMethods(), args.length);
+	return this.invokeMethod(null, method, args);
+      }
+    }
+    return null;
 }
 
   protected Method findMatchingMethod(String methodName, Object instance, Object... args) {
@@ -306,7 +311,7 @@ private MethodExecutionResult invokeStaticMethod(String methodName, List<String>
       }
     } catch (IllegalArgumentException e) {
       throw new RuntimeException("Bad call of: " + method.getDeclaringClass().getName() + "." + method.getName()
-              + ". On instance of: " + ((instance == null) ? "null" : instance.getClass().getName()), e);
+              + "." + ((instance == null) ? "" : " On instance of: " + instance.getClass().getName()), e);
     }
   }
 
