@@ -2,14 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import fitnesse.html.HtmlUtil;
+import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestResult;
+import fitnesse.testsystems.slim.results.SlimExceptionResult;
+import fitnesse.testsystems.slim.results.SlimTestResult;
+import fitnesse.testsystems.slim.tables.SyntaxError;
 import org.htmlparser.Node;
 import org.htmlparser.Tag;
 import org.htmlparser.nodes.TextNode;
@@ -20,13 +19,13 @@ import org.htmlparser.tags.TableRow;
 import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
 
-import fitnesse.html.HtmlUtil;
-import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionResult;
-import fitnesse.testsystems.TestResult;
-import fitnesse.testsystems.slim.results.SlimExceptionResult;
-import fitnesse.testsystems.slim.results.SlimTestResult;
-import fitnesse.testsystems.slim.tables.SyntaxError;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HtmlTable implements Table {
   private static final Logger LOG = Logger.getLogger(HtmlTable.class.getName());
@@ -420,8 +419,8 @@ public class HtmlTable implements Table {
                   HtmlUtil.escapeHTML(actual[2]),
                 HtmlUtil.escapeHTML(expected[0]) +
                   new HtmlDiffUtil.ExpectedBuilder(testResult.getActual(), expected[1])
-                    .setOpeningTag("</span><span class=\"diff\">")
-                    .setClosingTag("</span><span class=\"fail\">").build() +
+                    .setOpeningTag("<span class=\"diff\">")
+                    .setClosingTag("</span>").build() +
                   HtmlUtil.escapeHTML(expected[2]));
             }
           } else if ((testResult.hasActual() || testResult.hasExpected()) && testResult.hasMessage()) {
