@@ -1,5 +1,8 @@
 !2 ${FITNESSE_VERSION}
 
+!2 20191110
+ * Improved failure navigator at top-right after running tests: some tests were missed, others were counted twice. #1246
+
 !2 20190716
  * Fixed issue allowing multiple symbolic links to point from a single page the same target page ([[1234][https://github.com/unclebob/fitnesse/issues/1234]])
  * Allow 'Where Used' to also find pages having a symbolic link to the current page. ([[1237][https://github.com/unclebob/fitnesse/pull/1237]])
