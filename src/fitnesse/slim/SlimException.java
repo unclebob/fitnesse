@@ -1,9 +1,6 @@
 package fitnesse.slim;
 
 public class SlimException extends Exception {
-  private static final String PRETTY_PRINT_TAG_START = "message:<<";
-  private static final String PRETTY_PRINT_TAG_END = ">>";
-
   private final String tag;
   private final boolean prettyPrint;
 
@@ -84,7 +81,7 @@ public class SlimException extends Exception {
       sb.append(SlimServer.EXCEPTION_TAG);
     }
     if (this.prettyPrint) {
-      sb.append(PRETTY_PRINT_TAG_START);
+      sb.append(SlimVersion.PRETTY_PRINT_TAG_START);
     }
 
     if (tag != null && !tag.isEmpty()) {
@@ -96,7 +93,7 @@ public class SlimException extends Exception {
       sb.append(msg);
     }
     if (this.prettyPrint) {
-      sb.append(PRETTY_PRINT_TAG_END);
+      sb.append(SlimVersion.PRETTY_PRINT_TAG_END);
     }
 
     StackTraceEnricher enricher = new StackTraceEnricher();

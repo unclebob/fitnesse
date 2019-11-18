@@ -3,6 +3,7 @@ package fitnesse.slim.fixtureInteraction;
 import fitnesse.slim.ConverterSupport;
 import fitnesse.slim.MethodExecutionResult;
 import fitnesse.slim.SlimError;
+import fitnesse.slim.SlimException;
 import fitnesse.slim.SlimServer;
 import fitnesse.slim.StackTraceEnricher;
 
@@ -230,7 +231,11 @@ private List<String> pathsCache = new ArrayList<>();
       Class<?> clazz = searchPathsForClass(paths, className);
       if (clazz != null) {
         method = findMatchingMethod(new String[]{staticMethodName}, clazz.getMethods(), args.length);
-	return this.invokeMethod(null, method, args);
+        if (method != null) {
+	  return this.invokeMethod(null, method, args);
+        } else {
+            return MethodExecutionResult.noMethod(staticMethodName + "(static)", clazz, args.length);
+        }
       }
     }
     return null;
@@ -261,6 +266,7 @@ private List<String> pathsCache = new ArrayList<>();
     return method;
   }
 
+
   private boolean isMatchingMethod(Method method, String methodName, int nArgs) {
     boolean hasMatchingName = method.getName().equals(methodName);
     boolean hasMatchingArguments = method.getParameterTypes().length == nArgs;
@@ -268,10 +274,31 @@ private List<String> pathsCache = new ArrayList<>();
   }
 
   protected MethodExecutionResult invokeMethod(Object instance, Method method, Object[] args) throws Throwable {
-    Object[] convertedArgs = convertArgs(method, args);
-    Object retval = callMethod(instance, method, convertedArgs);
-    Class<?> retType = method.getReturnType();
-    return new MethodExecutionResult(retval, retType);
+      Object[] convertedArgs = null;
+      Object retval = null;
+      String methodName = method.getDeclaringClass().getName() + "." + MethodExecutionResult.methodToString(method)
+                          + "." + ((instance == null) ? "" : " On instance of: " + instance.getClass().getName());
+      Class<?> retType = method.getReturnType();
+      try {
+        convertedArgs = convertArgs(method, args);
+      } catch (SlimError e) {
+	throw e;
+	// TODO: create test cases for this to check that it works and is displayed correctly in the result
+	//throw new SlimException(e.getMessage()+ "\n\n"+ "You may want to check if the correct method signature has been identified by Slim:\n" + methodName + "\n", e, true);
+      } catch (Exception e) {
+	throw e;
+	// TODO: create test cases for this to check that it works and is displayed correctly in the result 
+        //throw new SlimError(e.getMessage()+ "\n\n"+ "You may want to check if the correct method signature has been identified by Slim:\n" + methodName + "\n", e);
+      }
+      try {
+        retval = callMethod(instance, method, convertedArgs);
+      } catch (Exception e) {
+        // We can't modify the exception text as it could be an exception coming from the SUT
+	// TODO print this only if there are at least to methods with the same name and number of parameters  
+        System.out.println("InvokeMethod failed during invocation, you may want to check if the correct method signature has been identified by Slim: "  + " : " + methodName);
+	throw e;
+      }
+      return new MethodExecutionResult(retval, retType);
   }
 
   protected Object[] convertArgs(Method method, Object[] args) {
@@ -312,6 +339,12 @@ private List<String> pathsCache = new ArrayList<>();
     } catch (IllegalArgumentException e) {
       throw new RuntimeException("Bad call of: " + method.getDeclaringClass().getName() + "." + method.getName()
               + "." + ((instance == null) ? "" : " On instance of: " + instance.getClass().getName()), e);
+    }
+    catch (Exception e){
+      String methodName = MethodExecutionResult.methodToString(method);
+      throw new RuntimeException("Exception when invoking: " + method.getDeclaringClass().getName() + "." + methodName
+              + "." + ((instance == null) ? "" : " On instance of: " + instance.getClass().getName()), e);
+      
     }
   }
 

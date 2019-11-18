@@ -95,7 +95,11 @@ public class SlimExceptionResult implements ExceptionResult {
       case COULD_NOT_INVOKE_CONSTRUCTOR:
         return "Could not invoke constructor for " + tokens[1];
       case NO_METHOD_IN_CLASS:
-        return String.format("Method %s not found in %s", tokens[1], tokens[2]);
+	if (tokens.length == 3){ // Legacy from Slim.Version <= 0.5 
+          return String.format("Method %s not found in %s", tokens[1], tokens[2]);
+	} else {
+	  return exceptionMessage.substring(exceptionMessage.indexOf(" ") + 1);
+	}
       case NO_CONSTRUCTOR:
         return String.format("Could not find constructor for %s", tokens[1]);
       case NO_CONVERTER_FOR_ARGUMENT_NUMBER:
