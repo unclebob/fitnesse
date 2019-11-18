@@ -35,9 +35,9 @@ ${exclamation}${minus}
 !4 called as method
 
 !| script | Boolean | 0 |
-| $x= | String.valueOf | 5 |
-| $s= | String.valueOf | aString and not a number |
-| $s= | String.valueOf | 9.8 |
+| $sPass= | String.valueOf | 5 |
+| $sFail= | String.valueOf | aString and not a number |
+| $sFail= | String.valueOf | 9.8 |
 
 
 

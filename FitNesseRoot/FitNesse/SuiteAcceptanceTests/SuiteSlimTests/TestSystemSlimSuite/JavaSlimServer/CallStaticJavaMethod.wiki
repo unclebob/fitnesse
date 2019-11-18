@@ -3,22 +3,19 @@ Test
 ---
 | import |
 | fitnesse.util |
+|java.time|
 
-!2 Static functions can be called in scripts of any object
+!2 Static methods can be called in scripts of any object and result can be assigned to slim symbols
 
 !| script | EchoFixture |
-|$d=|  DateTimeUtil.getDateFromString|12/31/1999 23:59:59|
-|check| echo |$d| Fri Dec 31 23:59:59 CET 1999|
+|show | java.time.temporal.ChronoUnit.values|
+|$CU_HOURS=|java.time.temporal.ChronoUnit.valueOf|HOURS|
 
+!3 Static methods can serve as factories to create objects for scripts
 
-!2 Static functions can serve as factories to create objects for scripts
-
-!|script|  DateTimeUtil.getDateFromString|11/30/2019 12:15:59|
-|check| to string|Sat Nov 30 12:15:59 CET 2019|
-|check| get class|class java.util.Date|
-|check | get year| 119|
-|check | get month| 10|
-|check | get date| 30|
-|check | get day| 6|
-|check | after| $d| true|
-|check | before| $d| false|
+!|script|Instant.parse|2007-12-03T10:15:30.00Z|
+|$I1=|get fixture|
+|$I2=|plusSeconds|7200|
+|check| until| $I2||$CU_HOURS|2|
+|$I3=|plusSeconds|-3600|
+|check| until| $I3||$CU_HOURS|-1|
