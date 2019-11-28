@@ -7,32 +7,36 @@ Test
 !define minus (-)
 !define exclamation (!)
 
-| script                                                      |
-|given test page         |${TestPageName}                      |
+|script                                                            |
+|given test page         |${TestPageName}                          |
 |and Test System setup is|!-!define TEST_SYSTEM-! {slim}${SUT_PATH}|
-|and Setup content is                                          |!-
+|and Setup content is                                              |!-
 
 !define SLIM_FLAGS {-v}
 
-|import                                                        |
-|fitnesse.slim.test                                            |
+|import            |
+|fitnesse.slim.test|
 
 -!|
-|and Test content is|!include -seamless >TestPage |
-|when page                          |${TestPageName}|is tested and HTML is extracted                           |
-|then                               |1              |assertions pass,|1|fail,|0|are ignored|6|exceptions thrown|
-|and cell                           |Could not invoke constructor for !-TestSlim.1.-! |has result      |error                                     |
-|and cell                           |Can't convert 8.9 to integer.|has result      |error                                     |
-|and cell                           |Can't convert Hello to integer.|has result      |error                                     |
-|and cell                           |Can't convert 9.8 to integer.|has result      |error                                     |
-|and cell                           |Can't convert aString and not a number to integer.|has result      |error                                     |
-|and cell                           |Can't convert twenty to integer.|has result      |error                                   |
-|and cell                           |expected .H..span..span class="diff".ello            |has result      |fail                                   |
-|show Symbol                        |$HTML_Result                                                              |
-|note|!4 TODO Would be better to have this in the HTML result page and not in the execution log with verbose logging|
-|get collapsed executon log for page|${TestPageName}                                                           |
-|and should contain|java.lang.NumberFormatException: For input string: "twenty"|
-|and should contain|java.lang.NumberFormatException: For input string: "five"|
-|and should contain|java.lang.NumberFormatException: For input string: "8.9"|
-|and should contain|java.lang.NumberFormatException: For input string: "Hello"|
-|and should contain|java.lang.NumberFormatException: For input string: "aString and not a number"|
+|and Test content is                |!include -seamless >TestPage                                                                                    |
+|when page                          |${TestPageName}                                      |is tested and HTML is extracted                           |
+|then                               |1                                                    |assertions pass,|1|fail,|0|are ignored|6|exceptions thrown|
+|and cell                           |Could not invoke constructor for !-TestSlim.1.-!     |has result      |error                                    |
+|and cell                           |No converter for java.time.Clock.                    |has result      |error                                    |
+|and cell                           |Can't convert Hello to long.                         |has result      |error                                    |
+|and cell                           |Can't convert aWrongValue to long.                   |has result      |error                                    |
+|and cell                           |No converter for java.time.temporal.TemporalAccessor.|has result      |error                                    |
+|and cell                           |Can't convert twenty to integer.                     |has result      |error                                    |
+|and cell                           |expected .H..span..span class="diff".ello            |has result      |fail                                     |
+|show Symbol                        |$HTML_Result                                                                                                    |
+|note                               |!4 As a TDD developer !-
+To have fast turnaround times 
+I need to see the exceptions stack trace in the execution log with verbose logging enabled 
+-!|
+|get collapsed executon log for page|${TestPageName}                                                                                                 |
+|and should contain                 |java.lang.NumberFormatException: For input string: "twenty"                                                     |
+|and should contain                 |java.lang.NumberFormatException: For input string: "five"                                                       |
+|and should contain                 |NO_CONVERTER_FOR_ARGUMENT_NUMBER java.time.Clock                                                                |
+|and should contain                 |java.lang.NumberFormatException: For input string: "Hello"                                                      |
+|and should contain                 |java.lang.NumberFormatException: For input string: "aWrongValue"                                                |
+|and should contain                 |NO_CONVERTER_FOR_ARGUMENT_NUMBER java.time.temporal.TemporalAccessor.                                           |

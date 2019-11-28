@@ -22,10 +22,11 @@ ${exclamation}${minus}
 
 
 !3 Wrong static method parameter types raise a meaningful exception
-!4 called as constructor
-!| script | java.lang.String.valueOf | 8.9 |
 
-!| script | java.lang.String.valueOf | Hello |
+!4 called as constructor
+!| script | java.time.Instant.now | 8.9 |
+
+!| script | java.time.Instant.ofEpochSecond | Hello |
 
 !5 Correct calls
 !| script | java.lang.String.valueOf | 5 |
@@ -36,8 +37,8 @@ ${exclamation}${minus}
 
 !| script | Boolean | 0 |
 | $sPass= | String.valueOf | 5 |
-| $sFail= | String.valueOf | aString and not a number |
-| $sFail= | String.valueOf | 9.8 |
+| $sFail= | java.time.Instant.ofEpochSecond | aWrongValue |
+| $sFail= | java.time.Instant.from | 9.8 |
 
 
 
