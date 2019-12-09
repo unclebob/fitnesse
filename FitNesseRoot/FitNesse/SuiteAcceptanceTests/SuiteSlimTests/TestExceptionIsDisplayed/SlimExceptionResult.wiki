@@ -56,6 +56,19 @@ Caused by: java.lang.NumberFormatException: For input string: "Hello"
 	at java.lang.Thread.run(Thread.java:748) [rt.jar:1.8.0_222]-!|Can't convert Hello to long.|
 
 !3 Given a '''!-SlimExceptionResult-!'''
+!3 When the exception message has two message tags
+!3 Then the exception message is shortened
+!3 AND only the first message is printed
+
+
+!|Transform Exception with StackTrace to Message|
+|#Case|exception|message?|
+|two messages|ignored ignored message:<<Top Message!>>!-
+Line 2
+-!Caused by: fitnesse.slim.SlimError: message:<<Causing Message.>>!-
+Line 3>> ignored ignored -!|Top Message!|
+
+!3 Given a '''!-SlimExceptionResult-!'''
 !3 AND it has a message
 !3 When the message has a FLAG/TAG defined in fitnesse.slim.SlimServer
 !3 Then the exception message is split on each space
@@ -79,7 +92,7 @@ Caused by: java.lang.NumberFormatException: For input string: "five"
 	at java.lang.NumberFormatException.forInputString(NumberFormatException.java:65) [rt.jar:1.8.0_222]
 	at java.lang.Integer.parseInt(Integer.java:580) [rt.jar:1.8.0_222]
 	at java.lang.Integer.valueOf(Integer.java:766) [rt.jar:1.8.0_222]-!|Could not invoke constructor for TestSlim[1]|    
-|classic translation NO_METHOD_IN_CLASS used when only two spaces in themessage|fitnesse.slim.SlimError: message:<<NO_METHOD_IN_CLASS nonExistingMethod[1] fitnesse.slim.test.TestSlim.>>!-
+|classic translation NO_METHOD_IN_CLASS used when only two spaces in the message|fitnesse.slim.SlimError: message:<<NO_METHOD_IN_CLASS nonExistingMethod[1] fitnesse.slim.test.TestSlim.>>!-
 	at fitnesse.slim.MethodExecutionResult$NoMethod.returnValue(MethodExecutionResult.java:34) [file:/home/six42/git/fitnesse/bin/main/]
 	at fitnesse.slim.StatementExecutor.call(StatementExecutor.java:112) [file:/home/six42/git/fitnesse/bin/main/]
 	at fitnesse.slim.instructions.CallAndOptionalAssignInstruction.executeInternal(CallAndOptionalAssignInstruction.java:30) [file:/home/six42/git/fitnesse/bin/main/]

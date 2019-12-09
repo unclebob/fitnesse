@@ -273,11 +273,7 @@ public class HtmlSlimResponderTest {
   public void noSuchConverter() throws Exception {
     getResultsForPageContents("|!-DT:fitnesse.slim.test.TestSlim-!|\n"
         + "|noSuchConverter|noSuchConverter?|\n" + "|x|x|\n");
-    TableScanner ts = getScannedResults();
-    Table dt = ts.getTable(0);
-    assertEquals(
-        "x <span class=\"error\">No converter for fitnesse.slim.test.TestSlim$NoSuchConverter.</span>",
-        dt.getCellContents(0, 2));
+    assertTestResultsContain("x <span class=\"error\">No converter for fitnesse.slim.test.TestSlim$NoSuchConverter.");
   }
 
   @Test

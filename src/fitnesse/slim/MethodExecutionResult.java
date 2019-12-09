@@ -57,6 +57,28 @@ public class MethodExecutionResult {
     }
   }
 
+  public static class InvalidParameters extends MethodExecutionResult {
+
+	    private final String methodName;
+	    private final Exception conversionException;
+
+	    public InvalidParameters(String methodName, Exception conversonException) {
+	      super(null, null);
+	      this.methodName = methodName;
+	      this.conversionException = conversonException;
+	    }
+
+	    @Override
+	    public Object returnValue() {
+	      throw new SlimError(SlimError.extractSlimMessage(conversionException.getMessage())+ "\nTryed to invoke: " + methodName, conversionException, "", true);	
+	    }
+
+	    @Override
+	    public boolean hasResult() {
+	      return false;
+	    }
+	  }
+
   public static final MethodExecutionResult NO_METHOD_IN_LIBRARIES = new MethodExecutionResult(null, null) {
     @Override
     public boolean hasResult() {

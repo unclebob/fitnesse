@@ -22,11 +22,11 @@ Test
 |when page                          |${TestPageName}                                      |is tested and HTML is extracted                           |
 |then                               |1                                                    |assertions pass,|1|fail,|0|are ignored|6|exceptions thrown|
 |and cell                           |Could not invoke constructor for !-TestSlim.1.-!     |has result      |error                                    |
-|and cell                           |No converter for java.time.Clock.                    |has result      |error                                    |
-|and cell                           |Can't convert Hello to long.                         |has result      |error                                    |
-|and cell                           |Can't convert aWrongValue to long.                   |has result      |error                                    |
-|and cell                           |No converter for java.time.temporal.TemporalAccessor.|has result      |error                                    |
-|and cell                           |Can't convert twenty to integer.                     |has result      |error                                    |
+|and cell                           |No converter for java.time.Clock.*                    |has result      |error                                    |
+|and cell                           |Can't convert Hello to long.*?                         |has result      |error                                    |
+|and cell                           |Can't convert aWrongValue to long.*?                   |has result      |error                                    |
+|and cell                           |No converter for java.time.temporal.TemporalAccessor.*?|has result      |error                                    |
+|and cell                           |Can't convert twenty to integer.*?                     |has result      |error                                    |
 |and cell                           |expected .H..span..span class="diff".ello            |has result      |fail                                     |
 |show Symbol                        |$HTML_Result                                                                                                    |
 |note                               |!4 As a TDD developer !-

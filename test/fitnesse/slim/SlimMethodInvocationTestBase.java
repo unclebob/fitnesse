@@ -160,8 +160,9 @@ public abstract class SlimMethodInvocationTestBase {
       fail("Converted array with non-integers to an integer array.");
     } catch (SlimException e) {
       System.out.println(e.getMessage());
-      assertEquals("fitnesse.slim.SlimError: message:<<Can't convert hello to integer.>>", e.getMessage());
-      assertTrue(NumberFormatException.class.isInstance(e.getCause().getCause()));
+      assertEquals("fitnesse.slim.SlimError: message:<<Can't convert hello to integer.\n"
+        + "Tryed to invoke: fitnesse.slim.test.TestSlim.setIntegerArray(java.lang.Integer[]) -> void. On instance of: "+ getTestClassName() + ">>", e.getMessage());
+      assertTrue(NumberFormatException.class.isInstance(e.getCause().getCause().getCause()));
     }
   }
 
@@ -184,8 +185,9 @@ public abstract class SlimMethodInvocationTestBase {
       fail("Converted array with non-doubles to a double array.");
     } catch (SlimException e) {
       System.out.println(e.getMessage());
-      assertEquals("fitnesse.slim.SlimError: message:<<Can't convert hello to double.>>", e.getMessage());
-      assertTrue(NumberFormatException.class.isInstance(e.getCause().getCause()));
+      assertEquals("fitnesse.slim.SlimError: message:<<Can't convert hello to double.\n"
+        + "Tryed to invoke: fitnesse.slim.test.TestSlim.setDoubleArray(java.lang.Double[]) -> void. On instance of: "+ getTestClassName() + ">>", e.getMessage());
+      assertTrue(NumberFormatException.class.isInstance(e.getCause().getCause().getCause()));
     }
   }
 

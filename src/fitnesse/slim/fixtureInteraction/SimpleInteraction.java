@@ -42,9 +42,14 @@ private List<String> pathsCache = new ArrayList<>();
     }
     catch (SlimError errorClassNotFound) {
       try {
-        MethodExecutionResult mER = invokeStaticMethod(className, paths, args);
-        if (mER != null) {
-            return mER.getObject();
+    	MethodExecutionResult mER = invokeStaticMethod(className, paths, args);
+  	    if (mER != null) {
+  		  if (mER.hasResult()) {
+  		    return mER.getObject();
+  		  } else {
+  		    // Error occurred, throw or return it   
+  		    return mER.returnValue();  
+  		  }
         }
       } catch (Throwable e) {
         throw new InstantiationException(new StringBuilder().append("Failed to call static method '").append(className).append("': ")
@@ -276,28 +281,15 @@ private List<String> pathsCache = new ArrayList<>();
   protected MethodExecutionResult invokeMethod(Object instance, Method method, Object[] args) throws Throwable {
       Object[] convertedArgs = null;
       Object retval = null;
-      String methodName = method.getDeclaringClass().getName() + "." + MethodExecutionResult.methodToString(method)
-                          + "." + ((instance == null) ? "" : " On instance of: " + instance.getClass().getName());
       Class<?> retType = method.getReturnType();
       try {
         convertedArgs = convertArgs(method, args);
-      } catch (SlimError e) {
-	throw e;
-	// TODO: create test cases for this to check that it works and is displayed correctly in the result
-	//throw new SlimException(e.getMessage()+ "\n\n"+ "You may want to check if the correct method signature has been identified by Slim:\n" + methodName + "\n", e, true);
       } catch (Exception e) {
-	throw e;
-	// TODO: create test cases for this to check that it works and is displayed correctly in the result 
-        //throw new SlimError(e.getMessage()+ "\n\n"+ "You may want to check if the correct method signature has been identified by Slim:\n" + methodName + "\n", e);
+        String methodName = method.getDeclaringClass().getName() + "." + MethodExecutionResult.methodToString(method)
+          + "." + ((instance == null) ? "" : " On instance of: " + instance.getClass().getName());
+    	return new MethodExecutionResult.InvalidParameters(methodName, e);
       }
-      try {
-        retval = callMethod(instance, method, convertedArgs);
-      } catch (Exception e) {
-        // We can't modify the exception text as it could be an exception coming from the SUT
-	// TODO print this only if there are at least to methods with the same name and number of parameters  
-        System.out.println("InvokeMethod failed during invocation, you may want to check if the correct method signature has been identified by Slim: "  + " : " + methodName);
-	throw e;
-      }
+      retval = callMethod(instance, method, convertedArgs);
       return new MethodExecutionResult(retval, retType);
   }
 
