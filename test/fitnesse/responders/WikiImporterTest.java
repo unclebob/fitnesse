@@ -139,18 +139,31 @@ public class WikiImporterTest implements WikiImporterClient {
   }
 
   @Test
-  public void testUrlParsing() throws Exception {
-    testUrlParsing("http://mysite.com", "mysite.com", 80, "");
-    testUrlParsing("http://mysite.com/", "mysite.com", 80, "");
-    testUrlParsing("http://mysite.com:8080/", "mysite.com", 8080, "");
-    testUrlParsing("http://mysite.com:8080", "mysite.com", 8080, "");
-    testUrlParsing("http://mysite.com:80/", "mysite.com", 80, "");
-    testUrlParsing("http://mysite.com/PageOne", "mysite.com", 80, "PageOne");
-    testUrlParsing("http://mysite.com/PageOne.ChildOne", "mysite.com", 80, "PageOne.ChildOne");
+  public void testUrlParsingHttp() throws Exception {
+    testUrlParsing("http://mysite.com", "http", "mysite.com", 80, "");
+    testUrlParsing("http://mysite.com/", "http", "mysite.com", 80, "");
+    testUrlParsing("http://mysite.com:8080/", "http", "mysite.com", 8080, "");
+    testUrlParsing("http://mysite.com:8080", "http", "mysite.com", 8080, "");
+    testUrlParsing("http://mysite.com:80/", "http", "mysite.com", 80, "");
+    testUrlParsing("http://mysite.com/PageOne", "http", "mysite.com", 80, "PageOne");
+    testUrlParsing("http://mysite.com/PageOne.ChildOne", "http", "mysite.com", 80, "PageOne.ChildOne");
   }
 
-  private void testUrlParsing(String url, String host, int port, String path) throws Exception {
+  @Test
+  public void testUrlParsingHttps() throws Exception {
+    testUrlParsing("https://mysite.com", "https", "mysite.com", 443, "");
+    testUrlParsing("https://mysite.com/", "https", "mysite.com", 443, "");
+    testUrlParsing("https://mysite.com:8080/", "https", "mysite.com", 8080, "");
+    testUrlParsing("https://mysite.com:8080", "https", "mysite.com", 8080, "");
+    testUrlParsing("https://mysite.com:80/", "https", "mysite.com", 80, "");
+    testUrlParsing("https://mysite.com/PageOne", "https", "mysite.com", 443, "PageOne");
+    testUrlParsing("https://mysite.com/PageOne.ChildOne", "https", "mysite.com", 443, "PageOne.ChildOne");
+    testUrlParsing("https://mysite.com:377/PageOne.ChildOne", "https", "mysite.com", 377, "PageOne.ChildOne");
+  }
+
+  private void testUrlParsing(String url, String protocol, String host, int port, String path) throws Exception {
     importer.parseUrl(url);
+    assertEquals(protocol, importer.getRemoteProtocol());
     assertEquals(host, importer.getRemoteHostname());
     assertEquals(port, importer.getRemotePort());
     assertEquals(path, PathParser.render(importer.getRemotePath()));

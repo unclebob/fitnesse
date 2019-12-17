@@ -1,4 +1,5 @@
 !2 ${FITNESSE_VERSION}
+ * Support importing remote wiki pages over https (not just http) ([[1086][https://github.com/unclebob/fitnesse/issues/1086]])
 
 !2 20191110
  * Improved failure navigator at top-right after running tests: some tests were missed, others were counted twice. #1246

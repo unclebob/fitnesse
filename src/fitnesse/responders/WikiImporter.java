@@ -30,6 +30,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
   private String remoteUsername;
   private String remotePassword;
 
+  private String remoteProtocol;
   private String remoteHostname;
   private int remotePort;
   private WikiPagePath localPath;
@@ -179,7 +180,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
 
   public String remoteUrl() {
     String remotePathName = PathParser.render(remotePath);
-    return "http://" + remoteHostname + ":" + remotePort + "/" + remotePathName;
+    return remoteProtocol + "://" + remoteHostname + ":" + remotePort + "/" + remotePathName;
   }
 
   @Override
@@ -233,6 +234,10 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
     return localPath;
   }
 
+  public String getRemoteProtocol() {
+    return remoteProtocol;
+  }
+
   public String getRemoteHostname() {
     return remoteHostname;
   }
@@ -259,25 +264,36 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
     URL url;
     try {
       url = new URL(urlString);
-    }
-    catch (MalformedURLException e) {
+    } catch (MalformedURLException e) {
       throw new MalformedURLException(urlString + " is not a valid URL.");
     }
 
+    remoteProtocol = url.getProtocol();
     remoteHostname = url.getHost();
-    remotePort = url.getPort();
-    if (remotePort == -1)
-      remotePort = 80;
+    remotePort = extractPort(url);
 
-    String path = url.getPath();
-    while (path.startsWith("/"))
-      path = path.substring(1);
-
+    String path = extractPath(url);
     remotePath = PathParser.parse(path);
 
     if (remotePath == null) {
       throw new MalformedURLException("The URL's resource path, " + path + ", is not a valid WikiWord.");
     }
+  }
+
+  private int extractPort(URL url) {
+    int port = url.getPort();
+    if (port == -1) {
+      port = url.getDefaultPort();
+    }
+    return port;
+  }
+
+  private String extractPath(URL url) {
+    String path = url.getPath();
+    while (path.startsWith("/")) {
+      path = path.substring(1);
+    }
+    return path;
   }
 
   public void setWikiImporterClient(WikiImporterClient client) {
