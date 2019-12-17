@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+
+!2 20191217
  * Support importing remote wiki pages over https (not just http) ([[1086][https://github.com/unclebob/fitnesse/issues/1086]])
 
 !2 20191110
