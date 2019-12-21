@@ -42,14 +42,14 @@ private List<String> pathsCache = new ArrayList<>();
     }
     catch (SlimError errorClassNotFound) {
       try {
-    	MethodExecutionResult mER = invokeStaticMethod(className, paths, args);
-  	    if (mER != null) {
-  		  if (mER.hasResult()) {
-  		    return mER.getObject();
-  		  } else {
-  		    // Error occurred, throw or return it   
-  		    return mER.returnValue();  
-  		  }
+        MethodExecutionResult mER = invokeStaticMethod(className, paths, args);
+        if (mER != null) {
+          if (mER.hasResult()) {
+            return mER.getObject();
+          } else {
+            // Error occurred, throw or return it
+            return mER.returnValue();
+          }
         }
       } catch (Throwable e) {
         throw new InstantiationException(new StringBuilder().append("Failed to call static method '").append(className).append("': ")
@@ -59,12 +59,11 @@ private List<String> pathsCache = new ArrayList<>();
       throw errorClassNotFound;
     }
 
-	Constructor<?> constructor = getConstructor(k, args);
-	if (constructor == null) {
-		throw new SlimError(String.format("message:<<%s %s>>",
-          SlimServer.NO_CONSTRUCTOR, className));
-	}
-	return newInstance(args, constructor);
+    Constructor<?> constructor = getConstructor(k, args);
+    if (constructor == null) {
+      throw new SlimError(String.format("message:<<%s %s>>", SlimServer.NO_CONSTRUCTOR, className));
+    }
+    return newInstance(args, constructor);
   }
 
   private Object newInstance(Object[] args, Constructor<?> constructor)
@@ -127,8 +126,7 @@ private List<String> pathsCache = new ArrayList<>();
    * {@code  args}, otherwise return the first constructor which matches as
    * arguments number
    */
-  protected Constructor<?> getConstructor(Class<?> clazz,
-          Object... args) {
+  protected Constructor<?> getConstructor(Class<?> clazz, Object... args) {
     /*in case no constructor has the args types, then return the first constructor which
      * matches as args number, and not as args types
      */
@@ -237,7 +235,7 @@ private List<String> pathsCache = new ArrayList<>();
       if (clazz != null) {
         method = findMatchingMethod(new String[]{staticMethodName}, clazz.getMethods(), args.length);
         if (method != null) {
-	  return this.invokeMethod(null, method, args);
+          return this.invokeMethod(null, method, args);
         } else {
             return MethodExecutionResult.noMethod(staticMethodName + "(static)", clazz, args.length);
         }

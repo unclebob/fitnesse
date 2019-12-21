@@ -34,10 +34,10 @@ public class SlimError extends RuntimeException {
     StringBuilder sb = new StringBuilder();
     sb.append(SlimVersion.PRETTY_PRINT_TAG_START);
     if (tag != null && !tag.isEmpty()) {
-	  sb.append(tag);
-	  // Separator between tag and message
-	  sb.append(" ");
-	}
+      sb.append(tag);
+      // Separator between tag and message
+      sb.append(" ");
+    }
     if (msg != null && !msg.isEmpty()) {
       sb.append(msg);
     }
@@ -45,7 +45,7 @@ public class SlimError extends RuntimeException {
     return sb.toString();
   }
   public static String extractSlimMessage(String msg){
-    msg = msg.replaceFirst(".*"+SlimVersion.PRETTY_PRINT_TAG_START, "");
+    msg = msg.replaceFirst(".*" + SlimVersion.PRETTY_PRINT_TAG_START, "");
     msg = msg.replaceFirst(SlimVersion.PRETTY_PRINT_TAG_END, "");
     return msg;
   }

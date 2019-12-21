@@ -70,7 +70,7 @@ public class MethodExecutionResult {
 
 	    @Override
 	    public Object returnValue() {
-	      throw new SlimError(SlimError.extractSlimMessage(conversionException.getMessage())+ "\nTryed to invoke: " + methodName, conversionException, "", true);	
+	      throw new SlimError(SlimError.extractSlimMessage(conversionException.getMessage())+ "\nTried to invoke: " + methodName, conversionException, "", true);
 	    }
 
 	    @Override
