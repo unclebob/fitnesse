@@ -4,14 +4,15 @@ package fitnesse.responders.run.slimResponder;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
 import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
+import fitnesse.slim.MethodExecutionResult;
 import fitnesse.testsystems.slim.*;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -79,7 +80,7 @@ public class HtmlSlimResponderTest {
   public void queryFixtureHasNoQueryFunction() throws Exception {
     getResultsForPageContents("!|Query:fitnesse.slim.test.TestSlim|\n"
         + "|x|y|\n");
-    assertTestResultsContain("Method query[0] not found in fitnesse.slim.test.TestSlim");
+    assertTestResultsContain(String.format(MethodExecutionResult.MESSAGE_S_NO_METHOD_S_D_IN_CLASS_S_AVAILABLE_METHODS_S,"query",0,"fitnesse.slim.test.TestSlim",""));
   }
 
   @Test
@@ -92,7 +93,7 @@ public class HtmlSlimResponderTest {
   public void orderedQueryFixtureHasNoQueryFunction() throws Exception {
     getResultsForPageContents("!|ordered query:fitnesse.slim.test.TestSlim|\n"
         + "|x|y|\n");
-    assertTestResultsContain("Method query[0] not found in fitnesse.slim.test.TestSlim");
+    assertTestResultsContain(String.format(MethodExecutionResult.MESSAGE_S_NO_METHOD_S_D_IN_CLASS_S_AVAILABLE_METHODS_S,"query",0,"fitnesse.slim.test.TestSlim",""));
   }
 
   @Test
@@ -105,7 +106,7 @@ public class HtmlSlimResponderTest {
   public void subsetQueryFixtureHasNoQueryFunction() throws Exception {
     getResultsForPageContents("!|subset query:fitnesse.slim.test.TestSlim|\n"
         + "|x|y|\n");
-    assertTestResultsContain("Method query[0] not found in fitnesse.slim.test.TestSlim");
+    assertTestResultsContain(String.format(MethodExecutionResult.MESSAGE_S_NO_METHOD_S_D_IN_CLASS_S_AVAILABLE_METHODS_S,"query",0,"fitnesse.slim.test.TestSlim",""));
   }
 
   @Test
@@ -130,7 +131,7 @@ public class HtmlSlimResponderTest {
   public void tableFixtureHasNoDoTableFunction() throws Exception {
     getResultsForPageContents("!|Table:fitnesse.slim.test.TestSlim|\n"
         + "|a|b|\n");
-    assertTestResultsContain("Method doTable[1] not found in fitnesse.slim.test.TestSlim.");
+    assertTestResultsContain(String.format(MethodExecutionResult.MESSAGE_S_NO_METHOD_S_D_IN_CLASS_S_AVAILABLE_METHODS_S,"doTable",1,"fitnesse.slim.test.TestSlim",""));
   }
 
   @Test
@@ -193,7 +194,7 @@ public class HtmlSlimResponderTest {
   public void tableWithBadVariableHasException() throws Exception {
     getResultsForPageContents("!|DT:fitnesse.slim.test.TestSlim|\n"
         + "|noSuchVar|\n" + "|3|\n");
-    assertTestResultsContain("<span class=\"error\">Method setNoSuchVar[1] not found in fitnesse.slim.test.TestSlim");
+    assertTestResultsContain("<span class=\"error\">" + String.format(MethodExecutionResult.MESSAGE_S_NO_METHOD_S_D_IN_CLASS_S_AVAILABLE_METHODS_S,"setNoSuchVar",1,"fitnesse.slim.test.TestSlim",""));
   }
 
   @Test
@@ -272,11 +273,7 @@ public class HtmlSlimResponderTest {
   public void noSuchConverter() throws Exception {
     getResultsForPageContents("|!-DT:fitnesse.slim.test.TestSlim-!|\n"
         + "|noSuchConverter|noSuchConverter?|\n" + "|x|x|\n");
-    TableScanner ts = getScannedResults();
-    Table dt = ts.getTable(0);
-    assertEquals(
-        "x <span class=\"error\">No converter for fitnesse.slim.test.TestSlim$NoSuchConverter.</span>",
-        dt.getCellContents(0, 2));
+    assertTestResultsContain("x <span class=\"error\">No converter for fitnesse.slim.test.TestSlim$NoSuchConverter.");
   }
 
   @Test
