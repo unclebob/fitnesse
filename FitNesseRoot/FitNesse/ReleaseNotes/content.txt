@@ -1,4 +1,5 @@
 !2 ${FITNESSE_VERSION}
+ * Add support calling static methods from Slim script tables ([[1245][https://github.com/unclebob/fitnesse/pull/1245]]).
 
 !2 20191217
  * Support importing remote wiki pages over https (not just http) ([[1086][https://github.com/unclebob/fitnesse/issues/1086]])
