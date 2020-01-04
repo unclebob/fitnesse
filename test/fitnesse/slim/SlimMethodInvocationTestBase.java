@@ -13,6 +13,7 @@ import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.DateConverter;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.test.TestSlimInterface;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,13 +38,30 @@ public abstract class SlimMethodInvocationTestBase {
   }
 
   @Test
-  public void throwMethodNotCalledErrorIfNoSuchMethod() throws Exception {
+  public void throwMethodNotCalledErrorIfNoSuchMethodAndListAvailableMethodsSorted() throws Exception {
     try {
-      caller.call("testSlim", "noSuchMethod");
+      caller.create("ShouldIBuyMilk", "fitnesse.slim.test.ShouldIBuyMilk", new Object[0]);
+      caller.call("ShouldIBuyMilk", "noSuchMethod");
       fail("Called non-existing method.");
     } catch (SlimException e) {
       assertTrue(e.getMessage(),e.toString().contains(SlimServer.EXCEPTION_TAG) &&
-          e.toString().contains("message:<<NO_METHOD_IN_CLASS noSuchMethod[0] " + getTestClassName() + ".>>"));
+          e.toString().contains("message:<<NO_METHOD_IN_CLASS No Method noSuchMethod[0] in class "+ "fitnesse.slim.test.ShouldIBuyMilk" + ".\n"+
+                                " Available methods:\n"+
+                                "equals(java.lang.Object) -> boolean\n"+
+                                "execute() -> void\n"+
+                                "getClass() -> class java.lang.Class\n"+
+                                "goToStore() -> class java.lang.String\n"+
+                                "hashCode() -> int\n"+
+                                "notify() -> void\n"+
+                                "notifyAll() -> void\n"+
+                                "setCashInWallet(int) -> void\n"+
+                                "setCreditCard(java.lang.String) -> void\n"+
+                                "setPintsOfMilkRemaining(int) -> void\n"+
+                                "table(java.util.List) -> void\n"+
+                                "toString() -> class java.lang.String\n"+
+                                "wait() -> void\n"+
+                                "wait(long) -> void\n"+
+                                "wait(long, int) -> void>>"));
     }
   }
 
@@ -142,8 +160,9 @@ public abstract class SlimMethodInvocationTestBase {
       fail("Converted array with non-integers to an integer array.");
     } catch (SlimException e) {
       System.out.println(e.getMessage());
-      assertEquals("fitnesse.slim.SlimError: message:<<Can't convert hello to integer.>>", e.getMessage());
-      assertTrue(NumberFormatException.class.isInstance(e.getCause().getCause()));
+      assertEquals("fitnesse.slim.SlimError: message:<<Can't convert hello to integer.\n"
+        + "Tried to invoke: fitnesse.slim.test.TestSlim.setIntegerArray(java.lang.Integer[]) -> void. On instance of: "+ getTestClassName() + ">>", e.getMessage());
+      assertTrue(NumberFormatException.class.isInstance(e.getCause().getCause().getCause()));
     }
   }
 
@@ -166,8 +185,9 @@ public abstract class SlimMethodInvocationTestBase {
       fail("Converted array with non-doubles to a double array.");
     } catch (SlimException e) {
       System.out.println(e.getMessage());
-      assertEquals("fitnesse.slim.SlimError: message:<<Can't convert hello to double.>>", e.getMessage());
-      assertTrue(NumberFormatException.class.isInstance(e.getCause().getCause()));
+      assertEquals("fitnesse.slim.SlimError: message:<<Can't convert hello to double.\n"
+        + "Tried to invoke: fitnesse.slim.test.TestSlim.setDoubleArray(java.lang.Double[]) -> void. On instance of: "+ getTestClassName() + ">>", e.getMessage());
+      assertTrue(NumberFormatException.class.isInstance(e.getCause().getCause().getCause()));
     }
   }
 

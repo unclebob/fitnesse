@@ -27,8 +27,8 @@
 |and cell                           |.td colspan="2">.pre>__EXCEPTION__:fitnesse.slim.SlimError: ENDTABLE_THROWS[^<]*|has result      |exception-detail closed-detail                                     |
 |and cell                           |.td colspan="2">.pre>__EXCEPTION__:fitnesse.slim.SlimError: BEGINTABLE_THROWS[^<]*|has result      |exception-detail closed-detail                                     |
 |and cell                           |.td colspan="2">.pre>__EXCEPTION__:fitnesse.slim.SlimError: DOTABLE_THROWS[^<]*|has result      |exception-detail closed-detail                                     |
-|and cell                           |expected ...span..span class="diff".EXCEPTION: ..span..span class="fail".Hello.            |has result      |fail                                   |
-|and cell                           |EXCEPTION:../span>.span class="fail">Hello]            |has result      |diff                                   |
+|and cell                           |expected ..span class="diff".EXCEPTION: ..span.Hello.            |has result      |fail                                   |
+|and cell                           |EXCEPTION:../span>Hello]            |has result      |diff                                   |
 |and cell                           |fitnesse.slim.test.StopTestException: stop test            |has result      |fail                                   |
 |and cell                           |Test not run            |has result      |ignore                                   |
 |# show Symbol                        |$HTML_Input                                                               |

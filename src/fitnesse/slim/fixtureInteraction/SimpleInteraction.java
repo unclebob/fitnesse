@@ -3,11 +3,15 @@ package fitnesse.slim.fixtureInteraction;
 import fitnesse.slim.ConverterSupport;
 import fitnesse.slim.MethodExecutionResult;
 import fitnesse.slim.SlimError;
+import fitnesse.slim.SlimException;
 import fitnesse.slim.SlimServer;
+import fitnesse.slim.StackTraceEnricher;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import static fitnesse.util.StringUtils.swapCaseOfFirstLetter;
@@ -23,18 +27,42 @@ public class SimpleInteraction implements FixtureInteraction {
       throw new RuntimeException(e);
     }
   }
+  
+// path cache is required for invoking static methods
+private List<String> pathsCache = new ArrayList<>();
 
   @Override
   public Object createInstance(List<String> paths, String className, Object[] args)
           throws IllegalArgumentException, InstantiationException,
-          IllegalAccessException, InvocationTargetException {
-    Class<?> k = searchPathsForClass(paths, className);
-    Constructor<?> constructor = getConstructor(k, args);
-    if (constructor == null) {
-      throw new SlimError(String.format("message:<<%s %s>>",
-              SlimServer.NO_CONSTRUCTOR, className));
+          IllegalAccessException, InvocationTargetException{
+    pathsCache = paths;
+    Class<?> k = null;
+    try{
+      k = searchPathsForClass(paths, className);
+    }
+    catch (SlimError errorClassNotFound) {
+      try {
+        MethodExecutionResult mER = invokeStaticMethod(className, paths, args);
+        if (mER != null) {
+          if (mER.hasResult()) {
+            return mER.getObject();
+          } else {
+            // Error occurred, throw or return it
+            return mER.returnValue();
+          }
+        }
+      } catch (Throwable e) {
+        throw new InstantiationException(new StringBuilder().append("Failed to call static method '").append(className).append("': ")
+          .append("\nCaused by: ").append(e.getClass().getName()).append(": ")
+          .append(e.getMessage()).append( new StackTraceEnricher().getStackTraceAsString(e)).toString());
+      }
+      throw errorClassNotFound;
     }
 
+    Constructor<?> constructor = getConstructor(k, args);
+    if (constructor == null) {
+      throw new SlimError(String.format("message:<<%s %s>>", SlimServer.NO_CONSTRUCTOR, className));
+    }
     return newInstance(args, constructor);
   }
 
@@ -70,7 +98,10 @@ public class SimpleInteraction implements FixtureInteraction {
 
   private Class<?> findClassInPaths(List<String> paths, String className) {
     Class<?> k = null;
-
+    
+    if (paths == null) {
+      return null;
+    }
     for (int i = 0; i < paths.size() && k == null; i++)
       k = getClass(paths.get(i) + "." + className);
 
@@ -95,8 +126,7 @@ public class SimpleInteraction implements FixtureInteraction {
    * {@code  args}, otherwise return the first constructor which matches as
    * arguments number
    */
-  protected Constructor<?> getConstructor(Class<?> clazz,
-          Object... args) {
+  protected Constructor<?> getConstructor(Class<?> clazz, Object... args) {
     /*in case no constructor has the args types, then return the first constructor which
      * matches as args number, and not as args types
      */
@@ -157,8 +187,10 @@ public class SimpleInteraction implements FixtureInteraction {
     try {
       //from fixture call we get only String values
       return ConverterSupport.convertArgs(args, argumentTypes);
-    } catch (SlimError ex) {
+    } catch (Throwable ex) {
+      // Conversion failed, either no converter or data is not correctly formatted
       //swallow the exception silently, as for this step it's not relevant
+      // return the not converted args list, this ensures this constructor will only be picked if no better constructor is found
       return args;
     }
   }
@@ -183,9 +215,34 @@ public class SimpleInteraction implements FixtureInteraction {
     Method method = findMatchingMethod(methodName, instance, args);
     if (method != null) {
       return this.invokeMethod(instance, method, args);
+    } else {
+      MethodExecutionResult mER = invokeStaticMethod(methodName, pathsCache, args );
+      if (mER != null) {
+        return mER;
+      }
     }
     return MethodExecutionResult.noMethod(methodName, instance.getClass(), args.length);
   }
+
+  private MethodExecutionResult invokeStaticMethod(String methodName, List<String> paths, Object... args) throws Throwable {
+    Method method;
+    int i = methodName.lastIndexOf('.');
+    if (i >=0) {
+      // Static Method
+      String className = methodName.substring(0, i);
+      String staticMethodName = methodName.substring(i+1);
+      Class<?> clazz = searchPathsForClass(paths, className);
+      if (clazz != null) {
+        method = findMatchingMethod(new String[]{staticMethodName}, clazz.getMethods(), args.length);
+        if (method != null) {
+          return this.invokeMethod(null, method, args);
+        } else {
+            return MethodExecutionResult.noMethod(staticMethodName + "(static)", clazz, args.length);
+        }
+      }
+    }
+    return null;
+}
 
   protected Method findMatchingMethod(String methodName, Object instance, Object... args) {
     String[] methodNames = new String[]{methodName, swapCaseOfFirstLetter(methodName)};
@@ -212,6 +269,7 @@ public class SimpleInteraction implements FixtureInteraction {
     return method;
   }
 
+
   private boolean isMatchingMethod(Method method, String methodName, int nArgs) {
     boolean hasMatchingName = method.getName().equals(methodName);
     boolean hasMatchingArguments = method.getParameterTypes().length == nArgs;
@@ -219,10 +277,18 @@ public class SimpleInteraction implements FixtureInteraction {
   }
 
   protected MethodExecutionResult invokeMethod(Object instance, Method method, Object[] args) throws Throwable {
-    Object[] convertedArgs = convertArgs(method, args);
-    Object retval = callMethod(instance, method, convertedArgs);
-    Class<?> retType = method.getReturnType();
-    return new MethodExecutionResult(retval, retType);
+      Object[] convertedArgs = null;
+      Object retval = null;
+      Class<?> retType = method.getReturnType();
+      try {
+        convertedArgs = convertArgs(method, args);
+      } catch (Exception e) {
+        String methodName = method.getDeclaringClass().getName() + "." + MethodExecutionResult.methodToString(method)
+          + "." + ((instance == null) ? "" : " On instance of: " + instance.getClass().getName());
+    	return new MethodExecutionResult.InvalidParameters(methodName, e);
+      }
+      retval = callMethod(instance, method, convertedArgs);
+      return new MethodExecutionResult(retval, retType);
   }
 
   protected Object[] convertArgs(Method method, Object[] args) {
@@ -262,7 +328,13 @@ public class SimpleInteraction implements FixtureInteraction {
       }
     } catch (IllegalArgumentException e) {
       throw new RuntimeException("Bad call of: " + method.getDeclaringClass().getName() + "." + method.getName()
-              + ". On instance of: " + instance.getClass().getName(), e);
+              + "." + ((instance == null) ? "" : " On instance of: " + instance.getClass().getName()), e);
+    }
+    catch (Exception e){
+      String methodName = MethodExecutionResult.methodToString(method);
+      throw new RuntimeException("Exception when invoking: " + method.getDeclaringClass().getName() + "." + methodName
+              + "." + ((instance == null) ? "" : " On instance of: " + instance.getClass().getName()), e);
+      
     }
   }
 

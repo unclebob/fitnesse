@@ -57,12 +57,12 @@ In this case no detailed diff is wanted.
 | abc           | =~/[ABC]+/i      | wrong syntax, disable value comparison, use string comparison |
 -!|
 |test results for page|TestPage|should contain|!-<span class="pass">abc</span>-!|
-|test results for page|TestPage|should contain|!-[<span class="diff">abc</span>] <span class="fail">expected [</span><span class="diff">xyz</span><span class="fail">]</span>-!|
-|test results for page|TestPage|should contain|!-[<span class="diff">a</span>bc] <span class="fail">expected [</span><span class="diff">x</span><span class="fail">bc]</span>-!|
-|test results for page|TestPage|should contain|!-[a<span class="diff">b</span>c] <span class="fail">expected [a</span><span class="diff">y</span><span class="fail">c]</span>-!|
-|test results for page|TestPage|should contain|!-[ab<span class="diff">c</span>] <span class="fail">expected [ab</span><span class="diff">z</span><span class="fail">]</span>-!|
-|test results for page|TestPage|should contain|!-[] <span class="fail">expected [</span><span class="diff">xyz</span><span class="fail">]</span>-!|
-|test results for page|TestPage|should contain|!-[<span class="diff">H</span>ello <span class="diff">W</span>or<span class="diff">l</span>d] <span class="fail">expected [</span><span class="diff">W</span><span class="fail">ell</span><span class="diff">c</span><span class="fail">o</span><span class="diff">me</span><span class="fail"> </span><span class="diff">L</span><span class="fail">ord]-!|
+|test results for page|TestPage|should contain|!-[<span class="diff">abc</span>] <span class="fail">expected [<span class="diff">xyz</span>]</span>-!|
+|test results for page|TestPage|should contain|!-[<span class="diff">a</span>bc] <span class="fail">expected [<span class="diff">x</span>bc]</span>-!|
+|test results for page|TestPage|should contain|!-[a<span class="diff">b</span>c] <span class="fail">expected [a<span class="diff">y</span>c]</span>-!|
+|test results for page|TestPage|should contain|!-[ab<span class="diff">c</span>] <span class="fail">expected [ab<span class="diff">z</span>]</span>-!|
+|test results for page|TestPage|should contain|!-[] <span class="fail">expected [<span class="diff">xyz</span>]</span>-!|
+|test results for page|TestPage|should contain|!-[<span class="diff">H</span>ello <span class="diff">W</span>or<span class="diff">l</span>d] <span class="fail">expected [<span class="diff">W</span>ell<span class="diff">c</span>o<span class="diff">me</span> <span class="diff">L</span>ord]</span>-!|
 *!
 
 !*> Tests for type int
@@ -171,16 +171,16 @@ Test symbols by string comparison.
 |               | $symbol          | |
 -!|
 |test results for page|TestPage|should contain|!-<span class="pass">abc</span>-!|
-|test results for page|TestPage|should contain|!-[<span class="diff">abc</span>] <span class="fail">expected [</span><span class="diff">xyz</span><span class="fail">]</span>-!|
-|test results for page|TestPage|should contain|!-[<span class="diff">a</span>bc] <span class="fail">expected [</span><span class="diff">x</span><span class="fail">bc]</span>-!|
-|test results for page|TestPage|should contain|!-[a<span class="diff">b</span>c] <span class="fail">expected [a</span><span class="diff">y</span><span class="fail">c]</span>-!|
-|test results for page|TestPage|should contain|!-[ab<span class="diff">c</span>] <span class="fail">expected [ab</span><span class="diff">z</span><span class="fail">]</span>-!|
+|test results for page|TestPage|should contain|!-[<span class="diff">abc</span>] <span class="fail">expected [<span class="diff">xyz</span>]</span>-!|
+|test results for page|TestPage|should contain|!-[<span class="diff">a</span>bc] <span class="fail">expected [<span class="diff">x</span>bc]</span>-!|
+|test results for page|TestPage|should contain|!-[a<span class="diff">b</span>c] <span class="fail">expected [a<span class="diff">y</span>c]</span>-!|
+|test results for page|TestPage|should contain|!-[ab<span class="diff">c</span>] <span class="fail">expected [ab<span class="diff">z</span>]</span>-!|
 |test results for page|TestPage|should contain|!-&lt;span class="pass"&gt;$symbol-&gt;[abc]&lt;/span&gt;-!|
-|test results for page|TestPage|should contain|!-[<span class="diff">xyz</span>] <span class="fail">expected [$symbol-&gt;[</span><span class="diff">abc</span><span class="fail">]]</span>-!|
-|test results for page|TestPage|should contain|!-[<span class="diff">x</span>bc] <span class="fail">expected [$symbol-&gt;[</span><span class="diff">a</span><span class="fail">bc]]</span>-!|
-|test results for page|TestPage|should contain|!-[a<span class="diff">y</span>c] <span class="fail">expected [$symbol-&gt;[a</span><span class="diff">b</span><span class="fail">c]]</span>-!|
-|test results for page|TestPage|should contain|!-[ab<span class="diff">z</span>] <span class="fail">expected [$symbol-&gt;[ab</span><span class="diff">c</span><span class="fail">]]</span>-!|
-|test results for page|TestPage|should contain|!-[] <span class="fail">expected [$symbol-&gt;[</span><span class="diff">abc</span><span class="fail">]]</span>-!|
+|test results for page|TestPage|should contain|!-[<span class="diff">xyz</span>] <span class="fail">expected [$symbol-&gt;[<span class="diff">abc</span>]]</span>-!|
+|test results for page|TestPage|should contain|!-[<span class="diff">x</span>bc] <span class="fail">expected [$symbol-&gt;[<span class="diff">a</span>bc]]</span>-!|
+|test results for page|TestPage|should contain|!-[a<span class="diff">y</span>c] <span class="fail">expected [$symbol-&gt;[a<span class="diff">b</span>c]]</span>-!|
+|test results for page|TestPage|should contain|!-[ab<span class="diff">z</span>] <span class="fail">expected [$symbol-&gt;[ab<span class="diff">c</span>]]</span>-!|
+|test results for page|TestPage|should contain|!-[] <span class="fail">expected [$symbol-&gt;[<span class="diff">abc</span>]]</span>-!|
 *!
 
 !*> Tests of custom comparator
@@ -198,9 +198,9 @@ The inverse comparator fitnesse.slim.test.InverseComparator negates the method S
 | note  | everything not equals to 'abc' is ok |
 | check | echo | abc | inverse:xyz |
 | note  | everything not equals to 'abc' is ok |
-| check | echo | abc | inverse:ABC | 
+| check | echo | abc | inverse:ABC |
 | note  | everthing not equals to 'abc' is ok |
-| check | echo | abc | inverse:cba | 
+| check | echo | abc | inverse:cba |
 | note  | only 'abc' is nok |
 | check | echo | abc | inverse:abc |
 -!|
@@ -226,5 +226,5 @@ Test Scenario and Script
 | Detailed Diff Scenario Test |
 -!|
 |test results for page|TestPage|should contain|!-<span class="pass">hello</span>-!|
-|test results for page|TestPage|should contain|!-[h<span class="diff">e</span>llo] <span class="fail">expected [h</span><span class="diff">a</span><span class="fail">llo]</span>-!|
+|test results for page|TestPage|should contain|!-[h<span class="diff">e</span>llo] <span class="fail">expected [h<span class="diff">a</span>llo]</span>-!|
 *!

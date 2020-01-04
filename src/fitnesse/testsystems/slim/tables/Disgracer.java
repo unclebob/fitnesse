@@ -21,6 +21,7 @@ public class Disgracer {
   }
 
   private String disgraceMethodNameIfNecessary() {
+	if (nameHasDotsBeforeEnd()) return name;
     if (isGraceful()) {
       return disgraceMethodName();
     } else {
@@ -82,7 +83,7 @@ public class Disgracer {
     boolean isGraceful = false;
     for (char c : name.toCharArray()) {
       if (isGraceful(c))
-        isGraceful = true;
+        return true;
     }
     return isGraceful;
   }

@@ -34,8 +34,8 @@ public class SlimMethodInvocationViaAroundTest extends SlimMethodInvocationTest 
   }
 
   @Override
-  public void throwMethodNotCalledErrorIfNoSuchMethod() throws Exception {
-    super.throwMethodNotCalledErrorIfNoSuchMethod();
+  public void throwMethodNotCalledErrorIfNoSuchMethodAndListAvailableMethodsSorted() throws Exception {
+    super.throwMethodNotCalledErrorIfNoSuchMethodAndListAvailableMethodsSorted();
     validateNoMethodIntercepted();
   }
 
