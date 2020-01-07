@@ -29,6 +29,7 @@ Test
 |#Case|exception|message?|
 |no message tags|Hello FitNesse|null|
 |has message tags|message:<<Hello FitNesse>>|Hello FitNesse|
+|has message tags with HTML|message:<<<div>Bad things<br/><span><b>happened</b></span></div>>>|<div>Bad things<br/><span><b>happened</b></span></div>|
 |multi line message|ignored ignored message:<<Line 1!-
 Line 2
 Line 3>> ignored ignored -!|Line 1!-
