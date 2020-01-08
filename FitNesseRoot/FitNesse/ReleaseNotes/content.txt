@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+
+!2 20200108
  * Bugfix for pretty printed exceptions ending with '<' ([[1252][https://github.com/unclebob/fitnesse/issues/1252]]).
 
 !2 20191229
