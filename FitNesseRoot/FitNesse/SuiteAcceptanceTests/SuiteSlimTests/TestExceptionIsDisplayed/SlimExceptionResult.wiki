@@ -92,7 +92,7 @@ Line 3>> ignored ignored -!|Top Message!|
 Caused by: java.lang.NumberFormatException: For input string: "five"
 	at java.lang.NumberFormatException.forInputString(NumberFormatException.java:65) [rt.jar:1.8.0_222]
 	at java.lang.Integer.parseInt(Integer.java:580) [rt.jar:1.8.0_222]
-	at java.lang.Integer.valueOf(Integer.java:766) [rt.jar:1.8.0_222]-!|Could not invoke constructor for TestSlim[1]|    
+	at java.lang.Integer.valueOf(Integer.java:766) [rt.jar:1.8.0_222]-!|Could not invoke constructor for TestSlim[1]|
 |classic translation NO_METHOD_IN_CLASS used when only two spaces in the message|fitnesse.slim.SlimError: message:<<NO_METHOD_IN_CLASS nonExistingMethod[1] fitnesse.slim.test.TestSlim.>>!-
 	at fitnesse.slim.MethodExecutionResult$NoMethod.returnValue(MethodExecutionResult.java:34) [file:/home/six42/git/fitnesse/bin/main/]
 	at fitnesse.slim.StatementExecutor.call(StatementExecutor.java:112) [file:/home/six42/git/fitnesse/bin/main/]
@@ -140,7 +140,7 @@ equals(java.lang.Object) -> boolean-!|
 Caused by: java.lang.NumberFormatException: For input string: "five"
 	at java.lang.NumberFormatException.forInputString(NumberFormatException.java:65) [rt.jar:1.8.0_222]
 	at java.lang.Integer.parseInt(Integer.java:580) [rt.jar:1.8.0_222]
-	at java.lang.Integer.valueOf(Integer.java:766) [rt.jar:1.8.0_222]-!|false|false|    
+	at java.lang.Integer.valueOf(Integer.java:766) [rt.jar:1.8.0_222]-!|false|false|
 |classic translation NO_METHOD_IN_CLASS used when only two spaces in themessage|fitnesse.slim.SlimError: message:<<NO_METHOD_IN_CLASS nonExistingMethod[1] fitnesse.slim.test.TestSlim.>>!-
 	at fitnesse.slim.MethodExecutionResult$NoMethod.returnValue(MethodExecutionResult.java:34) [file:/home/six42/git/fitnesse/bin/main/]
 	at fitnesse.slim.StatementExecutor.call(StatementExecutor.java:112) [file:/home/six42/git/fitnesse/bin/main/]
@@ -161,17 +161,17 @@ equals(java.lang.Object) -> boolean>>
 	at fitnesse.slim.MethodExecutionResult$NoMethod.returnValue(MethodExecutionResult.java:34) [file:/home/six42/git/fitnesse/bin/main/]
 	at fitnesse.slim.StatementExecutor.call(StatementExecutor.java:112) [file:/home/six42/git/fitnesse/bin/main/]
 	at fitnesse.slim.instructions.CallAndOptionalAssignInstruction.executeInternal(CallAndOptionalAssignInstruction.java:30) [file:/home/six42/git/fitnesse/bin/main/]
-	at fitnesse.slim.SlimService.access$0(SlimService.java:167) [file:/home/six42/git/fitnesse/bin/main/]-!||true|    
+	at fitnesse.slim.SlimService.access$0(SlimService.java:167) [file:/home/six42/git/fitnesse/bin/main/]-!||true|
 |NO_INSTANCE|message:<<NO_INSTANCE TestSlim ignores everything after second space>>!-
 	at fitnesse.slim.converters.IntConverter.getObject(IntConverter.java:14) [file:/home/six42/git/fitnesse/bin/main/]
-	at java.lang.Integer.valueOf(Integer.java:766) [rt.jar:1.8.0_222]-!|true||        
+	at java.lang.Integer.valueOf(Integer.java:766) [rt.jar:1.8.0_222]-!|true||
 |NO_METHOD_IN_CLASS but no message|fitnesse.slim.SlimError: NO_METHOD_IN_CLASS No Method nonExistingMethod[1] in class fitnesse.slim.test.TestSlim.!-
  Available methods:
 addTo(int, int) -> int
 	at fitnesse.slim.MethodExecutionResult$NoMethod.returnValue(MethodExecutionResult.java:34) [file:/home/six42/git/fitnesse/bin/main/]
 	at fitnesse.slim.StatementExecutor.call(StatementExecutor.java:112) [file:/home/six42/git/fitnesse/bin/main/]
 	at fitnesse.slim.instructions.CallAndOptionalAssignInstruction.executeInternal(CallAndOptionalAssignInstruction.java:30) [file:/home/six42/git/fitnesse/bin/main/]
-	at fitnesse.slim.SlimService.access$0(SlimService.java:167) [file:/home/six42/git/fitnesse/bin/main/]-!|||    
+	at fitnesse.slim.SlimService.access$0(SlimService.java:167) [file:/home/six42/git/fitnesse/bin/main/]-!|||
 |NO_INSTANCE but no message|NO_INSTANCE TestSlim!-
 	at fitnesse.slim.converters.IntConverter.getObject(IntConverter.java:14) [file:/home/six42/git/fitnesse/bin/main/]
-	at java.lang.Integer.valueOf(Integer.java:766) [rt.jar:1.8.0_222]-!|||            
+	at java.lang.Integer.valueOf(Integer.java:766) [rt.jar:1.8.0_222]-!|||
