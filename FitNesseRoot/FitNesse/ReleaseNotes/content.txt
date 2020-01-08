@@ -1,4 +1,5 @@
 !2 ${FITNESSE_VERSION}
+ * Bugfix for pretty printed exceptions ending with '<' ([[1252][https://github.com/unclebob/fitnesse/issues/1252]]).
 
 !2 20191229
  * Add support calling static methods from Slim script tables ([[1245][https://github.com/unclebob/fitnesse/pull/1245]]).
