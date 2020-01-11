@@ -162,7 +162,7 @@ public class SymbolType implements Matchable {
         decorators.addFirst(symbolDecorator);
     }
 
-    public void applyParsedSymbolDecorations(Symbol symbol, VariableSource variableSource) {
+    void applyParsedSymbolDecorations(Symbol symbol, VariableSource variableSource) {
         decorators.forEach(decorator -> decorator.handleParsedSymbol(symbol, variableSource));
     }
 }
