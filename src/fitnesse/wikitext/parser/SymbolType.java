@@ -1,6 +1,9 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.parser.decorator.ParsedSymbolDecorator;
+
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class SymbolType implements Matchable {
@@ -106,7 +109,8 @@ public class SymbolType implements Matchable {
     private List<Matcher> wikiMatchers = new ArrayList<>(1);
     private Rule wikiRule = defaultRule;
     private Translation htmlTranslation = null;
-    private final SymbolType closeType;
+    private final SymbolType                        closeType;
+    private final LinkedList<ParsedSymbolDecorator> decorators = new LinkedList<>();
 
     public SymbolType(String name) { this(name, Empty); }
 
@@ -152,6 +156,14 @@ public class SymbolType implements Matchable {
 
     public SymbolType closeType() {
       return closeType;
+    }
+
+    public void prependDecorator(ParsedSymbolDecorator symbolDecorator) {
+        decorators.addFirst(symbolDecorator);
+    }
+
+    public void applyParsedSymbolDecorations(Symbol symbol, VariableSource variableSource) {
+        decorators.forEach(decorator -> decorator.handleParsedSymbol(symbol, variableSource));
     }
 }
 

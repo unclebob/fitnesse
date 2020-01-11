@@ -6,10 +6,6 @@ public class HtmlTranslator extends Translator {
 
     @Override
     protected Translation getTranslation(SymbolType symbolType) {
-        if(symbolType instanceof SymbolTypeDecorator){
-            SymbolType applicable = ((SymbolTypeDecorator)symbolType).isApplicable(this);
-            return applicable.getHtmlTranslation();
-        }
         return symbolType.getHtmlTranslation();
     }
 
