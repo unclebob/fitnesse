@@ -2,6 +2,7 @@
 <properties>
 <Edit>true</Edit>
 <Files>true</Files>
+<Help>Test the detailed formatting of failed string comparisons</Help>
 <Properties>true</Properties>
 <RecentChanges>true</RecentChanges>
 <Refactor>true</Refactor>

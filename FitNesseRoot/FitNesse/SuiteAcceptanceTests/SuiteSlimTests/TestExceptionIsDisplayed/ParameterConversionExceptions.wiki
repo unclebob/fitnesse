@@ -27,7 +27,8 @@ Test
 |and cell                           |Can't convert aWrongValue to long.*?                   |has result      |error                                    |
 |and cell                           |No converter for java.time.temporal.TemporalAccessor.*?|has result      |error                                    |
 |and cell                           |Can't convert twenty to integer.*?                     |has result      |error                                    |
-|and cell                           |expected .H.span class="diff".ello                     |has result      |fail                                     |
+|ensure |	content contains|<span class="fail">expected [H<span class="diff">ello</span>]</span>|
+|and cell                           |expected.*                     |has result      |fail                                     |
 |show Symbol                        |$HTML_Result                                                                                                    |
 |note                               |!4 As a TDD developer !-
 To have fast turnaround times
