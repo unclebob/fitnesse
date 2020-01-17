@@ -43,7 +43,7 @@ ${exclamation}${minus}
 
 
 
-!3 TODO
+!3 Known Limitations (TODO)
 Would expect that this uses the String(String) constructor but it rather uses String(Character) and truncates the string 
 !| script | String | Hello |
 |check|to string|Hello|
