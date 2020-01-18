@@ -42,14 +42,6 @@ public class SlimTableDefaultColoringTest {
     verify(table, atLeastOnce()).getChildren();
   }
 
-  @Test
-  public void should_leave_table_contents_alone_when_disabled() {
-    givenTestSystem("slim");
-    SlimTableDefaultColoring.disableForTable(table);
-    slimTableDefaultColoring.handleParsedSymbol(table, variableSource);
-    verify(table, never()).getChildren();
-  }
-
   private void givenTestSystem(String testSystem) {
     when(variableSource.findVariable("TEST_SYSTEM")).thenReturn(new Maybe<>(testSystem));
   }

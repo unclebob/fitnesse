@@ -23,15 +23,20 @@ import static fitnesse.wikitext.parser.decorator.SymbolInspector.inspect;
 
 public class SlimTableDefaultColoring implements ParsedSymbolDecorator {
 
-  private static final String DISABLE_DEFAULT_COLORING_MARKER_PROP = "__disable_default_coloring_";
+  private static final SlimTableDefaultColoring INSTANCE = new SlimTableDefaultColoring();
 
   private static boolean isInstalled;
 
   public static void install() {
     if (!isInstalled) {
-      Table.symbolType.prependDecorator(new SlimTableDefaultColoring());
+      Table.symbolType.addDecorator(INSTANCE);
       isInstalled = true;
     }
+  }
+
+  public static void uninstall() {
+    Table.symbolType.removeDecorator(INSTANCE);
+    isInstalled = false;
   }
 
   //visible for testing
@@ -39,17 +44,10 @@ public class SlimTableDefaultColoring implements ParsedSymbolDecorator {
     //hidden
   }
 
-  /**
-   * Can be called by preceding decorators to override the coloring logic for a specific table.
-   */
-  public static void disableForTable(Symbol table) {
-    inspect(table).checkSymbolType(Table.symbolType);
-    table.putProperty(DISABLE_DEFAULT_COLORING_MARKER_PROP, "true");
-  }
 
   @Override
   public void handleParsedSymbol(Symbol symbol, VariableSource variableSource) {
-    if (!symbol.hasProperty(DISABLE_DEFAULT_COLORING_MARKER_PROP) && isSlimContext(variableSource)) {
+    if (isSlimContext(variableSource)) {
       inspect(symbol).checkSymbolType(Table.symbolType);
       handleParsedTable(symbol);
     }

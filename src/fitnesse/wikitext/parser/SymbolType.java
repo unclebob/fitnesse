@@ -110,7 +110,7 @@ public class SymbolType implements Matchable {
     private Rule wikiRule = defaultRule;
     private Translation htmlTranslation = null;
     private final SymbolType                        closeType;
-    private final LinkedList<ParsedSymbolDecorator> decorators = new LinkedList<>();
+    private final List<ParsedSymbolDecorator> decorators = new LinkedList<>();
 
     public SymbolType(String name) { this(name, Empty); }
 
@@ -158,8 +158,12 @@ public class SymbolType implements Matchable {
       return closeType;
     }
 
-    public void prependDecorator(ParsedSymbolDecorator symbolDecorator) {
-        decorators.addFirst(symbolDecorator);
+    public void addDecorator(ParsedSymbolDecorator symbolDecorator) {
+      decorators.add(symbolDecorator);
+    }
+
+    public void removeDecorator(ParsedSymbolDecorator symbolDecorator) {
+      decorators.remove(symbolDecorator);
     }
 
     void applyParsedSymbolDecorations(Symbol symbol, VariableSource variableSource) {

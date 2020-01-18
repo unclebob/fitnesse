@@ -34,7 +34,7 @@ public class CustomScriptTableRenderingPlugin extends PluginFeatureFactoryBase {
 
   private static class TableSymbolDecorator implements ParsedSymbolDecorator {
     static void install() {
-      Table.symbolType.prependDecorator(new TableSymbolDecorator());
+      Table.symbolType.addDecorator(new TableSymbolDecorator());
     }
 
     @Override
