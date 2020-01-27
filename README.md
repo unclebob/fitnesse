@@ -21,7 +21,7 @@ Have a bug or a feature request? [Please open a new issue](https://github.com/un
 
 ## Community
 
-Have a question that's not a feature request or bug report? [Ask on the mailing list.](http://groups.yahoo.com/group/fitnesse)
+Have a question that's not a feature request or bug report? [Ask on the mailing list.](http://groups.yahoo.com/group/fitnesse) or [Join the Slack Community](https://join.slack.com/t/fitnessecommunity/shared_invite/enQtOTIzMjEwNTEzNTM2LWQ5OTE2ZjI5YmIzZWM2YzQwMDA2YmE5N2ZhMzNiNWM2ZjYzMDNmMTkzOTNmOTQ2N2E4Mzc2NGE4Y2ViMzE2MTE)
 
 ## Edge builds
 
