@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+
+!2 20200128
  * Update documentation replace references to Yahoo Group with Slack channel ([[1259][https://github.com/unclebob/fitnesse/pull/1259]]).
 
 !2 20200108
