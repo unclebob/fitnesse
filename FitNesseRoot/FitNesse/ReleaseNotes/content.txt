@@ -1,4 +1,5 @@
 !2 ${FITNESSE_VERSION}
+ * Update documentation replace references to Yahoo Group with Slack channel ([[1259][https://github.com/unclebob/fitnesse/pull/1259]]).
 
 !2 20200108
  * Bugfix for pretty printed exceptions ending with '<' ([[1252][https://github.com/unclebob/fitnesse/issues/1252]]).
