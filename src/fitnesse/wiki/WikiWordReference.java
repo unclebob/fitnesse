@@ -1,5 +1,6 @@
 package fitnesse.wiki;
 
+import fit.exception.IncorrectPathException;
 import fitnesse.wikitext.parser.Symbol;
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,7 +24,9 @@ public class WikiWordReference {
   }
 
   public static String expandPrefix(WikiPage wikiPage, String theWord) {
-    if (theWord.charAt(0) == '^' || theWord.charAt(0) == '>') {
+    if (theWord.equals("")) {
+      throw new IncorrectPathException("Path to Page must be filled in");
+    } else if (theWord.charAt(0) == '^' || theWord.charAt(0) == '>') {
       String prefix = wikiPage.getName();
       return String.format("%s.%s", prefix, theWord.substring(1));
     } else if (theWord.charAt(0) == '<') {
