@@ -21,7 +21,7 @@ Have a bug or a feature request? [Please open a new issue](https://github.com/un
 
 ## Community
 
-Have a question that's not a feature request or bug report? [Join the Slack Community.](https://join.slack.com/t/fitnessecommunity/shared_invite/enQtOTIzMjEwNTEzNTM2LWQ5OTE2ZjI5YmIzZWM2YzQwMDA2YmE5N2ZhMzNiNWM2ZjYzMDNmMTkzOTNmOTQ2N2E4Mzc2NGE4Y2ViMzE2MTE)
+Have a question that's not a feature request or bug report? [Join the Slack Community.](https://fitnesse-community-inviter.herokuapp.com/)
 
 ## Edge builds
 
@@ -69,7 +69,7 @@ To run the acceptance tests:
 $ ./gradlew acceptanceTest
 ```
 
-Direct any questions to the [Slack Community.](https://join.slack.com/t/fitnessecommunity/shared_invite/enQtOTIzMjEwNTEzNTM2LWQ5OTE2ZjI5YmIzZWM2YzQwMDA2YmE5N2ZhMzNiNWM2ZjYzMDNmMTkzOTNmOTQ2N2E4Mzc2NGE4Y2ViMzE2MTE).
+Direct any questions to the [Slack Community.](https://fitnesse-community-inviter.herokuapp.com/).
 
 
 ### Working with Eclipse and IntelliJ

@@ -106,7 +106,7 @@ and leaves the decision to the implementer of the test cases if he wants to use 
 !2 Warning: The Hybrid Decision Table is still experimental
 The way how the method names are configured (via variables) might change.
 Be prepared to refactor your tests if you use this feature.
-Your ideas for a final solution are welcome please give feedback on the [[!-FitNesse-! Slack Community][https://join.slack.com/t/fitnessecommunity/shared_invite/enQtOTIzMjEwNTEzNTM2LWQ5OTE2ZjI5YmIzZWM2YzQwMDA2YmE5N2ZhMzNiNWM2ZjYzMDNmMTkzOTNmOTQ2N2E4Mzc2NGE4Y2ViMzE2MTE]]
+Your ideas for a final solution are welcome please give feedback on the [[!-FitNesse-! Slack Community][https://fitnesse-community-inviter.herokuapp.com/]]
 
 
 
