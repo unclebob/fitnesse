@@ -25,6 +25,7 @@ import fitnesse.wiki.fs.FileSystemPageFactory;
 import fitnesse.wiki.fs.VersionsController;
 import fitnesse.wiki.fs.ZipFileVersionsController;
 import fitnesse.wikitext.parser.SymbolProvider;
+import fitnesse.wikitext.parser.decorator.SlimTableDefaultColoring;
 
 import static fitnesse.ConfigurationParameter.*;
 
@@ -160,6 +161,8 @@ public class ContextConfigurator {
           theme);
 
     SymbolProvider symbolProvider = SymbolProvider.wikiParsingProvider;
+
+    SlimTableDefaultColoring.install();
 
     pluginsLoader.loadResponders(context.responderFactory);
 

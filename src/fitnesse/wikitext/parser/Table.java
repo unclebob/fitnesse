@@ -1,9 +1,12 @@
 package fitnesse.wikitext.parser;
 
+import static fitnesse.wikitext.parser.decorator.SymbolClassPropertyAppender.CLASS_PROPERTY_NAME;
+import static fitnesse.wikitext.parser.decorator.SymbolClassPropertyAppender.classPropertyAppender;
+
 public class Table extends SymbolType implements Rule, Translation {
   public static final Table symbolType = new Table();
 
-  public static final SymbolType tableRow = new SymbolType("TableRow");
+  public static final SymbolType tableRow  = new SymbolType("TableRow");
   public static final SymbolType tableCell = new SymbolType("TableCell");
 
   public Table() {
@@ -45,8 +48,8 @@ public class Table extends SymbolType implements Rule, Translation {
 
   private Symbol parseCell(Parser parser, String content) {
     Symbol cell = (content.contains("!"))
-            ? parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider, ParseSpecification.tablePriority)
-            : parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.tableParsingProvider, ParseSpecification.tablePriority);
+                  ? parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider, ParseSpecification.tablePriority)
+                  : parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.tableParsingProvider, ParseSpecification.tablePriority);
     cell.setType(tableCell);
     return cell;
   }
@@ -67,36 +70,43 @@ public class Table extends SymbolType implements Rule, Translation {
   }
 
   @Override
-  public String toTarget(Translator translator, Symbol symbol) {
-      HtmlWriter writer = new HtmlWriter();
-      writer.startTag("table");
-      if (symbol.hasProperty("class")) {
-        writer.putAttribute("class", symbol.getProperty("class"));
+  public String toTarget(Translator translator, Symbol table) {
+    HtmlWriter writer = new HtmlWriter();
+    writer.startTag("table");
+    writeClassAttributeIfDefinedForSymbol(table, writer);
+    int longestRow = longestRow(table);
+    int rowCount = 0;
+    for (Symbol row : table.getChildren()) {
+      rowCount++;
+      writer.startTag("tr");
+      if (rowCount == 1 && table.hasProperty("hideFirst")) {
+        classPropertyAppender().addPropertyValue(row, "hidden");
       }
-      int longestRow = longestRow(symbol);
-      int rowCount = 0;
-      for (Symbol child : symbol.getChildren()) {
-        rowCount++;
-        writer.startTag("tr");
-        if (rowCount == 1 && symbol.hasProperty("hideFirst")) {
-          writer.putAttribute("class", "hidden");
+      writeClassAttributeIfDefinedForSymbol(row, writer);
+      int extraColumnSpan = longestRow - rowLength(row);
+      int column = 1;
+      for (Symbol cell : row.getChildren()) {
+        String body = translateCellBody(translator, cell);
+        writer.startTag("td");
+        if (extraColumnSpan > 0 && column == rowLength(row)) {
+          writer.putAttribute("colspan", Integer.toString(extraColumnSpan + 1));
         }
-        int extraColumnSpan = longestRow - rowLength(child);
-        int column = 1;
-        for (Symbol grandChild : child.getChildren()) {
-          String body = translateCellBody(translator, grandChild);
-          writer.startTag("td");
-          if (extraColumnSpan > 0 && column == rowLength(child))
-            writer.putAttribute("colspan", Integer.toString(extraColumnSpan + 1));
-          writer.putText(body);
-          writer.endTag();
-          column++;
-        }
+        writeClassAttributeIfDefinedForSymbol(cell, writer);
+        writer.putText(body);
         writer.endTag();
+        column++;
       }
       writer.endTag();
-      return writer.toHtml();
     }
+    writer.endTag();
+    return writer.toHtml();
+  }
+
+  private void writeClassAttributeIfDefinedForSymbol(Symbol symbol, HtmlWriter writer) {
+    if (symbol.hasProperty(CLASS_PROPERTY_NAME)) {
+      writer.putAttribute("class", symbol.getProperty(CLASS_PROPERTY_NAME));
+    }
+  }
 
   protected String translateCellBody(Translator translator, Symbol cell) {
     final String literalDelimiter = new String(new char[]{255, 1, 255});

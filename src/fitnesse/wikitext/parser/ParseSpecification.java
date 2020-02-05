@@ -120,7 +120,9 @@ public class ParseSpecification {
                 ignoreFirst(currentToken.getType());
                 scanner.copy(backup);
             } else {
-                parsedSymbol.getValue().setStartOffset(startOffset).setEndOffset(scanner.getOffset());
+                Symbol parsedSymbolValue = parsedSymbol.getValue();
+                parsedSymbolValue.getType().applyParsedSymbolDecorations(parsedSymbolValue, parser.getVariableSource());
+                parsedSymbolValue.setStartOffset(startOffset).setEndOffset(scanner.getOffset());
                 clearIgnoresFirst();
                 return parsedSymbol;
             }
