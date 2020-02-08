@@ -10,7 +10,7 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.NotFoundResponder;
+import fitnesse.services.PageService;
 import fitnesse.wiki.*;
 
 import java.util.Arrays;
@@ -20,20 +20,19 @@ import java.util.List;
 public class SavePropertiesResponder implements SecureResponder {
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-    SimpleResponse response = new SimpleResponse();
-    String resource = request.getResource();
-    WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = context.getRootPage().getPageCrawler().getPage(path);
-    if (page == null)
-      return new NotFoundResponder().makeResponse(context, request);
+    PageService pageService = new PageService(context, request);
+    WikiPage page = pageService.getPage();
+    pageService.pageIsNull(page);
+
     PageData data = page.getData();
     saveAttributes(request, data);
     VersionInfo commitRecord = page.commit(data);
+    SimpleResponse response = new SimpleResponse();
     if (commitRecord != null) {
       response.addHeader("Current-Version", commitRecord.getName());
     }
     context.recentChanges.updateRecentChanges(page);
-    response.redirect(context.contextRoot, resource);
+    response.redirect(context.contextRoot, request.getResource());
 
     return response;
   }
