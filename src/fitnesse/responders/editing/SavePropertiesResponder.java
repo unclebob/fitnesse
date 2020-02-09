@@ -6,23 +6,20 @@ package fitnesse.responders.editing;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
-import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.services.PageService;
+import fitnesse.responders.BasicResponder;
 import fitnesse.wiki.*;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SavePropertiesResponder implements SecureResponder {
+public class SavePropertiesResponder extends BasicResponder {
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-    PageService pageService = new PageService(context, request);
-    WikiPage page = pageService.getPage();
-    pageService.pageIsNull(page);
+    WikiPage page = getPage(context, request);
 
     PageData data = page.getData();
     saveAttributes(request, data);
@@ -35,6 +32,11 @@ public class SavePropertiesResponder implements SecureResponder {
     response.redirect(context.contextRoot, request.getResource());
 
     return response;
+  }
+
+  @Override
+  protected String contentFrom(FitNesseContext context, Request request, WikiPage requestedPage) {
+    return prepareResponseDocument(context).html(request);
   }
 
   private void saveAttributes(Request request, PageData data) {

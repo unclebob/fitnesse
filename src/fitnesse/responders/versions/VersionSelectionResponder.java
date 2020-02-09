@@ -12,26 +12,23 @@ import java.util.List;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
-import fitnesse.authentication.SecureResponder;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.services.PageService;
+import fitnesse.responders.BasicResponder;
 import fitnesse.wiki.*;
 
 import static fitnesse.wiki.PageData.LAST_MODIFYING_USER;
 import static fitnesse.wiki.PageData.PropertyLAST_MODIFIED;
 
 
-public class VersionSelectionResponder implements SecureResponder {
+public class VersionSelectionResponder extends BasicResponder {
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-    PageService pageService = new PageService(context, request);
-    WikiPage page = pageService.getPage();
-    pageService.pageIsNull(page);
+    WikiPage page = getPage(context, request);
 
     PageData pageData = page.getData();
     List<VersionInfo> versions = getVersionsList(page);
@@ -49,6 +46,11 @@ public class VersionSelectionResponder implements SecureResponder {
     response.setContent(html.html(request));
 
     return response;
+  }
+
+  @Override
+  protected String contentFrom(FitNesseContext context, Request request, WikiPage requestedPage) {
+    return prepareResponseDocument(context).html(request);
   }
 
   private String makeLastModifiedTag(PageData pageData) {

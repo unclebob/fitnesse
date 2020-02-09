@@ -8,6 +8,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.InsecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.html.template.HtmlPage;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -28,6 +29,19 @@ public abstract class BasicResponder implements SecureResponder {
       response = responseWith(contentFrom(context, request, requestedPage));
 
     return response;
+  }
+
+  protected WikiPage getPage(FitNesseContext context, Request request) {
+    String resource = request.getResource();
+    WikiPagePath path = PathParser.parse(resource);
+    return context.getRootPage().getPageCrawler().getPage(path);
+  }
+
+  protected HtmlPage prepareResponseDocument(FitNesseContext context) {
+    HtmlPage responseDocument = context.pageFactory.newPage();
+    responseDocument.addTitles("Default Responder");
+    responseDocument.setMainTemplate("defaultPage.vm");
+    return responseDocument;
   }
 
   protected WikiPage getRequestedPage(Request request, FitNesseContext context) {
