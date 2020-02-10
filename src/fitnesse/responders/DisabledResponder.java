@@ -17,6 +17,7 @@ public class DisabledResponder extends BasicResponder {
     return prepareResponseDocument(context).html(request);
   }
 
+  @Override
   protected HtmlPage prepareResponseDocument(FitNesseContext context) {
     HtmlPage responseDocument = context.pageFactory.newPage();
     responseDocument.addTitles("Default Responder");

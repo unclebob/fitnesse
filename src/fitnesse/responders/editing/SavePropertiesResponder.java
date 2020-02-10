@@ -34,11 +34,6 @@ public class SavePropertiesResponder extends BasicResponder {
     return response;
   }
 
-  @Override
-  protected String contentFrom(FitNesseContext context, Request request, WikiPage requestedPage) {
-    return prepareResponseDocument(context).html(request);
-  }
-
   private void saveAttributes(Request request, PageData data) {
     setPageTypeAttribute(request, data);
 

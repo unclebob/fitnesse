@@ -50,7 +50,9 @@ public abstract class BasicResponder implements SecureResponder {
     return requestedPage;
   }
 
-  protected abstract String contentFrom(FitNesseContext context, Request request, WikiPage requestedPage);
+  protected String contentFrom(FitNesseContext context, Request request, WikiPage requestedPage) {
+    return prepareResponseDocument(context).html(request);
+  }
 
   protected Response pageNotFoundResponse(FitNesseContext context, Request request) throws Exception {
     return new NotFoundResponder().makeResponse(context, request);

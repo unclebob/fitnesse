@@ -48,11 +48,6 @@ public class VersionSelectionResponder extends BasicResponder {
     return response;
   }
 
-  @Override
-  protected String contentFrom(FitNesseContext context, Request request, WikiPage requestedPage) {
-    return prepareResponseDocument(context).html(request);
-  }
-
   private String makeLastModifiedTag(PageData pageData) {
     String username = pageData.getAttribute(LAST_MODIFYING_USER);
     String dateString = pageData.getAttribute(PropertyLAST_MODIFIED);
