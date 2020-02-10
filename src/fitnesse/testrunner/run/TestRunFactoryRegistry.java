@@ -7,18 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestRunFactoryRegistry {
-  public final static TestRunFactory DEFAULT =
-    new TestRunFactory() {
-      @Override
-      public boolean canRun(List<WikiPage> pages) {
-        return true;
-      }
-
-      @Override
-      public TestRun createRun(List<WikiPage> pages) {
-        return new PerTestSystemTestRun(pages);
-      }
-    };
+  public final static TestRunFactory DEFAULT = new PartitioningTestRunFactory();
 
   private final List<TestRunFactory> testRunFactories = new ArrayList<>();
   private final FitNesseContext context;
@@ -33,6 +22,10 @@ public class TestRunFactoryRegistry {
 
   public TestRun createRun(List<WikiPage> pages) {
     return getFactory(pages).createRun(pages);
+  }
+
+  public PagePositions findPagePositions(List<WikiPage> pages) {
+    return getFactory(pages).findPagePositions(pages);
   }
 
   public TestRunFactory getFactory(List<WikiPage> pages) {
