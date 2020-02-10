@@ -16,7 +16,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
-public abstract class BasicResponder implements SecureResponder {
+public class BasicResponder implements SecureResponder {
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
