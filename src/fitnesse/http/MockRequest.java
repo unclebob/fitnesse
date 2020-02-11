@@ -8,6 +8,10 @@ public class MockRequest extends Request {
     super.setResource("");
   }
 
+  public MockRequest(String resource) {
+    super.setResource(resource);
+  }
+
   public void setRequestLine(String value) {
     requestLine = value;
   }
