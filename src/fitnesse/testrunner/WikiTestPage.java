@@ -143,7 +143,7 @@ public class WikiTestPage implements TestPage {
 
   protected void includePages(String name, List<WikiPage> pages, BiConsumer<WikiPage, StringBuilder> includePage,
                               StringBuilder decoratedContent) {
-    if (!pages.isEmpty()) {
+    if (pages != null && !pages.isEmpty()) {
       boolean multiplePages = pages.size() > 1;
       if (multiplePages) {
         decoratedContent.append("!*> ");
