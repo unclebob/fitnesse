@@ -3,6 +3,8 @@
 package fitnesse.testrunner;
 
 import fitnesse.FitNesseContext;
+import fitnesse.testrunner.run.TestRun;
+import fitnesse.testrunner.run.TestRunFactoryRegistry;
 import fitnesse.testsystems.Descriptor;
 import fitnesse.testsystems.TestExecutionException;
 import fitnesse.testsystems.TestSystem;
@@ -48,7 +50,7 @@ public class MultipleTestsRunnerTest {
     WikiPage testPage1 = addTestPage(suite, "TestPage1", "!define TEST_SYSTEM {A}");
     WikiPage testPage2 = addTestPage(suite, "TestPage2", "!define TEST_SYSTEM {B}");
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(asList(testPage1, testPage2), testSystemFactory);
+    MultipleTestsRunner runner = new MultipleTestsRunner(createRun(testPage1, testPage2), testSystemFactory);
 
     runner.executeTestPages();
 
@@ -61,7 +63,7 @@ public class MultipleTestsRunnerTest {
     WikiPage testPage = addTestPage(suite, "TestPage1", "!define TEST_SYSTEM {A}");
     ClosableTestSystemListener listener = mock(ClosableTestSystemListener.class);
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(asList(testPage), testSystemFactory);
+    MultipleTestsRunner runner = new MultipleTestsRunner(createRun(testPage), testSystemFactory);
     runner.addTestSystemListener(listener);
     runner.executeTestPages();
 
@@ -74,6 +76,10 @@ public class MultipleTestsRunnerTest {
     data.setAttribute("Test");
     testPage.commit(data);
     return testPage;
+  }
+
+  private TestRun createRun(WikiPage... pages) {
+    return TestRunFactoryRegistry.DEFAULT.createRun(asList(pages));
   }
 
   private Descriptor forTestSystem(String type) {

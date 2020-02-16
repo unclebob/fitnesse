@@ -1,8 +1,5 @@
 package fitnesse;
 
-import java.io.IOException;
-import java.util.Properties;
-
 import fitnesse.authentication.Authenticator;
 import fitnesse.components.ComponentFactory;
 import fitnesse.components.Logger;
@@ -12,6 +9,7 @@ import fitnesse.reporting.FormatterFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.ContentFilterResponder;
 import fitnesse.testrunner.MultipleTestSystemFactory;
+import fitnesse.testrunner.run.TestRunFactoryRegistry;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
@@ -27,7 +25,20 @@ import fitnesse.wiki.fs.ZipFileVersionsController;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.decorator.SlimTableDefaultColoring;
 
-import static fitnesse.ConfigurationParameter.*;
+import java.io.IOException;
+import java.util.Properties;
+
+import static fitnesse.ConfigurationParameter.COMMAND;
+import static fitnesse.ConfigurationParameter.CONFIG_FILE;
+import static fitnesse.ConfigurationParameter.CONTEXT_ROOT;
+import static fitnesse.ConfigurationParameter.CREDENTIALS;
+import static fitnesse.ConfigurationParameter.LOG_DIRECTORY;
+import static fitnesse.ConfigurationParameter.RECENT_CHANGES_CLASS;
+import static fitnesse.ConfigurationParameter.ROOT_DIRECTORY;
+import static fitnesse.ConfigurationParameter.THEME;
+import static fitnesse.ConfigurationParameter.VERSIONS_CONTROLLER_CLASS;
+import static fitnesse.ConfigurationParameter.VERSIONS_CONTROLLER_DAYS;
+import static fitnesse.ConfigurationParameter.WIKI_PAGE_FACTORY_CLASS;
 
 /**
  * Set up a context for running a FitNesse Instance.
@@ -140,6 +151,7 @@ public class ContextConfigurator {
     CustomComparatorRegistry customComparatorRegistry = new CustomComparatorRegistry();
 
     MultipleTestSystemFactory testSystemFactory = new MultipleTestSystemFactory(slimTableFactory, customComparatorRegistry, classLoader);
+    TestRunFactoryRegistry testRunFactoryRegistry = TestRunFactoryRegistry.getInstance();
 
     FormatterFactory formatterFactory = new FormatterFactory(componentFactory);
 
@@ -155,6 +167,7 @@ public class ContextConfigurator {
           logger,
           testSystemFactory,
           testSystemListener,
+          testRunFactoryRegistry,
           formatterFactory,
           properties,
           variableSource,
@@ -176,6 +189,7 @@ public class ContextConfigurator {
     pluginsLoader.loadSymbolTypes(symbolProvider);
     pluginsLoader.loadSlimTables(slimTableFactory);
     pluginsLoader.loadCustomComparators(customComparatorRegistry);
+    pluginsLoader.loadTestRunFactories(testRunFactoryRegistry, context);
 
     ContentFilter contentFilter = pluginsLoader.loadContentFilter();
 

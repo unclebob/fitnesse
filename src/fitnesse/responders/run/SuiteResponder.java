@@ -32,6 +32,7 @@ import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.RunningTestingTracker;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testrunner.SuiteFilter;
+import fitnesse.testrunner.run.TestRun;
 import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.TestExecutionException;
@@ -345,12 +346,18 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   protected MultipleTestsRunner newMultipleTestsRunner(List<WikiPage> pages) {
     // Add test url inputs to context's variableSource.
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(pages, context.testSystemFactory);
+    TestRun run = createRunProvider(pages);
+    MultipleTestsRunner runner = new MultipleTestsRunner(run, context.testSystemFactory);
+
     runner.setRunInProcess(debug);
     runner.setEnableRemoteDebug(remoteDebug);
     addFormatters(runner);
 
     return runner;
+  }
+
+  protected TestRun createRunProvider(List<WikiPage> pages) {
+    return context.testRunFactoryRegistry.createRun(pages);
   }
 
   @Override

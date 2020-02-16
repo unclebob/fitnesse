@@ -2,15 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import java.io.File;
-import java.util.Map;
-import java.util.Properties;
-
 import fitnesse.authentication.Authenticator;
 import fitnesse.components.Logger;
 import fitnesse.html.template.PageFactory;
 import fitnesse.reporting.FormatterFactory;
 import fitnesse.responders.ResponderFactory;
+import fitnesse.testrunner.run.TestRunFactoryRegistry;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.wiki.RecentChanges;
@@ -20,6 +17,10 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.fs.VersionsController;
 import fitnesse.wikitext.parser.VariableSource;
+
+import java.io.File;
+import java.util.Map;
+import java.util.Properties;
 
 public class FitNesseContext {
   public static final String WIKI_PROTOCOL_PROPERTY = "wiki.protocol";
@@ -35,6 +36,7 @@ public class FitNesseContext {
 
   public final TestSystemFactory testSystemFactory;
   public final TestSystemListener testSystemListener;
+  public final TestRunFactoryRegistry testRunFactoryRegistry;
 
   public final FormatterFactory formatterFactory;
 
@@ -59,6 +61,7 @@ public class FitNesseContext {
                             RecentChanges recentChanges, int port,
                             Authenticator authenticator, Logger logger,
                             TestSystemFactory testSystemFactory, TestSystemListener testSystemListener,
+                            TestRunFactoryRegistry testRunFactoryRegistry,
                             FormatterFactory formatterFactory,
                             Properties properties,
                             SystemVariableSource variableSource,
@@ -74,6 +77,7 @@ public class FitNesseContext {
     this.port = port;
     this.authenticator = authenticator;
     this.logger = logger;
+    this.testRunFactoryRegistry = testRunFactoryRegistry;
     this.testSystemFactory = testSystemFactory;
     this.testSystemListener = testSystemListener;
     this.formatterFactory = formatterFactory;

@@ -6,6 +6,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.slim.instructions.SystemExitSecurityManager;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.SuiteContentsFinder;
+import fitnesse.testrunner.run.TestRun;
 import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.TestExecutionException;
 import fitnesse.testsystems.TestSummary;
@@ -391,7 +392,8 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   }
 
   protected void runPages(List<WikiPage> pages, final RunNotifier notifier) {
-    MultipleTestsRunner testRunner = createTestRunner(pages, context, debugMode);
+    TestRun run = createTestRun(pages);
+    MultipleTestsRunner testRunner = createTestRunner(run, context, debugMode);
     addTestSystemListeners(notifier, testRunner, suiteClass, getDescriptionFactory());
     addExecutionLogListener(notifier, testRunner, suiteClass);
     System.setProperty(SystemExitSecurityManager.PREVENT_SYSTEM_EXIT, String.valueOf(preventSystemExit));
@@ -401,6 +403,10 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
       Description description = getDescriptionFactory().createSuiteDescription(suiteClass);
       notifier.fireTestFailure(new Failure(description, e));
     }
+  }
+
+  protected TestRun createTestRun(List<WikiPage> pages) {
+    return JUnitHelper.createTestRun(context, pages);
   }
 
   protected void addTestSystemListeners(RunNotifier notifier, MultipleTestsRunner testRunner, Class<?> suiteClass,
