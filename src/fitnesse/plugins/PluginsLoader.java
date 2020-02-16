@@ -1,12 +1,6 @@
 package fitnesse.plugins;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.ServiceLoader;
-
+import fitnesse.FitNesseContext;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
@@ -17,11 +11,18 @@ import fitnesse.reporting.FormatterRegistry;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.testrunner.TestSystemFactoryRegistry;
+import fitnesse.testrunner.run.TestRunFactoryRegistry;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
-import fitnesse.util.ClassUtils;
 import fitnesse.wiki.WikiPageFactoryRegistry;
 import fitnesse.wikitext.parser.SymbolProvider;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.ServiceLoader;
 
 public class PluginsLoader {
   private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(PluginsLoader.class.getName());
@@ -143,6 +144,12 @@ public class PluginsLoader {
   public void loadTestSystems(final TestSystemFactoryRegistry registrar) throws PluginException {
     for (PluginFeatureFactory pff : pluginFeatureFactories) {
       pff.registerTestSystemFactories(registrar);
+    }
+  }
+
+  public void loadTestRunFactories(final TestRunFactoryRegistry registry, final FitNesseContext context) throws PluginException {
+    for (PluginFeatureFactory pff : pluginFeatureFactories) {
+      pff.registerTestRunFactories(registry, context);
     }
   }
 }

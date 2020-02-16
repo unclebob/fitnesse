@@ -5,6 +5,7 @@ import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.SuiteContentsFinder;
+import fitnesse.testrunner.run.TestRun;
 import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystemListener;
@@ -79,7 +80,9 @@ public class JUnitHelper {
     JavaFormatter testFormatter = new JavaFormatter(pageName);
     testFormatter.setResultsRepository(new JavaFormatter.FolderResultsRepository(outputDir));
 
-    MultipleTestsRunner testRunner = createTestRunner(initChildren(pageName, suiteFilter, excludeSuiteFilter, context), context, debugMode);
+    List<WikiPage> pages = initChildren(pageName, suiteFilter, excludeSuiteFilter, context);
+    TestRun run = createTestRun(context, pages);
+    MultipleTestsRunner testRunner = createTestRunner(run, context, debugMode);
     testRunner.addTestSystemListener(testFormatter);
     testRunner.addTestSystemListener(resultsListener);
     testRunner.addExecutionLogListener(new ConsoleExecutionLogListener());
@@ -106,10 +109,14 @@ public class JUnitHelper {
     return crawler.getPage(path);
   }
 
-  static MultipleTestsRunner createTestRunner(List<WikiPage> pages, FitNesseContext context, boolean debugMode) {
-    MultipleTestsRunner runner = new MultipleTestsRunner(pages, context.testSystemFactory);
+  static MultipleTestsRunner createTestRunner(TestRun run, FitNesseContext context, boolean debugMode) {
+    MultipleTestsRunner runner = new MultipleTestsRunner(run, context.testSystemFactory);
     runner.setRunInProcess(debugMode);
     return runner;
+  }
+
+  static TestRun createTestRun(FitNesseContext context, List<WikiPage> pages) {
+    return context.testRunFactoryRegistry.createRun(pages);
   }
 
   static String msgAtLeastOneTest(String pageName, TestSummary summary) {
