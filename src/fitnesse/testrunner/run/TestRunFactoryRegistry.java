@@ -1,17 +1,12 @@
 package fitnesse.testrunner.run;
 
+import fitnesse.FitNesseContext;
 import fitnesse.wiki.WikiPage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestRunFactoryRegistry {
-  private final static TestRunFactoryRegistry INSTANCE = new TestRunFactoryRegistry();
-
-  public static TestRunFactoryRegistry getInstance() {
-    return INSTANCE;
-  }
-
   public final static TestRunFactory DEFAULT =
     new TestRunFactory() {
       @Override
@@ -26,12 +21,10 @@ public class TestRunFactoryRegistry {
     };
 
   private final List<TestRunFactory> testRunFactories = new ArrayList<>();
+  private final FitNesseContext context;
 
-  private TestRunFactoryRegistry() {
-  }
-
-  public void resetFactories() {
-    testRunFactories.clear();
+  public TestRunFactoryRegistry(FitNesseContext context) {
+    this.context = context;
   }
 
   public void addFactory(TestRunFactory factory) {
@@ -47,5 +40,9 @@ public class TestRunFactoryRegistry {
       .filter(f -> f.canRun(pages))
       .findFirst()
       .orElse(DEFAULT);
+  }
+
+  public FitNesseContext getContext() {
+    return context;
   }
 }

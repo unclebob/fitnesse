@@ -1,6 +1,5 @@
 package fitnesse.plugins;
 
-import fitnesse.FitNesseContext;
 import fitnesse.authentication.Authenticator;
 import fitnesse.reporting.FormatterRegistry;
 import fitnesse.responders.ResponderFactory;
@@ -47,7 +46,7 @@ public interface PluginFeatureFactory {
   default void registerCustomComparators(CustomComparatorRegistry customComparatorRegistry) throws PluginException {
   }
 
-  default void registerTestRunFactories(TestRunFactoryRegistry runFactoryRegistry, FitNesseContext context) throws PluginException {
+  default void registerTestRunFactories(TestRunFactoryRegistry runFactoryRegistry) throws PluginException {
   }
 
 }

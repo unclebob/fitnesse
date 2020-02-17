@@ -1,6 +1,5 @@
 package fitnesse.plugins;
 
-import fitnesse.FitNesseContext;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
@@ -147,9 +146,9 @@ public class PluginsLoader {
     }
   }
 
-  public void loadTestRunFactories(final TestRunFactoryRegistry registry, final FitNesseContext context) throws PluginException {
+  public void loadTestRunFactories(final TestRunFactoryRegistry registry) throws PluginException {
     for (PluginFeatureFactory pff : pluginFeatureFactories) {
-      pff.registerTestRunFactories(registry, context);
+      pff.registerTestRunFactories(registry);
     }
   }
 }

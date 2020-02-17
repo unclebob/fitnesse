@@ -61,7 +61,6 @@ public class FitNesseContext {
                             RecentChanges recentChanges, int port,
                             Authenticator authenticator, Logger logger,
                             TestSystemFactory testSystemFactory, TestSystemListener testSystemListener,
-                            TestRunFactoryRegistry testRunFactoryRegistry,
                             FormatterFactory formatterFactory,
                             Properties properties,
                             SystemVariableSource variableSource,
@@ -77,7 +76,6 @@ public class FitNesseContext {
     this.port = port;
     this.authenticator = authenticator;
     this.logger = logger;
-    this.testRunFactoryRegistry = testRunFactoryRegistry;
     this.testSystemFactory = testSystemFactory;
     this.testSystemListener = testSystemListener;
     this.formatterFactory = formatterFactory;
@@ -87,6 +85,7 @@ public class FitNesseContext {
     this.variableSource = variableSource;
     fitNesse = new FitNesse(this);
     pageFactory = new PageFactory(this);
+    testRunFactoryRegistry = new TestRunFactoryRegistry(this);
   }
 
   public WikiPage getRootPage() {

@@ -1,8 +1,6 @@
 package fitnesse.testrunner.run;
 
 import fitnesse.wiki.WikiPage;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -15,17 +13,7 @@ import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 
 public class TestRunFactoryRegistryTest {
-  private TestRunFactoryRegistry registry = TestRunFactoryRegistry.getInstance();
-
-  @Before
-  public void setUp() {
-    registry.resetFactories();
-  }
-
-  @After
-  public void tearDown() {
-    registry.resetFactories();
-  }
+  private TestRunFactoryRegistry registry = new TestRunFactoryRegistry(null);
 
   @Test
   public void defaultIsPerTestSystemTestRun() {

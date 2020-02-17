@@ -9,7 +9,6 @@ import fitnesse.reporting.FormatterFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.ContentFilterResponder;
 import fitnesse.testrunner.MultipleTestSystemFactory;
-import fitnesse.testrunner.run.TestRunFactoryRegistry;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
@@ -151,7 +150,6 @@ public class ContextConfigurator {
     CustomComparatorRegistry customComparatorRegistry = new CustomComparatorRegistry();
 
     MultipleTestSystemFactory testSystemFactory = new MultipleTestSystemFactory(slimTableFactory, customComparatorRegistry, classLoader);
-    TestRunFactoryRegistry testRunFactoryRegistry = TestRunFactoryRegistry.getInstance();
 
     FormatterFactory formatterFactory = new FormatterFactory(componentFactory);
 
@@ -167,7 +165,6 @@ public class ContextConfigurator {
           logger,
           testSystemFactory,
           testSystemListener,
-          testRunFactoryRegistry,
           formatterFactory,
           properties,
           variableSource,
@@ -189,7 +186,7 @@ public class ContextConfigurator {
     pluginsLoader.loadSymbolTypes(symbolProvider);
     pluginsLoader.loadSlimTables(slimTableFactory);
     pluginsLoader.loadCustomComparators(customComparatorRegistry);
-    pluginsLoader.loadTestRunFactories(testRunFactoryRegistry, context);
+    pluginsLoader.loadTestRunFactories(context.testRunFactoryRegistry);
 
     ContentFilter contentFilter = pluginsLoader.loadContentFilter();
 
