@@ -221,7 +221,7 @@ public class WikiTestPage implements TestPage {
   }
 
   protected boolean isSuiteSetUpOrTearDownPage() {
-    return isSuiteSetupOrTearDown(sourcePage);
+    return sourcePage.isSuiteSetupOrTearDown();
   }
 
   protected WikiPage findInheritedPage(String pageName) {
@@ -242,10 +242,5 @@ public class WikiTestPage implements TestPage {
     LinkedList<WikiPage> uncles = new LinkedList<>();
     sourcePage.getPageCrawler().traverseUncles(uncleName, uncles::addFirst);
     return uncles;
-  }
-
-  public static boolean isSuiteSetupOrTearDown(WikiPage wikiPage) {
-    String name = wikiPage.getName();
-    return (PageData.SUITE_SETUP_NAME.equals(name) || PageData.SUITE_TEARDOWN_NAME.equals(name));
   }
 }

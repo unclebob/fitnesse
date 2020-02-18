@@ -16,7 +16,9 @@ import fitnesse.wiki.WikiPagePath;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -96,16 +98,16 @@ public class JUnitHelper {
   }
 
   private List<WikiPage> initChildren(String suiteName, String suiteFilter, String excludeSuiteFilter, FitNesseContext context) {
-    WikiPage suiteRoot = getSuiteRootPage(suiteName, context);
+    WikiPage suiteRoot = getSuiteRootPage(suiteName, context, Collections.emptyMap());
     if (!suiteRoot.getData().hasAttribute("Suite")) {
       return Arrays.asList(suiteRoot);
     }
     return new SuiteContentsFinder(suiteRoot, new fitnesse.testrunner.SuiteFilter(suiteFilter, excludeSuiteFilter), context.getRootPage()).getAllPagesToRunForThisSuite();
   }
 
-  static WikiPage getSuiteRootPage(String suiteName, FitNesseContext context) {
+  static WikiPage getSuiteRootPage(String suiteName, FitNesseContext context, Map<String, String> customProperties) {
     WikiPagePath path = PathParser.parse(suiteName);
-    PageCrawler crawler = context.getRootPage().getPageCrawler();
+    PageCrawler crawler = context.getRootPage(customProperties).getPageCrawler();
     return crawler.getPage(path);
   }
 

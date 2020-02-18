@@ -86,6 +86,11 @@ public interface WikiPage extends Comparable<WikiPage> {
   default WikiPagePath getFullPath() {
     return getPageCrawler().getFullPath();
   }
+
+  default boolean isSuiteSetupOrTearDown() {
+    String name = getName();
+    return (PageData.SUITE_SETUP_NAME.equals(name) || PageData.SUITE_TEARDOWN_NAME.equals(name));
+  }
 }
 
 

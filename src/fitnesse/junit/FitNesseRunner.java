@@ -25,7 +25,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static fitnesse.junit.JUnitHelper.createTestRunner;
 import static fitnesse.junit.JUnitHelper.getSuiteRootPage;
@@ -419,17 +421,24 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   }
 
   protected List<WikiPage> initChildren() {
-    WikiPage suiteRoot = getSuiteRootPage(suiteName, context);
+    Map<String, String> customProperties = createCustomProperties();
+
+    WikiPage suiteRoot = getSuiteRootPage(suiteName, context, customProperties);
     if (suiteRoot == null) {
       throw new IllegalArgumentException("No page " + this.suiteName);
     }
     List<WikiPage> children;
     if (suiteRoot.getData().hasAttribute("Suite")) {
-      children = new SuiteContentsFinder(suiteRoot, getSuiteFilter(), context.getRootPage()).getAllPagesToRunForThisSuite();
+      SuiteContentsFinder contentsFinder = new SuiteContentsFinder(suiteRoot, getSuiteFilter(), context.getRootPage());
+      return contentsFinder.getAllPagesToRunForThisSuite();
     } else {
       children = Collections.singletonList(suiteRoot);
     }
     return children;
+  }
+
+  protected Map<String, String> createCustomProperties() {
+    return new HashMap<>();
   }
 
   private fitnesse.testrunner.SuiteFilter getSuiteFilter() {
