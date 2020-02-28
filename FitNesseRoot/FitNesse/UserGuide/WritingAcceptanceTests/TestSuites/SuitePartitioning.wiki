@@ -5,7 +5,7 @@ Suites can be partitioned, that is split into multiple parts, for instance to ru
 
 There are multiple ways to select certain parts of a suite. SubWikiSuites and TagsAndFilters both allow suites to be split, but these are static. And if the goal is only to improve a test suite's execution time, it could be considered improper use of these mechanisms as they are intended to define functional aspects of tests.
 A purpose-build mechanism to partition a suite is also available. When running a suite one can provide a !style_code(partitionCount) and !style_code(partitionIndex) parameter (zero-based) to indicate in how many parts the suite should be split, and which part to run now.
-An example usage of this mechanism is a call to !style_code(!-http://&lt;host>:&lt;port>/&lt;suite path>?suite&partitionCount=2&partionIndex=0-!). This would partion the suite in two, executing the first.
+An example usage of this mechanism is a call to !style_code(!-http://&lt;host>:&lt;port>/&lt;suite path>?suite&partitionCount=2&partitionIndex=0-!). This would partition the suite in two, executing the first.
 
 So one can start multiple runs for the same suite, all using the same partition count, but a different partition index.
 By starting 'partition count' runs all tests are run, without the need to manually define and maintain exactly which tests should go in which partition, even when tests are added and removed from the suite.
@@ -20,7 +20,7 @@ So one could for instance do !style_code(!-http://&lt;host>:&lt;port>/&lt;suite 
 One can also supply a file containing a partitioning in the format created by the partition preview responder when running a suite. This file can list the desired partitioning for all known test pages. Any other pages found in the suite will be spread evenly across all partitions.
 The filename for such a file must be supplied to the suite responder using the !style_code(partitionIndexFile) parameter. The file will be looked up inside the wiki's [[files section][.FitNesse.UserGuide.FitNesseWiki.FilesSection]].
 
-So for example a call to !style_code(!-http://&lt;host>:&lt;port>/&lt;suite path>?suite&partitionCount=2&partionIndex=1&partitionIndexFile=partitions.tsv-!). This would partion the tests in the suite in two groups using the division described in a file called !style_code(partitions.tsv) in the files section, executing the second group.
+So for example a call to !style_code(!-http://&lt;host>:&lt;port>/&lt;suite path>?suite&partitionCount=2&partitionIndex=1&partitionIndexFile=partitions.tsv-!). This would partition the tests in the suite in two groups using the division described in a file called !style_code(partitions.tsv) in the files section, executing the second group.
 The file's content could look something like this (where whitespace between columns should be tab characters):
 {{{
 Page	Partition	Test System	Order
