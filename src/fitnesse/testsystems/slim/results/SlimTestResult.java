@@ -187,6 +187,6 @@ public class SlimTestResult implements TestResult {
   }
 
   public static SlimTestResult testNotRun() {
-    return new SlimTestResult(null, null, "Test not run", ExecutionResult.IGNORE, false);
+    return new SlimTestResult(null, null, "Test not run", ExecutionResult.IGNORE, true);
   }
 }

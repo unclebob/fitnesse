@@ -59,6 +59,8 @@ public class JUnitRunNotifierResultsListener
     Description description = descriptionFor(test);
     if (firstFailure != null) {
       notifier.fireTestFailure(new Failure(description, firstFailure));
+    } else if (testSummary.getIgnores() > 0 && testSummary.getRight() == 0 && testSummary.getWrong() == 0 && testSummary.getExceptions() == 0) {
+      notifier.fireTestFailure(new Failure(description, new AssertionError("All assertions were ignored on page " + test.getFullPath())));
     } else if (testSummary.getExceptions() > 0) {
       notifier.fireTestFailure(new Failure(description, new Exception("Exception occurred on page " + test.getFullPath())));
     } else if (testSummary.getWrong() > 0) {
