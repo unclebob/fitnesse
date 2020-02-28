@@ -31,7 +31,7 @@ public interface PageListPartitioner {
    * @param factory function to create PagesByTestSystem
    * @param pages pages to be executed.
    * @param partitionCount number of partitions to create
-   * @return page -> partition and index within that partition, for each partition to include page in.
+   * @return page to partition and index within that partition, for each partition to include page in.
    */
   PagePositions findPagePositions(Function<List<WikiPage>, ? extends PagesByTestSystem> factory, List<WikiPage> pages, int partitionCount);
 }
