@@ -156,7 +156,7 @@ public class PagePositions {
     }
   }
 
-  protected String formatDimension(Object dimension) {
+  public String formatDimension(Object dimension) {
     if (dimension instanceof WikiPageIdentity) {
       return ((WikiPageIdentity) dimension).testSystem();
     } else {

@@ -1,0 +1,27 @@
+<h1>Partitioning preview</h1>
+<div>
+ <a class="button" href="?partition&partitionCount=$partitionCount">Download TSV partitionfile</a><br />&nbsp;
+</div>
+<table>
+ <thead>
+  <tr>
+   <th>Page</th>
+   <th>Partition</th>
+   <th>Test System</th>
+   <th>Order</th>
+  </tr>
+ </thead>
+ <tbody>
+  #foreach($page in $partitioning.getPages())
+  <tr>
+   #foreach($position in $partitioning.getPositions($page))
+   <td>$page</td>
+   #foreach($dimension in $position.getGroup())
+   <td>$partitioning.formatDimension($dimension)</td>
+   #end
+   <td>$position.getPositionInGroup()</td>
+   #end
+  </tr>
+  #end
+ </tbody>
+</table>
