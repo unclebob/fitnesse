@@ -1,25 +1,26 @@
 <h1>Partitioning preview</h1>
 <div>
- <a class="button" href="?partition&partitionCount=$partitionCount">Download TSV partitionfile</a><br />&nbsp;
+ <a class="button" href="?partition&format=tsv&partitionCount=$partitionCount">Download TSV partitionfile</a><br/>&nbsp;
 </div>
 <table>
  <thead>
-  <tr>
-   <th>Page</th>
-   <th>Partition</th>
-   <th>Test System</th>
-   <th>Order</th>
-  </tr>
+ <tr>
+  <th>Page</th>
+  #foreach($groupName in $pagePositions.getGroupNames())
+   <th>$groupName</th>
+  #end
+  <th>Order</th>
+ </tr>
  </thead>
  <tbody>
-  #foreach($page in $partitioning.getPages())
+  #foreach($page in $pagePositions.getPages())
   <tr>
-   #foreach($position in $partitioning.getPositions($page))
-   <td>$page</td>
-   #foreach($dimension in $position.getGroup())
-   <td>$partitioning.formatDimension($dimension)</td>
-   #end
-   <td>$position.getPositionInGroup()</td>
+   #foreach($position in $pagePositions.getPositions($page))
+    <td>$page</td>
+    #foreach($dimension in $position.getGroup())
+     <td>$pagePositions.formatDimension($dimension)</td>
+    #end
+    <td>$position.getPositionInGroup()</td>
    #end
   </tr>
   #end

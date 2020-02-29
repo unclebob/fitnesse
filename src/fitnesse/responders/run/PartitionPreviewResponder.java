@@ -1,10 +1,7 @@
 package fitnesse.responders.run;
 
-import fitnesse.FitNesseContext;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
-import fitnesse.http.Request;
-import fitnesse.http.Response;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testrunner.SuiteFilter;
@@ -24,25 +21,14 @@ import java.util.regex.Pattern;
 public class PartitionPreviewResponder extends ChunkingResponder {
 
   @Override
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-    Response response = super.makeResponse(context, request);
-    if (request.hasInput("html")) {
-      response.setContentType("text/html");
-    } else {
-      response.setContentType("text/tab-separated-values");
-    }
-    return response;
-  }
-
-  @Override
   protected void doSending() throws Exception {
     PagePositions pages = getPagesToRun();
     try {
-      if (request.hasInput("html")) {
-        makePartitionPreviewHtmlResponse().render(response.getWriter(), request);
-      } else {
+      if (response.isTabSeparatedFormat()) {
         Writer writer = response.getWriter();
         pages.appendTo(writer, "\t");
+      } else {
+        makePartitionPreviewHtmlResponse(pages).render(response.getWriter(), request);
       }
     } finally {
       response.close();
@@ -60,13 +46,13 @@ public class PartitionPreviewResponder extends ChunkingResponder {
     return context.testRunFactoryRegistry.findPagePositions(pages);
   }
 
-  private HtmlPage makePartitionPreviewHtmlResponse() throws UnsupportedEncodingException {
+  private HtmlPage makePartitionPreviewHtmlResponse(PagePositions pages) throws UnsupportedEncodingException {
     HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Partitioning preview");
     page.setPageTitle(new PageTitle(PathParser.parse(request.getResource())));
     page.setNavTemplate("viewNav");
     page.put("partitionCount", getPartitionCount());
-    page.put("partitioning", getPagesToRun());
+    page.put("pagePositions", pages);
     page.setMainTemplate("partitionPreview");
 
     return page;

@@ -30,9 +30,9 @@ Create two sub pages
 |line  |!-!define TEST_SYSTEM {slim}-!|
 |page  |!-SuitePage.TestPage4-!       |
 
-|Response Requester.                                      |
-|uri                                               |valid?|
-|!-SuitePage?responder=partition&partitionCount=3-!|true  |
+|Response Requester.                                                 |
+|uri                                                          |valid?|
+|!-SuitePage?responder=partition&format=tsv&partitionCount=3-!|true  |
 
 |Response Examiner.|
 |contents?         |

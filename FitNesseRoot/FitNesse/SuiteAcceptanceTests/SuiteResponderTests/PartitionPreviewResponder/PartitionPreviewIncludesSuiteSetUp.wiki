@@ -58,9 +58,9 @@ Create two sub pages
 |line  |!-|!-fitnesse.testutil.PassFixture-!-!!-|-!|
 |page  |!-SuitePage.TestPage6-!                    |
 
-|Response Requester.                                                                       |
-|uri                                                                                |valid?|
-|!-SuitePage?responder=partition&partitionCount=3&partitionIndexFile=partition.txt-!|true  |
+|Response Requester.                                                                                  |
+|uri                                                                                           |valid?|
+|!-SuitePage?responder=partition&format=tsv&partitionCount=3&partitionIndexFile=partition.txt-!|true  |
 
 |Response Examiner.|
 |contents?         |
