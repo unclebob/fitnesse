@@ -43,11 +43,7 @@ public class PagePositionsBasedWikiPagePartitioner implements ListPartitioner<Wi
 
   protected Comparator<WikiPage> createComparator(PagePositions pagePositions) {
     Comparator<String> comp = pagePositions.createByPositionInGroupComparator();
-    return (page1, page2) -> {
-      String path1 = page1.getFullPath().toString();
-      String path2 = page2.getFullPath().toString();
-      return comp.compare(path1, path2);
-    };
+    return Comparator.comparing(p -> p.getFullPath().toString(), comp);
   }
 
   protected ListPartitioner<WikiPage> createPartitioner(PagePositions pagePositions) {
