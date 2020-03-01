@@ -1,8 +1,5 @@
 package fitnesse.testrunner.run;
 
-import fitnesse.util.partitioner.EqualLengthListPartitioner;
-import fitnesse.util.partitioner.ListPartitioner;
-import fitnesse.util.partitioner.MapBasedListPartitioner;
 import fitnesse.wiki.WikiPage;
 
 import java.util.ArrayList;
@@ -14,8 +11,7 @@ import java.util.Map;
 /**
  * Partitions pages based on provided PagePositions.
  */
-public class PagePositionsBasedWikiPagePartitioner implements ListPartitioner<WikiPage> {
-  private ListPartitioner<WikiPage> partitioner;
+public class PagePositionsBasedWikiPagePartitioner extends PositionMapBasedWikiPagePartitioner {
   private Comparator<WikiPage> pageComparator;
 
   public PagePositionsBasedWikiPagePartitioner(PagePositions pagePositions) {
@@ -25,8 +21,9 @@ public class PagePositionsBasedWikiPagePartitioner implements ListPartitioner<Wi
   }
 
   public void setPagePositions(PagePositions pagePositions) {
-    pageComparator = createComparator(pagePositions);
-    partitioner = createPartitioner(pagePositions);
+    Map<String, Integer> partitionMap = loadPartitionFile(pagePositions);
+    setPartitionMap(partitionMap);
+    setPageComparator(createComparator(pagePositions));
   }
 
   @Override
@@ -38,27 +35,12 @@ public class PagePositionsBasedWikiPagePartitioner implements ListPartitioner<Wi
       pages = new ArrayList<>(source);
       pages.sort(pageComparator);
     }
-    return partitioner.split(pages, partitionCount);
+    return super.split(pages, partitionCount);
   }
 
   protected Comparator<WikiPage> createComparator(PagePositions pagePositions) {
     Comparator<String> comp = pagePositions.createByPositionInGroupComparator();
-    return Comparator.comparing(p -> p.getFullPath().toString(), comp);
-  }
-
-  protected ListPartitioner<WikiPage> createPartitioner(PagePositions pagePositions) {
-    Map<String, Integer> positionMap = loadPartitionFile(pagePositions);
-    return createPartitioner(positionMap);
-  }
-
-  protected ListPartitioner<WikiPage> createPartitioner(Map<String, Integer> positionMap) {
-    return new MapBasedListPartitioner<>(wp -> wp.getFullPath().toString(), positionMap, this::handleUnknownPages);
-  }
-
-  protected List<List<WikiPage>> handleUnknownPages(
-    List<List<WikiPage>> partitionsFromFile,
-    List<WikiPage> pagesNotPresent) {
-    return new EqualLengthListPartitioner<WikiPage>().split(pagesNotPresent, partitionsFromFile.size());
+    return Comparator.comparing(this::getFullPath, comp);
   }
 
   protected Map<String, Integer> loadPartitionFile(PagePositions pagePositions) {
@@ -79,5 +61,13 @@ public class PagePositionsBasedWikiPagePartitioner implements ListPartitioner<Wi
       }
     }
     return indices;
+  }
+
+  public Comparator<WikiPage> getPageComparator() {
+    return pageComparator;
+  }
+
+  public void setPageComparator(Comparator<WikiPage> pageComparator) {
+    this.pageComparator = pageComparator;
   }
 }
