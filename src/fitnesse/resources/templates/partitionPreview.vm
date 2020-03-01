@@ -4,7 +4,8 @@
   <tbody>
   <tr>
    <td>
-    <a class="button" href="?partition&format=tsv&partitionCount=$partitionCount" title="partition preview in tab-separated format">Download TSV file</a>
+    <a class="button" href="?partition&format=tsv&partitionCount=$partitionCount"
+       title="partition preview in tab-separated format">Download TSV file</a>
    </td>
    <td>
     <p class="note">
@@ -29,15 +30,15 @@
  </thead>
  <tbody>
   #foreach($page in $pagePositions.getPages())
-  <tr>
    #foreach($position in $pagePositions.getPositions($page))
+   <tr>
     <td style="overflow-y: auto; max-width: 60em;">$page</td>
     #foreach($dimension in $position.getGroup())
      <td>$pagePositions.formatDimension($dimension)</td>
     #end
     <td>$position.getPositionInGroup()</td>
+   </tr>
    #end
-  </tr>
   #end
  </tbody>
 </table>
