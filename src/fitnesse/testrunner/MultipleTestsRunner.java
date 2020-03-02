@@ -111,10 +111,7 @@ public class MultipleTestsRunner implements Stoppable {
 
         @Override
         public String getTestSystem() {
-          String testSystemName = getVariable(WikiPageIdentity.TEST_SYSTEM);
-          if (testSystemName == null)
-            return "fit";
-          return testSystemName;
+          return identity.testSystem();
         }
 
         @Override
