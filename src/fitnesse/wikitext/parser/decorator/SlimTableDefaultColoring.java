@@ -17,6 +17,7 @@ import fitnesse.wikitext.parser.Table;
 import fitnesse.wikitext.parser.VariableSource;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static fitnesse.wikitext.parser.decorator.SymbolClassPropertyAppender.classPropertyAppender;
 import static fitnesse.wikitext.parser.decorator.SymbolInspector.inspect;
@@ -44,6 +45,7 @@ public class SlimTableDefaultColoring implements ParsedSymbolDecorator {
     //hidden
   }
 
+  private final ConcurrentHashMap<String, Boolean> validClasses = new ConcurrentHashMap<>();
 
   @Override
   public void handleParsedSymbol(Symbol symbol, VariableSource variableSource) {
@@ -126,11 +128,13 @@ public class SlimTableDefaultColoring implements ParsedSymbolDecorator {
   }
 
   private boolean isValidClass(String potentialClass) {
-    try {
-      return ClassUtils.forName(potentialClass) != null;
-    } catch (Exception | NoClassDefFoundError e) {
-      return false;
-    }
+    return validClasses.computeIfAbsent(potentialClass, p -> {
+      try {
+        return ClassUtils.forName(potentialClass) != null;
+      } catch (Exception | NoClassDefFoundError e) {
+        return false;
+      }
+    });
   }
 
   private boolean isSlimContext(VariableSource variableSource) {
