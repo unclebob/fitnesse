@@ -9,6 +9,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -28,7 +29,7 @@ public class PagePositions {
 
   private final Map<List<Object>, List<Object>> groupCache = new HashMap<>();
   private String lineSep = "\n";
-  private List<String> groupNames = new ArrayList<>();
+  private List<String> groupNames = new ArrayList<>(2);
   private Map<String, List<PagePosition>> positions = new LinkedHashMap<>();
 
   public List<String> getGroupNames() {
@@ -89,16 +90,8 @@ public class PagePositions {
 
   protected void parseHeader(BufferedReader reader, String groupSep) throws IOException {
     splitNextLine(reader, groupSep)
-      .map(parts -> {
-        int count = parts.length;
-        if (count < 3) throw new IllegalArgumentException("Expected at least 2 columns, got: " + count);
-        groupNames.clear();
-        for (int i = 1; i < count - 1; i++) {
-          groupNames.add(parts[i]);
-        }
-        return groupNames;
-      }).
-      orElseThrow(() -> new IllegalArgumentException("No header line"));
+      .map(parts -> Collections.addAll(groupNames, stripHeadAndTail(parts)))
+      .orElseThrow(() -> new IllegalArgumentException("No header line"));
   }
 
   protected void parseRows(BufferedReader reader, String groupSep) throws IOException {
@@ -108,12 +101,16 @@ public class PagePositions {
         break;
       }
       String[] parts = linePresent.get();
-      int count = parts.length;
-      if (count < 3) throw new IllegalArgumentException("Expected at least 2 columns, got: " + count);
-      Integer pos = Integer.valueOf(parts[count - 1]);
-      List<Object> group = asList((Object[])Arrays.copyOfRange(parts, 1, count - 1));
+      List<Object> group = asList((Object[]) stripHeadAndTail(parts));
+      Integer pos = Integer.valueOf(parts[parts.length - 1]);
       addPosition(parts[0], group, pos);
     }
+  }
+
+  protected String[] stripHeadAndTail(String[] parts) {
+    int count = parts.length;
+    if (count < 3) throw new IllegalArgumentException("Expected at least 2 columns, got: " + count);
+    return Arrays.copyOfRange(parts, 1, count - 1);
   }
 
   protected Optional<String[]> splitNextLine(BufferedReader reader, String groupSep) throws IOException {
