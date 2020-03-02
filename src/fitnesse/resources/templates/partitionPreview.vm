@@ -1,9 +1,9 @@
 <h1>Partitioning preview</h1>
 <div>
- <table>
+ <table style="table-layout: fixed; width: 100%;">
   <tbody>
   <tr>
-   <td>
+   <td style="width: 11em;">
     <a class="button" href="?partition&format=tsv&partitionCount=$partitionCount"
        title="partition preview in tab-separated format">Download TSV file</a>
    </td>
@@ -18,21 +18,21 @@
   </tbody>
  </table>
 </div>
-<table>
+<table style="table-layout: fixed; width: 100%;">
  <thead>
  <tr>
   <th>Page</th>
   #foreach($groupName in $pagePositions.getGroupNames())
-   <th>$groupName</th>
+   <th style="width: 5em;">$groupName</th>
   #end
-  <th>Order</th>
+  <th style="width: 4em;">Order</th>
  </tr>
  </thead>
  <tbody>
   #foreach($page in $pagePositions.getPages())
    #foreach($position in $pagePositions.getPositions($page))
    <tr>
-    <td style="overflow-y: auto; max-width: 60em;">$page</td>
+    <td style="overflow-y: auto;">$page</td>
     #foreach($dimension in $position.getGroup())
      <td>$pagePositions.formatDimension($dimension)</td>
     #end
