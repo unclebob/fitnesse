@@ -8,6 +8,7 @@ import fitnesse.testsystems.slim.tables.ScriptTable;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wikitext.parser.Maybe;
+import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.Table;
 import fitnesse.wikitext.parser.VariableSource;
@@ -54,10 +55,17 @@ public class SlimTableDefaultColoring implements ParsedSymbolDecorator {
 
   @Override
   public void handleParsedSymbol(Symbol symbol, VariableSource variableSource) {
-    if (isSlimContext(variableSource)) {
+    if (isSlimContext(variableSource) && isOnTestPage(variableSource)) {
       inspect(symbol).checkSymbolType(Table.symbolType);
       handleParsedTable(symbol);
     }
+  }
+
+  private boolean isOnTestPage(VariableSource variableSource) {
+    if (variableSource instanceof ParsingPage) {
+      return ((ParsingPage) variableSource).getPage().hasProperty("Test");
+    }
+    return false;
   }
 
   private void handleParsedTable(Symbol table) {
