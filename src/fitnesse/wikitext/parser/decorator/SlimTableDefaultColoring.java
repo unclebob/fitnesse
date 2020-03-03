@@ -1,25 +1,18 @@
 package fitnesse.wikitext.parser.decorator;
 
-import fit.FixtureLoader;
-import fit.FixtureName;
 import fitnesse.testsystems.slim.tables.DecisionTable;
 import fitnesse.testsystems.slim.tables.DynamicDecisionTable;
-import fitnesse.testsystems.slim.tables.ImportTable;
 import fitnesse.testsystems.slim.tables.QueryTable;
 import fitnesse.testsystems.slim.tables.ScenarioTable;
 import fitnesse.testsystems.slim.tables.ScriptTable;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
-import fitnesse.util.CacheHelper;
-import fitnesse.util.ClassUtils;
 import fitnesse.wikitext.parser.Maybe;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.Table;
 import fitnesse.wikitext.parser.VariableSource;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import static fitnesse.wikitext.parser.decorator.SymbolClassPropertyAppender.classPropertyAppender;
 import static fitnesse.wikitext.parser.decorator.SymbolInspector.inspect;
@@ -47,7 +40,8 @@ public class SlimTableDefaultColoring implements ParsedSymbolDecorator {
     //hidden
   }
 
-  private final Map<String, Boolean> validClasses = Collections.synchronizedMap(CacheHelper.lruCache(1000));
+  // TODO we should use table factory from current context, then we would have custom table types and registered aliases
+  private final SlimTableFactory sf = new SlimTableFactory();
 
   @Override
   public void handleParsedSymbol(Symbol symbol, VariableSource variableSource) {
@@ -58,7 +52,6 @@ public class SlimTableDefaultColoring implements ParsedSymbolDecorator {
   }
 
   private void handleParsedTable(Symbol table) {
-    boolean isImportFixture = false;
     boolean colorTable = false;
     boolean isFirstColumnTitle = false;
     boolean isSecondRowTitle = false;
@@ -73,7 +66,6 @@ public class SlimTableDefaultColoring implements ParsedSymbolDecorator {
 
         if (rowNo == 1) {
           // If slim table class declaration then get fixture info for table coloring scheme
-          SlimTableFactory sf = new SlimTableFactory();
           Class<? extends SlimTable> slimTableClazz = sf.getTableType(cellContent);
           if (slimTableClazz != null) {
             colorTable = true;
@@ -81,41 +73,24 @@ public class SlimTableDefaultColoring implements ParsedSymbolDecorator {
               DynamicDecisionTable.class.isAssignableFrom(slimTableClazz) ||
               QueryTable.class.isAssignableFrom(slimTableClazz)) {
               isSecondRowTitle = true;
-            } else if (ImportTable.class.isAssignableFrom(slimTableClazz)) {
-              isImportFixture = true;
             } else if (ScriptTable.class.isAssignableFrom(slimTableClazz) ||
               ScenarioTable.class.isAssignableFrom(slimTableClazz)) {
               isFirstColumnTitle = true;
             }
           }
 
-          // Unmarked decision tables aren't found by getTableType().  Color table if first row is valid class.
-          // TODO this uses reflection and is therefore slow, and it only works if the fixture classes are on
-          //      the wiki's classpath. It also does not detect scenario table based decision tables
-          //      Should we remove it althogether? or...
-          //      this is also the only reason we are tracking import tables, so we can look in all packages they mention
+          // Unmarked decision tables aren't found by getTableType(), but they are Slim's default
           if (!colorTable) {
             String lowercaseContent = cellContent.toLowerCase();
             if (!lowercaseContent.equals("comment") && !lowercaseContent.startsWith("comment:")) {
-              List<String> potentialClasses = new FixtureName(cellContent)
-                .getPotentialFixtureClassNames(FixtureLoader.instance().fixturePathElements);
-              for (String potentialClass : potentialClasses) {
-                if (isValidClass(potentialClass)) {
-                  colorTable = true;
-                  isSecondRowTitle = true;
-                  break;
-                }
-              }
+              colorTable = true;
+              isSecondRowTitle = true;
             }
           }
         }
 
         // Use color scheme attributes to color table rows.
         if (colorTable) {
-          if (isImportFixture) {
-            FixtureLoader.instance().addPackageToPath(cellContent);
-          }
-
           if (rowNo == 1) {
             classPropertyAppender().addPropertyValue(row, "slimRowTitle");
           } else if (isSecondRowTitle && rowNo == 2) {
@@ -133,16 +108,6 @@ public class SlimTableDefaultColoring implements ParsedSymbolDecorator {
         }
       }
     }
-  }
-
-  private boolean isValidClass(String potentialClass) {
-    return validClasses.computeIfAbsent(potentialClass, p -> {
-      try {
-        return ClassUtils.forName(potentialClass) != null;
-      } catch (Exception | NoClassDefFoundError e) {
-        return false;
-      }
-    });
   }
 
   private boolean isSlimContext(VariableSource variableSource) {
