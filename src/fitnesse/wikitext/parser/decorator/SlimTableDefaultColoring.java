@@ -90,6 +90,10 @@ public class SlimTableDefaultColoring implements ParsedSymbolDecorator {
           }
 
           // Unmarked decision tables aren't found by getTableType().  Color table if first row is valid class.
+          // TODO this uses reflection and is therefore slow, and it only works if the fixture classes are on
+          //      the wiki's classpath. It also does not detect scenario table based decision tables
+          //      Should we remove it althogether? or...
+          //      this is also the only reason we are tracking import tables, so we can look in all packages they mention
           if (!colorTable) {
             List<String> potentialClasses = new FixtureName(cellContent)
               .getPotentialFixtureClassNames(FixtureLoader.instance().fixturePathElements);
