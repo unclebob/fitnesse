@@ -10,14 +10,16 @@ import fitnesse.testsystems.slim.tables.ScenarioTable;
 import fitnesse.testsystems.slim.tables.ScriptTable;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
+import fitnesse.util.CacheHelper;
 import fitnesse.util.ClassUtils;
 import fitnesse.wikitext.parser.Maybe;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.Table;
 import fitnesse.wikitext.parser.VariableSource;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 
 import static fitnesse.wikitext.parser.decorator.SymbolClassPropertyAppender.classPropertyAppender;
 import static fitnesse.wikitext.parser.decorator.SymbolInspector.inspect;
@@ -45,7 +47,7 @@ public class SlimTableDefaultColoring implements ParsedSymbolDecorator {
     //hidden
   }
 
-  private final ConcurrentHashMap<String, Boolean> validClasses = new ConcurrentHashMap<>();
+  private final Map<String, Boolean> validClasses = Collections.synchronizedMap(CacheHelper.lruCache(1000));
 
   @Override
   public void handleParsedSymbol(Symbol symbol, VariableSource variableSource) {
