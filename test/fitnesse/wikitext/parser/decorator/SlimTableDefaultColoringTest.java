@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.stubbing.OngoingStubbing;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
@@ -34,8 +35,29 @@ public class SlimTableDefaultColoringTest {
   }
 
   @Test
+  public void should_leave_table_contents_alone_when_no_explicit_test_system() {
+    noExplicitTestSystem();
+    when(sourcePage.getName()).thenReturn("MyTest");
+    when(sourcePage.hasProperty("Test")).thenReturn(true);
+    slimTableDefaultColoring.handleParsedSymbol(table, variableSource);
+    verify(table, never()).getChildren();
+    verify(sourcePage, never()).hasProperty(any());
+  }
+
+  @Test
+  public void should_leave_table_contents_alone_on_static_page_no_explicit_test_system() {
+    noExplicitTestSystem();
+    when(sourcePage.getName()).thenReturn("MyStaticPage");
+    when(sourcePage.hasProperty("Test")).thenReturn(false);
+    slimTableDefaultColoring.handleParsedSymbol(table, variableSource);
+    verify(table, never()).getChildren();
+    verify(sourcePage, never()).hasProperty(any());
+  }
+
+  @Test
   public void should_leave_table_contents_alone_when_not_slim_test_system() {
     givenTestSystem("fit");
+    when(sourcePage.getName()).thenReturn("MyTest");
     slimTableDefaultColoring.handleParsedSymbol(table, variableSource);
     verify(table, never()).getChildren();
     verify(sourcePage, never()).hasProperty(any());
@@ -44,6 +66,7 @@ public class SlimTableDefaultColoringTest {
   @Test
   public void should_decorate_table_contents_when_slim_test_system_test_page() {
     givenTestSystem("slim");
+    when(sourcePage.getName()).thenReturn("MyTest");
     when(sourcePage.hasProperty("Test")).thenReturn(true);
     slimTableDefaultColoring.handleParsedSymbol(table, variableSource);
     verify(table).getChildren();
@@ -52,12 +75,66 @@ public class SlimTableDefaultColoringTest {
   @Test
   public void should_not_decorate_table_contents_by_default_when_slim_test_system_not_test_page() {
     givenTestSystem("slim");
+    when(sourcePage.getName()).thenReturn("MyStaticPage");
     when(sourcePage.hasProperty("Test")).thenReturn(false);
     slimTableDefaultColoring.handleParsedSymbol(table, variableSource);
     verify(table, never()).getChildren();
   }
 
+  @Test
+  public void should_decorate_scenario_library() {
+    noExplicitTestSystem();
+    when(sourcePage.getName()).thenReturn("ScenarioLibrary");
+    when(sourcePage.hasProperty("Test")).thenReturn(false);
+    slimTableDefaultColoring.handleParsedSymbol(table, variableSource);
+    verify(table).getChildren();
+  }
+
+  @Test
+  public void should_decorate_suite_set_up() {
+    noExplicitTestSystem();
+    when(sourcePage.getName()).thenReturn("SuiteSetUp");
+    when(sourcePage.hasProperty("Test")).thenReturn(false);
+    slimTableDefaultColoring.handleParsedSymbol(table, variableSource);
+    verify(table).getChildren();
+  }
+
+  @Test
+  public void should_decorate_suite_tear_down() {
+    noExplicitTestSystem();
+    when(sourcePage.getName()).thenReturn("SuiteTearDown");
+    when(sourcePage.hasProperty("Test")).thenReturn(false);
+    slimTableDefaultColoring.handleParsedSymbol(table, variableSource);
+    verify(table).getChildren();
+  }
+
+  @Test
+  public void should_decorate_set_up() {
+    noExplicitTestSystem();
+    when(sourcePage.getName()).thenReturn("SetUp");
+    when(sourcePage.hasProperty("Test")).thenReturn(false);
+    slimTableDefaultColoring.handleParsedSymbol(table, variableSource);
+    verify(table).getChildren();
+  }
+
+  @Test
+  public void should_decorate_tear_down() {
+    noExplicitTestSystem();
+    when(sourcePage.getName()).thenReturn("TearDown");
+    when(sourcePage.hasProperty("Test")).thenReturn(false);
+    slimTableDefaultColoring.handleParsedSymbol(table, variableSource);
+    verify(table).getChildren();
+  }
+
+  private void noExplicitTestSystem() {
+    whenTestSystemLookedUp().thenReturn(Maybe.noString);
+  }
+
   private void givenTestSystem(String testSystem) {
-    when(variableSource.findVariable("TEST_SYSTEM")).thenReturn(new Maybe<>(testSystem));
+    whenTestSystemLookedUp().thenReturn(new Maybe<>(testSystem));
+  }
+
+  private OngoingStubbing<Maybe<String>> whenTestSystemLookedUp() {
+    return when(variableSource.findVariable("TEST_SYSTEM"));
   }
 }

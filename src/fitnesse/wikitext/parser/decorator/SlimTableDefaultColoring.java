@@ -1,5 +1,6 @@
 package fitnesse.wikitext.parser.decorator;
 
+import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.slim.tables.DecisionTable;
 import fitnesse.testsystems.slim.tables.DynamicDecisionTable;
 import fitnesse.testsystems.slim.tables.QueryTable;
@@ -7,18 +8,28 @@ import fitnesse.testsystems.slim.tables.ScenarioTable;
 import fitnesse.testsystems.slim.tables.ScriptTable;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
+import fitnesse.wiki.PageData;
 import fitnesse.wikitext.parser.Maybe;
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.Table;
 import fitnesse.wikitext.parser.VariableSource;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static fitnesse.wikitext.parser.decorator.SymbolClassPropertyAppender.classPropertyAppender;
 import static fitnesse.wikitext.parser.decorator.SymbolInspector.inspect;
+import static java.util.Arrays.asList;
 
 public class SlimTableDefaultColoring implements ParsedSymbolDecorator {
+
+  private static final Set<String> SPECIAL_PAGES =
+    new HashSet<>(
+      asList(WikiTestPage.SCENARIO_LIBRARY,
+        WikiTestPage.SET_UP, WikiTestPage.TEAR_DOWN,
+        PageData.SUITE_SETUP_NAME, PageData.SUITE_TEARDOWN_NAME));
 
   private static SlimTableDefaultColoring INSTANCE;
 
@@ -47,25 +58,16 @@ public class SlimTableDefaultColoring implements ParsedSymbolDecorator {
 
   private final SlimTableFactory sf;
 
-  //visible for testing
-  SlimTableDefaultColoring(SlimTableFactory factory) {
-    //hidden
+  protected SlimTableDefaultColoring(SlimTableFactory factory) {
     sf = factory;
   }
 
   @Override
   public void handleParsedSymbol(Symbol symbol, VariableSource variableSource) {
-    if (isSlimContext(variableSource) && isOnTestPage(variableSource)) {
+    if ((isSlimContext(variableSource) && isOnTestPage(variableSource)) || isOnSpecialPage(variableSource)) {
       inspect(symbol).checkSymbolType(Table.symbolType);
       handleParsedTable(symbol);
     }
-  }
-
-  private boolean isOnTestPage(VariableSource variableSource) {
-    if (variableSource instanceof ParsingPage) {
-      return ((ParsingPage) variableSource).getPage().hasProperty("Test");
-    }
-    return false;
   }
 
   private void handleParsedTable(Symbol table) {
@@ -127,8 +129,23 @@ public class SlimTableDefaultColoring implements ParsedSymbolDecorator {
     }
   }
 
-  private boolean isSlimContext(VariableSource variableSource) {
-    Maybe<String> testSystem = variableSource.findVariable("TEST_SYSTEM");
+  protected boolean isOnSpecialPage(VariableSource variableSource) {
+    if (variableSource instanceof ParsingPage) {
+      String name = ((ParsingPage) variableSource).getPage().getName();
+      return SPECIAL_PAGES.contains(name);
+    }
+    return false;
+  }
+
+  protected boolean isOnTestPage(VariableSource variableSource) {
+    if (variableSource instanceof ParsingPage) {
+      return ((ParsingPage) variableSource).getPage().hasProperty("Test");
+    }
+    return false;
+  }
+
+  protected boolean isSlimContext(VariableSource parsingPage) {
+    Maybe<String> testSystem = parsingPage.findVariable("TEST_SYSTEM");
     return "slim".equals(testSystem.getValue());
   }
 }
