@@ -95,13 +95,16 @@ public class SlimTableDefaultColoring implements ParsedSymbolDecorator {
           //      Should we remove it althogether? or...
           //      this is also the only reason we are tracking import tables, so we can look in all packages they mention
           if (!colorTable) {
-            List<String> potentialClasses = new FixtureName(cellContent)
-              .getPotentialFixtureClassNames(FixtureLoader.instance().fixturePathElements);
-            for (String potentialClass : potentialClasses) {
-              if (isValidClass(potentialClass)) {
-                colorTable = true;
-                isSecondRowTitle = true;
-                break;
+            String lowercaseContent = cellContent.toLowerCase();
+            if (!lowercaseContent.equals("comment") && !lowercaseContent.startsWith("comment:")) {
+              List<String> potentialClasses = new FixtureName(cellContent)
+                .getPotentialFixtureClassNames(FixtureLoader.instance().fixturePathElements);
+              for (String potentialClass : potentialClasses) {
+                if (isValidClass(potentialClass)) {
+                  colorTable = true;
+                  isSecondRowTitle = true;
+                  break;
+                }
               }
             }
           }
