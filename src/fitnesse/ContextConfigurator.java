@@ -172,6 +172,7 @@ public class ContextConfigurator {
 
     SymbolProvider symbolProvider = SymbolProvider.wikiParsingProvider;
 
+    SlimTableDefaultColoring.createInstanceIfNeeded(slimTableFactory);
     SlimTableDefaultColoring.install();
 
     pluginsLoader.loadResponders(context.responderFactory);

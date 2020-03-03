@@ -1,5 +1,6 @@
 package fitnesse.wikitext.parser.decorator;
 
+import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wikitext.parser.Maybe;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.Table;
@@ -21,7 +22,7 @@ public class SlimTableDefaultColoringTest {
   @Mock
   private VariableSource variableSource;
 
-  private SlimTableDefaultColoring slimTableDefaultColoring = new SlimTableDefaultColoring();
+  private SlimTableDefaultColoring slimTableDefaultColoring = new SlimTableDefaultColoring(new SlimTableFactory());
 
   @Before
   public void init() {

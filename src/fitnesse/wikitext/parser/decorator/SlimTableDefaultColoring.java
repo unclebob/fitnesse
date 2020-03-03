@@ -19,12 +19,21 @@ import static fitnesse.wikitext.parser.decorator.SymbolInspector.inspect;
 
 public class SlimTableDefaultColoring implements ParsedSymbolDecorator {
 
-  private static final SlimTableDefaultColoring INSTANCE = new SlimTableDefaultColoring();
+  private static SlimTableDefaultColoring INSTANCE;
 
   private static boolean isInstalled;
 
+  public static synchronized void createInstanceIfNeeded(SlimTableFactory factory) {
+    if (INSTANCE == null) {
+      INSTANCE = new SlimTableDefaultColoring(factory);
+    }
+  }
+
   public static void install() {
     if (!isInstalled) {
+      if (INSTANCE == null) {
+        throw new IllegalStateException("No table factory provided yet");
+      }
       Table.symbolType.addDecorator(INSTANCE);
       isInstalled = true;
     }
@@ -35,13 +44,13 @@ public class SlimTableDefaultColoring implements ParsedSymbolDecorator {
     isInstalled = false;
   }
 
-  //visible for testing
-  SlimTableDefaultColoring() {
-    //hidden
-  }
+  private final SlimTableFactory sf;
 
-  // TODO we should use table factory from current context, then we would have custom table types and registered aliases
-  private final SlimTableFactory sf = new SlimTableFactory();
+  //visible for testing
+  SlimTableDefaultColoring(SlimTableFactory factory) {
+    //hidden
+    sf = factory;
+  }
 
   @Override
   public void handleParsedSymbol(Symbol symbol, VariableSource variableSource) {
