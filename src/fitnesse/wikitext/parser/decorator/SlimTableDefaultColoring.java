@@ -66,13 +66,12 @@ public class SlimTableDefaultColoring implements ParsedSymbolDecorator {
     int rowNo = 0;
     for (Symbol row : table.getChildren()) {
       rowNo++;
-      int colNo = 0;
-      for (Symbol cell : row.getChildren()) {
-        colNo++;
-        final String cellContent = inspect(cell).getRawContent();
+      List<Symbol> columns = row.getChildren();
+      if (!columns.isEmpty()) {
+        Symbol firstCell = columns.get(0);
+        final String cellContent = inspect(firstCell).getRawContent();
 
-        if (rowNo == 1 && colNo == 1) {
-
+        if (rowNo == 1) {
           // If slim table class declaration then get fixture info for table coloring scheme
           SlimTableFactory sf = new SlimTableFactory();
           Class<? extends SlimTable> slimTableClazz = sf.getTableType(cellContent);
@@ -105,7 +104,7 @@ public class SlimTableDefaultColoring implements ParsedSymbolDecorator {
         }
 
         // Use color scheme attributes to color table rows.
-        if (colorTable && colNo == 1) {
+        if (colorTable) {
           if (isImportFixture) {
             FixtureLoader.instance().addPackageToPath(cellContent);
           }
