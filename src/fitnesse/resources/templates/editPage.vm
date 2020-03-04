@@ -147,7 +147,7 @@ $(function () {
  <div>
   <h2>Insert image</h2>
   <fieldset>
-  <p>1. From the files section: <a href="/files" class="button" target="_blank">Manage</a></p>
+  <p>1. From the files section: <a href="${contextRoot}files" class="button" target="_blank">Manage</a></p>
   <pre></pre>
   <ul class="select-box"></ul>
   </fieldset>

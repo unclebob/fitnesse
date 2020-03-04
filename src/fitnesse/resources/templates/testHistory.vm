@@ -33,7 +33,7 @@
     #else #set ($failClass = "fail")
     #end
 
-    <td><a href="/$page?pageHistory">$page</a></td>
+    <td><a href="${contextRoot}$page?pageHistory">$page</a></td>
     <td class="$passClass">$pageHistory.passes</td>
     <td class="$failClass">$pageHistory.failures</td>
     <td>$barGraph.formatEndingDate("dd MMM yy, HH:mm")</td>
