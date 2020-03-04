@@ -1,5 +1,8 @@
 !2 ${FITNESSE_VERSION}
+
+!2 20200304
  * New feature to split a suite of tests in partitions, which could be used to split test execution across multiple workers, without having the change the content or structure of the test pages ([[1268][https://github.com/unclebob/fitnesse/pull/1268]]).
+ * Exclude page names from test history which start with same substring ([[1263][https://github.com/unclebob/fitnesse/pull/1263]]).
  * Minor: Speed-up test startup by using less Java reflection generating pages.
 
 !2 20200205
