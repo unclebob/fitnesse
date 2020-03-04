@@ -1,5 +1,6 @@
 !2 ${FITNESSE_VERSION}
- * New feature to split a suite of tests in partitions, which could be used to split test execution across multiple workers, without having the change the content or structure of the test pages.
+ * New feature to split a suite of tests in partitions, which could be used to split test execution across multiple workers, without having the change the content or structure of the test pages ([[1268][https://github.com/unclebob/fitnesse/pull/1268]]).
+ * Minor: Speed-up test startup by using less Java reflection generating pages.
 
 !2 20200205
  * Added ability to customize HTML generated for Slim tables, using 'symbol decorators' ([[1255][https://github.com/unclebob/fitnesse/pull/1255]]).
