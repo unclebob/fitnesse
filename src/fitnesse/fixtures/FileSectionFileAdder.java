@@ -3,10 +3,12 @@
 package fitnesse.fixtures;
 
 import java.io.File;
+import java.io.FileWriter;
 
 public class FileSectionFileAdder {
   private String path;
   private String type;
+  private String content = "";
 
   public boolean valid() throws Exception {
     File file;
@@ -15,7 +17,10 @@ public class FileSectionFileAdder {
       file.mkdir();
     } else {
       file = new File(FileSection.getFileSection(), path);
-      file.createNewFile();
+      try (FileWriter fw = new FileWriter(file)) {
+        fw.append(content);
+      }
+      content = "";
     }
     return file.exists();
   }
@@ -26,5 +31,9 @@ public class FileSectionFileAdder {
 
   public void setType(String type) {
     this.type = type;
+  }
+
+  public void setContent(String content) {
+    this.content = content;
   }
 }
