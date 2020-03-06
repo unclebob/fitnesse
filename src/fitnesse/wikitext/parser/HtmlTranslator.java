@@ -11,11 +11,8 @@ public class HtmlTranslator extends Translator {
 
   @Override
   protected Translation getTranslation(Symbol symbol) {
-    Translation translation = super.getTranslation(symbol);
-    if (translation != null) {
-      symbol.getType().applyParsedSymbolDecorations(symbol, parsingPage);
-    }
-    return translation;
+    symbol.getType().applyParsedSymbolDecorations(symbol, parsingPage);
+    return super.getTranslation(symbol);
   }
 
   public ParsingPage getParsingPage() { return parsingPage; }
