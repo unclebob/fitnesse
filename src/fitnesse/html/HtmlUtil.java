@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.regex.Pattern;
+
+import static fitnesse.util.StringUtils.replaceStrings;
 
 public class HtmlUtil {
   public static final HtmlElement BR = new RawHtml("<br/>");
@@ -67,14 +67,6 @@ public class HtmlUtil {
 
   public static String escapeWiki(String value) {
       return replaceStrings(value, specialWikiChars, specialWikiEscapes);
-  }
-
-  private static String replaceStrings(String value, String[] originalStrings, String[] replacementStrings) {
-    String result = value;
-    for (int i = 0; i < originalStrings.length; i++)
-      if (result.contains(originalStrings[i]))
-        result = StringUtils.replace(result, originalStrings[i], replacementStrings[i]);
-    return result;
   }
 
   public static String remainRfc3986UnreservedCharacters(final String heading) {

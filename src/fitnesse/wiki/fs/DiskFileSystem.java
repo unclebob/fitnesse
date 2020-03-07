@@ -1,16 +1,22 @@
 package fitnesse.wiki.fs;
 
-import java.io.*;
-import java.util.Arrays;
-import java.util.Collection;
-
 import fitnesse.util.Clock;
 import util.FileUtil;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public class DiskFileSystem implements FileSystem {
 
-  private FilenameFilter filenameFilter = new FilenameFilter() {
-    private Collection skippedFileNames = Arrays.asList("CVS", "RCS");
+  private static final FilenameFilter FILENAME_FILTER = new FilenameFilter() {
+    private Set<String> skippedFileNames = new HashSet<>(Arrays.asList("CVS", "RCS"));
 
     @Override
     public boolean accept(final File dir, final String name) {
@@ -42,7 +48,7 @@ public class DiskFileSystem implements FileSystem {
 
   @Override
   public String[] list(File path) {
-    return path.isDirectory() ? path.list(filenameFilter) : new String[]{};
+    return path.isDirectory() ? path.list(FILENAME_FILTER) : new String[0];
   }
 
   @Override

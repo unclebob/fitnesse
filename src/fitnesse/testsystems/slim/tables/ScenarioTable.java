@@ -3,13 +3,24 @@
 package fitnesse.testsystems.slim.tables;
 
 import fitnesse.slim.instructions.Instruction;
-import fitnesse.testsystems.*;
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestExecutionException;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestResult;
+import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimTestResult;
-import org.apache.commons.lang3.StringUtils;
+import fitnesse.util.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -232,7 +243,7 @@ public class ScenarioTable extends SlimTable {
       parameterizedName = nameBuffer.toString().trim();
     }
     if (parameterizedName != null) {
-      String patternString = parameterizedName.replaceAll("_", "(.*)");
+      String patternString = StringUtils.replace(parameterizedName, "_", "(.*)");
       pattern = Pattern.compile(patternString);
     }
   }

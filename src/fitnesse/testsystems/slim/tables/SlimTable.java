@@ -2,14 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import fitnesse.slim.MethodExecutionResult;
 import fitnesse.slim.SlimExpressionEvaluator;
 import fitnesse.slim.SlimSymbol;
@@ -28,6 +20,14 @@ import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimExceptionResult;
 import fitnesse.testsystems.slim.results.SlimTestResult;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static fitnesse.testsystems.slim.tables.ComparatorUtil.approximatelyEqual;
 
@@ -229,7 +229,7 @@ public abstract class SlimTable {
     } catch (IllegalArgumentException e) {
       value = e.getMessage();
     }
-    return value == null ? "null" : value.toString();
+    return String.valueOf(value);
   }
 
   private String HtmlValueOfSymbol(String symbol) {
@@ -323,7 +323,7 @@ public abstract class SlimTable {
         for (int i = symbolName.length() - 1; i > 0; i--) {
           String str = symbolName.substring(0, i);
           if ((value = getSymbol(str)) != null)
-            return value + symbolName.substring(i, symbolName.length());
+            return value + symbolName.substring(i);
         }
 
         return null;
@@ -484,7 +484,7 @@ public abstract class SlimTable {
       return null;
     }
   }
-  
+
   class ReturnedSymbolExpectation extends ReturnedValueExpectation {
     private String symbolName;
     private String assignToName = null;

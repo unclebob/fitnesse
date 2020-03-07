@@ -11,6 +11,7 @@ import fitnesse.testrunner.run.FileBasedTestRunFactory;
 import fitnesse.testrunner.run.TestRunFactoryRegistry;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.TestSystemListener;
+import fitnesse.util.StringUtils;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.UrlPathVariableSource;
@@ -126,8 +127,7 @@ public class FitNesseContext {
     return variableSource.getProperty(name);
   }
 
-  private String unifiedPathPattern(String s)
-  {
-    return s.replace("/",File.separator);
+  private String unifiedPathPattern(String s) {
+    return StringUtils.replace(s, "/", File.separator);
   }
 }

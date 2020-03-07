@@ -1,15 +1,15 @@
 package fitnesse.testsystems.slim.tables;
 
+import fitnesse.testsystems.slim.SlimTestContext;
+import fitnesse.testsystems.slim.Table;
+import fitnesse.util.StringUtils;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import fitnesse.testsystems.slim.SlimTestContext;
-import fitnesse.testsystems.slim.Table;
-import fitnesse.util.StringUtils;
 
 public class SlimTableFactory {
   private static final Logger LOG = Logger.getLogger(SlimTableFactory.class.getName());
@@ -51,7 +51,7 @@ public class SlimTableFactory {
     if (tableTypes.get(nameOrPrefix) != null) {
       throw new IllegalStateException("A table type named '" + nameOrPrefix + "' already exists");
     }
-    tableTypes.put(nameOrPrefix.toLowerCase().replaceAll(":", ""), tableClass);
+    tableTypes.put(StringUtils.replace(nameOrPrefix.toLowerCase(), ":", ""), tableClass);
   }
 
   public SlimTable makeSlimTable(Table table, String tableId, SlimTestContext slimTestContext) {

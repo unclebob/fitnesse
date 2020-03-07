@@ -5,7 +5,7 @@ import static java.lang.Character.toUpperCase;
 
 public class Disgracer {
   public boolean capitalizeNextWord;
-  public StringBuffer disgracedName;
+  public StringBuilder disgracedName;
   private String name;
 
   public Disgracer(String name) {
@@ -59,7 +59,7 @@ public class Disgracer {
   }
 
   private String disgraceName() {
-    disgracedName = new StringBuffer();
+    disgracedName = new StringBuilder();
     for (char c : name.toCharArray())
       appendCharInProperCase(c);
 
