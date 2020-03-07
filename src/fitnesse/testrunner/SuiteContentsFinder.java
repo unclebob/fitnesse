@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testrunner;
 
+import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -113,9 +114,10 @@ public class SuiteContentsFinder {
     if (pageReferences.isEmpty()) {
       return;
     }
+    PageCrawler pageCrawler = thePage.getPageCrawler();
     for (String pageReference : pageReferences) {
       WikiPagePath path = PathParser.parse(pageReference);
-      WikiPage referencedPage = thePage.getPageCrawler().getSiblingPage(path);
+      WikiPage referencedPage = pageCrawler.getSiblingPage(path);
       if (referencedPage != null)
         pages.add(referencedPage);
     }
