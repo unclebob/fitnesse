@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.regex.Pattern;
 
 public class HtmlUtil {
@@ -71,7 +73,7 @@ public class HtmlUtil {
     String result = value;
     for (int i = 0; i < originalStrings.length; i++)
       if (result.contains(originalStrings[i]))
-        result = result.replace(originalStrings[i], replacementStrings[i]);
+        result = StringUtils.replace(result, originalStrings[i], replacementStrings[i]);
     return result;
   }
 
