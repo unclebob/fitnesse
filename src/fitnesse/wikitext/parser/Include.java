@@ -38,11 +38,7 @@ public class Include extends SymbolType implements Rule, Translation {
         current.add(option);
         if (!next.isType(SymbolType.Text) && !next.isType(WikiWord.symbolType)) return Symbol.nothing;
 
-        String includedPageName = next.getContent();
-        while (parser.peek().isType(SymbolType.Text) || parser.peek().isType(WikiWord.symbolType)) {
-          Symbol remainderOfPageName = parser.moveNext(1);
-          includedPageName += remainderOfPageName.getContent();
-        }
+        String includedPageName = getIncludedPageName(parser, next.getContent());
 
         SourcePage sourcePage = parser.getPage().getNamedPage();
 
@@ -81,7 +77,16 @@ public class Include extends SymbolType implements Rule, Translation {
       return new Maybe<>(current);
     }
 
-    @Override
+  private String getIncludedPageName(Parser parser, String nextContent) {
+    StringBuilder includedPageName = new StringBuilder(nextContent);
+    while (parser.peek().isType(SymbolType.Text) || parser.peek().isType(WikiWord.symbolType)) {
+      Symbol remainderOfPageName = parser.moveNext(1);
+      includedPageName.append(remainderOfPageName.getContent());
+    }
+    return includedPageName.toString();
+  }
+
+  @Override
     public String toTarget(Translator translator, Symbol symbol) {
         if (symbol.getChildren().size() < 4) {
             return translator.translate(symbol.childAt(2));
