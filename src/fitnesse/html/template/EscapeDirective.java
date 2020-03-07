@@ -2,9 +2,6 @@ package fitnesse.html.template;
 
 import fitnesse.html.HtmlUtil;
 import org.apache.velocity.context.InternalContextAdapter;
-import org.apache.velocity.exception.MethodInvocationException;
-import org.apache.velocity.exception.ParseErrorException;
-import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.directive.Directive;
 import org.apache.velocity.runtime.parser.node.Node;
 
@@ -23,7 +20,7 @@ public class EscapeDirective extends Directive {
   }
 
   @Override
-  public boolean render(InternalContextAdapter context, Writer writer, Node node) throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException {
+  public boolean render(InternalContextAdapter context, Writer writer, Node node) throws IOException {
     Object value = node.jjtGetChild(0).value(context);
     if (value != null) {
         String text = HtmlUtil.escapeHTML(String.valueOf(value).replaceAll(
