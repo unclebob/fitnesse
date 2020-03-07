@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+
+!2 20200307
  * Fix bug in page rendering when using custom (not '/') content root ([[1272][https://github.com/unclebob/fitnesse/pull/1272]]).
  * Simplify (and improve) Slim's table colouring ([[1271][https://github.com/unclebob/fitnesse/pull/1271]]).
  * Minor performance enhancements.
