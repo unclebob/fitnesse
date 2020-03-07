@@ -9,7 +9,13 @@ public class HtmlTranslator extends Translator {
         return symbolType.getHtmlTranslation();
     }
 
-    public ParsingPage getParsingPage() { return parsingPage; }
+  @Override
+  protected Translation getTranslation(Symbol symbol) {
+    symbol.getType().applyParsedSymbolDecorations(symbol, parsingPage);
+    return super.getTranslation(symbol);
+  }
+
+  public ParsingPage getParsingPage() { return parsingPage; }
 
     public HtmlTranslator(SourcePage currentPage, ParsingPage parsingPage) {
         super(currentPage);

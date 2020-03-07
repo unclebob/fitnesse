@@ -25,6 +25,7 @@ import java.util.function.BiConsumer;
 public class WikiTestPage implements TestPage {
   public static final String TEAR_DOWN = "TearDown";
   public static final String SET_UP = "SetUp";
+  public static final String SCENARIO_LIBRARY = "ScenarioLibrary";
 
   private final WikiPage sourcePage;
   private List<WikiPage> scenarioLibraries;
@@ -231,7 +232,7 @@ public class WikiTestPage implements TestPage {
   private List<WikiPage> findScenarioLibraries() {
     List<WikiPage> uncles;
     if (shouldIncludeScenarioLibraries()) {
-      uncles = findUncles("ScenarioLibrary");
+      uncles = findUncles(SCENARIO_LIBRARY);
     } else {
       uncles = Collections.emptyList();
     }

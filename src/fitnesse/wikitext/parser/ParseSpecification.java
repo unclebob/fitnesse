@@ -121,7 +121,6 @@ public class ParseSpecification {
                 scanner.copy(backup);
             } else {
                 Symbol parsedSymbolValue = parsedSymbol.getValue();
-                parsedSymbolValue.getType().applyParsedSymbolDecorations(parsedSymbolValue, parser.getVariableSource());
                 parsedSymbolValue.setStartOffset(startOffset).setEndOffset(scanner.getOffset());
                 clearIgnoresFirst();
                 return parsedSymbol;
