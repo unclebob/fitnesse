@@ -28,6 +28,26 @@ public class MapBasedListPartitionerTest {
   }
 
   @Test
+  public void testNonePlaced() {
+    List<String> list = new ArrayList<>(positions.keySet());
+
+    MapBasedListPartitioner<String> partitioner =
+      new MapBasedListPartitioner<>(identity(), Collections.emptyMap(), (parts, nf) -> {
+        notFoundArgs.add(nf);
+        return new ArrayList<>(parts.size());
+      });
+
+    List<List<String>> parts = partitioner.split(list, 6);
+    assertEquals(6, parts.size());
+
+    for (List<String> part : parts) {
+      assertEquals(0, part.size());
+    }
+
+    assertEquals(Collections.singletonList(list), notFoundArgs);
+  }
+
+  @Test
   public void testAllPlaced() {
     List<String> list = new ArrayList<>(positions.keySet());
 

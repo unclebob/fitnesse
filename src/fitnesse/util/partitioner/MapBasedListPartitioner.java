@@ -1,6 +1,5 @@
 package fitnesse.util.partitioner;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,7 +32,7 @@ public class MapBasedListPartitioner<T> extends FunctionBasedListPartitioner<T> 
   @Override
   protected List<T> addUsingPositionFunction(List<T> source, List<List<T>> result) {
     if (positionMap.isEmpty()) {
-      return Collections.emptyList();
+      return source;
     } else {
       return super.addUsingPositionFunction(source, result);
     }
