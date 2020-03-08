@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+
+!2 20200307
  * Bugfixes in splitting suite in partitions.
 
 !2 20200307
