@@ -399,10 +399,14 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     }
     if (partAnnotation.count() > 0 && partAnnotation.index() >= 0) {
       return new ImmutablePair<>(partAnnotation.count(), partAnnotation.index());
-    } else if (!"".equals(partAnnotation.countSystemProperty()) && !"".equals(partAnnotation.indexSystemProperty())) {
-      int count = Integer.parseInt(partAnnotation.countSystemProperty());
-      int index = Integer.parseInt(partAnnotation.indexSystemProperty());
-      return new ImmutablePair<>(count, index);
+    } else {
+      String countSystemProperty = partAnnotation.countSystemProperty();
+      String indexSystemProperty = partAnnotation.indexSystemProperty();
+      if (!"".equals(countSystemProperty) && !"".equals(indexSystemProperty)) {
+        int count = Integer.parseInt(System.getProperty(countSystemProperty));
+        int index = Integer.parseInt(System.getProperty(indexSystemProperty));
+        return new ImmutablePair<>(count, index);
+      }
     }
     throw new InitializationError(
       "In annotation @Partition you have to specify: " +
