@@ -10,7 +10,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,11 +64,8 @@ public class FileUtil {
   }
 
   public static void deleteFileSystemDirectory(File current) throws IOException {
-    File[] children = current.listFiles();
-    if (children != null) {
-      for (File child : children) {
-        deleteFileSystemDirectory(child);
-      }
+    for (File child : listFiles(current)) {
+      deleteFileSystemDirectory(child);
     }
     deleteFile(current);
   }
@@ -75,7 +74,7 @@ public class FileUtil {
     deleteFile(new File(filename));
   }
 
-  public static void deleteFile(File file) throws IOException{
+  public static void deleteFile(File file) throws IOException {
     if (!file.exists())
       return;
     if (!file.delete())
@@ -114,7 +113,7 @@ public class FileUtil {
       s.useDelimiter("\\A");
       return s.hasNext() ? s.next() : "";
     }
-   }
+  }
 
   public static File createDir(String path) {
     makeDir(path);
@@ -122,22 +121,47 @@ public class FileUtil {
   }
 
   public static File[] getDirectoryListing(File dir) {
-    File[] files = dir.listFiles();
-    if (files == null)
-      return new File[0];
+    File[] files = listFiles(dir);
+    if (files.length > 0) {
+      SortedSet<File> dirSet = new TreeSet<>();
+      SortedSet<File> fileSet = new TreeSet<>();
+      for (File file : files) {
+        if (file.isDirectory())
+          dirSet.add(file);
+        else
+          fileSet.add(file);
+      }
+      List<File> fileList = new ArrayList<>(files.length);
+      fileList.addAll(dirSet);
+      fileList.addAll(fileSet);
+      files = fileList.toArray(new File[0]);
+    }
+    return files;
+  }
 
-    SortedSet<File> dirSet = new TreeSet<>();
-    SortedSet<File> fileSet = new TreeSet<>();
-    for (File file : files) {
-      if (file.isDirectory())
-        dirSet.add(file);
-      else
-        fileSet.add(file);
+  public static File[] listFiles(File dir) {
+    return listFiles(dir, p -> true);
+  }
+
+  public static File[] listFiles(File dir, DirectoryStream.Filter<Path> visitPredicate) {
+    if (!dir.isDirectory()) {
+      return new File[0];
     }
     List<File> fileList = new ArrayList<>();
-    fileList.addAll(dirSet);
-    fileList.addAll(fileSet);
+    try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir.toPath(), visitPredicate)) {
+      for (Path path : stream) {
+        fileList.add(path.toFile());
+      }
+    } catch (IOException e) {
+      // not expected, ignore
+    }
     return fileList.toArray(new File[0]);
+  }
+
+  public static boolean isEmpty(File directory) throws IOException {
+    try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(directory.toPath())) {
+      return !dirStream.iterator().hasNext();
+    }
   }
 
   public static void close(Closeable closeable) {

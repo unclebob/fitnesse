@@ -1,22 +1,22 @@
 package fitnesse.wiki.fs;
 
-import java.io.*;
-import java.util.Arrays;
-import java.util.Collection;
-
 import fitnesse.util.Clock;
 import util.FileUtil;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class DiskFileSystem implements FileSystem {
-
-  private FilenameFilter filenameFilter = new FilenameFilter() {
-    private Collection skippedFileNames = Arrays.asList("CVS", "RCS");
-
-    @Override
-    public boolean accept(final File dir, final String name) {
-      return !(new File(dir, name).isHidden() || skippedFileNames.contains(name));
-    }
-  };
+  private static final Set<String> SKIPPED_FILE_NAMES = new HashSet<>(Arrays.asList("CVS", "RCS"));
 
   @Override
   public void makeFile(File file, String content) throws IOException {
@@ -41,8 +41,14 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public String[] list(File path) {
-    return path.isDirectory() ? path.list(filenameFilter) : new String[]{};
+  public String[] list(File dir) {
+    File[] files = FileUtil.listFiles(dir, path ->
+      !Files.isHidden(path) && !SKIPPED_FILE_NAMES.contains(path.getFileName().toString()));
+    List<String> fileList = new ArrayList<>(files.length);
+    for (File f : files) {
+      fileList.add(f.getName());
+    }
+    return fileList.toArray(new String[0]);
   }
 
   @Override

@@ -4,6 +4,8 @@ package fitnesse.html;
 
 import java.util.regex.Pattern;
 
+import static fitnesse.util.StringUtils.replaceStrings;
+
 public class HtmlUtil {
   public static final HtmlElement BR = new RawHtml("<br/>");
   public static final HtmlElement HR = new RawHtml("<hr/>");
@@ -65,14 +67,6 @@ public class HtmlUtil {
 
   public static String escapeWiki(String value) {
       return replaceStrings(value, specialWikiChars, specialWikiEscapes);
-  }
-
-  private static String replaceStrings(String value, String[] originalStrings, String[] replacementStrings) {
-    String result = value;
-    for (int i = 0; i < originalStrings.length; i++)
-      if (result.contains(originalStrings[i]))
-        result = result.replace(originalStrings[i], replacementStrings[i]);
-    return result;
   }
 
   public static String remainRfc3986UnreservedCharacters(final String heading) {

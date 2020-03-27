@@ -5,6 +5,7 @@ import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.SuiteContentsFinder;
+import fitnesse.testrunner.run.TestRun;
 import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystemListener;
@@ -15,7 +16,9 @@ import fitnesse.wiki.WikiPagePath;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -79,7 +82,9 @@ public class JUnitHelper {
     JavaFormatter testFormatter = new JavaFormatter(pageName);
     testFormatter.setResultsRepository(new JavaFormatter.FolderResultsRepository(outputDir));
 
-    MultipleTestsRunner testRunner = createTestRunner(initChildren(pageName, suiteFilter, excludeSuiteFilter, context), context, debugMode);
+    List<WikiPage> pages = initChildren(pageName, suiteFilter, excludeSuiteFilter, context);
+    TestRun run = createTestRun(context, pages);
+    MultipleTestsRunner testRunner = createTestRunner(run, context, debugMode);
     testRunner.addTestSystemListener(testFormatter);
     testRunner.addTestSystemListener(resultsListener);
     testRunner.addExecutionLogListener(new ConsoleExecutionLogListener());
@@ -93,23 +98,27 @@ public class JUnitHelper {
   }
 
   private List<WikiPage> initChildren(String suiteName, String suiteFilter, String excludeSuiteFilter, FitNesseContext context) {
-    WikiPage suiteRoot = getSuiteRootPage(suiteName, context);
+    WikiPage suiteRoot = getSuiteRootPage(suiteName, context, Collections.emptyMap());
     if (!suiteRoot.getData().hasAttribute("Suite")) {
       return Arrays.asList(suiteRoot);
     }
     return new SuiteContentsFinder(suiteRoot, new fitnesse.testrunner.SuiteFilter(suiteFilter, excludeSuiteFilter), context.getRootPage()).getAllPagesToRunForThisSuite();
   }
 
-  static WikiPage getSuiteRootPage(String suiteName, FitNesseContext context) {
+  static WikiPage getSuiteRootPage(String suiteName, FitNesseContext context, Map<String, String> customProperties) {
     WikiPagePath path = PathParser.parse(suiteName);
-    PageCrawler crawler = context.getRootPage().getPageCrawler();
+    PageCrawler crawler = context.getRootPage(customProperties).getPageCrawler();
     return crawler.getPage(path);
   }
 
-  static MultipleTestsRunner createTestRunner(List<WikiPage> pages, FitNesseContext context, boolean debugMode) {
-    MultipleTestsRunner runner = new MultipleTestsRunner(pages, context.testSystemFactory);
+  static MultipleTestsRunner createTestRunner(TestRun run, FitNesseContext context, boolean debugMode) {
+    MultipleTestsRunner runner = new MultipleTestsRunner(run, context.testSystemFactory);
     runner.setRunInProcess(debugMode);
     return runner;
+  }
+
+  static TestRun createTestRun(FitNesseContext context, List<WikiPage> pages) {
+    return context.testRunFactoryRegistry.createRun(pages);
   }
 
   static String msgAtLeastOneTest(String pageName, TestSummary summary) {

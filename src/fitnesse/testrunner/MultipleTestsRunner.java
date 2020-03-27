@@ -4,7 +4,6 @@ package fitnesse.testrunner;
 
 import fitnesse.testrunner.run.RunCoordinator;
 import fitnesse.testrunner.run.TestRun;
-import fitnesse.testrunner.run.TestRunFactory;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ClassPath;
 import fitnesse.testsystems.CompositeExecutionLogListener;
@@ -19,7 +18,6 @@ import fitnesse.testsystems.TestSystem;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.TestingInterruptedException;
-import fitnesse.wiki.WikiPage;
 import util.FileUtil;
 
 import java.util.ArrayList;
@@ -40,11 +38,11 @@ public class MultipleTestsRunner implements Stoppable {
 
   private final AtomicInteger testsInProgressCount = new AtomicInteger();
 
-  public MultipleTestsRunner(List<WikiPage> pages, TestSystemFactory testSystemFactory) {
+  public MultipleTestsRunner(TestRun run, TestSystemFactory testSystemFactory) {
     this.testSystemFactory = testSystemFactory;
     this.formatters = new CompositeFormatter();
     this.executionLogListener = new CompositeExecutionLogListener();
-    this.run = createRun(pages);
+    this.run = run;
   }
 
   public void setRunInProcess(boolean runInProcess) {
@@ -85,10 +83,6 @@ public class MultipleTestsRunner implements Stoppable {
     }
   }
 
-  private TestRun createRun(List<WikiPage> pages) {
-    return TestRunFactory.getInstance().createRun(pages);
-  }
-
   private void allTestingComplete() {
     FileUtil.close(formatters);
   }
@@ -117,10 +111,7 @@ public class MultipleTestsRunner implements Stoppable {
 
         @Override
         public String getTestSystem() {
-          String testSystemName = getVariable(WikiPageIdentity.TEST_SYSTEM);
-          if (testSystemName == null)
-            return "fit";
-          return testSystemName;
+          return identity.testSystem();
         }
 
         @Override

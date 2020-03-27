@@ -8,6 +8,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.InsecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.html.template.HtmlPage;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -15,7 +16,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
-public abstract class BasicResponder implements SecureResponder {
+public class BasicResponder implements SecureResponder {
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -30,13 +31,28 @@ public abstract class BasicResponder implements SecureResponder {
     return response;
   }
 
+  protected WikiPage getPage(FitNesseContext context, Request request) {
+    String resource = request.getResource();
+    WikiPagePath path = PathParser.parse(resource);
+    return context.getRootPage().getPageCrawler().getPage(path);
+  }
+
+  protected HtmlPage prepareResponseDocument(FitNesseContext context) {
+    HtmlPage responseDocument = context.pageFactory.newPage();
+    responseDocument.addTitles("Default Responder");
+    responseDocument.setMainTemplate("defaultPage.vm");
+    return responseDocument;
+  }
+
   protected WikiPage getRequestedPage(Request request, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(request.getResource());
     WikiPage requestedPage = context.getRootPage().getPageCrawler().getPage(path);
     return requestedPage;
   }
 
-  protected abstract String contentFrom(FitNesseContext context, Request request, WikiPage requestedPage);
+  protected String contentFrom(FitNesseContext context, Request request, WikiPage requestedPage) {
+    return prepareResponseDocument(context).html(request);
+  }
 
   protected Response pageNotFoundResponse(FitNesseContext context, Request request) throws Exception {
     return new NotFoundResponder().makeResponse(context, request);

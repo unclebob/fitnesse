@@ -49,6 +49,10 @@ public class TestHistoryResponderTest {
     response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
   }
 
+  private void makeResponse(String page) throws Exception {
+    response = (SimpleResponse) responder.makeResponse(context, new MockRequest(page));
+  }
+
   private void removeResultsDirectory() throws IOException {
     if (resultsDirectory.exists())
       FileUtil.deleteFileSystemDirectory(resultsDirectory);
@@ -117,10 +121,13 @@ public class TestHistoryResponderTest {
     addPageDirectoryWithOneResult("ParentOne.PageOne", "20090418123103_1_2_3_4");
     addPageDirectoryWithOneResult("ParentOne.PageTwo", "20090418123103_1_2_3_4");
     addPageDirectoryWithOneResult("ParentTwo.PageThree", "20090418123103_1_2_3_4");
+    addPageDirectoryWithOneResult("ParentOnePager.PageOne", "20090418123103_1_2_3_4");
+    addPageDirectoryWithOneResult("ParentOne", "20090418123103_1_2_3_4");
 
     TestHistory history = new TestHistory(resultsDirectory, "ParentOne");
     Set<String> pageNames = history.getPageNames();
-    assertEquals(2, pageNames.size());
+    assertEquals(3, pageNames.size());
+    assertTrue(pageNames.contains("ParentOne"));
     assertTrue(pageNames.contains("ParentOne.PageOne"));
     assertTrue(pageNames.contains("ParentOne.PageTwo"));
   }
@@ -281,7 +288,7 @@ public class TestHistoryResponderTest {
     File pageDirectory = addPageDirectory("SomePage");
     addTestResult(pageDirectory, "20090418123103_1_2_3_4");
     addTestResult(pageDirectory, "20090419123103_1_0_0_0");
-    makeResponse();
+    makeResponse("SomePage");
     assertHasRegexp("SomePage", response.getContent());
     assertHasRegexp("<td class=\"pass\">1</td>", response.getContent());
     assertHasRegexp("<td class=\"fail\">1</td>", response.getContent());

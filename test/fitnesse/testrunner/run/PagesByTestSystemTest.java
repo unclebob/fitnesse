@@ -14,13 +14,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class PagesByTestSystemTest{
+public class PagesByTestSystemTest {
   private WikiPage suite;
   private FitNesseContext context;
 
@@ -68,6 +69,22 @@ public class PagesByTestSystemTest{
     assertEquals(setUp, ((WikiTestPage) slimList.get(0)).getSourcePage());
     assertEquals(slimPage, ((WikiTestPage) slimList.get(1)).getSourcePage());
     assertEquals(tearDown, ((WikiTestPage) slimList.get(2)).getSourcePage());
+  }
+
+  @Test
+  public void testInserterChosen() {
+    suite = WikiPageUtil.addPage(context.getRootPage(),
+      PathParser.parse("SuitePage"),
+      "This is the altered test suite\n!define ALL_UNCLE_SUITE_SETUPS {true}\n");
+
+    PageListSetUpTearDownProcessor processor = PagesByTestSystem.createProcessor(Collections.singletonList(suite));
+    assertEquals(PageListSetUpTearDownInserter.class, processor.getClass());
+  }
+
+  @Test
+  public void testSurrounderChosen() {
+    PageListSetUpTearDownProcessor processor = PagesByTestSystem.createProcessor(Collections.singletonList(suite));
+    assertEquals(PageListSetUpTearDownSurrounder.class, processor.getClass());
   }
 
   private WikiPage addTestPage(WikiPage page, String name, String content) {

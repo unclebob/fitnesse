@@ -297,6 +297,25 @@ public class SuiteResponderTest {
     assertHasRegexp("#TestThree", results);
   }
 
+  @Test
+  public void canRunPartition0() throws Exception {
+    addTestPagesWithSuiteProperty();
+    request.setQueryString("suiteFilter=smoke,foo&partitionCount=2&partitionIndex=0");
+    String results = runSuite();
+    assertDoesntHaveRegexp("#TestOne", results);
+    assertDoesntHaveRegexp("#TestTwo", results);
+    assertHasRegexp("#TestThree", results);
+  }
+
+  @Test
+  public void canRunPartition1() throws Exception {
+    addTestPagesWithSuiteProperty();
+    request.setQueryString("suiteFilter=smoke,foo&partitionCount=2&partitionIndex=1");
+    String results = runSuite();
+    assertDoesntHaveRegexp("#TestOne", results);
+    assertHasRegexp("#TestTwo", results);
+    assertDoesntHaveRegexp("#TestThree", results);
+  }
 
   @Test
   public void excludeSuiteQuery() throws Exception {

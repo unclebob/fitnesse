@@ -13,11 +13,7 @@ public class DisabledResponder extends BasicResponder {
   }
 
   @Override
-  protected String contentFrom(FitNesseContext context, Request request, WikiPage requestedPage) {
-    return prepareResponseDocument(context).html(request);
-  }
-
-  private HtmlPage prepareResponseDocument(FitNesseContext context) {
+  protected HtmlPage prepareResponseDocument(FitNesseContext context) {
     HtmlPage responseDocument = context.pageFactory.newPage();
     responseDocument.addTitles("Default Responder");
     responseDocument.setMainTemplate("disabledPage.vm");

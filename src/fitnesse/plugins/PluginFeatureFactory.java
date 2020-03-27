@@ -5,6 +5,7 @@ import fitnesse.reporting.FormatterRegistry;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.testrunner.TestSystemFactoryRegistry;
+import fitnesse.testrunner.run.TestRunFactoryRegistry;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wiki.WikiPageFactoryRegistry;
@@ -43,6 +44,9 @@ public interface PluginFeatureFactory {
   }
 
   default void registerCustomComparators(CustomComparatorRegistry customComparatorRegistry) throws PluginException {
+  }
+
+  default void registerTestRunFactories(TestRunFactoryRegistry runFactoryRegistry) throws PluginException {
   }
 
 }

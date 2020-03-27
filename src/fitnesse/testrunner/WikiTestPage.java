@@ -25,6 +25,7 @@ import java.util.function.BiConsumer;
 public class WikiTestPage implements TestPage {
   public static final String TEAR_DOWN = "TearDown";
   public static final String SET_UP = "SetUp";
+  public static final String SCENARIO_LIBRARY = "ScenarioLibrary";
 
   private final WikiPage sourcePage;
   private List<WikiPage> scenarioLibraries;
@@ -143,7 +144,7 @@ public class WikiTestPage implements TestPage {
 
   protected void includePages(String name, List<WikiPage> pages, BiConsumer<WikiPage, StringBuilder> includePage,
                               StringBuilder decoratedContent) {
-    if (!pages.isEmpty()) {
+    if (pages != null && !pages.isEmpty()) {
       boolean multiplePages = pages.size() > 1;
       if (multiplePages) {
         decoratedContent.append("!*> ");
@@ -221,7 +222,7 @@ public class WikiTestPage implements TestPage {
   }
 
   protected boolean isSuiteSetUpOrTearDownPage() {
-    return isSuiteSetupOrTearDown(sourcePage);
+    return sourcePage.isSuiteSetupOrTearDown();
   }
 
   protected WikiPage findInheritedPage(String pageName) {
@@ -231,7 +232,7 @@ public class WikiTestPage implements TestPage {
   private List<WikiPage> findScenarioLibraries() {
     List<WikiPage> uncles;
     if (shouldIncludeScenarioLibraries()) {
-      uncles = findUncles("ScenarioLibrary");
+      uncles = findUncles(SCENARIO_LIBRARY);
     } else {
       uncles = Collections.emptyList();
     }
@@ -242,10 +243,5 @@ public class WikiTestPage implements TestPage {
     LinkedList<WikiPage> uncles = new LinkedList<>();
     sourcePage.getPageCrawler().traverseUncles(uncleName, uncles::addFirst);
     return uncles;
-  }
-
-  public static boolean isSuiteSetupOrTearDown(WikiPage wikiPage) {
-    String name = wikiPage.getName();
-    return (PageData.SUITE_SETUP_NAME.equals(name) || PageData.SUITE_TEARDOWN_NAME.equals(name));
   }
 }

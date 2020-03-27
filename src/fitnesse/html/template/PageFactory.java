@@ -52,19 +52,19 @@ public class PageFactory {
     properties.setProperty(VelocityEngine.CHECK_EMPTY_OBJECTS, "false");
     properties.setProperty(VelocityEngine.INPUT_ENCODING, FileUtil.CHARENCODING);
 
-    properties.setProperty(VelocityEngine.RESOURCE_LOADER, "file,themepath,classpath");
+    properties.setProperty(VelocityEngine.RESOURCE_LOADERS, "file,themepath,classpath");
 
     properties.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH,
         String.format("%s/files/fitnesse/templates", rootPagePath));
 
-    properties.setProperty("themepath." + VelocityEngine.RESOURCE_LOADER + ".class",
+    properties.setProperty(VelocityEngine.RESOURCE_LOADER + ".themepath.class",
         ClasspathResourceLoader.class.getName());
-    properties.setProperty("themepath." + VelocityEngine.RESOURCE_LOADER + ".base",
+    properties.setProperty(VelocityEngine.RESOURCE_LOADER + ".themepath.base",
         String.format("/fitnesse/resources/%s/templates", theme));
 
-    properties.setProperty("classpath." + VelocityEngine.RESOURCE_LOADER + ".class",
+    properties.setProperty(VelocityEngine.RESOURCE_LOADER + ".classpath.class",
         ClasspathResourceLoader.class.getName());
-    properties.setProperty("classpath." + VelocityEngine.RESOURCE_LOADER + ".base",
+    properties.setProperty(VelocityEngine.RESOURCE_LOADER + ".classpath.base",
         "/fitnesse/resources/templates");
 
     VelocityEngine engine = new VelocityEngine();

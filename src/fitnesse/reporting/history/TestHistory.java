@@ -14,7 +14,12 @@ public class TestHistory {
   }
 
   public TestHistory(File historyDirectory, String pageName) {
-    readPageHistoryDirectory(historyDirectory, pageName);
+    if ("".equals(pageName)) {
+      // Top Level Request
+      readHistoryDirectory(historyDirectory);
+    } else {
+      readPageHistoryDirectory(historyDirectory, pageName);
+    }
   }
 
   private void readHistoryDirectory(File historyDirectory) {
@@ -45,10 +50,14 @@ public class TestHistory {
     }
   }
 
+  /*
+   * Includes result pages from the page itself and all child pages
+   */
   private void readPageHistoryDirectory(File historyDirectory, String pageName) {
     File[] pageDirectories = FileUtil.getDirectoryListing(historyDirectory);
+    String childPageNames = pageName + ".";
     for (File file : pageDirectories)
-      if ((isValidFile(file)) && file.getName().startsWith(pageName))
+      if ((isValidFile(file)) && (file.getName().equals(pageName) || file.getName().startsWith(childPageNames)))
         pageDirectoryMap.put(file.getName(), file);
   }
 

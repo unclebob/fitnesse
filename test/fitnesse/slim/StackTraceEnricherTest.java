@@ -11,13 +11,15 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.regex.Pattern;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class StackTraceEnricherTest {
   private static final String JUNIT_JAR_PATTERN = "[junit";
   private static final String RT_JAR = "rt.jar";
-  private static final String COMMONS_LANG_VERSION = "3.8.1";
-  private static final Pattern COMMONS_LANG_JAR = Pattern.compile("commons-lang3(-3.8.1)?.jar");
+  private static final String COMMONS_LANG_VERSION = "3.9";
+  private static final Pattern COMMONS_LANG_JAR = Pattern.compile("commons-lang3(-3.9)?.jar");
 
   private Throwable exception;
   private Throwable exceptionWithCause;

@@ -1,5 +1,26 @@
 !2 ${FITNESSE_VERSION}
 
+!2 20200307
+ * Bugfixes in splitting suite in partitions.
+
+!2 20200307
+ * Fix bug in page rendering when using custom (not '/') content root ([[1272][https://github.com/unclebob/fitnesse/pull/1272]]).
+ * Simplify (and improve) Slim's table colouring ([[1271][https://github.com/unclebob/fitnesse/pull/1271]]).
+ * Minor performance enhancements.
+
+!2 20200304
+ * New feature to split a suite of tests in partitions, which could be used to split test execution across multiple workers, without having the change the content or structure of the test pages ([[1268][https://github.com/unclebob/fitnesse/pull/1268]]).
+ * Exclude page names from test history which start with same substring ([[1263][https://github.com/unclebob/fitnesse/pull/1263]]).
+ * Minor: Speed-up test startup by using less Java reflection generating pages.
+
+!2 20200205
+ * Added ability to customize HTML generated for Slim tables, using 'symbol decorators' ([[1255][https://github.com/unclebob/fitnesse/pull/1255]]).
+ * Ensured proper validation messages when user forgets to specify a target page for a symbolic link ([[1260][https://github.com/unclebob/fitnesse/pull/1260]]).
+ * Updated Slack channel invite to point to https://fitnesse-community-inviter.herokuapp.com ([[1261][https://github.com/unclebob/fitnesse/pull/1261]]).
+
+!2 20200128
+ * Update documentation replace references to Yahoo Group with Slack channel ([[1259][https://github.com/unclebob/fitnesse/pull/1259]]).
+
 !2 20200108
  * Bugfix for pretty printed exceptions ending with '<' ([[1252][https://github.com/unclebob/fitnesse/issues/1252]]).
 

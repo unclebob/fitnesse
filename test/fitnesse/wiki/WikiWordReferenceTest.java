@@ -1,5 +1,6 @@
 package fitnesse.wiki;
 
+import fit.exception.IncorrectPathException;
 import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +30,15 @@ public class WikiWordReferenceTest {
   public void ifPageDoesNotExist() {
     String actual = WikiWordReference.expandPrefix(referer, "<NoSuchPage");
     assertEquals(".NoSuchPage", actual);
+  }
+
+  @Test
+  public void ifPathIsEmpty() {
+    try {
+      WikiWordReference.expandPrefix(referer, "");
+    } catch (IncorrectPathException e) {
+      assertEquals("Path to Page must be filled in", e.getMessage());
+    }
   }
 
   @Test

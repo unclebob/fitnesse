@@ -1,5 +1,9 @@
 package fitnesse.reporting.history;
 
+import fitnesse.util.Clock;
+import fitnesse.wiki.WikiPagePath;
+import util.FileUtil;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
@@ -7,10 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import fitnesse.util.Clock;
-import fitnesse.wiki.WikiPagePath;
-import util.FileUtil;
 
 import static java.lang.String.format;
 
@@ -66,10 +66,11 @@ public class HistoryPurger {
   }
 
   private void deleteDirectoryIfExpired(File file) throws IOException {
-    File[] files = FileUtil.getDirectoryListing(file);
+    File[] files = FileUtil.listFiles(file);
     deleteExpiredFiles(files);
-    if (file.list().length == 0)
+    if (FileUtil.isEmpty(file)) {
       FileUtil.deleteFileSystemDirectory(file);
+    }
   }
 
   private void deleteFileIfExpired(File file) throws IOException {

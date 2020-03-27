@@ -2,21 +2,20 @@ package fitnesse.reporting;
 
 import fitnesse.html.HtmlElement;
 import fitnesse.html.HtmlTag;
+import fitnesse.util.StringUtils;
 
 public class JavascriptUtil {
+
+  // backslash, quote, tab, newline, line feed, platform-specific-newline
+  private static final String[] specialHtml = new String[]{"\\", "\"", "\t", "\n", "\r", HtmlElement.endl};
+  private static final String[] specialHtmlEscapes = new String[]{"\\\\", "\\\"", "\\t", "\\n", "\\r", "\\n"};
 
   private JavascriptUtil() {
   }
 
 
   public static String escapeHtmlForJavaScript(String html) {
-    html = html.replaceAll("\\\\", "\\\\\\\\"); // backslash
-    html = html.replaceAll("\"", "\\\\\""); //  quote
-    html = html.replaceAll("\t", "\\\\t"); // tab
-    html = html.replaceAll("\n", "\\\\n"); // newline
-    html = html.replaceAll("\r", "\\\\r"); // line feed
-    html = html.replaceAll(HtmlElement.endl, "\\\\n");
-    return html;
+    return StringUtils.replaceStrings(html, specialHtml, specialHtmlEscapes);
   }
 
   public static HtmlTag makeAppendElementScript(String idElement, String htmlToAppend) {

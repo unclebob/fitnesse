@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import util.FileUtil;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
@@ -11,19 +13,18 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TimeZone;
 
-import util.FileUtil;
-
 public abstract class Response {
   public enum Format {
     XML("text/xml"),
     HTML("text/html; charset=" + FileUtil.CHARENCODING),
     TEXT("text/text"),
+    TSV("text/tab-separated-values"),
     JSON("application/json"),
     JUNIT("text/junit");
 
     private final String contentType;
 
-    private Format(String contentType) {
+    Format(String contentType) {
       this.contentType = contentType;
     }
 
@@ -59,6 +60,8 @@ public abstract class Response {
       format = Format.JUNIT;
     } else if ("text".equalsIgnoreCase(formatString)) {
       format = Format.TEXT;
+    } else if ("tsv".equalsIgnoreCase(formatString)) {
+      format = Format.TSV;
     } else {
       format = Format.HTML;
     }
@@ -80,6 +83,10 @@ public abstract class Response {
 
   public boolean isTextFormat() {
     return Format.TEXT.contentType.equals(contentType);
+  }
+
+  public boolean isTabSeparatedFormat() {
+    return Format.TSV.contentType.equals(contentType);
   }
 
   public boolean isJunitFormat() {

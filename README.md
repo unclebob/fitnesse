@@ -21,7 +21,7 @@ Have a bug or a feature request? [Please open a new issue](https://github.com/un
 
 ## Community
 
-Have a question that's not a feature request or bug report? [Ask on the mailing list.](http://groups.yahoo.com/group/fitnesse)
+Have a question that's not a feature request or bug report? [Join the Slack Community.](https://fitnesse-community-inviter.herokuapp.com/)
 
 ## Edge builds
 
@@ -69,7 +69,7 @@ To run the acceptance tests:
 $ ./gradlew acceptanceTest
 ```
 
-Direct any questions to the [FitNesse Yahoo group](https://groups.yahoo.com/neo/groups/fitnesse/info).
+Direct any questions to the [Slack Community.](https://fitnesse-community-inviter.herokuapp.com/).
 
 
 ### Working with Eclipse and IntelliJ

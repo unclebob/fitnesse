@@ -2,10 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.instructions.Instruction;
@@ -15,6 +11,10 @@ import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.Table;
 import fitnesse.testsystems.slim.results.SlimTestResult;
 import fitnesse.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class ScriptTable extends SlimTable {
 
@@ -300,7 +300,7 @@ public class ScriptTable extends SlimTable {
 
     public static String getScenarioNameFromAlternatingCells(Table table, int endingCol, int row) throws SyntaxError {
       String actionName = getActionNameStartingAt(table, 0, endingCol, row);
-      String simpleName = actionName.replace(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX, "");
+      String simpleName = StringUtils.replace(actionName, SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX, "");
       return Disgracer.disgraceClassName(simpleName);
     }
 

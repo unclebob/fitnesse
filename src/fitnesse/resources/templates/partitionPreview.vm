@@ -1,0 +1,44 @@
+<h1>Partitioning preview</h1>
+<div>
+ <table style="table-layout: fixed; width: 100%;">
+  <tbody>
+  <tr>
+   <td style="width: 11em;">
+    <a class="button" href="?partition&format=tsv&partitionCount=$partitionCount"
+       title="partition preview in tab-separated format">Download TSV file</a>
+   </td>
+   <td>
+    <p class="note">
+     Partition index file in tab-separated format (TSV) can be supplied to suite responder to fix partitioning used.
+     See <a href="FitNesse.UserGuide.WritingAcceptanceTests.TestSuites.SuitePartitioning#PartitionIndexFile">SuitePartitioning
+     in the user guide</a> for more details.
+    </p>
+   </td>
+  </tr>
+  </tbody>
+ </table>
+</div>
+<table style="table-layout: fixed; width: 100%;">
+ <thead>
+ <tr>
+  <th>Page</th>
+  #foreach($groupName in $pagePositions.getGroupNames())
+   <th style="width: 5em;">$groupName</th>
+  #end
+  <th style="width: 4em;">Order</th>
+ </tr>
+ </thead>
+ <tbody>
+  #foreach($page in $pagePositions.getPages())
+   #foreach($position in $pagePositions.getPositions($page))
+   <tr>
+    <td style="overflow-y: auto;">$page</td>
+    #foreach($dimension in $position.getGroup())
+     <td>$pagePositions.formatDimension($dimension)</td>
+    #end
+    <td>$position.getPositionInGroup()</td>
+   </tr>
+   #end
+  #end
+ </tbody>
+</table>

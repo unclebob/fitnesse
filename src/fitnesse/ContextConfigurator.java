@@ -1,8 +1,5 @@
 package fitnesse;
 
-import java.io.IOException;
-import java.util.Properties;
-
 import fitnesse.authentication.Authenticator;
 import fitnesse.components.ComponentFactory;
 import fitnesse.components.Logger;
@@ -25,8 +22,22 @@ import fitnesse.wiki.fs.FileSystemPageFactory;
 import fitnesse.wiki.fs.VersionsController;
 import fitnesse.wiki.fs.ZipFileVersionsController;
 import fitnesse.wikitext.parser.SymbolProvider;
+import fitnesse.wikitext.parser.decorator.SlimTableDefaultColoring;
 
-import static fitnesse.ConfigurationParameter.*;
+import java.io.IOException;
+import java.util.Properties;
+
+import static fitnesse.ConfigurationParameter.COMMAND;
+import static fitnesse.ConfigurationParameter.CONFIG_FILE;
+import static fitnesse.ConfigurationParameter.CONTEXT_ROOT;
+import static fitnesse.ConfigurationParameter.CREDENTIALS;
+import static fitnesse.ConfigurationParameter.LOG_DIRECTORY;
+import static fitnesse.ConfigurationParameter.RECENT_CHANGES_CLASS;
+import static fitnesse.ConfigurationParameter.ROOT_DIRECTORY;
+import static fitnesse.ConfigurationParameter.THEME;
+import static fitnesse.ConfigurationParameter.VERSIONS_CONTROLLER_CLASS;
+import static fitnesse.ConfigurationParameter.VERSIONS_CONTROLLER_DAYS;
+import static fitnesse.ConfigurationParameter.WIKI_PAGE_FACTORY_CLASS;
 
 /**
  * Set up a context for running a FitNesse Instance.
@@ -161,6 +172,9 @@ public class ContextConfigurator {
 
     SymbolProvider symbolProvider = SymbolProvider.wikiParsingProvider;
 
+    SlimTableDefaultColoring.createInstanceIfNeeded(slimTableFactory);
+    SlimTableDefaultColoring.install();
+
     pluginsLoader.loadResponders(context.responderFactory);
 
     if (wikiPageFactory instanceof WikiPageFactoryRegistry) {
@@ -173,6 +187,7 @@ public class ContextConfigurator {
     pluginsLoader.loadSymbolTypes(symbolProvider);
     pluginsLoader.loadSlimTables(slimTableFactory);
     pluginsLoader.loadCustomComparators(customComparatorRegistry);
+    pluginsLoader.loadTestRunFactories(context.testRunFactoryRegistry);
 
     ContentFilter contentFilter = pluginsLoader.loadContentFilter();
 
