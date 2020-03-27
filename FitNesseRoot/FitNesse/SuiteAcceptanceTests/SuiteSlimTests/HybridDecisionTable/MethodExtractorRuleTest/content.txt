@@ -27,13 +27,17 @@
 
 !4 Hint: use this table to construct your Json expression.
  
-!|script                           |Method Extractor                                                        |
+|script                           |Method Extractor                                                        |
 |#                                 |Scope Pattern                               |Target Name |Parameter List|
 |add;                              |Cell\s+(\w+):(\d+)\s*                       |getRowColumn|$2,$1         |
 |# used a named group in the pattern                                                                        |
 |add;                              |Named\s+Cell\s+(?<column>\w+):(?<row>\d+)\s*|getRowColumn|$row,$column  |
 |# used a fixed value as parameter                                                                          |
 |add;                              |Header\s+Column\s+(\w+)\s*                  |getRowColumn|0,$1          |
+|# Function name in bold everything else is ignored|
+|add;|(?s).*<b>(.*)</b>.*|set $1||
+|# Function in the first line followed by a description in the following lines|
+|add;|(?s)^([^\n]*)\n.*|set $1||
 |# Default (match all pattern) catches every column name                                                    |
 |add;                              |.+                                          |set         |$0            |
 |# The first matching rule is used. The below will never be used as it comes after the default rule         |
@@ -52,6 +56,14 @@
 |Named Cell BX:451  |getRowColumn          |[451, BX]       |
 |Header Column F    |getRowColumn          |[0, F]          |
 |Cell 7             |set                   |[Cell 7]        |
+|!- hello    
+ This is a Description
+ to explain the column purpose.
+ It will be ignored for the 
+ function identitication -!| setHello|[] |
+|!- The bold word    
+ -! is ''' the key ''' in this !- 
+ long text -!| setTheKey|[] |
 |Last and Least     |set                   |[Last and Least]|
 
 
@@ -89,6 +101,16 @@
     "Parameters":"$1"
   },
   {
+    "Scope":"(?s).*<[b]>(.*)</b>.*",
+    "TargetName":"set $1",
+    "Parameters":""
+  },
+  {
+    "Scope":"(?s)^([^\\n]*)\\n.*",
+    "TargetName":"set $1",
+    "Parameters":""
+  },
+  {
     "Scope":".+",
     "TargetName":"set $0",
     "Parameters":""
@@ -100,4 +122,12 @@
 |hallo              |setHallo              |[]             |
 |property abc       |getProperty           |[abc]          |
 |Element 5          |get                   |[5]            |
-
+|!- hello    
+ This is a Description
+ to explain the column purpose.
+ It will be ignored for the 
+ function identitication -!| setHello|[] |
+|!- The bold word    
+ -! is ''' the key ''' in this !- 
+ long text -!| setTheKey|[] |
+|no match|setNoMatch|[]|
