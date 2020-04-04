@@ -1,4 +1,5 @@
 !2 ${FITNESSE_VERSION}
+ * Ensure FitNesseRunner takes suite partitioning into account when determining children ([[1275][https://github.com/unclebob/fitnesse/issues/1275]]).
 
 !2 20200307
  * Bugfixes in splitting suite in partitions.
