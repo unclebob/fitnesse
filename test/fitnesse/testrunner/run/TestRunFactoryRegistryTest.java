@@ -24,6 +24,7 @@ public class TestRunFactoryRegistryTest {
     addFactory(pages -> Optional.empty());
     run = registry.createRun(Collections.emptyList());
     assertEquals(PerTestSystemTestRun.class, run.getClass());
+    assertEquals(0, run.getPages().size());
   }
 
   @Test

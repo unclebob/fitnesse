@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Organize pages by test system in an appropriate order.
@@ -73,12 +74,15 @@ public class PagesByTestSystem {
     return testPages;
   }
 
+  public List<WikiPage> testsToRun() {
+    return pagesByTestSystem.values().stream()
+      .flatMap(List::stream)
+      .collect(Collectors.toList());
+  }
+
   public int totalTestsToRun() {
-    int tests = 0;
-    for (List<WikiPage> listOfPagesToRun : pagesByTestSystem.values()) {
-      tests += listOfPagesToRun.size();
-    }
-    return tests;
+    return pagesByTestSystem.values().stream()
+      .mapToInt(List::size).sum();
   }
 
   public Collection<WikiPageIdentity> identities() {

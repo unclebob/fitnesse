@@ -200,6 +200,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   private boolean preventSystemExit;
   private FitNesseContext context;
   private DescriptionFactory descriptionFactory;
+  private TestRun testRun;
   private List<WikiPage> children;
 
   public FitNesseRunner(Class<?> suiteClass) throws InitializationError {
@@ -455,25 +456,26 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     return getDescriptionFactory().createDescription(suiteClass, child);
   }
 
+  protected TestRun getTestRun() {
+    if (this.testRun == null) {
+      List<WikiPage> allChildren = initChildren();
+      this.testRun = createTestRun(allChildren);
+    }
+    return this.testRun;
+  }
+
   @Override
   protected List<WikiPage> getChildren() {
     if (this.children == null) {
-      this.children = initChildren();
+      this.children = getTestRun().getPages();
     }
     return this.children;
   }
 
   @Override
   public void run(final RunNotifier notifier) {
-    if (isFilteredForChildTest()) {
-      super.run(notifier);
-    } else {
-      runPages(children, notifier);
-    }
-  }
-
-  private boolean isFilteredForChildTest() {
-    return getDescription().getChildren().size() < getChildren().size();
+    TestRun run = getTestRun();
+    runPages(run, notifier);
   }
 
   @Override
@@ -483,6 +485,10 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
 
   protected void runPages(List<WikiPage> pages, final RunNotifier notifier) {
     TestRun run = createTestRun(pages);
+    runPages(run, notifier);
+  }
+
+  protected void runPages(TestRun run, final RunNotifier notifier) {
     MultipleTestsRunner testRunner = createTestRunner(run, context, debugMode);
     addTestSystemListeners(notifier, testRunner, suiteClass, getDescriptionFactory());
     addExecutionLogListener(notifier, testRunner, suiteClass);
