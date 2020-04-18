@@ -50,8 +50,8 @@ public class Table extends SymbolType implements Rule, Translation {
 
   private Symbol parseCell(Parser parser, String content) {
     Symbol cell = (content.contains("!"))
-                  ? parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider, ParseSpecification.tablePriority)
-                  : parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.tableParsingProvider, ParseSpecification.tablePriority);
+      ? parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider, ParseSpecification.tablePriority)
+      : parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.tableParsingProvider, ParseSpecification.tablePriority);
     cell.setType(tableCell);
     return cell;
   }
