@@ -57,11 +57,50 @@ public class DefineTest {
 
   @Test
   public void definesTwoTables() {
+    checkMultipleTables("", 2);
+  }
+
+  @Test
+  public void definesManyTablesCurlyOnEndOfLine() {
+    checkMultipleTables("", 15);
+  }
+
+  @Test
+  public void definesManyTablesCurlyOnEndOfLineSpaceBefore() {
+    checkMultipleTables(" ", 15);
+  }
+
+  @Test
+  public void definesManyTablesCurlyOnEndOfLineSpacesBefore() {
+    checkMultipleTables("   ", 15);
+  }
+
+  @Test
+  public void definesManyTablesCurlyAtStartOfLine() {
+    checkMultipleTables("\n", 15);
+  }
+
+  private void checkMultipleTables(String postfix, int count) {
     WikiPage pageOne = new TestRoot().makePage("PageOne");
-    ParserTestHelper.assertTranslatesTo(pageOne,
-      "!define x {|a|b|c|}\n!define y {|d|e|f|}",
-      MakeDefinition("x=|a|b|c|") + HtmlElement.endl + "<br/>"
-        + MakeDefinition("y=|d|e|f|") + HtmlElement.endl);
+    StringBuilder sb = new StringBuilder();
+    StringBuilder sb2 = new StringBuilder();
+    for (int i = 0; i < count; i++) {
+      if (i > 0) {
+        sb.append("\n");
+        sb2.append("<br/>");
+      }
+      sb.append(createTableDefine("x", i, postfix));
+      sb2.append(MakeDefinition(createExpectedDefinition("x", i, postfix)));
+      sb2.append(HtmlElement.endl);
+    }
+    ParserTestHelper.assertTranslatesTo(pageOne, sb.toString(), sb2.toString());
+  }
+
+  private String createTableDefine(String name, int index, String postfix) {
+      return String.format("!define %s%s {|a|b|c|\n|a|b|%s}", name, index, postfix);
+  }
+      private String createExpectedDefinition(String name, int index, String postfix) {
+    return String.format("%s%s=|a|b|c|\n|a|b|%s", name, index, postfix);
   }
 
   @Test

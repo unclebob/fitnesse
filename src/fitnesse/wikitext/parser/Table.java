@@ -40,7 +40,7 @@ public class Table extends SymbolType implements Rule, Translation {
         if (parser.atEnd()) return Symbol.nothing;
         if (containsNewLine(cell)) return Symbol.nothing;
         row.add(cell);
-        if (endsRow(parser.getCurrent())) break;
+        if (endsRow(parser)) break;
       }
       row.setEndOffset(parser.getOffset());
       if (!startsRow(parser.getCurrent())) break;
@@ -63,8 +63,20 @@ public class Table extends SymbolType implements Rule, Translation {
     return false;
   }
 
-  private boolean endsRow(Symbol symbol) {
-    return symbol.getContent().indexOf("\n") > 0;
+  private boolean endsRow(Parser parser) {
+    Symbol current = parser.getCurrent();
+    String currentContent = current.getContent();
+    return currentContent.indexOf("\n") > 0 || endsRowInDefine(currentContent, parser);
+  }
+
+  private boolean endsRowInDefine(String currentContent, Parser parser) {
+    // row can also be inside a define. In that case the final '|' is not followed by a newline
+    // but by the define's close brace ('}'), possibly preceded by whitespace
+    if ("|".equals(currentContent)) {
+      return !parser.peek(SymbolType.CloseBrace).isEmpty()
+        || !parser.peek(SymbolType.Whitespace, SymbolType.CloseBrace).isEmpty();
+    }
+    return false;
   }
 
   private boolean startsRow(Symbol symbol) {
