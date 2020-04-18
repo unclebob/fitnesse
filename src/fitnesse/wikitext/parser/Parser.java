@@ -58,7 +58,7 @@ public class Parser {
         return scanner.peek(size, new ParseSpecification().provider(specification));
     }
 
-    public List<Symbol> peek(SymbolType[] types) {
+    public List<Symbol> peek(SymbolType... types) {
         List<Symbol> lookAhead = scanner.peek(types.length, new ParseSpecification().provider(specification));
         if (lookAhead.size() != types.length) return emptySymbols;
         for (int i = 0; i < lookAhead.size(); i++) {
