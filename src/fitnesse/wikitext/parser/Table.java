@@ -73,8 +73,10 @@ public class Table extends SymbolType implements Rule, Translation {
     // row can also be inside a define. In that case the final '|' is not followed by a newline
     // but by the define's close brace ('}'), possibly preceded by whitespace
     if ("|".equals(currentContent)) {
-      return !parser.peek(SymbolType.CloseBrace).isEmpty()
-        || !parser.peek(SymbolType.Whitespace, SymbolType.CloseBrace).isEmpty();
+      return !parser.peek(SymbolType.CloseBrace, SymbolType.Newline).isEmpty()
+        || !parser.peek(SymbolType.CloseBrace, SymbolType.Whitespace, SymbolType.Newline).isEmpty()
+        || !parser.peek(SymbolType.Whitespace, SymbolType.CloseBrace, SymbolType.Newline).isEmpty()
+        || !parser.peek(SymbolType.Whitespace, SymbolType.CloseBrace, SymbolType.Whitespace, SymbolType.Newline).isEmpty();
     }
     return false;
   }

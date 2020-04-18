@@ -12,6 +12,8 @@ public class TableTest {
     ParserTestHelper.assertScansTokenType("-|a|\n", "Table", true);
     ParserTestHelper.assertScansTokenType("-!|a|\n", "Table", true);
     ParserTestHelper.assertScansTokenType("!|  a  |\n", "Table", true);
+    ParserTestHelper.assertScansTokenType("|}|\n", "Table", true);
+    ParserTestHelper.assertScansTokenType("|a|}|\n", "Table", true);
   }
 
   @Test
@@ -21,6 +23,15 @@ public class TableTest {
     ParserTestHelper.assertParses("|  a  |\n", "SymbolList[Table[TableRow[TableCell[Whitespace, Text, Whitespace]]]]");
     ParserTestHelper.assertParses("!|  a  |\n", "SymbolList[Table[TableRow[TableCell[Whitespace, Text, Whitespace]]]]");
     ParserTestHelper.assertParses("!|a:b|\n", "SymbolList[Table[TableRow[TableCell[Text, Colon, Text]]]]");
+    ParserTestHelper.assertParses("|  a |b|\n", "SymbolList[Table[TableRow[TableCell[Whitespace, Text, Whitespace], TableCell[Text]]]]");
+    ParserTestHelper.assertParses("| }  |\n", "SymbolList[Table[TableRow[TableCell[Whitespace, CloseBrace, Whitespace]]]]");
+    ParserTestHelper.assertParses("|  a |}|\n", "SymbolList[Table[TableRow[TableCell[Whitespace, Text, Whitespace], TableCell[CloseBrace]]]]");
+    ParserTestHelper.assertParses("|  a | } |\n", "SymbolList[Table[TableRow[TableCell[Whitespace, Text, Whitespace], TableCell[Whitespace, CloseBrace, Whitespace]]]]");
+    ParserTestHelper.assertParses("|  a | }|\n", "SymbolList[Table[TableRow[TableCell[Whitespace, Text, Whitespace], TableCell[Whitespace, CloseBrace]]]]");
+    ParserTestHelper.assertParses("|  a |} |\n", "SymbolList[Table[TableRow[TableCell[Whitespace, Text, Whitespace], TableCell[CloseBrace, Whitespace]]]]");
+    ParserTestHelper.assertParses("|  a |}\n", "SymbolList[Table[TableRow[TableCell[Whitespace, Text, Whitespace]]], CloseBrace, Newline]");
+    ParserTestHelper.assertParses("|  a | }\n", "SymbolList[Table[TableRow[TableCell[Whitespace, Text, Whitespace]]], Whitespace, CloseBrace, Newline]");
+    ParserTestHelper.assertParses("|  a |} \n", "SymbolList[Table[TableRow[TableCell[Whitespace, Text, Whitespace]]], CloseBrace, Whitespace, Newline]");
   }
 
   @Test
