@@ -29,10 +29,12 @@ If the problem has to do with how a file handled in the wiki or how it is parsed
 **Stack Trace**
 If applicable, add a stack trace of the error.
 
-**Desktop (please complete the following information):**
+**Configuration:**
  - OS: [e.g. iOS]
  - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+ - Version [e.g. 20200404] of FitNesse
+ - Test System: [e.g. Fit or Slim]
+ - Plugins in use: [xebium, hsac, RestFixture]
 
 
 **Additional context**
