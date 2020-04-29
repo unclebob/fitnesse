@@ -29,24 +29,33 @@ public class PerformanceTest {
     }
 
     @Test
-    public void NewParserTable() throws Exception {
-        runNewParser(tablePageContent);
+    public void NewParserTable() {
+        runNewParser("big table", tablePageContent);
     }
 
     @Test
-    public void NewParserDefine() throws Exception {
-        runNewParser(definePageContent);
+    public void NewParserDefine() {
+        runNewParser("big define", definePageContent);
     }
 
-    private void runNewParser(String input) throws Exception {
+    @Test
+    public void ParserDefineTable() {
+      StringBuilder input = new StringBuilder();
+      for (int i = 0; i < 20; i++) {
+        input.append("!define x" + i + " {|a|\n|b|}\n");
+      }
+      runNewParser("define table", input.toString());
+    }
+
+    private void runNewParser(String name, String input) {
         long start = System.currentTimeMillis();
         WikiPage page = new TestRoot().makePage("NewTest");
         //String result = ParserTest.translateTo(new TestRoot().makePage("NewTest"), pageContent);
         Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page)), input).parse();
-        System.out.println(System.currentTimeMillis() - start);
+        System.out.println(name + " parse " + (System.currentTimeMillis() - start));
         start = System.currentTimeMillis();
         /*String result =*/ new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page))).translateTree(list);
-        System.out.println(System.currentTimeMillis() - start);
+        System.out.println(name + " render " + (System.currentTimeMillis() - start));
         //System.out.println(result);
         assertEquals("done", "done");
     }
@@ -62,7 +71,7 @@ public class PerformanceTest {
 
       long start = System.currentTimeMillis();
       List<Object> result = SlimDeserializer.deserialize(serializedList);
-      System.out.println(System.currentTimeMillis() - start);
+      System.out.println("deserialize " + (System.currentTimeMillis() - start));
 
       assertEquals(objects, result);
     }

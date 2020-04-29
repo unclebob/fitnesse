@@ -11,6 +11,8 @@ public class Table extends SymbolType implements Rule, Translation {
   public static final SymbolType tableRow  = new SymbolType("TableRow");
   public static final SymbolType tableCell = new SymbolType("TableCell");
 
+  static final SymbolType[] cellTerminators = new SymbolType[] {SymbolType.EndCell, SymbolType.Newline};
+
   public Table() {
     super("Table");
     wikiMatcher(new Matcher().startLine().string("|"));
@@ -38,7 +40,7 @@ public class Table extends SymbolType implements Rule, Translation {
           break;
         }
         if (parser.atEnd()) return Symbol.nothing;
-        if (containsNewLine(cell)) return Symbol.nothing;
+        if (parser.getCurrent().isType(SymbolType.Newline)) return Symbol.nothing;
         row.add(cell);
         if (endsRow(parser.getCurrent())) break;
       }
@@ -50,17 +52,10 @@ public class Table extends SymbolType implements Rule, Translation {
 
   private Symbol parseCell(Parser parser, String content) {
     Symbol cell = (content.contains("!"))
-      ? parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider, ParseSpecification.tablePriority)
-      : parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.tableParsingProvider, ParseSpecification.tablePriority);
+      ? parser.parseToWithSymbols(cellTerminators, SymbolProvider.literalTableProvider, ParseSpecification.tablePriority)
+      : parser.parseToWithSymbols(cellTerminators, SymbolProvider.tableParsingProvider, ParseSpecification.tablePriority);
     cell.setType(tableCell);
     return cell;
-  }
-
-  private boolean containsNewLine(Symbol cell) {
-    for (Symbol child : cell.getChildren()) {
-      if (child.isType(SymbolType.Newline)) return true;
-    }
-    return false;
   }
 
   private boolean endsRow(Symbol symbol) {
