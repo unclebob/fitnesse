@@ -1,4 +1,5 @@
 !2 ${FITNESSE_VERSION}
+ * Bugfix: very slow rendering of pages having multiple tables defined via symbols ([[1280][https://github.com/unclebob/fitnesse/issues/1280]]).
 
 !2 20200404
  * Ensure FitNesseRunner takes suite partitioning into account when determining children ([[1275][https://github.com/unclebob/fitnesse/issues/1275]]).
