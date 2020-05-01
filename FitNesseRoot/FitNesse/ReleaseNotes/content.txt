@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+
+!2 20200501
  * Bugfix: very slow rendering of pages having multiple tables defined via symbols ([[1280][https://github.com/unclebob/fitnesse/issues/1280]]).
 
 !2 20200404
