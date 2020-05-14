@@ -96,4 +96,4 @@ If you are more interested in learning how to create the code that makes test ta
 If you are more interested in why and how to get teams to use FitNesse, see AcceptanceTests.  If you want to learn how to create and run FitNesse tests, check out [[Editing FitNesse Pages][<FitNesse.FullReferenceGuide.UserGuide.FitNesseWiki.EditingFitNessePages]], [[Creating Test Tables][<FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests]], and [[Test Table Styles][<FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.SliM]].
 
 !4 Or Take Your Own Path
-Finally, if you want to zoom back out and look at all of the FitNesse topics, check out the table of contents on the <UserGuide.
+Finally, if you want to zoom back out and look at all of the FitNesse topics, check out the table of contents on the UserGuide.
