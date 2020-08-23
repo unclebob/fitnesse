@@ -28,12 +28,6 @@ public class WikiSourcePageTest {
         assertTrue(names.contains("PageThree"));
     }
 
-    @Test
-    public void getsUrlForPage() {
-        WikiPage test = new TestRoot().makePage("MyPage");
-        assertEquals("WikiPath", new WikiSourcePage(test).makeUrl("WikiPath"));
-    }
-
   @Test
   public void makeFullPathOfTarget() {
     WikiPage test = new TestRoot().makePage("MyPage");

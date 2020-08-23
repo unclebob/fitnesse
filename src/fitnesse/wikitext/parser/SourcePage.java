@@ -17,7 +17,6 @@ public interface SourcePage extends Comparable<SourcePage> {
     Collection<SourcePage> getChildren();
     boolean hasProperty(String propertyKey);
     String getProperty(String propertyKey);
-    String makeUrl(String wikiWordPath);
 
     List<Symbol> getSymbols(SymbolType symbolType);
 }

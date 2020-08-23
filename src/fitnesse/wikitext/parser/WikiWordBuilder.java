@@ -21,7 +21,7 @@ public class WikiWordBuilder {
       } else if ("FitNesse".equals(originalName)) {
         return "<span class=\"fitnesse\">" + originalName + "</span>";
       } else {
-        return makeLinkToNonExistentWikiPage(originalName, currentPage.makeUrl(wikiWordPath));
+        return makeLinkToNonExistentWikiPage(originalName, currentPage.makeFullPathOfTarget(wikiWordPath));
       }
     }
 
@@ -30,7 +30,7 @@ public class WikiWordBuilder {
         return makeLinkToExistingWikiPage(qualifiedName, linkBody, null) + " " +
             makeLinkToExistingWikiPage(qualifiedName + "?edit&amp;redirectToReferer=true&amp;redirectAction=", "(edit)", "edit");
       } else {
-        return makeLinkToNonExistentWikiPage(originalName, currentPage.makeUrl(wikiWordPath));
+        return makeLinkToNonExistentWikiPage(originalName, currentPage.makeFullPathOfTarget(wikiWordPath));
       }
     }
 
