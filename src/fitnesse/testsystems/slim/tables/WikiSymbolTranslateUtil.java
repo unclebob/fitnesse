@@ -24,7 +24,6 @@ class WikiSymbolTranslateUtil {
     public HashMap<String, String> properties = new HashMap<>();
     public SourcePage includedPage;
     public String targetPath;
-    public String url;
 
     @Override
     public String getName() {
@@ -84,11 +83,6 @@ class WikiSymbolTranslateUtil {
     @Override
     public String getProperty(String propertyKey) {
       return properties.containsKey(propertyKey) ? properties.get(propertyKey) : "";
-    }
-
-    @Override
-    public String makeUrl(String wikiWordPath) {
-      return url;
     }
 
     @Override

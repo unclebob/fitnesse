@@ -1,13 +1,12 @@
 package fitnesse.wikitext.parser;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.BaseWikitextPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.WikiSourcePage;
+
+import static org.junit.Assert.*;
 
 public class ParserTestHelper {
   public static final String newLineRendered = "<br/>";
@@ -27,7 +26,7 @@ public class ParserTestHelper {
         return;
       }
     }
-    assertTrue(!found);
+    assertFalse(found);
   }
 
   public static void assertScans(String expected, Scanner scanner) {
@@ -72,6 +71,10 @@ public class ParserTestHelper {
 
   public static void assertTranslatesTo(WikiPage page, String expected) {
     assertEquals(expected, translateTo(new WikiSourcePage(page)));
+  }
+
+  public static String translateTo(String input) {
+    return translateTo(new TestSourcePage(), input);
   }
 
   public static String translateTo(WikiPage page, String input) {
@@ -161,13 +164,6 @@ public class ParserTestHelper {
     return result.toString();
   }
 
-  public static String serializeContent(Symbol symbol) {
-    StringBuilder result = new StringBuilder();
-    if (symbol.getContent() != null) result.append(symbol.getContent());
-    for (Symbol child : symbol.getChildren()) result.append(serializeContent(child));
-    return result.toString();
-  }
-
   public static String metaHtml(String message) {
     return "<span class=\"meta\">" + message + "</span>";
   }
@@ -194,12 +190,9 @@ public class ParserTestHelper {
   }
 
   public static String nestedTableWithCellAndRow(String cellContent, String firstRow) {
-    StringBuilder tableWithCellAndRow = new StringBuilder();
-    tableWithCellAndRow.append("<table>").append(HtmlElement.endl)
-      .append("\t").append(firstRow).append(HtmlElement.endl)
-      .append("\t\t<td>").append(cellContent).append("</td>").append(HtmlElement.endl)
-      .append("\t</tr>").append(HtmlElement.endl).append("</table>");
-    return tableWithCellAndRow.toString();
+    return "<table>" + HtmlElement.endl +
+      "\t" + firstRow + HtmlElement.endl +
+      "\t\t<td>" + cellContent + "</td>" + HtmlElement.endl +
+      "\t</tr>" + HtmlElement.endl + "</table>";
   }
-
 }

@@ -300,11 +300,6 @@ public class CustomLexerTest {
     }
 
     @Override
-    public String makeUrl(String wikiWordPath) {
-      throw new IllegalStateException("Should not have been called in this context");
-    }
-
-    @Override
     public List<Symbol> getSymbols(final SymbolType symbolType) {
       return Collections.emptyList();
     }

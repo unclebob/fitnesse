@@ -10,7 +10,6 @@ public class TestSourcePage implements SourcePage {
   public HashMap<String, String> properties = new HashMap<>();
   public SourcePage includedPage;
   public String targetPath;
-  public String url;
 
   public TestSourcePage withContent(String content) {
     this.content = content;
@@ -29,11 +28,6 @@ public class TestSourcePage implements SourcePage {
 
   public TestSourcePage withTarget(String targetPath) {
     this.targetPath = targetPath;
-    return this;
-  }
-
-  public TestSourcePage withUrl(String url) {
-    this.url = url;
     return this;
   }
 
@@ -64,7 +58,7 @@ public class TestSourcePage implements SourcePage {
 
   @Override
   public boolean targetExists(String wikiWordPath) {
-    return targetPath != null;
+    return !targetPath.contains("Non");
   }
 
   @Override
@@ -95,11 +89,6 @@ public class TestSourcePage implements SourcePage {
   @Override
   public String getProperty(String propertyKey) {
     return properties.containsKey(propertyKey) ? properties.get(propertyKey) : "";
-  }
-
-  @Override
-  public String makeUrl(String wikiWordPath) {
-    return url;
   }
 
   @Override

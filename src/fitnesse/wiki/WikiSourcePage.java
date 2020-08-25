@@ -114,11 +114,6 @@ public class WikiSourcePage implements SourcePage {
         return false;
     }
 
-    @Override
-    public String makeUrl(String wikiWordPath) {
-        return makeFullPathOfTarget(wikiWordPath) ;
-    }
-
     private boolean isParentOf(WikiPage possibleParent) {
         for (WikiPage candidate = page; candidate.getParent() != candidate; candidate = candidate.getParent()) {
             if (possibleParent == candidate)
