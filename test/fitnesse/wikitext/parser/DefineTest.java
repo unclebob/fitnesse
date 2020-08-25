@@ -42,6 +42,7 @@ public class DefineTest {
   public void definesValues() {
     assertDefinesValue("!define x {y}", "x", "y");
     assertDefinesValue("|!define x {y}|\n", "x", "y");
+    assertDefinesValue("{{{\n!define notDefined {y}\n}}}", "notDefined", "*nothing*");
     //todo: move to variableTest?
     //assertDefinesValue("!define x {''y''}", "x", "<i>y</i>");
     //assertDefinesValue("!define x {!note y\n}", "x", "<span class=\"note\">y</span><br/>");
