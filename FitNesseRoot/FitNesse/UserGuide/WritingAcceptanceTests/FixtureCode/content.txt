@@ -152,7 +152,7 @@ This is a common pattern. One way or another, Fitnesse test tables on a single p
 Note the ''execute'' method of !style_code(!-GameTurnFixture-!).  This will be called after all the setters have been called, and just before the output functions are called.
 
 !2 Summary
- * A fixture is the class that FitNesse and Slim use to process a particular test table when the Test button is clicked. For each row of data in a test table, Slim sets its inputs using stter methods, and then calls the specified output methods. FitNesse uses the return values to determine whether to turn output table cells green or red.
+ * A fixture is the class that FitNesse and Slim use to process a particular test table when the Test button is clicked. For each row of data in a test table, Slim sets its inputs using setter methods, and then calls the specified output methods. FitNesse uses the return values to determine whether to turn output table cells green or red.
  * You need to use a ClassPath to specify to Slim where your fixture code resides.
  * Fixture code should be as thin as possible: its methods should merely delegate to, and return values from, methods on application code. To process our player-adding test tables above when we click the Test button, Slim uses our !-AddRemovePlayerFixture-! Java class to pass data between the table and underlying Java application classes (Game and Player).
  * Sometimes fixtures get involved in pulling together test data for input, and formatting returned data for display, but fixtures should contain no business logic.
