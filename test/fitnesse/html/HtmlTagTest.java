@@ -17,18 +17,18 @@ public class HtmlTagTest {
   }
 
   @Test
-  public void testEmpty() throws Exception {
+  public void testEmpty() {
     assertEquals("<aTag/>" + endl, tag.html());
   }
 
   @Test
-  public void testWithText() throws Exception {
+  public void testWithText() {
     tag.add("some text");
     assertEquals("<aTag>some text</aTag>" + endl, tag.html());
   }
 
   @Test
-  public void testEmbeddedTag() throws Exception {
+  public void testEmbeddedTag() {
     tag.add(new HtmlTag("innertag"));
 
     String expected = "<aTag>" + endl +
@@ -39,13 +39,13 @@ public class HtmlTagTest {
   }
 
   @Test
-  public void testAttribute() throws Exception {
+  public void testAttribute() {
     tag.addAttribute("key", "value");
     assertEquals("<aTag key=\"value\"/>" + endl, tag.html());
   }
 
   @Test
-  public void testCombination() throws Exception {
+  public void testCombination() {
     tag.addAttribute("mykey", "myValue");
     HtmlTag inner = new HtmlTag("inner");
     inner.add(new HtmlTag("beforetext"));
@@ -65,7 +65,7 @@ public class HtmlTagTest {
   }
 
   @Test
-  public void testNoEndTabWithoutChildrenTags() throws Exception {
+  public void testNoEndTabWithoutChildrenTags() {
     HtmlTag subtag = new HtmlTag("subtag");
     subtag.add("content");
     tag.add(subtag);
@@ -78,15 +78,15 @@ public class HtmlTagTest {
   }
 
   @Test
-  public void whenInline_noLineBreaksOrTabsAreGeneratedForChildren() throws Exception {
+  public void whenInline_noLineBreaksOrTabsAreGeneratedForChildren() {
     HtmlTag subtag = new HtmlTag("child");
     subtag.add("content");
     tag.add(subtag);
-    assertEquals("<aTag>\t<child>content</child>" + endl + "</aTag>", tag.htmlInline());
+    assertEquals("<aTag><child>content</child></aTag>", tag.htmlInline());
   }
 
   @Test
-  public void testTwoChildren() throws Exception {
+  public void testTwoChildren() {
     tag.add(new HtmlTag("tag1"));
     tag.add(new HtmlTag("tag2"));
 
@@ -99,7 +99,7 @@ public class HtmlTagTest {
   }
 
   @Test
-  public void testUse() throws Exception {
+  public void testUse() {
     tag.add("original");
     tag.use("new");
     assertEquals("<aTag>new</aTag>" + endl, tag.html());
