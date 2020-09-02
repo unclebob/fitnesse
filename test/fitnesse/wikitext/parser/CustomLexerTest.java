@@ -300,7 +300,7 @@ public class CustomLexerTest {
     }
 
     @Override
-    public List<Symbol> getSymbols(final SymbolType symbolType) {
+    public List<Symbol> findHeaderLines() {
       return Collections.emptyList();
     }
 

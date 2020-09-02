@@ -3,7 +3,6 @@ package fitnesse.wiki;
 import fitnesse.wikitext.parser.Maybe;
 import fitnesse.wikitext.parser.SourcePage;
 import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.SymbolType;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -128,8 +127,8 @@ public class WikiSourcePage implements SourcePage {
     }
 
   @Override
-  public List<Symbol> getSymbols(final SymbolType symbolType) {
-    return WikiPageUtil.getSymbols(page, symbolType);
+  public List<Symbol> findHeaderLines() {
+    return WikiPageUtil.findHeaderLines(page);
   }
 
 }

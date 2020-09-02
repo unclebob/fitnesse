@@ -3,7 +3,7 @@
 package fitnesse.wiki;
 
 import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.parser.SyntaxTree;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -132,11 +132,11 @@ public class SymbolicPage extends BaseWikitextPage {
   }
 
   @Override
-  public Symbol getSyntaxTree() {
+  public SyntaxTree getSyntaxTree() {
     if (containsWikitext()) {
       return super.getSyntaxTree();
     }
-    return Symbol.emptySymbol;
+    return SyntaxTree.EMPTY_TREE;
   }
 
   @Override

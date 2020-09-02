@@ -2,13 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import fitnesse.wikitext.parser.Symbol;
+
 import java.io.File;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
-
-import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.SymbolType;
 
 public class WikiPageUtil {
 
@@ -85,14 +84,14 @@ public class WikiPageUtil {
 
   public static List<String> getXrefPages(WikiPage page) {
     if (page instanceof WikitextPage) {
-      return WikitextPageUtil.getXrefPages((WikitextPage) page);
+      return ((WikitextPage) page).getSyntaxTree().findXrefs();
     }
     return Collections.emptyList();
   }
 
-  public static List<Symbol> getSymbols(final WikiPage page, final SymbolType symbolType) {
+  public static List<Symbol> findHeaderLines(final WikiPage page) {
     if (page instanceof WikitextPage) {
-      return WikitextPageUtil.getSymbols((WikitextPage) page, symbolType);
+      return ((WikitextPage) page).getSyntaxTree().findHeaderLines();
     }
     return Collections.emptyList();
   }

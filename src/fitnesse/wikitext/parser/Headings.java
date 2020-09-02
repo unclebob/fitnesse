@@ -45,7 +45,7 @@ public class Headings extends SymbolType implements Rule, Translation {
   private List<Symbol> extractHeaderLines(final Translator translator) {
     HtmlTranslator htmlTranslator = (HtmlTranslator) translator;
     SourcePage sourcePage = htmlTranslator.getPage();
-    return sourcePage.getSymbols(HeaderLine.symbolType);
+    return sourcePage.findHeaderLines();
   }
 
   /**
@@ -93,7 +93,7 @@ public class Headings extends SymbolType implements Rule, Translation {
     });
     return sb.toString();
   }
-  
+
   static String buildIdOfHeaderLine(final String textFromHeaderLine) {
 	  return HtmlUtil.remainRfc3986UnreservedCharacters(textFromHeaderLine);
   }

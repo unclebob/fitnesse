@@ -18,5 +18,5 @@ public interface SourcePage extends Comparable<SourcePage> {
     boolean hasProperty(String propertyKey);
     String getProperty(String propertyKey);
 
-    List<Symbol> getSymbols(SymbolType symbolType);
+    List<Symbol> findHeaderLines();
 }

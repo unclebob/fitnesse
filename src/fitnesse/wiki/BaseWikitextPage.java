@@ -4,14 +4,7 @@ package fitnesse.wiki;
 
 import fitnesse.util.Clock;
 import fitnesse.wiki.fs.WikiPageProperties;
-import fitnesse.wikitext.parser.CompositeVariableSource;
-import fitnesse.wikitext.parser.HtmlTranslator;
-import fitnesse.wikitext.parser.Maybe;
-import fitnesse.wikitext.parser.Parser;
-import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.SymbolProvider;
-import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.parser.*;
 
 import static fitnesse.wiki.PageType.STATIC;
 
@@ -22,7 +15,7 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
 
   private final VariableSource variableSource;
   private ParsingPage parsingPage;
-  private Symbol syntaxTree;
+  private SyntaxTree syntaxTree;
 
   protected BaseWikitextPage(String name, VariableSource variableSource) {
     this(name, null, variableSource);
@@ -53,7 +46,7 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
 
   @Override
   public String getHtml() {
-    return new HtmlTranslator(new WikiSourcePage(this), getParsingPage()).translateTree(getSyntaxTree());
+    return getSyntaxTree().translate(new HtmlTranslator(new WikiSourcePage(this), getParsingPage()));
   }
 
   @Override
@@ -63,7 +56,7 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
   }
 
   @Override
-  public Symbol getSyntaxTree() {
+  public SyntaxTree getSyntaxTree() {
     parse();
     return syntaxTree;
   }
@@ -72,7 +65,7 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
     if (syntaxTree == null) {
       // This is the only page where we need a VariableSource
       parsingPage = makeParsingPage(this);
-      syntaxTree = Parser.make(parsingPage, getData().getContent()).parse();
+      syntaxTree = new SyntaxTree(Parser.make(parsingPage, getData().getContent()).parse());
     }
   }
 
