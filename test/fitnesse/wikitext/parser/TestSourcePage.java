@@ -1,9 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
 public class TestSourcePage implements SourcePage {
   public String content;
@@ -73,7 +71,7 @@ public class TestSourcePage implements SourcePage {
 
   @Override
   public Maybe<SourcePage> findIncludedPage(String pageName) {
-    return includedPage != null ? new Maybe<>(includedPage) : Maybe.<SourcePage>nothingBecause("missing");
+    return includedPage != null ? new Maybe<>(includedPage) : Maybe.nothingBecause("missing");
   }
 
   @Override
@@ -88,16 +86,11 @@ public class TestSourcePage implements SourcePage {
 
   @Override
   public String getProperty(String propertyKey) {
-    return properties.containsKey(propertyKey) ? properties.get(propertyKey) : "";
+    return properties.getOrDefault(propertyKey, "");
   }
 
   @Override
   public int compareTo(SourcePage other) {
     return getName().compareTo(other.getName());
-  }
-
-  @Override
-  public List<Symbol> findHeaderLines() {
-    return Collections.emptyList();
   }
 }

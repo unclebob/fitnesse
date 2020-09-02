@@ -3,9 +3,7 @@ package fitnesse.testsystems.slim.tables;
 import fitnesse.wikitext.parser.*;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Helper class to translate wiki markup in symbols to a Slim-readable html String
@@ -19,7 +17,7 @@ class WikiSymbolTranslateUtil {
     return new HtmlTranslator(page, new ParsingPage(page)).translateTree(list);
   }
 
-  private class DummySourcePage implements SourcePage {
+  private static class DummySourcePage implements SourcePage {
     public String content;
     public HashMap<String, String> properties = new HashMap<>();
     public SourcePage includedPage;
@@ -67,7 +65,7 @@ class WikiSymbolTranslateUtil {
 
     @Override
     public Maybe<SourcePage> findIncludedPage(String pageName) {
-      return includedPage != null ? new Maybe<>(includedPage) : Maybe.<SourcePage>nothingBecause("missing");
+      return includedPage != null ? new Maybe<>(includedPage) : Maybe.nothingBecause("missing");
     }
 
     @Override
@@ -82,17 +80,12 @@ class WikiSymbolTranslateUtil {
 
     @Override
     public String getProperty(String propertyKey) {
-      return properties.containsKey(propertyKey) ? properties.get(propertyKey) : "";
+      return properties.getOrDefault(propertyKey, "");
     }
 
     @Override
     public int compareTo(SourcePage other) {
       return getName().compareTo(other.getName());
-    }
-
-    @Override
-    public List<Symbol> findHeaderLines() {
-      return Collections.emptyList();
     }
   }
 }

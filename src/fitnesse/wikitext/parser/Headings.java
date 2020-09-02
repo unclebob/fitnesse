@@ -3,8 +3,10 @@ package fitnesse.wikitext.parser;
 import fitnesse.html.HtmlElement;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
+import fitnesse.wiki.WikitextPage;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
@@ -45,7 +47,10 @@ public class Headings extends SymbolType implements Rule, Translation {
   private List<Symbol> extractHeaderLines(final Translator translator) {
     HtmlTranslator htmlTranslator = (HtmlTranslator) translator;
     SourcePage sourcePage = htmlTranslator.getPage();
-    return sourcePage.findHeaderLines();
+    if (sourcePage instanceof WikitextPage) {
+      return ((WikitextPage)sourcePage).getSyntaxTree().findHeaderLines();
+    }
+    return Collections.emptyList();
   }
 
   /**

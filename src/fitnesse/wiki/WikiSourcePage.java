@@ -2,16 +2,14 @@ package fitnesse.wiki;
 
 import fitnesse.wikitext.parser.Maybe;
 import fitnesse.wikitext.parser.SourcePage;
-import fitnesse.wikitext.parser.Symbol;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 public class WikiSourcePage implements SourcePage {
-    private WikiPage page;
+    private final WikiPage page;
 
     public WikiSourcePage(WikiPage page) { this.page = page; }
 
@@ -81,7 +79,7 @@ public class WikiSourcePage implements SourcePage {
         else if (isParentOf(includedPage))
            return Maybe.nothingBecause("Error! Cannot include parent page (" + pageName + ").");
         else {
-            return new Maybe<SourcePage>(new WikiSourcePage(includedPage));
+            return new Maybe<>(new WikiSourcePage(includedPage));
         }
     }
 
@@ -125,10 +123,4 @@ public class WikiSourcePage implements SourcePage {
     public int compareTo(SourcePage other) {
         return getName().compareTo(other.getName());
     }
-
-  @Override
-  public List<Symbol> findHeaderLines() {
-    return WikiPageUtil.findHeaderLines(page);
-  }
-
 }

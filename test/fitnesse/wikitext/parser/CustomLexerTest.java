@@ -39,7 +39,7 @@ public class CustomLexerTest {
   public void shouldInclude() {
     String buffer = "!include -seamless .WikiWord";
 
-    assertEquals(asList("Include:!include -seamless .WikiWord"),
+    assertEquals(Collections.singletonList("Include:!include -seamless .WikiWord"),
             lex(buffer));
   }
 
@@ -297,11 +297,6 @@ public class CustomLexerTest {
     @Override
     public String getProperty(String propertyKey) {
       throw new IllegalStateException("Should not have been called in this context");
-    }
-
-    @Override
-    public List<Symbol> findHeaderLines() {
-      return Collections.emptyList();
     }
 
     @Override
