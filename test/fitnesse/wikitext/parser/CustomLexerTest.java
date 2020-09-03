@@ -300,6 +300,11 @@ public class CustomLexerTest {
     }
 
     @Override
+    public List<Symbol> findHeaderLines() {
+      return Collections.emptyList();
+    }
+
+    @Override
     public int compareTo(SourcePage o) {
       throw new IllegalStateException("Should not have been called in this context");
     }

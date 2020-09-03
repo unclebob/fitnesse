@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface SourcePage extends Comparable<SourcePage> {
     String getName();
@@ -16,4 +17,6 @@ public interface SourcePage extends Comparable<SourcePage> {
     Collection<SourcePage> getChildren();
     boolean hasProperty(String propertyKey);
     String getProperty(String propertyKey);
+
+    List<Symbol> findHeaderLines();
 }

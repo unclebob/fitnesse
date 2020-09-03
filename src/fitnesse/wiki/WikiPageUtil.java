@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import fitnesse.wikitext.parser.Symbol;
+
 import java.io.File;
 import java.net.URI;
 import java.util.Collections;
@@ -83,6 +85,13 @@ public class WikiPageUtil {
   public static List<String> getXrefPages(WikiPage page) {
     if (page instanceof WikitextPage) {
       return ((WikitextPage) page).getSyntaxTree().findXrefs();
+    }
+    return Collections.emptyList();
+  }
+
+  public static List<Symbol> findHeaderLines(WikiPage page) {
+    if (page instanceof WikitextPage) {
+      return ((WikitextPage) page).getSyntaxTree().findHeaderLines();
     }
     return Collections.emptyList();
   }

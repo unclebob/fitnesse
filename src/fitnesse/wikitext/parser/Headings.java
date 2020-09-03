@@ -45,12 +45,8 @@ public class Headings extends SymbolType implements Rule, Translation {
   }
 
   private List<Symbol> extractHeaderLines(final Translator translator) {
-    HtmlTranslator htmlTranslator = (HtmlTranslator) translator;
-    SourcePage sourcePage = htmlTranslator.getPage();
-    if (sourcePage instanceof WikitextPage) {
-      return ((WikitextPage)sourcePage).getSyntaxTree().findHeaderLines();
-    }
-    return Collections.emptyList();
+    SourcePage sourcePage = translator.getPage();
+    return sourcePage.findHeaderLines();
   }
 
   /**

@@ -2,11 +2,13 @@ package fitnesse.wiki;
 
 import fitnesse.wikitext.parser.Maybe;
 import fitnesse.wikitext.parser.SourcePage;
+import fitnesse.wikitext.parser.Symbol;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 public class WikiSourcePage implements SourcePage {
     private final WikiPage page;
@@ -122,5 +124,10 @@ public class WikiSourcePage implements SourcePage {
     @Override
     public int compareTo(SourcePage other) {
         return getName().compareTo(other.getName());
+    }
+
+    @Override
+    public List<Symbol> findHeaderLines() {
+      return WikiPageUtil.findHeaderLines(page);
     }
 }

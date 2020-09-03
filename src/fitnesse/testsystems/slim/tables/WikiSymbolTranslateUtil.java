@@ -3,7 +3,9 @@ package fitnesse.testsystems.slim.tables;
 import fitnesse.wikitext.parser.*;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Helper class to translate wiki markup in symbols to a Slim-readable html String
@@ -81,6 +83,11 @@ class WikiSymbolTranslateUtil {
     @Override
     public String getProperty(String propertyKey) {
       return properties.getOrDefault(propertyKey, "");
+    }
+
+    @Override
+    public List<Symbol> findHeaderLines() {
+      return Collections.emptyList();
     }
 
     @Override

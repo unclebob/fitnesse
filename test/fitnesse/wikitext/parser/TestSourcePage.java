@@ -1,7 +1,9 @@
 package fitnesse.wikitext.parser;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 public class TestSourcePage implements SourcePage {
   public String content;
@@ -87,6 +89,11 @@ public class TestSourcePage implements SourcePage {
   @Override
   public String getProperty(String propertyKey) {
     return properties.getOrDefault(propertyKey, "");
+  }
+
+  @Override
+  public List<Symbol> findHeaderLines() {
+    return Collections.emptyList();
   }
 
   @Override
