@@ -65,22 +65,6 @@ public class HeadingsTest {
   }
 
   @Test
-  public void testToTarget_whenTranslate_expectHtml() {
-    // arrange
-    Symbol current = new Symbol(SymbolType.Newline);
-    TestSourcePage sourcePage = new TestSourcePage();
-    Translator translator = new HtmlTranslator(sourcePage, new ParsingPage(sourcePage));
-    Headings headings = new Headings();
-
-    // act
-    String html = headings.toTarget(translator, current);
-
-    // assert
-    assertTrue(Pattern.compile("<div class=\"contents\">.*<b>Contents:</b>.*</div>", Pattern
-      .DOTALL).matcher(html).find());
-  }
-
-  @Test
   public void testListStyle_whenAllowedValue_expectValid() {
     assertEquals(7, Headings.ListStyle.values().length);
     assertEquals(Headings.ListStyle.DECIMAL, Headings.ListStyle.byNameIgnoreCase("decimal"));

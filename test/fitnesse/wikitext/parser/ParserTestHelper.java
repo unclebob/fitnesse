@@ -5,6 +5,7 @@ import fitnesse.wiki.BaseWikitextPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.WikiSourcePage;
+import fitnesse.wikitext.SyntaxTree;
 
 import static org.junit.Assert.*;
 
@@ -80,13 +81,15 @@ public class ParserTestHelper {
   public static String translateTo(WikiPage page, String input) {
     ParsingPage.Cache cache = new ParsingPage.Cache();
     VariableSource variableSource = new CompositeVariableSource(cache, new BaseWikitextPage.ParentPageVariableSource(page));
-    Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page), variableSource, cache), input).parse();
-    return new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page))).translateTree(list);
+    SyntaxTreeV2 syntaxTree = new SyntaxTreeV2();
+    syntaxTree.parse(input, new ParsingPage(new WikiSourcePage(page), variableSource, cache));
+    return syntaxTree.getHtml();
   }
 
   public static String translateTo(SourcePage page, String input) {
-    Symbol list = Parser.make(new ParsingPage(page), input).parse();
-    return new HtmlTranslator(page, new ParsingPage(page)).translateTree(list);
+    SyntaxTreeV2 syntaxTree = new SyntaxTreeV2();
+    syntaxTree.parse(input, new ParsingPage(page));
+    return syntaxTree.getHtml();
   }
 
   public static String roundTrip(SourcePage page, String input) {
@@ -96,9 +99,9 @@ public class ParserTestHelper {
 
   public static String translateToHtml(WikiPage page, String input, VariableSource variableSource) {
     ParsingPage.Cache cache = new ParsingPage.Cache();
-    ParsingPage currentPage = new ParsingPage(new WikiSourcePage(page), new CompositeVariableSource(cache, variableSource), cache);
-    Symbol list = Parser.make(currentPage, input, SymbolProvider.wikiParsingProvider).parse();
-    return new HtmlTranslator(new WikiSourcePage(page), currentPage).translateTree(list);
+    SyntaxTreeV2 syntaxTree = new SyntaxTreeV2();
+    syntaxTree.parse(input, new ParsingPage(new WikiSourcePage(page), new CompositeVariableSource(cache, variableSource), cache));
+    return syntaxTree.getHtml();
   }
 
   public static String translateTo(WikiPage page) {
@@ -107,11 +110,15 @@ public class ParserTestHelper {
 
   public static String translateTo(SourcePage page, VariableSource variableSource) {
     ParsingPage.Cache cache = new ParsingPage.Cache();
-    return new HtmlTranslator(page, new ParsingPage(page)).translateTree(Parser.make(new ParsingPage(page, new CompositeVariableSource(cache, variableSource), cache), page.getContent(), SymbolProvider.wikiParsingProvider).parse());
+    SyntaxTreeV2 syntaxTree = new SyntaxTreeV2();
+    syntaxTree.parse(page.getContent(), new ParsingPage(page, new CompositeVariableSource(cache, variableSource), cache));
+    return syntaxTree.getHtml();
   }
 
   public static String translateTo(SourcePage page) {
-    return new HtmlTranslator(page, new ParsingPage(page)).translateTree(Parser.make(new ParsingPage(page), page.getContent()).parse());
+    SyntaxTreeV2 syntaxTree = new SyntaxTreeV2();
+    syntaxTree.parse(page.getContent(), new ParsingPage(page));
+    return syntaxTree.getHtml();
   }
 
   public static void assertParses(String input, String expected) {
@@ -131,6 +138,12 @@ public class ParserTestHelper {
 
   public static Symbol parse(WikiPage page) {
     return Parser.make(new ParsingPage(new WikiSourcePage(page)), page.getData().getContent()).parse();
+  }
+
+  public static SyntaxTree parseSyntax(WikiPage page) {
+    SyntaxTree syntaxTree = new SyntaxTreeV2();
+    syntaxTree.parse(page.getData().getContent(), new ParsingPage(new WikiSourcePage(page)));
+    return syntaxTree;
   }
 
   public static Symbol parse(WikiPage page, String input) {

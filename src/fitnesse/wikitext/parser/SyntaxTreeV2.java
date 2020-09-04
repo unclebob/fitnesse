@@ -1,33 +1,43 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.SyntaxTree;
+
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
-public class SyntaxTree {
-  public static final SyntaxTree EMPTY_TREE = new SyntaxTree(Symbol.emptySymbol);
-
-  public SyntaxTree(Symbol tree) {
-    this.tree = tree;
+public class SyntaxTreeV2 implements SyntaxTree {
+  public SyntaxTreeV2() {
+    this(SymbolProvider.wikiParsingProvider);
   }
 
-  public String translate(Translator translator) {
-    return translator.translateTree(tree);
+  public SyntaxTreeV2(SymbolProvider symbolProvider) {
+    this.symbolProvider = symbolProvider;
+    tree = Symbol.emptySymbol;
   }
 
-  public List<Symbol> findHeaderLines() {
-    final List<Symbol> symbols = new LinkedList<>();
-    for (final Symbol symbol : tree.getChildren()) {
-      if (symbol.isType(HeaderLine.symbolType)) {
-        symbols.add(symbol);
-      }
-    }
-    return Collections.unmodifiableList(symbols);
+  public ParsingPage getParsingPage() { return parsingPage; }
+  public Symbol getSyntaxTree() { return tree; }
+
+  @Override
+  public void parse(String input, ParsingPage parsingPage) {
+    this.parsingPage = parsingPage;
+    tree = Parser.make(parsingPage, input, symbolProvider).parse();
   }
 
-  public List<String> findPaths(Translator translator) {
+  @Override
+  public String getHtml() {
+    return new HtmlTranslator(parsingPage.getPage(), this).translateTree(tree);
+  }
+
+  @Override
+  public Maybe<String> findVariable(String name) {
+    return parsingPage.findVariable(name);
+  }
+
+  @Override
+  public List<String> findPaths() {
     List<String> result = new ArrayList<>();
+    HtmlTranslator translator = new HtmlTranslator(parsingPage.getPage(), this);
     tree.walkPostOrder(new SymbolTreeWalker() {
 
       @Override
@@ -69,5 +79,8 @@ public class SyntaxTree {
     return xrefPages;
   }
 
-  private final Symbol tree;
+  private final SymbolProvider symbolProvider;
+
+  private Symbol tree;
+  private ParsingPage parsingPage;
 }

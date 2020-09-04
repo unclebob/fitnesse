@@ -92,11 +92,6 @@ public class TestSourcePage implements SourcePage {
   }
 
   @Override
-  public List<Symbol> findHeaderLines() {
-    return Collections.emptyList();
-  }
-
-  @Override
   public int compareTo(SourcePage other) {
     return getName().compareTo(other.getName());
   }

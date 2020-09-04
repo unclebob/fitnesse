@@ -3,12 +3,8 @@ package fitnesse.wikitext.parser;
 import fitnesse.html.HtmlElement;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
-import fitnesse.wiki.WikitextPage;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Generates a ordered list of all headers from within the current wiki page.
@@ -37,16 +33,21 @@ public class Headings extends SymbolType implements Rule, Translation {
 
   @Override
   public String toTarget(Translator translator, Symbol current) {
-    final List<Symbol> headerLines = extractHeaderLines(translator);
+    final List<Symbol> headerLines = findHeaderLines(((HtmlTranslator)translator).getSyntaxTree());
     HeadingContentBuilder headingContentBuilder = new HeadingContentBuilder(headerLines,
       ListStyle.byNameIgnoreCase(current.getProperty(STYLE)));
     HtmlElement html = headingContentBuilder.htmlElements();
     return html.html();
   }
 
-  private List<Symbol> extractHeaderLines(final Translator translator) {
-    SourcePage sourcePage = translator.getPage();
-    return sourcePage.findHeaderLines();
+  private List<Symbol> findHeaderLines(Symbol tree) {
+    final List<Symbol> symbols = new LinkedList<>();
+    for (final Symbol symbol : tree.getChildren()) {
+      if (symbol.isType(HeaderLine.symbolType)) {
+        symbols.add(symbol);
+      }
+    }
+    return Collections.unmodifiableList(symbols);
   }
 
   /**
