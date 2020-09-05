@@ -116,7 +116,9 @@ public class ClassPathBuilder {
 
   protected List<String> getItemsFromPage(WikiPage page) {
     if (page instanceof WikitextPage) {
-      return ((WikitextPage) page).getSyntaxTree().findPaths();
+      List<String> result = new ArrayList<>();
+      ((WikitextPage) page).getSyntaxTree().findPaths(result::add);
+      return result;
     }
     return Collections.emptyList();
   }

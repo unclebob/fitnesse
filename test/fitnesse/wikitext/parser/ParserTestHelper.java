@@ -81,15 +81,11 @@ public class ParserTestHelper {
   public static String translateTo(WikiPage page, String input) {
     ParsingPage.Cache cache = new ParsingPage.Cache();
     VariableSource variableSource = new CompositeVariableSource(cache, new BaseWikitextPage.ParentPageVariableSource(page));
-    SyntaxTreeV2 syntaxTree = new SyntaxTreeV2();
-    syntaxTree.parse(input, new ParsingPage(new WikiSourcePage(page), variableSource, cache));
-    return syntaxTree.getHtml();
+    return translate(input, new ParsingPage(new WikiSourcePage(page), variableSource, cache));
   }
 
   public static String translateTo(SourcePage page, String input) {
-    SyntaxTreeV2 syntaxTree = new SyntaxTreeV2();
-    syntaxTree.parse(input, new ParsingPage(page));
-    return syntaxTree.getHtml();
+    return translate(input, new ParsingPage(page));
   }
 
   public static String roundTrip(SourcePage page, String input) {
@@ -99,9 +95,7 @@ public class ParserTestHelper {
 
   public static String translateToHtml(WikiPage page, String input, VariableSource variableSource) {
     ParsingPage.Cache cache = new ParsingPage.Cache();
-    SyntaxTreeV2 syntaxTree = new SyntaxTreeV2();
-    syntaxTree.parse(input, new ParsingPage(new WikiSourcePage(page), new CompositeVariableSource(cache, variableSource), cache));
-    return syntaxTree.getHtml();
+    return translate(input, new ParsingPage(new WikiSourcePage(page), new CompositeVariableSource(cache, variableSource), cache));
   }
 
   public static String translateTo(WikiPage page) {
@@ -110,15 +104,11 @@ public class ParserTestHelper {
 
   public static String translateTo(SourcePage page, VariableSource variableSource) {
     ParsingPage.Cache cache = new ParsingPage.Cache();
-    SyntaxTreeV2 syntaxTree = new SyntaxTreeV2();
-    syntaxTree.parse(page.getContent(), new ParsingPage(page, new CompositeVariableSource(cache, variableSource), cache));
-    return syntaxTree.getHtml();
+    return translate(page.getContent(), new ParsingPage(page, new CompositeVariableSource(cache, variableSource), cache));
   }
 
   public static String translateTo(SourcePage page) {
-    SyntaxTreeV2 syntaxTree = new SyntaxTreeV2();
-    syntaxTree.parse(page.getContent(), new ParsingPage(page));
-    return syntaxTree.getHtml();
+    return translate(page.getContent(), new ParsingPage(page));
   }
 
   public static void assertParses(String input, String expected) {
@@ -141,9 +131,7 @@ public class ParserTestHelper {
   }
 
   public static SyntaxTree parseSyntax(WikiPage page) {
-    SyntaxTree syntaxTree = new SyntaxTreeV2();
-    syntaxTree.parse(page.getData().getContent(), new ParsingPage(new WikiSourcePage(page)));
-    return syntaxTree;
+    return parse(page.getData().getContent(), new ParsingPage(new WikiSourcePage(page)));
   }
 
   public static Symbol parse(WikiPage page, String input) {
@@ -207,5 +195,15 @@ public class ParserTestHelper {
       "\t" + firstRow + HtmlElement.endl +
       "\t\t<td>" + cellContent + "</td>" + HtmlElement.endl +
       "\t</tr>" + HtmlElement.endl + "</table>";
+  }
+
+  private static String translate(String input, ParsingPage page) {
+    return parse(input, page).translateToHtml();
+  }
+
+  private static SyntaxTree parse(String input, ParsingPage page) {
+    SyntaxTreeV2 syntaxTree = new SyntaxTreeV2();
+    syntaxTree.parse(input, page);
+    return syntaxTree;
   }
 }

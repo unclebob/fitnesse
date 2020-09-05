@@ -4,6 +4,7 @@ package fitnesse.wiki;
 
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -82,7 +83,9 @@ public class WikiPageUtil {
 
   public static List<String> getXrefPages(WikiPage page) {
     if (page instanceof WikitextPage) {
-      return ((WikitextPage) page).getSyntaxTree().findXrefs();
+      List<String> result = new ArrayList<>();
+      ((WikitextPage) page).getSyntaxTree().findXrefs(result::add);
+      return result;
     }
     return Collections.emptyList();
   }

@@ -2,8 +2,7 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.wikitext.SyntaxTree;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.Consumer;
 
 public class SyntaxTreeV2 implements SyntaxTree {
   public SyntaxTreeV2() {
@@ -25,7 +24,7 @@ public class SyntaxTreeV2 implements SyntaxTree {
   }
 
   @Override
-  public String getHtml() {
+  public String translateToHtml() {
     return new HtmlTranslator(parsingPage.getPage(), this).translateTree(tree);
   }
 
@@ -35,48 +34,66 @@ public class SyntaxTreeV2 implements SyntaxTree {
   }
 
   @Override
-  public List<String> findPaths() {
-    List<String> result = new ArrayList<>();
+  public void findPaths(Consumer<String> takePath) {
     HtmlTranslator translator = new HtmlTranslator(parsingPage.getPage(), this);
     tree.walkPostOrder(new SymbolTreeWalker() {
 
       @Override
       public boolean visit(Symbol node) {
         if (node.getType() instanceof PathsProvider) {
-          result.addAll(((PathsProvider) node.getType()).providePaths(translator, node));
-        }
-        return true;
-      }
-
-      @Override
-      public boolean visitChildren(Symbol node) {
-        return true;
-      }
-    });
-    return result;
-  }
-
-  public List<String> findXrefs() {
-    List<String> xrefPages = new ArrayList<>();
-    tree.walkPreOrder(new SymbolTreeWalker() {
-      @Override
-      public boolean visit(Symbol node) {
-        if (node.isType(See.symbolType)) {
-          if (node.childAt(0).isType(Alias.symbolType)) {
-            xrefPages.add(node.childAt(0).lastChild().childAt(0).getContent());
-          } else {
-            xrefPages.add(node.childAt(0).getContent());
+          for (String path: (((PathsProvider) node.getType()).providePaths(translator, node))) {
+            takePath.accept(path);
           }
         }
         return true;
       }
 
       @Override
-      public boolean visitChildren(Symbol node) {
+      public boolean visitChildren(Symbol node) { return true; }
+    });
+  }
+
+  public void findXrefs(Consumer<String> takeXref) {
+    tree.walkPreOrder(new SymbolTreeWalker() {
+      @Override
+      public boolean visit(Symbol node) {
+        if (node.isType(See.symbolType)) {
+          if (node.childAt(0).isType(Alias.symbolType)) {
+            takeXref.accept(node.childAt(0).lastChild().childAt(0).getContent());
+          } else {
+            takeXref.accept(node.childAt(0).getContent());
+          }
+        }
         return true;
       }
+
+      @Override
+      public boolean visitChildren(Symbol node) { return true; }
     });
-    return xrefPages;
+  }
+
+  @Override
+  public void findWhereUsed(Consumer<String> takeWhere) {
+    tree.walkPreOrder(new SymbolTreeWalker() {
+
+      @Override
+      public boolean visit(Symbol node) {
+        if (node.isType(WikiWord.symbolType)) {
+          takeWhere.accept(node.getContent());
+        }
+        else if (node.isType(Alias.symbolType)) {
+          String linkText = node.childAt(1).childAt(0).getContent();
+          if (linkText.contains("?")) {
+            linkText = linkText.substring(0, linkText.indexOf('?'));
+          }
+          takeWhere.accept(linkText);
+        }
+        return true;
+      }
+
+      @Override
+      public boolean visitChildren(Symbol node) { return true; }
+    });
   }
 
   private final SymbolProvider symbolProvider;

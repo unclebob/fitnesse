@@ -16,7 +16,7 @@ class WikiSymbolTranslateUtil {
     SourcePage page = new DummySourcePage();
     SyntaxTree syntaxTree = new SyntaxTreeV2();
     syntaxTree.parse(input, new ParsingPage(page));
-    return syntaxTree.getHtml();
+    return syntaxTree.translateToHtml();
   }
 
   private static class DummySourcePage implements SourcePage {

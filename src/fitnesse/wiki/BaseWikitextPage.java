@@ -42,13 +42,13 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
 
     SyntaxTree tree = new SyntaxTreeV2(SymbolProvider.variableDefinitionSymbolProvider);
     tree.parse(variable.getValue(), parsingPage);
-    return tree.getHtml();
+    return tree.translateToHtml();
   }
 
   @Override
   public String getHtml() {
     parse();
-    return syntaxTree.getHtml();
+    return syntaxTree.translateToHtml();
   }
 
   @Override

@@ -44,7 +44,7 @@ public class WikiTestPage implements TestPage {
       String content = getDecoratedContent();
       SyntaxTreeV2 syntaxTree = new SyntaxTreeV2();
       syntaxTree.parse(content, BaseWikitextPage.makeParsingPage((BaseWikitextPage) sourcePage));
-      return syntaxTree.getHtml();
+      return syntaxTree.translateToHtml();
     } else {
       return sourcePage.getHtml();
     }

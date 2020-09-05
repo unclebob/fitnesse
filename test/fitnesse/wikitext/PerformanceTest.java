@@ -55,7 +55,7 @@ public class PerformanceTest {
         syntaxTree.parse(input, new ParsingPage(new WikiSourcePage(page)));
         System.out.println(name + " parse " + (System.currentTimeMillis() - start));
         start = System.currentTimeMillis();
-        /*String result =*/ syntaxTree.getHtml();
+        /*String result =*/ syntaxTree.translateToHtml();
         System.out.println(name + " render " + (System.currentTimeMillis() - start));
         //System.out.println(result);
         assertEquals("done", "done");
