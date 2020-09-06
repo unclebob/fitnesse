@@ -27,6 +27,7 @@ public class MovePageResponderTest extends ResponderTestCase {
   private WikiPage pageOne;
   private WikiPage pageA;
   private WikiPage pageTwo;
+  private WikiPage pageThree;
   private MovePageResponder moveResponder;
   private PageCrawler crawler;
 
@@ -43,6 +44,7 @@ public class MovePageResponderTest extends ResponderTestCase {
     pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "^PageA");
     pageA = WikiPageUtil.addPage(pageOne, PathParser.parse("PageA"), "content");
     pageTwo = WikiPageUtil.addPage(root, PathParser.parse("PageTwo"), "");
+    pageThree = WikiPageUtil.addPage(root, PathParser.parse("PageThree"), "[[alias][.PageOne.PageA]]");
     crawler = root.getPageCrawler();
   }
 
@@ -115,6 +117,13 @@ public class MovePageResponderTest extends ResponderTestCase {
     movePage("PageOne.PageA", "PageTwo", true);
     pageOne = root.getChildPage("PageOne");
     assertEquals(".PageTwo.PageA", pageOne.getData().getContent());
+  }
+
+  @Test
+  public void testAliasReferencesChanged() throws Exception {
+    movePage("PageOne.PageA", "PageTwo", true);
+    pageOne = root.getChildPage("PageOne");
+    assertEquals("[[alias][.PageTwo.PageA]]", pageThree.getData().getContent());
   }
 
   @Test
