@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki.refactoring;
 
+import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiWordReference;
 import fitnesse.wikitext.parser.Alias;
@@ -24,6 +25,12 @@ public class MovedPageReferenceRenamer extends ReferenceRenamer {
   public boolean visit(Symbol node) {
     if (node.isType(WikiWord.symbolType)) {
       new WikiWordReference(currentPage(), node.getContent()).wikiWordRenameMovedPageIfReferenced(node, pageToBeMoved, newParentName);
+    } else if (node.isType(Alias.symbolType)) {
+      Symbol wikiWord = node.childAt(1).childAt(0);
+      String aliasReference = wikiWord.getContent();
+      if (PathParser.isWikiPath(aliasReference)) {
+        new WikiWordReference(currentPage(), aliasReference).wikiWordRenameMovedPageIfReferenced(wikiWord, pageToBeMoved, newParentName);
+      }
     }
     return true;
   }
