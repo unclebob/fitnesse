@@ -51,10 +51,11 @@ public class PerformanceTest {
         long start = System.currentTimeMillis();
         WikiPage page = new TestRoot().makePage("NewTest");
         //String result = ParserTest.translateTo(new TestRoot().makePage("NewTest"), pageContent);
-        Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page)), input).parse();
+        SyntaxTreeV2 syntaxTree = new SyntaxTreeV2();
+        syntaxTree.parse(input, new ParsingPage(new WikiSourcePage(page)));
         System.out.println(name + " parse " + (System.currentTimeMillis() - start));
         start = System.currentTimeMillis();
-        /*String result =*/ new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page))).translateTree(list);
+        /*String result =*/ syntaxTree.translateToHtml();
         System.out.println(name + " render " + (System.currentTimeMillis() - start));
         //System.out.println(result);
         assertEquals("done", "done");

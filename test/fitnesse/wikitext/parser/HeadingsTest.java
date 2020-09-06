@@ -2,6 +2,7 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlElement;
 import fitnesse.html.HtmlTag;
+import fitnesse.wiki.WikiPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,22 +62,6 @@ public class HeadingsTest {
     Symbol symbol = maybe.getValue();
     assertEquals(current, symbol);
     assertEquals(match, symbol.childAt(0).childAt(0).getContent());
-  }
-
-  @Test
-  public void testToTarget_whenTranslate_expectHtml() {
-    // arrange
-    Symbol current = new Symbol(SymbolType.Newline);
-    TestSourcePage sourcePage = new TestSourcePage();
-    Translator translator = new HtmlTranslator(sourcePage, new ParsingPage(sourcePage));
-    Headings headings = new Headings();
-
-    // act
-    String html = headings.toTarget(translator, current);
-
-    // assert
-    assertTrue(Pattern.compile("<div class=\"contents\">.*<b>Contents:</b>.*</div>", Pattern
-      .DOTALL).matcher(html).find());
   }
 
   @Test
@@ -270,6 +255,28 @@ public class HeadingsTest {
     // assert
     assertTrue(current.hasProperty(optionKey.toUpperCase()));
     assertEquals(optionValue, current.getProperty(optionKey.toUpperCase()));
+  }
+
+  @Test
+  public void translates() {
+    TestRoot root = new TestRoot();
+    WikiPage page = root.makePage("Page", "!headings\n!1 Title\n!2 Heading\n");
+    ParserTestHelper.assertTranslatesTo(page,
+        "<div class=\"contents\">\n" +
+        "\t<b>Contents:</b>\n" +
+        "\t<ol style=\"list-style-type: decimal;\">\n" +
+        "\t\t<li class=\"heading1\">\n" +
+        "\t\t\t<a href=\"#Title\">Title</a>\n" +
+        "\t\t</li>\n" +
+        "\t\t<ol style=\"list-style-type: decimal;\">\n" +
+        "\t\t\t<li class=\"heading2\">\n" +
+        "\t\t\t\t<a href=\"#Heading\">Heading</a>\n" +
+        "\t\t\t</li>\n" +
+        "\t\t</ol>\n" +
+        "\t</ol>\n" +
+        "</div>\n" +
+        "<br/><h1 id=\"Title\">Title</h1>\n" +
+        "<h2 id=\"Heading\">Heading</h2>\n");
   }
 
   private Symbol buildHeaderLine(final String level, final String text) {

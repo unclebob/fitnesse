@@ -2,8 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.SyntaxTree;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -124,19 +123,11 @@ public class SymbolicPage extends BaseWikitextPage {
   }
 
   @Override
-  public ParsingPage getParsingPage() {
-    if (containsWikitext()) {
-      return super.getParsingPage();
-    }
-    return null;
-  }
-
-  @Override
-  public Symbol getSyntaxTree() {
+  public SyntaxTree getSyntaxTree() {
     if (containsWikitext()) {
       return super.getSyntaxTree();
     }
-    return Symbol.emptySymbol;
+    return null;
   }
 
   @Override

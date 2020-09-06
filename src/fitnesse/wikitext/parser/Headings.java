@@ -4,9 +4,7 @@ import fitnesse.html.HtmlElement;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Generates a ordered list of all headers from within the current wiki page.
@@ -35,17 +33,21 @@ public class Headings extends SymbolType implements Rule, Translation {
 
   @Override
   public String toTarget(Translator translator, Symbol current) {
-    final List<Symbol> headerLines = extractHeaderLines(translator);
+    final List<Symbol> headerLines = findHeaderLines(((HtmlTranslator)translator).getSyntaxTree());
     HeadingContentBuilder headingContentBuilder = new HeadingContentBuilder(headerLines,
       ListStyle.byNameIgnoreCase(current.getProperty(STYLE)));
     HtmlElement html = headingContentBuilder.htmlElements();
     return html.html();
   }
 
-  private List<Symbol> extractHeaderLines(final Translator translator) {
-    HtmlTranslator htmlTranslator = (HtmlTranslator) translator;
-    SourcePage sourcePage = htmlTranslator.getPage();
-    return sourcePage.getSymbols(HeaderLine.symbolType);
+  private List<Symbol> findHeaderLines(Symbol tree) {
+    final List<Symbol> symbols = new LinkedList<>();
+    for (final Symbol symbol : tree.getChildren()) {
+      if (symbol.isType(HeaderLine.symbolType)) {
+        symbols.add(symbol);
+      }
+    }
+    return Collections.unmodifiableList(symbols);
   }
 
   /**
@@ -93,7 +95,7 @@ public class Headings extends SymbolType implements Rule, Translation {
     });
     return sb.toString();
   }
-  
+
   static String buildIdOfHeaderLine(final String textFromHeaderLine) {
 	  return HtmlUtil.remainRfc3986UnreservedCharacters(textFromHeaderLine);
   }
