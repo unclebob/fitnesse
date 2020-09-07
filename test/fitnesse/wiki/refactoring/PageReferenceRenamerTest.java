@@ -82,7 +82,7 @@ public class PageReferenceRenamerTest {
     subWiki.commit(data);
 
     renamer = new PageReferenceRenamer(subWiki_pageTwo, "PageThree");
-    renameReferences(root, renamer);
+    ReferenceRenamingTraverser.renameReferences(root, renamer);
 
     String updatedSubWikiContent = subWiki.getData().getContent();
     assertEquals("Stuff >PageThree Stuff\n", updatedSubWikiContent);
@@ -95,7 +95,7 @@ public class PageReferenceRenamerTest {
     subWiki.commit(data);
 
     renamer = new PageReferenceRenamer(subWiki_pageTwo, "PageThree");
-    renameReferences(root, renamer);
+    ReferenceRenamingTraverser.renameReferences(root, renamer);
     String updatedSubWikiContent = subWiki.getData().getContent();
     assertEquals("Stuff >PageThree.DeepPage Stuff\n", updatedSubWikiContent);
   }
@@ -103,7 +103,7 @@ public class PageReferenceRenamerTest {
   private void checkChangesOnPageOne(String beforeText, String expectedAfterText) {
     subWiki_pageOne = WikiPageUtil.addPage(subWiki, PathParser.parse("PageOne"), beforeText);
     renamer = new PageReferenceRenamer(subWiki_pageTwo, "PageThree");
-    renameReferences(root, renamer);
+    ReferenceRenamingTraverser.renameReferences(root, renamer);
     subWiki_pageOne = subWiki.getChildPage("PageOne");
     String updatedPageOneContent = subWiki_pageOne.getData().getContent();
     assertEquals(expectedAfterText, updatedPageOneContent);
@@ -115,7 +115,7 @@ public class PageReferenceRenamerTest {
     pageTwoChildData.setContent("gunk .SubWiki.PageTwo gunk");
     subWiki_pageTwo_pageTwoChild.commit(pageTwoChildData);
     renamer = new PageReferenceRenamer(subWiki_pageTwo, "PageThree");
-    renameReferences(root, renamer);
+    ReferenceRenamingTraverser.renameReferences(root, renamer);
     String updatedContent = subWiki_pageTwo_pageTwoChild.getData().getContent();
     assertEquals("gunk .SubWiki.PageThree gunk", updatedContent);
   }
@@ -124,7 +124,7 @@ public class PageReferenceRenamerTest {
   public void testSubPageReferenceUnchangedWhenParentRenamed() {
     WikiPage pageOne = WikiPageUtil.addPage(subWiki, PathParser.parse("PageOne"), "gunk ^SubPage gunk");
     renamer = new PageReferenceRenamer(subWiki, "RenamedSubWiki");
-    renameReferences(root, renamer);
+    ReferenceRenamingTraverser.renameReferences(root, renamer);
     String updatedContent = pageOne.getData().getContent();
     assertEquals("gunk ^SubPage gunk", updatedContent);
   }
@@ -133,7 +133,7 @@ public class PageReferenceRenamerTest {
   public void testRenameParentWithSubPageReferenceOnSibling() {
     WikiPage pageOne = WikiPageUtil.addPage(subWiki, PathParser.parse("PageOne"), "gunk PageTwo gunk");
     renamer = new PageReferenceRenamer(subWiki, "RenamedSubWiki");
-    renameReferences(root, renamer);
+    ReferenceRenamingTraverser.renameReferences(root, renamer);
     String updatedContent = pageOne.getData().getContent();
     assertEquals("gunk PageTwo gunk", updatedContent);
   }
@@ -143,7 +143,7 @@ public class PageReferenceRenamerTest {
     WikiPage source = WikiPageUtil.addPage(root, PathParser.parse("SourcePage"), "gunk TargetPage gunk");
     WikiPage target = WikiPageUtil.addPage(root, PathParser.parse("TargetPage"));
     renamer = new PageReferenceRenamer(target, "RenamedPage");
-    renameReferences(root, renamer);
+    ReferenceRenamingTraverser.renameReferences(root, renamer);
     String updatedSourceContent = source.getData().getContent();
     assertEquals("gunk RenamedPage gunk", updatedSourceContent);
   }
@@ -153,7 +153,7 @@ public class PageReferenceRenamerTest {
     WikiPage source = WikiPageUtil.addPage(root, PathParser.parse("SourcePage"), "gunk ^TargetPage gunk");
     WikiPage target = WikiPageUtil.addPage(source, PathParser.parse("TargetPage"));
     renamer = new PageReferenceRenamer(target, "RenamedPage");
-    renameReferences(root, renamer);
+    ReferenceRenamingTraverser.renameReferences(root, renamer);
 
     source = root.getChildPage("SourcePage");
     String updatedSourceContent = source.getData().getContent();
@@ -230,10 +230,6 @@ public class PageReferenceRenamerTest {
     checkSymbolicLinkChangesOnPageOne(beforeLinks, expectedLinks);
   }
 
-  private void renameReferences(WikiPage root, ChangeReference changeReference) {
-      root.getPageCrawler().traverse(new ReferenceRenamingTraverser(changeReference), new NoPruningStrategy());
-  }
-
   private void checkSymbolicLinkChangesOnPageOne(String beforeLink, String expectedAfterLink) {
     checkSymbolicLinkChangesOnPageOne(
       Collections.singletonMap("FirstLink", beforeLink),
@@ -251,7 +247,7 @@ public class PageReferenceRenamerTest {
     subWiki_pageOne.commit(data);
 
     renamer = new PageReferenceRenamer(subWiki_pageTwo, "PageThree");
-    renameReferences(root, renamer);
+    ReferenceRenamingTraverser.renameReferences(root, renamer);
 
     PageData pageOneDataAfter = subWiki.getChildPage("PageOne").getData();
     linksProperty = pageOneDataAfter.getProperties().getProperty(SymbolicPage.PROPERTY_NAME);

@@ -1,11 +1,7 @@
 package fitnesse.wiki.refactoring;
 
 import fitnesse.components.TraversalListener;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.SymbolicPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperty;
-import fitnesse.wiki.WikiSourcePage;
+import fitnesse.wiki.*;
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.SyntaxTreeV2;
@@ -14,9 +10,14 @@ import java.util.Optional;
 import java.util.Set;
 
 public class ReferenceRenamingTraverser implements TraversalListener<WikiPage> {
+
+  public static void renameReferences(WikiPage root, ChangeReference changeReference) {
+    root.getPageCrawler().traverse(new ReferenceRenamingTraverser(changeReference), new NoPruningStrategy());
+  }
+
   private final ChangeReference changeReference;
 
-  public ReferenceRenamingTraverser(ChangeReference changeReference) {
+  private ReferenceRenamingTraverser(ChangeReference changeReference) {
     this.changeReference = changeReference;
   }
 

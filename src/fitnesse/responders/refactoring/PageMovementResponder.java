@@ -55,7 +55,7 @@ public abstract class PageMovementResponder implements SecureResponder {
     }
 
     if (request.hasInput("refactorReferences")) {
-      renameReferences(context.getRootPage(), getReferenceRenamer());
+      ReferenceRenamingTraverser.renameReferences(context.getRootPage(), getReferenceRenamer());
     }
     execute();
 
@@ -63,10 +63,6 @@ public abstract class PageMovementResponder implements SecureResponder {
     response.redirect(context.contextRoot, createRedirectionUrl(newParentPage, getNewPageName()));
 
     return response;
-  }
-
-  private void renameReferences(WikiPage root, ChangeReference changeReference) {
-    root.getPageCrawler().traverse(new ReferenceRenamingTraverser(changeReference), new NoPruningStrategy());
   }
 
   protected boolean getAndValidateRefactoredPage(FitNesseContext context, Request request) {
