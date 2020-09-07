@@ -1,7 +1,6 @@
 package fitnesse.wiki;
 
 import fit.exception.IncorrectPathException;
-import fitnesse.wikitext.parser.Symbol;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
@@ -9,8 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class WikiWordReference {
-  private WikiPage currentPage;
-  private String wikiWord;
+  private final WikiPage currentPage;
+  private final String wikiWord;
 
   public WikiWordReference(WikiPage currentPage, String wikiWord) {
     this.currentPage = currentPage;
@@ -42,11 +41,6 @@ public class WikiWordReference {
       return "." + undecoratedPath;
     }
     return theWord;
-  }
-
-  public void wikiWordRenameMovedPageIfReferenced(Symbol wikiWord, WikiPage pageToBeMoved, String newParentName) {
-    getMovedPageRenamedContent(wikiWord.getContent(), pageToBeMoved, newParentName)
-      .ifPresent(wikiWord::setContent);
   }
 
   public Optional<String> getMovedPageRenamedContent(String content, WikiPage pageToBeMoved, String newParentName) {
@@ -85,11 +79,6 @@ public class WikiWordReference {
 
   private boolean refersTo(String qualifiedReference, String qualifiedTarget) {
     return qualifiedReference.equals(qualifiedTarget) || qualifiedReference.startsWith(qualifiedTarget + ".");
-  }
-
-  public void wikiWordRenamePageIfReferenced(Symbol wikiWord, WikiPage pageToRename, String newName) {
-    getRenamedContent(wikiWord.getContent(), pageToRename, newName)
-      .ifPresent(wikiWord::setContent);
   }
 
   public Optional<String> getRenamedContent(String content, WikiPage pageToRename, String newName) {

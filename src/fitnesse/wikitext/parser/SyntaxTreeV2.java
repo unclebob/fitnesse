@@ -1,8 +1,11 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wiki.PathParser;
 import fitnesse.wikitext.SyntaxTree;
 
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class SyntaxTreeV2 implements SyntaxTree {
   public SyntaxTreeV2() {
@@ -26,6 +29,11 @@ public class SyntaxTreeV2 implements SyntaxTree {
   @Override
   public String translateToHtml() {
     return new HtmlTranslator(parsingPage.getPage(), this).translateTree(tree);
+  }
+
+  @Override
+  public String translateToMarkUp() {
+    return new WikiTranslator(parsingPage.getPage()).translateTree(tree);
   }
 
   @Override
@@ -93,6 +101,31 @@ public class SyntaxTreeV2 implements SyntaxTree {
 
       @Override
       public boolean visitChildren(Symbol node) { return true; }
+    });
+  }
+
+  @Override
+  public void findReferences(Function<String, Optional<String>> changeReference) {
+    tree.walkPreOrder(new SymbolTreeWalker() {
+
+      @Override
+      public boolean visit(Symbol node) {
+        if (node.isType(WikiWord.symbolType)) {
+          changeReference.apply(node.getContent()).ifPresent(node::setContent);
+        } else if (node.isType(Alias.symbolType)) {
+          Symbol wikiWord = node.childAt(1).childAt(0);
+          String aliasReference = wikiWord.getContent();
+          if (PathParser.isWikiPath(aliasReference)) {
+            changeReference.apply(aliasReference).ifPresent(wikiWord::setContent);
+          }
+        }
+        return true;
+      }
+
+      @Override
+      public boolean visitChildren(Symbol node) {
+        return !node.isType(Alias.symbolType);
+      }
     });
   }
 
