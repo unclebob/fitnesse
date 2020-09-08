@@ -2,9 +2,7 @@ package fitnesse.wiki.refactoring;
 
 import fitnesse.components.TraversalListener;
 import fitnesse.wiki.*;
-import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.SymbolProvider;
-import fitnesse.wikitext.parser.SyntaxTreeV2;
+import fitnesse.wikitext.TextSystem;
 
 import java.util.Optional;
 import java.util.Set;
@@ -53,7 +51,7 @@ public class ReferenceRenamingTraverser implements TraversalListener<WikiPage> {
   private boolean updatePageContent(WikiPage currentPage, PageData data) {
     String content = data.getContent();
 
-    String newContent = getUpdatedPageContent(currentPage, content);
+    String newContent = getUpdatedPageContent(currentPage);
 
     boolean pageHasChanged = !newContent.equals(content);
     if (pageHasChanged) {
@@ -62,10 +60,7 @@ public class ReferenceRenamingTraverser implements TraversalListener<WikiPage> {
     return pageHasChanged;
   }
 
-  private String getUpdatedPageContent(WikiPage currentPage, String content) {
-    SyntaxTreeV2 syntaxTree = new SyntaxTreeV2(SymbolProvider.refactoringProvider);
-    syntaxTree.parse(content, new ParsingPage(new WikiSourcePage(currentPage)));
-    syntaxTree.findReferences(reference -> changeReference.changeReference(currentPage, reference));
-    return syntaxTree.translateToMarkUp();
+  private String getUpdatedPageContent(WikiPage currentPage) {
+    return TextSystem.make().changeReferences(currentPage, reference -> changeReference.changeReference(currentPage, reference));
   }
 }

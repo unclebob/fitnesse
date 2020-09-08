@@ -5,6 +5,7 @@ package fitnesse.wiki;
 import fitnesse.util.Clock;
 import fitnesse.wiki.fs.WikiPageProperties;
 import fitnesse.wikitext.SyntaxTree;
+import fitnesse.wikitext.TextSystem;
 import fitnesse.wikitext.parser.*;
 
 import static fitnesse.wiki.PageType.STATIC;
@@ -39,10 +40,7 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
   public String getVariable(String name) {
     Maybe<String> variable = getSyntaxTree().findVariable(name);
     if (variable.isNothing()) return null;
-
-    SyntaxTree tree = new SyntaxTreeV2(SymbolProvider.variableDefinitionSymbolProvider);
-    tree.parse(variable.getValue(), parsingPage);
-    return tree.translateToHtml();
+    return TextSystem.make().variableValueToHtml(parsingPage, variable.getValue());
   }
 
   @Override
@@ -60,8 +58,7 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
   private void parse() {
     if (syntaxTree == null) {
       parsingPage = makeParsingPage(this);
-      syntaxTree = new SyntaxTreeV2();
-      syntaxTree.parse(getData().getContent(), parsingPage);
+      syntaxTree = TextSystem.make().parse(parsingPage, getData().getContent());
     }
   }
 

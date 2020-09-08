@@ -20,20 +20,65 @@ public class SyntaxTreeV2 implements SyntaxTree {
   public ParsingPage getParsingPage() { return parsingPage; }
   public Symbol getSyntaxTree() { return tree; }
 
-  @Override
   public void parse(String input, ParsingPage parsingPage) {
     this.parsingPage = parsingPage;
     tree = Parser.make(parsingPage, input, symbolProvider).parse();
   }
 
-  @Override
-  public String translateToHtml() {
-    return new HtmlTranslator(parsingPage.getPage(), this).translateTree(tree);
+  public String translateToMarkUp() {
+    return new WikiTranslator(parsingPage.getPage()).translateTree(tree);
+  }
+
+  public void findWhereUsed(Consumer<String> takeWhere) {
+    tree.walkPreOrder(new SymbolTreeWalker() {
+
+      @Override
+      public boolean visit(Symbol node) {
+        if (node.isType(WikiWord.symbolType)) {
+          takeWhere.accept(node.getContent());
+        }
+        else if (node.isType(Alias.symbolType)) {
+          String linkText = node.childAt(1).childAt(0).getContent();
+          if (linkText.contains("?")) {
+            linkText = linkText.substring(0, linkText.indexOf('?'));
+          }
+          takeWhere.accept(linkText);
+        }
+        return true;
+      }
+
+      @Override
+      public boolean visitChildren(Symbol node) { return true; }
+    });
+  }
+
+  public void findReferences(Function<String, Optional<String>> changeReference) {
+    tree.walkPreOrder(new SymbolTreeWalker() {
+
+      @Override
+      public boolean visit(Symbol node) {
+        if (node.isType(WikiWord.symbolType)) {
+          changeReference.apply(node.getContent()).ifPresent(node::setContent);
+        } else if (node.isType(Alias.symbolType)) {
+          Symbol wikiWord = node.childAt(1).childAt(0);
+          String aliasReference = wikiWord.getContent();
+          if (PathParser.isWikiPath(aliasReference)) {
+            changeReference.apply(aliasReference).ifPresent(wikiWord::setContent);
+          }
+        }
+        return true;
+      }
+
+      @Override
+      public boolean visitChildren(Symbol node) {
+        return !node.isType(Alias.symbolType);
+      }
+    });
   }
 
   @Override
-  public String translateToMarkUp() {
-    return new WikiTranslator(parsingPage.getPage()).translateTree(tree);
+  public String translateToHtml() {
+    return new HtmlTranslator(parsingPage.getPage(), this).translateTree(tree);
   }
 
   @Override
@@ -61,6 +106,7 @@ public class SyntaxTreeV2 implements SyntaxTree {
     });
   }
 
+  @Override
   public void findXrefs(Consumer<String> takeXref) {
     tree.walkPreOrder(new SymbolTreeWalker() {
       @Override
@@ -77,55 +123,6 @@ public class SyntaxTreeV2 implements SyntaxTree {
 
       @Override
       public boolean visitChildren(Symbol node) { return true; }
-    });
-  }
-
-  @Override
-  public void findWhereUsed(Consumer<String> takeWhere) {
-    tree.walkPreOrder(new SymbolTreeWalker() {
-
-      @Override
-      public boolean visit(Symbol node) {
-        if (node.isType(WikiWord.symbolType)) {
-          takeWhere.accept(node.getContent());
-        }
-        else if (node.isType(Alias.symbolType)) {
-          String linkText = node.childAt(1).childAt(0).getContent();
-          if (linkText.contains("?")) {
-            linkText = linkText.substring(0, linkText.indexOf('?'));
-          }
-          takeWhere.accept(linkText);
-        }
-        return true;
-      }
-
-      @Override
-      public boolean visitChildren(Symbol node) { return true; }
-    });
-  }
-
-  @Override
-  public void findReferences(Function<String, Optional<String>> changeReference) {
-    tree.walkPreOrder(new SymbolTreeWalker() {
-
-      @Override
-      public boolean visit(Symbol node) {
-        if (node.isType(WikiWord.symbolType)) {
-          changeReference.apply(node.getContent()).ifPresent(node::setContent);
-        } else if (node.isType(Alias.symbolType)) {
-          Symbol wikiWord = node.childAt(1).childAt(0);
-          String aliasReference = wikiWord.getContent();
-          if (PathParser.isWikiPath(aliasReference)) {
-            changeReference.apply(aliasReference).ifPresent(wikiWord::setContent);
-          }
-        }
-        return true;
-      }
-
-      @Override
-      public boolean visitChildren(Symbol node) {
-        return !node.isType(Alias.symbolType);
-      }
     });
   }
 
