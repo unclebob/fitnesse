@@ -1,9 +1,9 @@
 package fitnesse.wiki;
 
+import java.util.Optional;
 import java.util.Properties;
 
-import fitnesse.wikitext.parser.Maybe;
-import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.VariableSource;
 
 public class SystemVariableSource implements VariableSource {
   private final Properties properties;
@@ -17,10 +17,8 @@ public class SystemVariableSource implements VariableSource {
   }
 
   @Override
-  public Maybe<String> findVariable(String name) {
-    String result = getProperty(name);
-    if (result == null) return Maybe.noString;
-    return new Maybe<>(result);
+  public Optional<String> findVariable(String name) {
+    return Optional.ofNullable(getProperty(name));
   }
 
   public String getProperty(String name) {

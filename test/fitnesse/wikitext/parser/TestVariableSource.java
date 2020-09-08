@@ -1,5 +1,9 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.VariableSource;
+
+import java.util.Optional;
+
 public class TestVariableSource implements VariableSource {
     private String name;
     private String value;
@@ -10,7 +14,7 @@ public class TestVariableSource implements VariableSource {
     }
 
     @Override
-    public Maybe<String> findVariable(String requestedName) {
-        return requestedName.equals(name) ? new Maybe<>(value) : Maybe.noString;
+    public Optional<String> findVariable(String requestedName) {
+        return requestedName.equals(name) ? Optional.ofNullable(value) : Optional.empty();
     }
 }

@@ -9,14 +9,14 @@ import fitnesse.testsystems.slim.tables.ScriptTable;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wiki.PageData;
-import fitnesse.wikitext.parser.Maybe;
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.Table;
-import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.VariableSource;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static fitnesse.wikitext.parser.decorator.SymbolClassPropertyAppender.classPropertyAppender;
@@ -145,7 +145,7 @@ public class SlimTableDefaultColoring implements ParsedSymbolDecorator {
   }
 
   protected boolean isSlimContext(VariableSource parsingPage) {
-    Maybe<String> testSystem = parsingPage.findVariable("TEST_SYSTEM");
-    return "slim".equals(testSystem.getValue());
+    Optional<String> testSystem = parsingPage.findVariable("TEST_SYSTEM");
+    return testSystem.isPresent() && "slim".equals(testSystem.get());
   }
 }

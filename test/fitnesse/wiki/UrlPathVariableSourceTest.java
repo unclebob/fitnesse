@@ -22,7 +22,7 @@ public class UrlPathVariableSourceTest {
     SystemVariableSource source = new SystemVariableSource(properties);
     UrlPathVariableSource urlSource = new UrlPathVariableSource(source, null);
 
-    assertThat(urlSource.findVariable("TestProp").getValue(), is("found"));
+    assertThat(urlSource.findVariable("TestProp").get(), is("found"));
   }
 
   @Test
@@ -36,7 +36,7 @@ public class UrlPathVariableSourceTest {
     urlVariables.put("PATH", "yyyyy");
     UrlPathVariableSource urlSource = new UrlPathVariableSource(source, urlVariables);
 
-    assertThat(urlSource.findVariable("PATH").getValue(), is(urlVariables.get("PATH")));
+    assertThat(urlSource.findVariable("PATH").get(), is(urlVariables.get("PATH")));
   }
 
 }

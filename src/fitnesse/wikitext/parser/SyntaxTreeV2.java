@@ -82,7 +82,7 @@ public class SyntaxTreeV2 implements SyntaxTree {
   }
 
   @Override
-  public Maybe<String> findVariable(String name) {
+  public Optional<String> findVariable(String name) {
     return parsingPage.findVariable(name);
   }
 

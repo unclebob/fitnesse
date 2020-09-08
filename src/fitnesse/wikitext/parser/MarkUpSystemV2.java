@@ -3,13 +3,13 @@ package fitnesse.wikitext.parser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiSourcePage;
 import fitnesse.wikitext.SyntaxTree;
-import fitnesse.wikitext.TextSystem;
+import fitnesse.wikitext.MarkUpSystem;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class TextSystemV2 implements TextSystem {
+public class MarkUpSystemV2 implements MarkUpSystem {
   @Override
   public SyntaxTree parse(ParsingPage page, String content) {
     SyntaxTreeV2 syntaxTree = new SyntaxTreeV2();

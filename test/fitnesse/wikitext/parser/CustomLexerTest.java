@@ -1,11 +1,6 @@
 package fitnesse.wikitext.parser;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import org.junit.Test;
 
@@ -223,7 +218,7 @@ public class CustomLexerTest {
     }
 
     @Override
-    public Maybe<String> findVariable(String name) {
+    public Optional<String> findVariable(String name) {
       return super.findVariable(name);
     }
   }

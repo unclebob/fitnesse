@@ -1,7 +1,11 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.CompositeVariableSource;
+import fitnesse.wikitext.VariableSource;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * The page represents wiki page in the course of being parsed.
@@ -51,34 +55,33 @@ public class ParsingPage implements VariableSource {
   }
 
   public void putVariable(String name, String value) {
-    cache.putVariable(name, new Maybe<>(value));
+    cache.putVariable(name, value);
   }
 
   @Override
-  public Maybe<String> findVariable(String name) {
-    return variableSource != null ? variableSource.findVariable(name) : Maybe.noString;
+  public Optional<String> findVariable(String name) {
+    return variableSource != null ? variableSource.findVariable(name) : Optional.empty();
   }
 
   public static class Cache implements VariableSource {
 
-    private final Map<String, Maybe<String>> cache;
+    private final Map<String, String> cache;
 
     public Cache() {
-      this(new HashMap<String, Maybe<String>>());
+      this(new HashMap<>());
     }
 
-    public Cache(Map<String, Maybe<String>> cache) {
+    public Cache(Map<String, String> cache) {
       this.cache = cache;
     }
 
-    public void putVariable(String name, Maybe<String> value) {
+    public void putVariable(String name, String value) {
       cache.put(name, value);
     }
 
     @Override
-    public Maybe<String> findVariable(String name) {
-      if (!cache.containsKey(name)) return Maybe.noString;
-      return cache.get(name);
+    public Optional<String> findVariable(String name) {
+      return Optional.ofNullable(cache.get(name));
     }
   }
 
@@ -92,16 +95,16 @@ public class ParsingPage implements VariableSource {
     }
 
     @Override
-    public Maybe<String> findVariable(String key) {
+    public Optional<String> findVariable(String key) {
       String value;
       if (key.equals("PAGE_NAME"))
         value = namedPage.getName();
       else if (key.equals("PAGE_PATH"))
         value = namedPage.getPath();
       else
-        return Maybe.noString;
+        return Optional.empty();
 
-      return new Maybe<>(value);
+      return Optional.ofNullable(value);
     }
   }
 }

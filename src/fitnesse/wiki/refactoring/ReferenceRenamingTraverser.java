@@ -2,7 +2,7 @@ package fitnesse.wiki.refactoring;
 
 import fitnesse.components.TraversalListener;
 import fitnesse.wiki.*;
-import fitnesse.wikitext.TextSystem;
+import fitnesse.wikitext.MarkUpSystem;
 
 import java.util.Optional;
 import java.util.Set;
@@ -61,6 +61,6 @@ public class ReferenceRenamingTraverser implements TraversalListener<WikiPage> {
   }
 
   private String getUpdatedPageContent(WikiPage currentPage) {
-    return TextSystem.make().changeReferences(currentPage, reference -> changeReference.changeReference(currentPage, reference));
+    return MarkUpSystem.make().changeReferences(currentPage, reference -> changeReference.changeReference(currentPage, reference));
   }
 }

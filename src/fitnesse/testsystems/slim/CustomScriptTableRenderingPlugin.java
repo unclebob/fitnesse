@@ -6,7 +6,7 @@ import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.Table;
-import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.VariableSource;
 import fitnesse.wikitext.parser.decorator.ParsedSymbolDecorator;
 
 import java.util.logging.Logger;

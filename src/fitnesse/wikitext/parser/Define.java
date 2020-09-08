@@ -33,7 +33,9 @@ public class Define extends SymbolType implements Rule, Translation {
   private Maybe<String> copyVariableValue(Parser parser, Symbol next) {
     String fromVariableName = next.getContent();
     if (!ScanString.isVariableName(fromVariableName)) return Maybe.noString;
-    return parser.getVariableSource().findVariable(fromVariableName);
+    return parser.getVariableSource().findVariable(fromVariableName)
+      .map(Maybe::new)
+      .orElse(Maybe.noString);
   }
 
   private Maybe<String> parseVariableValue(Parser parser, Symbol next) {

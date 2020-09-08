@@ -1,7 +1,7 @@
 package fitnesse.wikitext.parser.decorator;
 
 import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.VariableSource;
 
 public interface ParsedSymbolDecorator {
 
