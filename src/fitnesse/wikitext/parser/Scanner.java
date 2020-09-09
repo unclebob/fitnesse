@@ -2,6 +2,7 @@ package fitnesse.wikitext.parser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Scanner {
 
@@ -12,14 +13,7 @@ public class Scanner {
 
     public Scanner(SourcePage sourcePage, CharSequence input) {
         this(
-            new TextMaker(
-                new VariableSource() {
-                        @Override
-                        public Maybe<String> findVariable(String name) {
-                            return Maybe.noString;
-                        }
-                },
-                sourcePage),
+            new TextMaker(name -> Optional.empty(), sourcePage),
             input);
     }
 

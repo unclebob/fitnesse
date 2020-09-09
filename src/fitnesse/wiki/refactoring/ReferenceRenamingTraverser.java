@@ -1,52 +1,43 @@
 package fitnesse.wiki.refactoring;
 
 import fitnesse.components.TraversalListener;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.SymbolicPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperty;
-import fitnesse.wiki.WikiSourcePage;
-import fitnesse.wikitext.parser.Parser;
-import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.SymbolProvider;
-import fitnesse.wikitext.parser.SymbolTreeWalker;
-import fitnesse.wikitext.parser.WikiTranslator;
+import fitnesse.wiki.*;
+import fitnesse.wikitext.MarkUpSystem;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 
-class ReferenceRenamingTraverser implements TraversalListener<WikiPage> {
-  private final SymbolTreeWalker walker;
-  private final Function<String, Optional<String>> symbolicLinkProcessor;
-  private WikiPage currentPage;
+public class ReferenceRenamingTraverser implements TraversalListener<WikiPage> {
 
-  ReferenceRenamingTraverser(SymbolTreeWalker walker, Function<String, Optional<String>> symbolicLinkProcessor) {
-    this.walker = walker;
-    this.symbolicLinkProcessor = symbolicLinkProcessor;
+  public static void renameReferences(WikiPage root, ChangeReference changeReference) {
+    root.getPageCrawler().traverse(new ReferenceRenamingTraverser(changeReference), new NoPruningStrategy());
+  }
+
+  private final ChangeReference changeReference;
+
+  private ReferenceRenamingTraverser(ChangeReference changeReference) {
+    this.changeReference = changeReference;
   }
 
   @Override
   public void process(WikiPage currentPage) {
-    this.currentPage = currentPage;
     PageData data = currentPage.getData();
-    boolean pageHasChanged = checkSymbolicLinks(data);
-    pageHasChanged |= updatePageContent(data);
+    boolean pageHasChanged = checkSymbolicLinks(currentPage, data);
+    pageHasChanged |= updatePageContent(currentPage, data);
 
     if (pageHasChanged) {
       currentPage.commit(data);
     }
   }
 
-  private boolean checkSymbolicLinks(PageData data) {
+  private boolean checkSymbolicLinks(WikiPage currentPage, PageData data) {
     boolean pageHasChanged = false;
     WikiPageProperty suiteProperty = data.getProperties().getProperty(SymbolicPage.PROPERTY_NAME);
     if (suiteProperty != null) {
       Set<String> links = suiteProperty.keySet();
       for (String link : links) {
         String linkTarget = suiteProperty.get(link);
-        Optional<String> renamedLinkTarget = symbolicLinkProcessor.apply(linkTarget);
+        Optional<String> renamedLinkTarget = changeReference.changeReference(currentPage, linkTarget);
         if (renamedLinkTarget.isPresent()) {
           suiteProperty.set(link, renamedLinkTarget.get());
           pageHasChanged = true;
@@ -57,10 +48,10 @@ class ReferenceRenamingTraverser implements TraversalListener<WikiPage> {
   }
 
 
-  private boolean updatePageContent(PageData data) {
+  private boolean updatePageContent(WikiPage currentPage, PageData data) {
     String content = data.getContent();
 
-    String newContent = getUpdatedPageContent(content);
+    String newContent = getUpdatedPageContent(currentPage);
 
     boolean pageHasChanged = !newContent.equals(content);
     if (pageHasChanged) {
@@ -69,17 +60,7 @@ class ReferenceRenamingTraverser implements TraversalListener<WikiPage> {
     return pageHasChanged;
   }
 
-  private String getUpdatedPageContent(String content) {
-    Symbol syntaxTree = Parser.make(
-      new ParsingPage(new WikiSourcePage(currentPage)),
-      content,
-      SymbolProvider.refactoringProvider)
-      .parse();
-    syntaxTree.walkPreOrder(walker);
-    return new WikiTranslator(new WikiSourcePage(currentPage)).translateTree(syntaxTree);
-  }
-
-  WikiPage currentPage() {
-    return currentPage;
+  private String getUpdatedPageContent(WikiPage currentPage) {
+    return MarkUpSystem.make().changeReferences(currentPage, reference -> changeReference.changeReference(currentPage, reference));
   }
 }

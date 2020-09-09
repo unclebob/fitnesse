@@ -74,7 +74,7 @@ public class DefineTest {
     WikiPage pageOne = new TestRoot().makePage("PageOne", input);
     ParsingPage page = new ParsingPage(new WikiSourcePage(pageOne));
     Parser.make(page, input).parse();
-    assertEquals(definedValue, page.findVariable(name).getValue());
+    assertEquals(definedValue, page.findVariable(name).orElse("*nothing*"));
   }
 
   private void assertTranslatesDefine(String input, String definition) {
@@ -85,5 +85,4 @@ public class DefineTest {
   private String MakeDefinition(String definition) {
     return "<span class=\"meta\">variable defined: " + definition + "</span>";
   }
-
 }

@@ -8,8 +8,8 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wikitext.MarkUpSystem;
 import fitnesse.wikitext.parser.Include;
-import fitnesse.wikitext.parser.SyntaxTreeV2;
 
 import java.io.File;
 import java.util.Collections;
@@ -42,9 +42,7 @@ public class WikiTestPage implements TestPage {
     // -AJM- Okay, this is not as clean as I'd like it to be, but for now it does the trick
     if (containsWikitext()) {
       String content = getDecoratedContent();
-      SyntaxTreeV2 syntaxTree = new SyntaxTreeV2();
-      syntaxTree.parse(content, BaseWikitextPage.makeParsingPage((BaseWikitextPage) sourcePage));
-      return syntaxTree.translateToHtml();
+      return MarkUpSystem.make().parse(BaseWikitextPage.makeParsingPage((BaseWikitextPage) sourcePage), content).translateToHtml();
     } else {
       return sourcePage.getHtml();
     }

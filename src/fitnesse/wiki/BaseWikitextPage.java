@@ -4,8 +4,13 @@ package fitnesse.wiki;
 
 import fitnesse.util.Clock;
 import fitnesse.wiki.fs.WikiPageProperties;
+import fitnesse.wikitext.CompositeVariableSource;
 import fitnesse.wikitext.SyntaxTree;
+import fitnesse.wikitext.MarkUpSystem;
+import fitnesse.wikitext.VariableSource;
 import fitnesse.wikitext.parser.*;
+
+import java.util.Optional;
 
 import static fitnesse.wiki.PageType.STATIC;
 
@@ -37,12 +42,9 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
 
   @Override
   public String getVariable(String name) {
-    Maybe<String> variable = getSyntaxTree().findVariable(name);
-    if (variable.isNothing()) return null;
-
-    SyntaxTree tree = new SyntaxTreeV2(SymbolProvider.variableDefinitionSymbolProvider);
-    tree.parse(variable.getValue(), parsingPage);
-    return tree.translateToHtml();
+    return getSyntaxTree().findVariable(name)
+      .map(value -> MarkUpSystem.make().variableValueToHtml(parsingPage, value))
+      .orElse(null);
   }
 
   @Override
@@ -60,8 +62,7 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
   private void parse() {
     if (syntaxTree == null) {
       parsingPage = makeParsingPage(this);
-      syntaxTree = new SyntaxTreeV2();
-      syntaxTree.parse(getData().getContent(), parsingPage);
+      syntaxTree = MarkUpSystem.make().parse(parsingPage, getData().getContent());
     }
   }
 
@@ -113,12 +114,12 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
     }
 
     @Override
-    public Maybe<String> findVariable(String name) {
+    public Optional<String> findVariable(String name) {
       if(variableSource instanceof UrlPathVariableSource){
         Maybe<String> result = ((UrlPathVariableSource) variableSource).findUrlVariable(name);
-        if (!result.isNothing()) return result;
+        if (!result.isNothing()) return Optional.of(result.getValue());
       }
-      return Maybe.noString;
+      return Optional.empty();
     }
   }
 
@@ -131,17 +132,15 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
     }
 
     @Override
-    public Maybe<String> findVariable(String name) {
+    public Optional<String> findVariable(String name) {
       if (page.isRoot()) {
-        // Get variable from
-        return Maybe.noString;
+        return Optional.empty();
       }
       WikiPage parentPage = page.getParent();
       if (parentPage instanceof WikitextPage) {
         return ((WikitextPage) parentPage).getSyntaxTree().findVariable(name);
       } else {
-        String value = parentPage.getVariable(name);
-        return value != null ? new Maybe<>(value) : Maybe.noString;
+        return Optional.ofNullable(parentPage.getVariable(name));
       }
     }
   }

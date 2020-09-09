@@ -1,7 +1,9 @@
 package fitnesse.testsystems.slim.tables;
 
-import fitnesse.wikitext.SyntaxTree;
-import fitnesse.wikitext.parser.*;
+import fitnesse.wikitext.MarkUpSystem;
+import fitnesse.wikitext.parser.Maybe;
+import fitnesse.wikitext.parser.ParsingPage;
+import fitnesse.wikitext.parser.SourcePage;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,10 +15,7 @@ import java.util.HashMap;
 class WikiSymbolTranslateUtil {
 
   String getHtmlFor(String input) {
-    SourcePage page = new DummySourcePage();
-    SyntaxTree syntaxTree = new SyntaxTreeV2();
-    syntaxTree.parse(input, new ParsingPage(page));
-    return syntaxTree.translateToHtml();
+    return MarkUpSystem.make().parse(new ParsingPage(new DummySourcePage()), input).translateToHtml();
   }
 
   private static class DummySourcePage implements SourcePage {

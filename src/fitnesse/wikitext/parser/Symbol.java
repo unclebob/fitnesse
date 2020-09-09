@@ -1,10 +1,8 @@
 package fitnesse.wikitext.parser;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import fitnesse.wikitext.VariableSource;
+
+import java.util.*;
 
 public class Symbol {
     private static final List<Symbol> NO_CHILDREN = Collections.emptyList();
@@ -63,11 +61,6 @@ public class Symbol {
         return children;
     }
 
-    public Symbol addToFront(Symbol child) {
-        children().add(0, child);
-        return this;
-    }
-
     public Symbol add(Symbol child) {
         children().add(child);
         return this;
@@ -106,8 +99,7 @@ public class Symbol {
     public void evaluateVariables(String[] names, VariableSource source) {
         if (variables == null) variables = new HashMap<>(names.length);
         for (String name: names) {
-            Maybe<String> value = source.findVariable(name);
-            if (!value.isNothing()) variables.put(name, value.getValue());
+            source.findVariable(name).ifPresent(value -> variables.put(name, value));
         }
     }
 
@@ -146,9 +138,8 @@ public class Symbol {
       return startOffset;
     }
 
-    Symbol setEndOffset(int endOffset) {
+    void setEndOffset(int endOffset) {
       this.endOffset = endOffset;
-      return this;
     }
 
     public int getEndOffset() {

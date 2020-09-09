@@ -11,14 +11,9 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.SymbolicPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.WikiPageProperty;
-import fitnesse.wiki.refactoring.ReferenceRenamer;
+import fitnesse.wiki.*;
+import fitnesse.wiki.refactoring.ChangeReference;
+import fitnesse.wiki.refactoring.ReferenceRenamingTraverser;
 
 import java.util.List;
 
@@ -33,7 +28,7 @@ public abstract class PageMovementResponder implements SecureResponder {
 
   protected abstract boolean getAndValidateRefactoringParameters(Request request);
 
-  protected abstract ReferenceRenamer getReferenceRenamer(FitNesseContext context);
+  protected abstract ChangeReference getReferenceRenamer();
 
   protected abstract String getNewPageName();
 
@@ -60,7 +55,7 @@ public abstract class PageMovementResponder implements SecureResponder {
     }
 
     if (request.hasInput("refactorReferences")) {
-      getReferenceRenamer(context).renameReferences();
+      ReferenceRenamingTraverser.renameReferences(context.getRootPage(), getReferenceRenamer());
     }
     execute();
 

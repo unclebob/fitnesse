@@ -1,8 +1,11 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wiki.PathParser;
 import fitnesse.wikitext.SyntaxTree;
 
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class SyntaxTreeV2 implements SyntaxTree {
   public SyntaxTreeV2() {
@@ -17,10 +20,60 @@ public class SyntaxTreeV2 implements SyntaxTree {
   public ParsingPage getParsingPage() { return parsingPage; }
   public Symbol getSyntaxTree() { return tree; }
 
-  @Override
   public void parse(String input, ParsingPage parsingPage) {
     this.parsingPage = parsingPage;
     tree = Parser.make(parsingPage, input, symbolProvider).parse();
+  }
+
+  public String translateToMarkUp() {
+    return new WikiTranslator(parsingPage.getPage()).translateTree(tree);
+  }
+
+  public void findWhereUsed(Consumer<String> takeWhere) {
+    tree.walkPreOrder(new SymbolTreeWalker() {
+
+      @Override
+      public boolean visit(Symbol node) {
+        if (node.isType(WikiWord.symbolType)) {
+          takeWhere.accept(node.getContent());
+        }
+        else if (node.isType(Alias.symbolType)) {
+          String linkText = node.childAt(1).childAt(0).getContent();
+          if (linkText.contains("?")) {
+            linkText = linkText.substring(0, linkText.indexOf('?'));
+          }
+          takeWhere.accept(linkText);
+        }
+        return true;
+      }
+
+      @Override
+      public boolean visitChildren(Symbol node) { return true; }
+    });
+  }
+
+  public void findReferences(Function<String, Optional<String>> changeReference) {
+    tree.walkPreOrder(new SymbolTreeWalker() {
+
+      @Override
+      public boolean visit(Symbol node) {
+        if (node.isType(WikiWord.symbolType)) {
+          changeReference.apply(node.getContent()).ifPresent(node::setContent);
+        } else if (node.isType(Alias.symbolType)) {
+          Symbol wikiWord = node.childAt(1).childAt(0);
+          String aliasReference = wikiWord.getContent();
+          if (PathParser.isWikiPath(aliasReference)) {
+            changeReference.apply(aliasReference).ifPresent(wikiWord::setContent);
+          }
+        }
+        return true;
+      }
+
+      @Override
+      public boolean visitChildren(Symbol node) {
+        return !node.isType(Alias.symbolType);
+      }
+    });
   }
 
   @Override
@@ -29,7 +82,7 @@ public class SyntaxTreeV2 implements SyntaxTree {
   }
 
   @Override
-  public Maybe<String> findVariable(String name) {
+  public Optional<String> findVariable(String name) {
     return parsingPage.findVariable(name);
   }
 
@@ -53,6 +106,7 @@ public class SyntaxTreeV2 implements SyntaxTree {
     });
   }
 
+  @Override
   public void findXrefs(Consumer<String> takeXref) {
     tree.walkPreOrder(new SymbolTreeWalker() {
       @Override
@@ -63,30 +117,6 @@ public class SyntaxTreeV2 implements SyntaxTree {
           } else {
             takeXref.accept(node.childAt(0).getContent());
           }
-        }
-        return true;
-      }
-
-      @Override
-      public boolean visitChildren(Symbol node) { return true; }
-    });
-  }
-
-  @Override
-  public void findWhereUsed(Consumer<String> takeWhere) {
-    tree.walkPreOrder(new SymbolTreeWalker() {
-
-      @Override
-      public boolean visit(Symbol node) {
-        if (node.isType(WikiWord.symbolType)) {
-          takeWhere.accept(node.getContent());
-        }
-        else if (node.isType(Alias.symbolType)) {
-          String linkText = node.childAt(1).childAt(0).getContent();
-          if (linkText.contains("?")) {
-            linkText = linkText.substring(0, linkText.indexOf('?'));
-          }
-          takeWhere.accept(linkText);
         }
         return true;
       }

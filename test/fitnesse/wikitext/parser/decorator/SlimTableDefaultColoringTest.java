@@ -1,7 +1,6 @@
 package fitnesse.wikitext.parser.decorator;
 
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
-import fitnesse.wikitext.parser.Maybe;
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.SourcePage;
 import fitnesse.wikitext.parser.Symbol;
@@ -11,6 +10,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.stubbing.OngoingStubbing;
+
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
@@ -127,14 +128,14 @@ public class SlimTableDefaultColoringTest {
   }
 
   private void noExplicitTestSystem() {
-    whenTestSystemLookedUp().thenReturn(Maybe.noString);
+    whenTestSystemLookedUp().thenReturn(Optional.empty());
   }
 
   private void givenTestSystem(String testSystem) {
-    whenTestSystemLookedUp().thenReturn(new Maybe<>(testSystem));
+    whenTestSystemLookedUp().thenReturn(Optional.ofNullable(testSystem));
   }
 
-  private OngoingStubbing<Maybe<String>> whenTestSystemLookedUp() {
+  private OngoingStubbing<Optional<String>> whenTestSystemLookedUp() {
     return when(variableSource.findVariable("TEST_SYSTEM"));
   }
 }

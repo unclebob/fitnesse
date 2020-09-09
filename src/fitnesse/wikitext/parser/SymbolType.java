@@ -1,5 +1,6 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.VariableSource;
 import fitnesse.wikitext.parser.decorator.ParsedSymbolDecorator;
 
 import java.util.ArrayList;
