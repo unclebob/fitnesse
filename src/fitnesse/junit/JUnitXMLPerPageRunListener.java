@@ -1,17 +1,11 @@
 package fitnesse.junit;
 
 import fitnesse.util.TimeMeasurement;
-import org.apache.commons.text.StringEscapeUtils;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 
 /**
  * JUnit RunListener to be used during integration test executing FitNesse pages.
@@ -22,14 +16,15 @@ import java.io.Writer;
  */
 public class JUnitXMLPerPageRunListener extends RunListener {
   // default directory for maven-failsafe-plugin
-  private final static String OUTPUT_PATH = "target/failsafe-reports/";
+  private static final String OUTPUT_PATH = "target/failsafe-reports/";
+  private final JUnitXMLTestResultRecorder testResultRecorder;
   private TimeMeasurement timeMeasurement;
 
   /**
    * Creates new.
    */
   public JUnitXMLPerPageRunListener() {
-    new File(getOutputPath()).mkdirs();
+    testResultRecorder = new JUnitXMLTestResultRecorder(new File(OUTPUT_PATH));
   }
 
   @Override
@@ -42,14 +37,17 @@ public class JUnitXMLPerPageRunListener extends RunListener {
   public void testFinished(Description description) throws Exception {
     super.testFinished(description);
     if (!timeMeasurement.isStopped()) {
-      recordTestResult(description, null, getExecutionTime());
+      testResultRecorder.recordTestResult(getTestName(description), 0, 0, 0, null, getExecutionTime());
     }
   }
 
   @Override
   public void testFailure(Failure failure) throws Exception {
     super.testFailure(failure);
-    recordTestResult(failure.getDescription(), failure.getException(), getExecutionTime());
+    if (failure.getException() instanceof AssertionError)
+      testResultRecorder.recordTestResult(getTestName(failure.getDescription()), 0, 1, 0, failure.getException(), getExecutionTime());
+    else
+      testResultRecorder.recordTestResult(getTestName(failure.getDescription()), 0, 0, 1, failure.getException(), getExecutionTime());
   }
 
   protected double getExecutionTime() {
@@ -61,85 +59,6 @@ public class JUnitXMLPerPageRunListener extends RunListener {
       }
     }
     return executionTime;
-  }
-
-  /**
-   * Records result of single page (i.e. test).
-   * @param description JUnit test description
-   * @param exception exception from test
-   * @param executionTime execution time in seconds
-   * @throws IOException if unable to write XML
-   */
-  protected void recordTestResult(Description description, Throwable exception, double executionTime) throws IOException {
-    String testName = getTestName(description);
-    String resultXml = generateResultXml(testName, exception, executionTime);
-    writeResult(testName, resultXml);
-  }
-
-  /**
-   * Creates XML string describing test outcome.
-   * @param testName name of test.
-   * @param exception exception from test
-   * @param executionTime execution time in seconds
-   * @return XML description of test result
-   */
-  protected String generateResultXml(String testName, Throwable exception, double executionTime) {
-    int errors = 0;
-    int failures = 0;
-    String failureXml = "";
-
-    if (exception != null) {
-      failureXml = "<failure type=\"" + exception.getClass().getName()
-        + "\" message=\"" + getMessage(exception)
-        + "\"></failure>";
-      if (exception instanceof AssertionError)
-        failures = 1;
-      else
-        errors = 1;
-    }
-
-    return "<testsuite errors=\"" + errors + "\" skipped=\"0\" tests=\"1\" time=\""
-      + executionTime + "\" failures=\"" + failures + "\" name=\""
-      + testName + "\">" + "<properties></properties>" + "<testcase classname=\""
-      + testName + "\" time=\"" + executionTime + "\" name=\""
-      + testName + "\">" + failureXml + "</testcase>" + "</testsuite>";
-  }
-
-  protected String getMessage(Throwable exception) {
-    String errorMessage = exception.getMessage();
-    return StringEscapeUtils.escapeXml10(errorMessage);
-  }
-
-  /**
-   * Writes XML result to disk.
-   * @param testName name of test.
-   * @param resultXml XML description of test outcome.
-   * @throws IOException if unable to write result.
-   */
-  protected void writeResult(String testName, String resultXml) throws IOException {
-    String finalPath = getXmlFileName(testName);
-    Writer fw = null;
-    try {
-      fw = new BufferedWriter(
-        new OutputStreamWriter(
-          new FileOutputStream(finalPath),
-          "UTF-8"));
-      fw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-      fw.write(resultXml);
-    } finally {
-      if (fw != null) {
-        fw.close();
-      }
-    }
-  }
-
-  /**
-   * @param testName name of test.
-   * @return file name to use.
-   */
-  protected String getXmlFileName(String testName) {
-    // default pattern used by maven-failsafe-plugin
-    return new File(getOutputPath(), "TEST-" + testName + ".xml").getAbsolutePath();
   }
 
   /**
