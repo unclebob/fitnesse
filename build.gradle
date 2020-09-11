@@ -24,6 +24,7 @@ plugins {
   id "maven-publish"
   id "com.jfrog.bintray" version "1.8.4"
   id "com.github.ben-manes.versions" version "0.27.0"
+  id "groovy"
 }
 
 apply plugin: "info.solidsoft.pitest"
@@ -74,6 +75,7 @@ dependencies {
   compile "org.slf4j:slf4j-jdk14:1.7.25"
   compile "org.json:json:20190722"
   compile "com.googlecode.java-diff-utils:diffutils:1.3.0"
+  compile gradleApi()
   optional "org.apache.ant:ant:1.10.7"
   optional "junit:junit:4.13"
 
