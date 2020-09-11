@@ -24,6 +24,7 @@ plugins {
   id "maven-publish"
   id "com.jfrog.bintray" version "1.8.4"
   id "com.github.ben-manes.versions" version "0.27.0"
+  id "org.sonarqube" version "2.7"
 }
 
 apply plugin: "info.solidsoft.pitest"

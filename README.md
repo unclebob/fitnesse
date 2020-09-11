@@ -132,3 +132,31 @@ both Maven Central and JCenter.
    $ ./gradlew release
    ```
 
+#### Running SonarQube (version 8.1) locally
+
+First you need to have Java (Oracle JRE 11 or OpenJDK 11) installed on your machine.
+
+Then download SonarQube community edition from this link: https://www.sonarqube.org/downloads/
+
+Go to the conf folder of your sonarqube installation and edit the following line in wrapper.conf file with this:
+
+`wrapper.java.command=<YOUR-JAVA-LOCATION>\Java\jdk-11.0.6\bin\java`
+
+Go to the following location where your SonarQube is installed:
+
+`<YOUR-SONARQUBE-LOCATION>/sonarqube-8.1.0.31237\bin\windows-x86-64`
+
+Open the command line and do this to start the SonarQube server:
+
+`.\StartSonar.bat`
+
+Open a browser and go to http://localhost:9000
+
+Login with admin as username and password respectively.
+
+Make a project by clicking the + and call it fitnesse.
+
+Now that you've made a project. Open the command line and go to the root of the Java FitNesse project and do this for a code analyse:
+`./gradlew sonarqube -x test`
+
+The -x test means not to run the unit test otherwise no code analyse will be done if there's a unit test failing.
