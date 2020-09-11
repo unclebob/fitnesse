@@ -1,5 +1,6 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.SourcePage;
 import fitnesse.wikitext.VariableSource;
 
 import java.util.regex.Pattern;

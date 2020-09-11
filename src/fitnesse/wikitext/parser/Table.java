@@ -1,6 +1,8 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.util.StringUtils;
+import fitnesse.util.Tree;
+import fitnesse.util.TreeWalker;
 
 import static fitnesse.wikitext.parser.decorator.SymbolClassPropertyAppender.CLASS_PROPERTY_NAME;
 import static fitnesse.wikitext.parser.decorator.SymbolClassPropertyAppender.classPropertyAppender;
@@ -107,7 +109,7 @@ public class Table extends SymbolType implements Rule, Translation {
 
   protected String translateCellBody(Translator translator, Symbol cell) {
     final String literalDelimiter = new String(new char[]{255, 1, 255});
-    cell.walkPreOrder(new SymbolTreeWalker() {
+    cell.walkPreOrder(new TreeWalker<Symbol>() {
       @Override
       public boolean visit(Symbol node) {
         if (node.isType(Literal.symbolType)) {
@@ -117,7 +119,7 @@ public class Table extends SymbolType implements Rule, Translation {
       }
 
       @Override
-      public boolean visitChildren(Symbol node) {
+      public boolean visitBranches(Symbol node) {
         return true;
       }
     });

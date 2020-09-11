@@ -1,5 +1,7 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.SourcePage;
+
 import java.util.HashMap;
 import java.util.Map;
 

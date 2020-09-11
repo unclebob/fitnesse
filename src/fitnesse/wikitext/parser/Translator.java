@@ -1,5 +1,7 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.SourcePage;
+
 public abstract class Translator {
 
   private final SourcePage currentPage;

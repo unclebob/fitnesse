@@ -1,8 +1,6 @@
 package fitnesse.wiki;
 
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiSourcePage;
-import fitnesse.wikitext.parser.SourcePage;
+import fitnesse.wikitext.SourcePage;
 import fitnesse.wikitext.parser.TestRoot;
 import org.junit.Test;
 

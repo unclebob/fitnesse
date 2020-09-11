@@ -2,6 +2,8 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPageProperty;
+import fitnesse.wikitext.ParsingPage;
+import fitnesse.wikitext.SourcePage;
 
 import java.util.Collection;
 import java.util.Collections;

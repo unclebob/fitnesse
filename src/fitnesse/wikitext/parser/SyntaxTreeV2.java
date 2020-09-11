@@ -1,6 +1,8 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.util.TreeWalker;
 import fitnesse.wiki.PathParser;
+import fitnesse.wikitext.ParsingPage;
 import fitnesse.wikitext.SyntaxTree;
 
 import java.util.Optional;
@@ -30,7 +32,7 @@ public class SyntaxTreeV2 implements SyntaxTree {
   }
 
   public void findWhereUsed(Consumer<String> takeWhere) {
-    tree.walkPreOrder(new SymbolTreeWalker() {
+    tree.walkPreOrder(new TreeWalker<Symbol>() {
 
       @Override
       public boolean visit(Symbol node) {
@@ -48,12 +50,12 @@ public class SyntaxTreeV2 implements SyntaxTree {
       }
 
       @Override
-      public boolean visitChildren(Symbol node) { return true; }
+      public boolean visitBranches(Symbol node) { return true; }
     });
   }
 
   public void findReferences(Function<String, Optional<String>> changeReference) {
-    tree.walkPreOrder(new SymbolTreeWalker() {
+    tree.walkPreOrder(new TreeWalker<Symbol>() {
 
       @Override
       public boolean visit(Symbol node) {
@@ -70,7 +72,7 @@ public class SyntaxTreeV2 implements SyntaxTree {
       }
 
       @Override
-      public boolean visitChildren(Symbol node) {
+      public boolean visitBranches(Symbol node) {
         return !node.isType(Alias.symbolType);
       }
     });
@@ -89,7 +91,7 @@ public class SyntaxTreeV2 implements SyntaxTree {
   @Override
   public void findPaths(Consumer<String> takePath) {
     HtmlTranslator translator = new HtmlTranslator(parsingPage.getPage(), this);
-    tree.walkPostOrder(new SymbolTreeWalker() {
+    tree.walkPostOrder(new TreeWalker<Symbol>() {
 
       @Override
       public boolean visit(Symbol node) {
@@ -102,13 +104,13 @@ public class SyntaxTreeV2 implements SyntaxTree {
       }
 
       @Override
-      public boolean visitChildren(Symbol node) { return true; }
+      public boolean visitBranches(Symbol node) { return true; }
     });
   }
 
   @Override
   public void findXrefs(Consumer<String> takeXref) {
-    tree.walkPreOrder(new SymbolTreeWalker() {
+    tree.walkPreOrder(new TreeWalker<Symbol>() {
       @Override
       public boolean visit(Symbol node) {
         if (node.isType(See.symbolType)) {
@@ -122,7 +124,7 @@ public class SyntaxTreeV2 implements SyntaxTree {
       }
 
       @Override
-      public boolean visitChildren(Symbol node) { return true; }
+      public boolean visitBranches(Symbol node) { return true; }
     });
   }
 

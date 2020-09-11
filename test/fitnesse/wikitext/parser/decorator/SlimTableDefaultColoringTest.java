@@ -1,8 +1,8 @@
 package fitnesse.wikitext.parser.decorator;
 
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
-import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.SourcePage;
+import fitnesse.wikitext.ParsingPage;
+import fitnesse.wikitext.SourcePage;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.Table;
 import org.junit.Before;

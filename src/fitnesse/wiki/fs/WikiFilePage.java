@@ -1,6 +1,7 @@
 package fitnesse.wiki.fs;
 
 import fitnesse.wiki.*;
+import fitnesse.wikitext.ParsingPage;
 import fitnesse.wikitext.VariableSource;
 import fitnesse.wikitext.parser.*;
 import org.apache.commons.lang3.StringUtils;

@@ -4,11 +4,8 @@ package fitnesse.wiki;
 
 import fitnesse.util.Clock;
 import fitnesse.wiki.fs.WikiPageProperties;
-import fitnesse.wikitext.CompositeVariableSource;
-import fitnesse.wikitext.SyntaxTree;
-import fitnesse.wikitext.MarkUpSystem;
-import fitnesse.wikitext.VariableSource;
-import fitnesse.wikitext.parser.*;
+import fitnesse.wikitext.*;
+import fitnesse.wikitext.parser.Maybe;
 
 import java.util.Optional;
 

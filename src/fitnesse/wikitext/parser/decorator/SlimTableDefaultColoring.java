@@ -9,7 +9,7 @@ import fitnesse.testsystems.slim.tables.ScriptTable;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wiki.PageData;
-import fitnesse.wikitext.parser.ParsingPage;
+import fitnesse.wikitext.ParsingPage;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.Table;
 import fitnesse.wikitext.VariableSource;
