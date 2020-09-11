@@ -7,6 +7,13 @@ import org.gradle.api.tasks.testing.TestResult;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Gradle TestListener to be used during integration test executing FitNesse pages.
+ * It will create a result XML file per FitNesse page, instead of default behavior that creates only
+ * 1 file per Java test runner class (and we have only 1 class that runs all pages).
+ * This allows build servers to report progress during the run.
+ * The page names are used as test names, the Java class executing them is ignored.
+ */
 public class JUnitXMLPerPageTestListener implements TestListener {
 
   private final JUnitXMLTestResultRecorder testResultRecorder;

@@ -10,10 +10,18 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Recorder for test results in the JUnit xml format.
+ * The xml report is written to the file system.
+ */
 public class JUnitXMLTestResultRecorder {
 
   private final File reportsDir;
 
+  /**
+   * Constructs a JUnitXMLTestResultRecorder.
+   * @param reportsDir directory the test results are to be written to (eg. <code>reports.junitXml.destination</code>)
+   */
   public JUnitXMLTestResultRecorder(File reportsDir) {
     this.reportsDir = reportsDir;
     this.reportsDir.mkdirs();
@@ -58,6 +66,7 @@ public class JUnitXMLTestResultRecorder {
   }
 
   /**
+   * Gets the absolute file name of the test result.
    * @param testName name of test
    * @return file name to use
    */
@@ -97,6 +106,11 @@ public class JUnitXMLTestResultRecorder {
       + "</testcase>" + "</testsuite>";
   }
 
+  /**
+   * Gets the message from the throwable and escapes it.
+   * @param throwable
+   * @return the escaped message
+   */
   private String getMessage(Throwable throwable) {
     String errorMessage = throwable.getMessage();
     return StringEscapeUtils.escapeXml10(errorMessage);
