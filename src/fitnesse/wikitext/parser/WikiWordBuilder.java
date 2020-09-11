@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
+import fitnesse.wikitext.SourcePage;
 
 public class WikiWordBuilder {
     private final SourcePage currentPage;

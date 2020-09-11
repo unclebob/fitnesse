@@ -3,6 +3,7 @@ package fitnesse.wikitext.parser;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.wiki.PathParser;
+import fitnesse.wikitext.ParsingPage;
 
 public class Alias extends SymbolType implements Rule, Translation {
     public static final Alias symbolType = new Alias();

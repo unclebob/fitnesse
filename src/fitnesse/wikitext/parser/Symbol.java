@@ -1,10 +1,12 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.util.Tree;
+import fitnesse.util.TreeWalker;
 import fitnesse.wikitext.VariableSource;
 
 import java.util.*;
 
-public class Symbol {
+public class Symbol implements Tree<Symbol> {
     private static final List<Symbol> NO_CHILDREN = Collections.emptyList();
 
     public static final Maybe<Symbol> nothing = new Maybe<>();
@@ -54,6 +56,13 @@ public class Symbol {
     public Symbol lastChild() { return childAt(getChildren().size() - 1); }
     public List<Symbol> getChildren() { return children; }
 
+  @Override
+  public Symbol getNode() { return this; }
+
+  @Override
+  public Collection<? extends Tree<Symbol>> getBranches() { return children; }
+
+
     private List<Symbol> children() {
         if (children == NO_CHILDREN) {
             children = new LinkedList<>();
@@ -77,24 +86,6 @@ public class Symbol {
         return result;
     }
 
-    public boolean walkPostOrder(SymbolTreeWalker walker) {
-        if (walker.visitChildren(this)) {
-            for (Symbol child: children) {
-                if (!child.walkPostOrder(walker)) return false;
-            }
-        }
-        return walker.visit(this);
-    }
-
-    public boolean walkPreOrder(SymbolTreeWalker walker) {
-        if (!walker.visit(this)) return false;
-        if (walker.visitChildren(this)) {
-            for (Symbol child: children) {
-                if (!child.walkPreOrder(walker)) return false;
-            }
-        }
-        return true;
-    }
 
     public void evaluateVariables(String[] names, VariableSource source) {
         if (variables == null) variables = new HashMap<>(names.length);

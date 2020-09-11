@@ -3,6 +3,7 @@ package fitnesse.wikitext.parser;
 import fitnesse.html.HtmlElement;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
+import fitnesse.util.TreeWalker;
 
 import java.util.*;
 
@@ -78,7 +79,7 @@ public class Headings extends SymbolType implements Rule, Translation {
 
   static String extractTextFromHeaderLine(final Symbol headerLine) {
     final StringBuilder sb = new StringBuilder();
-    headerLine.walkPreOrder(new SymbolTreeWalker() {
+    headerLine.walkPreOrder(new TreeWalker<Symbol>() {
       @Override
       public boolean visit(final Symbol node) {
         if (node.isType(SymbolType.Text) || node.isType(Literal.symbolType) ||
@@ -89,7 +90,7 @@ public class Headings extends SymbolType implements Rule, Translation {
       }
 
       @Override
-      public boolean visitChildren(final Symbol node) {
+      public boolean visitBranches(final Symbol node) {
         return true;
       }
     });

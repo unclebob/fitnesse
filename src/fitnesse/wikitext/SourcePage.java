@@ -1,4 +1,6 @@
-package fitnesse.wikitext.parser;
+package fitnesse.wikitext;
+
+import fitnesse.wikitext.parser.Maybe;
 
 import java.util.Collection;
 

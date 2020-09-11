@@ -2,8 +2,8 @@ package fitnesse.testsystems.slim.tables;
 
 import fitnesse.wikitext.MarkUpSystem;
 import fitnesse.wikitext.parser.Maybe;
-import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.SourcePage;
+import fitnesse.wikitext.ParsingPage;
+import fitnesse.wikitext.SourcePage;
 
 import java.util.Collection;
 import java.util.HashMap;

@@ -1,9 +1,9 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.SourcePage;
+
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
 public class TestSourcePage implements SourcePage {
   public String content;

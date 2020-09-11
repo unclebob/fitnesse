@@ -3,6 +3,7 @@ package fitnesse.wikitext.parser;
 import fitnesse.html.HtmlElement;
 import fitnesse.html.HtmlTag;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wikitext.ParsingPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

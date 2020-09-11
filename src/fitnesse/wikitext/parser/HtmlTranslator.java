@@ -1,5 +1,8 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.ParsingPage;
+import fitnesse.wikitext.SourcePage;
+
 public class HtmlTranslator extends Translator {
   public HtmlTranslator(SourcePage currentPage, SyntaxTreeV2 syntaxTree) {
     super(currentPage);

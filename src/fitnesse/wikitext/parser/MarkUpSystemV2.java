@@ -2,6 +2,7 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiSourcePage;
+import fitnesse.wikitext.ParsingPage;
 import fitnesse.wikitext.SyntaxTree;
 import fitnesse.wikitext.MarkUpSystem;
 

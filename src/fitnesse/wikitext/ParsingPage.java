@@ -1,7 +1,4 @@
-package fitnesse.wikitext.parser;
-
-import fitnesse.wikitext.CompositeVariableSource;
-import fitnesse.wikitext.VariableSource;
+package fitnesse.wikitext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +7,7 @@ import java.util.Optional;
 /**
  * The page represents wiki page in the course of being parsed.
  */
-public class ParsingPage implements VariableSource {
+public class ParsingPage implements VariableStore {
 
   private final SourcePage page;
   private final SourcePage namedPage; // included page
@@ -54,6 +51,7 @@ public class ParsingPage implements VariableSource {
     return namedPage;
   }
 
+  @Override
   public void putVariable(String name, String value) {
     cache.putVariable(name, value);
   }
@@ -63,7 +61,7 @@ public class ParsingPage implements VariableSource {
     return variableSource != null ? variableSource.findVariable(name) : Optional.empty();
   }
 
-  public static class Cache implements VariableSource {
+  public static class Cache implements VariableStore {
 
     private final Map<String, String> cache;
 
@@ -75,6 +73,7 @@ public class ParsingPage implements VariableSource {
       this.cache = cache;
     }
 
+    @Override
     public void putVariable(String name, String value) {
       cache.put(name, value);
     }
