@@ -13,6 +13,27 @@ import java.io.File;
  * 1 file per Java class (and we have only 1 class that runs all pages).
  * This allows build servers to report progress during the run.
  * The page names are used as test names, the Java class executing them is ignored.
+ * <p/>
+ * Usage example:
+ * <pre>
+ * {@code
+ * <plugin>
+ *   <artifactId>maven-failsafe-plugin</artifactId>
+ *   ...
+ *   <configuration>
+ *   ...
+ *     <properties>
+ *       <property>
+ *         <name>listener</name>
+ *         <value>fitnesse.junit.JUnitXMLPerPageRunListener</value>
+ *       </property>
+ *     </properties>
+ *     <disableXmlReport>true</disableXmlReport>
+ *   </configuration>
+ * </plugin>
+ * }
+ * </pre>
+ * NOTE: The standard JUnit xml reports have to be disabled.
  */
 public class JUnitXMLPerPageRunListener extends RunListener {
   // default directory for maven-failsafe-plugin

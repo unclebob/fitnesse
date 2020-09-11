@@ -13,11 +13,33 @@ import java.io.IOException;
  * 1 file per Java test runner class (and we have only 1 class that runs all pages).
  * This allows build servers to report progress during the run.
  * The page names are used as test names, the Java class executing them is ignored.
+ * <p/>
+ * Usage example:<br/>
+ * <pre>
+ * {@code
+ * buildscript {
+ *   ...
+ *   dependencies {
+ *     classpath "org.fitnesse:fitnesse:20200911"
+ *   }
+ * }
+ * ...
+ * integrationtest {
+ *   addTestListener(new JUnitXMLPerPageTestListener(reports.junitXml.destination) as TestListener)
+ *   ...
+ * }
+ * }
+ * </pre>
+ * NOTE: The standard JUnit xml reports have to be disabled via <code>junitXml.enabled = false</code>
  */
 public class JUnitXMLPerPageTestListener implements TestListener {
 
   private final JUnitXMLTestResultRecorder testResultRecorder;
 
+  /**
+   * Constructs a new JUnitXMLPerPageTestListener.
+   * @param reportsDir directory the reports are written to (eg. <code>reports.junitXml.destination</code>)
+   */
   public JUnitXMLPerPageTestListener(File reportsDir) {
     testResultRecorder = new JUnitXMLTestResultRecorder(reportsDir);
   }
@@ -55,6 +77,11 @@ public class JUnitXMLPerPageTestListener implements TestListener {
     }
   }
 
+  /**
+   * Processes a test failure.
+   * @param testDescriptor
+   * @param result
+   */
   protected void testFailure(TestDescriptor testDescriptor, TestResult result) {
     try {
       if (result.getExceptions() instanceof AssertionError)
@@ -67,6 +94,11 @@ public class JUnitXMLPerPageTestListener implements TestListener {
 
   }
 
+  /**
+   * Processes a skipped test.
+   * @param testDescriptor
+   * @param result
+   */
   protected void testSkipped(TestDescriptor testDescriptor, TestResult result) {
     try {
       if (result.getException() instanceof AssertionError)
@@ -78,6 +110,11 @@ public class JUnitXMLPerPageTestListener implements TestListener {
     }
   }
 
+  /**
+   * Processes a test success
+   * @param testDescriptor
+   * @param result
+   */
   protected void testSuccess(TestDescriptor testDescriptor, TestResult result) {
     try {
       testResultRecorder.recordTestResult(testDescriptor.getName(), 0, 0, 0, null, calculateExecutionTimeInSeconds(result));
@@ -86,7 +123,12 @@ public class JUnitXMLPerPageTestListener implements TestListener {
     }
   }
 
-  static double calculateExecutionTimeInSeconds(TestResult result) {
+  /**
+   * Calculates the execution time.
+   * @param result
+   * @return execution time in seconds
+   */
+  protected double calculateExecutionTimeInSeconds(TestResult result) {
     return (double) (result.getEndTime() - result.getStartTime()) / 1000;
   }
 }
