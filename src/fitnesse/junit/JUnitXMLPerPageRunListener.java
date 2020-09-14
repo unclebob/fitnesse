@@ -33,7 +33,7 @@ import java.io.File;
  * </plugin>
  * }
  * </pre>
- * NOTE: The standard JUnit xml reports have to be disabled.
+ * NOTE: The standard JUnit xml reports have to be disabled, as shown in example above.
  */
 public class JUnitXMLPerPageRunListener extends RunListener {
   // default directory for maven-failsafe-plugin
