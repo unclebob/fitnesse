@@ -77,7 +77,7 @@ public class JUnitXMLPerPageRunListener extends RunListener {
   protected long getExecutionTime() {
     long executionTime = 0;
     if (timeMeasurement != null) {
-      executionTime = timeMeasurement.elapsedMilliseconds();
+      executionTime = timeMeasurement.elapsed();
       if (!timeMeasurement.isStopped()) {
         timeMeasurement.stop();
       }
