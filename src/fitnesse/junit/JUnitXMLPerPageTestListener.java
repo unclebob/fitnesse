@@ -84,10 +84,11 @@ public class JUnitXMLPerPageTestListener implements TestListener {
    */
   protected void testFailure(TestDescriptor testDescriptor, TestResult result) {
     try {
-      if (result.getExceptions() instanceof AssertionError)
+      if (result.getExceptions() instanceof AssertionError) {
         testResultRecorder.recordTestResult(testDescriptor.getName(), 0, 1, 0, result.getException(), calculateExecutionTimeInSeconds(result));
-      else
+      } else {
         testResultRecorder.recordTestResult(testDescriptor.getName(), 0, 0, 1, result.getException(), calculateExecutionTimeInSeconds(result));
+      }
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -101,10 +102,11 @@ public class JUnitXMLPerPageTestListener implements TestListener {
    */
   protected void testSkipped(TestDescriptor testDescriptor, TestResult result) {
     try {
-      if (result.getException() instanceof AssertionError)
+      if (result.getException() instanceof AssertionError) {
         testResultRecorder.recordTestResult(testDescriptor.getName(), 1, 0, 0, result.getException(), calculateExecutionTimeInSeconds(result));
-      else
+      } else {
         testResultRecorder.recordTestResult(testDescriptor.getName(), 0, 0, 1, result.getException(), calculateExecutionTimeInSeconds(result));
+      }
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
