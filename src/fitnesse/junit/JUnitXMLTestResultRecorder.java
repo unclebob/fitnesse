@@ -34,11 +34,11 @@ public class JUnitXMLTestResultRecorder {
    * @param failures number of test failures
    * @param errors number of errors of test
    * @param throwable throwable from test
-   * @param executionTime execution time in seconds
+   * @param executionTime execution time in milliseconds
    */
-  void recordTestResult(String testName, int skipped, int failures, int errors, Throwable throwable, double executionTime) throws
+  void recordTestResult(String testName, int skipped, int failures, int errors, Throwable throwable, long executionTime) throws
     IOException {
-    String resultXml = generateResultXml(testName, skipped, failures, errors, throwable, executionTime);
+    String resultXml = generateResultXml(testName, skipped, failures, errors, throwable, (double) executionTime / 1000);
     writeResult(testName, resultXml);
   }
 
@@ -102,7 +102,7 @@ public class JUnitXMLTestResultRecorder {
 
   /**
    * Gets the message from the throwable and escapes it.
-   * @param throwable
+   * @param throwable the throwable that occurred during test execution
    * @return the escaped message
    */
   private String getMessage(Throwable throwable) {
