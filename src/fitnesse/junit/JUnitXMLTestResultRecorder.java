@@ -53,7 +53,7 @@ public class JUnitXMLTestResultRecorder {
     try (Writer fw = new BufferedWriter(
       new OutputStreamWriter(
         new FileOutputStream(finalPath),
-        StandardCharsets.UTF_8.displayName()))) {
+        StandardCharsets.UTF_8))) {
       fw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
       fw.write(resultXml);
     }
