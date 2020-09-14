@@ -13,8 +13,8 @@ import java.io.IOException;
  * 1 file per Java test runner class (and we have only 1 class that runs all pages).
  * This allows build servers to report progress during the run.
  * The page names are used as test names, the Java class executing them is ignored.
- * <p/>
- * Usage example:<br/>
+ * <p><br>
+ * Usage example:
  * <pre>
  * {@code
  * buildscript {
@@ -79,8 +79,8 @@ public class JUnitXMLPerPageTestListener implements TestListener {
 
   /**
    * Processes a test failure.
-   * @param testDescriptor
-   * @param result
+   * @param testDescriptor the descriptor of the test
+   * @param result the result of the test
    */
   protected void testFailure(TestDescriptor testDescriptor, TestResult result) {
     try {
@@ -96,8 +96,8 @@ public class JUnitXMLPerPageTestListener implements TestListener {
 
   /**
    * Processes a skipped test.
-   * @param testDescriptor
-   * @param result
+   * @param testDescriptor the descriptor of the test
+   * @param result the result of the test
    */
   protected void testSkipped(TestDescriptor testDescriptor, TestResult result) {
     try {
@@ -112,8 +112,8 @@ public class JUnitXMLPerPageTestListener implements TestListener {
 
   /**
    * Processes a test success
-   * @param testDescriptor
-   * @param result
+   * @param testDescriptor the descriptor of the test
+   * @param result the result of the test
    */
   protected void testSuccess(TestDescriptor testDescriptor, TestResult result) {
     try {
@@ -125,7 +125,7 @@ public class JUnitXMLPerPageTestListener implements TestListener {
 
   /**
    * Calculates the execution time.
-   * @param result
+   * @param result the result of the test
    * @return execution time in seconds
    */
   protected double calculateExecutionTimeInSeconds(TestResult result) {
