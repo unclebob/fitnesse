@@ -128,9 +128,9 @@ public class JUnitXMLPerPageTestListener implements TestListener {
   /**
    * Calculates the execution time.
    * @param result the result of the test
-   * @return execution time in seconds
+   * @return execution time in milliseconds
    */
-  protected double calculateExecutionTimeInSeconds(TestResult result) {
-    return (double) (result.getEndTime() - result.getStartTime()) / 1000;
+  protected long calculateExecutionTimeInSeconds(TestResult result) {
+    return result.getEndTime() - result.getStartTime();
   }
 }

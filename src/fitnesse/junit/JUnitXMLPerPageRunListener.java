@@ -71,10 +71,13 @@ public class JUnitXMLPerPageRunListener extends RunListener {
       testResultRecorder.recordTestResult(getTestName(failure.getDescription()), 0, 0, 1, failure.getException(), getExecutionTime());
   }
 
-  protected double getExecutionTime() {
-    double executionTime = 0;
+  /**
+   * @return test execution time in milliseconds
+   */
+  protected long getExecutionTime() {
+    long executionTime = 0;
     if (timeMeasurement != null) {
-      executionTime = timeMeasurement.elapsedSeconds();
+      executionTime = timeMeasurement.elapsedMilliseconds();
       if (!timeMeasurement.isStopped()) {
         timeMeasurement.stop();
       }
@@ -83,7 +86,7 @@ public class JUnitXMLPerPageRunListener extends RunListener {
   }
 
   /**
-   * @return directory to store test XMLs in.
+   * @return directory to store test XMLs in
    */
   protected String getOutputPath() {
     return OUTPUT_PATH;
