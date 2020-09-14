@@ -50,18 +50,12 @@ public class JUnitXMLTestResultRecorder {
    */
   private void writeResult(String testName, String resultXml) throws IOException {
     String finalPath = getXmlFileName(testName);
-    Writer fw = null;
-    try {
-      fw = new BufferedWriter(
-        new OutputStreamWriter(
-          new FileOutputStream(finalPath),
-          StandardCharsets.UTF_8.displayName()));
+    try (Writer fw = new BufferedWriter(
+      new OutputStreamWriter(
+        new FileOutputStream(finalPath),
+        StandardCharsets.UTF_8.displayName()))) {
       fw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
       fw.write(resultXml);
-    } finally {
-      if (fw != null) {
-        fw.close();
-      }
     }
   }
 
