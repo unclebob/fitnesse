@@ -41,7 +41,15 @@ public class JUnitXMLPerPageTestListener implements TestListener {
    * @param reportsDir directory the reports are written to (eg. <code>reports.junitXml.destination</code>)
    */
   public JUnitXMLPerPageTestListener(File reportsDir) {
-    testResultRecorder = new JUnitXMLTestResultRecorder(reportsDir);
+    this.testResultRecorder = new JUnitXMLTestResultRecorder(reportsDir);
+  }
+
+  /**
+   * Constructs a new JUnitXMLPerPageTestListener.
+   * @param jUnitXMLTestResultRecorder the recorder used to record the test results
+   */
+  public JUnitXMLPerPageTestListener(JUnitXMLTestResultRecorder jUnitXMLTestResultRecorder) {
+    this.testResultRecorder = jUnitXMLTestResultRecorder;
   }
 
   @Override
@@ -84,7 +92,7 @@ public class JUnitXMLPerPageTestListener implements TestListener {
    */
   protected void testFailure(TestDescriptor testDescriptor, TestResult result) {
     try {
-      if (result.getExceptions() instanceof AssertionError) {
+      if (result.getException() instanceof AssertionError) {
         testResultRecorder.recordTestResult(testDescriptor.getName(), 0, 1, 0, result.getException(), calculateExecutionTimeInSeconds(result));
       } else {
         testResultRecorder.recordTestResult(testDescriptor.getName(), 0, 0, 1, result.getException(), calculateExecutionTimeInSeconds(result));
