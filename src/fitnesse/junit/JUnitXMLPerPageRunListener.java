@@ -45,7 +45,15 @@ public class JUnitXMLPerPageRunListener extends RunListener {
    * Creates new.
    */
   public JUnitXMLPerPageRunListener() {
-    testResultRecorder = new JUnitXMLTestResultRecorder(new File(OUTPUT_PATH));
+    this.testResultRecorder = new JUnitXMLTestResultRecorder(new File(OUTPUT_PATH));
+  }
+
+  /**
+   * Creates new.
+   * @param jUnitXMLTestResultRecorder the recorder used to record the test results
+   */
+  public JUnitXMLPerPageRunListener(JUnitXMLTestResultRecorder jUnitXMLTestResultRecorder) {
+    this.testResultRecorder = jUnitXMLTestResultRecorder;
   }
 
   @Override
