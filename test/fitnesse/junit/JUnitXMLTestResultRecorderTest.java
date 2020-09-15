@@ -53,13 +53,13 @@ public class JUnitXMLTestResultRecorderTest {
       String testName = "myTestName";
       long executionTimeMillis = 1275;
       Throwable throwable = new AssertionError("Gallier rule ;-)");
-      String xmlResultOnSuccess = getXmlResultOnSkipped(testName, executionTimeMillis, throwable);
+      String xmlResultOnSkipped = getXmlResultOnSkipped(testName, executionTimeMillis, throwable);
 
       // when the test result recorder is called
       jUnitXMLTestResultRecorder.recordTestResult(testName, 1, 0, 0, throwable, executionTimeMillis);
 
       // then the correct report is written to disk
-      assertEquals(xmlResultOnSuccess, readReportFile("TEST-" + testName + ".xml"));
+      assertEquals(xmlResultOnSkipped, readReportFile("TEST-" + testName + ".xml"));
     } catch (IOException e) {
       // and no exception is thrown
       fail("IOException was caught but should have never been thrown.");
@@ -73,13 +73,13 @@ public class JUnitXMLTestResultRecorderTest {
       String testName = "myTestName";
       long executionTimeMillis = 1275;
       Throwable throwable = new AssertionError("Gallier rule ;-)");
-      String xmlResultOnSuccess = getXmlResultOnFailure(testName, executionTimeMillis, throwable);
+      String xmlResultOnFailure = getXmlResultOnFailure(testName, executionTimeMillis, throwable);
 
       // when the test result recorder is called
       jUnitXMLTestResultRecorder.recordTestResult(testName, 0, 1, 0, throwable, executionTimeMillis);
 
       // then the correct report is written to disk
-      assertEquals(xmlResultOnSuccess, readReportFile("TEST-" + testName + ".xml"));
+      assertEquals(xmlResultOnFailure, readReportFile("TEST-" + testName + ".xml"));
     } catch (IOException e) {
       // and no exception is thrown
       fail("IOException was caught but should have never been thrown.");
@@ -93,13 +93,13 @@ public class JUnitXMLTestResultRecorderTest {
       String testName = "myTestName";
       long executionTimeMillis = 1275;
       Throwable throwable = new RuntimeException("Gallier rule ;-)");
-      String xmlResultOnSuccess = getXmlResultOnError(testName, executionTimeMillis, throwable);
+      String xmlResultOnError = getXmlResultOnError(testName, executionTimeMillis, throwable);
 
       // when the test result recorder is called
       jUnitXMLTestResultRecorder.recordTestResult(testName, 0, 0, 1, throwable, executionTimeMillis);
 
       // then the correct report is written to disk
-      assertEquals(xmlResultOnSuccess, readReportFile("TEST-" + testName + ".xml"));
+      assertEquals(xmlResultOnError, readReportFile("TEST-" + testName + ".xml"));
     } catch (IOException e) {
       // and no exception is thrown
       fail("IOException was caught but should have never been thrown.");
