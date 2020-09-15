@@ -52,7 +52,7 @@ public class JUnitXMLTestResultRecorderTest {
       // given a test success
       String testName = "myTestName";
       long executionTimeMillis = 1275;
-      Throwable throwable = new AssertionError("Gallier rule ;-)");
+      Throwable throwable = new AssertionError("Gallier approved detail message");
       String xmlResultOnSkipped = getXmlResultOnSkipped(testName, executionTimeMillis, throwable);
 
       // when the test result recorder is called
@@ -72,7 +72,7 @@ public class JUnitXMLTestResultRecorderTest {
       // given a test failure
       String testName = "myTestName";
       long executionTimeMillis = 1275;
-      Throwable throwable = new AssertionError("Gallier rule ;-)");
+      Throwable throwable = new AssertionError("Gallier approved detail message");
       String xmlResultOnFailure = getXmlResultOnFailure(testName, executionTimeMillis, throwable);
 
       // when the test result recorder is called
@@ -92,7 +92,7 @@ public class JUnitXMLTestResultRecorderTest {
       // given a test error
       String testName = "myTestName";
       long executionTimeMillis = 1275;
-      Throwable throwable = new RuntimeException("Gallier rule ;-)");
+      Throwable throwable = new RuntimeException("Gallier approved detail message");
       String xmlResultOnError = getXmlResultOnError(testName, executionTimeMillis, throwable);
 
       // when the test result recorder is called
