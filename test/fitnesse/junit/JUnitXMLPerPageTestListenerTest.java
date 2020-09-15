@@ -2,7 +2,6 @@ package fitnesse.junit;
 
 import org.gradle.api.tasks.testing.TestDescriptor;
 import org.gradle.api.tasks.testing.TestResult;
-import org.junit.Before;
 import org.junit.Test;
 
 import javax.annotation.Nullable;
@@ -20,12 +19,7 @@ public class JUnitXMLPerPageTestListenerTest {
   private JUnitXMLTestResultRecorder testResultRecorderMock = mock(JUnitXMLTestResultRecorder.class);
 
   // SUT
-  private JUnitXMLPerPageTestListener jUnitXMLPerPageTestListener;
-
-  @Before
-  public void setUp() {
-    jUnitXMLPerPageTestListener = new JUnitXMLPerPageTestListener(testResultRecorderMock);
-  }
+  private JUnitXMLPerPageTestListener jUnitXMLPerPageTestListener = new JUnitXMLPerPageTestListener(testResultRecorderMock);
 
   @Test(expected = Test.None.class /* no exception expected */)
   public void beforeSuite() {
