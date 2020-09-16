@@ -54,7 +54,7 @@ public class JUnitXMLPerPageTestListenerIntegrationTest {
   public void afterTestOnSkipped() {
     // given a after test event is triggered with a test descriptor and a skipped test
     TestDescriptor testDescriptor = getTestDescriptor();
-    Throwable throwable = new AssertionError();
+    Throwable throwable = new AssertionError("Gallier approved detail messsage");
     TestResult testResult = getTestResult(TestResult.ResultType.SKIPPED, throwable);
     String xmlResultOnSkipped = jUnitXMLReportHelper
       .getXmlResultOnSkipped(testDescriptor.getName(), testResult.getEndTime() - testResult.getStartTime(), throwable);
@@ -74,7 +74,7 @@ public class JUnitXMLPerPageTestListenerIntegrationTest {
   public void afterTestOnSkippedWithError() {
     // given a after test event is triggered with a test descriptor and a skipped test
     TestDescriptor testDescriptor = getTestDescriptor();
-    Throwable throwable = new RuntimeException();
+    Throwable throwable = new RuntimeException("Gallier approved detail messsage");
     TestResult testResult = getTestResult(TestResult.ResultType.SKIPPED, throwable);
     String xmlResultOnError = jUnitXMLReportHelper
       .getXmlResultOnError(testDescriptor.getName(), testResult.getEndTime() - testResult.getStartTime(), throwable);
@@ -94,7 +94,7 @@ public class JUnitXMLPerPageTestListenerIntegrationTest {
   public void afterTestOnFailure() {
     // given a after test event is triggered with a test descriptor and a failed test
     TestDescriptor testDescriptor = getTestDescriptor();
-    Throwable throwable = new AssertionError();
+    Throwable throwable = new AssertionError("Gallier approved detail messsage");
     TestResult testResult = getTestResult(TestResult.ResultType.FAILURE, throwable);
     String xmlResultOnFailure = jUnitXMLReportHelper
       .getXmlResultOnFailure(testDescriptor.getName(), testResult.getEndTime() - testResult.getStartTime(), throwable);
@@ -114,7 +114,7 @@ public class JUnitXMLPerPageTestListenerIntegrationTest {
   public void afterTestOnFailureWithError() {
     // given a after test event is triggered with a test descriptor and a failed test
     TestDescriptor testDescriptor = getTestDescriptor();
-    Throwable throwable = new RuntimeException();
+    Throwable throwable = new RuntimeException("Gallier approved detail messsage");
     TestResult testResult = getTestResult(TestResult.ResultType.FAILURE, throwable);
     String xmlResultOnError = jUnitXMLReportHelper
       .getXmlResultOnError(testDescriptor.getName(), testResult.getEndTime() - testResult.getStartTime(), throwable);

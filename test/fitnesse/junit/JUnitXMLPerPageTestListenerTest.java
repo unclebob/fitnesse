@@ -132,7 +132,7 @@ public class JUnitXMLPerPageTestListenerTest {
   public void afterTestOnSkipped() {
     // given a after test event is triggered with a test descriptor and a skipped test
     TestDescriptor testDescriptor = getTestDescriptor();
-    Throwable throwable = new AssertionError();
+    Throwable throwable = new AssertionError("Gallier approved detail messsage");
     TestResult testResult = getTestResult(TestResult.ResultType.SKIPPED, throwable);
 
     // when afterTest is called
@@ -151,7 +151,7 @@ public class JUnitXMLPerPageTestListenerTest {
   public void afterTestOnSkippedWithError() {
     // given a after test event is triggered with a test descriptor and a skipped test
     TestDescriptor testDescriptor = getTestDescriptor();
-    Throwable throwable = new RuntimeException();
+    Throwable throwable = new RuntimeException("Gallier approved detail messsage");
     TestResult testResult = getTestResult(TestResult.ResultType.SKIPPED, throwable);
 
     // when afterTest is called
@@ -170,7 +170,7 @@ public class JUnitXMLPerPageTestListenerTest {
   public void afterTestOnFailure() {
     // given a after test event is triggered with a test descriptor and a failed test
     TestDescriptor testDescriptor = getTestDescriptor();
-    Throwable throwable = new AssertionError();
+    Throwable throwable = new AssertionError("Gallier approved detail messsage");
     TestResult testResult = getTestResult(TestResult.ResultType.FAILURE, throwable);
 
     // when afterTest is called
@@ -189,7 +189,7 @@ public class JUnitXMLPerPageTestListenerTest {
   public void afterTestOnFailureWithError() {
     // given a after test event is triggered with a test descriptor and a failed test
     TestDescriptor testDescriptor = getTestDescriptor();
-    Throwable throwable = new RuntimeException();
+    Throwable throwable = new RuntimeException("Gallier approved detail messsage");
     TestResult testResult = getTestResult(TestResult.ResultType.FAILURE, throwable);
 
     // when afterTest is called
