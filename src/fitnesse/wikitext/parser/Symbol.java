@@ -1,7 +1,6 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.util.Tree;
-import fitnesse.util.TreeWalker;
 import fitnesse.wikitext.VariableSource;
 
 import java.util.*;
