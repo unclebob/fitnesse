@@ -1,6 +1,5 @@
 package fitnesse.wikitext.parser;
 
-import fitnesse.util.TreeWalker;
 import fitnesse.wiki.PathParser;
 import fitnesse.wikitext.ParsingPage;
 import fitnesse.wikitext.SyntaxTree;
@@ -32,33 +31,22 @@ public class SyntaxTreeV2 implements SyntaxTree {
   }
 
   public void findWhereUsed(Consumer<String> takeWhere) {
-    tree.walkPreOrder(new TreeWalker<Symbol>() {
-
-      @Override
-      public boolean visit(Symbol node) {
-        if (node.isType(WikiWord.symbolType)) {
-          takeWhere.accept(node.getContent());
-        }
-        else if (node.isType(Alias.symbolType)) {
-          String linkText = node.childAt(1).childAt(0).getContent();
-          if (linkText.contains("?")) {
-            linkText = linkText.substring(0, linkText.indexOf('?'));
-          }
-          takeWhere.accept(linkText);
-        }
-        return true;
+    tree.walkPreOrder(node -> {
+      if (node.isType(WikiWord.symbolType)) {
+        takeWhere.accept(node.getContent());
       }
-
-      @Override
-      public boolean visitBranches(Symbol node) { return true; }
+      else if (node.isType(Alias.symbolType)) {
+        String linkText = node.childAt(1).childAt(0).getContent();
+        if (linkText.contains("?")) {
+          linkText = linkText.substring(0, linkText.indexOf('?'));
+        }
+        takeWhere.accept(linkText);
+      }
     });
   }
 
   public void findReferences(Function<String, Optional<String>> changeReference) {
-    tree.walkPreOrder(new TreeWalker<Symbol>() {
-
-      @Override
-      public boolean visit(Symbol node) {
+    tree.walkPreOrder(node -> {
         if (node.isType(WikiWord.symbolType)) {
           changeReference.apply(node.getContent()).ifPresent(node::setContent);
         } else if (node.isType(Alias.symbolType)) {
@@ -68,14 +56,9 @@ public class SyntaxTreeV2 implements SyntaxTree {
             changeReference.apply(aliasReference).ifPresent(wikiWord::setContent);
           }
         }
-        return true;
-      }
-
-      @Override
-      public boolean visitBranches(Symbol node) {
-        return !node.isType(Alias.symbolType);
-      }
-    });
+      },
+      node -> !node.isType(Alias.symbolType)
+    );
   }
 
   @Override
@@ -91,40 +74,25 @@ public class SyntaxTreeV2 implements SyntaxTree {
   @Override
   public void findPaths(Consumer<String> takePath) {
     HtmlTranslator translator = new HtmlTranslator(parsingPage.getPage(), this);
-    tree.walkPostOrder(new TreeWalker<Symbol>() {
-
-      @Override
-      public boolean visit(Symbol node) {
-        if (node.getType() instanceof PathsProvider) {
-          for (String path: (((PathsProvider) node.getType()).providePaths(translator, node))) {
-            takePath.accept(path);
-          }
+    tree.walkPostOrder(node -> {
+      if (node.getType() instanceof PathsProvider) {
+        for (String path: (((PathsProvider) node.getType()).providePaths(translator, node))) {
+          takePath.accept(path);
         }
-        return true;
       }
-
-      @Override
-      public boolean visitBranches(Symbol node) { return true; }
     });
   }
 
   @Override
   public void findXrefs(Consumer<String> takeXref) {
-    tree.walkPreOrder(new TreeWalker<Symbol>() {
-      @Override
-      public boolean visit(Symbol node) {
-        if (node.isType(See.symbolType)) {
-          if (node.childAt(0).isType(Alias.symbolType)) {
-            takeXref.accept(node.childAt(0).lastChild().childAt(0).getContent());
-          } else {
-            takeXref.accept(node.childAt(0).getContent());
-          }
+    tree.walkPreOrder(node -> {
+      if (node.isType(See.symbolType)) {
+        if (node.childAt(0).isType(Alias.symbolType)) {
+          takeXref.accept(node.childAt(0).lastChild().childAt(0).getContent());
+        } else {
+          takeXref.accept(node.childAt(0).getContent());
         }
-        return true;
       }
-
-      @Override
-      public boolean visitBranches(Symbol node) { return true; }
     });
   }
 

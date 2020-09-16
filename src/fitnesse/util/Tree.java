@@ -1,27 +1,36 @@
 package fitnesse.util;
 
 import java.util.Collection;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public interface Tree<T> {
   T getNode();
   Collection<? extends Tree<T>> getBranches();
 
-  default boolean walkPreOrder(TreeWalker<T> walker) {
-    if (!walker.visit(getNode())) return false;
-    if (walker.visitBranches(getNode())) {
-      for (Tree<T> branch: getBranches()) {
-        if (!branch.walkPreOrder(walker)) return false;
+  default void walkPreOrder(Consumer<T> visitNode, Predicate<T> visitBranches) {
+    visitNode.accept(getNode());
+    if (visitBranches.test(getNode())) {
+      for (Tree<T> branch : getBranches()) {
+        branch.walkPreOrder(visitNode, visitBranches);
       }
     }
-    return true;
   }
 
-  default boolean walkPostOrder(TreeWalker<T> walker) {
-    if (walker.visitBranches(getNode())) {
-      for (Tree<T> branch: getBranches()) {
-        if (!branch.walkPostOrder(walker)) return false;
+  default void walkPreOrder(Consumer<T> visitNode) {
+    walkPreOrder(visitNode, node -> true);
+  }
+
+  default void walkPostOrder(Consumer<T> visitNode, Predicate<T> visitBranches) {
+    if (visitBranches.test(getNode())) {
+      for (Tree<T> branch : getBranches()) {
+        branch.walkPostOrder(visitNode, visitBranches);
       }
     }
-    return walker.visit(getNode());
+    visitNode.accept(getNode());
+  }
+
+  default void walkPostOrder(Consumer<T> visitNode) {
+    walkPostOrder(visitNode, node -> true);
   }
 }
