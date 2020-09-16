@@ -9,6 +9,7 @@ import java.io.IOException;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 public class JUnitXMLPerPageRunListenerTest {
 
@@ -16,6 +17,22 @@ public class JUnitXMLPerPageRunListenerTest {
 
   // SUT
   private JUnitXMLPerPageRunListener jUnitXMLPerPageRunListener = new JUnitXMLPerPageRunListener(testResultRecorderMock);
+
+  @Test
+  public void testStarted() {
+    // given some test
+    Description description = Description.createTestDescription(JUnitXMLPerPageRunListenerTest.class, "myTestName");
+
+    // when the test is started
+    try {
+      jUnitXMLPerPageRunListener.testStarted(description);
+    } catch (Exception e) {
+      fail("Exception was caught but should have never been thrown.");
+    }
+
+    // then does nothing
+    verifyNoInteractions(testResultRecorderMock);
+  }
 
   @Test
   public void testSuccess() {
