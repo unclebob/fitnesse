@@ -21,7 +21,7 @@ public class JUnitXMLPerPageTestListenerTest {
   // SUT
   private JUnitXMLPerPageTestListener jUnitXMLPerPageTestListener = new JUnitXMLPerPageTestListener(testResultRecorderMock);
 
-  @Test(expected = Test.None.class /* no exception expected */)
+  @Test
   public void beforeSuite() {
     // given a before suite event is triggered with a test descriptor
     TestDescriptor testDescriptor = getTestDescriptor();
@@ -33,7 +33,7 @@ public class JUnitXMLPerPageTestListenerTest {
     verifyNoInteractions(testResultRecorderMock);
   }
 
-  @Test(expected = Test.None.class /* no exception expected */)
+  @Test
   public void afterSuiteOnSuccess() {
     // given a after test event is triggered with a test descriptor and a test success
     TestDescriptor testDescriptor = getTestDescriptor();
@@ -46,7 +46,7 @@ public class JUnitXMLPerPageTestListenerTest {
     verifyNoInteractions(testResultRecorderMock);
   }
 
-  @Test(expected = Test.None.class /* no exception expected */)
+  @Test
   public void afterSuiteOnSkipped() {
     // given a after test event is triggered with a test descriptor and a skipped test
     TestDescriptor testDescriptor = getTestDescriptor();
@@ -59,7 +59,7 @@ public class JUnitXMLPerPageTestListenerTest {
     verifyNoInteractions(testResultRecorderMock);
   }
 
-  @Test(expected = Test.None.class /* no exception expected */)
+  @Test
   public void afterSuiteOnSkippedWithError() {
     // given a after test event is triggered with a test descriptor and a skipped test
     TestDescriptor testDescriptor = getTestDescriptor();
@@ -72,7 +72,7 @@ public class JUnitXMLPerPageTestListenerTest {
     verifyNoInteractions(testResultRecorderMock);
   }
 
-  @Test(expected = Test.None.class /* no exception expected */)
+  @Test
   public void afterSuiteOnFailure() {
     // given a after test event is triggered with a test descriptor and a test failure
     TestDescriptor testDescriptor = getTestDescriptor();
@@ -85,7 +85,7 @@ public class JUnitXMLPerPageTestListenerTest {
     verifyNoInteractions(testResultRecorderMock);
   }
 
-  @Test(expected = Test.None.class /* no exception expected */)
+  @Test
   public void afterSuiteOnFailureWithError() {
     // given a after test event is triggered with a test descriptor and a test failure
     TestDescriptor testDescriptor = getTestDescriptor();
@@ -98,7 +98,7 @@ public class JUnitXMLPerPageTestListenerTest {
     verifyNoInteractions(testResultRecorderMock);
   }
 
-  @Test(expected = Test.None.class /* no exception expected */)
+  @Test
   public void beforeTest() {
     // given a before test event is triggered with a test descriptor
     TestDescriptor testDescriptor = getTestDescriptor();
@@ -110,7 +110,7 @@ public class JUnitXMLPerPageTestListenerTest {
     verifyNoInteractions(testResultRecorderMock);
   }
 
-  @Test(expected = Test.None.class /* no exception expected */)
+  @Test
   public void afterTestOnSuccess() {
     // given a after test event is triggered with a test descriptor and a test success
     TestDescriptor testDescriptor = getTestDescriptor();
@@ -128,7 +128,7 @@ public class JUnitXMLPerPageTestListenerTest {
     }
   }
 
-  @Test(expected = Test.None.class /* no exception expected */)
+  @Test
   public void afterTestOnSkipped() {
     // given a after test event is triggered with a test descriptor and a skipped test
     TestDescriptor testDescriptor = getTestDescriptor();
@@ -147,7 +147,7 @@ public class JUnitXMLPerPageTestListenerTest {
     }
   }
 
-  @Test(expected = Test.None.class /* no exception expected */)
+  @Test
   public void afterTestOnSkippedWithError() {
     // given a after test event is triggered with a test descriptor and a skipped test
     TestDescriptor testDescriptor = getTestDescriptor();
@@ -166,7 +166,7 @@ public class JUnitXMLPerPageTestListenerTest {
     }
   }
 
-  @Test(expected = Test.None.class /* no exception expected */)
+  @Test
   public void afterTestOnFailure() {
     // given a after test event is triggered with a test descriptor and a failed test
     TestDescriptor testDescriptor = getTestDescriptor();
@@ -185,7 +185,7 @@ public class JUnitXMLPerPageTestListenerTest {
     }
   }
 
-  @Test(expected = Test.None.class /* no exception expected */)
+  @Test
   public void afterTestOnFailureWithError() {
     // given a after test event is triggered with a test descriptor and a failed test
     TestDescriptor testDescriptor = getTestDescriptor();
