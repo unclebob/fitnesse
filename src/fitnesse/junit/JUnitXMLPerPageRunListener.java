@@ -73,10 +73,14 @@ public class JUnitXMLPerPageRunListener extends RunListener {
   @Override
   public void testFailure(Failure failure) throws Exception {
     super.testFailure(failure);
-    if (failure.getException() instanceof AssertionError)
-      testResultRecorder.recordTestResult(getTestName(failure.getDescription()), 0, 1, 0, failure.getException(), getExecutionTime());
-    else
-      testResultRecorder.recordTestResult(getTestName(failure.getDescription()), 0, 0, 1, failure.getException(), getExecutionTime());
+    String testName = getTestName(failure.getDescription());
+    Throwable throwable = failure.getException();
+    long executionTime = getExecutionTime();
+    if (throwable instanceof AssertionError) {
+      testResultRecorder.recordTestResult(testName, 0, 1, 0, throwable, executionTime);
+    } else {
+      testResultRecorder.recordTestResult(testName, 0, 0, 1, throwable, executionTime);
+    }
   }
 
   /**

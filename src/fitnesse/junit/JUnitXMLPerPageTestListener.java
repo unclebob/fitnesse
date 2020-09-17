@@ -91,16 +91,18 @@ public class JUnitXMLPerPageTestListener implements TestListener {
    * @param result the result of the test
    */
   protected void testFailure(TestDescriptor testDescriptor, TestResult result) {
+    String testName = testDescriptor.getName();
+    Throwable throwable = result.getException();
+    long executionTime = calculateExecutionTimeInSeconds(result);
     try {
-      if (result.getException() instanceof AssertionError) {
-        testResultRecorder.recordTestResult(testDescriptor.getName(), 0, 1, 0, result.getException(), calculateExecutionTimeInSeconds(result));
+      if (throwable instanceof AssertionError) {
+        testResultRecorder.recordTestResult(testName, 0, 1, 0, throwable, executionTime);
       } else {
-        testResultRecorder.recordTestResult(testDescriptor.getName(), 0, 0, 1, result.getException(), calculateExecutionTimeInSeconds(result));
+        testResultRecorder.recordTestResult(testName, 0, 0, 1, throwable, executionTime);
       }
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-
   }
 
   /**
@@ -109,11 +111,14 @@ public class JUnitXMLPerPageTestListener implements TestListener {
    * @param result the result of the test
    */
   protected void testSkipped(TestDescriptor testDescriptor, TestResult result) {
+    String testName = testDescriptor.getName();
+    Throwable throwable = result.getException();
+    long executionTime = calculateExecutionTimeInSeconds(result);
     try {
-      if (result.getException() instanceof AssertionError) {
-        testResultRecorder.recordTestResult(testDescriptor.getName(), 1, 0, 0, result.getException(), calculateExecutionTimeInSeconds(result));
+      if (throwable instanceof AssertionError) {
+        testResultRecorder.recordTestResult(testName, 1, 0, 0, throwable, executionTime);
       } else {
-        testResultRecorder.recordTestResult(testDescriptor.getName(), 0, 0, 1, result.getException(), calculateExecutionTimeInSeconds(result));
+        testResultRecorder.recordTestResult(testName, 0, 0, 1, throwable, executionTime);
       }
     } catch (IOException e) {
       throw new RuntimeException(e);
