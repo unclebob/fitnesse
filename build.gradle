@@ -70,7 +70,7 @@ dependencies {
     exclude group:"org.apache.commons", module: "commons-lang3"
     exclude group: 'org.slf4j', module: 'slf4j-api'
   }
-  compile "org.apache.commons:commons-lang3:3.9"
+  compile "org.apache.commons:commons-lang3:3.11"
   compile "org.slf4j:slf4j-api:1.7.25"
   compile "org.slf4j:slf4j-jdk14:1.7.25"
   compile "org.json:json:20190722"
