@@ -149,7 +149,7 @@ and buy milk-!!|
 
 |baseline: should I buy milk|
 |GIVEN I have '''zero'''!-
--!!style_indigo[''pints of milk remaining'']!- 
+-!!style_indigo{''pints of milk remaining''}!- 
 in my fridge -!| WHEN I have '''AT LEAST 3$'''!-<sup>1</sup>
 -! !style_indigo[''cash in wallet''] ----- !- <sup>1</sup>: the price for 
 a bottle of milk -!| OR I '''have''' a !-<u>-!''credit card''!-</u>-!|THEN I ''go to store'' !-
