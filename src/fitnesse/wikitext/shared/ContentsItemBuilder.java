@@ -1,4 +1,4 @@
-package fitnesse.wikitext.parser;
+package fitnesse.wikitext.shared;
 
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
@@ -14,15 +14,15 @@ import java.util.Collection;
 import java.util.Collections;
 
 public class ContentsItemBuilder {
-    private Symbol contents;
-    private int level;
-    private SourcePage page;
+    private final PropertySource contents;
+    private final int level;
+    private final SourcePage page;
 
-    public ContentsItemBuilder(Symbol contents, int level) {
+    public ContentsItemBuilder(PropertySource contents, int level) {
         this(contents, level, null);
     }
 
-    public ContentsItemBuilder(Symbol contents, int level, SourcePage page) {
+    public ContentsItemBuilder(PropertySource contents, int level, SourcePage page) {
         this.contents = contents;
         this.level = level;
         this.page = page;
@@ -44,7 +44,7 @@ public class ContentsItemBuilder {
                 listItem.add(new ContentsItemBuilder(contents, level + 1, child).buildLevel(child));
             }
             else if (getRecursionLimit() > 0){
-                listItem.add(contents.getVariable(Contents.MORE_SUFFIX_TOC, Contents.MORE_SUFFIX_DEFAULT));
+                listItem.add(contents.findProperty(VariableName.MORE_SUFFIX_TOC, VariableName.MORE_SUFFIX_DEFAULT));
             }
         }
         return listItem;
@@ -64,10 +64,10 @@ public class ContentsItemBuilder {
         listItem.add(link);
         String help = page.getProperty(WikiPageProperty.HELP);
         if (!help.isEmpty()) {
-            if (hasOption("-h", Contents.HELP_TOC)) {
+            if (hasOption("-h", VariableName.HELP_TOC)) {
                 listItem.add(HtmlUtil.makeSpanTag("pageHelp", ": " + help));
             }
-            else if (hasOption("-H", Contents.HELP_INSTEAD_OF_TITLE_TOC)) {
+            else if (hasOption("-H", VariableName.HELP_INSTEAD_OF_TITLE_TOC)) {
                 link.use(help);
             }
             else {
@@ -80,17 +80,17 @@ public class ContentsItemBuilder {
     private String buildBody(SourcePage page) {
         String itemText = page.getName();
 
-        if (hasOption("-g", Contents.REGRACE_TOC)) {
+        if (hasOption("-g", VariableName.REGRACE_TOC)) {
             //todo: DRY? see wikiwordbuilder
             itemText = GracefulNamer.regrace(itemText);
         }
 
-        if (hasOption("-p", Contents.PROPERTY_TOC)) {
+        if (hasOption("-p", VariableName.PROPERTY_TOC)) {
             String properties = getBooleanProperties(page);
             if (!properties.isEmpty()) itemText += " " + properties;
         }
 
-        if (hasOption("-f", Contents.FILTER_TOC)) {
+        if (hasOption("-f", VariableName.FILTER_TOC)) {
             String filters = page.getProperty(WikiPageProperty.SUITES);
             if (!filters.isEmpty()) itemText += " (" + filters + ")";
         }
@@ -103,33 +103,25 @@ public class ContentsItemBuilder {
     }
 
     private int getRecursionLimit() {
-        for (Symbol child: contents.getChildren()) {
-            if (!child.getContent().startsWith("-R")) continue;
-            String level = child.getContent().substring(2);
-            if (level.isEmpty()) return Integer.MAX_VALUE;
-            try {
-              return Integer.parseInt(level);
-            }
-            catch (NumberFormatException e) {
-                return 0;
-            }
-        }
+      String level = contents.findProperty("-R", "0");
+      try {
+        return Integer.parseInt(level);
+      } catch (NumberFormatException e) {
         return 0;
+      }
     }
 
     private boolean hasOption(String option, String variableName) {
-        for (Symbol child: contents.getChildren()) {
-           if (child.getContent().equals(option)) return true;
-        }
-        return !variableName.isEmpty()
-                && contents.getVariable(variableName, "").equals("true");
+      return contents.hasProperty(option) ||
+        (!variableName.isEmpty()
+          && contents.findProperty(variableName, "").equals("true"));
     }
 
     private String getBooleanProperties(SourcePage sourcePage) {
-        String propChars = contents.getVariable(Contents.PROPERTY_CHARACTERS,
-                Contents.PROPERTY_CHARACTERS_DEFAULT).trim();
-        if(propChars.length() != Contents.PROPERTY_CHARACTERS_DEFAULT.length() ){
-            propChars = Contents.PROPERTY_CHARACTERS_DEFAULT;
+        String propChars = contents.findProperty(VariableName.PROPERTY_CHARACTERS,
+                PROPERTY_CHARACTERS_DEFAULT).trim();
+        if(propChars.length() != PROPERTY_CHARACTERS_DEFAULT.length() ){
+            propChars = PROPERTY_CHARACTERS_DEFAULT;
         }
 
         String result = "";
@@ -157,4 +149,6 @@ public class ContentsItemBuilder {
         if (sourcePage.hasProperty(WikiPageProperty.PRUNE)) result += " pruned";
         return result;
     }
+
+    private static final String PROPERTY_CHARACTERS_DEFAULT = "*+@>-";
 }

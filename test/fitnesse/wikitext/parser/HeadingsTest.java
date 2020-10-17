@@ -220,7 +220,7 @@ public class HeadingsTest {
   }
 
   @Test
-  public void testOptionParser_whenOptionWithoutValue_expectOneKeyAndNullValue() {
+  public void testOptionParser_whenOptionWithoutValue_expectOneKeyAndEmptyValue() {
     // arrange
     Symbol current = new Symbol(Headings.symbolType);
     Symbol body = new Symbol(SymbolType.SymbolList);
@@ -234,7 +234,7 @@ public class HeadingsTest {
 
     // assert
     assertTrue(current.hasProperty(style.toUpperCase()));
-    assertNull(current.getProperty(style.toUpperCase()));
+    assertEquals("", current.getProperty(style.toUpperCase()));
   }
 
   @Test

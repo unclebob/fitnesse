@@ -2,10 +2,11 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.util.Tree;
 import fitnesse.wikitext.VariableSource;
+import fitnesse.wikitext.shared.PropertySource;
 
 import java.util.*;
 
-public class Symbol implements Tree<Symbol> {
+public class Symbol implements Tree<Symbol>, PropertySource {
     private static final List<Symbol> NO_CHILDREN = Collections.emptyList();
 
     public static final Maybe<Symbol> nothing = new Maybe<>();
@@ -14,7 +15,7 @@ public class Symbol implements Tree<Symbol> {
     private SymbolType type;
     private String content;
     private List<Symbol> children;
-    private Map<String,String> variables;
+    private Map<String,String> variables; // deprecated - use properties, no need for 2 maps
     private Map<String,String> properties;
     private int startOffset = -1;
     private int endOffset = -1;
@@ -55,12 +56,27 @@ public class Symbol implements Tree<Symbol> {
     public Symbol lastChild() { return childAt(getChildren().size() - 1); }
     public List<Symbol> getChildren() { return children; }
 
+  public void copyVariables(String[] names, VariableSource source) {
+    for (String name: names) {
+      source.findVariable(name).ifPresent(value -> putProperty(name, value));
+    }
+  }
+
   @Override
   public Symbol getNode() { return this; }
 
   @Override
   public Collection<? extends Tree<Symbol>> getBranches() { return children; }
 
+  @Override
+  public Optional<String> findProperty(String key) {
+    return hasProperty(key) ? Optional.of(properties.get(key)) : Optional.empty();
+  }
+
+  @Override
+  public boolean hasProperty(String key) {
+    return properties != null && properties.containsKey(key);
+  }
 
     private List<Symbol> children() {
         if (children == NO_CHILDREN) {
@@ -85,7 +101,8 @@ public class Symbol implements Tree<Symbol> {
         return result;
     }
 
-
+    // @deprecate use copyVariables
+    @Deprecated
     public void evaluateVariables(String[] names, VariableSource source) {
         if (variables == null) variables = new HashMap<>(names.length);
         for (String name: names) {
@@ -93,6 +110,8 @@ public class Symbol implements Tree<Symbol> {
         }
     }
 
+    // @deprecated use findProperty
+    @Deprecated
     public String getVariable(String name, String defaultValue) {
         return variables != null && variables.containsKey(name) ? variables.get(name) : defaultValue;
     }
@@ -103,16 +122,16 @@ public class Symbol implements Tree<Symbol> {
         return this;
     }
 
-    public boolean hasProperty(String key) {
-        return properties != null && properties.containsKey(key);
-    }
-
+    // @deprecated use findProperty
+    @Deprecated
     public String getProperty(String key, String defaultValue) {
-        return properties != null && properties.containsKey(key) ? properties.get(key) : defaultValue;
+        return findProperty(key, defaultValue);
     }
 
+    // @deprecated use findProperty
+    @Deprecated
     public String getProperty(String key) {
-        return getProperty(key, "");
+        return findProperty(key, "");
     }
 
     public boolean hasOffset() {

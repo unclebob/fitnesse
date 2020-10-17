@@ -15,7 +15,7 @@ public class ContentsTest {
     }
 
     @Test public void parsesContents() throws Exception {
-        ParserTestHelper.assertParses("!contents -f -g", "SymbolList[Contents[Text, Text]]");
+        ParserTestHelper.assertParses("!contents -f -g", "SymbolList[Contents]");
         ParserTestHelper.assertParses("!contents hi", "SymbolList[Text, Whitespace, Text]");
         ParserTestHelper.assertParses("!contents ]", "SymbolList[Text, Whitespace, CloseBracket]");
     }

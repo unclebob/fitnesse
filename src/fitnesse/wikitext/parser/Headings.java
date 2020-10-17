@@ -35,7 +35,7 @@ public class Headings extends SymbolType implements Rule, Translation {
   public String toTarget(Translator translator, Symbol current) {
     final List<Symbol> headerLines = findHeaderLines(((HtmlTranslator)translator).getSyntaxTree());
     HeadingContentBuilder headingContentBuilder = new HeadingContentBuilder(headerLines,
-      ListStyle.byNameIgnoreCase(current.getProperty(STYLE)));
+      ListStyle.byNameIgnoreCase(current.findProperty(STYLE, "")));
     HtmlElement html = headingContentBuilder.htmlElements();
     return html.html();
   }
@@ -158,7 +158,7 @@ public class Headings extends SymbolType implements Rule, Translation {
     }
 
     private int getLevel(final Symbol headerLine) {
-      return Integer.parseInt(headerLine.getProperty(LineRule.Level));
+      return Integer.parseInt(headerLine.findProperty(LineRule.Level, "0"));
     }
 
   }
@@ -189,7 +189,7 @@ public class Headings extends SymbolType implements Rule, Translation {
     }
 
     private void finishSymbols() {
-      handleOptionAsValue(null);
+      handleOptionAsValue("");
     }
 
     private void handleNonWhitespace(final Symbol symbol) {
@@ -210,7 +210,7 @@ public class Headings extends SymbolType implements Rule, Translation {
 
     private void handleOptionAsKeyCandidate(final String option) {
       if (isOptionAKey(previousOption)) {
-        addToOptions(null);
+        addToOptions("");
       }
       previousOption = option;
     }
