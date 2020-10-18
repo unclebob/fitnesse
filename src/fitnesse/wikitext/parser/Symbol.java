@@ -2,11 +2,11 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.util.Tree;
 import fitnesse.wikitext.VariableSource;
-import fitnesse.wikitext.shared.PropertySource;
+import fitnesse.wikitext.shared.PropertyStore;
 
 import java.util.*;
 
-public class Symbol implements Tree<Symbol>, PropertySource {
+public class Symbol implements Tree<Symbol>, PropertyStore {
     private static final List<Symbol> NO_CHILDREN = Collections.emptyList();
 
     public static final Maybe<Symbol> nothing = new Maybe<>();
@@ -56,12 +56,6 @@ public class Symbol implements Tree<Symbol>, PropertySource {
     public Symbol lastChild() { return childAt(getChildren().size() - 1); }
     public List<Symbol> getChildren() { return children; }
 
-  public void copyVariables(String[] names, VariableSource source) {
-    for (String name: names) {
-      source.findVariable(name).ifPresent(value -> putProperty(name, value));
-    }
-  }
-
   @Override
   public Symbol getNode() { return this; }
 
@@ -76,6 +70,12 @@ public class Symbol implements Tree<Symbol>, PropertySource {
   @Override
   public boolean hasProperty(String key) {
     return properties != null && properties.containsKey(key);
+  }
+
+  @Override
+  public void putProperty(String key, String value) {
+    if (properties == null) properties = new HashMap<>(1);
+    properties.put(key, value);
   }
 
     private List<Symbol> children() {
@@ -101,7 +101,7 @@ public class Symbol implements Tree<Symbol>, PropertySource {
         return result;
     }
 
-    // @deprecate use copyVariables
+    // @deprecated use copyVariables
     @Deprecated
     public void evaluateVariables(String[] names, VariableSource source) {
         if (variables == null) variables = new HashMap<>(names.length);
@@ -114,12 +114,6 @@ public class Symbol implements Tree<Symbol>, PropertySource {
     @Deprecated
     public String getVariable(String name, String defaultValue) {
         return variables != null && variables.containsKey(name) ? variables.get(name) : defaultValue;
-    }
-
-    public Symbol putProperty(String key, String value) {
-        if (properties == null) properties = new HashMap<>(1);
-        properties.put(key, value);
-        return this;
     }
 
     // @deprecated use findProperty
