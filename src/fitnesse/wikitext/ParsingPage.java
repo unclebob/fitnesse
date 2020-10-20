@@ -51,6 +51,8 @@ public class ParsingPage implements VariableStore {
     return namedPage;
   }
 
+  public int nextId() { return cache.nextId(); }
+
   @Override
   public void putVariable(String name, String value) {
     cache.putVariable(name, value);
@@ -64,6 +66,7 @@ public class ParsingPage implements VariableStore {
   public static class Cache implements VariableStore {
 
     private final Map<String, String> cache;
+    private int id;
 
     public Cache() {
       this(new HashMap<>());
@@ -81,6 +84,10 @@ public class ParsingPage implements VariableStore {
     @Override
     public Optional<String> findVariable(String name) {
       return Optional.ofNullable(cache.get(name));
+    }
+
+    public int nextId() {
+      return id++;
     }
   }
 

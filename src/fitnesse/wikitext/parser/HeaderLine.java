@@ -1,10 +1,6 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
-import fitnesse.wiki.SymbolUtil;
-
-import java.util.List;
 
 public class HeaderLine extends SymbolType implements Translation {
   public static final HeaderLine symbolType = new HeaderLine();
@@ -23,23 +19,9 @@ public class HeaderLine extends SymbolType implements Translation {
 
   @Override
   public String toTarget(Translator translator, Symbol symbol) {
-    final HtmlTag result = new HtmlTag("h" + symbol.getProperty(LineRule.Level));
-    addInnerHtml(result, translator, symbol);
-    addAttributeId(result, translator, symbol.childAt(0));
+    final HtmlTag result = new HtmlTag("h" + symbol.findProperty(LineRule.LEVEL, "1"));
+    result.add(translator.translate(symbol.childAt(0)).trim());
+    symbol.findProperty(LineRule.ID).ifPresent(id -> result.addAttribute("id", id));
     return result.html();
   }
-
-  private void addInnerHtml(final HtmlTag result, final Translator translator,
-                            final Symbol symbol) {
-    final String heading = translator.translate(symbol.childAt(0)).trim();
-    result.add(heading);
-  }
-
-  private void addAttributeId(final HtmlTag result, final Translator translator,
-                              final Symbol symbol) {
-    final String textFromHeaderLine = Headings.extractTextFromHeaderLine(symbol);
-    final String value = Headings.buildIdOfHeaderLine(textFromHeaderLine);
-    result.addAttribute("id", value);
-  }
-
 }
