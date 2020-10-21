@@ -51,6 +51,7 @@ public class ParsingPage implements VariableStore {
     return namedPage;
   }
 
+  @Override
   public int nextId() { return cache.nextId(); }
 
   @Override
@@ -86,6 +87,7 @@ public class ParsingPage implements VariableStore {
       return Optional.ofNullable(cache.get(name));
     }
 
+    @Override
     public int nextId() {
       return id++;
     }
