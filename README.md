@@ -94,7 +94,7 @@ There are a few things to keep in mind when working from an IDE:
 1. Clone the FitNesse Git repository from https://github.com/unclebob/fitnesse.
 2. Import FitNesse via _File_ -> _Import..._ -> _Gradle Project_.
 3. Select the just cloned project folder. Follow the wizard.
-4. Ensure the project properties have a Java 7 compiler or newer set.
+4. Ensure the project properties have a Java 8 compiler or newer set.
 
 #### Import FitNesse in IntelliJ IDEA (16)
 
@@ -102,7 +102,7 @@ There are a few things to keep in mind when working from an IDE:
 2. From the welcome screen (the one you get when all projects are closed), click _Import Project_.
 3. Select the file `build.gradle` in the fitnesse folder.
 4. Follow the wizard. Deselect the option `Create separate module per source set`. You can use the
-   `Use gradle wrapper task configuration`. Use Java 7 or newer. It should find source and test folders and
+   `Use gradle wrapper task configuration`. Use Java 8 or newer. It should find source and test folders and
     show you two modules: `fitnesse` and `:buildSrc`; import both.
 5. Open the Gradle Build tool, select the task `copyRuntimeLibs` and (right-click) mark it as _Execute After Make_.
 
@@ -111,7 +111,7 @@ There are a few things to keep in mind when working from an IDE:
 Software artifacts (the FitNesse jar, the standalone jar and POM files) are uploaded to [Bintray](https://bintray.com/fitnesse). There are two repositories:
 
 * _Edge_ contains snapshot builds
-* _Release_ contains the official release builds. 
+* _Release_ contains the official release builds.
 
 In both cases you'll need sufficient permissions to perform a release.
 
