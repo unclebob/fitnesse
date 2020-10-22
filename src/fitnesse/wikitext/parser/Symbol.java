@@ -6,7 +6,7 @@ import fitnesse.wikitext.shared.PropertyStore;
 
 import java.util.*;
 
-public class Symbol implements Tree<Symbol>, PropertyStore {
+public class Symbol extends Tree<Symbol> implements PropertyStore {
     private static final List<Symbol> NO_CHILDREN = Collections.emptyList();
 
     public static final Maybe<Symbol> nothing = new Maybe<>();
@@ -14,7 +14,7 @@ public class Symbol implements Tree<Symbol>, PropertyStore {
 
     private SymbolType type;
     private String content;
-    private List<Symbol> children;
+    private List<Symbol> branches;
     private Map<String,String> variables; // deprecated - use properties, no need for 2 maps
     private Map<String,String> properties;
     private int startOffset = -1;
@@ -25,7 +25,7 @@ public class Symbol implements Tree<Symbol>, PropertyStore {
     public Symbol(SymbolType type, String content) {
         this.type = type;
         this.content = content;
-        this.children = NO_CHILDREN;
+        this.branches = NO_CHILDREN;
     }
 
     public Symbol(SymbolType type, String content, int startOffset) {
@@ -54,13 +54,10 @@ public class Symbol implements Tree<Symbol>, PropertyStore {
 
     public Symbol childAt(int index) { return getChildren().get(index); }
     public Symbol lastChild() { return childAt(getChildren().size() - 1); }
-    public List<Symbol> getChildren() { return children; }
+    public List<Symbol> getChildren() { return branches; }
 
-  @Override
-  public Symbol getNode() { return this; }
-
-  @Override
-  public Collection<? extends Tree<Symbol>> getBranches() { return children; }
+  @Override protected List<Symbol> getBranches() { return branches; }
+  @Override protected Symbol getNode() { return this; }
 
   @Override
   public Optional<String> findProperty(String key) {
@@ -79,10 +76,10 @@ public class Symbol implements Tree<Symbol>, PropertyStore {
   }
 
     private List<Symbol> children() {
-        if (children == NO_CHILDREN) {
-            children = new LinkedList<>();
+        if (branches == NO_CHILDREN) {
+            branches = new LinkedList<>();
         }
-        return children;
+        return branches;
     }
 
     public Symbol add(Symbol child) {
@@ -97,7 +94,7 @@ public class Symbol implements Tree<Symbol>, PropertyStore {
 
     public Symbol childrenAfter(int after) {
         Symbol result = new Symbol(SymbolType.SymbolList);
-        for (int i = after + 1; i < children.size(); i++) result.add(children.get(i));
+        for (int i = after + 1; i < branches.size(); i++) result.add(branches.get(i));
         return result;
     }
 
