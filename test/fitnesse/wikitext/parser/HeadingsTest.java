@@ -3,6 +3,7 @@ package fitnesse.wikitext.parser;
 import fitnesse.html.HtmlElement;
 import fitnesse.html.HtmlTag;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wikitext.shared.Names;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -211,8 +212,8 @@ public class HeadingsTest {
 
   private Symbol buildHeaderLine(final String level, final String text) {
     Symbol symbol = new Symbol(HeaderLine.symbolType);
-    symbol.putProperty(LineRule.LEVEL, level);
-    symbol.putProperty(LineRule.ID, "5");
+    symbol.putProperty(Names.LEVEL, level);
+    symbol.putProperty(Names.ID, "5");
     Symbol symbolList = new Symbol(SymbolType.SymbolList);
     symbol.add(symbolList);
     symbolList.add(new Symbol(SymbolType.Text, text));

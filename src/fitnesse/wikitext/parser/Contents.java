@@ -3,7 +3,7 @@ package fitnesse.wikitext.parser;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.wikitext.shared.ContentsItemBuilder;
-import fitnesse.wikitext.shared.VariableName;
+import fitnesse.wikitext.shared.Names;
 
 public class Contents extends SymbolType implements Rule, Translation {
 
@@ -33,13 +33,13 @@ public class Contents extends SymbolType implements Rule, Translation {
         }
 
         current.copyVariables(new String[] {
-                  VariableName.HELP_TOC,
-                  VariableName.HELP_INSTEAD_OF_TITLE_TOC,
-                  VariableName.REGRACE_TOC,
-                  VariableName.PROPERTY_TOC,
-                  VariableName.FILTER_TOC,
-                  VariableName.MORE_SUFFIX_TOC,
-                  VariableName.PROPERTY_CHARACTERS},
+                  Names.HELP_TOC,
+                  Names.HELP_INSTEAD_OF_TITLE_TOC,
+                  Names.REGRACE_TOC,
+                  Names.PROPERTY_TOC,
+                  Names.FILTER_TOC,
+                  Names.MORE_SUFFIX_TOC,
+                  Names.PROPERTY_CHARACTERS},
                 parser.getVariableSource());
 
         return new Maybe<>(current);

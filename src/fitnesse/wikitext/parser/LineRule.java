@@ -1,8 +1,8 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.shared.Names;
+
 public class LineRule implements Rule {
-  public static final String LEVEL = "level";
-  public static final String ID = "id";
 
     @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
@@ -11,8 +11,8 @@ public class LineRule implements Rule {
 
         String level = current.getContent().substring(1,2);
         if (ScanString.isDigits(level)) { //todo: a bit of a hack - this is for header lines
-          current.putProperty(LEVEL, level);
-          current.putProperty(ID, Integer.toString(parser.getPage().nextId()));
+          current.putProperty(Names.LEVEL, level);
+          current.putProperty(Names.ID, Integer.toString(parser.getPage().nextId()));
         }
 
         current.add(parser.parseToEnd(SymbolType.Newline));

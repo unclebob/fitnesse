@@ -44,7 +44,7 @@ public class ContentsItemBuilder {
                 listItem.add(new ContentsItemBuilder(contents, level + 1, child).buildLevel(child));
             }
             else if (getRecursionLimit() > 0){
-                listItem.add(contents.findProperty(VariableName.MORE_SUFFIX_TOC, VariableName.MORE_SUFFIX_DEFAULT));
+                listItem.add(contents.findProperty(Names.MORE_SUFFIX_TOC, Names.MORE_SUFFIX_DEFAULT));
             }
         }
         return listItem;
@@ -64,10 +64,10 @@ public class ContentsItemBuilder {
         listItem.add(link);
         String help = page.getProperty(WikiPageProperty.HELP);
         if (!help.isEmpty()) {
-            if (hasOption("-h", VariableName.HELP_TOC)) {
+            if (hasOption("-h", Names.HELP_TOC)) {
                 listItem.add(HtmlUtil.makeSpanTag("pageHelp", ": " + help));
             }
-            else if (hasOption("-H", VariableName.HELP_INSTEAD_OF_TITLE_TOC)) {
+            else if (hasOption("-H", Names.HELP_INSTEAD_OF_TITLE_TOC)) {
                 link.use(help);
             }
             else {
@@ -80,17 +80,17 @@ public class ContentsItemBuilder {
     private String buildBody(SourcePage page) {
         String itemText = page.getName();
 
-        if (hasOption("-g", VariableName.REGRACE_TOC)) {
+        if (hasOption("-g", Names.REGRACE_TOC)) {
             //todo: DRY? see wikiwordbuilder
             itemText = GracefulNamer.regrace(itemText);
         }
 
-        if (hasOption("-p", VariableName.PROPERTY_TOC)) {
+        if (hasOption("-p", Names.PROPERTY_TOC)) {
             String properties = getBooleanProperties(page);
             if (!properties.isEmpty()) itemText += " " + properties;
         }
 
-        if (hasOption("-f", VariableName.FILTER_TOC)) {
+        if (hasOption("-f", Names.FILTER_TOC)) {
             String filters = page.getProperty(WikiPageProperty.SUITES);
             if (!filters.isEmpty()) itemText += " (" + filters + ")";
         }
@@ -118,7 +118,7 @@ public class ContentsItemBuilder {
     }
 
     private String getBooleanProperties(SourcePage sourcePage) {
-        String propChars = contents.findProperty(VariableName.PROPERTY_CHARACTERS,
+        String propChars = contents.findProperty(Names.PROPERTY_CHARACTERS,
                 PROPERTY_CHARACTERS_DEFAULT).trim();
         if(propChars.length() != PROPERTY_CHARACTERS_DEFAULT.length() ){
             propChars = PROPERTY_CHARACTERS_DEFAULT;

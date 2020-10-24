@@ -3,6 +3,7 @@ package fitnesse.wikitext.parser;
 import fitnesse.html.HtmlElement;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
+import fitnesse.wikitext.shared.Names;
 
 import java.util.*;
 
@@ -129,7 +130,7 @@ public class Headings extends SymbolType implements Rule, Translation {
         listitemElement.addAttribute("class", "heading" + currentLevel());
         final String textFromHeaderLine = extractTextFromHeaderLine(headerLine);
         final HtmlTag anchorElement = new HtmlTag("a", textFromHeaderLine);
-        headerLine.findProperty(LineRule.ID).ifPresent(id -> anchorElement.addAttribute("href", "#" + id));
+        headerLine.findProperty(Names.ID).ifPresent(id -> anchorElement.addAttribute("href", "#" + id));
         listitemElement.add(anchorElement);
         stack.peek().add(listitemElement);
         processed = true;
@@ -141,7 +142,7 @@ public class Headings extends SymbolType implements Rule, Translation {
     }
 
     private int getLevel(final Symbol headerLine) {
-      return Integer.parseInt(headerLine.findProperty(LineRule.LEVEL, "0"));
+      return Integer.parseInt(headerLine.findProperty(Names.LEVEL, "0"));
     }
 
   }
