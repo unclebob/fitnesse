@@ -31,8 +31,13 @@ class Translate implements Translation{
     return this;
   }
 
+  Translate content() {
+    arguments.add((translator, symbol) -> symbol.getContent());
+    return this;
+  }
+
   Translate text(String content) {
-    arguments.add((s,t) -> content);
+    arguments.add((t,s) -> content);
     return this;
   }
 

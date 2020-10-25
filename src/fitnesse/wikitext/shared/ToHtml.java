@@ -11,6 +11,10 @@ public class ToHtml {
     return HtmlTag.name("a").attribute("href", "#" + strings[0]).body(".#" + strings[0]).html();
   }
 
+  public static String email(String[] strings) {
+    return HtmlTag.name("a").attribute("href", "mailto:" + strings[0]).body(strings[0]).htmlInline();
+  }
+
   public static String header(String[] strings, PropertySource source) {
     HtmlTag result = new HtmlTag("h" + source.findProperty(Names.LEVEL, "1"));
     result.add(strings[0].trim());
@@ -24,6 +28,10 @@ public class ToHtml {
 
   public static String newLine() {
     return HtmlTag.name("br").htmlInline();
+  }
+
+  public static String note(String[] strings) {
+    return HtmlTag.name("p").attribute("class", "note").body(strings[0]).html();
   }
 
   public static String pair(String[] strings) {

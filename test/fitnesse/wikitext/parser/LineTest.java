@@ -43,7 +43,7 @@ public class LineTest {
     }
 
     @Test public void translatesCenters() {
-        ParserTestHelper.assertTranslatesTo("!c some text", "<center>some text</center>" + HtmlElement.endl);
+        ParserTestHelper.assertTranslatesTo("!c some text", "<center>some text</center>");
     }
 
     @Test public void scansNotes() {
@@ -52,7 +52,7 @@ public class LineTest {
     }
 
     @Test public void translatesNotes() {
-        ParserTestHelper.assertTranslatesTo("!note some note", "<p class=\"note\">some note</p>");
+        ParserTestHelper.assertTranslatesTo("!note some note", "<p class=\"note\">some note</p>" + HtmlElement.endl);
     }
 
     @Test public void translatesMetas() {

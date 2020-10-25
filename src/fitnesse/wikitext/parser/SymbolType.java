@@ -19,7 +19,7 @@ public class SymbolType implements Matchable {
             .wikiMatcher(new Matcher().startLineOrCell().string("!c"))
             .wikiMatcher(new Matcher().startLineOrCell().string("!C"))
             .wikiRule(new LineRule())
-            .htmlTranslation(new HtmlBuilder("center").body(0));
+            .htmlTranslation(Translate.with(ToHtml::pair).text("center").child(0));
     public static final SymbolType CloseBrace = new SymbolType("CloseBrace")
             .wikiMatcher(new Matcher().string("}"));
     public static final SymbolType CloseBracket = new SymbolType("CloseBracket")
@@ -49,7 +49,7 @@ public class SymbolType implements Matchable {
             .wikiMatcher(new Matcher().string("+").digits())
             .wikiMatcher(new Matcher().string("-").digits());
     public static final SymbolType EMail = new SymbolType("EMail")
-            .htmlTranslation(new HtmlBuilder("a").bodyContent().attribute("href", -1, "mailto:").inline());
+            .htmlTranslation(Translate.with(ToHtml::email).content());
     public static final SymbolType Empty = new SymbolType("Empty");
     public static final SymbolType EndCell = new SymbolType("EndCell")
             .wikiMatcher(new Matcher().string("|").ignoreWhitespace().string("\n|"))
@@ -72,7 +72,7 @@ public class SymbolType implements Matchable {
     public static final SymbolType NoteLine = new SymbolType("NoteLine")
             .wikiMatcher(new Matcher().startLineOrCell().string("!note"))
             .wikiRule(new LineRule())
-            .htmlTranslation(new HtmlBuilder("p").body(0).attribute("class", "note").inline());
+            .htmlTranslation(Translate.with(ToHtml::note).child(0));
     public static final SymbolType OpenBrace = new SymbolType("OpenBrace", CloseBrace)
             .wikiMatcher(new Matcher().string("{"));
 
