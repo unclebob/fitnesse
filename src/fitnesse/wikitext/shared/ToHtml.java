@@ -37,4 +37,8 @@ public class ToHtml {
   public static String pair(String[] strings) {
     return HtmlTag.name(strings[0]).body(strings[1]).htmlInline();
   }
+
+  public static String path(String[] strings) {
+    return new HtmlTag("span").attribute("class", "meta").body("classpath: " + strings[0]).htmlInline();
+  }
 }
