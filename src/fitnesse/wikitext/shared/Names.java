@@ -13,6 +13,9 @@ public class Names {
   public static final String PROPERTY_TOC = "PROPERTY_TOC";
   public static final String REGRACE_TOC = "REGRACE_TOC";
 
+  // variable for the expression widget
+  public static final String FORMAT_LOCALE = "FORMAT_LOCALE";
+
   //properties for the header widgets
   public static final String LEVEL = "level";
   public static final String ID = "id";

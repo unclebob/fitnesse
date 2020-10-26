@@ -1,6 +1,8 @@
 package fitnesse.wikitext.shared;
 
 import fitnesse.html.HtmlTag;
+import fitnesse.wikitext.parser.FormattedExpression;
+import fitnesse.wikitext.parser.Maybe;
 
 public class ToHtml {
   public static String anchorName(String[] strings) {
@@ -13,6 +15,19 @@ public class ToHtml {
 
   public static String email(String[] strings) {
     return HtmlTag.name("a").attribute("href", "mailto:" + strings[0]).body(strings[0]).htmlInline();
+  }
+
+  public static String error(String[] strings) {
+    return " " + HtmlTag.name("span").attribute("class", "fail").body(strings[0]).htmlInline() + " ";
+  }
+
+  public static String expression(String[] strings, PropertySource source) {
+    String locale = source.findProperty(Names.FORMAT_LOCALE, "");
+    Maybe<String> formatLocale = locale.length() > 0 ? new Maybe<>(locale) : Maybe.noString;
+    Maybe<String> result = new FormattedExpression(strings[0], formatLocale).evaluate();
+    return (result.isNothing())
+      ? ToHtml.error(new String[] {result.because()})
+      : result.getValue();
   }
 
   public static String header(String[] strings, PropertySource source) {
