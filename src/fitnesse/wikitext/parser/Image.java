@@ -17,6 +17,7 @@ public class Image extends SymbolType implements Rule, Translation {
 
     @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
+        StringBuilder source = new StringBuilder(current.getContent());
     	  String imageProperty =
             current.getContent().endsWith("l") ? Link.Left
             : current.getContent().endsWith("r") ? Link.Right
@@ -24,31 +25,37 @@ public class Image extends SymbolType implements Rule, Translation {
 
         parser.moveNext(1);
         if (!parser.getCurrent().isType(SymbolType.Whitespace)) return Symbol.nothing;
-
+        source.append(parser.getCurrent().getContent());
         parser.moveNext(1);
 
         Map<String, String> options = new TreeMap<>();
         while (parser.getCurrent().isType(SymbolType.Text) && parser.getCurrent().getContent().startsWith("-")) {
             String option = parser.getCurrent().getContent();
+            source.append(option);
             parser.moveNext(1);
             if (!parser.getCurrent().isType(SymbolType.Whitespace)) return Symbol.nothing;
+            source.append(parser.getCurrent().getContent());
             parser.moveNext(1);
             if (!parser.getCurrent().isType(SymbolType.Text)) return Symbol.nothing;
+            source.append(parser.getCurrent().getContent());
             String value = parser.getCurrent().getContent();
             parser.moveNext(1);
             if (!parser.getCurrent().isType(SymbolType.Whitespace)) return Symbol.nothing;
+            source.append(parser.getCurrent().getContent());
             parser.moveNext(1);
             options.put(option, value);
         }
+        current.setContent(source.toString());
 
-        if (parser.getCurrent().isType(Link.symbolType)) {
-            Maybe<Symbol> link = Link.symbolType.getWikiRule().parse(parser.getCurrent(), parser);
+        final Symbol name = parser.getCurrent();
+        if (name.isType(Link.symbolType)) {
+            Maybe<Symbol> link = Link.symbolType.getWikiRule().parse(name, parser);
             if (link.isNothing()) return Symbol.nothing;
             addOptions(link.getValue(), options);
             return makeImageLink(current, link.getValue(), imageProperty);
         }
-        else if (parser.getCurrent().isType(SymbolType.Text)) {
-            Symbol list = new Symbol(SymbolType.SymbolList).add(parser.getCurrent());
+        else if (name.isType(SymbolType.Text) || name.isType(WikiWord.symbolType)) {
+            Symbol list = new Symbol(SymbolType.SymbolList).add(new Symbol(SymbolType.Text, name.getContent()));
             Symbol link = new Symbol(Link.symbolType).add(list);
             addOptions(link, options);
             return makeImageLink(current, link, imageProperty);
