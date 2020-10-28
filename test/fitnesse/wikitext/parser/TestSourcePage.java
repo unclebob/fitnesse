@@ -9,7 +9,7 @@ public class TestSourcePage implements SourcePage {
   public String content;
   public HashMap<String, String> properties = new HashMap<>();
   public SourcePage includedPage;
-  public String targetPath;
+  public String targetPath = "";
 
   public TestSourcePage withContent(String content) {
     this.content = content;

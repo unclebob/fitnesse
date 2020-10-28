@@ -1,5 +1,7 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.shared.ToHtml;
+
 import java.util.List;
 
 public class AnchorName extends SymbolType implements Rule {
@@ -8,7 +10,7 @@ public class AnchorName extends SymbolType implements Rule {
         super("AnchorName");
         wikiMatcher(new Matcher().string("!anchor"));
         wikiRule(this);
-        htmlTranslation(new HtmlBuilder("a").attribute("name", 0).body(-1, " ").inline());
+        htmlTranslation(Translate.with(ToHtml::anchorName).child(0));
     }
 
     @Override

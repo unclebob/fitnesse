@@ -1,5 +1,6 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.shared.ContentsItemBuilder;
 import org.junit.Test;
 
 import fitnesse.html.HtmlElement;
@@ -49,7 +50,7 @@ public class ContentsItemTest {
     @Test
     public void assertBuildsSymbolicLinkSuffix() throws Exception{
         Symbol contents = new Symbol(new Contents());
-        contents.add(new Symbol(SymbolType.Text, "-p"));
+        contents.putProperty("-p", "");
 
         WikiPage root = InMemoryPage.makeRoot("RooT");
         WikiPage pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "page one");
@@ -76,8 +77,8 @@ public class ContentsItemTest {
 
     private void assertBuilds(String page, String[] properties, String option, String variable, String result) throws Exception {
         Symbol contents = new Symbol(new Contents());
-        contents.add(new Symbol(SymbolType.Text, option));
-        contents.evaluateVariables(new String[] {variable},new TestVariableSource(variable, "true"));
+        contents.putProperty(option, "");
+        contents.copyVariables(new String[] {variable},new TestVariableSource(variable, "true"));
         ContentsItemBuilder builder = new ContentsItemBuilder(contents, 1);
         assertEquals("<li>" + HtmlElement.endl + "\t" + result + HtmlElement.endl + "</li>" + HtmlElement.endl,
                 builder.buildItem(new WikiSourcePage(withProperties(new TestRoot().makePage(page), properties))).html());

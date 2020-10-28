@@ -713,12 +713,11 @@ public class ScriptTableTest {
   @Test
   public void sendHtmlInstructionForTable() throws Exception {
     String newLine = System.getProperty("line.separator");
-    String testPage = "!define BONUSRatingTbl {| RATING_NBR | DESCR2 |\n" +
-      "| 1 | Met 100% of goals |\n" +
-      "| 2 | Met < 50% of goals |\n" +
-      "}\n" +
+    String testPage =
       "| script |\n" +
-      "| show | echo | ${BONUSRatingTbl}|\n";
+      "| show | echo | !(| RATING_NBR | DESCR2 |\n" +
+      "| 1 | Met 100% of goals |\n" +
+      "| 2 | Met < 50% of goals |)! |\n";
     st = makeScriptTable(testPage, false);
     assertions.addAll(st.getAssertions());
     assertEquals(assertions.toString(), 2, assertions.size());

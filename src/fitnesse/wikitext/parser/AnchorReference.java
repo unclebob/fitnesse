@@ -1,15 +1,15 @@
 package fitnesse.wikitext.parser;
 
-import fitnesse.html.HtmlUtil;
+import fitnesse.wikitext.shared.ToHtml;
 
 import java.util.List;
 
-public class AnchorReference extends SymbolType implements Rule, Translation {
+public class AnchorReference extends SymbolType implements Rule {
     public AnchorReference() {
         super("AnchorReference");
         wikiMatcher(new Matcher().string(".#"));
         wikiRule(this);
-        htmlTranslation(this);
+        htmlTranslation(Translate.with(ToHtml::anchorReference).child(0));
     }
 
     @Override
@@ -21,11 +21,5 @@ public class AnchorReference extends SymbolType implements Rule, Translation {
         if (!ScanString.isWord(anchor)) return Symbol.nothing;
 
         return new Maybe<>(current.add(tokens.get(0)));
-    }
-
-    @Override
-    public String toTarget(Translator translator, Symbol symbol) {
-        String name = translator.translate(symbol.childAt(0));
-        return HtmlUtil.makeLink("#" + name, ".#" + name).html();
     }
 }

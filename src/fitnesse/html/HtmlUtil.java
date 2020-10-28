@@ -68,9 +68,4 @@ public class HtmlUtil {
   public static String escapeWiki(String value) {
       return replaceStrings(value, specialWikiChars, specialWikiEscapes);
   }
-
-  public static String remainRfc3986UnreservedCharacters(final String heading) {
-    return heading.replaceAll("[^A-Za-z0-9\\-._~]", "");
-  }
-
 }
