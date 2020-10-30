@@ -61,6 +61,6 @@ public class ReferenceRenamingTraverser implements TraversalListener<WikiPage> {
   }
 
   private String getUpdatedPageContent(WikiPage currentPage) {
-    return MarkUpSystem.make().changeReferences(currentPage, reference -> changeReference.changeReference(currentPage, reference));
+    return MarkUpSystem.make().changeReferences(new WikiSourcePage(currentPage), reference -> changeReference.changeReference(currentPage, reference));
   }
 }
