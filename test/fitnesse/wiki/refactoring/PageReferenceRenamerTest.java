@@ -179,9 +179,8 @@ public class PageReferenceRenamerTest {
   }
 
   @Test
-  public void testAliasTagNotChanged() {
-    final String ALIAS_LINK = "[[PageTwo][MyPageTwo]]";
-    checkChangesOnPageOne(ALIAS_LINK, ALIAS_LINK);
+  public void testAliasTagChanged() {
+    checkChangesOnPageOne("[[PageTwo][MyPageTwo]]", "[[PageThree][MyPageTwo]]");
   }
 
   @Test

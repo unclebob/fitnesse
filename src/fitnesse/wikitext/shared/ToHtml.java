@@ -41,7 +41,18 @@ public class ToHtml {
     HtmlTag result =  HtmlTag.name("img").attribute("src", strings[0]);
     source.findProperty(Names.IMAGE_CLASS).ifPresent(value -> result.addAttribute("class", value));
     source.findProperty(Names.IMAGE_WIDTH).ifPresent(value -> result.addAttribute("width", value));
+    String style =
+      source.findProperty(Names.IMAGE_BORDER).map(value -> "border:" + value + "px solid black;").orElse("") +
+      source.findProperty(Names.IMAGE_MARGIN).map(value -> "margin:" + value + "px;").orElse("");
+    if (style.length() > 0) result.addAttribute("style", style);
     return result.htmlInline();
+  }
+
+  public static String link(String[] strings) {
+    String url = strings[0] + strings[1];
+    String description = strings[2].length() > 0 ? strings[2] : url;
+    int files = url.indexOf("//files/");
+    return HtmlTag.name("a").attribute("href", files < 0 ? url : url.substring(files + 2)).body(description).htmlInline();
   }
 
   public static String nestedPair(String[] strings) {
