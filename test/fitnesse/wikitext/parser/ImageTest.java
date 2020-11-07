@@ -42,7 +42,7 @@ public class ImageTest {
 
     @Test
     public void imageWithMargin() {
-        ParserTestHelper.assertTranslatesTo("!img -m 10 name", "<img src=\"name\" style=\"margin:10px 10px 10px 10px;\"/>");
+        ParserTestHelper.assertTranslatesTo("!img -m 10 name", "<img src=\"name\" style=\"margin:10px;\"/>");
     }
 
     @Test
@@ -52,7 +52,7 @@ public class ImageTest {
 
     @Test
     public void imageWithMarginBorderWidth() {
-        ParserTestHelper.assertTranslatesTo("!img -m 5 -b 1 -w 50 name", "<img src=\"name\" width=\"50\" style=\"border:1px solid black;margin:5px 5px 5px 5px;\"/>");
+        ParserTestHelper.assertTranslatesTo("!img -m 5 -b 1 -w 50 name", "<img src=\"name\" width=\"50\" style=\"border:1px solid black;margin:5px;\"/>");
     }
 /*  @Test public void ImageIsPreserved() {
     assertRoundTrip("!img-l -m 5 -w 10 -b 2 PrettyNice");

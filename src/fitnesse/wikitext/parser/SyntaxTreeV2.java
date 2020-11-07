@@ -50,10 +50,16 @@ public class SyntaxTreeV2 implements SyntaxTree {
         if (node.isType(WikiWord.symbolType)) {
           changeReference.apply(node.getContent()).ifPresent(node::setContent);
         } else if (node.isType(Alias.symbolType)) {
-          Symbol wikiWord = node.childAt(1).childAt(0);
-          String aliasReference = wikiWord.getContent();
-          if (PathParser.isWikiPath(aliasReference)) {
-            changeReference.apply(aliasReference).ifPresent(wikiWord::setContent);
+          Symbol wikiWord = node.childAt(0).childAt(0);
+          if (wikiWord.isType(WikiWord.symbolType)) {
+            changeReference.apply(wikiWord.getContent()).ifPresent(wikiWord::setContent);
+          }
+          else {
+            wikiWord = node.childAt(1).childAt(0);
+            String aliasReference = wikiWord.getContent();
+            if (PathParser.isWikiPath(aliasReference)) {
+              changeReference.apply(aliasReference).ifPresent(wikiWord::setContent);
+            }
           }
         }
       },

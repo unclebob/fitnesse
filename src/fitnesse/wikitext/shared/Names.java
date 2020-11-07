@@ -19,4 +19,13 @@ public class Names {
   //properties for the header widgets
   public static final String LEVEL = "level";
   public static final String ID = "id";
+
+  // properties for the !img widget
+  public static final String IMAGE_BORDER= "-b";
+  public static final String IMAGE_MARGIN = "-m";
+  public static final String IMAGE_WIDTH = "-w";
+  public static final String IMAGE_CLASS = "image";
+  // values for the image class
+  public static final String LEFT = "left";
+  public static final String RIGHT = "right";
 }

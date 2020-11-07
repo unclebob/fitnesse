@@ -1,8 +1,7 @@
 package fitnesse.wikitext.parser;
 
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiSourcePage;
 import fitnesse.wikitext.ParsingPage;
+import fitnesse.wikitext.SourcePage;
 import fitnesse.wikitext.SyntaxTree;
 import fitnesse.wikitext.MarkUpSystem;
 
@@ -26,16 +25,16 @@ public class MarkUpSystemV2 implements MarkUpSystem {
   }
 
   @Override
-  public void findWhereUsed(WikiPage page, Consumer<String> takeWhereUsed) {
+  public void findWhereUsed(SourcePage page, Consumer<String> takeWhereUsed) {
     SyntaxTreeV2 syntaxTree = new SyntaxTreeV2(SymbolProvider.refactoringProvider);
-    syntaxTree.parse(page.getData().getContent(), new ParsingPage(new WikiSourcePage(page)));
+    syntaxTree.parse(page.getContent(), new ParsingPage(page));
     syntaxTree.findWhereUsed(takeWhereUsed);
   }
 
   @Override
-  public String changeReferences(WikiPage page, Function<String, Optional<String>> changeReference) {
+  public String changeReferences(SourcePage page, Function<String, Optional<String>> changeReference) {
     SyntaxTreeV2 syntaxTree = new SyntaxTreeV2(SymbolProvider.refactoringProvider);
-    syntaxTree.parse(page.getData().getContent(), new ParsingPage(new WikiSourcePage(page)));
+    syntaxTree.parse(page.getContent(), new ParsingPage(page));
     syntaxTree.findReferences(changeReference);
     return syntaxTree.translateToMarkUp();
   }
