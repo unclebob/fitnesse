@@ -74,7 +74,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
       currentWriter
         .write("</title><meta http-equiv='Content-Type' content='text/html;charset=" + FileUtil.CHARENCODING + "'/>"
           + "<link rel='stylesheet' type='text/css' href='css/fitnesse.css'/>"
-          + "<script src='javascript/jquery-1.11.3.min.js' type='text/javascript'></script>"
+          + "<script src='javascript/jquery-3.5.1.min.js' type='text/javascript'></script>"
           + "<script src='javascript/fitnesse.js' type='text/javascript'></script>" + "</head><body><header><h2>");
       currentWriter.write(testName);
       currentWriter.write("</h2></header><article>");
@@ -126,7 +126,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
       addFile(cssDir + "fitnesse_pages.css", "css/fitnesse_pages.css");
       addFile(cssDir + "fitnesse_straight.css", "css/fitnesse_straight.css");
       String javascriptDir = base + "javascript/";
-      addFile(javascriptDir + "jquery-1.11.3.min.js", "javascript/jquery-1.11.3.min.js");
+      addFile(javascriptDir + "jquery-3.5.1.min.js", "javascript/jquery-3.5.1.min.js");
       addFile(javascriptDir + "fitnesse.js", "javascript/fitnesse.js");
       String imagesDir = base + "images/";
       addFile(imagesDir + "collapsibleOpen.png", "images/collapsibleOpen.png");
