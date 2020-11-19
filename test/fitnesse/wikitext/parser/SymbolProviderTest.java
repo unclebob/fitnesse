@@ -2,6 +2,7 @@ package fitnesse.wikitext.parser;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
 public class SymbolProviderTest {
@@ -24,6 +25,20 @@ public class SymbolProviderTest {
     parentProvider.add(SymbolType.OpenBrace);
     assertMatches(testProvider, testMatch, '{');
    }
+
+   @Test
+   public void copiedProviderMatchesOriginal() {
+     SymbolProvider testProvider = new SymbolProvider(new SymbolType[] {SymbolType.OpenBrace});
+     SymbolProvider copiedProvider = SymbolProvider.copy(testProvider);
+     assertMatches(copiedProvider, testMatch, '{');
+   }
+
+  @Test
+  public void symbolTypeCanBeRemovedFromProvider() {
+    SymbolProvider testProvider = new SymbolProvider(new SymbolType[] {SymbolType.OpenBrace});
+    testProvider.remove(SymbolType.OpenBrace);
+    assertMatches(testProvider, SymbolMatch.noMatch, '{');
+  }
 
   private void assertMatches(SymbolProvider testProvider, final SymbolMatch expected, char startCharacter) {
     SymbolMatch result = testProvider.findMatch(startCharacter, new SymbolMatcher() {
