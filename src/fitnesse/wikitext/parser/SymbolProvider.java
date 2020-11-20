@@ -32,6 +32,12 @@ public class SymbolProvider {
     new Headings()
   });
 
+  public static final SymbolProvider noLinksTableParsingProvider = SymbolProvider.copy(wikiParsingProvider)
+    .remove(WikiWord.symbolType)
+    .remove(SymbolType.EMail)
+    .remove(Link.symbolType)
+    .add(SymbolType.EndCell);
+
   public static final SymbolProvider tableParsingProvider = new SymbolProvider(wikiParsingProvider).add(SymbolType.EndCell);
 
   public static final SymbolProvider aliasLinkProvider = new SymbolProvider(

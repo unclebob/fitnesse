@@ -170,7 +170,8 @@ public class ContextConfigurator {
           variableSource,
           theme);
 
-    SymbolProvider symbolProvider = SymbolProvider.wikiParsingProvider;
+    SymbolProvider wikiParsingProvider = SymbolProvider.wikiParsingProvider;
+    SymbolProvider noLinksTableParsingProvider = SymbolProvider.noLinksTableParsingProvider;
 
     SlimTableDefaultColoring.createInstanceIfNeeded(slimTableFactory);
     SlimTableDefaultColoring.install();
@@ -184,7 +185,8 @@ public class ContextConfigurator {
     }
     pluginsLoader.loadTestSystems(testSystemFactory);
     pluginsLoader.loadFormatters(formatterFactory);
-    pluginsLoader.loadSymbolTypes(symbolProvider);
+    pluginsLoader.loadSymbolTypes(wikiParsingProvider);
+    pluginsLoader.loadSymbolTypes(noLinksTableParsingProvider);
     pluginsLoader.loadSlimTables(slimTableFactory);
     pluginsLoader.loadCustomComparators(customComparatorRegistry);
     pluginsLoader.loadTestRunFactories(context.testRunFactoryRegistry);
