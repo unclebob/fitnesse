@@ -23,6 +23,10 @@ public class Table extends SymbolType implements Rule, Translation {
     htmlTranslation(this);
   }
 
+  public Table(String name) {
+    super(name);
+  }
+
   @Override
   public Maybe<Symbol> parse(Symbol current, Parser parser) {
     String content = current.getContent();
@@ -50,7 +54,7 @@ public class Table extends SymbolType implements Rule, Translation {
     return new Maybe<>(current);
   }
 
-  private Symbol parseCell(Parser parser, String content) {
+  protected Symbol parseCell(Parser parser, String content) {
     Symbol cell = (content.contains("!"))
       ? parser.parseToWithSymbols(cellTerminators, SymbolProvider.literalTableProvider, ParseSpecification.tablePriority)
       : parser.parseToWithSymbols(cellTerminators, SymbolProvider.tableParsingProvider, ParseSpecification.tablePriority);
