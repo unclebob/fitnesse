@@ -60,3 +60,29 @@
 |Response Examiner.|
 |type|pattern|matches?|
 |contents|!-''italic''-!|true|
+#
+
+
+'''Test that wikiwords, http links and e-mail adresses don't get interpreted inside no-links tables.'''
+|script                                               |
+|start|Page Builder                                   |
+|line |!-^|WikiWord|https://localhost|test@mail.com|-!|
+|page |!-TableTestPageFour-!                          |
+#
+#
+|Response Requester.                   |
+|uri                  |valid?|contents?|
+|!-TableTestPageFour-!|true  |         |
+#
+#
+|Response Examiner.                                               |
+|type    |pattern                          |matches?|wrapped html?|
+|contents|!-&lt;td&gt;WikiWord&lt;/td&gt;-!|true    |             |
+#
+|Response Examiner.                                                                                                |
+|type    |pattern                                                                                         |matches?|
+|contents|!-WikiWord&lt;a title="create page" href="WikiWord?edit&amp;nonExistent=true"&gt;[?]&lt;/a&gt;-!|false   |
+|contents|!-&lt;td&gt;https://localhost&lt;/td&gt;-!                                                      |true    |
+|contents|!-&lt;a href="https://localhost"&gt;https://localhost&lt;/a&gt;-!                               |false   |
+|contents|!-&lt;td&gt;test@mail.com&lt;/td&gt;-!                                                          |true    |
+|contents|!-&lt;a href="mailto:test@mail.com"&gt;test@mail.com&lt;/a&gt;-!                                |false   |
