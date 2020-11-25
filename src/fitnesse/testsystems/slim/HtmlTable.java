@@ -33,8 +33,8 @@ public class HtmlTable implements Table {
   private static final String SYMBOL_ASSIGNMENT = "\\$[A-Za-z]\\w*<?->?\\[|\\$`[^`]+`<?->?\\[";
   private static final String SYMBOL_ASSIGNMENT_SUFFIX = "\\]";
 
-  private static final Pattern HTML_PATTERN = Pattern.compile("^(?:" + SYMBOL_ASSIGNMENT + ")?" +
-                                                                HtmlUtil.HTML_CELL_CONTENT_PATTERN_TEXT +
+  private static final Pattern HTML_PATTERN = Pattern.compile("^(?:" + SYMBOL_ASSIGNMENT + ")?.*" +
+                                                                HtmlUtil.HTML_CELL_CONTENT_PATTERN_TEXT + ".*" +
                                                                 SYMBOL_ASSIGNMENT_SUFFIX + "?$",
                                                           Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
   private static final Pattern SYMBOL_REPLACEMENT_PATTERN = Pattern.compile("^(" + SYMBOL_ASSIGNMENT + ")(.*)(" +
@@ -444,7 +444,7 @@ public class HtmlTable implements Table {
   }
 
   private static String asHtml(String text) {
-    if (qualifiesAsHtml(text)) {
+    if (qualifiesAsHtml(text) || qualifiesAsConvertedList(text)) {
       if (qualifiesAsSymbolReplacement(text)) {
         int contentOffset = text.indexOf('[');
         String assignment = text.substring(0, contentOffset);
@@ -468,6 +468,10 @@ public class HtmlTable implements Table {
     return text.startsWith("$") && SYMBOL_REPLACEMENT_PATTERN.matcher(text).matches();
   }
 
+  static boolean qualifiesAsConvertedList(String text) {
+    return text.startsWith("[") && text.endsWith("]");
+  }
+
   private static String[] parseSymbol(String text) {
     Matcher matcher = SYMBOL_REPLACEMENT_PATTERN.matcher(text);
     String[] symbols = new String[] {"","",""};
@@ -482,8 +486,8 @@ public class HtmlTable implements Table {
   }
 
   static boolean qualifiesAsHtml(String text) {
-    // performance improvement: First check 1st character.
-    return (text.startsWith("<") || text.startsWith("$")) && HTML_PATTERN.matcher(text).matches();
+    // performance improvement: First check for lt character.
+    return (text.contains("<") || text.startsWith("$")) && HTML_PATTERN.matcher(text).matches();
   }
 
 }

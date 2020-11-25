@@ -21,7 +21,7 @@ public class HtmlUtil {
               "blockquote|ins|del|object|map|video|audio|figure|table|fieldset|canvas|a|em|strong|small|mark|" +
               "abbr|dfn|i|b|s|u|code|var|samp|kbd|sup|sub|q|cite|span|br|ins|del|img|embed|object|video|audio|label|" +
               "output|datalist|progress|command|canvas|time|meter)([ >].*</\\1>|[^>]*/>)";
-  private static final Pattern HTML_PATTERN = Pattern.compile("^" + HTML_CELL_CONTENT_PATTERN_TEXT + "$",
+  private static final Pattern HTML_PATTERN = Pattern.compile("^.*" + HTML_CELL_CONTENT_PATTERN_TEXT + ".*$",
                                                         Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
   public static HtmlTag makeBold(String content) {
@@ -49,8 +49,8 @@ public class HtmlUtil {
   }
 
   public static boolean isValidTableCellContent(String text) {
-    // performance improvement: First check 1st character.
-    return text.startsWith("<") && HTML_PATTERN.matcher(text).matches();
+    // performance improvement: First check for lt character.
+    return text.contains("<") && HTML_PATTERN.matcher(text).matches();
   }
 
   public static String escapeHTML(String value) {
