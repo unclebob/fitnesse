@@ -500,7 +500,7 @@ public class HtmlTable implements Table {
   }
 
   static boolean qualifiesAsHtml(String text) {
-    // performance improvement: First check for first character.
+    // performance improvement: First check for 1st character.
     return (text.startsWith("<") || text.startsWith("$")) && HTML_PATTERN.matcher(text).matches();
   }
 
