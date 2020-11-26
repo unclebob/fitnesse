@@ -455,7 +455,7 @@ public class HtmlTable implements Table {
       }
       return text;
     }
-    if(containsHtml(text) && qualifiesAsConvertedList(text)) {
+    if (containsHtml(text) && qualifiesAsConvertedList(text)) {
       return text;
     }
     return HtmlUtil.escapeHTML(text);
@@ -505,5 +505,4 @@ public class HtmlTable implements Table {
   }
 
 }
-
 
