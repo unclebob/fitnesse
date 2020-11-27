@@ -455,7 +455,7 @@ public class HtmlTable implements Table {
       }
       return text;
     }
-    if(containsHtml(text) && qualifiesAsConvertedList(text)) {
+    if (containsHtml(text) && qualifiesAsConvertedList(text)) {
       return text;
     }
     return HtmlUtil.escapeHTML(text);
@@ -474,7 +474,7 @@ public class HtmlTable implements Table {
   }
 
   public static boolean qualifiesAsConvertedList(String text) {
-    if(qualifiesAsSymbolReplacement(text)) {
+    if (qualifiesAsSymbolReplacement(text)) {
       int contentOffset = text.indexOf('[');
       String symbolContent = text.substring(contentOffset + 1, text.length() -1);
       return qualifiesAsConvertedList(symbolContent);
@@ -505,5 +505,3 @@ public class HtmlTable implements Table {
   }
 
 }
-
-
