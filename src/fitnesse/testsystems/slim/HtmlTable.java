@@ -37,8 +37,8 @@ public class HtmlTable implements Table {
                                                                 HtmlUtil.HTML_CELL_CONTENT_PATTERN_TEXT +
                                                                 SYMBOL_ASSIGNMENT_SUFFIX + "?$",
                                                           Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-  private static final Pattern CONTAINS_HTML_PATTERN = Pattern.compile(".*" + HtmlUtil.HTML_CELL_CONTENT_PATTERN_TEXT + ".*",
-    Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+  private static final Pattern CONTAINS_TABLE_HTML_PATTERN = Pattern.compile(".*(<table.*?>.*</table>).*",
+                                                                          Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
   private static final Pattern SYMBOL_REPLACEMENT_PATTERN = Pattern.compile("^(" + SYMBOL_ASSIGNMENT + ")(.*)(" +
           SYMBOL_ASSIGNMENT_SUFFIX + ")$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
@@ -455,7 +455,7 @@ public class HtmlTable implements Table {
       }
       return text;
     }
-    if (containsHtml(text) && qualifiesAsConvertedList(text)) {
+    if (containsHtmlTable(text) && qualifiesAsConvertedList(text)) {
       return text;
     }
     return HtmlUtil.escapeHTML(text);
@@ -482,8 +482,8 @@ public class HtmlTable implements Table {
     return text.startsWith("[") && text.endsWith("]");
   }
 
-  static boolean containsHtml(String text) {
-    return text.contains("<") && CONTAINS_HTML_PATTERN.matcher(text).matches();
+  static boolean containsHtmlTable(String text) {
+    return text.contains("<") && CONTAINS_TABLE_HTML_PATTERN.matcher(text).matches();
   }
 
   private static String[] parseSymbol(String text) {
