@@ -483,7 +483,7 @@ public class HtmlTable implements Table {
   }
 
   static boolean containsHtml(String text) {
-    return CONTAINS_HTML_PATTERN.matcher(text).matches();
+    return text.contains("<") && CONTAINS_HTML_PATTERN.matcher(text).matches();
   }
 
   private static String[] parseSymbol(String text) {
