@@ -22,9 +22,20 @@ If you don't want any markup directives interpreted in the table, then you can u
 |!1 like a literal|--and is especially useful--|''for test tables.''|
 |^SinceTheyTend| * to have WikiWord symbols in them.|
 
+!2 No Link Generating tables
+If you don't want Wikiwords, URL's or E-mail adresses interpreted in the table, but you do want symbols like !-!today-! interpreted, then you can use a special form where your table is preceded with a ^ character:
+'''Markup Text'''
+{{{^|ThisTableWillExclude|WikiWords, http://links|and email@adress.es          |
+|from being parsed,  |however                |''it will respect formatting''|
+|and parse symbols like !-!today (yyyyMMdd)-!                               |}}}
+'''Displays as:'''
+^|ThisTableWillExclude|WikiWords, http://links|and email@adress.es          |
+|from being parsed,  |however                |''it will respect formatting''|
+|and parse symbols like !today (yyyyMMdd)                                   |
+
 !2 Hidden table heads
 You can hide the first row of a table. This allows you to write comment tables that just look like ordinary HTML tables.
-The complete table still gets executed, the first row is just hidden by a CSS rule. 
+The complete table still gets executed, the first row is just hidden by a CSS rule.
 Precede the first row with a '-'. This also works for literal tables.
 
 '''Markup Text'''
