@@ -1,4 +1,7 @@
-import org.gradle.api.tasks.*
+import org.gradle.api.tasks.InputDirectory
+import org.gradle.api.tasks.JavaExec
+import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.TaskAction
 
 class LessCompiler extends JavaExec {
   @InputDirectory
@@ -12,7 +15,6 @@ class LessCompiler extends JavaExec {
   @TaskAction
   public void exec() {
     inputDir.mkdirs()
-    main "org.mozilla.javascript.tools.shell.Main"
     args "extra/lesscss/less-rhino-1.7.0.js", new File(inputDir, mainLessFile)
     standardOutput = cssFile.newOutputStream()
     super.exec()
