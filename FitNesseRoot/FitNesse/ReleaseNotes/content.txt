@@ -1,4 +1,7 @@
 !2 ${FITNESSE_VERSION}
+* New table type: 'No links table' to create tables where wiki-words, email addresses and URLs are not automatically converted to hyperlinks ([[1310][https://github.com/unclebob/fitnesse/pull/1310]])
+* Upgrade bootstrap to 4.5.3 and JQuery to 3.5.1 ([[1309][https://github.com/unclebob/fitnesse/pull/1309]])
+* Bugfix: rendering of maps inside lists ([[1311][https://github.com/unclebob/fitnesse/pull/1311]])
 
 !2 20200501
  * Bugfix: very slow rendering of pages having multiple tables defined via symbols ([[1280][https://github.com/unclebob/fitnesse/issues/1280]]).
