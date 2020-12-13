@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+
+!2 20201213
 * New table type: 'No links table' to create tables where wiki-words, email addresses and URLs are not automatically converted to hyperlinks ([[1310][https://github.com/unclebob/fitnesse/pull/1310]])
 * Facilitate running a suite in partitions by adding a JUnit !-RunListener-! and Gradle !-TestListener-! that generate XML result files per page, instead of per suite. ([[1297][https://github.com/unclebob/fitnesse/pull/1297]])
 * Upgrade bootstrap to 4.5.3 and JQuery to 3.5.1 ([[1309][https://github.com/unclebob/fitnesse/pull/1309]])
