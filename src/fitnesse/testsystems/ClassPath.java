@@ -45,8 +45,8 @@ public class ClassPath {
     String location = findLocationForClass(testRunner);
     if (location != null) {
       List<String> newElements = new ArrayList<>();
-      newElements.add(location);
       newElements.addAll(elements);
+      newElements.add(location);
       return new ClassPath(newElements, separator);
     }
     return this;
