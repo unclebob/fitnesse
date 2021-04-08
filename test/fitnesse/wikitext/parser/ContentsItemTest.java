@@ -47,6 +47,12 @@ public class ContentsItemTest {
         assertBuildsOption("PlainItem", new String[]{}, "-g", "REGRACE_TOC", "<a href=\"PlainItem\" class=\"static\">Plain Item</a>");
     }
 
+  @Test
+  public void buildsTestPageCount() throws Exception {
+    assertBuildsOption("PlainItem", new String[]{"Suite=true"}, "-c", "TEST_PAGE_COUNT_TOC",
+            "<a href=\"PlainItem\" class=\"suite\">PlainItem(Test pages:0)</a>");
+  }
+
     @Test
     public void assertBuildsSymbolicLinkSuffix() throws Exception{
         Symbol contents = new Symbol(new Contents());

@@ -12,6 +12,7 @@ public class Names {
   public static final String PROPERTY_CHARACTERS = "PROPERTY_CHARACTERS";
   public static final String PROPERTY_TOC = "PROPERTY_TOC";
   public static final String REGRACE_TOC = "REGRACE_TOC";
+  public static final String TEST_PAGE_COUNT_TOC = "TEST_PAGE_COUNT_TOC";
 
   // variable for the expression widget
   public static final String FORMAT_LOCALE = "FORMAT_LOCALE";
