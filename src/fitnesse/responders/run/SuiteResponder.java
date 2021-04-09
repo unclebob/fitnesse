@@ -292,7 +292,10 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   }
 
   protected String getRerunPageName() {
-    return "RerunLastFailures";
+    PageCrawler pageCrawler = page.getPageCrawler();
+    WikiPagePath fullPath = pageCrawler.getFullPath();
+    String fullPathName = PathParser.render(fullPath);
+    return "RerunLastFailures_"+fullPathName.replace(".","-");
   }
 
   protected String getTitle() {
