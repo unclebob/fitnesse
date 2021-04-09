@@ -116,6 +116,7 @@ ${SPC}${SPC}'' N.B.: Multiple asterisks are allowed, e.g.,'' ${BANG}'''****'''${
 | Contents List - Properties | ${CODE} ${BANG}'''contents -p'''     ${CODEend} |
 | Contents List - Suite Filters | ${CODE} ${BANG}'''contents -f'''     ${CODEend} |
 | Contents List - Help Text | ${CODE} ${BANG}'''contents -h'''     ${CODEend} |
+| Contents List - Test Page Count | ${CODE} ${BANG}'''contents -c'''     ${CODEend} |
 )
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
