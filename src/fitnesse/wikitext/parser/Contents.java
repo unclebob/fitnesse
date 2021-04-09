@@ -39,7 +39,8 @@ public class Contents extends SymbolType implements Rule, Translation {
                   Names.PROPERTY_TOC,
                   Names.FILTER_TOC,
                   Names.MORE_SUFFIX_TOC,
-                  Names.PROPERTY_CHARACTERS},
+                  Names.PROPERTY_CHARACTERS,
+                  Names.TEST_PAGE_COUNT_TOC},
                 parser.getVariableSource());
 
         return new Maybe<>(current);

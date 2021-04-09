@@ -12,6 +12,7 @@ import util.GracefulNamer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 
 public class ContentsItemBuilder {
     private final PropertySource contents;
@@ -76,9 +77,33 @@ public class ContentsItemBuilder {
         }
         return listItem;
     }
+    private boolean isSpecialPageToBeCountedAsTest(SourcePage page){
+      String pageName = page.getName();
+      return pageName.contains("SuiteSetUp") || pageName.contains("SuiteTearDown");
+    }
+
+    private int getTotalTestPagesInASuite(SourcePage page) {
+      if (page.hasProperty(PageType.TEST.toString()) || isSpecialPageToBeCountedAsTest(page)){
+        return 1;
+      }
+      int counter = 0;
+      if (page.hasProperty(PageType.SUITE.toString())) {
+        Iterator<SourcePage> pages = page.getChildren().iterator();
+        while (pages.hasNext()) {
+          SourcePage sourcePage = pages.next();
+          counter += getTotalTestPagesInASuite(sourcePage);
+        }
+      }
+      return counter;
+    }
 
     private String buildBody(SourcePage page) {
         String itemText = page.getName();
+        //Will show count of test pages under this suite
+        if (hasOption("-c", Names.TEST_PAGE_COUNT_TOC)) {
+          if (page.hasProperty(PageType.SUITE.toString()))
+            itemText += " ( " + getTotalTestPagesInASuite(page) + " )";
+        }
 
         if (hasOption("-g", Names.REGRACE_TOC)) {
             //todo: DRY? see wikiwordbuilder
