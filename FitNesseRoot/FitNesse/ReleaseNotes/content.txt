@@ -1,4 +1,7 @@
-!2 ${FITNESSE_VERSION}
+!2 20210410
+* Ability to show number of test pages in table of context of suite. ([[1318][https://github.com/unclebob/fitnesse/pull/1318]])
+* Create distinct rerun failed page per suite, to allow concurent suites to run. ([[1316][https://github.com/unclebob/fitnesse/pull/1316]])
+* Small change of classpath ordering. ([[1317][https://github.com/unclebob/fitnesse/pull/1317]])
 
 !2 20201213
 * New table type: 'No links table' to create tables where wiki-words, email addresses and URLs are not automatically converted to hyperlinks ([[1310][https://github.com/unclebob/fitnesse/pull/1310]])
