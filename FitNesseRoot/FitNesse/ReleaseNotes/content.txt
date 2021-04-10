@@ -1,3 +1,5 @@
+!2 ${FITNESSE_VERSION}
+
 !2 20210410
 * Ability to show number of test pages in table of context of suite. ([[1318][https://github.com/unclebob/fitnesse/pull/1318]])
 * Create distinct rerun failed page per suite, to allow concurent suites to run. ([[1316][https://github.com/unclebob/fitnesse/pull/1316]])
