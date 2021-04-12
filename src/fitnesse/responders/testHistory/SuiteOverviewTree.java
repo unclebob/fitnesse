@@ -1,15 +1,15 @@
 package fitnesse.responders.testHistory;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.LinkedList;
-import java.util.List;
-
 import fitnesse.reporting.history.MostRecentPageHistoryReader;
 import fitnesse.reporting.history.PageHistory;
 import fitnesse.reporting.history.TestResultRecord;
 import fitnesse.wiki.WikiPage;
 import util.GracefulNamer;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.LinkedList;
+import java.util.List;
 
 public class SuiteOverviewTree {
 
@@ -37,7 +37,7 @@ public class SuiteOverviewTree {
 
     for (WikiPage aPage : wikiPagelist)  {
       try {
-        allPages.add(aPage.getPageCrawler().getFullPath().toString());
+        allPages.add(aPage.getFullPath().toString());
       } catch (Exception e) {
         allPages.add("There was also a probem getting the path of one page.");
       }

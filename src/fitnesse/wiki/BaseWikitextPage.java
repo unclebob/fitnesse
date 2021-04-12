@@ -4,15 +4,10 @@ package fitnesse.wiki;
 
 import fitnesse.util.Clock;
 import fitnesse.wiki.fs.WikiPageProperties;
-import fitnesse.wikitext.parser.CompositeVariableSource;
-import fitnesse.wikitext.parser.HtmlTranslator;
+import fitnesse.wikitext.*;
 import fitnesse.wikitext.parser.Maybe;
-import fitnesse.wikitext.parser.Parser;
-import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.SymbolProvider;
-import fitnesse.wikitext.parser.VariableSource;
-import fitnesse.wikitext.parser.WikiSourcePage;
+
+import java.util.Optional;
 
 import static fitnesse.wiki.PageType.STATIC;
 
@@ -23,7 +18,7 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
 
   private final VariableSource variableSource;
   private ParsingPage parsingPage;
-  private Symbol syntaxTree;
+  private SyntaxTree syntaxTree;
 
   protected BaseWikitextPage(String name, VariableSource variableSource) {
     this(name, null, variableSource);
@@ -44,36 +39,27 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
 
   @Override
   public String getVariable(String name) {
-    ParsingPage parsingPage = getParsingPage();
-    Maybe<String> variable = parsingPage.findVariable(name);
-    if (variable.isNothing()) return null;
-
-    Parser parser = Parser.make(parsingPage, "", SymbolProvider.variableDefinitionSymbolProvider);
-    return new HtmlTranslator(null, parsingPage).translate(parser.parseWithParent(variable.getValue(), null));
+    return getSyntaxTree().findVariable(name)
+      .map(value -> MarkUpSystem.make().variableValueToHtml(parsingPage, value))
+      .orElse(null);
   }
 
   @Override
   public String getHtml() {
-    return new HtmlTranslator(new WikiSourcePage(this), getParsingPage()).translateTree(getSyntaxTree());
-  }
-
-  @Override
-  public ParsingPage getParsingPage() {
     parse();
-    return parsingPage;
+    return syntaxTree.translateToHtml();
   }
 
   @Override
-  public Symbol getSyntaxTree() {
+  public SyntaxTree getSyntaxTree() {
     parse();
     return syntaxTree;
   }
 
   private void parse() {
     if (syntaxTree == null) {
-      // This is the only page where we need a VariableSource
       parsingPage = makeParsingPage(this);
-      syntaxTree = Parser.make(parsingPage, getData().getContent()).parse();
+      syntaxTree = MarkUpSystem.make().parse(parsingPage, getData().getContent());
     }
   }
 
@@ -125,12 +111,12 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
     }
 
     @Override
-    public Maybe<String> findVariable(String name) {
+    public Optional<String> findVariable(String name) {
       if(variableSource instanceof UrlPathVariableSource){
         Maybe<String> result = ((UrlPathVariableSource) variableSource).findUrlVariable(name);
-        if (!result.isNothing()) return result;
+        if (!result.isNothing()) return Optional.of(result.getValue());
       }
-      return Maybe.noString;
+      return Optional.empty();
     }
   }
 
@@ -143,17 +129,15 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
     }
 
     @Override
-    public Maybe<String> findVariable(String name) {
+    public Optional<String> findVariable(String name) {
       if (page.isRoot()) {
-        // Get variable from
-        return Maybe.noString;
+        return Optional.empty();
       }
       WikiPage parentPage = page.getParent();
       if (parentPage instanceof WikitextPage) {
-        return ((WikitextPage) parentPage).getParsingPage().findVariable(name);
+        return ((WikitextPage) parentPage).getSyntaxTree().findVariable(name);
       } else {
-        String value = parentPage.getVariable(name);
-        return value != null ? new Maybe<>(value) : Maybe.noString;
+        return Optional.ofNullable(parentPage.getVariable(name));
       }
     }
   }

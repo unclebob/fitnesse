@@ -36,6 +36,6 @@
 |line|5|!-Image should be inline &lt;img src="name"/> with the text-!|
 |line|6|!-&lt;img src="name" class="left" width="200"/>-!|
 |line|7|!-&lt;img src="name" class="right" width="150"/>-!|
-|line|8|!-&lt;img src="name" style="border:1px solid black;margin:5px 5px 5px 5px;"/>-!|
-|line|9|!-&lt;img src="url" class="right" width="640" style="border:2px solid black;margin:10px 10px 10px 10px;"/>-!|
+|line|8|!-&lt;img src="name" style="border:1px solid black;margin:5px;"/>-!|
+|line|9|!-&lt;img src="url" class="right" width="640" style="border:2px solid black;margin:10px;"/>-!|
 

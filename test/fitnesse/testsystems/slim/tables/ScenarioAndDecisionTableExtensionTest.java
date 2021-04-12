@@ -44,7 +44,6 @@ public class ScenarioAndDecisionTableExtensionTest {
     slimTableFactory.addTableType(SCRIPT_EXTENSION_NAME, DiffScriptTable.class);
     root = InMemoryPage.makeRoot("root");
     assertions = new ArrayList<>();
-    ScenarioTable.setDefaultChildClass(ScriptTable.class);
   }
 
   private SlimTestContextImpl makeTables(String scenarioText, String scriptText) throws Exception {
@@ -233,6 +232,10 @@ public class ScenarioAndDecisionTableExtensionTest {
 
     public DiffScriptTable(Table table, String tableId, SlimTestContext context) {
       super(table, tableId, context);
+
+      ScenarioTable scenarioTable = ((ScenarioTable.ScenarioTestContext) context).getScenarioTable();
+      assertEquals(ScenarioTableWithDifferentScript.class, scenarioTable.getClass());
+      assertEquals(SlimTestContextImpl.class, scenarioTable.getTestContext().getClass());
     }
     @Override
     protected String getTableType() {

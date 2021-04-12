@@ -2,17 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
-
 import fitnesse.FitNesseContext;
-import fitnesse.wiki.refactoring.MovedPageReferenceRenamer;
-import fitnesse.wiki.refactoring.ReferenceRenamer;
 import fitnesse.http.Request;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.refactoring.ChangeReference;
+import fitnesse.wiki.refactoring.MovedPageReferenceRenamer;
 
 public class MovePageResponder extends PageMovementResponder {
-
   private String newParentName;
 
   @Override
@@ -39,8 +37,8 @@ public class MovePageResponder extends PageMovementResponder {
 
   @Override
   protected boolean getAndValidateRefactoringParameters(Request request) {
-    WikiPagePath pageToBeMovedPath = oldRefactoredPage.getPageCrawler().getFullPath();
-    WikiPagePath newParentPath = newParentPage.getPageCrawler().getFullPath();
+    WikiPagePath pageToBeMovedPath = oldRefactoredPage.getFullPath();
+    WikiPagePath newParentPath = newParentPage.getFullPath();
 
     return !pageToBeMovedPath.equals(newParentPath) &&
     !selfPage(pageToBeMovedPath, newParentPath) &&
@@ -57,8 +55,8 @@ public class MovePageResponder extends PageMovementResponder {
   }
 
   @Override
-  protected ReferenceRenamer getReferenceRenamer(FitNesseContext context) {
-    return new MovedPageReferenceRenamer(context.getRootPage(), oldRefactoredPage, newParentName);
+  protected ChangeReference getReferenceRenamer() {
+    return new MovedPageReferenceRenamer(oldRefactoredPage, newParentName);
   }
 
   @Override

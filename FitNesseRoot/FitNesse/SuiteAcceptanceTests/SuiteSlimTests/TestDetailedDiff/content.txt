@@ -1,230 +1,40 @@
-!define TEST_SYSTEM {slim}
+!contents -R2 -g -p -f -h
 
-!3 Diff of failed tests
+!define TestPageName {Testpage}
+!define minus (-)
+!define exclamation (!)
+ 
 
-!4 Original intentionally failing tests
+|script                                                            |
+|given test page         |${TestPageName}                          |
+|and Test System setup is|!-!define TEST_SYSTEM-! {slim}${SUT_PATH}|
+|and Test content is                |!include -seamless >TestPage                                                                                    |
+|when page                          |${TestPageName}                                      |is tested and HTML is extracted                           |
+|#when page                          |${TestPageName}                                      |is tested|
+|then                               |25                                                    |assertions pass,|50|fail,|1|are ignored|0|exceptions thrown|
+|note| !4 Tests of strings|
+|ensure| content contains|!-<span class="pass">abc</span>-!|
+|ensure| content contains|!-[<span class="diff">abc</span>] <span class="fail">expected [<span class="diff">xyz</span>]</span>-!|
+|ensure| content contains|!-[<span class="diff">a</span>bc] <span class="fail">expected [<span class="diff">x</span>bc]</span>-!|
+|ensure| content contains|!-[a<span class="diff">b</span>c] <span class="fail">expected [a<span class="diff">y</span>c]</span>-!|
+|ensure| content contains|!-[ab<span class="diff">c</span>] <span class="fail">expected [ab<span class="diff">z</span>]</span>-!|
+|ensure| content contains|!-[] <span class="fail">expected [<span class="diff">xyz</span>]</span>-!|
+|ensure| content contains|!-[<span class="diff">H</span>ello <span class="diff">W</span>or<span class="diff">l</span>d] <span class="fail">expected [<span class="diff">W</span>ell<span class="diff">c</span>o<span class="diff">me</span> <span class="diff">L</span>ord]</span>-!|
+|note| !4 Tests of smbols|
+|ensure| content contains|!-<span class="pass">def</span>-!|
+|ensure| content contains|!-[<span class="diff">def</span>] <span class="fail">expected [<span class="diff">xyz</span>]</span>-!|
+|ensure| content contains|!-[<span class="diff">d</span>ef] <span class="fail">expected [<span class="diff">x</span>ef]</span>-!|
+|ensure| content contains|!-[d<span class="diff">e</span>f] <span class="fail">expected [d<span class="diff">y</span>f]</span>-!|
+|ensure| content contains|!-[de<span class="diff">f</span>] <span class="fail">expected [de<span class="diff">z</span>]</span>-!|
+|ensure| content contains|!-&lt;span class="pass"&gt;$symbol-&gt;[def]&lt;/span&gt;-!|
+|ensure| content contains|!-[<span class="diff">xyz</span>] <span class="fail">expected [$symbol-&gt;[<span class="diff">def</span>]]</span>-!|
+|ensure| content contains|!-[<span class="diff">x</span>ef] <span class="fail">expected [$symbol-&gt;[<span class="diff">d</span>ef]]</span>-!|
+|ensure| content contains|!-[d<span class="diff">y</span>f] <span class="fail">expected [$symbol-&gt;[d<span class="diff">e</span>f]]</span>-!|
+|ensure| content contains|!-[de<span class="diff">z</span>] <span class="fail">expected [$symbol-&gt;[de<span class="diff">f</span>]]</span>-!|
+|ensure| content contains|!-[] <span class="fail">expected [$symbol-&gt;[<span class="diff">def</span>]]</span>-!|
+|note| !4 Tests of scenario|
+|ensure| content contains|!-<span class="pass">hello</span>-!|
+|ensure| content contains|!-[h<span class="diff">e</span>llo] <span class="fail">expected [h<span class="diff">a</span>llo]</span>-!|
+|note| !4 Display Test Results|
+|show Symbol                        |$HTML_Result                                                                                                    |
 
-The subordinate page >TestPage collects the following tests. The page is disabled because of many tests fails intentionally. It is useful for manual tests only.
-
-!4 Test wrapper for test
-
-!*> Tests for type string
-
-!| script |
-|given page|TestPage|with content|${SUT_PATH} !-
-!define TEST_SYSTEM {slim}
-
-!| import |
-| fitnesse.slim.test |
-
-Test Strings by plain compare, neither custom compare nor regular expression.
-In this case detailed diff is wanted.
-
-| Detailed Diff |
-| actual string | expected string? | #comment                                                  |
-| abc           | abc              | equal                                                     |
-| abc           | xyz              | completly different                                       |
-| abc           | xbc              | first char different                                      |
-| abc           | ayc              | middle char different                                     |
-| abc           | abz              | last char different                                       |
-|               | xyz              | actual empty, expected filled                             |
-| abc           |                  | actual filled, expected empty; will be counted as ignored |
-| <&>           | <&>              | equal with HTML special chars                             |
-| <&>           | xyz              | completly different with HTML special chars               |
-| <&>           | x&>              | first char different with HTML special chars              |
-| <&>           | <y>              | middle char different with HTML special chars             |
-| <&>           | <&z              | last char differentwith HTML special chars                |
-|               | <&>              | actual empty, expected filled with HTML special chars     |
-| abc           | <&>              | completly different with HTML special chars               |
-| abc           | <bc              | first char different with HTML special chars              |
-| abc           | a&c              | middle char different with HTML special chars             |
-| abc           | ab>              | last char different with HTML special chars               |
-| Hello World   | Wellcome Lord    | no obvious match                                          |
-
-Test Strings by regular expression.
-In this case no detailed diff is wanted.
-
-| Detailed Diff |
-| actual string | expected string? | #comment |
-| abc           | =~/abc/          | match    |
-| abc           | =~/a.c/          | match    |
-| abc           | =~/\w+/          | match    |
-| abc           | =~/\w{3}/        | match    |
-| abc           | =~/^\w{3}$/      | match    |
-| abc           | =~/\w{1}/        | match    |
-| abc           | =~/^\w{1}$/      | no match |
-| abc           | =~/[ABC]+/       | no match |
-| abc           | =~/[ABC]+/i      | wrong syntax, disable value comparison, use string comparison |
--!|
-|test results for page|TestPage|should contain|!-<span class="pass">abc</span>-!|
-|test results for page|TestPage|should contain|!-[<span class="diff">abc</span>] <span class="fail">expected [</span><span class="diff">xyz</span><span class="fail">]</span>-!|
-|test results for page|TestPage|should contain|!-[<span class="diff">a</span>bc] <span class="fail">expected [</span><span class="diff">x</span><span class="fail">bc]</span>-!|
-|test results for page|TestPage|should contain|!-[a<span class="diff">b</span>c] <span class="fail">expected [a</span><span class="diff">y</span><span class="fail">c]</span>-!|
-|test results for page|TestPage|should contain|!-[ab<span class="diff">c</span>] <span class="fail">expected [ab</span><span class="diff">z</span><span class="fail">]</span>-!|
-|test results for page|TestPage|should contain|!-[] <span class="fail">expected [</span><span class="diff">xyz</span><span class="fail">]</span>-!|
-|test results for page|TestPage|should contain|!-[<span class="diff">H</span>ello <span class="diff">W</span>or<span class="diff">l</span>d] <span class="fail">expected [</span><span class="diff">W</span><span class="fail">ell</span><span class="diff">c</span><span class="fail">o</span><span class="diff">me</span><span class="fail"> </span><span class="diff">L</span><span class="fail">ord]-!|
-*!
-
-!*> Tests for type int
-
-!| script |
-|given page|TestPage|with content|${SUT_PATH} !-
-!define TEST_SYSTEM {slim}
-
-!| import |
-| fitnesse.slim.test |
-
-Test integers by string comparison.
-In this case detailed diff ist wanted.
-
-| Detailed Diff |
-| actual int | expected int? | #comment |
-| 1          | 1             | equal    |
-| 1          | 2             | completly different |
-| 1          | 10            | partially different |
-|            | 1             | completly different |
-
-Test integers by value comparison, see <FitNesse.UserGuide.WritingAcceptanceTests.SliM.ValueComparisons
-In this case no detailed diff is wanted.
-
-| Detailed Diff |
-| actual int | expected int? | #comment |
-| 1          | >=1           | ok |
-| 1          | <2            | ok |
-| 1          | >1            | nok |
-| 1          | =1            | ok |
-| 1          | <1            | nok |
-| 1          | 0<_<2         | ok |
-| 1          | 2<_<0         | nok, logically wrong |
-| 1          | 0>_>2         | wrong syntax, disable value comparison, use string comparison |
-| 1          | 2>_>0         | wrong syntax, disable value comparison, use string comparison |
--!|
-|test results for page|TestPage|should contain||
-*!
-
-!*> Tests for type double
-
-!| script |
-|given page|TestPage|with content|${SUT_PATH} !-
-!define TEST_SYSTEM {slim}
-
-!| import |
-| fitnesse.slim.test |
-
-Test doubles by string comparison.
-In this case detailed diff ist wanted.
-
-| Detailed Diff |
-| actual double | expected double? | #comment |
-| 1.0           | 1.0              | equal    |
-| 1.1           | 222              | completly different |
-| 1.0           | 10               | partially different |
-|               | 1.0              | partially different |
-
-Test doubles by value comparison, see <FitNesse.UserGuide.WritingAcceptanceTests.SliM.ValueComparisons
-In this case no detailed diff is wanted.
-
-| Detailed Diff |
-| actual double | expected double? | #comment |
-| 1             | >=1              | ok |
-| 1             | <2               | ok |
-| 1             | >1               | nok |
-| 1             | =1               | ok |
-| 1             | <1               | nok |
-| 1             | 0<_<2            | ok |
-| 1             | 2<_<0            | nok, logically wrong |
-| 1             | 0>_>2            | wrong syntax, disable value comparison, use string comparison |
-| 1             | 2>_>0            | wrong syntax, disable value comparison, use string comparison |
-| 1.0           | ~=1              | ok |
-| 1.1           | ~=1              | ok |
-| 0.9           | ~=1              | ok |
-| 1.0           | ~=1.0            | ok |
-| 1.1           | ~=1.0            | nok |
-| 0.9           | ~=1.0            | nok |
--!|
-|test results for page|TestPage|should contain||
-*!
-
-!*> Tests of fitnesse symbols
-
-!| script |
-|given page|TestPage|with content|${SUT_PATH} !-
-!define TEST_SYSTEM {slim}
-
-!| import |
-| fitnesse.slim.test |
-Test symbols by string comparison.
-
-| Detailed Diff |
-| actual symbol | expected symbol? | #comment |
-| abc           | $symbol=         | |
-| $symbol       | abc              | |
-| $symbol       | xyz              | |
-| $symbol       | xbc              | |
-| $symbol       | ayc              | |
-| $symbol       | abz              | |
-| abc           | $symbol          | |
-| xyz           | $symbol          | |
-| xbc           | $symbol          | |
-| ayc           | $symbol          | |
-| abz           | $symbol          | |
-|               | $symbol          | |
--!|
-|test results for page|TestPage|should contain|!-<span class="pass">abc</span>-!|
-|test results for page|TestPage|should contain|!-[<span class="diff">abc</span>] <span class="fail">expected [</span><span class="diff">xyz</span><span class="fail">]</span>-!|
-|test results for page|TestPage|should contain|!-[<span class="diff">a</span>bc] <span class="fail">expected [</span><span class="diff">x</span><span class="fail">bc]</span>-!|
-|test results for page|TestPage|should contain|!-[a<span class="diff">b</span>c] <span class="fail">expected [a</span><span class="diff">y</span><span class="fail">c]</span>-!|
-|test results for page|TestPage|should contain|!-[ab<span class="diff">c</span>] <span class="fail">expected [ab</span><span class="diff">z</span><span class="fail">]</span>-!|
-|test results for page|TestPage|should contain|!-&lt;span class="pass"&gt;$symbol-&gt;[abc]&lt;/span&gt;-!|
-|test results for page|TestPage|should contain|!-[<span class="diff">xyz</span>] <span class="fail">expected [$symbol-&gt;[</span><span class="diff">abc</span><span class="fail">]]</span>-!|
-|test results for page|TestPage|should contain|!-[<span class="diff">x</span>bc] <span class="fail">expected [$symbol-&gt;[</span><span class="diff">a</span><span class="fail">bc]]</span>-!|
-|test results for page|TestPage|should contain|!-[a<span class="diff">y</span>c] <span class="fail">expected [$symbol-&gt;[a</span><span class="diff">b</span><span class="fail">c]]</span>-!|
-|test results for page|TestPage|should contain|!-[ab<span class="diff">z</span>] <span class="fail">expected [$symbol-&gt;[ab</span><span class="diff">c</span><span class="fail">]]</span>-!|
-|test results for page|TestPage|should contain|!-[] <span class="fail">expected [$symbol-&gt;[</span><span class="diff">abc</span><span class="fail">]]</span>-!|
-*!
-
-!*> Tests of custom comparator
-
-!| script |
-|given page|TestPage|with content|${SUT_PATH} !-
-!define TEST_SYSTEM {slim}
-
-!| import |
-| fitnesse.slim.test |
-Test custom comparator, see FitNesse.UserGuide.AdministeringFitNesse.ConfigurationFile
-The inverse comparator fitnesse.slim.test.InverseComparator negates the method String.equals(String).
-
-| script | Detailed Diff |
-| note  | everything not equals to 'abc' is ok |
-| check | echo | abc | inverse:xyz |
-| note  | everything not equals to 'abc' is ok |
-| check | echo | abc | inverse:ABC | 
-| note  | everthing not equals to 'abc' is ok |
-| check | echo | abc | inverse:cba | 
-| note  | only 'abc' is nok |
-| check | echo | abc | inverse:abc |
--!|
-|test results for page|TestPage|should contain||
-*!
-
-!*> Tests of scenario
-
-!| script |
-|given page|TestPage|with content|${SUT_PATH} !-
-!define TEST_SYSTEM {slim}
-
-!| import |
-| fitnesse.slim.test |
-Test Scenario and Script
-
-!| Scenario | Detailed Diff Scenario Test |
-| start | Detailed Diff |
-| check | echo | hello | hello |
-| check | echo | hello | hallo |
-
-!| Script |
-| Detailed Diff Scenario Test |
--!|
-|test results for page|TestPage|should contain|!-<span class="pass">hello</span>-!|
-|test results for page|TestPage|should contain|!-[h<span class="diff">e</span>llo] <span class="fail">expected [h</span><span class="diff">a</span><span class="fail">llo]</span>-!|
-*!

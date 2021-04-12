@@ -4,12 +4,12 @@
 | this is ''italic'' text | this is <i>italic</i> text | italic widget |
 | this is '''bold''' text | this is <b>bold</b> text | bold widget |
 | !c This is centered text | <center>This is centered text</center> |
-| !1 header | <h1>header</h1> |
-| !2 header | <h2>header</h2> |
-| !3 header | <h3>header</h3> |
-| !4 header | <h4>header</h4> |
-| !5 header | <h5>header</h5> |
-| !6 header | <h6>header</h6> |
+|!1 header                                          |<h1 id="0">header</h1>                                                                                                                                         |
+|!2 header                                          |<h2 id="0">header</h2>                                                                                                                                         |
+|!3 header                                          |<h3 id="0">header</h3>                                                                                                                                         |
+|!4 header                                          |<h4 id="0">header</h4>                                                                                                                                         |
+|!5 header                                          |<h5 id="0">header</h5>                                                                                                                                         |
+|!6 header                                          |<h6 id="0">header</h6>                                                                                                                                         |
 | http://files/x | <a href="files/x">http://files/x</a> | file link |
 | http://fitnesse.org | <a href="http://fitnesse.org">http://fitnesse.org</a> | http link |
 | SomePage | SomePage<a title="create page" href="SomePage\?edit&nonExistent=true">\[\?\]</a> | missing wiki word |

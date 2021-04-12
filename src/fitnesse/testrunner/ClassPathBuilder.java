@@ -13,11 +13,6 @@ import java.util.Set;
 import fitnesse.components.TraversalListener;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikitextPage;
-import fitnesse.wikitext.parser.HtmlTranslator;
-import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.Paths;
-import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.WikiSourcePage;
 
 public class ClassPathBuilder {
 
@@ -121,9 +116,9 @@ public class ClassPathBuilder {
 
   protected List<String> getItemsFromPage(WikiPage page) {
     if (page instanceof WikitextPage) {
-      Symbol tree = ((WikitextPage) page).getSyntaxTree();
-      ParsingPage parsingPage = ((WikitextPage) page).getParsingPage();
-      return new Paths(new HtmlTranslator(new WikiSourcePage(page), parsingPage)).getPaths(tree);
+      List<String> result = new ArrayList<>();
+      ((WikitextPage) page).getSyntaxTree().findPaths(result::add);
+      return result;
     }
     return Collections.emptyList();
   }

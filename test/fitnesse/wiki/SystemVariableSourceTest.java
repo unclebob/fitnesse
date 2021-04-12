@@ -19,7 +19,7 @@ public class SystemVariableSourceTest {
 
     SystemVariableSource source = new SystemVariableSource(properties);
 
-    assertThat(source.findVariable("TestProp").getValue(), is("found"));
+    assertThat(source.findVariable("TestProp").get(), is("found"));
   }
 
   @Test
@@ -29,7 +29,7 @@ public class SystemVariableSourceTest {
 
     SystemVariableSource source = new SystemVariableSource(properties);
 
-    assertThat(source.findVariable("user.name").getValue(), is(System.getProperty("user.name")));
+    assertThat(source.findVariable("user.name").get(), is(System.getProperty("user.name")));
   }
 
   @Test

@@ -3,9 +3,8 @@ package fitnesse.wiki.fs;
 import java.io.File;
 import java.util.*;
 
-import fitnesse.util.StringUtils;
 import fitnesse.wiki.*;
-import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.VariableSource;
 
 class FileSystemSubWikiPageFactory implements SubWikiPageFactory {
 

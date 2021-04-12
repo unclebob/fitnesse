@@ -2,21 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.versions;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.html.template.HtmlPage;
-import fitnesse.html.template.PageTitle;
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testrunner.WikiTestPageUtil;
 import fitnesse.wiki.PageCrawler;
@@ -26,6 +22,10 @@ import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class VersionResponder implements SecureResponder {
   private String version;
@@ -44,11 +44,11 @@ public class VersionResponder implements SecureResponder {
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
 
-    String fullPathName = PathParser.render(page.getPageCrawler().getFullPath());
+    String fullPathName = PathParser.render(page.getFullPath());
     HtmlPage html = makeHtml(fullPathName, page, context);
 
     SimpleResponse response = new SimpleResponse();
-    response.setContent(html.html());
+    response.setContent(html.html(request));
 
     return response;
   }

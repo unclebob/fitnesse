@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 import fitnesse.wiki.*;
-import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.VariableSource;
 import util.FileUtil;
 
 import static java.lang.String.format;
@@ -119,6 +119,7 @@ public class FileSystemPage extends BaseWikitextPage implements FileBasedWikiPag
     return new PageData(pageData);
   }
 
+  @Override
   public File getFileSystemPath() {
     return this.path;
   }

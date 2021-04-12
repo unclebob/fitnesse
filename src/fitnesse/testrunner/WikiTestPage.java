@@ -1,10 +1,5 @@
 package fitnesse.testrunner;
 
-import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
-
-import fitnesse.components.TraversalListener;
 import fitnesse.testsystems.ClassPath;
 import fitnesse.testsystems.TestPage;
 import fitnesse.wiki.BaseWikitextPage;
@@ -13,16 +8,20 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import fitnesse.wikitext.parser.HtmlTranslator;
-import fitnesse.wikitext.parser.Parser;
-import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.WikiSourcePage;
+import fitnesse.wikitext.MarkUpSystem;
+import fitnesse.wikitext.parser.Include;
+
+import java.io.File;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.BiConsumer;
 
 // TODO: need 2 implementations, one for wiki text pages (Fit, Slim) and one for non-wiki text pages. See PagesByTestSystem
 public class WikiTestPage implements TestPage {
   public static final String TEAR_DOWN = "TearDown";
   public static final String SET_UP = "SetUp";
+  public static final String SCENARIO_LIBRARY = "ScenarioLibrary";
 
   private final WikiPage sourcePage;
   private List<WikiPage> scenarioLibraries;
@@ -43,11 +42,7 @@ public class WikiTestPage implements TestPage {
     // -AJM- Okay, this is not as clean as I'd like it to be, but for now it does the trick
     if (containsWikitext()) {
       String content = getDecoratedContent();
-      ParsingPage parsingPage = BaseWikitextPage.makeParsingPage((BaseWikitextPage) sourcePage);
-
-      Symbol syntaxTree = Parser.make(parsingPage, content).parse();
-
-      return new HtmlTranslator(new WikiSourcePage(sourcePage), parsingPage).translateTree(syntaxTree);
+      return MarkUpSystem.make().parse(BaseWikitextPage.makeParsingPage((BaseWikitextPage) sourcePage), content).translateToHtml();
     } else {
       return sourcePage.getHtml();
     }
@@ -64,7 +59,7 @@ public class WikiTestPage implements TestPage {
 
   @Override
   public String getFullPath() {
-    return PathParser.render(sourcePage.getPageCrawler().getFullPath());
+    return PathParser.render(sourcePage.getFullPath());
   }
 
   @Override
@@ -97,11 +92,11 @@ public class WikiTestPage implements TestPage {
     StringBuilder decoratedContent = new StringBuilder(1024);
     includeScenarioLibraries(decoratedContent);
 
-    includePage(getSetUp(), "-setup", decoratedContent);
+    includeSetUps(decoratedContent);
 
     addPageContent(decoratedContent);
 
-    includePage(getTearDown(), "-teardown", decoratedContent);
+    includeTearDowns(decoratedContent);
 
     return decoratedContent.toString();
   }
@@ -116,25 +111,47 @@ public class WikiTestPage implements TestPage {
 
   protected void includeScenarioLibraries(StringBuilder decoratedContent) {
     final List<WikiPage> libraries = getScenarioLibraries();
-    if (!libraries.isEmpty()) {
-      if (libraries.size() > 1) {
-        decoratedContent.append("!*> Scenario Libraries\n");
-      }
+    includePages("Scenario Libraries", libraries, this::includeScenarioLibrary, decoratedContent);
+  }
 
-      for (WikiPage scenarioLibrary : libraries) {
-        includeScenarioLibrary(scenarioLibrary, decoratedContent);
-      }
+  protected void includeSetUps(StringBuilder decoratedContent) {
+    includeSetUp(getSetUp(), decoratedContent);
+  }
 
-      if (libraries.size() > 1) {
-        decoratedContent.append("*!\n");
-      }
-    }
+  protected void includeTearDowns(StringBuilder decoratedContent) {
+    includeTearDown(getTearDown(), decoratedContent);
   }
 
   protected void includeScenarioLibrary(WikiPage scenarioLibrary, StringBuilder newPageContent) {
-    newPageContent.append("!include -c .");
-    newPageContent.append(getPathNameForPage(scenarioLibrary));
-    newPageContent.append("\n");
+    includePage(scenarioLibrary, Include.COLLAPSE_ARG, newPageContent);
+  }
+
+  protected void includeSetUp(WikiPage suiteSetUp, StringBuilder newPageContent) {
+    includePage(suiteSetUp, Include.SETUP_ARG, newPageContent);
+  }
+
+  protected void includeTearDown(WikiPage suiteTearDown, StringBuilder newPageContent) {
+    includePage(suiteTearDown, Include.TEARDOWN_ARG, newPageContent);
+  }
+
+  protected void includePages(String name, List<WikiPage> pages, BiConsumer<WikiPage, StringBuilder> includePage,
+                              StringBuilder decoratedContent) {
+    if (pages != null && !pages.isEmpty()) {
+      boolean multiplePages = pages.size() > 1;
+      if (multiplePages) {
+        decoratedContent.append("!*> ");
+        decoratedContent.append(name);
+        decoratedContent.append("\n");
+      }
+
+      for (WikiPage page : pages) {
+        includePage.accept(page, decoratedContent);
+      }
+
+      if (multiplePages) {
+        decoratedContent.append("*!\n");
+      }
+    }
   }
 
   protected void includePage(WikiPage wikiPage, String arg, StringBuilder newPageContent) {
@@ -150,7 +167,7 @@ public class WikiTestPage implements TestPage {
   }
 
   private String getPathNameForPage(WikiPage page) {
-    WikiPagePath pagePath = page.getPageCrawler().getFullPath();
+    WikiPagePath pagePath = page.getFullPath();
     return PathParser.render(pagePath);
   }
 
@@ -197,7 +214,7 @@ public class WikiTestPage implements TestPage {
   }
 
   protected boolean isSuiteSetUpOrTearDownPage() {
-    return isSuiteSetupOrTearDown(sourcePage);
+    return sourcePage.isSuiteSetupOrTearDown();
   }
 
   protected WikiPage findInheritedPage(String pageName) {
@@ -205,20 +222,18 @@ public class WikiTestPage implements TestPage {
   }
 
   private List<WikiPage> findScenarioLibraries() {
-    final LinkedList<WikiPage> uncles = new LinkedList<>();
+    List<WikiPage> uncles;
     if (shouldIncludeScenarioLibraries()) {
-      sourcePage.getPageCrawler().traverseUncles("ScenarioLibrary", new TraversalListener<WikiPage>() {
-        @Override
-        public void process(WikiPage page) {
-          uncles.addFirst(page);
-        }
-      });
+      uncles = findUncles(SCENARIO_LIBRARY);
+    } else {
+      uncles = Collections.emptyList();
     }
     return uncles;
   }
 
-  public static boolean isSuiteSetupOrTearDown(WikiPage wikiPage) {
-    String name = wikiPage.getName();
-    return (PageData.SUITE_SETUP_NAME.equals(name) || PageData.SUITE_TEARDOWN_NAME.equals(name));
+  protected List<WikiPage> findUncles(String uncleName) {
+    LinkedList<WikiPage> uncles = new LinkedList<>();
+    sourcePage.getPageCrawler().traverseUncles(uncleName, uncles::addFirst);
+    return uncles;
   }
 }

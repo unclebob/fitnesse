@@ -14,3 +14,4 @@ Instead of defining arguments on the ''!contents'' widget, variables can be defi
 |-p            |Show property suffixes. !-
 -!Defaults:  Suite(*), Test(+), Imported(@), Symbolic(>), Skip(-).                           | PROPERTY_TOC {true} !-
 -!PROPERTY_CHARACTERS {*+@>-}|
+|-c            |Show number of test pages in a suite.                                        |                                |

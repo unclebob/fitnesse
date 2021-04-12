@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim.protocol;
 
-import java.util.List;
-
 import fitnesse.slim.SlimVersion;
+
+import java.util.List;
 
 /**
  * Packs up a list into a serialized string using a special format.  The list items must be strings, or lists.
@@ -16,12 +16,12 @@ import fitnesse.slim.SlimVersion;
  * of the item followed by a :.
  */
 public class SlimSerializer {
-  private StringBuffer result;
+  private StringBuilder result;
   private List<Object> list;
 
   public SlimSerializer(List<Object> list) {
     this.list = list;
-    result = new StringBuffer();
+    result = new StringBuilder();
   }
 
   public static String serialize(List<Object> list) {

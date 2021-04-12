@@ -2,21 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static util.RegexTestCase.assertSubString;
-
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.util.Clock;
+import fitnesse.util.XmlUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiImportProperty;
@@ -28,8 +19,17 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
-import fitnesse.util.Clock;
-import fitnesse.util.XmlUtil;
+
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static util.RegexTestCase.assertSubString;
 
 public class WikiImporterTest implements WikiImporterClient {
   public WikiPage pageOne;
@@ -139,18 +139,31 @@ public class WikiImporterTest implements WikiImporterClient {
   }
 
   @Test
-  public void testUrlParsing() throws Exception {
-    testUrlParsing("http://mysite.com", "mysite.com", 80, "");
-    testUrlParsing("http://mysite.com/", "mysite.com", 80, "");
-    testUrlParsing("http://mysite.com:8080/", "mysite.com", 8080, "");
-    testUrlParsing("http://mysite.com:8080", "mysite.com", 8080, "");
-    testUrlParsing("http://mysite.com:80/", "mysite.com", 80, "");
-    testUrlParsing("http://mysite.com/PageOne", "mysite.com", 80, "PageOne");
-    testUrlParsing("http://mysite.com/PageOne.ChildOne", "mysite.com", 80, "PageOne.ChildOne");
+  public void testUrlParsingHttp() throws Exception {
+    testUrlParsing("http://mysite.com", "http", "mysite.com", 80, "");
+    testUrlParsing("http://mysite.com/", "http", "mysite.com", 80, "");
+    testUrlParsing("http://mysite.com:8080/", "http", "mysite.com", 8080, "");
+    testUrlParsing("http://mysite.com:8080", "http", "mysite.com", 8080, "");
+    testUrlParsing("http://mysite.com:80/", "http", "mysite.com", 80, "");
+    testUrlParsing("http://mysite.com/PageOne", "http", "mysite.com", 80, "PageOne");
+    testUrlParsing("http://mysite.com/PageOne.ChildOne", "http", "mysite.com", 80, "PageOne.ChildOne");
   }
 
-  private void testUrlParsing(String url, String host, int port, String path) throws Exception {
+  @Test
+  public void testUrlParsingHttps() throws Exception {
+    testUrlParsing("https://mysite.com", "https", "mysite.com", 443, "");
+    testUrlParsing("https://mysite.com/", "https", "mysite.com", 443, "");
+    testUrlParsing("https://mysite.com:8080/", "https", "mysite.com", 8080, "");
+    testUrlParsing("https://mysite.com:8080", "https", "mysite.com", 8080, "");
+    testUrlParsing("https://mysite.com:80/", "https", "mysite.com", 80, "");
+    testUrlParsing("https://mysite.com/PageOne", "https", "mysite.com", 443, "PageOne");
+    testUrlParsing("https://mysite.com/PageOne.ChildOne", "https", "mysite.com", 443, "PageOne.ChildOne");
+    testUrlParsing("https://mysite.com:377/PageOne.ChildOne", "https", "mysite.com", 377, "PageOne.ChildOne");
+  }
+
+  private void testUrlParsing(String url, String protocol, String host, int port, String path) throws Exception {
     importer.parseUrl(url);
+    assertEquals(protocol, importer.getRemoteProtocol());
     assertEquals(host, importer.getRemoteHostname());
     assertEquals(port, importer.getRemotePort());
     assertEquals(path, PathParser.render(importer.getRemotePath()));
@@ -267,7 +280,7 @@ public class WikiImporterTest implements WikiImporterClient {
     WikiPage page = parentPage.addChildPage(pageName);
     PageData data = page.getData();
 
-    WikiPagePath pagePath = page.getPageCrawler().getFullPath();
+    WikiPagePath pagePath = page.getFullPath();
     WikiImportProperty importProps = new WikiImportProperty("http://localhost:" + FitNesseUtil.PORT + "/" + PathParser.render(pagePath));
     if (isRoot)
       importProps.setRoot(true);

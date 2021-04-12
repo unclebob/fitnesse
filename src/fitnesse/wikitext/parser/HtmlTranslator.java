@@ -1,22 +1,28 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.ParsingPage;
+import fitnesse.wikitext.SourcePage;
+
 public class HtmlTranslator extends Translator {
+  public HtmlTranslator(SourcePage currentPage, SyntaxTreeV2 syntaxTree) {
+    super(currentPage);
+    this.syntaxTree = syntaxTree;
+  }
 
-    private ParsingPage parsingPage;
+  public ParsingPage getParsingPage() { return syntaxTree.getParsingPage(); }
+  public Symbol getSyntaxTree() { return syntaxTree.getSyntaxTree(); }
 
-    @Override
-    protected Translation getTranslation(SymbolType symbolType) {
-        if(symbolType instanceof SymbolTypeDecorator){
-            SymbolType applicable = ((SymbolTypeDecorator)symbolType).isApplicable(this);
-            return applicable.getHtmlTranslation();
-        }
-        return symbolType.getHtmlTranslation();
-    }
+  @Override
+  protected Translation getTranslation(SymbolType symbolType) {
+    return symbolType.getHtmlTranslation();
+  }
 
-    public ParsingPage getParsingPage() { return parsingPage; }
+  @Override
+  protected Translation getTranslation(Symbol symbol) {
+    symbol.getType().applyParsedSymbolDecorations(symbol, syntaxTree.getParsingPage());
+    return super.getTranslation(symbol);
+  }
 
-    public HtmlTranslator(SourcePage currentPage, ParsingPage parsingPage) {
-        super(currentPage);
-        this.parsingPage = parsingPage;
-    }
+  private final SyntaxTreeV2 syntaxTree;
+
 }

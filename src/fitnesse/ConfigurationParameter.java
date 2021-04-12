@@ -1,5 +1,7 @@
 package fitnesse;
 
+import util.FileUtil;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -7,8 +9,6 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import util.FileUtil;
 
 /**
  * Parameters used to configure FitNesse.
@@ -40,7 +40,9 @@ public enum ConfigurationParameter {
   VERSIONS_CONTROLLER_CLASS("VersionsController"),
   VERSIONS_CONTROLLER_DAYS("VersionsController.days"),
   RECENT_CHANGES_CLASS("RecentChanges"),
-  CONTEXT_ROOT("ContextRoot");
+  CONTEXT_ROOT("ContextRoot"),
+  LOCALHOST_ONLY("LocalhostOnly"),
+  THEME("Theme");
 
   private static final Logger LOG = Logger.getLogger(ConfigurationParameter.class.getName());
 

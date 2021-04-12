@@ -2,6 +2,22 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import fitnesse.components.TraversalListener;
+import fitnesse.http.RequestBuilder;
+import fitnesse.http.ResponseParser;
+import fitnesse.util.XmlUtil;
+import fitnesse.wiki.NoPruningStrategy;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiImportProperty;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperty;
+import fitnesse.wiki.XmlizerPageHandler;
+import fitnesse.wiki.fs.PageXmlizer;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -10,20 +26,11 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-
-import fitnesse.util.XmlUtil;
-import fitnesse.components.TraversalListener;
-import fitnesse.http.RequestBuilder;
-import fitnesse.http.ResponseParser;
-import fitnesse.wiki.*;
-import fitnesse.wiki.fs.PageXmlizer;
-
 public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiPage> {
   private String remoteUsername;
   private String remotePassword;
 
+  private String remoteProtocol;
   private String remoteHostname;
   private int remotePort;
   private WikiPagePath localPath;
@@ -92,9 +99,9 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
   }
 
   private void catalogLocalTree(WikiPage page) {
-    contextPath = page.getPageCrawler().getFullPath();
+    contextPath = page.getFullPath();
     pageCatalog = new HashSet<>();
-    page.getPageCrawler().traverse(this);
+    page.getPageCrawler().traverse(this, new NoPruningStrategy());
     WikiPagePath relativePathOfContext = contextPath.subtractFromFront(contextPath);
     pageCatalog.remove(relativePathOfContext);
   }
@@ -140,7 +147,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
   }
 
   private WikiPagePath relativePath(WikiPage childPage) {
-    return childPage.getPageCrawler().getFullPath().subtractFromFront(contextPath);
+    return childPage.getFullPath().subtractFromFront(contextPath);
   }
 
   protected void importRemotePageContent(WikiPage localPage) throws IOException {
@@ -173,7 +180,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
 
   public String remoteUrl() {
     String remotePathName = PathParser.render(remotePath);
-    return "http://" + remoteHostname + ":" + remotePort + "/" + remotePathName;
+    return remoteProtocol + "://" + remoteHostname + ":" + remotePort + "/" + remotePathName;
   }
 
   @Override
@@ -227,6 +234,10 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
     return localPath;
   }
 
+  public String getRemoteProtocol() {
+    return remoteProtocol;
+  }
+
   public String getRemoteHostname() {
     return remoteHostname;
   }
@@ -253,25 +264,36 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
     URL url;
     try {
       url = new URL(urlString);
-    }
-    catch (MalformedURLException e) {
+    } catch (MalformedURLException e) {
       throw new MalformedURLException(urlString + " is not a valid URL.");
     }
 
+    remoteProtocol = url.getProtocol();
     remoteHostname = url.getHost();
-    remotePort = url.getPort();
-    if (remotePort == -1)
-      remotePort = 80;
+    remotePort = extractPort(url);
 
-    String path = url.getPath();
-    while (path.startsWith("/"))
-      path = path.substring(1);
-
+    String path = extractPath(url);
     remotePath = PathParser.parse(path);
 
     if (remotePath == null) {
       throw new MalformedURLException("The URL's resource path, " + path + ", is not a valid WikiWord.");
     }
+  }
+
+  private int extractPort(URL url) {
+    int port = url.getPort();
+    if (port == -1) {
+      port = url.getDefaultPort();
+    }
+    return port;
+  }
+
+  private String extractPath(URL url) {
+    String path = url.getPath();
+    while (path.startsWith("/")) {
+      path = path.substring(1);
+    }
+    return path;
   }
 
   public void setWikiImporterClient(WikiImporterClient client) {

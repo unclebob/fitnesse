@@ -1,8 +1,9 @@
 package fitnesse.wiki;
 
 import java.util.Map;
+import java.util.Optional;
 
-import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.VariableSource;
 import fitnesse.wikitext.parser.Maybe;
 
 public class UrlPathVariableSource implements VariableSource {
@@ -15,9 +16,9 @@ public class UrlPathVariableSource implements VariableSource {
   }
 
   @Override
-  public Maybe<String> findVariable(String name) {
+  public Optional<String> findVariable(String name) {
     if(urlParams != null && urlParams.containsKey(name)) {
-        return new Maybe<>(urlParams.get(name));
+        return Optional.ofNullable(urlParams.get(name));
     }
 
     return systemVariables.findVariable(name);

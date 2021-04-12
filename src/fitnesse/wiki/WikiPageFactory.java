@@ -2,7 +2,7 @@ package fitnesse.wiki;
 
 import java.io.File;
 
-import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.VariableSource;
 
 public interface WikiPageFactory {
 

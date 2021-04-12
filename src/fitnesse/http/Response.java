@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import util.FileUtil;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
@@ -11,19 +13,18 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TimeZone;
 
-import util.FileUtil;
-
 public abstract class Response {
   public enum Format {
     XML("text/xml"),
     HTML("text/html; charset=" + FileUtil.CHARENCODING),
     TEXT("text/text"),
+    TSV("text/tab-separated-values"),
     JSON("application/json"),
     JUNIT("text/junit");
 
     private final String contentType;
 
-    private Format(String contentType) {
+    Format(String contentType) {
       this.contentType = contentType;
     }
 
@@ -59,6 +60,8 @@ public abstract class Response {
       format = Format.JUNIT;
     } else if ("text".equalsIgnoreCase(formatString)) {
       format = Format.TEXT;
+    } else if ("tsv".equalsIgnoreCase(formatString)) {
+      format = Format.TSV;
     } else {
       format = Format.HTML;
     }
@@ -80,6 +83,10 @@ public abstract class Response {
 
   public boolean isTextFormat() {
     return Format.TEXT.contentType.equals(contentType);
+  }
+
+  public boolean isTabSeparatedFormat() {
+    return Format.TSV.contentType.equals(contentType);
   }
 
   public boolean isJunitFormat() {
@@ -112,11 +119,15 @@ public abstract class Response {
     if (hasContent()) {
       addContentHeaders();
     }
-    StringBuffer text = new StringBuffer();
+    StringBuilder text = new StringBuilder();
     if (!Format.TEXT.contentType.equals(contentType)) {
       text.append("HTTP/1.1 ").append(status).append(" ").append(
         getReasonPhrase()).append(CRLF);
-      makeHeaders(text);
+
+      for (Entry<String, String> entry: headers.entrySet()) {
+        appendHeader(text, entry.getKey(), entry.getValue());
+      }
+
       text.append(CRLF);
     }
     return text.toString();
@@ -172,10 +183,9 @@ public abstract class Response {
     return value.getBytes(FileUtil.CHARENCODING);
   }
 
-  void makeHeaders(StringBuffer text) {
-    for (Entry<String, String> entry: headers.entrySet()) {
-      text.append(entry.getKey()).append(": ").append(entry.getValue()).append(CRLF);
-    }
+  protected StringBuilder appendHeader(StringBuilder builder, String header, String value) {
+    builder.append(header).append(": ").append(value).append(CRLF);
+    return builder;
   }
 
   protected void addContentHeaders() {

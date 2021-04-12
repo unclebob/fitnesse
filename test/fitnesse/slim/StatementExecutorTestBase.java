@@ -14,7 +14,6 @@ import static org.junit.Assert.fail;
 
 public abstract class StatementExecutorTestBase {
 
-  protected static final String MESSAGE_NO_METHOD_IN_CLASS = "message:<<NO_METHOD_IN_CLASS %s[%d] %s.>>";
   protected static final String INSTANCE_NAME = "myInstance";
   protected StatementExecutorInterface statementExecutor;
 
@@ -124,8 +123,8 @@ public abstract class StatementExecutorTestBase {
       statementExecutor.call(INSTANCE_NAME, "noSuchMethod");
       fail("Executed non-existing method.");
     } catch (SlimException e) {
-      String expectedErrorMessage = String.format(MESSAGE_NO_METHOD_IN_CLASS, "noSuchMethod", 0,
-          annotatedFixtureName());
+      String expectedErrorMessage = SlimVersion.PRETTY_PRINT_TAG_START + SlimServer.NO_METHOD_IN_CLASS + " "+ String.format(MethodExecutionResult.MESSAGE_S_NO_METHOD_S_D_IN_CLASS_S_AVAILABLE_METHODS_S, "noSuchMethod", 0,
+          annotatedFixtureName(),"");
       assertTrue(e.getMessage(), e.getMessage().contains(expectedErrorMessage));
     }
   }

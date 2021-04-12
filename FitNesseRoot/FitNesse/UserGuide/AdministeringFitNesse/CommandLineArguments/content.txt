@@ -15,7 +15,7 @@ A subset of configuration options can be provided through the command line. Comm
 | {{{-c <command>}}} | Command | ''none'' | Run a Rest Command and then exit. You can find more information on the -c options at RestfulServices. |
 | {{{-b <filename>}}} | !-RedirectOutput-! | ''stdout'' | redirect command output. This is most useful in conjunction with the ''-c'' option |
 | {{{-f <config file>}}} | n.a. | plugins.properties | Load an alternative configuration file. The file format adhere's to the java standard of property files. If this option is not provided, the default file ''plugins.properties'' will be loaded if it exists. |
-
+| {{{-lh}}} | !-LocalhostOnly-! | ''false'' | Bind only to the local loopback interface, preventing access to the wiki from other computers in the network |
 
 !1 Java system properties
 

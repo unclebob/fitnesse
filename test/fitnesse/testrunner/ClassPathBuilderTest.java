@@ -2,22 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testrunner;
 
-import java.io.IOException;
-import java.util.List;
-
-import fitnesse.testrunner.ClassPathBuilder;
-import fitnesse.wiki.MockingPageCrawler;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.*;
 import fitnesse.wiki.fs.InMemoryPage;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
+
+import java.io.IOException;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

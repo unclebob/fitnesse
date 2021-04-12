@@ -1,6 +1,18 @@
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
 language: java
+
 jdk:
- - oraclejdk7
- - oraclejdk8
-# - openjdk7 Crashes with a buffer overflow (7u91-2.6.3-0ubuntu0.12.04.1)
-# See https://github.com/travis-ci/travis-ci/issues/6203
+  - openjdk8
+  - oraclejdk9
+
+matrix:
+  include:
+    - dist: trusty
+      jdk: oraclejdk8

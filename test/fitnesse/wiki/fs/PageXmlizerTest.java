@@ -223,7 +223,6 @@ public class PageXmlizerTest {
     String marshaledValue = XmlUtil.xmlAsString(doc);
 
     assertSubString("<data>", marshaledValue);
-    assertSubString("CDATA", marshaledValue);
     assertSubString("this is some content", marshaledValue);
 
     String[] propertyLines = new WikiPageProperties(properties).toXml().split("\n");

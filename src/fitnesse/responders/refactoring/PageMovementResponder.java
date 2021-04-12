@@ -5,7 +5,6 @@ import fitnesse.Responder;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.wiki.refactoring.ReferenceRenamer;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
@@ -13,6 +12,8 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
 import fitnesse.wiki.*;
+import fitnesse.wiki.refactoring.ChangeReference;
+import fitnesse.wiki.refactoring.ReferenceRenamingTraverser;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public abstract class PageMovementResponder implements SecureResponder {
 
   protected abstract boolean getAndValidateRefactoringParameters(Request request);
 
-  protected abstract ReferenceRenamer getReferenceRenamer(FitNesseContext context);
+  protected abstract ChangeReference getReferenceRenamer();
 
   protected abstract String getNewPageName();
 
@@ -54,7 +55,7 @@ public abstract class PageMovementResponder implements SecureResponder {
     }
 
     if (request.hasInput("refactorReferences")) {
-      getReferenceRenamer(context).renameReferences();
+      ReferenceRenamingTraverser.renameReferences(context.getRootPage(), getReferenceRenamer());
     }
     execute();
 
@@ -143,7 +144,7 @@ public abstract class PageMovementResponder implements SecureResponder {
       WikiPagePath relativePath = PathParser.parse(oldRefactoredPage.getParent().getPageCrawler().getRelativeName(referencedPage));
       fullPath = this.newParentPage.getPageCrawler().getFullPathOfChild(relativePath);
     } else {
-      fullPath = referencedPage.getPageCrawler().getFullPath();
+      fullPath = referencedPage.getFullPath();
     }
     fullPath.makeAbsolute();
     symLinks.set(pageName, PathParser.render(fullPath));
@@ -153,8 +154,8 @@ public abstract class PageMovementResponder implements SecureResponder {
 
 
   private boolean isChildOf(WikiPage childPage, WikiPage parentPage) {
-	  String childPath = PathParser.render(childPage.getPageCrawler().getFullPath());
-	  String parentPath = PathParser.render(parentPage.getPageCrawler().getFullPath());
+	  String childPath = PathParser.render(childPage.getFullPath());
+	  String parentPath = PathParser.render(parentPage.getFullPath());
 	  return childPath.startsWith(parentPath);
   }
 

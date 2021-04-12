@@ -2,14 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.TestExecutionException;
 import fitnesse.testsystems.slim.HtmlTableScanner;
 import fitnesse.testsystems.slim.SlimTestContext;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
@@ -138,6 +136,7 @@ public class ScenarioTableExtensionTest {
   /**
    * ScenarioTable that looks for input parameters in all its rows, without the
    * parameters having to be specified in the first row also.
+   * based on https://github.com/fhoeben/hsac-fitnesse-plugin/blob/master/src/main/java/nl/hsac/fitnesse/slim/AutoArgScenarioTable.java
    */
   public static class AutoArgScenarioTable extends ScenarioTable {
     private static final Pattern ARG_PATTERN = Pattern.compile("@\\{(.+?)\\}");
@@ -145,6 +144,8 @@ public class ScenarioTableExtensionTest {
 
     private Set<String> inputs;
     private Set<String> outputs;
+
+    private Map<String, String> currentCallArguments;
 
     public AutoArgScenarioTable(Table table, String tableId, SlimTestContext testContext) {
       super(table, tableId, testContext);
@@ -172,21 +173,94 @@ public class ScenarioTableExtensionTest {
       }
     }
 
-    private Set<String> findArguments(Pattern pattern) {
+    private Set<String> findArguments(Pattern pattern) throws SyntaxError {
       Set<String> found = new LinkedHashSet<>();
       int rowCount = table.getRowCount();
       for (int row = 0; row < rowCount; row++) {
         int columnCount = table.getColumnCountInRow(row);
-        for (int column = 0; column < columnCount; column++) {
-          String cellContent = table.getCellContents(column, row);
-          Matcher m = pattern.matcher(cellContent);
-          while (m.find()) {
-            String input = m.group(1);
-            found.add(input);
+        ScenarioTable calledScenario = getCalledScenario(columnCount - 1, row);
+        if (calledScenario != null) {
+          addNestedScenarioArguments(found, pattern == ARG_PATTERN, calledScenario);
+        } else {
+          for (int column = 0; column < columnCount; column++) {
+            String cellContent = table.getCellContents(column, row);
+            addAllMatches(pattern, found, cellContent);
           }
         }
       }
       return found;
+    }
+
+    private ScenarioTable getCalledScenario(int lastCol, int row) throws SyntaxError {
+      String scenarioName = ScriptTable.RowHelper.getScenarioNameFromAlternatingCells(table, lastCol, row);
+      ScenarioTable scenario = getScenarioByName(scenarioName);
+      if (scenario == null && lastCol == 0) {
+        String cellContents = table.getCellContents(0, row);
+        scenario = getScenarioByPattern(cellContents);
+      }
+      return scenario;
+    }
+
+    private void addNestedScenarioArguments(Set<String> found, boolean addInputs, ScenarioTable scenario) {
+      Set<String> scenarioArgs = addInputs ? scenario.getInputs() : scenario.getOutputs();
+      found.addAll(scenarioArgs);
+    }
+
+    private ScenarioTable getScenarioByName(String scenarioName) {
+      return getTestContext().getScenario(scenarioName);
+    }
+
+    private ScenarioTable getScenarioByPattern(String invokingString) {
+      return getTestContext().getScenarioByPattern(invokingString);
+    }
+
+    private boolean addAllMatches(Pattern pattern, Set<String> found, String cellContent) {
+      boolean anyMatches = false;
+      Matcher m = pattern.matcher(cellContent);
+      while (m.find()) {
+        String input = m.group(1);
+        found.add(input);
+        anyMatches = true;
+      }
+      return anyMatches;
+    }
+
+    public Map<String, String> getCurrentCallArguments() {
+      return currentCallArguments;
+    }
+
+    @Override
+    public List<SlimAssertion> call(Map<String, String> scenarioArguments,
+                                    SlimTable parentTable, int row) throws TestExecutionException {
+      try {
+        currentCallArguments = scenarioArguments;
+        if (scenarioArguments.isEmpty()) {
+          SlimTestContext context = parentTable.getTestContext();
+          if (context instanceof ScenarioTestContext) {
+            ScenarioTestContext sTestContext = (ScenarioTestContext) context;
+            AutoArgScenarioTable caller = getCallingTable(sTestContext);
+            Map<String, String> callerArgs = caller.getCurrentCallArguments();
+            for (Map.Entry<String, String> entry : callerArgs.entrySet()) {
+              String arg = entry.getKey();
+              if (inputs.contains(arg)) {
+                scenarioArguments.put(arg, entry.getValue());
+              }
+            }
+          }
+        }
+        return super.call(scenarioArguments, parentTable, row);
+      } finally {
+        currentCallArguments = null;
+      }
+    }
+
+    private AutoArgScenarioTable getCallingTable(ScenarioTestContext context) {
+      ScenarioTable t = context.getScenarioTable();
+      if (t instanceof AutoArgScenarioTable) {
+        return (AutoArgScenarioTable) t;
+      } else {
+        return null;
+      }
     }
   }
 }

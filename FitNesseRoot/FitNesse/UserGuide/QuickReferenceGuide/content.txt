@@ -43,10 +43,13 @@
 |${CODE}''over-text''${NUL}'''!-----------!'''${NUL}''under-text''${CODEend}|thicker                                            |
 )
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-!define HEADINGS (${BANG}'''1''' ''largest heading text''
+!define HEADER LINES (${BANG}'''1''' ''largest heading text''
 ${BANG}'''2''' ''middle heading text''
 ${BANG}'''3''' ''smaller heading text''
 and so on up to ${BANG}'''6'''
+)
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+!define HEADINGS (${BANG}'''!headings''' generates a list of all header lines
 )
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define CollapsibleEXPANDED (${BANG}'''*''' ${OPT}''title''${OPTend}
@@ -106,13 +109,14 @@ ${SPC}${SPC}'' N.B.: Multiple asterisks are allowed, e.g.,'' ${BANG}'''****'''${
 
 )
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-!define TocInsert (| Contents List | ${CODE} ${BANG}'''contents'''     ${CODEend} | 
+!define TocInsert (| Contents List | ${CODE} ${BANG}'''contents'''     ${CODEend} |
 | Contents Tree | ${CODE} ${BANG}'''contents -R'''  ${CODEend} |
 | Contents Sub-tree | ${CODE} ${BANG}'''contents -R'''${OPT}''nn''${OPTend}${CODEend} |
 | Contents List - Graceful | ${CODE} ${BANG}'''contents -g'''     ${CODEend} |
 | Contents List - Properties | ${CODE} ${BANG}'''contents -p'''     ${CODEend} |
 | Contents List - Suite Filters | ${CODE} ${BANG}'''contents -f'''     ${CODEend} |
 | Contents List - Help Text | ${CODE} ${BANG}'''contents -h'''     ${CODEend} |
+| Contents List - Test Page Count | ${CODE} ${BANG}'''contents -c'''     ${CODEend} |
 )
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

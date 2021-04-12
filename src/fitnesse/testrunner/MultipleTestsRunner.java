@@ -2,16 +2,31 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testrunner;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import fitnesse.testsystems.*;
+import fitnesse.testrunner.run.RunCoordinator;
+import fitnesse.testrunner.run.TestRun;
+import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.ClassPath;
+import fitnesse.testsystems.CompositeExecutionLogListener;
+import fitnesse.testsystems.Descriptor;
+import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.ExecutionLogListener;
+import fitnesse.testsystems.TestExecutionException;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestResult;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.TestSystemFactory;
+import fitnesse.testsystems.TestSystemListener;
 import fitnesse.testsystems.slim.TestingInterruptedException;
 import util.FileUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class MultipleTestsRunner implements Stoppable {
+  private final TestRun run;
   private final CompositeFormatter formatters;
-  private final PagesByTestSystem pagesByTestSystem;
 
   private final TestSystemFactory testSystemFactory;
   private final CompositeExecutionLogListener executionLogListener;
@@ -21,15 +36,13 @@ public class MultipleTestsRunner implements Stoppable {
   private boolean runInProcess;
   private boolean enableRemoteDebug;
 
-  private TestSystem testSystem;
-  private volatile int testsInProgressCount;
+  private final AtomicInteger testsInProgressCount = new AtomicInteger();
 
-  public MultipleTestsRunner(final PagesByTestSystem pagesByTestSystem,
-                             final TestSystemFactory testSystemFactory) {
-    this.pagesByTestSystem = pagesByTestSystem;
+  public MultipleTestsRunner(TestRun run, TestSystemFactory testSystemFactory) {
     this.testSystemFactory = testSystemFactory;
     this.formatters = new CompositeFormatter();
     this.executionLogListener = new CompositeExecutionLogListener();
+    this.run = run;
   }
 
   public void setRunInProcess(boolean runInProcess) {
@@ -44,9 +57,14 @@ public class MultipleTestsRunner implements Stoppable {
     this.formatters.addTestSystemListener(listener);
   }
 
+  public void addExecutionLogListener(ExecutionLogListener listener) {
+    executionLogListener.addExecutionLogListener(listener);
+  }
+
   public void executeTestPages() throws TestExecutionException {
+    MultipleTestsCoordinator coordinator = new MultipleTestsCoordinator();
     try {
-      internalExecuteTestPages();
+      run.executeTestPages(coordinator);
     } catch (Exception e) {
       executionLogListener.exceptionOccurred(e);
       throw new TestingInterruptedException(e);
@@ -55,127 +73,114 @@ public class MultipleTestsRunner implements Stoppable {
     }
   }
 
+  @Override
+  public void stop() {
+    boolean wasNotStopped = isNotStopped();
+    isStopped = true;
+
+    if (wasNotStopped) {
+      run.stop();
+    }
+  }
+
   private void allTestingComplete() {
     FileUtil.close(formatters);
   }
 
-  private void internalExecuteTestPages() throws TestExecutionException {
-    announceTotalTestsToRun(pagesByTestSystem);
+  private class MultipleTestsCoordinator implements RunCoordinator {
 
-    for (WikiPageIdentity identity : pagesByTestSystem.identities()) {
-      startTestSystemAndExecutePages(identity, pagesByTestSystem.testPagesForIdentity(identity));
+    @Override
+    public boolean isNotStopped() {
+      return MultipleTestsRunner.this.isNotStopped();
     }
-  }
 
-  private void startTestSystemAndExecutePages(WikiPageIdentity identity, List<TestPage> testSystemPages) throws TestExecutionException {
-    TestSystem testSystem = null;
-    try {
-      if (!isStopped) {
-        testSystem = startTestSystem(identity, testSystemPages);
-      }
+    @Override
+    public int announceTestStarted() {
+      return testsInProgressCount.getAndIncrement();
+    }
 
-      if (testSystem != null && testSystem.isSuccessfullyStarted()) {
-        executeTestSystemPages(testSystemPages, testSystem);
-        waitForTestSystemToSendResults();
-      }
-    } finally {
-      if (!isStopped && testSystem != null) {
-        try {
-          testSystem.bye();
-        } catch (Exception e) {
-          executionLogListener.exceptionOccurred(e);
+    @Override
+    public void reportException(Exception e) {
+      executionLogListener.exceptionOccurred(e);
+    }
+
+    @Override
+    public TestSystem startTestSystem(final WikiPageIdentity identity, final List<TestPage> testPages) {
+      Descriptor descriptor = new Descriptor() {
+        private ClassPath classPath;
+
+        @Override
+        public String getTestSystem() {
+          return identity.testSystem();
         }
-      }
-    }
-  }
 
-  private TestSystem startTestSystem(final WikiPageIdentity identity, final List<TestPage> testPages) {
-    Descriptor descriptor = new Descriptor() {
-      private ClassPath classPath;
+        @Override
+        public String getTestSystemType() {
+          return getTestSystem().split(":")[0];
+        }
 
-      @Override
-      public String getTestSystem() {
-        String testSystemName = getVariable(WikiPageIdentity.TEST_SYSTEM);
-        if (testSystemName == null)
-          return "fit";
-        return testSystemName;
-      }
-
-      @Override
-      public String getTestSystemType() {
-        return getTestSystem().split(":")[0];
-      }
-
-      @Override
-      public ClassPath getClassPath() {
-        if (classPath == null) {
-          List<ClassPath> paths = new ArrayList<>();
-          for (TestPage testPage: testPages) {
-            paths.add(testPage.getClassPath());
+        @Override
+        public ClassPath getClassPath() {
+          if (classPath == null) {
+            List<ClassPath> paths = new ArrayList<>();
+            for (TestPage testPage: testPages) {
+              paths.add(testPage.getClassPath());
+            }
+            classPath = new ClassPath(paths);
           }
-          classPath = new ClassPath(paths);
+          return classPath;
         }
-        return classPath;
-      }
 
-      @Override
-      public boolean runInProcess() {
-        return runInProcess;
-      }
+        @Override
+        public boolean runInProcess() {
+          return runInProcess;
+        }
 
-      @Override
-      public boolean isDebug() {
-        return enableRemoteDebug;
-      }
+        @Override
+        public boolean isDebug() {
+          return enableRemoteDebug;
+        }
 
-      @Override
-      public String getVariable(String name) {
-        return identity.getVariable(name);
-      }
+        @Override
+        public String getVariable(String name) {
+          return identity.getVariable(name);
+        }
 
-      @Override
-      public ExecutionLogListener getExecutionLogListener() {
-        return executionLogListener;
-      }
-    };
+        @Override
+        public ExecutionLogListener getExecutionLogListener() {
+          return executionLogListener;
+        }
+      };
 
-    InternalTestSystemListener internalTestSystemListener = new InternalTestSystemListener();
-    try {
-      testSystem = testSystemFactory.create(descriptor);
-
-      testSystem.addTestSystemListener(internalTestSystemListener);
-      testSystem.start();
-    } catch (Exception e) {
-      formatters.unableToStartTestSystem(descriptor.getTestSystem(), e);
-      return null;
-    }
-    return testSystem;
-  }
-
-  private void executeTestSystemPages(List<TestPage> pagesInTestSystem, TestSystem testSystem) throws TestExecutionException {
-    for (TestPage testPage : pagesInTestSystem) {
-      testsInProgressCount++;
-      testSystem.runTests(testPage);
-    }
-  }
-
-  private void waitForTestSystemToSendResults() throws TestingInterruptedException {
-    // TODO: use testSystemStopped event to wait for tests to end.
-    while (testsInProgressCount > 0 && isNotStopped())
+      InternalTestSystemListener internalTestSystemListener = new InternalTestSystemListener();
       try {
-        Thread.sleep(50);
-      } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-        throw new TestingInterruptedException("Interrupted while waiting for test results", e);
+        TestSystem testSystem = testSystemFactory.create(descriptor);
+
+        testSystem.addTestSystemListener(internalTestSystemListener);
+        testSystem.start();
+        return testSystem;
+      } catch (Exception e) {
+        formatters.unableToStartTestSystem(descriptor.getTestSystem(), e);
+        return null;
       }
-  }
+    }
 
-  void announceTotalTestsToRun(PagesByTestSystem pagesByTestSystem) {
-    formatters.announceNumberTestsToRun(pagesByTestSystem.totalTestsToRun());
-  }
+    @Override
+    public void waitForNoTestsInProgress() throws TestingInterruptedException {
+      // TODO: use testSystemStopped event to wait for tests to end.
+      while (testsInProgressCount.get() > 0 && isNotStopped())
+        try {
+          Thread.sleep(50);
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+          throw new TestingInterruptedException("Interrupted while waiting for test results", e);
+        }
+    }
 
-  public void addExecutionLogListener(ExecutionLogListener listener) {
-    executionLogListener.addExecutionLogListener(listener);
+    @Override
+    public void announceTotalTestsToRun(int toRun) {
+      formatters.announceNumberTestsToRun(toRun);
+    }
   }
 
   private class InternalTestSystemListener implements TestSystemListener {
@@ -197,7 +202,7 @@ public class MultipleTestsRunner implements Stoppable {
     @Override
     public void testComplete(TestPage testPage, TestSummary testSummary) {
       formatters.testComplete(testPage, testSummary);
-      testsInProgressCount--;
+      testsInProgressCount.getAndDecrement();
     }
 
     @Override
@@ -223,15 +228,5 @@ public class MultipleTestsRunner implements Stoppable {
 
   private boolean isNotStopped() {
     return !isStopped;
-  }
-
-  @Override
-  public void stop() {
-    boolean wasNotStopped = isNotStopped();
-    isStopped = true;
-
-    if (wasNotStopped && testSystem != null) {
-      testSystem.kill();
-    }
   }
 }

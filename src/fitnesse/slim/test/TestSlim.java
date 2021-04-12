@@ -186,7 +186,7 @@ public class TestSlim implements TestSlimInterface {
   }
 
   public void die() {
-    throw new Error("blah");
+    throw new Error("TestSlim died");
   }
 
   public void setNoSuchConverter(NoSuchConverter x) {

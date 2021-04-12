@@ -5,6 +5,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 
 import fitnesse.ConfigurationParameter;
@@ -13,8 +14,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.WikiPageFactoryRegistry;
-import fitnesse.wikitext.parser.Maybe;
-import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.VariableSource;
 
 /**
  * This is the general factory used to load and create wiki pages.
@@ -33,8 +33,12 @@ public class FileSystemPageFactory implements WikiPageFactory, WikiPageFactoryRe
   }
 
   public FileSystemPageFactory(Properties properties) {
-    this(new DiskFileSystem(), new ComponentFactory(properties).createComponent(
-            ConfigurationParameter.VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class));
+    this(new ComponentFactory(properties));
+  }
+
+  public FileSystemPageFactory(ComponentFactory componentFactory) {
+    this(new DiskFileSystem(), componentFactory.createComponent(
+      ConfigurationParameter.VERSIONS_CONTROLLER_CLASS, ZipFileVersionsController.class));
   }
 
   public FileSystemPageFactory(FileSystem fileSystem, VersionsController versionsController) {
@@ -109,9 +113,9 @@ public class FileSystemPageFactory implements WikiPageFactory, WikiPageFactoryRe
 
     @Override
     public WikiPage makePage(final File path, final String pageName, final WikiPage parent, final VariableSource variableSource) {
-      Maybe<String> rootPath = variableSource.findVariable("FITNESSE_ROOTPATH");
+      Optional<String> rootPath = variableSource.findVariable("FITNESSE_ROOTPATH");
       return new FileSystemPage(path, pageName, parent, null, versionsController,
-        new FileSystemSubWikiPageFactory(new File(rootPath.getValue()), fileSystem, variableSource, FileSystemPageFactory.this),
+        new FileSystemSubWikiPageFactory(new File(rootPath.orElse("*nothing*")), fileSystem, variableSource, FileSystemPageFactory.this),
         variableSource);
     }
 
@@ -128,9 +132,9 @@ public class FileSystemPageFactory implements WikiPageFactory, WikiPageFactoryRe
   protected class WikiFilePageFactory implements WikiPageFactory {
     @Override
     public WikiPage makePage(final File path, final String pageName, final WikiPage parent, final VariableSource variableSource) {
-      Maybe<String> rootPath = variableSource.findVariable("FITNESSE_ROOTPATH");
+      Optional<String> rootPath = variableSource.findVariable("FITNESSE_ROOTPATH");
       return new WikiFilePage(path, pageName.substring(0, pageName.length() - WikiFilePage.FILE_EXTENSION.length()), parent, null, versionsController,
-        new FileSystemSubWikiPageFactory(new File(rootPath.getValue()), fileSystem, variableSource, FileSystemPageFactory.this),
+        new FileSystemSubWikiPageFactory(new File(rootPath.orElse("*nothing*")), fileSystem, variableSource, FileSystemPageFactory.this),
         variableSource);
     }
 
@@ -146,9 +150,9 @@ public class FileSystemPageFactory implements WikiPageFactory, WikiPageFactoryRe
   protected class ChildWikiFilePageFactory implements WikiPageFactory {
     @Override
     public WikiPage makePage(final File path, final String pageName, final WikiPage parent, final VariableSource variableSource) {
-      Maybe<String> rootPath = variableSource.findVariable("FITNESSE_ROOTPATH");
+      Optional<String> rootPath = variableSource.findVariable("FITNESSE_ROOTPATH");
       return new WikiFilePage(wikiFile(path), pageName, parent, null, versionsController,
-        new FileSystemSubWikiPageFactory(new File(rootPath.getValue()), fileSystem, variableSource, FileSystemPageFactory.this),
+        new FileSystemSubWikiPageFactory(new File(rootPath.orElse("*nothing*")), fileSystem, variableSource, FileSystemPageFactory.this),
         variableSource);
     }
 
@@ -166,9 +170,9 @@ public class FileSystemPageFactory implements WikiPageFactory, WikiPageFactoryRe
   protected class RootWikiFilePageFactory implements WikiPageFactory {
     @Override
     public WikiPage makePage(final File path, final String pageName, final WikiPage parent, final VariableSource variableSource) {
-      Maybe<String> rootPath = variableSource.findVariable("FITNESSE_ROOTPATH");
+      Optional<String> rootPath = variableSource.findVariable("FITNESSE_ROOTPATH");
       return new WikiFilePage(new File(path, WikiFilePage.ROOT_FILE_NAME), pageName, parent, null, versionsController,
-        new FileSystemSubWikiPageFactory(new File(rootPath.getValue()), fileSystem, variableSource, FileSystemPageFactory.this),
+        new FileSystemSubWikiPageFactory(new File(rootPath.orElse("*nothing*")), fileSystem, variableSource, FileSystemPageFactory.this),
         variableSource);
     }
 

@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CachedInteraction extends DefaultInteraction {
+public class CachedInteraction extends SimpleInteraction {
   private static final Constructor<?> noConstructor = NotExisting.class.getConstructors()[0];
   private static final Method noMethod = NotExisting.class.getDeclaredMethods()[0];
 

@@ -1,12 +1,5 @@
 package fitnesse.plugins;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.ServiceLoader;
-
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
@@ -17,19 +10,29 @@ import fitnesse.reporting.FormatterRegistry;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.testrunner.TestSystemFactoryRegistry;
+import fitnesse.testrunner.run.TestRunFactoryRegistry;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wiki.WikiPageFactoryRegistry;
 import fitnesse.wikitext.parser.SymbolProvider;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.ServiceLoader;
+
 public class PluginsLoader {
   private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(PluginsLoader.class.getName());
 
   private final ComponentFactory componentFactory;
+  private final ClassLoader classLoader;
   private final Collection<PluginFeatureFactory> pluginFeatureFactories;
 
-  public PluginsLoader(ComponentFactory componentFactory) throws PluginException {
+  public PluginsLoader(ComponentFactory componentFactory, ClassLoader classLoader) throws PluginException {
     this.componentFactory = componentFactory;
+    this.classLoader = classLoader;
     this.pluginFeatureFactories = findPluginFeatureFactories();
   }
 
@@ -37,7 +40,7 @@ public class PluginsLoader {
     List<PluginFeatureFactory> factories = new ArrayList<>();
     factories.addAll(PropertyBasedPluginFeatureFactory.loadFromProperties(componentFactory));
 
-    for (PluginFeatureFactory factory : ServiceLoader.load(PluginFeatureFactory.class)) {
+    for (PluginFeatureFactory factory : ServiceLoader.load(PluginFeatureFactory.class, classLoader)) {
       factories.add(factory);
     }
     return factories;
@@ -80,6 +83,17 @@ public class PluginsLoader {
       }
     }
     return authenticator == null ? defaultAuthenticator : authenticator;
+  }
+
+  public String getDefaultTheme() {
+    String theme = null;
+    for (PluginFeatureFactory pff : pluginFeatureFactories) {
+      theme = pff.getDefaultTheme();
+      if (theme != null) {
+        break;
+      }
+    }
+    return theme;
   }
 
   public void loadSymbolTypes(SymbolProvider symbolProvider) throws PluginException {
@@ -129,6 +143,12 @@ public class PluginsLoader {
   public void loadTestSystems(final TestSystemFactoryRegistry registrar) throws PluginException {
     for (PluginFeatureFactory pff : pluginFeatureFactories) {
       pff.registerTestSystemFactories(registrar);
+    }
+  }
+
+  public void loadTestRunFactories(final TestRunFactoryRegistry registry) throws PluginException {
+    for (PluginFeatureFactory pff : pluginFeatureFactories) {
+      pff.registerTestRunFactories(registry);
     }
   }
 }

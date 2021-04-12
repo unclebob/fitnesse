@@ -2,13 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import fitnesse.util.Clock;
+import fitnesse.wiki.WikiPage;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-
-import fitnesse.util.Clock;
-
-import fitnesse.wiki.WikiPage;
 
 public class SaveRecorder {
   public static final Random ticketNumGen = new Random();
@@ -17,7 +16,7 @@ public class SaveRecorder {
 
   public static long pageSaved(WikiPage page, long ticketNumber) {
     long timeStamp = timeStamp();
-    String name = page.getPageCrawler().getFullPath().toString();
+    String name = page.getFullPath().toString();
     ticketRegistry.put(name, ticketNumber);
     saveTime.put(name, timeStamp);
     return timeStamp;
@@ -51,7 +50,7 @@ public class SaveRecorder {
       this.thisEditTime = thisEditTime;
       this.ticket = ticket;
       this.page = page;
-      fullPageName = page.getPageCrawler().getFullPath().toString();
+      fullPageName = page.getFullPath().toString();
     }
 
     public boolean shouldMerge() {

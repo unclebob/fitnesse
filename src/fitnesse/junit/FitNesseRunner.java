@@ -1,39 +1,42 @@
 package fitnesse.junit;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import fitnesse.ConfigurationParameter;
 import fitnesse.ContextConfigurator;
 import fitnesse.FitNesseContext;
-import fitnesse.plugins.PluginException;
 import fitnesse.slim.instructions.SystemExitSecurityManager;
 import fitnesse.testrunner.MultipleTestsRunner;
-import fitnesse.testrunner.PagesByTestSystem;
 import fitnesse.testrunner.SuiteContentsFinder;
+import fitnesse.testrunner.run.FileBasedTestRunFactory;
+import fitnesse.testrunner.run.PartitioningTestRunFactory;
+import fitnesse.testrunner.run.TestRun;
 import fitnesse.testsystems.ConsoleExecutionLogListener;
 import fitnesse.testsystems.TestExecutionException;
 import fitnesse.testsystems.TestSummary;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
 
-import static org.junit.Assert.*;
+import java.io.File;
+import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static fitnesse.junit.JUnitHelper.createTestRunner;
+import static fitnesse.junit.JUnitHelper.getSuiteRootPage;
+import static fitnesse.junit.JUnitHelper.msgAtLeastOneTest;
+import static org.junit.Assert.assertTrue;
 
 public class FitNesseRunner extends ParentRunner<WikiPage> {
   /**
@@ -44,8 +47,8 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Target(ElementType.TYPE)
   public @interface Suite {
 
-    public String value() default "";
-    public String systemProperty() default "";
+    String value() default "";
+    String systemProperty() default "";
   }
   /**
    * The <code>DebugMode</code> annotation specifies whether the test is run
@@ -55,7 +58,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Target(ElementType.TYPE)
   public @interface DebugMode {
 
-    public boolean value();
+    boolean value();
   }
 
   /**
@@ -65,7 +68,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Target(ElementType.TYPE)
   public @interface PreventSystemExit {
 
-    public boolean value() default true;
+    boolean value() default true;
   }
 
   /**
@@ -76,9 +79,9 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Target(ElementType.TYPE)
   public @interface SuiteFilter {
 
-    public String value() default "";
-    public String systemProperty() default "";
-    public boolean andStrategy() default false;
+    String value() default "";
+    String systemProperty() default "";
+    boolean andStrategy() default false;
   }
   /**
    * The <code>ExcludeSuiteFilter</code> annotation specifies a filter for excluding tests from the Fitnesse suite
@@ -88,7 +91,39 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Target(ElementType.TYPE)
   public @interface ExcludeSuiteFilter {
 
-    public String value();
+    String value();
+    String systemProperty() default "";
+  }
+  /**
+   * The <code>Partition</code> annotation specifies the full test run should be split in a number of parts.
+   * Each part will be run separately, combining the results of all parts gives the full result.
+   * This annotation dictates the number of partitions to create, and which of those should be run when the current
+   * test is executed. The default is no partition: indicating the full test run should NOT be split but run as-is.
+   */
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.TYPE)
+  public @interface Partition {
+
+    /** @return number of partitions to create.*/
+    int count() default 0;
+    /** @return zero based partition to run.*/
+    int index() default -1;
+    String countSystemProperty() default "";
+    String indexSystemProperty() default "";
+  }
+  /**
+   * The <code>PartitionFile</code> annotation specifies the file containing a definition of how to divide the pages
+   * in a run in multiple partitions.
+   * @see Partition
+   * The default is no partition file: indicating partitions should be calculated dynamically.
+   */
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.TYPE)
+  public @interface PartitionFile {
+
+    /** @return filename containing definition.*/
+    String value() default "";
+    String systemProperty() default "";
   }
   /**
    * The <code>FitnesseDir</code> annotation specifies the absolute or relative
@@ -105,9 +140,9 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Target(ElementType.TYPE)
   public @interface FitnesseDir {
 
-    public String value() default "";
-    public String systemProperty() default "";
-    public String fitNesseRoot() default ContextConfigurator.DEFAULT_ROOT;
+    String value() default "";
+    String systemProperty() default "";
+    String fitNesseRoot() default ContextConfigurator.DEFAULT_ROOT;
   }
   /**
    * The <code>OutputDir</code> annotation specifies where the html reports of
@@ -124,10 +159,10 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Target(ElementType.TYPE)
   public @interface OutputDir {
 
-    public String value() default "";
-    public String systemProperty() default "";
+    String value() default "";
+    String systemProperty() default "";
 
-    public String pathExtension() default "";
+    String pathExtension() default "";
 
   }
   /**
@@ -139,8 +174,8 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Deprecated
   public @interface Port {
 
-    public int value() default 0;
-    public String systemProperty() default "";
+    int value() default 0;
+    String systemProperty() default "";
 
   }
   /**
@@ -150,7 +185,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   @Target(ElementType.TYPE)
   public @interface ConfigFile {
 
-    public String value();
+    String value();
   }
 
   private Class<?> suiteClass;
@@ -159,10 +194,13 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   private String suiteFilter;
   private boolean suiteFilterAndStrategy;
   private String excludeSuiteFilter;
+  private Pair<Integer, Integer> partition;
+  private String partitionFile;
   private boolean debugMode;
   private boolean preventSystemExit;
   private FitNesseContext context;
   private DescriptionFactory descriptionFactory;
+  private TestRun testRun;
   private List<WikiPage> children;
 
   public FitNesseRunner(Class<?> suiteClass) throws InitializationError {
@@ -208,6 +246,18 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     }
 
     try {
+      this.partition = getPartition(suiteClass);
+    } catch (Exception e) {
+      errors.add(e);
+    }
+
+    try {
+      this.partitionFile = getPartitionFile(suiteClass);
+    } catch (Exception e) {
+      errors.add(e);
+    }
+
+    try {
       this.debugMode = useDebugMode(suiteClass);
     } catch (Exception e) {
       errors.add(e);
@@ -226,12 +276,8 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   }
 
   protected FitNesseContext createContext(Class<?> suiteClass) throws Exception {
-    String rootPath = getFitNesseDir(suiteClass);
-    String fitNesseRoot = getFitNesseRoot(suiteClass);
-    int port = getPort(suiteClass);
-    File configFile = getConfigFile(rootPath, suiteClass);
 
-    return initContext(configFile, rootPath, fitNesseRoot, port);
+    return initContextConfigurator().makeFitNesseContext();
   }
 
   protected String getSuiteName(Class<?> klass) throws InitializationError {
@@ -297,7 +343,14 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     if (excludeSuiteFilterAnnotation == null) {
       return null;
     }
-    return excludeSuiteFilterAnnotation.value();
+    if (!"".equals(excludeSuiteFilterAnnotation.value())) {
+      return excludeSuiteFilterAnnotation.value();
+    }
+    if (!"".equals(excludeSuiteFilterAnnotation.systemProperty())) {
+      return System.getProperty(excludeSuiteFilterAnnotation.systemProperty());
+    }
+    throw new InitializationError(
+            "In annotation @ExcludeSuiteFilter you have to specify either 'value' or 'systemProperty'");
   }
 
   protected boolean useDebugMode(Class<?> klass) throws Exception {
@@ -339,7 +392,46 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     return fitnesseDirAnnotation.fitNesseRoot();
   }
 
-  public int getPort(Class<?> klass) throws Exception {
+  protected ImmutablePair<Integer, Integer> getPartition(Class<?> klass)
+        throws InitializationError {
+    Partition partAnnotation = klass.getAnnotation(Partition.class);
+    if (partAnnotation == null) {
+      return new ImmutablePair<>(1, 0);
+    }
+    if (partAnnotation.count() > 0 && partAnnotation.index() >= 0) {
+      return new ImmutablePair<>(partAnnotation.count(), partAnnotation.index());
+    } else {
+      String countSystemProperty = partAnnotation.countSystemProperty();
+      String indexSystemProperty = partAnnotation.indexSystemProperty();
+      if (!"".equals(countSystemProperty) && !"".equals(indexSystemProperty)) {
+        int count = Integer.parseInt(System.getProperty(countSystemProperty));
+        int index = Integer.parseInt(System.getProperty(indexSystemProperty));
+        return new ImmutablePair<>(count, index);
+      }
+    }
+    throw new InitializationError(
+      "In annotation @Partition you have to specify: " +
+        "either 'count' or 'countSystemProperty' and " +
+        "either 'index' or 'indexSystemProperty'");
+  }
+
+  protected String getPartitionFile(Class<?> klass)
+    throws Exception {
+    PartitionFile partFileAnnotation = klass.getAnnotation(PartitionFile.class);
+    if (partFileAnnotation == null) {
+      return null;
+    }
+    if (!"".equals(partFileAnnotation.value())) {
+      return partFileAnnotation.value();
+    }
+    if (!"".equals(partFileAnnotation.systemProperty())) {
+      return System.getProperty(partFileAnnotation.systemProperty());
+    }
+    throw new InitializationError(
+      "In annotation @PartitionFile you have to specify either 'value' or 'systemProperty'");
+  }
+
+  public int getPort(Class<?> klass) {
     Port portAnnotation = klass.getAnnotation(Port.class);
     if (null == portAnnotation) {
       return 0;
@@ -351,7 +443,7 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     return lport;
   }
 
-  protected File getConfigFile(String rootPath, Class<?> klass) throws Exception {
+  protected File getConfigFile(String rootPath, Class<?> klass) {
     ConfigFile configFileAnnotation = klass.getAnnotation(ConfigFile.class);
     if (null == configFileAnnotation) {
       return new File(rootPath, ContextConfigurator.DEFAULT_CONFIG_FILE);
@@ -364,25 +456,26 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     return getDescriptionFactory().createDescription(suiteClass, child);
   }
 
+  protected TestRun getTestRun() {
+    if (this.testRun == null) {
+      List<WikiPage> allChildren = initChildren();
+      this.testRun = createTestRun(allChildren);
+    }
+    return this.testRun;
+  }
+
   @Override
   protected List<WikiPage> getChildren() {
     if (this.children == null) {
-      this.children = initChildren();
+      this.children = getTestRun().getPages();
     }
     return this.children;
   }
 
   @Override
   public void run(final RunNotifier notifier) {
-    if (isFilteredForChildTest()) {
-      super.run(notifier);
-    } else {
-      runPages(children, notifier);
-    }
-  }
-
-  private boolean isFilteredForChildTest() {
-    return getDescription().getChildren().size() < getChildren().size();
+    TestRun run = getTestRun();
+    runPages(run, notifier);
   }
 
   @Override
@@ -390,8 +483,13 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     runPages(listOf(page), notifier);
   }
 
-  protected void runPages(List<WikiPage>pages, final RunNotifier notifier) {
-    MultipleTestsRunner testRunner = createTestRunner(pages);
+  protected void runPages(List<WikiPage> pages, final RunNotifier notifier) {
+    TestRun run = createTestRun(pages);
+    runPages(run, notifier);
+  }
+
+  protected void runPages(TestRun run, final RunNotifier notifier) {
+    MultipleTestsRunner testRunner = createTestRunner(run, context, debugMode);
     addTestSystemListeners(notifier, testRunner, suiteClass, getDescriptionFactory());
     addExecutionLogListener(notifier, testRunner, suiteClass);
     System.setProperty(SystemExitSecurityManager.PREVENT_SYSTEM_EXIT, String.valueOf(preventSystemExit));
@@ -401,6 +499,10 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
       Description description = getDescriptionFactory().createSuiteDescription(suiteClass);
       notifier.fireTestFailure(new Failure(description, e));
     }
+  }
+
+  protected TestRun createTestRun(List<WikiPage> pages) {
+    return JUnitHelper.createTestRun(context, pages);
   }
 
   protected void addTestSystemListeners(RunNotifier notifier, MultipleTestsRunner testRunner, Class<?> suiteClass,
@@ -413,17 +515,33 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
   }
 
   protected List<WikiPage> initChildren() {
-    WikiPage suiteRoot = getSuiteRootPage();
+    Map<String, String> customProperties = createCustomProperties();
+
+    WikiPage suiteRoot = getSuiteRootPage(suiteName, context, customProperties);
     if (suiteRoot == null) {
       throw new IllegalArgumentException("No page " + this.suiteName);
     }
     List<WikiPage> children;
     if (suiteRoot.getData().hasAttribute("Suite")) {
-      children = new SuiteContentsFinder(suiteRoot, getSuiteFilter(), context.getRootPage()).getAllPagesToRunForThisSuite();
+      SuiteContentsFinder contentsFinder = new SuiteContentsFinder(suiteRoot, getSuiteFilter(), context.getRootPage());
+      return contentsFinder.getAllPagesToRunForThisSuite();
     } else {
       children = Collections.singletonList(suiteRoot);
     }
     return children;
+  }
+
+  protected Map<String, String> createCustomProperties() {
+    Map<String, String> customProperties = new HashMap<>();
+    Integer partitionCount = partition.getLeft();
+    if (partitionCount > 1) {
+      customProperties.put(PartitioningTestRunFactory.PARTITION_COUNT_ARG, partitionCount.toString());
+      customProperties.put(PartitioningTestRunFactory.PARTITION_INDEX_ARG, partition.getRight().toString());
+    }
+    if (partitionFile != null) {
+      customProperties.put(FileBasedTestRunFactory.PARTITION_FILE_ARG, partitionFile);
+    }
+    return customProperties;
   }
 
   private fitnesse.testrunner.SuiteFilter getSuiteFilter() {
@@ -438,8 +556,13 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     return suiteFilterAndStrategy ? suiteFilter : null;
   }
 
-  static FitNesseContext initContext(File configFile, String rootPath, String fitNesseRoot, int port) throws IOException, PluginException {
-    ContextConfigurator contextConfigurator = ContextConfigurator.systemDefaults()
+  protected ContextConfigurator initContextConfigurator() throws InitializationError {
+    String rootPath = getFitNesseDir(suiteClass);
+    String fitNesseRoot = getFitNesseRoot(suiteClass);
+    int port = getPort(suiteClass);
+    File configFile = getConfigFile(rootPath, suiteClass);
+
+    return ContextConfigurator.systemDefaults()
       .updatedWith(System.getProperties())
       .updatedWith(ConfigurationParameter.loadProperties(configFile))
       .updatedWith(ConfigurationParameter.makeProperties(
@@ -447,23 +570,6 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
             ConfigurationParameter.ROOT_PATH, rootPath,
             ConfigurationParameter.ROOT_DIRECTORY, fitNesseRoot,
             ConfigurationParameter.OMITTING_UPDATES, true));
-
-    return contextConfigurator.makeFitNesseContext();
-  }
-
-  private WikiPage getSuiteRootPage() {
-    WikiPagePath path = PathParser.parse(this.suiteName);
-    PageCrawler crawler = context.getRootPage().getPageCrawler();
-    return crawler.getPage(path);
-  }
-
-  private MultipleTestsRunner createTestRunner(List<WikiPage> pages) {
-    final PagesByTestSystem pagesByTestSystem = new PagesByTestSystem(pages, context.getRootPage());
-
-    MultipleTestsRunner runner = new MultipleTestsRunner(pagesByTestSystem,
-            context.testSystemFactory);
-    runner.setRunInProcess(debugMode);
-    return runner;
   }
 
   private void executeTests(MultipleTestsRunner testRunner) throws IOException, TestExecutionException {
@@ -475,11 +581,6 @@ public class FitNesseRunner extends ParentRunner<WikiPage> {
     TestSummary summary = testFormatter.getTotalSummary();
 
     assertTrue(msgAtLeastOneTest(suiteName, summary), summary.getRight() > 0 || summary.getWrong() > 0 || summary.getExceptions() > 0);
-  }
-
-  private String msgAtLeastOneTest(String pageName, TestSummary summary) {
-    return MessageFormat.format("at least one test executed in {0}\n{1}",
-            pageName, summary.toString());
   }
 
   private List<WikiPage> listOf(WikiPage page) {

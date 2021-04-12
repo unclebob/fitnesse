@@ -2,9 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testrunner;
 
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,25 +23,23 @@ public class SuiteContentsFinder {
   private final WikiPage pageToRun;
   private final WikiPage wikiRootPage;
   private final SuiteFilter suiteFilter;
-  private List<WikiPage> testPageList;
 
   public SuiteContentsFinder(final WikiPage pageToRun, final SuiteFilter suiteFilter, WikiPage root) {
     this.pageToRun = pageToRun;
     wikiRootPage = root;
     this.suiteFilter = (suiteFilter != null) ? suiteFilter : SuiteFilter.MATCH_ALL;
-    testPageList = new LinkedList<>();
   }
 
   public List<WikiPage> getAllPagesToRunForThisSuite() {
+    List<WikiPage> testPageList = new LinkedList<>();
     String content = pageToRun.getHtml();
     if (SuiteSpecificationRunner.isASuiteSpecificationsPage(content)) {
       SuiteSpecificationRunner runner = new SuiteSpecificationRunner(wikiRootPage);
       if (runner.getPageListFromPageContent(content))
-        testPageList = runner.testPageList;
+        testPageList = runner.testPages();
     } else {
       testPageList = getAllTestPagesUnder();
-      List<WikiPage> referencedPages = gatherCrossReferencedTestPages();
-      testPageList.addAll(referencedPages);
+      testPageList.addAll(gatherCrossReferencedTestPages());
     }
     return testPageList;
   }
@@ -44,8 +51,8 @@ public class SuiteContentsFinder {
       @Override
       public int compare(WikiPage p1, WikiPage p2) {
         try {
-          WikiPagePath path1 = p1.getPageCrawler().getFullPath();
-          WikiPagePath path2 = p2.getPageCrawler().getFullPath();
+          WikiPagePath path1 = p1.getFullPath();
+          WikiPagePath path2 = p2.getFullPath();
 
           return path1.compareTo(path2);
         }
@@ -77,7 +84,6 @@ public class SuiteContentsFinder {
 
   private boolean isPruned(WikiPage page) {
     return page.getData().hasAttribute(PageData.PropertyPRUNE);
-
   }
 
   private boolean isTopPage(WikiPage page) {
@@ -108,9 +114,10 @@ public class SuiteContentsFinder {
     if (pageReferences.isEmpty()) {
       return;
     }
+    PageCrawler pageCrawler = thePage.getPageCrawler();
     for (String pageReference : pageReferences) {
       WikiPagePath path = PathParser.parse(pageReference);
-      WikiPage referencedPage = thePage.getPageCrawler().getSiblingPage(path);
+      WikiPage referencedPage = pageCrawler.getSiblingPage(path);
       if (referencedPage != null)
         pages.add(referencedPage);
     }

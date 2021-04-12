@@ -2,15 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fit.testFxtr;
 
-import static org.junit.Assert.assertEquals;
+import fit.Fixture;
+import fit.Parse;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-import org.junit.Test;
-import fit.Fixture;
-import fit.Parse;
+import static org.junit.Assert.assertEquals;
 
 public class HandleFixtureDoesNotExtendFixtureTest {
 

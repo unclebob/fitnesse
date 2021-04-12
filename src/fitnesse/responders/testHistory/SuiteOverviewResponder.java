@@ -1,21 +1,21 @@
 package fitnesse.responders.testHistory;
 
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.html.template.HtmlPage;
+import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testrunner.SuiteFilter;
-import fitnesse.html.template.HtmlPage;
-import fitnesse.html.template.PageTitle;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+
+import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 public class SuiteOverviewResponder implements Responder {
 
@@ -27,7 +27,7 @@ public class SuiteOverviewResponder implements Responder {
     WikiPage root = context.getRootPage();
     WikiPage page = root.getPageCrawler().getPage(PathParser.parse(request.getResource()));
 
-    SuiteFilter filter = SuiteResponder.createSuiteFilter(request, page.getPageCrawler().getFullPath().toString());
+    SuiteFilter filter = SuiteResponder.createSuiteFilter(request, page.getFullPath().toString());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
 
     List<WikiPage> pagelist = suiteTestFinder.getAllPagesToRunForThisSuite();
@@ -51,7 +51,7 @@ public class SuiteOverviewResponder implements Responder {
     page.put("treeRoot", treeview.getTreeRoot());
     page.put("viewLocation", request.getResource());
     page.setMainTemplate("suiteOverview");
-    response.setContent(page.html());
+    response.setContent(page.html(request));
     return response;
   }
 }

@@ -1,25 +1,25 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.VariableSource;
+import fitnesse.wikitext.parser.decorator.ParsedSymbolDecorator;
+import fitnesse.wikitext.shared.ToHtml;
+
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class SymbolType implements Matchable {
-    private static final Rule defaultRule = new Rule() {
-        @Override
-        public Maybe<Symbol> parse(Symbol current, Parser parser) {
-            return new Maybe<>(current);
-        }
-    };
+    private static final Rule defaultRule = (current, parser) -> new Maybe<>(current);
 
     public static final SymbolType Bold = new SymbolType("Bold")
             .wikiMatcher(new Matcher().string("'''"))
             .wikiRule(new EqualPairRule())
-            .htmlTranslation(new HtmlBuilder("b").body(0).inline());
+            .htmlTranslation(Translate.with(ToHtml::pair).text("b").child(0));
     public static final SymbolType CenterLine = new SymbolType("CenterLine")
             .wikiMatcher(new Matcher().startLineOrCell().string("!c"))
             .wikiMatcher(new Matcher().startLineOrCell().string("!C"))
             .wikiRule(new LineRule())
-            .htmlTranslation(new HtmlBuilder("center").body(0));
+            .htmlTranslation(Translate.with(ToHtml::pair).text("center").child(0));
     public static final SymbolType CloseBrace = new SymbolType("CloseBrace")
             .wikiMatcher(new Matcher().string("}"));
     public static final SymbolType CloseBracket = new SymbolType("CloseBracket")
@@ -49,7 +49,7 @@ public class SymbolType implements Matchable {
             .wikiMatcher(new Matcher().string("+").digits())
             .wikiMatcher(new Matcher().string("-").digits());
     public static final SymbolType EMail = new SymbolType("EMail")
-            .htmlTranslation(new HtmlBuilder("a").bodyContent().attribute("href", -1, "mailto:").inline());
+            .htmlTranslation(Translate.with(ToHtml::email).content());
     public static final SymbolType Empty = new SymbolType("Empty");
     public static final SymbolType EndCell = new SymbolType("EndCell")
             .wikiMatcher(new Matcher().string("|").ignoreWhitespace().string("\n|"))
@@ -60,7 +60,7 @@ public class SymbolType implements Matchable {
     public static final SymbolType Italic = new SymbolType("Italic")
             .wikiMatcher(new Matcher().string("''"))
             .wikiRule(new EqualPairRule())
-            .htmlTranslation(new HtmlBuilder("i").body(0).inline());
+            .htmlTranslation(Translate.with(ToHtml::pair).text("i").child(0));
     public static final SymbolType Meta = new SymbolType("Meta")
             .wikiMatcher(new Matcher().startLineOrCell().string("!meta"))
             .wikiRule(new LineRule())
@@ -68,11 +68,11 @@ public class SymbolType implements Matchable {
     public static final SymbolType Newline = new SymbolType("Newline")
             .wikiMatcher(new Matcher().string("\n"))
             .wikiMatcher(new Matcher().string("\r\n"))
-            .htmlTranslation(new HtmlBuilder("br").inline());
+            .htmlTranslation(Translate.with(ToHtml::newLine));
     public static final SymbolType NoteLine = new SymbolType("NoteLine")
             .wikiMatcher(new Matcher().startLineOrCell().string("!note"))
             .wikiRule(new LineRule())
-            .htmlTranslation(new HtmlBuilder("p").body(0).attribute("class", "note").inline());
+            .htmlTranslation(Translate.with(ToHtml::note).child(0));
     public static final SymbolType OpenBrace = new SymbolType("OpenBrace", CloseBrace)
             .wikiMatcher(new Matcher().string("{"));
 
@@ -87,7 +87,7 @@ public class SymbolType implements Matchable {
     public static final SymbolType Strike = new SymbolType("Strike")
             .wikiMatcher(new Matcher().string("--"))
             .wikiRule(new EqualPairRule())
-            .htmlTranslation(new HtmlBuilder("strike").body(0).inline());
+            .htmlTranslation(Translate.with(ToHtml::pair).text("strike").child(0));
     public static final SymbolType Style = new SymbolType("Style")
             .wikiMatcher(new Matcher().string("!style_").endsWith(new char[] {'(', '{', '['}))
             .wikiRule(new StyleRule())
@@ -102,11 +102,12 @@ public class SymbolType implements Matchable {
     public static final SymbolType Whitespace = new SymbolType("Whitespace")
             .wikiMatcher(new Matcher().whitespace());
 
-    private String name;
-    private List<Matcher> wikiMatchers = new ArrayList<>(1);
+    private final String name;
+    private final List<Matcher> wikiMatchers = new ArrayList<>(1);
     private Rule wikiRule = defaultRule;
     private Translation htmlTranslation = null;
-    private final SymbolType closeType;
+    private final SymbolType                        closeType;
+    private final List<ParsedSymbolDecorator> decorators = new LinkedList<>();
 
     public SymbolType(String name) { this(name, Empty); }
 
@@ -152,6 +153,18 @@ public class SymbolType implements Matchable {
 
     public SymbolType closeType() {
       return closeType;
+    }
+
+    public void addDecorator(ParsedSymbolDecorator symbolDecorator) {
+      decorators.add(symbolDecorator);
+    }
+
+    public void removeDecorator(ParsedSymbolDecorator symbolDecorator) {
+      decorators.remove(symbolDecorator);
+    }
+
+    void applyParsedSymbolDecorations(Symbol symbol, VariableSource variableSource) {
+        decorators.forEach(decorator -> decorator.handleParsedSymbol(symbol, variableSource));
     }
 }
 

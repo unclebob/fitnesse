@@ -335,7 +335,7 @@ public class WikiImportingResponderTest {
     WikiImportingResponder.handleImportProperties(html, page);
     html.setNavTemplate("wikiNav.vm");
     html.put("actions", new WikiPageActions(page));
-    return html.html();
+    return html.html(null);
   }
 
 }

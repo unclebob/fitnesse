@@ -1,5 +1,8 @@
 package fitnesse.slim;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
@@ -8,16 +11,15 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.regex.Pattern;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class StackTraceEnricherTest {
   private static final String JUNIT_JAR_PATTERN = "[junit";
   private static final String RT_JAR = "rt.jar";
-  private static final String COMMONS_LANG_VERSION = "2.6";
-  private static final Pattern COMMONS_LANG_JAR = Pattern.compile("commons-lang(-2.6)?.jar");
+  private static final String COMMONS_LANG_VERSION = "3.12.0";
+  private static final Pattern COMMONS_LANG_JAR = Pattern.compile("commons-lang3(-3.12.0)?.jar");
 
   private Throwable exception;
   private Throwable exceptionWithCause;
@@ -33,7 +35,7 @@ public class StackTraceEnricherTest {
   private Exception createException() {
     Exception exception = null;
     try {
-      org.apache.commons.lang.StringUtils.getLevenshteinDistance(null, null);
+      org.apache.commons.lang3.StringUtils.getLevenshteinDistance(null, null);
       fail("StringUtils.getLevenshteinDistance() changed its contract, expected IllegalArgumentException");
     } catch (IllegalArgumentException iae) {
       if (iae.getStackTrace() == null || iae.getStackTrace().length == 0) {
@@ -112,7 +114,7 @@ public class StackTraceEnricherTest {
   @Test
   public void shouldAddVersionWhenAvailable() {
     String stackTraceAsString = enricher.getStackTraceAsString(exception);
-    String fragment = ".jar:2.6";
+    String fragment = ".jar:" + COMMONS_LANG_VERSION;
 
     assertTrue(String.format("Version not added for commons-lang.jar. Did not find '%s' in \n%s", fragment, stackTraceAsString),
             stackTraceAsString.contains(fragment));
@@ -121,7 +123,7 @@ public class StackTraceEnricherTest {
   @Test
   public void shouldGetVersionForClassInJarWithVersion() {
     assertTrue("Version not retrieved for org.apache.commons.lang.ArrayUtils",
-        enricher.getVersion(org.apache.commons.lang.ArrayUtils.class).contains(COMMONS_LANG_VERSION));
+        enricher.getVersion(org.apache.commons.lang3.ArrayUtils.class).contains(COMMONS_LANG_VERSION));
   }
 
   @Test

@@ -2,6 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
+import fitnesse.slim.instructions.Instruction;
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestExecutionException;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestResult;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.slim.SlimTestContext;
+import fitnesse.testsystems.slim.Table;
+import fitnesse.testsystems.slim.results.SlimTestResult;
+import fitnesse.util.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,22 +24,15 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import fitnesse.slim.instructions.Instruction;
-import fitnesse.testsystems.ExecutionResult;
-import fitnesse.testsystems.TestExecutionException;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.TestResult;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.slim.SlimTestContext;
-import fitnesse.testsystems.slim.Table;
-import fitnesse.testsystems.slim.results.SlimTestResult;
-import org.apache.commons.lang.StringUtils;
 
-
+/**
+ * Scenario table acts as a factory for script tables. Those tables are created
+ * where ever a scenario table is invoked. The type of table used to actually execute
+ * the scenario may vary, depending on from which table a scenario is invoked.
+ */
 public class ScenarioTable extends SlimTable {
   private static final String instancePrefix = "scenarioTable";
   private static final String underscorePattern = "\\W_(?=\\W|$)";
-  private static Class<? extends ScriptTable> defaultChildClass = ScriptTable.class;
   private String name;
   private List<String> inputs = new ArrayList<>();
   private Set<String> outputs = new HashSet<>();
@@ -124,14 +128,14 @@ public class ScenarioTable extends SlimTable {
     }
   }
 
-  public static boolean isNameParameterized(String firstNameCell) {
+  private boolean isNameParameterized(String firstNameCell) {
     Pattern regPat = Pattern.compile(underscorePattern);
     Matcher underscoreMatcher = regPat.matcher(firstNameCell);
 
     return underscoreMatcher.find();
   }
 
-  public static String unparameterize(String firstNameCell) {
+  private String unparameterize(String firstNameCell) {
     String name = firstNameCell.replaceAll(underscorePattern, " ").trim();
 
     return Disgracer.disgraceClassName(name);
@@ -195,7 +199,7 @@ public class ScenarioTable extends SlimTable {
     if (parentTable instanceof ScriptTable) {
       scriptTable = createChild((ScriptTable) parentTable, newTable, testContext);
     } else {
-      scriptTable = createChild(defaultChildClass, newTable, testContext);
+      scriptTable = createChild(getTestContext().getCurrentScriptClass(), newTable, testContext);
     }
     scriptTable.setCustomComparatorRegistry(customComparatorRegistry);
     return scriptTable;
@@ -207,14 +211,6 @@ public class ScenarioTable extends SlimTable {
 
   protected ScriptTable createChild(Class<? extends ScriptTable> parentTableClass, Table newTable, SlimTestContext testContext) throws TableCreationException {
       return SlimTableFactory.createTable(parentTableClass, newTable, id, testContext);
-  }
-
-  public static void setDefaultChildClass(Class<? extends ScriptTable> defaultChildClass) {
-    ScenarioTable.defaultChildClass = defaultChildClass;
-  }
-
-  public static Class<? extends ScriptTable> getDefaultChildClass() {
-    return defaultChildClass;
   }
 
   public List<SlimAssertion> call(String[] args, ScriptTable parentTable, int row) throws TestExecutionException {
@@ -247,7 +243,7 @@ public class ScenarioTable extends SlimTable {
       parameterizedName = nameBuffer.toString().trim();
     }
     if (parameterizedName != null) {
-      String patternString = parameterizedName.replaceAll("_", "(.*)");
+      String patternString = StringUtils.replace(parameterizedName, "_", "(.*)");
       pattern = Pattern.compile(patternString);
     }
   }
@@ -317,7 +313,7 @@ public class ScenarioTable extends SlimTable {
 
   // This context is mainly used to determine if the scenario table evaluated successfully
   // This determines the execution result for the "calling" table row.
-  protected final class ScenarioTestContext implements SlimTestContext {
+  public final class ScenarioTestContext implements SlimTestContext {
 
     private final SlimTestContext testContext;
     private final TestSummary testSummary = new TestSummary();
@@ -326,9 +322,18 @@ public class ScenarioTable extends SlimTable {
       this.testContext = testContext;
     }
 
+    public ScenarioTable getScenarioTable() {
+      return ScenarioTable.this;
+    }
+
     @Override
     public String getSymbol(String symbolName) {
       return testContext.getSymbol(symbolName);
+    }
+
+    @Override
+    public Map<String, String> getSymbols() {
+      return testContext.getSymbols();
     }
 
     @Override
@@ -395,6 +400,26 @@ public class ScenarioTable extends SlimTable {
     @Override
     public TestPage getPageToTest() {
       return testContext.getPageToTest();
+    }
+
+    @Override
+    public void setCurrentScriptClass(Class<? extends ScriptTable> currentScriptClass) {
+      testContext.setCurrentScriptClass(currentScriptClass);
+    }
+
+    @Override
+    public Class<? extends ScriptTable> getCurrentScriptClass() {
+      return testContext.getCurrentScriptClass();
+    }
+
+    @Override
+    public void setCurrentScriptActor(String currentScriptActor) {
+      testContext.setCurrentScriptActor(currentScriptActor);
+    }
+
+    @Override
+    public String getCurrentScriptActor() {
+      return testContext.getCurrentScriptActor();
     }
   }
 }

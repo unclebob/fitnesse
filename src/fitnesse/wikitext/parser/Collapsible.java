@@ -44,8 +44,8 @@ public class Collapsible extends SymbolType implements Rule, Translation {
             parser.moveNext(1);
         }
 
+        current.putProperty(STATE, state);
         return new Maybe<>(current
-          .putProperty(STATE, state)
           .add(titleText)
           .add(bodyText));
     }

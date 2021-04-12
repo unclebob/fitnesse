@@ -1,5 +1,7 @@
 package fitnesse.testsystems;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -9,8 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.apache.commons.lang.StringUtils;
 
 public class ClassPath {
 
@@ -45,8 +45,8 @@ public class ClassPath {
     String location = findLocationForClass(testRunner);
     if (location != null) {
       List<String> newElements = new ArrayList<>();
-      newElements.add(location);
       newElements.addAll(elements);
+      newElements.add(location);
       return new ClassPath(newElements, separator);
     }
     return this;

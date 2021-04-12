@@ -87,7 +87,7 @@ public class TableTable extends SlimTable {
   }
 
   private void extendExistingRows(Table table, List<List<Object>> tableResults) {
-    for (int row = 1; row < tableResults.size(); row++)
+    for (int row = 1; row < table.getRowCount(); row++)
       extendRow(table, row, tableResults.get(row - 1));
   }
 
@@ -147,7 +147,7 @@ public class TableTable extends SlimTable {
   }
 
   private String manageSymbolInContent(String content, String message) {
-    String symbolName = ifSymbolAssignment(content);
+    String symbolName = isSymbolAssignment(content);
     if (symbolName != null) {
       setSymbol(symbolName, message, true);
       message = String.format("$%s<-[%s]", symbolName, message);

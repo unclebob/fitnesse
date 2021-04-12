@@ -8,10 +8,6 @@ import org.junit.Test;
 import static java.util.Arrays.asList;
 
 public class OrderedQueryTableTest extends QueryTableTestBase {
-  @Override
-  protected Class<? extends QueryTable> queryTableClass() {
-    return OrderedQueryTable.class;
-  }
 
   @Override
   protected String tableType() {

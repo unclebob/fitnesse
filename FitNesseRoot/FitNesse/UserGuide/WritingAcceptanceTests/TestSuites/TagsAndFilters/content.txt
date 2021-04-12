@@ -31,3 +31,6 @@ Sometimes half the suite will run okay, but after a point all tests will start f
 !style_code(!-http://&lt;host>:&lt;port>/&lt;suite path and test name>?responder=suite&startTest=TestTwo-!) will run all tests coming after !-TestTwo-!
 
 Remember, that the order tests run is alphabetical.  So in the above example, !-TestThree-! will not run because !-TestTwo-! actually comes after !-TestThree-!
+
+''Please note:'' if your test run is not failing from a certain point onwards, but has a few failures that you want to rerun the 'Rerun Failed' feature is probably more appropriate than 'startTest'.
+It can be accessed via the button on the suite result page (top right hand corner), or directly by going to: !style_code(!-http://&lt;host>:&lt;port>/RerunLastFailures?suite-!)

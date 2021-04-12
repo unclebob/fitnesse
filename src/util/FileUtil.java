@@ -2,55 +2,47 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
-import java.util.LinkedList;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 public class FileUtil {
 
   private static final Logger LOG = Logger.getLogger(FileUtil.class.getName());
 
-  public static final String CHARENCODING = "UTF-8";
+  public static final String CHARENCODING = StandardCharsets.UTF_8.name();
 
   public static File createFile(String path, String content) throws IOException {
     return createFile(path, new ByteArrayInputStream(content.getBytes()));
   }
 
   public static File createFile(String path, InputStream content) throws IOException {
-    String[] names = path.replace("/", File.separator).split(Pattern.quote(File.separator));
-    if (names.length == 1)
-      return createFile(new File(path), content);
-    else {
-      File parent = null;
-      for (int i = 0; i < names.length - 1; i++) {
-        parent = parent == null ? new File(names[i]) : new File(parent, names[i]);
-        if (!parent.exists())
-          parent.mkdir();
-      }
-      File fileToCreate = new File(parent, names[names.length - 1]);
-      return createFile(fileToCreate, content);
+    File file = new File(path);
+    if (path.contains("/")) {
+      File parent = file.getParentFile();
+      parent.mkdirs();
     }
+    return createFile(file, content);
   }
 
   public static File createFile(File file, String content) throws IOException {
-    return createFile(file, content.getBytes(CHARENCODING));
+    return createFile(file, content.getBytes(StandardCharsets.UTF_8));
   }
 
 
@@ -59,19 +51,7 @@ public class FileUtil {
   }
 
   public static File createFile(File file, InputStream content) throws IOException {
-    FileOutputStream fileOutput = null;
-    try {
-      fileOutput = new FileOutputStream(file);
-      FileUtil.copyBytes(content, fileOutput);
-    }
-    finally {
-      if (fileOutput != null)
-        try {
-          fileOutput.close();
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-    }
+    Files.copy(content, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
     return file;
   }
 
@@ -84,14 +64,8 @@ public class FileUtil {
   }
 
   public static void deleteFileSystemDirectory(File current) throws IOException {
-    File[] files = current.listFiles();
-
-    for (int i = 0; files != null && i < files.length; i++) {
-      File file = files[i];
-      if (file.isDirectory())
-        deleteFileSystemDirectory(file);
-      else
-        deleteFile(file);
+    for (File child : listFiles(current)) {
+      deleteFileSystemDirectory(child);
     }
     deleteFile(current);
   }
@@ -100,7 +74,7 @@ public class FileUtil {
     deleteFile(new File(filename));
   }
 
-  public static void deleteFile(File file) throws IOException{
+  public static void deleteFile(File file) throws IOException {
     if (!file.exists())
       return;
     if (!file.delete())
@@ -113,39 +87,19 @@ public class FileUtil {
   }
 
   public static String getFileContent(File input) throws IOException {
-    return new String(getFileBytes(input), CHARENCODING);
+    return new String(getFileBytes(input), StandardCharsets.UTF_8);
   }
 
   public static byte[] getFileBytes(File input) throws IOException {
-    long size = input.length();
-    FileInputStream stream = null;
-    try {
-      stream = new FileInputStream(input);
-      return new StreamReader(stream).readBytes((int) size);
-    } finally {
-      close(stream);
-    }
+    return Files.readAllBytes(input.toPath());
   }
 
-  public static LinkedList<String> getFileLines(File file) throws IOException {
-    LinkedList<String> lines = new LinkedList<>();
-    BufferedReader reader = new BufferedReader(new FileReader(file));
-    String line;
-    try {
-      while ((line = reader.readLine()) != null)
-        lines.add(line);
-    } finally {
-      close(reader);
-    }
-    return lines;
+  public static List<String> getFileLines(File file) throws IOException {
+    return Files.readAllLines(file.toPath(), Charset.defaultCharset());
   }
 
-  public static void writeLinesToFile(File file, List<String> lines) throws FileNotFoundException {
-    PrintStream output = new PrintStream(new FileOutputStream(file));
-    for (String line : lines) {
-      output.println(line);
-    }
-    output.close();
+  public static void writeLinesToFile(File file, List<String> lines) throws IOException {
+    Files.write(file.toPath(), lines, Charset.defaultCharset());
   }
 
   public static void copyBytes(InputStream input, OutputStream output) throws IOException {
@@ -154,14 +108,12 @@ public class FileUtil {
       output.write(reader.readBytes(1000));
   }
 
-  public static String toString(InputStream input) throws IOException {
-    String result = "";
-    Scanner s = new Scanner(input, CHARENCODING);
-    s.useDelimiter("\\A");
-    result = s.hasNext() ? s.next() : "";
-    s.close();
-    return result;
-   }
+  public static String toString(InputStream input) {
+    try (Scanner s = new Scanner(input, CHARENCODING)) {
+      s.useDelimiter("\\A");
+      return s.hasNext() ? s.next() : "";
+    }
+  }
 
   public static File createDir(String path) {
     makeDir(path);
@@ -169,21 +121,47 @@ public class FileUtil {
   }
 
   public static File[] getDirectoryListing(File dir) {
-    SortedSet<File> dirSet = new TreeSet<>();
-    SortedSet<File> fileSet = new TreeSet<>();
-    File[] files = dir.listFiles();
-    if (files == null)
-      return new File[0];
-    for (File file : files) {
-      if (file.isDirectory())
-        dirSet.add(file);
-      else
-        fileSet.add(file);
+    File[] files = listFiles(dir);
+    if (files.length > 0) {
+      SortedSet<File> dirSet = new TreeSet<>();
+      SortedSet<File> fileSet = new TreeSet<>();
+      for (File file : files) {
+        if (file.isDirectory())
+          dirSet.add(file);
+        else
+          fileSet.add(file);
+      }
+      List<File> fileList = new ArrayList<>(files.length);
+      fileList.addAll(dirSet);
+      fileList.addAll(fileSet);
+      files = fileList.toArray(new File[0]);
     }
-    List<File> fileList = new LinkedList<>();
-    fileList.addAll(dirSet);
-    fileList.addAll(fileSet);
-    return fileList.toArray(new File[fileList.size()]);
+    return files;
+  }
+
+  public static File[] listFiles(File dir) {
+    return listFiles(dir, p -> true);
+  }
+
+  public static File[] listFiles(File dir, DirectoryStream.Filter<Path> visitPredicate) {
+    if (!dir.isDirectory()) {
+      return new File[0];
+    }
+    List<File> fileList = new ArrayList<>();
+    try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir.toPath(), visitPredicate)) {
+      for (Path path : stream) {
+        fileList.add(path.toFile());
+      }
+    } catch (IOException e) {
+      // not expected, ignore
+    }
+    return fileList.toArray(new File[0]);
+  }
+
+  public static boolean isEmpty(File directory) throws IOException {
+    try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(directory.toPath())) {
+      return !dirStream.iterator().hasNext();
+    }
   }
 
   public static void close(Closeable closeable) {

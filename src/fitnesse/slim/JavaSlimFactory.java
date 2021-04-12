@@ -48,13 +48,17 @@ public class JavaSlimFactory extends SlimFactory {
     return new JavaSlimFactory(interaction, timeout, verbose);
   }
 
-  @SuppressWarnings("unchecked")
   public static FixtureInteraction createInteraction(String interactionClassName) {
+    return createInteraction(interactionClassName, ClassLoader.getSystemClassLoader());
+  }
+
+  @SuppressWarnings("unchecked")
+  public static FixtureInteraction createInteraction(String interactionClassName, ClassLoader classLoader) {
     if (interactionClassName == null) {
       return new DefaultInteraction();
     }
     try {
-      return ((Class<FixtureInteraction>) Class.forName(interactionClassName)).newInstance();
+      return ((Class<FixtureInteraction>) classLoader.loadClass(interactionClassName)).newInstance();
     } catch (Exception e) {
       throw new SlimError(e);
     }

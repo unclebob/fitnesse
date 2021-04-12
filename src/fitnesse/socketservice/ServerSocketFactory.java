@@ -13,4 +13,5 @@ public interface ServerSocketFactory {
    * @throws IOException Thrown if socket can not be created.
      */
   ServerSocket createServerSocket(int port) throws IOException;
+  ServerSocket createLocalOnlyServerSocket(int port) throws IOException;
 }

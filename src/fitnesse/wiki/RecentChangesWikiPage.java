@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import fitnesse.FitNesseContext;
+import fitnesse.util.Clock;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -11,10 +14,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import fitnesse.util.Clock;
-
-import fitnesse.FitNesseContext;
 
 public class RecentChangesWikiPage implements RecentChanges {
   private static final Logger LOG = Logger.getLogger(RecentChangesWikiPage.class.getName());
@@ -73,7 +72,7 @@ public class RecentChangesWikiPage implements RecentChanges {
   }
 
   private String resource(WikiPage page) {
-    WikiPagePath fullPath = page.getPageCrawler().getFullPath();
+    WikiPagePath fullPath = page.getFullPath();
     String resource = PathParser.render(fullPath);
     return resource;
   }

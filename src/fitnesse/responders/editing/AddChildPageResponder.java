@@ -9,7 +9,12 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageUtil;
 
 public class AddChildPageResponder implements SecureResponder {
   private WikiPage currentPage;
@@ -65,7 +70,7 @@ public class AddChildPageResponder implements SecureResponder {
   private Response createChildPageAndMakeResponse(FitNesseContext context) {
     createChildPage(context);
     SimpleResponse response = new SimpleResponse();
-    WikiPagePath fullPathOfCurrentPage = currentPage.getPageCrawler().getFullPath();
+    WikiPagePath fullPathOfCurrentPage = currentPage.getFullPath();
     response.redirect(context.contextRoot, fullPathOfCurrentPage.toString());
     return response;
   }

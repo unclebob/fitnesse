@@ -2,17 +2,10 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
+import fitnesse.wikitext.shared.ContentsItemBuilder;
+import fitnesse.wikitext.shared.Names;
 
 public class Contents extends SymbolType implements Rule, Translation {
-    public static final String FILTER_TOC = "FILTER_TOC";
-    public static final String HELP_TOC = "HELP_TOC";
-    public static final String HELP_INSTEAD_OF_TITLE_TOC = "HELP_INSTEAD_OF_TITLE_TOC";
-    public static final String MORE_SUFFIX_DEFAULT = " ...";
-    public static final String MORE_SUFFIX_TOC = "MORE_SUFFIX_TOC";
-    public static final String PROPERTY_TOC = "PROPERTY_TOC";
-    public static final String PROPERTY_CHARACTERS = "PROPERTY_CHARACTERS";
-    public static final String PROPERTY_CHARACTERS_DEFAULT = "*+@>-";
-    public static final String REGRACE_TOC = "REGRACE_TOC";
 
     public Contents() {
         super("Contents");
@@ -24,14 +17,30 @@ public class Contents extends SymbolType implements Rule, Translation {
     @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol body = parser.parseToEnd(SymbolType.Newline);
-        for (Symbol option: body.getChildren()) {
-            if (option.isType(SymbolType.Whitespace)) continue;
-            if (!option.getContent().startsWith("-")) return Symbol.nothing;
-            current.add(option);
+        for (Symbol child: body.getChildren()) {
+            if (child.isType(SymbolType.Whitespace)) continue;
+            String option = child.getContent();
+            if (!option.startsWith("-")) return Symbol.nothing;
+            if (option.equals("-R")) {
+              current.putProperty(option, String.valueOf(Integer.MAX_VALUE));
+            }
+            else if (option.startsWith("-R")) {
+              current.putProperty("-R", option.substring(2));
+            }
+            else {
+              current.putProperty(option, "");
+            }
         }
 
-        current.evaluateVariables(
-                new String[] {HELP_TOC, HELP_INSTEAD_OF_TITLE_TOC, REGRACE_TOC, PROPERTY_TOC, FILTER_TOC, MORE_SUFFIX_TOC, PROPERTY_CHARACTERS},
+        current.copyVariables(new String[] {
+                  Names.HELP_TOC,
+                  Names.HELP_INSTEAD_OF_TITLE_TOC,
+                  Names.REGRACE_TOC,
+                  Names.PROPERTY_TOC,
+                  Names.FILTER_TOC,
+                  Names.MORE_SUFFIX_TOC,
+                  Names.PROPERTY_CHARACTERS,
+                  Names.TEST_PAGE_COUNT_TOC},
                 parser.getVariableSource());
 
         return new Maybe<>(current);

@@ -40,6 +40,16 @@ Example
     "Scope":"has Value\\s+'(\\w*)'\\s*",
     "TargetName":"contains Value",
     "Parameters":"$1"
+  },
+  {
+    "Scope":"(?s).*<[i]>(.*)</i>.*",
+    "TargetName":"$1",
+    "Parameters":""
+  },
+  {
+    "Scope":"(?s)^([^\\n]*)\\n.*",
+    "TargetName":"$1",
+    "Parameters":""
   }
  ]
 }
@@ -54,10 +64,19 @@ Example
     "Parameters":"$1"
   },
   {
-    "Scope":".+",
-    "TargetName":"$0",
+    "Scope":"(?s).*<[i]>(.*)</i>.*",
+    "TargetName":"set $1",
     "Parameters":""
-  }
+  },
+  {
+    "Scope":"(?s)^([^\\n]*)\\n.*",
+    "TargetName":"set $1",
+    "Parameters":""
+  },
+  {
+    "Scope":".+",
+    "TargetName":"set $0",
+    "Parameters":""  }
  ]
 }
 -!)
@@ -66,18 +85,18 @@ Example
 
 !3 Based on your test cases you might expect or need to add a varying number of properties to a collection.
 !4 Test Case with 2 properties
-|Properties                                                                                                                                                                 |
-|#|property a|property b                    |size?|key set?|property a?|property b?|to string?                                                      |has Value '123456789' ?|
-| |$S1       |123456789                     |2    |[b, a]  |$S1        |123456789  |{b=123456789, a=abcdefghijklmnopqrstuvwxyz}                     |true                   |
-| |$S2       |"The fox jumps over the wall."|2    |[b, a]  |123456789  |$S3        |{b="The fox jumps over the wall.", a=123456789}                 |true                   |
-| |$S3       |abcdefghijklmnopqrstuvwxyz    |2    |[b, a]  |$S3        |$S1        |{b=abcdefghijklmnopqrstuvwxyz, a="The fox jumps over the wall."}|false                  |
+|Properties                                                                                       |
+|#|property a|property b                    |size?|property a?|property b?|has Value '123456789' ?|
+| |$S1       |123456789                     |2    |$S1        |123456789  |true                   |
+| |$S2       |"The fox jumps over the wall."|2    |123456789  |$S3        |true                   |
+| |$S3       |abcdefghijklmnopqrstuvwxyz    |2    |$S3        |$S1        |false                  |
 
 !4 Test Case with 3 properties added and 2 expected
-|Properties                                                                                                                                                                                                 |
-|#|property NEW|property a|property b|size?|key set?|property NEW?|property b?|to string?                                                                 |has Value '123456789' ?|has Value '!-FitNesse-!'?|
-| |Hello       |$S1       |$S2       |3    |        |Hello        |123456789  |                                                                           |true                   |false                    |
-| |!-FitNesse-!|$S2       |$S3       |3    |        |             |$S3        |                                                                           |true                   |true                     |
-| |World       |$S3       |$S1       |3    |        |World        |$S1        |{b=abcdefghijklmnopqrstuvwxyz, a="The fox jumps over the wall.", NEW=World}|false                  |false                    |
+|Properties                                                                                                            |
+|#|property NEW|property a|property b|size?|property NEW?|property b?|has Value '123456789' ?|has Value '!-FitNesse-!'?|
+| |Hello       |$S1       |$S2       |3    |Hello        |123456789  |true                   |false                    |
+| |!-FitNesse-!|$S2       |$S3       |3    |             |$S3        |true                   |true                     |
+| |World       |$S3       |$S1       |3    |World        |$S1        |false                  |false                    |
 
 
 !4 Look in the collapsed setup how the mapping between column names and method names is done.
@@ -100,13 +119,93 @@ This has the advantage that you don't need to specify the table type in your tes
 and leaves the decision to the implementer of the test cases if he wants to use a hybrid, dynamic or normal decision table.
 
 
-!4 IMPORTANT: to avoid side effects always add a >TearDown page to reset the mappings to the defaults.  
+!3 More verbose decision tables
+
+The flexible pattern matching of the hybrid table can also be used to document your decision tables even more
+ * describe the business logic for a column
+ * or use GIVEN, WHEN, THEN verbosity in the table header directly
+
+compare the below two tables with the standard one on this page .FitNesse.UserGuide.WritingAcceptanceTests.SliM.DecisionTable 
 
 
-!2 Warning: The Hybrid Decision Table is still experimental
-The way how the method names are configured (via variables) might change.
-Be prepared to refactor your tests if you use this feature.
-Your ideas for a final solution are welcome please give feedback on the [[!-FitNesse-! mail group][https://groups.yahoo.com/neo/groups/fitnesse/info]]
+|should I buy milk|
+|GIVEN I have '''ZERO'''!-
+-!''pints of milk remaining''!- 
+in my fridge -!| WHEN I have '''AT LEAST''' 3$!-<sup>1</sup>
+-! ''cash in wallet'' ----- !- <sup>1</sup>: the price for 
+a bottle of milk -!| OR I '''HAVE''' a ''credit card''|THEN I ''go to store'' !-
+and buy milk-!!|
+|0|0|no |no |
+|0|1|no |no |
+|0|2|no |no |
+|0|3|no |yes|
+|0|1|yes|yes|
+|1|1|yes|no |
+|2|5|yes|no |
+
+
+!meta if you like use in addition colours or other markup
+
+
+|baseline: should I buy milk|
+|GIVEN I have '''zero'''!-
+-!!style_indigo{''pints of milk remaining''}!- 
+in my fridge -!| WHEN I have '''AT LEAST 3$'''!-<sup>1</sup>
+-! !style_indigo[''cash in wallet''] ----- !- <sup>1</sup>: the price for 
+a bottle of milk -!| OR I '''have''' a !-<u>-!''credit card''!-</u>-!|THEN I ''go to store'' !-
+and buy milk-!!|
+|0|0|no |no |
+| |1|   |   |
+| |2|   |   |
+| |3|   |yes|
+| |1|yes|yes|
+|1|1|yes|no |
+|2|5|yes|no |
+
+
+The test case writer has just to set the function name in ''italic''
+and can use any other text and formatting to descibe the scenario further
+The pattern used in the hybrid table is the below. 
+
+{{{
+!define SLIM_DT_GETTER (!!---!
+{
+"FormatVersion":"1.0",
+"MethodExtractorRules":[
+  {
+    "Scope":"(?s).*<[i]>(.*)</i>.*",
+    "TargetName":"$1",
+    "Parameters":""
+  },
+  {
+    "Scope":"(?s)^([^\\n]*)\\n.*",
+    "TargetName":"$1",
+    "Parameters":""
+  }
+ ]
+}
+!- --!!)
+!define SLIM_DT_SETTER (!!---!
+{
+"FormatVersion":"1.0",
+"MethodExtractorRules":[
+  {
+    "Scope":"(?s).*<[i]>(.*)</i>.*",
+    "TargetName":"set $1",
+    "Parameters":""
+  },
+  {
+    "Scope":".+",
+    "TargetName":"set $0",
+    "Parameters":""  }
+ ]
+}
+!- --!!)
+
+}}}
+
+
+!3 IMPORTANT: to avoid side effects always add a >TearDown page to reset the mappings to the defaults.  
 
 
 

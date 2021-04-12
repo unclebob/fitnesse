@@ -77,10 +77,10 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument) {
     inCollapsibleBlock = false;
 
     function inParagraph() { return getSelfOrAncestor(holder, "p"); }
-    function inDefinition() { return $(holder).parents().andSelf().filter("p.meta, p.comment").get(0); }
+    function inDefinition() { return $(holder).parents().addBack().filter("p.meta, p.comment").get(0); }
     function inTable() { return getSelfOrAncestor(holder, "table"); }
-    function inEscapedTable() { return $(holder).parents().andSelf().filter("table.escaped").get(0); }
-    function inHashTable() { return $(holder).parents().andSelf().filter("table.hashtable").get(0); }
+    function inEscapedTable() { return $(holder).parents().addBack().filter("table.escaped").get(0); }
+    function inHashTable() { return $(holder).parents().addBack().filter("table.hashtable").get(0); }
     function inTableRow() { return getSelfOrAncestor(holder, "tr", "tbody"); }
     function inAnchor() { return getSelfOrAncestor(holder, "a"); }
     function inNestedText() { return getSelfOrAncestor(holder, "div"); }

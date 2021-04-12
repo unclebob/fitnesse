@@ -8,7 +8,7 @@ import java.util.List;
 
 import fitnesse.util.Clock;
 import fitnesse.wiki.*;
-import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.VariableSource;
 
 public class ExternalTestPage extends BaseWikitextPage {
   private FileSystem fileSystem;

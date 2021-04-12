@@ -2,14 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import fitnesse.html.HtmlUtil;
+import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestResult;
+import fitnesse.testsystems.slim.results.SlimExceptionResult;
+import fitnesse.testsystems.slim.results.SlimTestResult;
+import fitnesse.testsystems.slim.tables.SyntaxError;
 import org.htmlparser.Node;
 import org.htmlparser.Tag;
 import org.htmlparser.nodes.TextNode;
@@ -20,24 +19,26 @@ import org.htmlparser.tags.TableRow;
 import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
 
-import fitnesse.html.HtmlUtil;
-import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionResult;
-import fitnesse.testsystems.TestResult;
-import fitnesse.testsystems.slim.results.SlimExceptionResult;
-import fitnesse.testsystems.slim.results.SlimTestResult;
-import fitnesse.testsystems.slim.tables.SyntaxError;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HtmlTable implements Table {
   private static final Logger LOG = Logger.getLogger(HtmlTable.class.getName());
 
-  private static final String SYMBOL_ASSIGNMENT = "\\$[A-Za-z]\\w*<?->?\\[";
+  private static final String SYMBOL_ASSIGNMENT = "\\$[A-Za-z]\\w*<?->?\\[|\\$`[^`]+`<?->?\\[";
   private static final String SYMBOL_ASSIGNMENT_SUFFIX = "\\]";
 
   private static final Pattern HTML_PATTERN = Pattern.compile("^(?:" + SYMBOL_ASSIGNMENT + ")?" +
                                                                 HtmlUtil.HTML_CELL_CONTENT_PATTERN_TEXT +
                                                                 SYMBOL_ASSIGNMENT_SUFFIX + "?$",
                                                           Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+  private static final Pattern CONTAINS_TABLE_HTML_PATTERN = Pattern.compile(".*(<table.*?>.*</table>).*",
+                                                                          Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
   private static final Pattern SYMBOL_REPLACEMENT_PATTERN = Pattern.compile("^(" + SYMBOL_ASSIGNMENT + ")(.*)(" +
           SYMBOL_ASSIGNMENT_SUFFIX + ")$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
@@ -135,6 +136,24 @@ public class HtmlTable implements Table {
     insertRowAfter(row, childRow);
   }
 
+  private void addChildTableInCell(int colIndex, int rowIndex, String childText) {
+    Row row = rows.get(rowIndex);
+
+    Cell cell = row.getColumn(colIndex);
+    String originalContent = cell.getContent();
+    cell.addChildTable(originalContent, "error", childText);
+  }
+
+  private void insertRow(int rowIndex, String childText,
+      String rowType, ExecutionResult executionResult) {
+    Row row = rows.get(rowIndex);
+    Row childRow = makeChildRow(row,
+        new TextNode("<pre>" + HtmlUtil.escapeHTML(childText) + "</pre>"),
+        rowType);
+    insertRowAfter(row, childRow);
+    row.setExecutionResult(executionResult);
+  }
+
   private Row makeChildRow(Row row, Node contents, String type) {
     Row childRow = new Row();
     TableColumn column = (TableColumn) newTag(TableColumn.class);
@@ -198,15 +217,12 @@ public class HtmlTable implements Table {
   @Override
   public void updateContent(int colIndex, int rowIndex, SlimExceptionResult exceptionResult) {
     Row row = rows.get(rowIndex);
-    Cell cell = row.getColumn(colIndex);
-    if (exceptionResult.hasMessage()) {
-      cell.setExceptionResult(exceptionResult);
+    if (colIndex < 0) { // Row Exception
+      insertRow(rowIndex, exceptionResult.getException(), "exception",
+          exceptionResult.getExecutionResult());
     } else {
-      Row childRow = makeChildRow(row,
-              new TextNode("<pre>" + HtmlUtil.escapeHTML(exceptionResult.getException()) + "</pre>"),
-              "exception");
-      insertRowAfter(row, childRow);
-      row.setExecutionResult(exceptionResult.getExecutionResult());
+      Cell cell = row.getColumn(colIndex);
+      cell.setExceptionResult(exceptionResult);
     }
   }
 
@@ -335,17 +351,35 @@ public class HtmlTable implements Table {
       return columnNode;
     }
 
+    public void addChildTable(String headerText, String classType,
+        String childText) {
+      String childTable = "<table><tr class=\"exception closed\"><td> <span class=\""
+          + classType + "\">" + headerText
+          + "</span></td></tr><tr class=\"exception-detail closed-detail\"><td>"
+          + childText + "</td</tr></table>";
+      this.setContent(childTable);
+    }
+
     public void setTestResult(SlimTestResult testResult) {
       this.testResult = testResult;
     }
 
-    public void setExceptionResult(ExceptionResult exceptionResult) {
+    public void setExceptionResult(SlimExceptionResult exceptionResult) {
       if (this.exceptionResult == null) {
         this.exceptionResult = exceptionResult;
-        setContent(String.format("%s <span class=\"%s\">%s</span>",
-                originalContent,
-                exceptionResult.getExecutionResult().toString(),
-                asHtml(exceptionResult.getMessage())));
+        String exceptionText = exceptionResult.getMessage();
+        if (exceptionText != null) {
+          setContent(String.format("%s <span class=\"%s\">%s</span>",
+              originalContent, exceptionResult.getExecutionResult().toString(),
+              asHtml(exceptionText)));
+        } else {
+          exceptionText = exceptionResult.getException();
+          addChildTable(
+              originalContent,
+              exceptionResult.getExecutionResult().toString(),
+              asHtml(exceptionText)
+          );
+        }
       }
     }
 
@@ -358,7 +392,20 @@ public class HtmlTable implements Table {
               : originalContent;
       switch (testResult.getExecutionResult()) {
         case PASS:
-          return String.format("<span class=\"pass\">%s</span>", message);
+          if (testResult.hasExpected()) {
+            if (qualifiesAsHtml(testResult.getActual()) || qualifiesAsHtml(testResult.getExpected())) {
+              return String.format("<span class=\"pass\">%s</span>",
+                asHtml(testResult.getExpected()));
+            } else {
+              String[] expected = parseSymbol(testResult.getExpected());
+              return String.format("<span class=\"pass\">%s</span>",
+                HtmlUtil.escapeHTML(expected[0]) +
+                  HtmlUtil.escapeHTML(expected[1]) +
+                  HtmlUtil.escapeHTML(expected[2]));
+            }
+          } else {
+            return String.format("<span class=\"pass\">%s</span>", message);
+          }
         case FAIL:
           if (testResult.hasActual() && testResult.hasExpected()) {
             if (qualifiesAsHtml(testResult.getActual()) || qualifiesAsHtml(testResult.getExpected())) {
@@ -374,8 +421,8 @@ public class HtmlTable implements Table {
                   HtmlUtil.escapeHTML(actual[2]),
                 HtmlUtil.escapeHTML(expected[0]) +
                   new HtmlDiffUtil.ExpectedBuilder(testResult.getActual(), expected[1])
-                    .setOpeningTag("</span><span class=\"diff\">")
-                    .setClosingTag("</span><span class=\"fail\">").build() +
+                    .setOpeningTag("<span class=\"diff\">")
+                    .setClosingTag("</span>").build() +
                   HtmlUtil.escapeHTML(expected[2]));
             }
           } else if ((testResult.hasActual() || testResult.hasExpected()) && testResult.hasMessage()) {
@@ -408,6 +455,9 @@ public class HtmlTable implements Table {
       }
       return text;
     }
+    if (containsHtmlTable(text) && qualifiesAsConvertedList(text)) {
+      return text;
+    }
     return HtmlUtil.escapeHTML(text);
   }
 
@@ -421,6 +471,19 @@ public class HtmlTable implements Table {
 
   static boolean qualifiesAsSymbolReplacement(String text) {
     return text.startsWith("$") && SYMBOL_REPLACEMENT_PATTERN.matcher(text).matches();
+  }
+
+  public static boolean qualifiesAsConvertedList(String text) {
+    if (qualifiesAsSymbolReplacement(text)) {
+      int contentOffset = text.indexOf('[');
+      String symbolContent = text.substring(contentOffset + 1, text.length() -1);
+      return qualifiesAsConvertedList(symbolContent);
+    }
+    return text.startsWith("[") && text.endsWith("]");
+  }
+
+  static boolean containsHtmlTable(String text) {
+    return text.contains("<") && CONTAINS_TABLE_HTML_PATTERN.matcher(text).matches();
   }
 
   private static String[] parseSymbol(String text) {
@@ -442,5 +505,3 @@ public class HtmlTable implements Table {
   }
 
 }
-
-

@@ -5,7 +5,7 @@ package fitnesse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.ServerSocket;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadFactory;
@@ -38,7 +38,7 @@ public class FitNesse {
         LOG.log(Level.WARNING, "Could not handle request. Thread pool is exhausted.");
       }
     };
-    this.executorService = new ThreadPoolExecutor(5, 100, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(2),
+    this.executorService = new ThreadPoolExecutor(5, 100, 10, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(),
             new DaemonThreadFactory(), rejectionHandler);
   }
 
@@ -64,8 +64,9 @@ public class FitNesse {
     Request request = new MockRequestBuilder(command).noChunk().build();
     FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(), context, new SerialExecutorService());
     Response response = expediter.createGoodResponse(request);
-    if (response.getStatus() != 200){
-        throw new Exception("error loading page: " + response.getStatus());
+    int responseStatus = response.getStatus();
+    if (responseStatus >= 400 && responseStatus <= 599){
+        throw new Exception("error loading page: " + responseStatus);
     }
     response.withoutHttpHeaders();
     MockResponseSender sender = new MockResponseSender(out);

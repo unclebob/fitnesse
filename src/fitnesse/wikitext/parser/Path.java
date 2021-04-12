@@ -1,7 +1,9 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.shared.ToHtml;
+
 import java.util.Collection;
-import java.util.Arrays;
+import java.util.Collections;
 
 public class Path extends SymbolType implements Rule, PathsProvider {
     public static final Path symbolType = new Path();
@@ -10,12 +12,12 @@ public class Path extends SymbolType implements Rule, PathsProvider {
         super("Path");
         wikiMatcher(new Matcher().startLineOrCell().string("!path"));
         wikiRule(this);
-        htmlTranslation(new HtmlBuilder("span").body(0, "classpath: ").attribute("class", "meta").inline());
+        htmlTranslation(Translate.with(ToHtml::path).child(0));
     }
 
     @Override
     public Collection<String> providePaths(Translator translator, Symbol symbol) {
-        return Arrays.asList(translator.translate(symbol.childAt(0)));
+        return Collections.singletonList(translator.translate(symbol.childAt(0)));
     }
 
     @Override

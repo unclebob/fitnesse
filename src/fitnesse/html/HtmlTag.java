@@ -12,6 +12,12 @@ public class HtmlTag extends HtmlElement implements Iterable<HtmlElement> {
   private final String tagName;
   private boolean isInline;
 
+  public static HtmlTag name(String tagName) { return new HtmlTag(tagName); }
+  public HtmlTag attribute(String name, String value) { addAttribute(name, value); return this; }
+  public HtmlTag body(String body) { add(body); return this; }
+  public HtmlTag child(HtmlElement child) { add(child); return this; }
+  public HtmlTag text(String text) { add(new HtmlText(text)); return this; }
+
   public HtmlTag(String tagName) {
     this.tagName = tagName;
   }
@@ -36,8 +42,12 @@ public class HtmlTag extends HtmlElement implements Iterable<HtmlElement> {
   }
 
   public String htmlInline() {
+    return htmlInline(0);
+  }
+
+  public String htmlInline(int depth) {
     isInline = true;
-    return html(0);
+    return html(depth);
   }
 
   public String html(int depth) {
@@ -100,7 +110,7 @@ public class HtmlTag extends HtmlElement implements Iterable<HtmlElement> {
   }
 
   private class HtmlFormatter {
-    private int depth;
+    private final int depth;
     private boolean childTagWasMade;
     private boolean lastMadeChildWasNotTag;
     private boolean firstElement;
@@ -162,7 +172,8 @@ public class HtmlTag extends HtmlElement implements Iterable<HtmlElement> {
     }
 
     private String makeChildFromTag(HtmlTag element) {
-      return (childShouldStartWithNewLine() ? endl : "") + element.html(depth + 1);
+      return (childShouldStartWithNewLine() ? endl : "")
+        + (isInline ? element.htmlInline(depth) : element.html(depth + 1));
     }
 
     private boolean childShouldStartWithNewLine() {
@@ -186,7 +197,7 @@ public class HtmlTag extends HtmlElement implements Iterable<HtmlElement> {
     }
 
     private String makeTabs() {
-      return makeIndent(depth);
+      return isInline ? "" : makeIndent(depth);
     }
   }
 }

@@ -12,43 +12,38 @@ import java.util.List;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
-import fitnesse.authentication.SecureResponder;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.NotFoundResponder;
+import fitnesse.responders.BasicResponder;
 import fitnesse.wiki.*;
 
 import static fitnesse.wiki.PageData.LAST_MODIFYING_USER;
 import static fitnesse.wiki.PageData.PropertyLAST_MODIFIED;
 
 
-public class VersionSelectionResponder implements SecureResponder {
+public class VersionSelectionResponder extends BasicResponder {
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-    SimpleResponse response = new SimpleResponse();
-    String resource = request.getResource();
-    WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = context.getRootPage().getPageCrawler().getPage(path);
-    if (page == null)
-      return new NotFoundResponder().makeResponse(context, request);
+    WikiPage page = getPage(context, request);
 
     PageData pageData = page.getData();
     List<VersionInfo> versions = getVersionsList(page);
 
     HtmlPage html = context.pageFactory.newPage();
-    html.setTitle("Version Selection: " + resource);
-    html.setPageTitle(new PageTitle("Version Selection", PathParser.parse(resource), pageData.getAttribute(PageData.PropertySUITES)));
-  html.put("lastModified", makeLastModifiedTag(pageData));
+    html.setTitle("Version Selection: " + request.getResource());
+    html.setPageTitle(new PageTitle("Version Selection", PathParser.parse(request.getResource()), pageData.getAttribute(PageData.PropertySUITES)));
+    html.put("lastModified", makeLastModifiedTag(pageData));
     html.put("versions", versions);
     html.setNavTemplate("viewNav");
     html.put("viewLocation", request.getResource());
     html.setMainTemplate("versionSelection");
 
-    response.setContent(html.html());
+    SimpleResponse response = new SimpleResponse();
+    response.setContent(html.html(request));
 
     return response;
   }

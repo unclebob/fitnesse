@@ -2,18 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim.converters;
 
-import fitnesse.slim.Converter;
-import fitnesse.util.StringUtils;
-
-public class CharConverter implements Converter<Character> {
+public class CharConverter extends ConverterBase<Character> {
 
   @Override
-  public String toString(Character o) {
-    return o != null ? o.toString() : NULL_VALUE;
-  }
-
-  @Override
-  public Character fromString(String arg) {
-    return !StringUtils.isBlank(arg) ? arg.charAt(0) : null;
+  public Character getObject(String arg) {
+    return arg.charAt(0);
   }
 }

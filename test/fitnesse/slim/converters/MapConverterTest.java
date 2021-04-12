@@ -1,19 +1,14 @@
 package fitnesse.slim.converters;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import fitnesse.html.HtmlTag;
 import fitnesse.slim.Converter;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
 
@@ -137,6 +132,13 @@ public class MapConverterTest {
 
     assertEquals(StringUtils.join(Arrays.asList("<table class=\"hash_table\">", "\t<tr class=\"hash_row\">", "\t\t<td class=\"hash_key\">a</td>", "\t\t<td class=\"hash_value\">b</td>", "\t</tr>",
         "\t<tr class=\"hash_row\">", "\t\t<td class=\"hash_key\">c</td>", "\t\t<td class=\"hash_value\">d</td>", "\t</tr>", "</table>"), HtmlTag.endl), editor.toString(aMap()));
+  }
+
+  @Test
+  public void nonHtmlStringWithPercentageReturnsEmptyMap() {
+    //See https://github.com/unclebob/fitnesse/issues/1190
+    makeMap("1%");
+    assertEquals(0, result.size());
   }
 
   private Map<Object, Object> aMap() {

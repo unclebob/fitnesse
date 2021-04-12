@@ -1,16 +1,17 @@
 package fitnesse.wiki.fs;
 
+import fitnesse.wiki.*;
+import fitnesse.wikitext.ParsingPage;
+import fitnesse.wikitext.VariableSource;
+import fitnesse.wikitext.parser.*;
+import org.apache.commons.lang3.StringUtils;
+import util.FileUtil;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-
-import org.apache.commons.lang.StringUtils;
-
-import fitnesse.wiki.*;
-import fitnesse.wikitext.parser.*;
-import util.FileUtil;
 
 import static fitnesse.util.StringUtils.isBlank;
 import static java.lang.String.format;

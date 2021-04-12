@@ -2,12 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki.fs;
 
-import java.io.File;
-import java.util.Properties;
-
 import fitnesse.wiki.SystemVariableSource;
+import fitnesse.wiki.UrlPathVariableSource;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
+import fitnesse.wikitext.VariableSource;
+
+import java.io.File;
+import java.util.Map;
+import java.util.Properties;
 
 // In memory page, used for testing and instant pages (like GitFileVersionController's RecentChanges page).
 public class InMemoryPage {
@@ -20,13 +23,21 @@ public class InMemoryPage {
     return makeRoot(name, null, fileSystem);
   }
 
+  public static WikiPage makeRoot(String name, Map<String, String> customProperties) {
+    return makeRoot(name, new MemoryFileSystem(), new UrlPathVariableSource(new SystemVariableSource(null), customProperties));
+  }
+
   public static WikiPage makeRoot(String name, Properties properties) {
     return makeRoot(name, properties, new MemoryFileSystem());
   }
 
   public static WikiPage makeRoot(String name, Properties properties, MemoryFileSystem fileSystem) {
+    return makeRoot(name, fileSystem, new SystemVariableSource(properties));
+  }
+
+  public static WikiPage makeRoot(String name, MemoryFileSystem fileSystem, VariableSource variableSource) {
     WikiPageFactory factory = newInstance(fileSystem);
-    return factory.makePage(new File("."), name, null, new SystemVariableSource(properties));
+    return factory.makePage(new File("."), name, null, variableSource);
   }
 
   public static WikiPageFactory newInstance() {

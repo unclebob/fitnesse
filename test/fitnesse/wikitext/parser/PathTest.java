@@ -2,6 +2,7 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiSourcePage;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import java.util.List;
@@ -30,12 +31,4 @@ public class PathTest {
             ParserTestHelper.newLineRendered + "<span class=\"meta\">classpath: stuffy</span>" + ParserTestHelper.newLineRendered);
     }
 
-    @Test
-    public void findsDefinitions() throws Exception {
-        WikiPage page = new TestRoot().makePage("TestPage", "!path stuff\n!note and\n!path nonsense");
-        List<String> paths = new Paths(new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page)))).getPaths(ParserTestHelper.parse(page));
-        assertEquals(2, paths.size());
-        assertEquals("stuff", paths.get(0));
-        assertEquals("nonsense", paths.get(1));
-    }
 }

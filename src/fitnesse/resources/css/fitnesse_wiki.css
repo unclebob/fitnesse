@@ -152,7 +152,7 @@ span.fail * {
   background-color: #FFAAAA;
 }
 .diff,
-span.diff * {
+span.diff {
   background-color: #FF6666;
 }
 .ignore,

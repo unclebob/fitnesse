@@ -1,3 +1,6 @@
+#Don't remove this start magic to include and test this page in another page
+${exclamation}${minus}
+
 !define TEST_SYSTEM {slim}
 
 !| import |
@@ -71,7 +74,7 @@ In this case no detailed diff is wanted.
 
 
 Test doubles by string comparison.
-In this case detailed diff ist wanted.
+In this case detailed diff is wanted.
 
 | Detailed Diff |
 | actual double | expected double? | #comment |
@@ -106,21 +109,21 @@ Test symbols by string comparison.
 
 | Detailed Diff |
 | actual symbol | expected symbol? | #comment |
-| abc           | $symbol=         | |
-| $symbol       | abc              | |
+| def           | $symbol=         | |
+| $symbol       | def              | |
 | $symbol       | xyz              | |
-| $symbol       | xbc              | |
-| $symbol       | ayc              | |
-| $symbol       | abz              | |
-| abc           | $symbol          | |
+| $symbol       | xef              | |
+| $symbol       | dyf              | |
+| $symbol       | dez              | |
+| def           | $symbol          | |
 | xyz           | $symbol          | |
-| xbc           | $symbol          | |
-| ayc           | $symbol          | |
-| abz           | $symbol          | |
+| xef           | $symbol          | |
+| dyf           | $symbol          | |
+| dez           | $symbol          | |
 |               | $symbol          | |
 
 
-Test custom comparator, see FitNesse.UserGuide.AdministeringFitNesse.ConfigurationFile
+Test custom comparator, see <FitNesse.UserGuide.AdministeringFitNesse.ConfigurationFile
 The inverse comparator fitnesse.slim.test.InverseComparator negates the method String.equals(String).
 
 | script | Detailed Diff |
@@ -143,3 +146,6 @@ Test Scenario and Script
 
 !| Script |
 | Detailed Diff Scenario Test |
+
+#Don't remove this end magic to include and test this page in another page
+${minus}${exclamation}

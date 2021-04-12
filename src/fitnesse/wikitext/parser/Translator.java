@@ -1,38 +1,47 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.SourcePage;
+
 public abstract class Translator {
 
-    private SourcePage currentPage;
-    protected abstract Translation getTranslation(SymbolType symbolType);
+  private final SourcePage currentPage;
 
-    public SourcePage getPage() { return currentPage; }
+  protected abstract Translation getTranslation(SymbolType symbolType);
 
-    protected Translator(SourcePage currentPage) {
-        this.currentPage = currentPage;
-    }
-    
-    public String translateTree(Symbol syntaxTree) {
-        StringBuilder result = new StringBuilder();
-        for (Symbol symbol : syntaxTree.getChildren()) {
-            result.append(translate(symbol));
-        }
-        return result.toString();
-    }
+  public SourcePage getPage() {
+    return currentPage;
+  }
 
-    public String translate(Symbol symbol) {
-        if (getTranslation(symbol.getType()) != null) {
-            return getTranslation(symbol.getType()).toTarget(this, symbol);
-        }
-        else {
-            StringBuilder result = new StringBuilder(symbol.getContent());
-            for (Symbol child: symbol.getChildren()) {
-                result.append(translate(child));
-            }
-            return result.toString();
-        }
-    }
+  protected Translator(SourcePage currentPage) {
+    this.currentPage = currentPage;
+  }
 
-    public String formatMessage(String message) {
-        return translate(new Symbol(SymbolType.Meta).add(message));
+  public String translateTree(Symbol syntaxTree) {
+    StringBuilder result = new StringBuilder();
+    for (Symbol symbol : syntaxTree.getChildren()) {
+      result.append(translate(symbol));
     }
+    return result.toString();
+  }
+
+  public String translate(Symbol symbol) {
+    Translation translation = getTranslation(symbol);
+    if (translation != null) {
+      return translation.toTarget(this, symbol);
+    } else {
+      StringBuilder result = new StringBuilder(symbol.getContent());
+      for (Symbol child : symbol.getChildren()) {
+        result.append(translate(child));
+      }
+      return result.toString();
+    }
+  }
+
+  protected Translation getTranslation(Symbol symbol) {
+    return getTranslation(symbol.getType());
+  }
+
+  public String formatMessage(String message) {
+    return translate(new Symbol(SymbolType.Meta).add(message));
+  }
 }

@@ -2,24 +2,27 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import java.io.File;
-import java.util.Map;
-import java.util.Properties;
-
 import fitnesse.authentication.Authenticator;
 import fitnesse.components.Logger;
 import fitnesse.html.template.PageFactory;
 import fitnesse.reporting.FormatterFactory;
 import fitnesse.responders.ResponderFactory;
+import fitnesse.testrunner.run.FileBasedTestRunFactory;
+import fitnesse.testrunner.run.TestRunFactoryRegistry;
 import fitnesse.testsystems.TestSystemFactory;
 import fitnesse.testsystems.TestSystemListener;
+import fitnesse.util.StringUtils;
 import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.UrlPathVariableSource;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.fs.VersionsController;
-import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.VariableSource;
+
+import java.io.File;
+import java.util.Map;
+import java.util.Properties;
 
 public class FitNesseContext {
   public static final String WIKI_PROTOCOL_PROPERTY = "wiki.protocol";
@@ -35,6 +38,7 @@ public class FitNesseContext {
 
   public final TestSystemFactory testSystemFactory;
   public final TestSystemListener testSystemListener;
+  public final TestRunFactoryRegistry testRunFactoryRegistry;
 
   public final FormatterFactory formatterFactory;
 
@@ -44,6 +48,7 @@ public class FitNesseContext {
   private final String rootDirectoryName;
   public final String contextRoot;
   public final ResponderFactory responderFactory;
+  public final String theme;
   public final PageFactory pageFactory;
 
   public final SystemVariableSource variableSource;
@@ -59,7 +64,9 @@ public class FitNesseContext {
                             Authenticator authenticator, Logger logger,
                             TestSystemFactory testSystemFactory, TestSystemListener testSystemListener,
                             FormatterFactory formatterFactory,
-                            Properties properties) {
+                            Properties properties,
+                            SystemVariableSource variableSource,
+                            String theme) {
     super();
     this.version = version;
     this.wikiPageFactory = wikiPageFactory;
@@ -75,10 +82,13 @@ public class FitNesseContext {
     this.testSystemListener = testSystemListener;
     this.formatterFactory = formatterFactory;
     this.properties = properties;
+    this.theme = theme;
     responderFactory = new ResponderFactory(getRootPagePath());
-    variableSource = new SystemVariableSource(properties);
+    this.variableSource = variableSource;
     fitNesse = new FitNesse(this);
     pageFactory = new PageFactory(this);
+    testRunFactoryRegistry = new TestRunFactoryRegistry(this);
+    testRunFactoryRegistry.addFactory(new FileBasedTestRunFactory(this));
   }
 
   public WikiPage getRootPage() {
@@ -117,8 +127,7 @@ public class FitNesseContext {
     return variableSource.getProperty(name);
   }
 
-  private String unifiedPathPattern(String s)
-  {
-    return s.replace("/",File.separator);
+  private String unifiedPathPattern(String s) {
+    return StringUtils.replace(s, "/", File.separator);
   }
 }

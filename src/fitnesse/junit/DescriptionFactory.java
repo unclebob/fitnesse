@@ -1,10 +1,10 @@
 package fitnesse.junit;
 
-import java.lang.annotation.Annotation;
-
 import fitnesse.testsystems.TestPage;
 import fitnesse.wiki.WikiPage;
 import org.junit.runner.Description;
+
+import java.lang.annotation.Annotation;
 
 /**
  * Factory to create jUnit test Descriptions.
@@ -27,7 +27,7 @@ public class DescriptionFactory {
    * @return description.
    */
   public Description createDescription(Class<?> clazz, WikiPage page) {
-    String name = page.getPageCrawler().getFullPath().toString();
+    String name = page.getFullPath().toString();
     FitNessePageAnnotation wikiPageAnnotation = new FitNessePageAnnotation(page);
     return createDescription(clazz, name, wikiPageAnnotation);
   }

@@ -55,26 +55,6 @@ public class WikiBuilder implements Translation {
         return this;
     }
 
-    public WikiBuilder property(final String key, final String value, final String text) {
-        builders.add(new WikiStringBuilder() {
-            @Override
-            public void build(Translator translator, Symbol symbol, StringBuilder wikiString) {
-                if (symbol.getProperty(key, "*none*").equals(value)) wikiString.append(text);
-            }
-        });
-        return this;
-    }
-
-    public WikiBuilder property(final String key) {
-        builders.add(new WikiStringBuilder() {
-            @Override
-            public void build(Translator translator, Symbol symbol, StringBuilder wikiString) {
-                if (symbol.hasProperty(key)) wikiString.append(symbol.getProperty(key));
-            }
-        });
-        return this;
-    }
-
     @Override
     public String toTarget(Translator translator, Symbol symbol) {
         StringBuilder result = new StringBuilder();

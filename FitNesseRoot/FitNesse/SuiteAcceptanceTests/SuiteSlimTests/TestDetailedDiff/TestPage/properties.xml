@@ -7,6 +7,7 @@
 <RecentChanges/>
 <Refactor/>
 <Search/>
+<Suites>negativeTest, includedByParent</Suites>
 <Test/>
 <Versions/>
 <WhereUsed/>

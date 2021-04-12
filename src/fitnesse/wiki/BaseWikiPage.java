@@ -23,11 +23,6 @@ public abstract class BaseWikiPage implements WikiPage {
   }
 
   @Override
-  public PageCrawler getPageCrawler() {
-    return new PageCrawlerImpl(this);
-  }
-
-  @Override
   public WikiPage getParent() {
     return parent == null ? this : parent;
   }
@@ -53,8 +48,8 @@ public abstract class BaseWikiPage implements WikiPage {
   @Override
   public int compareTo(WikiPage other) {
     try {
-      WikiPagePath path1 = getPageCrawler().getFullPath();
-      WikiPagePath path2 = other.getPageCrawler().getFullPath();
+      WikiPagePath path1 = getFullPath();
+      WikiPagePath path2 = other.getFullPath();
       return path1.compareTo(path2);
     }
     catch (Exception e) {
@@ -68,9 +63,16 @@ public abstract class BaseWikiPage implements WikiPage {
       return true;
     if (!(other instanceof WikiPage))
       return false;
+    if (other instanceof SymbolicPage) {
+      return other.equals(this);
+    }
     try {
-      WikiPagePath path1 = getPageCrawler().getFullPath();
-      WikiPagePath path2 = ((WikiPage) other).getPageCrawler().getFullPath();
+      WikiPage otherPage = (WikiPage) other;
+      if (isRoot() && otherPage.isRoot()) {
+        return getName().equals(otherPage.getName());
+      }
+      WikiPagePath path1 = getFullPath();
+      WikiPagePath path2 = otherPage.getFullPath();
       return path1.equals(path2);
     } catch (Exception e) {
       return false;
@@ -80,7 +82,7 @@ public abstract class BaseWikiPage implements WikiPage {
   @Override
   public int hashCode() {
     try {
-      return getPageCrawler().getFullPath().hashCode();
+      return getFullPath().hashCode();
     } catch (Exception e) {
       return 0;
     }

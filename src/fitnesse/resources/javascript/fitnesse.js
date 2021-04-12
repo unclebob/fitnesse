@@ -37,23 +37,23 @@ $(document)
 	})
 	.on('click', 'article .collapsible .expandall', function () {
 		var section = $(this).closest('.collapsible');
-		section.find('.collapsible').andSelf().removeClass('closed');
+		section.find('.collapsible').addBack().removeClass('closed');
 		section.find('.scenario').removeClass('closed').next().show();
 		return false;
 	})
 	.on('click', 'article .collapsible .collapseall', function () {
 		var section = $(this).closest('.collapsible');
-		section.find('.collapsible, .scenario').andSelf().addClass('closed');
+		section.find('.collapsible, .scenario').addBack().addClass('closed');
 		section.find('.scenario').addClass('closed').next().hide();
 		return false;
     })
     .on('click', '.page-actions .expandall', function () {
-        $(document.body).find('.collapsible').andSelf().removeClass('closed');
+        $(document.body).find('.collapsible').addBack().removeClass('closed');
         $(document.body).find('.scenario').removeClass('closed').next().show();
         return false;
 	})
     .on('click', '.page-actions .collapseall', function () {
-        $(document.body).find('.collapsible, .scenario').andSelf().addClass('closed');
+        $(document.body).find('.collapsible, .scenario').addBack().addClass('closed');
         $(document.body).find('.scenario').addClass('closed').next().hide();
         return false;
     })
@@ -162,7 +162,7 @@ $(document).ready(function() {
 
 function initErrorMetadata() {
     var errors = $(".alternating_block .fail, .alternating_block .error, .alternating_block .exception")
-        .not(".scenario, .scenario .fail, .scenario .error, .exception .error");
+        .not(".scenario, .scenario>.fail, .scenario>.error, .exception .error");
 
     $("#error-nav-max").text(errors.length);
 

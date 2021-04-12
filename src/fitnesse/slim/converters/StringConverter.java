@@ -2,17 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim.converters;
 
-import fitnesse.slim.Converter;
-
-public class StringConverter implements Converter<String> {
-
-  @Override
-  public String toString(String o) {
-    return o != null ? o : NULL_VALUE;
-  }
+public class StringConverter extends ConverterBase<String> {
 
   @Override
   public String fromString(String arg) {
+    return arg;
+  }
+
+  @Override
+  protected String getObject(String arg) {
     return arg;
   }
 }

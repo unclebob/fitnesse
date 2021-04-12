@@ -24,6 +24,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
+import util.GradleSupport;
 import util.StreamReader;
 
 public class FitServerTest {
@@ -327,7 +328,7 @@ public class FitServerTest {
   }
 
   protected String command() {
-    return "java -cp build/classes/main fit.FitServer";
+    return "java -cp " + GradleSupport.CLASSES_DIR + " fit.FitServer";
   }
 
   protected String simpleTable(String fixtureName) {

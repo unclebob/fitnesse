@@ -2,18 +2,21 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.reporting;
 
-import static fitnesse.testsystems.ExecutionResult.getExecutionResult;
+import fitnesse.html.HtmlTag;
+import fitnesse.html.HtmlUtil;
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.TestSystem;
+import fitnesse.util.TimeMeasurement;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
 
-import fitnesse.testsystems.*;
-import fitnesse.util.TimeMeasurement;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
+import static fitnesse.testsystems.ExecutionResult.getExecutionResult;
 
 public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeable {
   private static final String TEST_SUMMARIES_ID = "test-summaries";
@@ -26,13 +29,15 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
   private int totalTests = 1;
   private TimeMeasurement latestTestTime;
   private String testSummariesId = TEST_SUMMARIES_ID;
+  private boolean testSummariesPresent;
   private TimeMeasurement totalTimeMeasurement;
 
 
-  public SuiteHtmlFormatter(WikiPage page, Writer writer) {
+  public SuiteHtmlFormatter(WikiPage page, boolean testSummariesPresent, Writer writer) {
     super(page, writer);
+    this.testSummariesPresent = testSummariesPresent;
     totalTimeMeasurement = new TimeMeasurement().start();
-    testBasePathName = PathParser.render(page.getPageCrawler().getFullPath());
+    testBasePathName = PathParser.render(page.getFullPath());
   }
 
   @Override
@@ -110,6 +115,12 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
 
     getAssertionCounts().add(testSummary);
 
+    if (hasTestSummaries()) {
+      addToTestSummaries(relativeName, testSummary);
+    }
+  }
+
+  protected void addToTestSummaries(String relativeName, TestSummary testSummary) {
     HtmlTag tag = new HtmlTag("li");
 
     tag.add(HtmlUtil.makeSpanTag("results " + getExecutionResult(relativeName, testSummary), testSummary.toString()));
@@ -158,11 +169,13 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
 
   @Override
   public void testSystemStarted(TestSystem testSystem) {
-    testSystemName = testSystem.getName();
-    testSummariesId = "test-system-" + testSystemName;
-    String tag = String.format("<h3>%s</h3>\n<ul id=\"%s\"></ul>", testSystemName, testSummariesId);
-    HtmlTag insertScript = JavascriptUtil.makeAppendElementScript(TEST_SUMMARIES_ID, tag);
-    writeData(insertScript.html());
+    if (hasTestSummaries()) {
+      testSystemName = testSystem.getName();
+      testSummariesId = "test-system-" + testSystemName;
+      String tag = String.format("<h3>%s</h3>\n<ul id=\"%s\"></ul>", testSystemName, testSummariesId);
+      HtmlTag insertScript = JavascriptUtil.makeAppendElementScript(TEST_SUMMARIES_ID, tag);
+      writeData(insertScript.html());
+    }
   }
 
   @Override
@@ -176,6 +189,9 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
     return summaryContent;
   }
 
+  protected boolean hasTestSummaries() {
+    return testSummariesPresent;
+  }
 }
 
 

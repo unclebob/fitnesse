@@ -26,10 +26,8 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import util.FileUtil;
 
 public class FileSystemPageZipFileVersioningTest {
   public static final int MAX_HISTORY_DEPTH = 3;

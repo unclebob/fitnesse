@@ -2,20 +2,24 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.junit.Before;
-import org.junit.Test;
-
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PageType;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.SymbolicPage;
+import fitnesse.wiki.WikiImportProperty;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperty;
+import fitnesse.wiki.WikiPageUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.junit.Before;
+import org.junit.Test;
 
-import static fitnesse.wiki.PageData.PropertyHELP;
-import static fitnesse.wiki.PageData.PropertySUITES;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -314,7 +318,7 @@ public class PropertiesResponderTest {
     data.setAttribute("Suite");
     page.commit(data);
     assertEquals(page, context.getRootPage().getPageCrawler().getPage(PathParser.parse(".SomePage")));
-    request.setResource(page.getPageCrawler().getFullPath().toString());
+    request.setResource(page.getFullPath().toString());
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
     assertSubString("Page type:", html);
@@ -330,7 +334,7 @@ public class PropertiesResponderTest {
     PageData data = page.getData();
     data.setAttribute("Test");
     page.commit(data);
-    request.setResource(page.getPageCrawler().getFullPath().toString());
+    request.setResource(page.getFullPath().toString());
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
     assertSubString("Page type:", html);
@@ -346,7 +350,7 @@ public class PropertiesResponderTest {
     PageData data = page.getData();
     data.setAttribute("Prune");
     page.commit(data);
-    request.setResource(page.getPageCrawler().getFullPath().toString());
+    request.setResource(page.getFullPath().toString());
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
     assertSubString("Page type:", html);

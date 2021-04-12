@@ -2,18 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.plugins;
 
-import java.io.File;
-import java.net.URL;
-import java.util.List;
-import java.util.Properties;
-
 import fitnesse.ConfigurationParameter;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.ComponentFactory;
-import fitnesse.components.PluginsClassLoader;
 import fitnesse.reporting.BaseFormatter;
 import fitnesse.reporting.FormatterFactory;
 import fitnesse.responders.ResponderFactory;
@@ -36,6 +30,7 @@ import fitnesse.testsystems.slim.tables.SlimAssertion;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.testutil.SimpleAuthenticator;
+import fitnesse.util.ClassUtils;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.WikiPageFactory;
@@ -48,20 +43,35 @@ import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.SymbolStream;
 import fitnesse.wikitext.parser.SymbolType;
 import fitnesse.wikitext.parser.Today;
-import fitnesse.wikitext.parser.VariableSource;
-
+import fitnesse.wikitext.VariableSource;
 import org.htmlparser.nodes.TextNode;
 import org.htmlparser.tags.TableColumn;
 import org.htmlparser.tags.TableRow;
 import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.List;
+import java.util.Properties;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class PluginsLoaderTest {
+  private ClassLoader originalClassLoader;
   private Properties testProperties;
   private PluginsLoader loader;
   private ResponderFactory responderFactory;
@@ -70,6 +80,7 @@ public class PluginsLoaderTest {
   private SlimTableFactory testSlimTableFactory;
   private CustomComparatorRegistry testCustomComparatorsRegistry;
   private MultipleTestSystemFactory testTestSystemFactory;
+  private URLClassLoader classLoader;
 
   @Before
   public void setUp() throws Exception {
@@ -79,21 +90,29 @@ public class PluginsLoaderTest {
     testWikiPageFactoryRegistry = new FileSystemPageFactory();
     testSlimTableFactory = new SlimTableFactory();
     testCustomComparatorsRegistry = new CustomComparatorRegistry();
-    testTestSystemFactory = new MultipleTestSystemFactory(testSlimTableFactory, testCustomComparatorsRegistry);
 
-    URL sampleUrl = new File("test/fitnesse/plugins").toURI().toURL();
-    PluginsClassLoader.addUrlToClasspath(sampleUrl);
+    originalClassLoader = Thread.currentThread().getContextClassLoader();
+    classLoader = createClassLoaderWithTestPlugin();
+    ClassUtils.setClassLoader(classLoader);
 
-    loader = new PluginsLoader(new ComponentFactory(testProperties));
+    testTestSystemFactory = new MultipleTestSystemFactory(testSlimTableFactory, testCustomComparatorsRegistry, classLoader);
+
+    loader = new PluginsLoader(new ComponentFactory(testProperties), classLoader);
 
     assertSymbolTypeMatch("!today", false);
+  }
+
+  @After
+  public void tearDown() {
+    ClassUtils.setClassLoader(null);
+    Thread.currentThread().setContextClassLoader(originalClassLoader);
   }
 
   @Test
   public void testAddPlugins() throws Exception {
     testProperties.setProperty(ConfigurationParameter.PLUGINS.getKey(), DummyPlugin.class.getName());
 
-    loader = new PluginsLoader(new ComponentFactory(testProperties));
+    loader = new PluginsLoader(new ComponentFactory(testProperties), classLoader);
 
     loader.loadResponders(responderFactory);
     loader.loadSymbolTypes(testProvider);
@@ -111,7 +130,7 @@ public class PluginsLoaderTest {
   public void shouldHandleInstanceMethods() throws Exception {
     testProperties.setProperty(ConfigurationParameter.PLUGINS.getKey(), InstantiableDummyPlugin.class.getName());
     testProperties.setProperty("responderName", "instanceTest");
-    loader = new PluginsLoader(new ComponentFactory(testProperties));
+    loader = new PluginsLoader(new ComponentFactory(testProperties), classLoader);
 
     loader.loadResponders(responderFactory);
 
@@ -127,7 +146,7 @@ public class PluginsLoaderTest {
   public void testAddResponderPlugins() throws Exception {
     String respondersValue = "custom1:" + WikiPageResponder.class.getName() + ",custom2:" + EditResponder.class.getName();
     testProperties.setProperty(ConfigurationParameter.RESPONDERS.getKey(), respondersValue);
-    loader = new PluginsLoader(new ComponentFactory(testProperties));
+    loader = new PluginsLoader(new ComponentFactory(testProperties), classLoader);
 
     loader.loadResponders(responderFactory);
 
@@ -212,6 +231,23 @@ public class PluginsLoaderTest {
   }
 
   @Test
+  public void noDefaultTheme() throws PluginException {
+    classLoader = new URLClassLoader(new URL[0], ClassLoader.getSystemClassLoader());
+    ClassUtils.setClassLoader(classLoader);
+
+    loader = new PluginsLoader(new ComponentFactory(testProperties), classLoader);
+
+    String theme = loader.getDefaultTheme();
+    assertNull(theme);
+  }
+
+  @Test
+  public void testDefaultThemeFromPlugin() {
+    String theme = loader.getDefaultTheme();
+    assertEquals("dummy-theme", theme);
+  }
+
+  @Test
   public void testWikiPageFactoryCreation() throws Exception {
     testProperties.setProperty(ConfigurationParameter.WIKI_PAGE_FACTORIES.getKey(), FooWikiPageFactory.class.getName());
 
@@ -290,6 +326,12 @@ public class PluginsLoaderTest {
     tableRow.setChildren(new NodeList(tableColumn));
     tableTag.setChildren(new NodeList(tableRow));
     return new HtmlTable(tableTag);
+  }
+
+  public static URLClassLoader createClassLoaderWithTestPlugin() throws MalformedURLException {
+    URL pluginLoaderTestDirectory = new File("plugin-loader-test").toURI().toURL();
+
+    return new URLClassLoader(new URL[] { pluginLoaderTestDirectory }, ClassLoader.getSystemClassLoader());
   }
 
   public static class TestContentFilter implements ContentFilter {

@@ -3,7 +3,7 @@
  <p>$lastModified</p>
  <form method="post">
   <input type="hidden" name="responder" value="saveProperties"/>
-  
+
   <h2>Page properties</h2>
   <div class="properties">
    <fieldset>
@@ -11,10 +11,10 @@
     #foreach( $pageType in $pageTypes )
     <label for="$pageType"><input type="radio" id="$pageType" name="PageType" value="$pageType"#if( $pageType == $selectedPageType) checked="checked"#end/>$pageType</label>
     #end
-    
+
     <label for="Prune"><input type="checkbox" id="Prune" name="Prune"#checked( "Prune" )/>Skip (Recursive)</label>
    </fieldset>
-     
+
    <fieldset>
     <legend>Actions:</legend>
     #foreach( $action in $actionTypes )
@@ -28,7 +28,7 @@
     <label for="$navigation"><input type="checkbox" id="$navigation" name="$navigation"#checked( $navigation )/>$navigation</label>
     #end
    </fieldset>
-    
+
    <fieldset>
     <legend>Security:</legend>
     #foreach( $security in $securityTypes )
@@ -42,7 +42,7 @@
     <label for="HelpText">Help text:</label>
     <input type="text" id="HelpText" name="HelpText"#value( "Help" ) size="70"/>
    </fieldset>
-    
+
    <fieldset>
     <label for="Suites">Tags:</label>
      <input type="text" id="Suites" title="Separate tags by a comma" name="Suites"#value( "Suites" ) size="70"/>
@@ -61,7 +61,7 @@
    <label for="remoteUrl">Remote Wiki URL:</label>
    <input type="text" id="remoteUrl" name="remoteUrl" size="70"/>
   </fieldset>
-  
+
   <fieldset>
   #set( $submitMsg = "Import" )
   #elseif( $makeImportRootForm )
@@ -76,7 +76,7 @@
    <a href="$sourceUrl">$sourceUrl</a>.</p>
   #set( $submitMsg = "Update Content and Subpages" )
   #end
-   
+
    <label class="checkbox" for="autoUpdate"><input type="checkbox" id="autoUpdate" name="autoUpdate"#if( $autoUpdate ) checked="checked"#end/>Automatically update imported content when executing tests</label>
    <input type="hidden" name="responder" value="import"/>
   </fieldset>
@@ -84,8 +84,8 @@
    <input type="submit" name="save" value="$submitMsg"/>
   </fieldset>
  </form>
- 
- 
+
+
  <form method="get" action="" name="symbolics" id="symbolics">
   <input type="hidden" name="responder" value="symlink"/>
   <h2>Symbolic Links</h2>
@@ -112,17 +112,17 @@
    #end
    <tr>
     <td>
-     <input type="text" name="linkName" size="30"/>
+     <input type="text" name="linkName" size="30" required/>
     </td>
     <td>
-     <input type="text" name="linkPath" size="70"/>
+     <input type="text" name="linkPath" size="70" required/>
     </td>
     <td>
      <input type="submit" name="submit" value="Create/Replace"/>
     </td>
    </tr>
   </table>
-  
+
   <a class="button" href="$viewLocation">Cancel</a>
 
  </form>

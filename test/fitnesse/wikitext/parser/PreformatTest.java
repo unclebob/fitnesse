@@ -1,6 +1,5 @@
 package fitnesse.wikitext.parser;
 
-import fitnesse.html.HtmlElement;
 import org.junit.Test;
 
 public class PreformatTest {
@@ -9,12 +8,12 @@ public class PreformatTest {
     }
 
     @Test public void translatesPreformats() {
-        ParserTestHelper.assertTranslatesTo("{{{stuff}}}", "<pre>stuff</pre>" + HtmlElement.endl);
-        ParserTestHelper.assertTranslatesTo("{{{''stuff''}}}", "<pre>''stuff''</pre>" + HtmlElement.endl);
-        ParserTestHelper.assertTranslatesTo("{{{<stuff>}}}", "<pre>&lt;stuff&gt;</pre>" + HtmlElement.endl);
+        ParserTestHelper.assertTranslatesTo("{{{stuff}}}", "<pre>stuff</pre>");
+        ParserTestHelper.assertTranslatesTo("{{{''stuff''}}}", "<pre>''stuff''</pre>");
+        ParserTestHelper.assertTranslatesTo("{{{<stuff>}}}", "<pre>&lt;stuff&gt;</pre>");
     }
 
     @Test public void translatesVariablesInPreformats() {
-        ParserTestHelper.assertTranslatesTo("{{{s${x}f}}}", new TestVariableSource("x", "tuf"), "<pre>stuff</pre>" + HtmlElement.endl);
+        ParserTestHelper.assertTranslatesTo("{{{s${x}f}}}", new TestVariableSource("x", "tuf"), "<pre>stuff</pre>");
     }
 }

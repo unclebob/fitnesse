@@ -34,7 +34,7 @@ FitNesse started as an HTML and [[wiki][http://wiki.org/wiki.cgi?WhatIsWiki]] "f
 
 !*** From the [[Fit website][http://fit.c2.com/]]:
 
-Great software requires collaboration and communication.Fitis a tool for enhancing collaboration in software development. It's an invaluable way to collaborate on complicated problems -and get them right- early in development.
+Great software requires collaboration and communication.Fit is a tool for enhancing collaboration in software development. It's an invaluable way to collaborate on complicated problems -and get them right- early in development.
 
 Fit allows customers, testers, and programmers to learn what their software ''should'' do and what it ''does'' do. It automatically compares customers' expectations to actual results.
 

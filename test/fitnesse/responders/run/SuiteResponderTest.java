@@ -2,9 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import java.io.File;
-import java.io.FileInputStream;
-
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -28,9 +25,21 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import util.FileUtil;
 
-import static org.junit.Assert.*;
-import static util.RegexTestCase.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import static fitnesse.wiki.WikiPageProperty.SUITES;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static util.RegexTestCase.assertDoesntHaveRegexp;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
 
 public class SuiteResponderTest {
   private static final String TEST_TIME = "12/5/2008 01:19:00";
@@ -88,14 +97,17 @@ public class SuiteResponderTest {
     FitNesseUtil.destroyTestContext();
   }
 
-  private String runSuite() throws Exception {
+  @Test
+  public void nonExistingReturns404() throws Exception {
+    request.setResource("DoesNotExist");
     Response response = responder.makeResponse(context, request);
-    MockResponseSender sender = new MockResponseSender();
-    sender.doSending(response);
-    String results = sender.sentData();
-    return results;
-  }
 
+    int status = response.getStatus();
+    assertEquals(404, status);
+
+    String results = getResponseContent(response);
+    assertSubString("Not Found:DoesNotExist", results);
+  }
 
   @Test
   public void testWithOneTest() throws Exception {
@@ -133,6 +145,26 @@ public class SuiteResponderTest {
     assertSubString("name=\"TestTwo2\"", results);
     assertSubString("PassFixture", results);
     assertSubString("FailFixture", results);
+
+    assertSubString("RerunLastFailures", results);
+    assertSubString("Rerun Failed", results);
+    File rerunPage = responder.getRerunPageFile();
+    assertTrue(rerunPage.exists());
+    String rerunPageContent = FileUtil.getFileContent(rerunPage);
+    assertSubString("SuitePage.TestTwo", rerunPageContent);
+    assertNotSubString("TestOne", rerunPageContent);
+
+    // execute rerun suite
+    String rerunPageName = responder.getRerunPageName();
+    request = new MockRequest();
+    request.setResource(rerunPageName);
+    responder = new SuiteResponder();
+    suite = WikiPageUtil.addPage(root, PathParser.parse(rerunPageName), rerunPageContent);
+    responder.page = suite;
+
+    String rerunresults = runSuite();
+    assertSubString("href=\\\"#SuitePage.TestTwo1\\\"", rerunresults);
+    assertNotSubString("TestOne", rerunresults);
   }
 
   @Test
@@ -153,6 +185,9 @@ public class SuiteResponderTest {
     assertNotSubString("id=\"TestTwo2\"", results);
     assertSubString("PassFixture", results);
     assertNotSubString("FailFixture", results);
+
+    File rerunPage = responder.getRerunPageFile();
+    assertFalse(rerunPage.exists());
   }
 
   @Test
@@ -262,6 +297,25 @@ public class SuiteResponderTest {
     assertHasRegexp("#TestThree", results);
   }
 
+  @Test
+  public void canRunPartition0() throws Exception {
+    addTestPagesWithSuiteProperty();
+    request.setQueryString("suiteFilter=smoke,foo&partitionCount=2&partitionIndex=0");
+    String results = runSuite();
+    assertDoesntHaveRegexp("#TestOne", results);
+    assertDoesntHaveRegexp("#TestTwo", results);
+    assertHasRegexp("#TestThree", results);
+  }
+
+  @Test
+  public void canRunPartition1() throws Exception {
+    addTestPagesWithSuiteProperty();
+    request.setQueryString("suiteFilter=smoke,foo&partitionCount=2&partitionIndex=1");
+    String results = runSuite();
+    assertDoesntHaveRegexp("#TestOne", results);
+    assertHasRegexp("#TestTwo", results);
+    assertDoesntHaveRegexp("#TestThree", results);
+  }
 
   @Test
   public void excludeSuiteQuery() throws Exception {
@@ -309,7 +363,7 @@ public class SuiteResponderTest {
   @Test
   public void testTagsShouldBeInheritedFromSuite() throws Exception {
     PageData suiteData = suite.getData();
-    suiteData.setAttribute(PageData.PropertySUITES, "tag");
+    suiteData.setAttribute(SUITES, "tag");
     suite.commit(suiteData);
     addTestToSuite("TestInheritsTag", fitPassFixture);
 
@@ -318,13 +372,13 @@ public class SuiteResponderTest {
     assertHasRegexp("#TestInheritsTag", results);
   }
 
-  private void addTestPagesWithSuiteProperty() throws Exception {
+  private void addTestPagesWithSuiteProperty() {
     WikiPage test2 = addTestToSuite("TestTwo", fitPassFixture);
     WikiPage test3 = addTestToSuite("TestThree", fitPassFixture);
     PageData data2 = test2.getData();
     PageData data3 = test3.getData();
-    data2.setAttribute(PageData.PropertySUITES, "foo");
-    data3.setAttribute(PageData.PropertySUITES, "bar, smoke");
+    data2.setAttribute(SUITES, "foo");
+    data3.setAttribute(SUITES, "bar, smoke");
     test2.commit(data2);
     test3.commit(data3);
   }
@@ -448,8 +502,7 @@ public class SuiteResponderTest {
     TestSummary counts = new TestSummary(3, 0, 0, 0);
     String resultsFileName = String.format("%s/SuitePage/20081205011900_%d_%d_%d_%d.xml",
       context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
-    File xmlResultsFile = new File(resultsFileName);
-    return xmlResultsFile;
+    return new File(resultsFileName);
   }
 
   @Test
@@ -506,6 +559,20 @@ public class SuiteResponderTest {
     runSuite();
 
     assertTrue(FooFormatter.initialized);
+  }
+
+  private String runSuite() throws Exception {
+    Response response = responder.makeResponse(context, request);
+
+    int status = response.getStatus();
+    assertEquals(200, status);
+    return getResponseContent(response);
+  }
+
+  private String getResponseContent(Response response) throws IOException {
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    return sender.sentData();
   }
 
   public static class FooFormatter extends BaseFormatter {

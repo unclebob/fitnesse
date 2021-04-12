@@ -4,30 +4,20 @@ package fitnesse.wiki.refactoring;
 
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiWordReference;
-import fitnesse.wikitext.parser.Alias;
-import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.WikiWord;
 
-public class MovedPageReferenceRenamer extends ReferenceRenamer {
-  private WikiPage pageToBeMoved;
-  private String newParentName;
+import java.util.Optional;
 
-  public MovedPageReferenceRenamer(WikiPage root, WikiPage pageToBeMoved, String newParentName) {
-    super(root);
+public class MovedPageReferenceRenamer implements ChangeReference {
+  private final WikiPage pageToBeMoved;
+  private final String newParentName;
+
+  public MovedPageReferenceRenamer(WikiPage pageToBeMoved, String newParentName) {
     this.pageToBeMoved = pageToBeMoved;
     this.newParentName = newParentName;
   }
 
-    @Override
-    public boolean visit(Symbol node) {
-      if (node.isType(WikiWord.symbolType)) {
-        new WikiWordReference(currentPage, node.getContent()).wikiWordRenameMovedPageIfReferenced(node, pageToBeMoved, newParentName);
-      }
-      return true;
-    }
-
-    @Override
-    public boolean visitChildren(Symbol node) {
-        return !node.isType(Alias.symbolType);
-    }
+  @Override
+  public Optional<String> changeReference(WikiPage currentPage, String reference) {
+    return new WikiWordReference(currentPage, reference).getMovedPageRenamedContent(reference, pageToBeMoved, newParentName);
+  }
 }

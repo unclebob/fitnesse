@@ -14,16 +14,21 @@ import static fitnesse.testsystems.slim.SlimClientBuilder.SLIM_FLAGS;
  */
 public class InProcessSlimClientBuilder extends ClientBuilder<SlimClient> {
 
-  public InProcessSlimClientBuilder(Descriptor descriptor) {
+  private ClassLoader classLoader;
+
+  public InProcessSlimClientBuilder(Descriptor descriptor, ClassLoader classLoader) {
     super(descriptor);
+    this.classLoader = classLoader;
   }
 
   @Override
   public SlimClient build() {
     final SlimService.Options options = SlimService.parseCommandLine(getSlimFlags());
     Integer statementTimeout = options != null ? options.statementTimeout : null;
-    SlimServer slimServer = createSlimServer(statementTimeout, isDebug());
-    return new InProcessSlimClient(getTestSystemName(), slimServer, getExecutionLogListener());
+    FixtureInteraction interaction = options != null ? options.interaction : JavaSlimFactory.createInteraction(null, classLoader);
+
+    SlimServer slimServer = createSlimServer(interaction, statementTimeout, isDebug());
+    return new InProcessSlimClient(getTestSystemName(), slimServer, getExecutionLogListener(), classLoader);
   }
 
   @Override
@@ -31,8 +36,7 @@ public class InProcessSlimClientBuilder extends ClientBuilder<SlimClient> {
     return "in-process";
   }
 
-  protected SlimServer createSlimServer(Integer timeout, boolean verbose) {
-    FixtureInteraction interaction = JavaSlimFactory.createInteraction(null);
+  protected SlimServer createSlimServer(FixtureInteraction interaction, Integer timeout, boolean verbose) {
     return JavaSlimFactory.createJavaSlimFactory(interaction, timeout, verbose).getSlimServer();
   }
 

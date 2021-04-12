@@ -1,12 +1,9 @@
 package fitnesse.wikitext.parser;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
+import fitnesse.wikitext.ParsingPage;
+import fitnesse.wikitext.SourcePage;
 import org.junit.Test;
 
 import static java.util.Arrays.asList;
@@ -39,7 +36,7 @@ public class CustomLexerTest {
   public void shouldInclude() {
     String buffer = "!include -seamless .WikiWord";
 
-    assertEquals(asList("Include:!include -seamless .WikiWord"),
+    assertEquals(Collections.singletonList("Include:!include -seamless .WikiWord"),
             lex(buffer));
   }
 
@@ -223,7 +220,7 @@ public class CustomLexerTest {
     }
 
     @Override
-    public Maybe<String> findVariable(String name) {
+    public Optional<String> findVariable(String name) {
       return super.findVariable(name);
     }
   }
@@ -296,11 +293,6 @@ public class CustomLexerTest {
 
     @Override
     public String getProperty(String propertyKey) {
-      throw new IllegalStateException("Should not have been called in this context");
-    }
-
-    @Override
-    public String makeUrl(String wikiWordPath) {
       throw new IllegalStateException("Should not have been called in this context");
     }
 

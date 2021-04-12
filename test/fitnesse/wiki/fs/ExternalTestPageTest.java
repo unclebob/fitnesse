@@ -1,22 +1,22 @@
 package fitnesse.wiki.fs;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
-
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.SystemVariableSource;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.VariableSource;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 public class ExternalTestPageTest {
@@ -58,7 +58,7 @@ public class ExternalTestPageTest {
     fileSystem.makeFile(new File("somewhere/MyTest/myfile.html"), "stuff");
     ExternalSuitePage suite = new ExternalSuitePage(new File("somewhere", "MyTest"), "MyTest", rootPage, fileSystem, variableSource);
     ExternalTestPage testPage = (ExternalTestPage) suite.getChildren().get(0);
-    WikiPagePath path = testPage.getPageCrawler().getFullPath();
+    WikiPagePath path = testPage.getFullPath();
     assertEquals("Page path for external file", "MyTest.myfile", path.toString());
   }
 
