@@ -190,8 +190,8 @@ public class MultipleTestsRunner implements Stoppable {
     }
 
     @Override
-    public void testOutputChunk(String output) {
-      formatters.testOutputChunk(output);
+    public void testOutputChunk(TestPage testPage, String output) {
+      formatters.testOutputChunk(testPage, output);
     }
 
     @Override

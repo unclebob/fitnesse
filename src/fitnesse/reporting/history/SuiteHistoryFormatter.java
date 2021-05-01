@@ -68,9 +68,9 @@ public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLog
   }
 
   @Override
-  public void testOutputChunk(String output) {
+  public void testOutputChunk(TestPage testPage, String output) {
     if (testHistoryFormatter != null) {
-      testHistoryFormatter.testOutputChunk(output);
+      testHistoryFormatter.testOutputChunk(testPage, output);
     }
   }
 

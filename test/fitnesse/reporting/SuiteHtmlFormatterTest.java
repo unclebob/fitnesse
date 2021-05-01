@@ -13,6 +13,7 @@ import static org.mockito.Mockito.when;
 import static util.RegexTestCase.*;
 
 import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
 import fitnesse.wiki.WikiPage;
@@ -142,13 +143,16 @@ public class SuiteHtmlFormatterTest {
     formatter.testSystemStarted(fitMock);
     formatter.announceNumberTestsToRun(2);
     formatter.announceStartNewTest("RelativeName", "FullName");
-    formatter.testOutputChunk("starting");
-    formatter.testOutputChunk(" output");
+    TestPage testPage = new WikiTestPage(new WikiPageDummy("RelativeName", "Content", null));
+    formatter.testOutputChunk(testPage, "starting");
+    formatter.testOutputChunk(testPage, " output");
     formatter.processTestResults("RelativeName", new TestSummary(1, 0, 0, 0));
+
     formatter.testSystemStarted(slimMock);
     formatter.announceStartNewTest("NewRelativeName", "NewFullName");
-    formatter.testOutputChunk("second");
-    formatter.testOutputChunk(" test");
+    TestPage newTestPage = new WikiTestPage(new WikiPageDummy("NewRelativeName", "NewContent", null));
+    formatter.testOutputChunk(newTestPage, "second");
+    formatter.testOutputChunk(newTestPage, " test");
     formatter.processTestResults("NewRelativeName", new TestSummary(0, 1, 0, 0));
     formatter.finishWritingOutput();
 

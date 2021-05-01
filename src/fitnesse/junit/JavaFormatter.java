@@ -163,7 +163,7 @@ public class JavaFormatter extends BaseFormatter implements Closeable {
   }
 
   @Override
-  public void testOutputChunk(String output) {
+  public void testOutputChunk(TestPage testPage, String output) {
     try {
       resultsRepository.write(output);
     } catch (IOException e) {

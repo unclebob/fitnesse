@@ -2,6 +2,7 @@ package fitnesse.junit;
 
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.util.TimeMeasurement;
 import fitnesse.wiki.WikiPageDummy;
@@ -108,7 +109,8 @@ public class JavaFormatterTest {
 
   @Test
   public void testOutputChunk_forwardsWriteToResultRepository() throws Exception{
-    jf.testOutputChunk("Hey there!");
+    TestPage testPage = new WikiTestPage(new WikiPageDummy("name", "content", null));
+    jf.testOutputChunk(testPage, "Hey there!");
     verify(mockResultsRepository).write("Hey there!");
   }
 

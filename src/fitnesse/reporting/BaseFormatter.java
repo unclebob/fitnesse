@@ -28,7 +28,7 @@ public abstract class BaseFormatter implements Formatter {
   }
 
   @Override
-  public void testOutputChunk(String output) {
+  public void testOutputChunk(TestPage testPage, String output) {
   }
 
   @Override

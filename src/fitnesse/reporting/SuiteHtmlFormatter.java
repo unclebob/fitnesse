@@ -153,7 +153,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
   }
 
   @Override
-  public void testOutputChunk(String output) {
+  public void testOutputChunk(TestPage testPage, String output) {
     writeData(output);
   }
 
