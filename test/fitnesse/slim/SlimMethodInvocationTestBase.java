@@ -2,21 +2,20 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.util.Arrays;
-import java.util.Date;
-
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.DateConverter;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.test.TestSlimInterface;
-
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.Date;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 // Extracted Test class to be implemented by all Java based Slim ports
 // The tests for PhpSlim and JsSlim implement this class
@@ -194,20 +193,24 @@ public abstract class SlimMethodInvocationTestBase {
   @Test
   public void handleReturnNull() throws Exception {
     Object result = caller.call("testSlim", "nullString");
-    Assert.assertNull(result);
+    assertNull(result);
   }
 
   @Test
   public void handleEchoNull() throws Exception {
     Object result = caller.call("testSlim", "echoString", new Object[]{null});
-    Assert.assertNull(result);
+    assertNull(result);
   }
 
   @Test
   public void handleNullSymbols() throws Exception {
     caller.assign("x", null);
     Object result = caller.call("testSlim", "echoString", new Object[]{"$x"});
-    Assert.assertNull(result);
+    assertNull(result);
+
+    caller.assign("xyz", null);
+    result = caller.call("testSlim", "echoString", new Object[]{"$xyz"});
+    assertNull(result);
   }
 
   @Test
@@ -215,11 +218,53 @@ public abstract class SlimMethodInvocationTestBase {
     caller.assign("x", null);
     Object result = caller.call("testSlim", "echoString", new Object[]{"A $x B"});
     assertEquals("A null B", result);
+
+    caller.assign("xyz", null);
+    result = caller.call("testSlim", "echoString", new Object[]{"A $xyz B"});
+    assertEquals("A null B", result);
+  }
+
+  @Test
+  public void handlesSymbolInStrings() throws Exception {
+    caller.assign("x", "a");
+    Object result = caller.call("testSlim", "echoString", new Object[]{"$x 1"});
+    assertEquals("a 1", result);
+
+    result = caller.call("testSlim", "echoString", new Object[]{"$x1"});
+    assertEquals("a1", result);
+
+    caller.assign("x", "abc");
+    result = caller.call("testSlim", "echoString", new Object[]{"$x1"});
+    assertEquals("abc1", result);
+
+    caller.assign("x", "a");
+    caller.assign("y", "b");
+    result = caller.call("testSlim", "echoString", new Object[]{"1$x1$y2"});
+    assertEquals("1a1b2", result);
+
+    caller.assign("xyz", "ccded");
+    result = caller.call("testSlim", "echoString", new Object[]{"1$x1$y$xyzpostfix"});
+    assertEquals("1a1bccdedpostfix", result);
   }
 
   @Test
   public void handleUnspecifiedSymbols() throws Exception {
     Object result = caller.call("testSlim", "echoString", new Object[]{"$x"});
     assertEquals("$x", result);
+
+    result = caller.call("testSlim", "echoString", new Object[]{"$xyz"});
+    assertEquals("$xyz", result);
+  }
+
+  @Test
+  public void handleUnspecifiedSymbolsInString() throws Exception {
+    Object result = caller.call("testSlim", "echoString", new Object[]{"A $x B"});
+    assertEquals("A $x B", result);
+
+    result = caller.call("testSlim", "echoString", new Object[]{"A $xyz B"});
+    assertEquals("A $xyz B", result);
+
+    result = caller.call("testSlim", "echoString", new Object[]{"A$xyzB"});
+    assertEquals("A$xyzB", result);
   }
 }

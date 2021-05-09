@@ -1,5 +1,6 @@
 package fitnesse.slim;
 
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,10 +15,68 @@ public abstract class SlimSymbol {
       .compile("\\A\\s*\\$([A-Za-z\\p{L}][\\w\\p{L}]*)\\s*=\\s*\\Z");
 
   protected String replacedString;
-  private Matcher symbolMatcher;
-  private int startingPosition;
+  protected SymbolMatcher symbolMatcher;
+  protected int startingPosition;
 
-  public static final String isSymbolAssignment(String content) {
+  public static class SymbolMatcher {
+    private final Function<String, String> symbolStore;
+    private final Matcher matcher;
+    private String fullString;
+    private String symbolName;
+    private String symbolValue;
+
+    public SymbolMatcher(Function<String, String> symbolStore, String str, int startingPosition) {
+      this.symbolStore = symbolStore;
+      matcher = SYMBOL_PATTERN.matcher(str);
+      if (matcher.find(startingPosition)) {
+        this.fullString = matcher.group();
+        resolveSymbol(matcher.group(1));
+      }
+    }
+
+    public boolean found() {
+      return getSymbolName() != null;
+    }
+
+    public String getSymbolFound() {
+      return fullString;
+    }
+
+    public int getSymbolStartPosition() {
+      return found() ? matcher.start() : -1;
+    }
+
+    public int getSymbolEndPosition() {
+      return found() ? matcher.start() + getSymbolName().length() + 1 : -1;
+    }
+
+    public String getSymbolName() {
+      return symbolName;
+    }
+
+    public String getSymbolValue() {
+      return symbolValue;
+    }
+
+    protected void resolveSymbol(String symbolNameMatch) {
+      symbolName = symbolNameMatch;
+      symbolValue = symbolStore.apply(symbolName);
+      if (symbolValue == null) {
+        // no symbol known for entire symbolName try to find a match for the prefix
+        for (int i = symbolName.length() - 1; i > 0; i--) {
+          String shorterName = symbolName.substring(0, i);
+          String shorterValue = symbolStore.apply(shorterName);
+          if (shorterValue != null) {
+            symbolName = shorterName;
+            symbolValue = shorterValue;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  public static String isSymbolAssignment(String content) {
     if (content == null)
       return null;
     Matcher matcher = SYMBOL_ASSIGNMENT_PATTERN.matcher(content);
@@ -32,7 +91,6 @@ public abstract class SlimSymbol {
       return s;
 
     replacedString = s;
-    symbolMatcher = SYMBOL_PATTERN.matcher(s);
     replaceAllSymbols();
     return replacedString;
   }
@@ -44,34 +102,36 @@ public abstract class SlimSymbol {
   }
 
   private void replaceSymbol() {
-    String value;
-    String prefix;
-    String suffix;
-    String symbolName = symbolMatcher.group(1);
-    value = formatSymbol(symbolName);
-    prefix = replacedString.substring(0, symbolMatcher.start());
-    suffix = replacedString.substring(symbolMatcher.end());
+    String value = formatSymbol();
+    String prefix = replacedString.substring(0, symbolMatcher.getSymbolStartPosition());
+    String suffix = replacedString.substring(symbolMatcher.getSymbolEndPosition());
     replacedString = prefix + value + suffix;
-    int replacementEnd = symbolMatcher.start() + value.length();
+    int replacementEnd = symbolMatcher.getSymbolStartPosition() + value.length();
     startingPosition = Math.min(replacementEnd, replacedString.length());
   }
 
-  protected String formatSymbol(String symbolName) {
-    String value = getSymbolValue(symbolName);
+  private String formatSymbol() {
+    String value = getSymbolValueImpl(symbolMatcher);
     if (value == null) {
       // return the original match without any change if the symbol is not defined
-      return symbolMatcher.group();
-    } else
+      return symbolMatcher.getSymbolFound();
+    } else {
+      String symbolName = symbolMatcher.getSymbolName();
       return formatSymbolValue(symbolName, value);
+    }
   }
 
   private boolean symbolFound() {
-    symbolMatcher = SYMBOL_PATTERN.matcher(replacedString);
-    return symbolMatcher.find(startingPosition);
+    symbolMatcher = new SymbolMatcher(this::getSymbolValue, replacedString, startingPosition);
+    return symbolMatcher.found();
   }
 
   protected String formatSymbolValue(String name, String value) {
     return value;
+  }
+
+  protected String getSymbolValueImpl(SymbolMatcher symbolMatcher) {
+    return symbolMatcher.getSymbolValue();
   }
 
   // implement this to access the Symbol Store

@@ -312,23 +312,18 @@ public abstract class SlimTable {
     //TODO: This is only implemented in the SlimServer but not in the Slim Client so it can't work properly :(
     // Should be removed. Would this breaks other SLIM Client implementations .Net ... ?
     @Override
-    protected String getSymbolValue(String symbolName) {
+    protected String getSymbolValueImpl(SymbolMatcher symbolMatcher) {
+      String symbolName = symbolMatcher.getSymbolName();
       if (symbolName.endsWith("`")) {
         String symbolNameWithDollar = symbolName.startsWith("$`") ? symbolName : "$" + symbolName;
         return getSlimExpressionResult(symbolNameWithDollar);
       }
+      return super.getSymbolValueImpl(symbolMatcher);
+    }
 
-      String value = getSymbol(symbolName);
-      if (value == null) {
-        for (int i = symbolName.length() - 1; i > 0; i--) {
-          String str = symbolName.substring(0, i);
-          if ((value = getSymbol(str)) != null)
-            return value + symbolName.substring(i);
-        }
-
-        return null;
-      } else
-        return value;
+    @Override
+    protected String getSymbolValue(String symbolName) {
+      return getSymbol(symbolName);
     }
 
     public String replace() {
