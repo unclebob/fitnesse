@@ -90,7 +90,7 @@ public class FitTestSystem implements TestSystem, FitClientListener {
       currentTestPage = processingQueue.removeFirst();
       testSystemListener.testStarted(currentTestPage);
     }
-    testSystemListener.testOutputChunk(output);
+    testSystemListener.testOutputChunk(currentTestPage, output);
   }
 
   @Override

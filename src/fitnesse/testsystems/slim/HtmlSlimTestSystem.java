@@ -45,7 +45,7 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
 
     if (allTables.isEmpty()) {
       String html = createHtmlResults(START_OF_TEST, END_OF_TEST);
-      testOutputChunk(html);
+      testOutputChunk(pageToTest, html);
     } else {
       for (int index = 0; index < allTables.size(); index++) {
         SlimTable theTable = allTables.get(index);
@@ -61,7 +61,7 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
         }
 
         String html = createHtmlResults(startWithTable, nextTable);
-        testOutputChunk(html);
+        testOutputChunk(pageToTest, html);
       }
     }
   }

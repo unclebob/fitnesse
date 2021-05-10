@@ -5,7 +5,7 @@ package fitnesse.testsystems;
 public interface TestSystemListener {
   void testSystemStarted(TestSystem testSystem);
 
-  void testOutputChunk(String output);
+  void testOutputChunk(TestPage testPage, String output);
 
   void testStarted(TestPage testPage);
 

@@ -26,9 +26,9 @@ public class CompositeTestSystemListener implements TestSystemListener {
   }
 
   @Override
-  public void testOutputChunk(final String output) {
+  public void testOutputChunk(final TestPage testPage, final String output) {
     for (TestSystemListener listener : listeners)
-      listener.testOutputChunk(output);
+      listener.testOutputChunk(testPage, output);
   }
 
   @Override

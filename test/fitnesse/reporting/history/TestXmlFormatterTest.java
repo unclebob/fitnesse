@@ -78,7 +78,7 @@ public class TestXmlFormatterTest {
     };
     final long startTime = clock.currentClockTimeInMillis();
 
-    formatter.testOutputChunk("outputChunk");
+    formatter.testOutputChunk(page, "outputChunk");
 
     formatter.testStarted(page);
 

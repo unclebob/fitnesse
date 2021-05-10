@@ -38,7 +38,7 @@ public class PrintTestListener implements TestSystemListener, Closeable {
   }
 
   @Override
-  public void testOutputChunk(String output) {
+  public void testOutputChunk(TestPage testPage, String output) {
   }
 
   @Override

@@ -191,7 +191,7 @@ public class SlimTestSystemTableProcessingTest {
     }
 
     @Override
-    public void testOutputChunk(String output) {
+    public void testOutputChunk(TestPage testPage, String output) {
       throw new UnsupportedOperationException();
     }
 

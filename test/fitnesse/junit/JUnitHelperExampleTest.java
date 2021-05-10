@@ -75,7 +75,7 @@ public class JUnitHelperExampleTest {
     }
 
     @Override
-    public void testOutputChunk(String output) {
+    public void testOutputChunk(TestPage testPage, String output) {
 
     }
 

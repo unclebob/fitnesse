@@ -176,8 +176,8 @@ public abstract class SlimTestSystem implements TestSystem {
     }
   }
 
-  protected void testOutputChunk(String output) {
-    testSystemListener.testOutputChunk(output);
+  protected void testOutputChunk(TestPage testPage, String output) {
+    testSystemListener.testOutputChunk(testPage, output);
   }
 
   protected void testStarted(TestPage testPage) {

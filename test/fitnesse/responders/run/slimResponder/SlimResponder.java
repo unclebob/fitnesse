@@ -113,7 +113,7 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
   }
 
   @Override
-  public void testOutputChunk(String output) {
+  public void testOutputChunk(TestPage testPage, String output) {
     this.output.append(output);
   }
 
