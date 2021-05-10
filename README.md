@@ -108,27 +108,28 @@ There are a few things to keep in mind when working from an IDE:
 
 ### The release process
 
-Software artifacts (the FitNesse jar, the standalone jar and POM files) are uploaded to [Bintray](https://bintray.com/fitnesse). There are two repositories:
+FitNesse releases are deployed to Maven Central via [OSS Sonatype](https://oss.sonatype.org/#welcome).
 
-* _Edge_ contains snapshot builds
-* _Release_ contains the official release builds.
-
-In both cases you'll need sufficient permissions to perform a release.
-
-#### Edge builds
-
-Edge builds can be done at any time
-
-   ```
-   $ ./gradlew snapshotRelease
-   ```
-
-#### Release builds
+Sufficient permissions are required to perform a release.
 
 Release builds denote "blessed" releases. Those are tagged in Git along with being released. The releases will be available from
-both Maven Central and JCenter.
+Maven Central.
 
    ```
    $ ./gradlew release
    ```
 
+For this to work you'll need to add some properties to your ~/.gradle/gradle.properties
+
+```
+sonatypeUsername=...
+sonatypePassword=...
+
+signing.keyId=...
+signing.password=...
+signing.secretKeyRingFile=...
+```
+
+Details on what values to provide can be found on
+[Deploy to Maven Central using API key ](https://blog.solidsoft.pl/2015/09/08/deploy-to-maven-central-using-api-key-aka-auth-token/)
+and the [documentation of the Signing Plugin](https://docs.gradle.org/current/userguide/signing_plugin.html).
