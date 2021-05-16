@@ -1,4 +1,7 @@
 !2 ${FITNESSE_VERSION}
+
+!2 20210516
+* Release process updated to no longer use Bintray.
 * Improve handling of Slim symbols embedded in strings ([[1324][https://github.com/unclebob/fitnesse/issues/1324]])
 
 !2 20210410
