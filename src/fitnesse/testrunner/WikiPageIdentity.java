@@ -7,6 +7,7 @@ public class WikiPageIdentity {
   public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
   public static final String TEST_RUNNER = "TEST_RUNNER";
   public static final String TEST_SYSTEM = "TEST_SYSTEM";
+  public static final String INTERMEDIATE_RESULT_PUBLISHER_SERVER_ADDRESS = "INTERMEDIATE_RESULT_PUBLISHER_SERVER_ADDRESS";
   private final WikiPage page;
   private final String testSystem;
   private final String testRunner;
@@ -68,7 +69,7 @@ public class WikiPageIdentity {
 
     WikiPageIdentity identity = (WikiPageIdentity) obj;
     return identity.testSystem().equals(testSystem()) &&
-            identity.testRunner().equals(testRunner()) &&
-            identity.commandPattern().equals(commandPattern());
+      identity.testRunner().equals(testRunner()) &&
+      identity.commandPattern().equals(commandPattern());
   }
 }

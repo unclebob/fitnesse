@@ -68,6 +68,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   private static final String AND_FILTER_ARG = "runTestsMatchingAllTags";
   private static final String OR_FILTER_ARG_1 = "runTestsMatchingAnyTag";
   private static final String OR_FILTER_ARG_2 = "suiteFilter";
+  public static boolean publish = false;
 
   static final RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
 
@@ -118,6 +119,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     debug |= request.hasInput("debug");
     remoteDebug |= request.hasInput("remote_debug");
     includeHtml |= request.hasInput("includehtml");
+    publish = request.hasInput("publish");
     data = page.getData();
 
     createMainFormatter();
@@ -132,6 +134,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     closeHtmlResponse(exitCode);
 
     cleanHistoryForSuite();
+    publish = false;
   }
 
   private void cleanHistoryForSuite() {
