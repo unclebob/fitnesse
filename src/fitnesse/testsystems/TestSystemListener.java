@@ -5,7 +5,28 @@ package fitnesse.testsystems;
 public interface TestSystemListener {
   void testSystemStarted(TestSystem testSystem);
 
-  void testOutputChunk(TestPage testPage, String output);
+  /**
+   * Appends content to test output.
+   * This method only exists to provide forward compatibility while Listeners are migrated to the overload also accepting a TestPage.
+   * @param output content to append
+   * @deprecated implement {@link #testOutputChunk(TestPage, String)}
+   */
+  @Deprecated
+  default void testOutputChunk(String output) {
+    throw new UnsupportedOperationException("This overload is deprecated, and should not be called any more. " +
+      "It only exists to provide forward compatibility while Listeners are migrated to the overload also accepting a TestPage.");
+  }
+
+  /**
+   * Appends content to test output.
+   * This method only has a default implementation to provide backwards compatibility for Listeners not yet migrated to implement it.
+   * All TestSystemListeners should implement it.
+   * @param testPage current test page
+   * @param output content to append
+   */
+  default void testOutputChunk(TestPage testPage, String output) {
+    testOutputChunk(output);
+  }
 
   void testStarted(TestPage testPage);
 
