@@ -3,7 +3,8 @@
 package fitnesse.testsystems;
 
 public interface TestSystemListener {
-  void testSystemStarted(TestSystem testSystem);
+  default void testSystemStarted(TestSystem testSystem) {
+  }
 
   /**
    * Appends content to test output.
@@ -28,13 +29,18 @@ public interface TestSystemListener {
     testOutputChunk(output);
   }
 
-  void testStarted(TestPage testPage);
+  default void testStarted(TestPage testPage) {
+  }
 
-  void testComplete(TestPage testPage, TestSummary testSummary);
+  default void testComplete(TestPage testPage, TestSummary testSummary) {
+  }
 
-  void testSystemStopped(TestSystem testSystem, Throwable cause /* may be null */);
+  default void testSystemStopped(TestSystem testSystem, Throwable cause /* may be null */) {
+  }
 
-  void testAssertionVerified(Assertion assertion, TestResult testResult);
+  default void testAssertionVerified(Assertion assertion, TestResult testResult) {
+  }
 
-  void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult);
+  default void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
+  }
 }
