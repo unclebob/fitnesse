@@ -83,6 +83,14 @@ public class JUnitXMLPerPageRunListener extends RunListener {
     }
   }
 
+  @Override
+  public void testIgnored(Description description) throws Exception {
+    super.testIgnored(description);
+    if (!timeMeasurement.isStopped()) {
+      testResultRecorder.recordTestResult(getTestName(description), 1, 0, 0, null, getExecutionTime());
+    }
+  }
+
   /**
    * @return test execution time in milliseconds
    */
