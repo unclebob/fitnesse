@@ -52,7 +52,7 @@ public class WikiPageDummy extends BaseWikiPage {
 
   @Override
   public String getHtml() {
-    return String.format("<em>%s</em>", pageData.getContent());
+    return pageData.getContent();
   }
 
   @Override
