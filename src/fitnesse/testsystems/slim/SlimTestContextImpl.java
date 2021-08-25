@@ -36,6 +36,9 @@ public class SlimTestContextImpl implements SlimTestContext {
 
   @Override
   public String getSymbol(String symbolName) {
+    if(symbolName.startsWith("SECRET_")) {
+      return "*****";
+    }
     return symbols.get(symbolName);
   }
 
