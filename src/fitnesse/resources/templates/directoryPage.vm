@@ -1,7 +1,7 @@
 #macro( prettyPrint $s )
  #if( $s.length() > 60 )
   #set ( $t = $s.length() - 40 )
-  $s.substring(0, 15)...$s.substring($t)#else${s}#end
+  #escape($s.substring(0, 15))...#escape($s.substring($t))#else#escape(${s})#end
 #end
 <table class="dirListing">
  <thead>
@@ -16,14 +16,14 @@
  #foreach( $fileInfo in $fileInfoList )
   <tr >
    <td>
-	<a href="$fileInfo.name#if( $fileInfo.directory )/#end">
+	<a href="#escape($fileInfo.name)#if( $fileInfo.directory )/#end">
 	 #if( $fileInfo.directory )<img src="${contextRoot}files/fitnesse/images/folder.gif" alt="folder"/>#end #prettyPrint( $fileInfo.name )#if( $fileInfo.directory )/#end
 	</a>
    </td>
    <td>$fileInfo.size</td>
    <td>$fileInfo.date</td>
    <td class="buttons">
-    <a href="?responder=renameConfirmation&filename=$fileInfo.name">Rename</a>&nbsp;|&nbsp;<a href="?responder=deleteConfirmation&filename=$fileInfo.name">Delete</a>
+    <a href="?responder=renameConfirmation&filename=#escape($fileInfo.name)">Rename</a>&nbsp;|&nbsp;<a href="?responder=deleteConfirmation&filename=#escape($fileInfo.name)">Delete</a>
    </td>
   </tr>
  #end
