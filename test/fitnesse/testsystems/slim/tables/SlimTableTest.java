@@ -49,6 +49,13 @@ public class SlimTableTest {
   }
 
   @Test
+  public void replaceSymbolsShouldReplaceSecretSymbol() throws Exception {
+    SlimTable table = new MockTable();
+    table.setSymbol("SECRET_x", "a");
+    assertEquals("this is a", table.replaceSymbols("this is $SECRET_x"));
+  }
+
+  @Test
   public void replaceSymbolsShouldReplaceMoreThanOneSymbol() throws Exception {
     SlimTable table = new MockTable();
     table.setSymbol("x", "a");
@@ -85,6 +92,13 @@ public class SlimTableTest {
     SlimTable table = new MockTable();
     table.setSymbol("x", "a");
     assertEquals("this is $x->[a]", table.replaceSymbolsWithFullExpansion("this is $x"));
+  }
+
+  @Test
+  public void replaceSymbolsFullExpansion_ShouldReplaceSecretSymbol() throws Exception {
+    SlimTable table = new MockTable();
+    table.setSymbol("SECRET_x", "a");
+    assertEquals("this is $SECRET_x->[a]", table.replaceSymbolsWithFullExpansion("this is $SECRET_x"));
   }
 
   @Test
