@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+* Values of Slim symbols prefixed by 'SECRET_' are not shown in test report. ([[1333][https://github.com/unclebob/fitnesse/pull/1333]])
+* The jUnit test reporter now reports tests that are shown as ignored in the wiki (blue bar in html result, e.g. a stop test exception was thrown in a !-SuiteSetUp-!) as 'ignored'. ([[1327][https://github.com/unclebob/fitnesse/pull/1327]])
 
 !2 20210606
 * 2nd attempt to fix non-backwards compatible change in fitnesse.testsystems.TestSystemListener ([[1325][https://github.com/unclebob/fitnesse/issues/1325]])
