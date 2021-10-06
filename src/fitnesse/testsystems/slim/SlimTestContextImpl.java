@@ -2,6 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testsystems.slim.tables.ScenarioTable;
+import fitnesse.testsystems.slim.tables.ScriptTable;
 import fitnesse.util.TimeMeasurement;
 
 import java.util.ArrayList;
@@ -11,12 +16,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import fitnesse.testsystems.ExecutionResult;
-import fitnesse.testsystems.TestPage;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testsystems.slim.tables.ScenarioTable;
-import fitnesse.testsystems.slim.tables.ScriptTable;
 
 public class SlimTestContextImpl implements SlimTestContext {
   private final Map<String, String> symbols = new HashMap<>();
@@ -36,6 +35,9 @@ public class SlimTestContextImpl implements SlimTestContext {
 
   @Override
   public String getSymbol(String symbolName) {
+    if (symbolName.startsWith("SECRET_")) {
+      return "*****";
+    }
     return symbols.get(symbolName);
   }
 
