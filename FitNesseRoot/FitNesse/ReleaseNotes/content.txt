@@ -48,10 +48,10 @@
 !2 20200205
  * Added ability to customize HTML generated for Slim tables, using 'symbol decorators' ([[1255][https://github.com/unclebob/fitnesse/pull/1255]]).
  * Ensured proper validation messages when user forgets to specify a target page for a symbolic link ([[1260][https://github.com/unclebob/fitnesse/pull/1260]]).
- * Updated Gitter channel invite to point to https://fitnesse-community-inviter.herokuapp.com ([[1261][https://github.com/unclebob/fitnesse/pull/1261]]).
+ * Updated Slack channel invite to point to https://fitnesse-community-inviter.herokuapp.com ([[1261][https://github.com/unclebob/fitnesse/pull/1261]]).
 
 !2 20200128
- * Update documentation replace references to Yahoo Group with Gitter channel ([[1259][https://github.com/unclebob/fitnesse/pull/1259]]).
+ * Update documentation replace references to Yahoo Group with Slack channel ([[1259][https://github.com/unclebob/fitnesse/pull/1259]]).
 
 !2 20200108
  * Bugfix for pretty printed exceptions ending with '<' ([[1252][https://github.com/unclebob/fitnesse/issues/1252]]).
