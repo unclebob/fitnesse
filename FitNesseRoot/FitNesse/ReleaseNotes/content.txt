@@ -1,4 +1,6 @@
 !2 ${FITNESSE_VERSION}
+
+!2 20211030
 * Switch community pages from Slack to Gitter. ([[1339][https://github.com/unclebob/fitnesse/pull/1339]])
 
 !2 20211006
