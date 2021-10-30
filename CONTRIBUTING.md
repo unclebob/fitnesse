@@ -4,7 +4,7 @@ This document describes some general guidelines for contributing to FitNesse. By
 
 ## Submitting issues
 
-The [GitHub issues](https://github.com/unclebob/fitnesse/issues) section is only for bugs and feature requests. Please refer to [The Slack Community.](https://fitnesse-community-inviter.herokuapp.com/) or [Stack Overflow](http://stackoverflow.com/search?q=fitnesse) for general advice. Even for possible bugs it's appreciated that they are discussed on those channels before submitting them as issues in the bug tracking system.
+The [GitHub issues](https://github.com/unclebob/fitnesse/issues) section is only for bugs and feature requests. Please refer to [The Gitter Community.](https://gitter.im/fitnesse-org/fitnesse) or [Stack Overflow](http://stackoverflow.com/search?q=fitnesse) for general advice. Even for possible bugs it's appreciated that they are discussed on those channels before submitting them as issues in the bug tracking system.
 
 ## Bylaws for the committers of FitNesse
 

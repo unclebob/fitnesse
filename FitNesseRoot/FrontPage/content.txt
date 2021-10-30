@@ -9,6 +9,6 @@ To add your first "page", click the [[Edit][.FrontPage?edit]] button and add a [
 |[[A Two-Minute Example][.FitNesse.UserGuide.TwoMinuteExample]]        |''A brief example. Read this one next.''   |
 |[[Acceptance Tests][.FitNesse.SuiteAcceptanceTests]]                  |''FitNesse's suite of Acceptance Tests''   |
 |[[Release Notes][.FitNesse.ReleaseNotes]]                             |''Find out about FitNesse's new features'' |
-|[[Slack Community][https://fitnesse-community-inviter.herokuapp.com/]]|''Join the Slack Community.''              |
+|[[Gitter Community][https://gitter.im/fitnesse-org/fitnesse]]|''Join the Gitter Community.''              |
 
 !note Release ${FITNESSE_VERSION}
