@@ -1,4 +1,5 @@
 !2 ${FITNESSE_VERSION}
+* Switch community pages from Slack to Gitter. ([[1339][https://github.com/unclebob/fitnesse/pull/1339]])
 
 !2 20211006
 * Values of Slim symbols prefixed by 'SECRET_' are not shown in test report. ([[1333][https://github.com/unclebob/fitnesse/pull/1333]])
