@@ -30,6 +30,13 @@ FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.AlwaysSecureOperation	0	s
 FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.SecureReadOperations	1	slim	0
 FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.SecureTestOperations	1	slim	1
 }}}
+It is also possible to specify any level in the tree for a partition. For example, all tests under !-SuiteWikiImportTests-! in below table will be included in partition 0 and !-SuiteAuthenticationTests-! will be in partition 1. Remaining tests not included in this file will be evenly spread across all partitions.
+Closest match in the tree takes precedence in case of a conflict. For example, if you specify both the test page and parent level in this file, test page partitioning index will be applied for that test.
+{{{
+Page	Partition	Test System	Order
+FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests	0	slim	0
+FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests	1	slim	0
+}}}
 
 !3 Partitioning Algorithm
 
