@@ -1,5 +1,7 @@
 package fitnesse.util.partitioner;
 
+import fitnesse.wiki.WikiPage;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -21,7 +23,8 @@ public class MapBasedListPartitioner<T> extends FunctionBasedListPartitioner<T> 
                                  BiFunction<List<List<T>>, List<T>, List<List<T>>> notFoundFunction) {
     super(
       t -> {
-        String key = keyFunction.apply(t);
+        Object object = keyFunction.apply(t);
+        String key = (object instanceof WikiPage) ? ((WikiPage) object).getFullPath().toString() : object.toString();
         Integer value = positionMap.get(key);
         return Optional.ofNullable(value);
       },

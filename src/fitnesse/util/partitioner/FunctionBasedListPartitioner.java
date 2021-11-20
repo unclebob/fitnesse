@@ -72,7 +72,7 @@ public class FunctionBasedListPartitioner<T> implements ListPartitioner<T> {
 
   private Optional<Integer> findParentPosition(T item) {
     if (item instanceof WikiPage) {
-      WikiPage wikiPage = ((WikiPage) item);
+      WikiPage wikiPage = ((WikiPage) item).getParent();
       while (!wikiPage.isRoot()) {
         Optional<Integer> pos = positionFunction.apply((T) wikiPage);
         if (pos.isPresent()) {

@@ -1,5 +1,8 @@
 package fitnesse.util.partitioner;
 
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wikitext.parser.TestRoot;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -85,4 +88,90 @@ public class FunctionBasedListPartitionerTest {
         asList("nf7", "6")),
       parts);
   }
+
+  @Test
+  public void testWithEmptyPartitionFile() {
+
+    LinkedHashMap<String, Integer> positions = new LinkedHashMap<>();
+    //Perform the split
+    Function<WikiPage, Optional<Integer>> f = s -> Optional.ofNullable(positions.get(s.getFullPath().toString()));
+    List<List<WikiPage>> noFoundArgs = new ArrayList<>();
+
+    FunctionBasedListPartitioner<WikiPage> partitioner =
+      new FunctionBasedListPartitioner<>(f, (parts, nf) -> {
+        noFoundArgs.add(nf);
+        return new EqualLengthListPartitioner<WikiPage>().split(nf, parts.size());
+      });
+
+    List<List<WikiPage>> parts = partitioner.split(constructTreeAndReturnAllTests(), 2);
+    assertEquals(2, parts.get(0).size());
+    assertEquals(2, parts.get(1).size());
+
+    List<String> actualPartition1TestCases = new ArrayList<>();
+    parts.get(0).forEach(e -> actualPartition1TestCases.add(e.getName()));
+    assertEquals(asList("Suite1Test1", "Suite1Test2"), actualPartition1TestCases);
+
+    List<String> actualPartition2TestCases = new ArrayList<>();
+    parts.get(1).forEach(e -> actualPartition2TestCases.add(e.getName()));
+    assertEquals(asList("Suite1Test3", "Suite2Test1"), actualPartition2TestCases);
+  }
+
+  @Test
+  public void testWithSuiteInPartitionFile() {
+    //Define the partition file
+    LinkedHashMap<String, Integer> positions = new LinkedHashMap<>();
+    positions.put("Suite1", 0);
+    positions.put("Suite2", 1);
+
+    Function<WikiPage, Optional<Integer>> f = s -> Optional.ofNullable(positions.get(s.getFullPath().toString()));
+    List<List<WikiPage>> noFoundArgs = new ArrayList<>();
+
+    FunctionBasedListPartitioner<WikiPage> partitioner =
+      new FunctionBasedListPartitioner<>(f, (parts, nf) -> {
+        noFoundArgs.add(nf);
+        return new ArrayList<>(parts.size());
+      });
+
+    List<List<WikiPage>> parts = partitioner.split(constructTreeAndReturnAllTests(), 2);
+
+    //Assertions
+    assertEquals(3, parts.get(0).size());
+    assertEquals(1, parts.get(1).size());
+
+    List<String> actualPartition1TestCases = new ArrayList<>();
+    parts.get(0).forEach(e -> actualPartition1TestCases.add(e.getName()));
+    assertEquals(asList("Suite1Test1", "Suite1Test2", "Suite1Test3"), actualPartition1TestCases);
+
+    List<String> actualPartition2TestCases = new ArrayList<>();
+    parts.get(1).forEach(e -> actualPartition2TestCases.add(e.getName()));
+    assertEquals(asList("Suite2Test1"), actualPartition2TestCases);
+  }
+
+  //Construct tree with 3 tests in first suite and 1 test in second suite
+  private List<WikiPage> constructTreeAndReturnAllTests() {
+    TestRoot root = new TestRoot();
+    WikiPage suite1 = root.makePage("Suite1", "!contents -R1 -g -p -f -h");
+    setPageProperties(suite1, "Suite");
+    WikiPage suite1Test1 = setPageProperties(suite1.addChildPage("Suite1Test1"), "Test");
+    WikiPage suite1Test2 = setPageProperties(suite1.addChildPage("Suite1Test2"), "Test");
+    WikiPage suite1Test3 = setPageProperties(suite1.addChildPage("Suite1Test3"), "Test");
+    WikiPage suite2 = root.makePage("Suite2", "!contents -R1 -g -p -f -h");
+    setPageProperties(suite2, "Suite");
+    WikiPage suite2Test1 = setPageProperties(suite2.addChildPage("Suite2Test1"), "Test");
+
+    List<WikiPage> list = new ArrayList<>();
+    list.add(0, suite1Test1);
+    list.add(1, suite1Test2);
+    list.add(2, suite1Test3);
+    list.add(3, suite2Test1);
+    return list;
+  }
+
+  private WikiPage setPageProperties(WikiPage wikiPage, String properties) {
+    PageData pageData = wikiPage.getData();
+    pageData.setAttribute(properties);
+    wikiPage.commit(pageData);
+    return wikiPage;
+  }
+
 }
