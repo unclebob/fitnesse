@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import static java.util.Arrays.asList;
 import static java.util.function.Function.identity;
@@ -168,7 +169,8 @@ public class MapBasedListPartitionerTest {
     positions.put("Suite2", 1);
 
     //Perform the split
-    MapBasedListPartitioner<WikiPage> partitioner = new MapBasedListPartitioner(identity(), positions);
+    Function<WikiPage, String> keyFunction = s -> s.getName();
+    MapBasedListPartitioner<WikiPage> partitioner = new MapBasedListPartitioner(keyFunction, positions);
     List<List<WikiPage>> parts = partitioner.split(constructTreeAndReturnAllTests(), 2);
 
     //Assertions
