@@ -1,5 +1,7 @@
 package fitnesse.util.partitioner;
 
+import fitnesse.wiki.WikiPage;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,6 +53,9 @@ public class FunctionBasedListPartitioner<T> implements ListPartitioner<T> {
     List<T> notFound = new ArrayList<>();
     for (T item : source) {
       Optional<Integer> pos = positionFunction.apply(item);
+      if (!pos.isPresent()) {
+        pos = findParentPosition(item);
+      }
       if (pos.isPresent()) {
         int index = pos.get();
         if (index >= 0 && index < partitionCount) {
@@ -63,6 +68,20 @@ public class FunctionBasedListPartitioner<T> implements ListPartitioner<T> {
       }
     }
     return notFound;
+  }
+
+  private Optional<Integer> findParentPosition(T item) {
+    if (item instanceof WikiPage) {
+      WikiPage wikiPage = ((WikiPage) item).getParent();
+      while (!wikiPage.isRoot()) {
+        Optional<Integer> pos = positionFunction.apply((T) wikiPage);
+        if (pos.isPresent()) {
+          return pos;
+        }
+        wikiPage = wikiPage.getParent();
+      }
+    }
+    return Optional.empty();
   }
 
   protected List<List<T>> combinePlacedAndNotFound(List<List<T>> partitions, List<List<T>> extraItems) {
