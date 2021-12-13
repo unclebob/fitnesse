@@ -4,7 +4,7 @@ public class Comment extends SymbolType implements Rule, Translation {
     public static final Comment symbolType = new Comment();
 
     public Comment() {
-        super("Comment", Newline);
+        super("Comment");
         wikiMatcher(new Matcher().startLine().string("#"));
         wikiRule(this);
         htmlTranslation(this);

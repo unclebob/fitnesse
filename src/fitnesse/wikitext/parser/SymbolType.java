@@ -73,12 +73,12 @@ public class SymbolType implements Matchable {
             .wikiMatcher(new Matcher().startLineOrCell().string("!note"))
             .wikiRule(new LineRule())
             .htmlTranslation(Translate.with(ToHtml::note).child(0));
-    public static final SymbolType OpenBrace = new SymbolType("OpenBrace", CloseBrace)
+    public static final SymbolType OpenBrace = new SymbolType("OpenBrace")
             .wikiMatcher(new Matcher().string("{"));
 
-    public static final SymbolType OpenBracket = new SymbolType("OpenBracket", CloseBracket)
+    public static final SymbolType OpenBracket = new SymbolType("OpenBracket")
             .wikiMatcher(new Matcher().string("["));
-    public static final SymbolType OpenParenthesis = new SymbolType("OpenParenthesis", CloseParenthesis)
+    public static final SymbolType OpenParenthesis = new SymbolType("OpenParenthesis")
             .wikiMatcher(new Matcher().string("("));
     public static final SymbolType OrderedList = new SymbolType("OrderedList")
             .wikiMatcher(new Matcher().startLine().whitespace().listDigit().string(" "))
@@ -106,14 +106,10 @@ public class SymbolType implements Matchable {
     private final List<Matcher> wikiMatchers = new ArrayList<>(1);
     private Rule wikiRule = defaultRule;
     private Translation htmlTranslation = null;
-    private final SymbolType                        closeType;
     private final List<ParsedSymbolDecorator> decorators = new LinkedList<>();
 
-    public SymbolType(String name) { this(name, Empty); }
-
-    public SymbolType(String name, SymbolType closeType) {
+    public SymbolType(String name) {
       this.name = name;
-      this.closeType = closeType;
     }
 
   public List<Matcher> getWikiMatchers() { return wikiMatchers; }
@@ -149,10 +145,6 @@ public class SymbolType implements Matchable {
             if (!matchLength.isNothing()) return new SymbolMatch(this, input, matchLength.getValue());
         }
         return SymbolMatch.noMatch;
-    }
-
-    public SymbolType closeType() {
-      return closeType;
     }
 
     public void addDecorator(ParsedSymbolDecorator symbolDecorator) {
