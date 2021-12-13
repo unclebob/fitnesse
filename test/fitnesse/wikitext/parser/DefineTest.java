@@ -21,7 +21,10 @@ public class DefineTest {
     assertParses("!define x {y}", "SymbolList[Define[Text, Text]]");
     assertParses("!define x {y" /* eof */, "SymbolList[Define[Text, Text]]");
     assertParses("!define x" /* eof */, "SymbolList[Define[Text, Text]]");
+  }
 
+  @Test public void parsesMissingBraces() {
+    assertParses("!define x +1 stuff", "SymbolList[Text, Whitespace, Text, Whitespace, Delta, Whitespace, Text]");
   }
 
   @Test
