@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import fitnesse.slim.converters.StringConverter;
 import fitnesse.slim.instructions.AssignInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.*;
@@ -132,9 +133,16 @@ public abstract class SlimTestSystem implements TestSystem {
   }
 
   protected void evaluateTables(List<SlimAssertion> assertions, Map<String, Object> instructionResults) throws SlimCommunicationException {
+    boolean setIgnored = false;
     for (SlimAssertion a : assertions) {
       final String key = a.getInstruction().getId();
-      final Object returnValue = instructionResults.get(key);
+      Object returnValue = instructionResults.get(key);
+      //Ignore management
+      if (returnValue != null && returnValue.toString().equals(StringConverter.IGNORE)) {
+        setIgnored = true;
+      } else if (setIgnored) {
+        returnValue = StringConverter.IGNORE;
+      }
       //Exception management
       if (returnValue != null && returnValue instanceof String && ((String) returnValue).startsWith(EXCEPTION_TAG)) {
         SlimExceptionResult exceptionResult = new SlimExceptionResult(key, (String) returnValue);

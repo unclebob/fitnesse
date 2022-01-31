@@ -3,6 +3,7 @@
 package fitnesse.testsystems.slim.tables;
 
 import fitnesse.slim.converters.BooleanConverter;
+import fitnesse.slim.converters.StringConverter;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.TestExecutionException;
@@ -373,6 +374,8 @@ public class ScriptTable extends SlimTable {
         return SlimTestResult.fail();
       else if (actual.equals(BooleanConverter.TRUE))
         return SlimTestResult.pass();
+      else if (actual.equals(StringConverter.IGNORE))
+        return SlimTestResult.testNotRun();
       else
         return SlimTestResult.plain();
     }

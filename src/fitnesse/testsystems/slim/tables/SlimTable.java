@@ -5,6 +5,7 @@ package fitnesse.testsystems.slim.tables;
 import fitnesse.slim.MethodExecutionResult;
 import fitnesse.slim.SlimExpressionEvaluator;
 import fitnesse.slim.SlimSymbol;
+import fitnesse.slim.converters.StringConverter;
 import fitnesse.slim.instructions.AssignInstruction;
 import fitnesse.slim.instructions.CallAndAssignInstruction;
 import fitnesse.slim.instructions.CallInstruction;
@@ -257,7 +258,7 @@ public abstract class SlimTable {
     @Override
     public TestResult evaluateExpectation(Object returnValue) {
       SlimTestResult testResult;
-      if (returnValue == null) {
+      if (returnValue == null || returnValue.toString().equals(StringConverter.IGNORE)) {
         testResult = SlimTestResult.testNotRun();
       } else {
         String value;
