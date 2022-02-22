@@ -111,6 +111,27 @@ public class IncludeTest {
   }
 
   @Test
+  public void tranlatesWithVariable() throws Exception {
+    TestRoot root = new TestRoot();
+
+    String content = "!define one {PageOne}\n" +
+                     "!include ${one}\n" +
+                     "!define two {PageTwo}\n" +
+                     "!include ${two}";
+    WikiPage currentPage = root.makePage("PageRoot",  content);
+
+    WikiPage pageOne = root.makePage("PageOne");
+    root.makePage(pageOne,"variable","page ''one''");
+
+    WikiPage pageTwo = root.makePage("PageTwo");
+    root.makePage(pageTwo,"variable","page ''two''");
+
+    String result = ParserTestHelper.translateTo(currentPage);
+    assertContains(result,"Included page: <a href=\"PageOne\">PageOne</a> <a href=\"PageOne?edit&amp;redirectToReferer=true&amp;redirectAction=\" class=\"edit\">(edit)</a>");
+    assertContains(result,"Included page: <a href=\"PageTwo\">PageTwo</a> <a href=\"PageTwo?edit&amp;redirectToReferer=true&amp;redirectAction=\" class=\"edit\">(edit)</a>");
+  }
+
+  @Test
   public void setupsAreHidden() throws Exception {
     String result = ParserTestHelper.translateTo(makePageThatIncludesSetup());
 
@@ -195,12 +216,12 @@ public class IncludeTest {
 
     ParserTestHelper.assertTranslatesTo(includingPage, "two");
   }
-  
+
   @Test
   public void translatesHelp() throws Exception {
     TestRoot root = new TestRoot();
     WikiPage includingPage = root.makePage("PageOne", "!include -h PageTwo");
-    
+
     WikiPage pageWithHelp = root.makePage("PageTwo", "two");
     PageData pageData = pageWithHelp.getData();
     pageData.setAttribute(PageData.PropertyHELP, "help me");
