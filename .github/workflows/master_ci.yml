@@ -9,7 +9,9 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+      matrix:
+        os: [ubuntu-18.04, ubuntu-20.04]
 
     steps:
     - uses: actions/checkout@v2
@@ -18,7 +20,6 @@ jobs:
       with:
         java-version: '8'
         distribution: 'temurin'
-        #cache: gradle 
         
     
     - name: Setup Gradle 
