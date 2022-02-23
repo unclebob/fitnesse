@@ -9,8 +9,11 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
-
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, ubuntu-20.04]
+        
     steps:
     
     - uses: actions/checkout@v2
@@ -18,8 +21,7 @@ jobs:
       uses: actions/setup-java@v2
       with:
         java-version: '8'
-        distribution: 'temurin'
-        #cache: gradle 
+        distribution: 'temurin' 
         
     - name: Setup Gradle 
       uses: gradle/gradle-build-action@v2 
