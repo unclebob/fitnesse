@@ -23,6 +23,7 @@ import fitnesse.responders.refactoring.MovePageResponder;
 import fitnesse.responders.refactoring.RefactorPageResponder;
 import fitnesse.responders.refactoring.RenamePageResponder;
 import fitnesse.responders.refactoring.SearchReplaceResponder;
+import fitnesse.responders.run.InstructionResponder;
 import fitnesse.responders.run.PartitionPreviewResponder;
 import fitnesse.responders.run.StopTestResponder;
 import fitnesse.responders.run.SuiteResponder;
@@ -112,6 +113,7 @@ public class ResponderFactory {
     addResponder("replace", SearchReplaceResponder.class);
     addResponder("overview", SuiteOverviewResponder.class);
     addResponder("compareVersions", VersionComparerResponder.class);
+    addResponder("instruction", InstructionResponder.class);
     filterMap = new HashMap<>();
   }
 

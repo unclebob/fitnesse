@@ -7,4 +7,10 @@ import java.io.IOException;
 
 public interface ResponseSender extends Closeable {
   void send(byte[] bytes) throws IOException;
+
+  default void sendLine(String line) throws IOException {
+    send(line.getBytes());
+    send(System.lineSeparator().getBytes());
+  }
+
 }
