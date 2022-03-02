@@ -95,7 +95,6 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
     properties.set(WikiPageProperty.FILES);
     properties.set(WikiPageProperty.VERSIONS);
     properties.set(WikiPageProperty.SEARCH);
-    properties.set(WikiPageProperty.VARIABLES_SCOPE);
     properties.setLastModificationTime(Clock.currentDate());
 
     PageType pageType = PageType.getPageTypeForPageName(getName());
