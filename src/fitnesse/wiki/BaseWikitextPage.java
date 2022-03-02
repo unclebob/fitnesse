@@ -68,6 +68,10 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
     syntaxTree = null;
   }
 
+  public ParsingPage getParsingPage() {
+    return parsingPage;
+  }
+
   public static ParsingPage makeParsingPage(BaseWikitextPage page) {
     ParsingPage.Cache cache = new ParsingPage.Cache();
 
@@ -91,6 +95,7 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
     properties.set(WikiPageProperty.FILES);
     properties.set(WikiPageProperty.VERSIONS);
     properties.set(WikiPageProperty.SEARCH);
+    properties.set(WikiPageProperty.VARIABLES_SCOPE);
     properties.setLastModificationTime(Clock.currentDate());
 
     PageType pageType = PageType.getPageTypeForPageName(getName());

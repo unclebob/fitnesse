@@ -1,0 +1,30 @@
+<h1>Defined variables</h1>
+#if($variables.size() > 0)
+<table id="definedVariables" class="dirListing">
+ <thead>
+  <tr>
+   <th><a href="javascript:void(tableSorter.sort(0));">Variable name</a></th>
+   <th><a href="javascript:void(tableSorter.sort(1));">Variable location</a></th>
+  </tr>
+ </thead>
+ <tbody>
+  #foreach ($entry in $variables.keySet())
+    <tr>
+      <td>$entry</td>
+      <td><a href="$variables.get($entry)">$variables.get($entry)</a></td>
+     </tr>
+  #end
+ </tbody>
+</table>
+<script src="${contextRoot}files/fitnesse/javascript/clientSideSort.js"> </script>
+<script language="javascript">
+ tableSorter = new TableSorter('definedVariables', new DateParser(/^(\w+) (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) (\d+) (\d+).(\d+).(\d+) (\w+) (\d+)$/,8,2,3,4,5,6));
+</script>
+#else
+<h2>There are no variables defined for page: $pageTitle.Title</h2>
+#end
+<fieldset>
+ <a class="button" href="$viewLocation">Back</a>
+</fieldset>
+
+

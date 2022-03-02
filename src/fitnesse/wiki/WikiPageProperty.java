@@ -24,6 +24,7 @@ public class WikiPageProperty implements Serializable {
   public static final String WHERE_USED = "WhereUsed";
   public static final String REFACTOR = "Refactor";
   public static final String PROPERTIES = "Properties";
+  public static final String VARIABLES_SCOPE = "VariablesScope";
   public static final String VERSIONS = "Versions";
   public static final String EDIT = "Edit";
   public static final String SUITES = "Suites";
