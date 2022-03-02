@@ -62,8 +62,11 @@ sourceSets {
   }
 }
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+java {
+  toolchain {
+    languageVersion.set(JavaLanguageVersion.of(8))
+  }
+}
 
 dependencies {
   compile "org.htmlparser:htmlparser:2.1"
