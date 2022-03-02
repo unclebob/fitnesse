@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.VariableTool;
 import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wikitext.ParsingPage;
 import fitnesse.wikitext.SourcePage;
@@ -38,11 +39,15 @@ public class Include extends SymbolType implements Rule, Translation {
       next = parser.moveNext(1);
     }
     current.add(option);
-    if (!next.isType(SymbolType.Text) && !next.isType(WikiWord.symbolType)) return Symbol.nothing;
+    if (!next.isType(SymbolType.Text) && !next.isType(WikiWord.symbolType) && !next.isType(Variable.symbolType)) return Symbol.nothing;
 
     String includedPageName = getIncludedPageName(parser, next.getContent());
 
     SourcePage sourcePage = parser.getPage().getNamedPage();
+
+    // Replace any variables occuring inside string with valid value
+    VariableTool vt = new VariableTool(parser.getVariableSource());
+    includedPageName = vt.replace(includedPageName);
 
     // Record the page name anyway, since we might want to show an error if it's invalid
     if (PathParser.isWikiPath(includedPageName)) {
@@ -80,7 +85,7 @@ public class Include extends SymbolType implements Rule, Translation {
 
   private String getIncludedPageName(Parser parser, String nextContent) {
     StringBuilder includedPageName = new StringBuilder(nextContent);
-    while (parser.peek().isType(SymbolType.Text) || parser.peek().isType(WikiWord.symbolType)) {
+    while (parser.peek().isType(SymbolType.Text) || parser.peek().isType(WikiWord.symbolType) || parser.peek().isType(Variable.symbolType) || parser.peek().isType(SymbolType.CloseBrace)) {
       Symbol remainderOfPageName = parser.moveNext(1);
       includedPageName.append(remainderOfPageName.getContent());
     }
