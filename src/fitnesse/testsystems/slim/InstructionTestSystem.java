@@ -1,6 +1,5 @@
 package fitnesse.testsystems.slim;
 
-import fitnesse.http.ResponseSender;
 import fitnesse.slim.SlimVersion;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.protocol.SlimListBuilder;
@@ -16,13 +15,12 @@ import fitnesse.testsystems.slim.tables.SlimAssertion;
 import fitnesse.testsystems.slim.tables.SlimTable;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 
-import java.io.IOException;
 import java.util.List;
 
 public class InstructionTestSystem implements TestSystem {
 
-  public InstructionTestSystem(ResponseSender sender) {
-    this.sender = sender;
+  public InstructionTestSystem(StringBuilder result) {
+    this.result = result;
   }
 
   @Override
@@ -41,18 +39,13 @@ public class InstructionTestSystem implements TestSystem {
 
   @Override
   public void runTests(TestPage page) throws TestExecutionException {
-    try {
-      List<SlimTable> tables = SlimPage.Make(page, new SlimTestContextImpl(page), new SlimTableFactory(), new CustomComparatorRegistry()).getTables();
-      for (SlimTable table: tables) {
-        List<Instruction> instructions = SlimAssertion.getInstructions(table.getAssertions());
-        String serial = SlimSerializer.serialize(new SlimListBuilder(Double.parseDouble(SlimVersion.VERSION)).toList(instructions));
-        sender.sendLine(page.getFullPath() + "|" + serial);
-      }
-      listener.testComplete(page, new TestSummary());
+    List<SlimTable> tables = SlimPage.Make(page, new SlimTestContextImpl(page), new SlimTableFactory(), new CustomComparatorRegistry()).getTables();
+    for (SlimTable table: tables) {
+      List<Instruction> instructions = SlimAssertion.getInstructions(table.getAssertions());
+      String serial = SlimSerializer.serialize(new SlimListBuilder(Double.parseDouble(SlimVersion.VERSION)).toList(instructions));
+      result.append(page.getFullPath()).append("|").append(serial).append(System.lineSeparator());
     }
-    catch (IOException e) {
-      throw new TestExecutionException(e);
-    }
+    listener.testComplete(page, new TestSummary());
   }
 
   @Override
@@ -65,6 +58,7 @@ public class InstructionTestSystem implements TestSystem {
     this.listener = listener;
   }
 
-  private final ResponseSender sender;
+  private final StringBuilder result;
+
   private TestSystemListener listener;
 }

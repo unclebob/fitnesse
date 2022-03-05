@@ -4,7 +4,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
-import fitnesse.http.ResponseSender;
+import fitnesse.http.SimpleResponse;
 import fitnesse.testrunner.MultipleTestsRunner;
 import fitnesse.testrunner.SuiteContentsFinder;
 import fitnesse.testrunner.SuiteFilter;
@@ -18,59 +18,43 @@ import fitnesse.testsystems.slim.InstructionTestSystem;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
-import java.io.IOException;
 import java.util.List;
 
 public class InstructionResponder implements Responder {
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-    return new InstructionResponse(context, request);
-  }
+    WikiPage root = context.getRootPage(request.getMap());
+    WikiPage suite = root.getPageCrawler().getPage(PathParser.parse(request.getResource()));
 
-  static class InstructionResponse extends Response {
+    SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(suite, SuiteFilter.MATCH_ALL, root);
+    List<WikiPage> pages = suiteTestFinder.getAllPagesToRunForThisSuite();
 
-    public InstructionResponse(FitNesseContext context, Request request) {
-      super("text");
-      this.request = request;
-      this.context = context;
+    TestRun run = new PartitioningTestRunFactory().createRun(pages);
+    StringBuilder result = new StringBuilder();
+    MultipleTestsRunner runner = new MultipleTestsRunner(run, new InstructionTestSystemFactory(result));
+    try {
+      runner.executeTestPages();
+    } catch (TestExecutionException e) {
+      e.printStackTrace();
     }
 
-    @Override
-    public void sendTo(ResponseSender sender) throws IOException {
-      WikiPage root = context.getRootPage(request.getMap());
-      WikiPage suite = root.getPageCrawler().getPage(PathParser.parse(request.getResource()));
-
-      SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(suite, SuiteFilter.MATCH_ALL, root);
-      List<WikiPage> pages = suiteTestFinder.getAllPagesToRunForThisSuite();
-
-      TestRun run = new PartitioningTestRunFactory().createRun(pages);
-      MultipleTestsRunner runner = new MultipleTestsRunner(run, new InstructionTestSystemFactory(sender));
-      try {
-        runner.executeTestPages();
-      } catch (TestExecutionException e) {
-        e.printStackTrace();
-      }
-    }
-
-    @Override
-    public int getContentSize() { return 0; }
-
-    private final Request request;
-    private final FitNesseContext context;
+    SimpleResponse response = new SimpleResponse();
+    response.setContent(result.toString());
+    return response;
   }
 
   static class InstructionTestSystemFactory implements TestSystemFactory {
 
-    public InstructionTestSystemFactory(ResponseSender sender) {
-      this.sender = sender;
+    public InstructionTestSystemFactory(StringBuilder result) {
+      this.result = result;
     }
 
     @Override
     public TestSystem create(Descriptor descriptor) {
-      return new InstructionTestSystem(sender);
+      return new InstructionTestSystem(result);
     }
 
-    private final ResponseSender sender;
+    private final StringBuilder result;
   }
 }
