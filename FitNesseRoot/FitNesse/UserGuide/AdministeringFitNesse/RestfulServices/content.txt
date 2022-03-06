@@ -46,6 +46,7 @@
 | | remoteUrl | The url to the complete pathname of the parent page to be imported. |
 | | autoUpdate | If present, will cause a re-import of changed pages whenever a test is run. |
 | importAndView | | imports (if necessary) and views the selected page. |
+| instruction | | displays the Slim instructions for a suite of Slim tests. This is intended as input for further analysis or for low level debugging.|
 | movePage | | moves the selected page below a different parent. |
 | | newLocation | The full path name of the page that will be the new parent. |
 | names | | Displays a list of the pages at the current level.  If no page name is supplied, then the list is all the pages at the top level.  Otherwise it is the list of direct children (not grandchildren) of the supplied page. |
