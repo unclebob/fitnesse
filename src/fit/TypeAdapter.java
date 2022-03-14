@@ -53,12 +53,12 @@ public class TypeAdapter {
   }
   
   // Primitive byte adapter
-  public static TypeAdapter adapterFor(Class<byte.class> type) {
+  public static TypeAdapter adapterFor(Class<byte> type) {
     return new ByteAdapter();
   }
   
   // Class Byte adapter
-  public static TypeAdapter adapterFor(Class<Byte.class> type) {
+  public static TypeAdapter adapterFor(Class<Byte> type) {
       Object retval = delegateAdapter(type);
       if (retval != null){
         return retval; 
@@ -67,12 +67,12 @@ public class TypeAdapter {
   }
   
   // Primitive short adapter
-  public static TypeAdapter adapterFor(Class<short.class> type) {
+  public static TypeAdapter adapterFor(Class<short> type) {
     return new ShortAdapter();
   }
   
   // Class Short adapter
-  public static TypeAdapter adapterFor(Class<Short.class> type) {
+  public static TypeAdapter adapterFor(Class<Short> type) {
       Object retval = delegateAdapter(type);
       if (retval != null){
         return retval; 
@@ -81,12 +81,12 @@ public class TypeAdapter {
   }
   
   // Primitive int adapter
-  public static TypeAdapter adapterFor(Class<int.class> type) {
+  public static TypeAdapter adapterFor(Class<int> type) {
     return new IntAdapter();
   }
   
   // Class Integer adapter
-  public static TypeAdapter adapterFor(Class<Integer.class> type) {
+  public static TypeAdapter adapterFor(Class<Integer> type) {
       Object retval = delegateAdapter(type);
       if (retval != null){
         return retval; 
@@ -95,12 +95,12 @@ public class TypeAdapter {
   }
   
   // Primitive long adapter
-  public static TypeAdapter adapterFor(Class<long.class> type) {
+  public static TypeAdapter adapterFor(Class<long> type) {
     return new LongAdapter();
   }
   
   // Class Long adapter
-  public static TypeAdapter adapterFor(Class<Long.class> type) {
+  public static TypeAdapter adapterFor(Class<Long> type) {
       Object retval = delegateAdapter(type);
       if (retval != null){
         return retval; 
@@ -109,12 +109,12 @@ public class TypeAdapter {
   }
   
   // Primitive float adapter
-  public static TypeAdapter adapterFor(Class<float.class> type) {
+  public static TypeAdapter adapterFor(Class<float> type) {
     return new FloatAdapter();
   }
   
   // Class Float adapter
-  public static TypeAdapter adapterFor(Class<Float.class> type) {
+  public static TypeAdapter adapterFor(Class<Float> type) {
       Object retval = delegateAdapter(type);
       if (retval != null){
         return retval; 
@@ -123,12 +123,12 @@ public class TypeAdapter {
   }
   
   // Primitive double adapter
-  public static TypeAdapter adapterFor(Class<double.class> type) {
+  public static TypeAdapter adapterFor(Class<double> type) {
     return new DoubleAdapter();
   }
   
   // Class Double adapter
-  public static TypeAdapter adapterFor(Class<Double.class> type) {
+  public static TypeAdapter adapterFor(Class<Double> type) {
       Object retval = delegateAdapter(type);
       if (retval != null){
         return retval; 
@@ -137,12 +137,12 @@ public class TypeAdapter {
   }
   
   // Primitive char adapter
-  public static TypeAdapter adapterFor(Class<char.class> type) {
+  public static TypeAdapter adapterFor(Class<char> type) {
     return new CharAdapter();
   }
   
   // Class Character adapter
-  public static TypeAdapter adapterFor(Class<Character.class> type) {
+  public static TypeAdapter adapterFor(Class<Character> type) {
       Object retval = delegateAdapter(type);
       if (retval != null){
         return retval; 
@@ -151,12 +151,12 @@ public class TypeAdapter {
   }
   
   // Primitive boolean adapter
-  public static TypeAdapter adapterFor(Class<boolean.class> type) {
+  public static TypeAdapter adapterFor(Class<boolean> type) {
     return new BooleanAdapter();
   }
   
   // Class Boolean adapter
-  public static TypeAdapter adapterFor(Class<Boolean.class> type) {
+  public static TypeAdapter adapterFor(Class<Boolean> type) {
       Object retval = delegateAdapter(type);
       if (retval != null){
         return retval; 
