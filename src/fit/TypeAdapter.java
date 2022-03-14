@@ -51,32 +51,140 @@ public class TypeAdapter {
     a.isRegex = isRegex;
     return a;
   }
-
-  public static TypeAdapter adapterFor(Class<?> type) throws UnsupportedOperationException {
-    if (type.isPrimitive()) {
-      if (type.equals(byte.class)) return new ByteAdapter();
-      if (type.equals(short.class)) return new ShortAdapter();
-      if (type.equals(int.class)) return new IntAdapter();
-      if (type.equals(long.class)) return new LongAdapter();
-      if (type.equals(float.class)) return new FloatAdapter();
-      if (type.equals(double.class)) return new DoubleAdapter();
-      if (type.equals(char.class)) return new CharAdapter();
-      if (type.equals(boolean.class)) return new BooleanAdapter();
-      throw new UnsupportedOperationException("can't yet adapt " + type);
-    } else {
+  
+  // Primitive byte adapter
+  public static TypeAdapter adapterFor(byte.class type) throws UnsupportedOperationException {
+    return new ByteAdapter();
+  }
+  
+  // Class Byte adapter
+  public static TypeAdapter adapterFor(Byte.class type) throws UnsupportedOperationException {
+      Object retval = delegateAdapter(type);
+      if (retval != null){
+        return retval; 
+      }
+        return new ClassByteAdapter(); 
+  }
+  
+  // Primitive short adapter
+  public static TypeAdapter adapterFor(short.class type) throws UnsupportedOperationException {
+    return new ShortAdapter();
+  }
+  
+  // Class Short adapter
+  public static TypeAdapter adapterFor(Short.class type) throws UnsupportedOperationException {
+      Object retval = delegateAdapter(type);
+      if (retval != null){
+        return retval; 
+      }
+        return new ClassShortAdapter(); 
+  }
+  
+  // Primitive int adapter
+  public static TypeAdapter adapterFor(int.class type) throws UnsupportedOperationException {
+    return new IntAdapter();
+  }
+  
+  // Class Integer adapter
+  public static TypeAdapter adapterFor(Integer.class type) throws UnsupportedOperationException {
+      Object retval = delegateAdapter(type);
+      if (retval != null){
+        return retval; 
+      }
+        return new ClassIntegerAdapter(); 
+  }
+  
+  // Primitive long adapter
+  public static TypeAdapter adapterFor(long.class type) throws UnsupportedOperationException {
+    return new LongAdapter();
+  }
+  
+  // Class Long adapter
+  public static TypeAdapter adapterFor(Long.class type) throws UnsupportedOperationException {
+      Object retval = delegateAdapter(type);
+      if (retval != null){
+        return retval; 
+      }
+        return new ClassLongAdapter(); 
+  }
+  
+  // Primitive float adapter
+  public static TypeAdapter adapterFor(float.class type) throws UnsupportedOperationException {
+    return new FloatAdapter();
+  }
+  
+  // Class Float adapter
+  public static TypeAdapter adapterFor(Float.class type) throws UnsupportedOperationException {
+      Object retval = delegateAdapter(type);
+      if (retval != null){
+        return retval; 
+      }
+        return new ClassFloatAdapter(); 
+  }
+  
+  // Primitive double adapter
+  public static TypeAdapter adapterFor(double.class type) throws UnsupportedOperationException {
+    return new DoubleAdapter();
+  }
+  
+  // Class Double adapter
+  public static TypeAdapter adapterFor(Double.class type) throws UnsupportedOperationException {
+      Object retval = delegateAdapter(type);
+      if (retval != null){
+        return retval; 
+      }
+        return new ClassDoubleAdapter(); 
+  }
+  
+  // Primitive char adapter
+  public static TypeAdapter adapterFor(char.class type) throws UnsupportedOperationException {
+    return new CharAdapter();
+  }
+  
+  // Class Character adapter
+  public static TypeAdapter adapterFor(Character.class type) throws UnsupportedOperationException {
+      Object retval = delegateAdapter(type);
+      if (retval != null){
+        return retval; 
+      }
+        return new ClassCharacterAdapter(); 
+  }
+  
+  // Primitive boolean adapter
+  public static TypeAdapter adapterFor(boolean.class type) throws UnsupportedOperationException {
+    return new BooleanAdapter();
+  }
+  
+  // Class Boolean adapter
+  public static TypeAdapter adapterFor(Boolean.class type) throws UnsupportedOperationException {
+      Object retval = delegateAdapter(type);
+      if (retval != null){
+        return retval; 
+      }
+        return new ClassBooleanAdapter(); 
+  }
+  
+  // Helper method for handeling delegate adapters. removed repetition of code.
+  private TypeAdapter delegateAdapter(Class<?> type){
       Object delegate = PARSE_DELEGATES.get(type);
       if (delegate instanceof DelegateClassAdapter)
         return (TypeAdapter) ((DelegateClassAdapter) delegate).clone();
       if (delegate instanceof DelegateObjectAdapter)
-        return (TypeAdapter) ((DelegateObjectAdapter) delegate).clone();
-      if (type.equals(Byte.class)) return new ClassByteAdapter();
-      if (type.equals(Short.class)) return new ClassShortAdapter();
-      if (type.equals(Integer.class)) return new ClassIntegerAdapter();
-      if (type.equals(Long.class)) return new ClassLongAdapter();
-      if (type.equals(Float.class)) return new ClassFloatAdapter();
-      if (type.equals(Double.class)) return new ClassDoubleAdapter();
-      if (type.equals(Character.class)) return new ClassCharacterAdapter();
-      if (type.equals(Boolean.class)) return new ClassBooleanAdapter();
+        return (TypeAdapter) ((DelegateObjectAdapter) delegate).clone()
+      else{
+        return null;
+      }
+  }
+  
+  // Handle any other types that may come in
+  public static TypeAdapter adapterFor(Class<?> type) throws UnsupportedOperationException {
+    if (type.isPrimitive()) {
+      throw new UnsupportedOperationException("can't yet adapt " + type);
+    } else {
+      Object retval = delegateAdapter(type);
+      if (retval != null){
+        return retval; 
+      }
       if (type.isArray()) return new ArrayAdapter();
       return new TypeAdapter();
     }
