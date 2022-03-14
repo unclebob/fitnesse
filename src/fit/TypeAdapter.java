@@ -51,140 +51,65 @@ public class TypeAdapter {
     a.isRegex = isRegex;
     return a;
   }
-  
+
   // Primitive byte adapter
-  public static TypeAdapter adapterFor(Class<byte> type) {
+  public static TypeAdapter adapterFor(byte type) {
     return new ByteAdapter();
   }
-  
-  // Class Byte adapter
-  public static TypeAdapter adapterFor(Class<Byte> type) {
-      Object retval = delegateAdapter(type);
-      if (retval != null){
-        return retval; 
-      }
-        return new ClassByteAdapter(); 
-  }
-  
+
   // Primitive short adapter
-  public static TypeAdapter adapterFor(Class<short> type) {
+  public static TypeAdapter adapterFor(short type) {
     return new ShortAdapter();
   }
-  
-  // Class Short adapter
-  public static TypeAdapter adapterFor(Class<Short> type) {
-      Object retval = delegateAdapter(type);
-      if (retval != null){
-        return retval; 
-      }
-        return new ClassShortAdapter(); 
-  }
-  
+
   // Primitive int adapter
-  public static TypeAdapter adapterFor(Class<int> type) {
+  public static TypeAdapter adapterFor(int type) {
     return new IntAdapter();
   }
-  
-  // Class Integer adapter
-  public static TypeAdapter adapterFor(Class<Integer> type) {
-      Object retval = delegateAdapter(type);
-      if (retval != null){
-        return retval; 
-      }
-        return new ClassIntegerAdapter(); 
-  }
-  
+
   // Primitive long adapter
-  public static TypeAdapter adapterFor(Class<long> type) {
+  public static TypeAdapter adapterFor(long type) {
     return new LongAdapter();
   }
-  
-  // Class Long adapter
-  public static TypeAdapter adapterFor(Class<Long> type) {
-      Object retval = delegateAdapter(type);
-      if (retval != null){
-        return retval; 
-      }
-        return new ClassLongAdapter(); 
-  }
-  
+
   // Primitive float adapter
-  public static TypeAdapter adapterFor(Class<float> type) {
+  public static TypeAdapter adapterFor(float type) {
     return new FloatAdapter();
   }
-  
-  // Class Float adapter
-  public static TypeAdapter adapterFor(Class<Float> type) {
-      Object retval = delegateAdapter(type);
-      if (retval != null){
-        return retval; 
-      }
-        return new ClassFloatAdapter(); 
-  }
-  
+
   // Primitive double adapter
-  public static TypeAdapter adapterFor(Class<double> type) {
+  public static TypeAdapter adapterFor(double type) {
     return new DoubleAdapter();
   }
-  
-  // Class Double adapter
-  public static TypeAdapter adapterFor(Class<Double> type) {
-      Object retval = delegateAdapter(type);
-      if (retval != null){
-        return retval; 
-      }
-        return new ClassDoubleAdapter(); 
-  }
-  
+
   // Primitive char adapter
-  public static TypeAdapter adapterFor(Class<char> type) {
+  public static TypeAdapter adapterFor(char type) {
     return new CharAdapter();
   }
-  
-  // Class Character adapter
-  public static TypeAdapter adapterFor(Class<Character> type) {
-      Object retval = delegateAdapter(type);
-      if (retval != null){
-        return retval; 
-      }
-        return new ClassCharacterAdapter(); 
-  }
-  
+
   // Primitive boolean adapter
-  public static TypeAdapter adapterFor(Class<boolean> type) {
+  public static TypeAdapter adapterFor(boolean type) {
     return new BooleanAdapter();
   }
-  
-  // Class Boolean adapter
-  public static TypeAdapter adapterFor(Class<Boolean> type) {
-      Object retval = delegateAdapter(type);
-      if (retval != null){
-        return retval; 
-      }
-        return new ClassBooleanAdapter(); 
-  }
-  
-  // Helper method for handeling delegate adapters. removed repetition of code.
-  private TypeAdapter delegateAdapter(Class<?> type){
-      Object delegate = PARSE_DELEGATES.get(type);
-      if (delegate instanceof DelegateClassAdapter)
-        return (TypeAdapter) ((DelegateClassAdapter) delegate).clone();
-      if (delegate instanceof DelegateObjectAdapter)
-        return (TypeAdapter) ((DelegateObjectAdapter) delegate).clone();
-      else{
-        return null;
-      }
-  }
-  
+
   // Handle any other types that may come in
   public static TypeAdapter adapterFor(Class<?> type) throws UnsupportedOperationException {
     if (type.isPrimitive()) {
       throw new UnsupportedOperationException("can't yet adapt " + type);
     } else {
-      Object retval = delegateAdapter(type);
-      if (retval != null){
-        return retval; 
-      }
+      Object delegate = PARSE_DELEGATES.get(type);
+      if (delegate instanceof DelegateClassAdapter)
+        return (TypeAdapter) ((DelegateClassAdapter) delegate).clone();
+      if (delegate instanceof DelegateObjectAdapter)
+        return (TypeAdapter) ((DelegateObjectAdapter) delegate).clone();
+      if (type.equals(Byte.class)) return new ClassByteAdapter();
+      if (type.equals(Short.class)) return new ClassShortAdapter();
+      if (type.equals(Integer.class)) return new ClassIntegerAdapter();
+      if (type.equals(Long.class)) return new ClassLongAdapter();
+      if (type.equals(Float.class)) return new ClassFloatAdapter();
+      if (type.equals(Double.class)) return new ClassDoubleAdapter();
+      if (type.equals(Character.class)) return new ClassCharacterAdapter();
+      if (type.equals(Boolean.class)) return new ClassBooleanAdapter();
       if (type.isArray()) return new ArrayAdapter();
       return new TypeAdapter();
     }
