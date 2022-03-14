@@ -53,12 +53,12 @@ public class TypeAdapter {
   }
   
   // Primitive byte adapter
-  public static TypeAdapter adapterFor(Class<byte.class> type) {
+  public static TypeAdapter adapterFor(byte.class type) throws UnsupportedOperationException {
     return new ByteAdapter();
   }
   
   // Class Byte adapter
-  public static TypeAdapter adapterFor(Class<Byte.class> type) {
+  public static TypeAdapter adapterFor(Byte.class type) throws UnsupportedOperationException {
       Object retval = delegateAdapter(type);
       if (retval != null){
         return retval; 
@@ -67,12 +67,12 @@ public class TypeAdapter {
   }
   
   // Primitive short adapter
-  public static TypeAdapter adapterFor(Class<short.class> type) {
+  public static TypeAdapter adapterFor(short.class type) throws UnsupportedOperationException {
     return new ShortAdapter();
   }
   
   // Class Short adapter
-  public static TypeAdapter adapterFor(Class<Short.class> type) {
+  public static TypeAdapter adapterFor(Short.class type) throws UnsupportedOperationException {
       Object retval = delegateAdapter(type);
       if (retval != null){
         return retval; 
@@ -81,12 +81,12 @@ public class TypeAdapter {
   }
   
   // Primitive int adapter
-  public static TypeAdapter adapterFor(Class<int.class> type) {
+  public static TypeAdapter adapterFor(int.class type) throws UnsupportedOperationException {
     return new IntAdapter();
   }
   
   // Class Integer adapter
-  public static TypeAdapter adapterFor(Class<Integer.class> type) {
+  public static TypeAdapter adapterFor(Integer.class type) throws UnsupportedOperationException {
       Object retval = delegateAdapter(type);
       if (retval != null){
         return retval; 
@@ -95,12 +95,12 @@ public class TypeAdapter {
   }
   
   // Primitive long adapter
-  public static TypeAdapter adapterFor(Class<long.class> type) {
+  public static TypeAdapter adapterFor(long.class type) throws UnsupportedOperationException {
     return new LongAdapter();
   }
   
   // Class Long adapter
-  public static TypeAdapter adapterFor(Class<Long.class> type) {
+  public static TypeAdapter adapterFor(Long.class type) throws UnsupportedOperationException {
       Object retval = delegateAdapter(type);
       if (retval != null){
         return retval; 
@@ -109,12 +109,12 @@ public class TypeAdapter {
   }
   
   // Primitive float adapter
-  public static TypeAdapter adapterFor(Class<float.class> type) {
+  public static TypeAdapter adapterFor(float.class type) throws UnsupportedOperationException {
     return new FloatAdapter();
   }
   
   // Class Float adapter
-  public static TypeAdapter adapterFor(Class<Float.class> type) {
+  public static TypeAdapter adapterFor(Float.class type) throws UnsupportedOperationException {
       Object retval = delegateAdapter(type);
       if (retval != null){
         return retval; 
@@ -123,12 +123,12 @@ public class TypeAdapter {
   }
   
   // Primitive double adapter
-  public static TypeAdapter adapterFor(Class<double.class> type) {
+  public static TypeAdapter adapterFor(double.class type) throws UnsupportedOperationException {
     return new DoubleAdapter();
   }
   
   // Class Double adapter
-  public static TypeAdapter adapterFor(Class<Double.class> type) {
+  public static TypeAdapter adapterFor(Double.class type) throws UnsupportedOperationException {
       Object retval = delegateAdapter(type);
       if (retval != null){
         return retval; 
@@ -137,12 +137,12 @@ public class TypeAdapter {
   }
   
   // Primitive char adapter
-  public static TypeAdapter adapterFor(Class<char.class> type) {
+  public static TypeAdapter adapterFor(char.class type) throws UnsupportedOperationException {
     return new CharAdapter();
   }
   
   // Class Character adapter
-  public static TypeAdapter adapterFor(Class<Character.class> type) {
+  public static TypeAdapter adapterFor(Character.class type) throws UnsupportedOperationException {
       Object retval = delegateAdapter(type);
       if (retval != null){
         return retval; 
@@ -151,12 +151,12 @@ public class TypeAdapter {
   }
   
   // Primitive boolean adapter
-  public static TypeAdapter adapterFor(Class<boolean.class> type) {
+  public static TypeAdapter adapterFor(boolean.class type) throws UnsupportedOperationException {
     return new BooleanAdapter();
   }
   
   // Class Boolean adapter
-  public static TypeAdapter adapterFor(Class<Boolean.class> type) {
+  public static TypeAdapter adapterFor(Boolean.class type) throws UnsupportedOperationException {
       Object retval = delegateAdapter(type);
       if (retval != null){
         return retval; 
@@ -170,7 +170,7 @@ public class TypeAdapter {
       if (delegate instanceof DelegateClassAdapter)
         return (TypeAdapter) ((DelegateClassAdapter) delegate).clone();
       if (delegate instanceof DelegateObjectAdapter)
-        return (TypeAdapter) ((DelegateObjectAdapter) delegate).clone();
+        return (TypeAdapter) ((DelegateObjectAdapter) delegate).clone()
       else{
         return null;
       }
