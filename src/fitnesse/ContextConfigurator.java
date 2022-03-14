@@ -268,12 +268,20 @@ public class ContextConfigurator {
   }
 
   private void findContextRoot() {
-    if (!contextRoot.startsWith("/")) {
+    if (!isRootStarts()) {
       contextRoot = "/" + contextRoot;
     }
-    if (!contextRoot.endsWith("/")) {
+    if (!isRootEnds()) {
       contextRoot = contextRoot + "/";
     }
+  }
+
+  private boolean isRootEnds() {
+    return contextRoot.endsWith("/");
+  }
+
+  private boolean isRootStarts() {
+    return contextRoot.startsWith("/");
   }
 
   public ContextConfigurator withRootDirectoryName(String rootDirectoryName) {
