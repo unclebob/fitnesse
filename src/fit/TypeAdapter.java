@@ -300,6 +300,7 @@ public class TypeAdapter {
         return true;
       }
       return false;
+    }
 
   }
 
