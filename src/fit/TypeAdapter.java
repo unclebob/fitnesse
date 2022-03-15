@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
+import java.util.Arrays;
 
 public class TypeAdapter {
   public Object target;
@@ -296,7 +297,7 @@ public class TypeAdapter {
     private boolean checkTrue(String s){
       String trueVals[] = {"true", "yes", "1", "y", "+"};
       String ls = s.toLowerCase();
-      if (trueVals.contains(ls)){
+      if (Arrays.asList(trueVals).contains(ls)){
         return true;
       }
       return false;
