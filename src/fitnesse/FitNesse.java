@@ -61,9 +61,7 @@ public class FitNesse {
   }
 
   public void executeSingleCommand(String command, OutputStream out) throws Exception {
-    Request request = new MockRequestBuilder(command).noChunk().build();
-    FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(), context, new SerialExecutorService());
-    Response response = expediter.createGoodResponse(request);
+    Response response = getResponse(command);
     int responseStatus = response.getStatus();
     if (responseStatus >= 400 && responseStatus <= 599){
         throw new Exception("error loading page: " + responseStatus);
@@ -71,6 +69,13 @@ public class FitNesse {
     response.withoutHttpHeaders();
     MockResponseSender sender = new MockResponseSender(out);
     sender.doSending(response);
+  }
+
+  private Response getResponse(String command) throws Exception {
+    Request request = new MockRequestBuilder(command).noChunk().build();
+    FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(), context, new SerialExecutorService());
+    Response response = expediter.createGoodResponse(request);
+    return response;
   }
 
   /**

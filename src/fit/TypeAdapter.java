@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
+import java.util.Arrays;
 
 public class TypeAdapter {
   public Object target;
@@ -286,19 +287,22 @@ public class TypeAdapter {
     @Override
     public Object parse(String s) {
       if ("null".equals(s)) return null;
-      String ls = s.toLowerCase();
-      if (ls.equals("true"))
+      
+      if (checkTrue(s))
         return Boolean.TRUE;
-      if (ls.equals("yes"))
-        return Boolean.TRUE;
-      if (ls.equals("1"))
-        return Boolean.TRUE;
-      if (ls.equals("y"))
-        return Boolean.TRUE;
-      if (ls.equals("+"))
-        return Boolean.TRUE;
+      
       return Boolean.FALSE;
     }
+    
+    private boolean checkTrue(String s){
+      String trueVals[] = {"true", "yes", "1", "y", "+"};
+      String ls = s.toLowerCase();
+      if (Arrays.asList(trueVals).contains(ls)){
+        return true;
+      }
+      return false;
+    }
+
   }
 
   static class ArrayAdapter extends TypeAdapter {

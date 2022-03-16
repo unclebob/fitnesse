@@ -255,12 +255,7 @@ public class ContextConfigurator {
         break;
       case CONTEXT_ROOT:
         contextRoot = value;
-        if (!contextRoot.startsWith("/")) {
-          contextRoot = "/" + contextRoot;
-        }
-        if (!contextRoot.endsWith("/")) {
-          contextRoot = contextRoot + "/";
-        }
+        findContextRoot();
         break;
       case PORT:
         port = Integer.parseInt(value);
@@ -270,6 +265,23 @@ public class ContextConfigurator {
         break;
     }
     return this;
+  }
+
+  private void findContextRoot() {
+    if (!isRootStarts()) {
+      contextRoot = "/" + contextRoot;
+    }
+    if (!isRootEnds()) {
+      contextRoot = contextRoot + "/";
+    }
+  }
+
+  private boolean isRootEnds() {
+    return contextRoot.endsWith("/");
+  }
+
+  private boolean isRootStarts() {
+    return contextRoot.startsWith("/");
   }
 
   public ContextConfigurator withRootDirectoryName(String rootDirectoryName) {
