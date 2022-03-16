@@ -299,7 +299,7 @@ public class Fixture {
   }
 
   private void compareCellToResult(TypeAdapter a, Parse cell) {
-    new CellComparator().compareCellToResult(a, cell);
+    getCellComparator(a,cell).compareCellToResult(a, cell);
   }
 
   public void handleBlankCell(Parse cell, TypeAdapter a) {
@@ -355,79 +355,10 @@ public class Fixture {
     return o;
   }
 
-  // TODO-RcM I might be moving out of here. Can you help me find a home of my
-  // own?
-  private class CellComparator {
-    private Object result = null;
+  private CellComparator getCellComparator(TypeAdapter a, Parse theCell){
+    return new CellComparator(null,null,a,theCell, this);
 
-    private Object expected = null;
-
-    private TypeAdapter typeAdapter;
-
-    private Parse cell;
-
-    private void compareCellToResult(TypeAdapter a, Parse theCell) {
-      typeAdapter = a;
-      cell = theCell;
-
-      try {
-        result = typeAdapter.get();
-        expected = parseCell();
-        if (expected instanceof Unparseable)
-          tryRelationalMatch();
-        else
-          compare();
-      } catch (Exception e) {
-        exception(cell, e);
-      }
-    }
-
-    private void compare() {
-      if (typeAdapter.equals(expected, result)) {
-        right(cell);
-      } else {
-        wrong(cell, typeAdapter.toString(result));
-      }
-    }
-
-    private Object parseCell() {
-      try {
-        return typeAdapter.isRegex ? cell.text() : typeAdapter.parse(cell.text());
-      }
-      // Ignore parse exceptions, print non-parse exceptions,
-      // return null so that compareCellToResult tries relational matching.
-      catch (NumberFormatException e) {
-      } catch (ParseException e) {
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-      return new Unparseable();
-    }
-
-    private void tryRelationalMatch() {
-      Class<?> adapterType = typeAdapter.type;
-      FitFailureException cantParseException = new CouldNotParseFitFailureException(cell.text(), adapterType
-        .getName());
-      if (result != null) {
-        FitMatcher matcher = new FitMatcher(cell.text(), result);
-        try {
-          if (matcher.matches())
-            right(cell);
-          else
-            wrong(cell);
-          cell.body = matcher.message();
-        } catch (FitMatcherException fme) {
-          exception(cell, cantParseException);
-        } catch (Exception e) {
-          exception(cell, e);
-        }
-      } else {
-        // TODO-RcM Is this always accurate?
-        exception(cell, cantParseException);
-      }
-    }
   }
-
-  private class Unparseable {
+  public static class Unparseable {
   }
 }
