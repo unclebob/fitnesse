@@ -8,9 +8,9 @@ import java.text.ParseException;
 
 public class CellComparator {
 
-  private Object result = null;
+  private Object result;
 
-  private Object expected = null;
+  private Object expected;
 
   private TypeAdapter typeAdapter;
 
@@ -19,10 +19,9 @@ public class CellComparator {
   private Fixture fixture;
 
 
-  CellComparator(Object Result, Object Expected, TypeAdapter typeadapter, Parse cell, Fixture fix) {
+  CellComparator(TypeAdapter typeadapter, Parse cell, Fixture fix) {
 
-    this.result = Result;
-    this.expected = Expected;
+
     this.typeAdapter = typeadapter;
     this.cell = cell;
     this.fixture = fix;

@@ -356,7 +356,7 @@ public class Fixture {
   }
 
   private CellComparator getCellComparator(TypeAdapter a, Parse theCell){
-    return new CellComparator(null,null,a,theCell, this);
+    return new CellComparator(a,theCell, this);
 
   }
   public static class Unparseable {
