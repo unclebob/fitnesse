@@ -11,6 +11,7 @@ public class WikiFileListBuilder {
 
   private Collection<String> files = []
   private Collection<String> doNotReplaceFiles = []
+  private Collection<String> mainDirectories = [];
 
   private File updateListFile
   private File updateDoNotCopyOverListFile

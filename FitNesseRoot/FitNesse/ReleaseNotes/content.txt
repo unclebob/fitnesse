@@ -1,5 +1,11 @@
 !2 ${FITNESSE_VERSION}
 
+!2 20220319
+* Add new responder to lists the Slim instructions suite to aid analysis/debugging ([[1356][https://github.com/unclebob/fitnesse/pull/1356]])
+* Allow usage of variables inside include statement ([[1353][https://github.com/unclebob/fitnesse/pull/1353]])
+* Improved template for new suites ([[1343][https://github.com/unclebob/fitnesse/pull/1344]])
+* Allow more control over how a test suite is partitioned ([[1343][https://github.com/unclebob/fitnesse/pull/1343]])
+
 !2 20211030
 * Switch community pages from Slack to Gitter. ([[1339][https://github.com/unclebob/fitnesse/pull/1339]])
 
