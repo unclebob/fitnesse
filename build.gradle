@@ -95,8 +95,12 @@ dependencies {
 
 task fitNesseVersion {
   def versionFile = new File("${sourceSets.main.output.resourcesDir}/META-INF/FitNesseVersion.txt")
-  versionFile.parentFile.mkdirs()
-  versionFile.text="v${version}"
+  outputs.file(versionFile)
+  doLast {
+    versionFile.parentFile.mkdirs()
+    versionFile.text = "v${version}"
+    println "fitNesseVersion: ${outputs.files.singleFile.text}"
+  }
 }
 
 task compileBootstrap(type: LessCompiler) {
