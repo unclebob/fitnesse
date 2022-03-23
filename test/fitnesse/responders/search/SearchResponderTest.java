@@ -76,7 +76,7 @@ public class SearchResponderTest {
   @Test
   public void testEscapesSearchString() throws Exception {
     String content = getResponseContentUsingSearchString("!+-<&>");
-    assertSubString("!+-<&>", content);
+    assertSubString("<title>Content Search Results for '!+-&lt;&amp;&gt;'</title>", content);
   }
 
   private String getResponseContentUsingSearchString(String searchString) throws Exception {
