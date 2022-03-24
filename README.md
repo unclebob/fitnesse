@@ -23,6 +23,12 @@ Have a bug or a feature request? [Please open a new issue](https://github.com/un
 
 Have a question that's not a feature request or bug report? [Join the Gitter Community.](https://gitter.im/fitnesse-org/fitnesse)
 
+## Edge builds
+
+The latest stable build of FitNesse can be [downloaded here](https://github.com/unclebob/fitnesse/actions) by clicking the latest workflow and clicking the `libs` artifact.
+
+**Note**: the `libs` artifact contains 2 jars. `fitnesse.jar` is for use in Maven or Ivy. Users who just want to run FitNesse by itself should use `fitnesse-standalone.jar` instead of `fitnesse.jar`.
+
 ## Developers
 
 Issues and pull requests are administered at [GitHub](https://github.com/unclebob/fitnesse/issues).
