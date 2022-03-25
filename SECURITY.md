@@ -22,4 +22,5 @@ FitNesse is intended to be used as part of a software development tool set. It a
 * FitNesse should be available only to trusted, knowledgeable, and professional members of the development team.
 * FitNesse should not be exposed on any public-facing servers.
 * FitNesse should not have access to any production environments. If testing with production data is desired, a copy of the data should be made to a secure sandboxed test environment.
+* When running FitNesse on a local machine, the `-lh` command line argument will ensure only connections from the same machine are accepted. 
 
