@@ -36,7 +36,8 @@ public class ScopeVariablesResponderTest {
   public void shouldListVariables() throws Exception {
     request.setResource("SimplePage.ChildPage.GrandChildPage");
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context,request);
-    assertHasRegexp("<a href=\"SimplePage\">SimplePage</a>", response.getContent());
-    assertHasRegexp("<a href=\"SimplePage\\.ChildPage\">SimplePage.ChildPage</a>", response.getContent());
+    assertHasRegexp("<tr>.*?<td>x</td>.*?<td><a href=\"SimplePage\">SimplePage</a></td>.*?</tr>", response.getContent());
+    assertHasRegexp("<tr>.*?<td>y</td>.*?<td><a href=\"SimplePage\">SimplePage</a></td>.*?</tr>", response.getContent());
+    assertHasRegexp("<tr>.*?<td>z</td>.*?<td><a href=\"SimplePage.ChildPage\">SimplePage.ChildPage</a></td>.*?</tr>", response.getContent());
   }
 }
