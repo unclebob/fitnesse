@@ -68,6 +68,10 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
     syntaxTree = null;
   }
 
+  public ParsingPage getParsingPage() {
+    return parsingPage;
+  }
+
   public static ParsingPage makeParsingPage(BaseWikitextPage page) {
     ParsingPage.Cache cache = new ParsingPage.Cache();
 

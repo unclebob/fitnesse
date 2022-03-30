@@ -125,5 +125,6 @@
 | viewVersion | | Shows the selected version of the wiki page. |
 | | version | The version identifier.  The version identifier is just the name of the zip file (without the .zip) that holds the version.  The format of this file name is (generally) ''user''-''id''-''yyyyMMddHHmmss'' where user might not be present. |
 | whereUsed | | Returns a list of pages that contains references (links) to the selected page |
+| variables | | Returns a list of variables that are available on this page |
 
  * ''nochunk''  can be added to many urls to turn off chunking.  This is most useful for test and suite urls when writing programs to parse the output.

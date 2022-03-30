@@ -79,6 +79,8 @@ public class WikiPageActions {
     return hasAction("RecentChanges");
   }
 
+  public boolean isWithVariablesScope() { return page != null; }
+
   public boolean isWithUserGuide() {
     return page != null;
   }

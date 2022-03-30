@@ -81,6 +81,7 @@ public class ResponderFactory {
     addResponder("properties", PropertiesResponder.class);
     addResponder("saveProperties", SavePropertiesResponder.class);
     addResponder("searchProperties", SearchPropertiesResponder.class);
+    addResponder("variables", ScopeVariablesResponder.class);
     // Deprecated:
     addResponder("executeSearchProperties", SearchPropertiesResponder.class);
     addResponder("whereUsed", WhereUsedResponder.class);

@@ -1,8 +1,10 @@
 package fitnesse.wikitext;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * The page represents wiki page in the course of being parsed.
@@ -24,6 +26,10 @@ public class ParsingPage implements VariableStore {
 
   public ParsingPage(SourcePage page, VariableSource variableSource, Cache cache) {
     this(page, page, variableSource, cache);
+  }
+
+  public Cache getCache() {
+    return cache;
   }
 
   private ParsingPage(SourcePage page, SourcePage namedPage, VariableSource variableSource, Cache cache) {
@@ -91,6 +97,11 @@ public class ParsingPage implements VariableStore {
     public int nextId() {
       return id++;
     }
+
+    public List<String> getVariables(){
+      return cache.entrySet().stream().map(e -> e.getKey()).collect(Collectors.toList());
+    }
+
   }
 
 
