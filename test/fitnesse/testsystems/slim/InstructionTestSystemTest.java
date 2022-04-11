@@ -18,7 +18,7 @@ public class InstructionTestSystemTest {
     try {
       testSystem.runTests(page);
       assertEquals(
-        "TestPageFullPath|[000002:000087:[000004:000015:scriptTable_0_0:000004:make:000016:scriptTableActor:000011:SampleClass:]:000088:[000004:000015:scriptTable_0_1:000004:call:000016:scriptTableActor:000012:SomeProperty:]:]" + System.lineSeparator(),
+        "TestPageFullPath|[000002:000087:[000004:000015:scriptTable_0_0:000004:make:000016:scriptTableActor:000011:SampleClass:]:000104:[000005:000015:scriptTable_0_1:000004:call:000016:scriptTableActor:000012:SomeProperty:000008:in%23put%0A%0D:]:]" + System.lineSeparator(),
         result.toString());
     } catch (TestExecutionException e) {
       e.printStackTrace();
@@ -53,7 +53,7 @@ public class InstructionTestSystemTest {
 
     @Override
     public String getHtml() {
-      return "<table><tr><td>script</td><td>SampleClass</td></tr><tr><td>check</td><td>SomeProperty</td><td>valid</td></tr></table>";
+      return "<table><tr><td>script</td><td>SampleClass</td></tr><tr><td>check</td><td>SomeProperty</td><td>in%put\r\n</td><td>valid</td></tr></table>";
     }
   }
 

@@ -43,7 +43,7 @@ public class InstructionTestSystem implements TestSystem {
     for (SlimTable table: tables) {
       List<Instruction> instructions = SlimAssertion.getInstructions(table.getAssertions());
       String serial = SlimSerializer.serialize(new SlimListBuilder(Double.parseDouble(SlimVersion.VERSION)).toList(instructions));
-      result.append(page.getFullPath()).append("|").append(serial).append(System.lineSeparator());
+      result.append(page.getFullPath()).append("|").append(encode(serial)).append(System.lineSeparator());
     }
     listener.testComplete(page, new TestSummary());
   }
@@ -56,6 +56,13 @@ public class InstructionTestSystem implements TestSystem {
   @Override
   public void addTestSystemListener(TestSystemListener listener) {
     this.listener = listener;
+  }
+
+  private String encode(String input) {
+    return input
+      .replace("%", "%23")
+      .replace("\r", "%0A")
+      .replace("\n", "%0D");
   }
 
   private final StringBuilder result;
