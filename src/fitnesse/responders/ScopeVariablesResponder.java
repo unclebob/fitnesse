@@ -6,10 +6,8 @@ import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.BasicResponder;
 import fitnesse.wiki.*;
-import fitnesse.wikitext.ParsingPage;
-import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.MarkUpSystem;
 
 import java.io.UnsupportedEncodingException;
 import java.util.*;
@@ -40,8 +38,7 @@ public class ScopeVariablesResponder extends BasicResponder {
 
   private HashMap<String,String> listVariablesLoc(WikiPage page){
     HashMap<String,String> variables = new HashMap<>();
-    ((BaseWikitextPage) page).getSyntaxTree();
-    List<String> variableList = ((BaseWikitextPage) page).getParsingPage().getCache().getVariables();
+    List<String> variableList = MarkUpSystem.listVariables(page);
 
     for(String var : variableList){
       if(variables.get(var) == null){

@@ -1,10 +1,18 @@
 package fitnesse.wikitext;
 
+import fitnesse.wiki.ApplicationVariableSource;
+import fitnesse.wiki.PageVariableSource;
+import fitnesse.wiki.UrlPathVariableSource;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiSourcePage;
+import fitnesse.wiki.WikitextPage;
+import fitnesse.wikitext.parser.Maybe;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * The page represents wiki page in the course of being parsed.
@@ -15,21 +23,39 @@ public class ParsingPage implements VariableStore {
   private final SourcePage namedPage; // included page
   private final VariableSource variableSource;
   private final Cache cache;
+  private int id;
 
   public ParsingPage(SourcePage page) {
     this(page, new Cache());
   }
 
+  public ParsingPage(WikiPage page, VariableSource variables) {
+    SourcePage source = new WikiSourcePage(page);
+    this.cache = new Cache();
+    this.variableSource = new CompositeVariableSource(
+      new NamedPageVariableSource(source),
+      new ApplicationVariableSource(variables),
+      new PageVariableSource(page),
+      new UserVariableSource(variables),
+      cache,
+      new ParentPageVariableSource(page),
+      variables);
+    this.page = source;
+    this.namedPage = source;
+  }
+
+  public ParsingPage(SourcePage source, VariableSource variables) {
+    this.cache = new Cache();
+    this.variableSource = new CompositeVariableSource(
+      new NamedPageVariableSource(source),
+      cache,
+      variables);
+    this.page = source;
+    this.namedPage = source;
+  }
+
   private ParsingPage(SourcePage page, Cache cache) {
     this(page, page, cache, cache);
-  }
-
-  public ParsingPage(SourcePage page, VariableSource variableSource, Cache cache) {
-    this(page, page, variableSource, cache);
-  }
-
-  public Cache getCache() {
-    return cache;
   }
 
   private ParsingPage(SourcePage page, SourcePage namedPage, VariableSource variableSource, Cache cache) {
@@ -57,8 +83,12 @@ public class ParsingPage implements VariableStore {
     return namedPage;
   }
 
+  public List<String> listVariables() {
+    return cache.listVariables();
+  }
+
   @Override
-  public int nextId() { return cache.nextId(); }
+  public int nextId() { return id++; }
 
   @Override
   public void putVariable(String name, String value) {
@@ -70,38 +100,42 @@ public class ParsingPage implements VariableStore {
     return variableSource != null ? variableSource.findVariable(name) : Optional.empty();
   }
 
-  public static class Cache implements VariableStore {
+  private static class Cache implements VariableSource {
 
-    private final Map<String, String> cache;
-    private int id;
+    private final Map<String, String> cache = new HashMap<>();
 
-    public Cache() {
-      this(new HashMap<>());
-    }
-
-    public Cache(Map<String, String> cache) {
-      this.cache = cache;
-    }
-
-    @Override
-    public void putVariable(String name, String value) {
-      cache.put(name, value);
-    }
+    public Cache() {}
 
     @Override
     public Optional<String> findVariable(String name) {
       return Optional.ofNullable(cache.get(name));
     }
 
+    public void putVariable(String name, String value) {
+      cache.put(name, value);
+    }
+
+    public List<String> listVariables(){
+      return new ArrayList<>(cache.keySet());
+    }
+  }
+
+  private static class UserVariableSource implements VariableSource {
+
+    private final VariableSource variableSource;
+
+    public UserVariableSource(VariableSource variableSource) {
+      this.variableSource = variableSource;
+    }
+
     @Override
-    public int nextId() {
-      return id++;
+    public Optional<String> findVariable(String name) {
+      if(variableSource instanceof UrlPathVariableSource){
+        Maybe<String> result = ((UrlPathVariableSource) variableSource).findUrlVariable(name);
+        if (!result.isNothing()) return Optional.of(result.getValue());
+      }
+      return Optional.empty();
     }
-
-    public List<String> getVariables(){
-      return cache.entrySet().stream().map(e -> e.getKey()).collect(Collectors.toList());
-    }
-
   }
 
 
@@ -124,6 +158,28 @@ public class ParsingPage implements VariableStore {
         return Optional.empty();
 
       return Optional.ofNullable(value);
+    }
+  }
+
+  public static class ParentPageVariableSource implements VariableSource {
+    private final WikiPage page;
+
+    public ParentPageVariableSource(WikiPage page) {
+
+      this.page = page;
+    }
+
+    @Override
+    public Optional<String> findVariable(String name) {
+      if (page.isRoot()) {
+        return Optional.empty();
+      }
+      WikiPage parentPage = page.getParent();
+      if (parentPage instanceof WikitextPage) {
+        return ((WikitextPage) parentPage).getSyntaxTree().findVariable(name);
+      } else {
+        return Optional.ofNullable(parentPage.getVariable(name));
+      }
     }
   }
 }
