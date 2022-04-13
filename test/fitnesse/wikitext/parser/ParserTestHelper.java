@@ -1,11 +1,12 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlElement;
-import fitnesse.wiki.BaseWikitextPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.WikiSourcePage;
 import fitnesse.wikitext.*;
+
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -79,9 +80,7 @@ public class ParserTestHelper {
   }
 
   public static String translateTo(WikiPage page, String input) {
-    ParsingPage.Cache cache = new ParsingPage.Cache();
-    VariableSource variableSource = new CompositeVariableSource(cache, new BaseWikitextPage.ParentPageVariableSource(page));
-    return translate(input, new ParsingPage(new WikiSourcePage(page), variableSource, cache));
+    return translate(input, new ParsingPage(page, new EmptyVariables()));
   }
 
   public static String translateTo(SourcePage page, String input) {
@@ -94,8 +93,7 @@ public class ParserTestHelper {
   }
 
   public static String translateToHtml(WikiPage page, String input, VariableSource variableSource) {
-    ParsingPage.Cache cache = new ParsingPage.Cache();
-    return translate(input, new ParsingPage(new WikiSourcePage(page), new CompositeVariableSource(cache, variableSource), cache));
+    return translate(input, new ParsingPage(page, variableSource));
   }
 
   public static String translateTo(WikiPage page) {
@@ -103,8 +101,7 @@ public class ParserTestHelper {
   }
 
   public static String translateTo(SourcePage page, VariableSource variableSource) {
-    ParsingPage.Cache cache = new ParsingPage.Cache();
-    return translate(page.getContent(), new ParsingPage(page, new CompositeVariableSource(cache, variableSource), cache));
+    return translate(page.getContent(), new ParsingPage(page, variableSource));
   }
 
   public static String translateTo(SourcePage page) {
@@ -205,5 +202,10 @@ public class ParserTestHelper {
     SyntaxTreeV2 syntaxTree = new SyntaxTreeV2();
     syntaxTree.parse(input, page);
     return syntaxTree;
+  }
+
+  public static class EmptyVariables implements VariableSource {
+    @Override
+    public Optional<String> findVariable(String name) { return Optional.empty(); }
   }
 }

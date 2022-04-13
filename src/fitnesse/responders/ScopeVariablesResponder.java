@@ -6,10 +6,8 @@ import fitnesse.html.template.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.BasicResponder;
 import fitnesse.wiki.*;
-import fitnesse.wikitext.ParsingPage;
-import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.MarkUpSystem;
 
 import java.io.UnsupportedEncodingException;
 import java.util.*;
@@ -31,27 +29,24 @@ public class ScopeVariablesResponder extends BasicResponder {
     Response response;
     if (requestedPage == null)
       response = pageNotFoundResponse(context, request);
-    else{
-      variables = listVariablesLoc(page);
+    else {
+      variables = new HashMap<>();
+      listVariablesLoc(page);
       response = makeResponse(request);
     }
     return response;
   }
 
-  private HashMap<String,String> listVariablesLoc(WikiPage page){
-    HashMap<String,String> variables = new HashMap<>();
-    ((BaseWikitextPage) page).getSyntaxTree();
-    List<String> variableList = ((BaseWikitextPage) page).getParsingPage().getCache().getVariables();
+  private void listVariablesLoc(WikiPage page) {
+    List<String> variableList = MarkUpSystem.listVariables(page);
 
-    for(String var : variableList){
-      if(variables.get(var) == null){
-        variables.put(var,page.getFullPath().toString());
+    for (String var : variableList) {
+      if (variables.get(var) == null) {
+        variables.put(var, page.getFullPath().toString());
       }
     }
 
-    if(page.getParent() != page) variables.putAll((listVariablesLoc(page.getParent())));
-
-    return variables;
+    if (page.getParent() != page) listVariablesLoc(page.getParent());
   }
 
   private Response makeResponse(Request request) throws UnsupportedEncodingException {

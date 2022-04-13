@@ -5,9 +5,6 @@ package fitnesse.wiki;
 import fitnesse.util.Clock;
 import fitnesse.wiki.fs.WikiPageProperties;
 import fitnesse.wikitext.*;
-import fitnesse.wikitext.parser.Maybe;
-
-import java.util.Optional;
 
 import static fitnesse.wiki.PageType.STATIC;
 
@@ -68,21 +65,8 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
     syntaxTree = null;
   }
 
-  public ParsingPage getParsingPage() {
-    return parsingPage;
-  }
-
   public static ParsingPage makeParsingPage(BaseWikitextPage page) {
-    ParsingPage.Cache cache = new ParsingPage.Cache();
-
-    VariableSource compositeVariableSource = new CompositeVariableSource(
-            new ApplicationVariableSource(page.variableSource),
-            new PageVariableSource(page),
-            new UserVariableSource(page.variableSource),
-            cache,
-            new ParentPageVariableSource(page),
-            page.variableSource);
-    return new ParsingPage(new WikiSourcePage(page), compositeVariableSource, cache);
+    return new ParsingPage(page, page.variableSource);
   }
 
   public WikiPageProperty defaultPageProperties() {
@@ -104,45 +88,5 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
 
     properties.set(pageType.toString());
     return properties;
-  }
-
-  public static class UserVariableSource implements VariableSource {
-
-    private final VariableSource variableSource;
-
-    public UserVariableSource(VariableSource variableSource) {
-      this.variableSource = variableSource;
-    }
-
-    @Override
-    public Optional<String> findVariable(String name) {
-      if(variableSource instanceof UrlPathVariableSource){
-        Maybe<String> result = ((UrlPathVariableSource) variableSource).findUrlVariable(name);
-        if (!result.isNothing()) return Optional.of(result.getValue());
-      }
-      return Optional.empty();
-    }
-  }
-
-  public static class ParentPageVariableSource implements VariableSource {
-    private final WikiPage page;
-
-    public ParentPageVariableSource(WikiPage page) {
-
-      this.page = page;
-    }
-
-    @Override
-    public Optional<String> findVariable(String name) {
-      if (page.isRoot()) {
-        return Optional.empty();
-      }
-      WikiPage parentPage = page.getParent();
-      if (parentPage instanceof WikitextPage) {
-        return ((WikitextPage) parentPage).getSyntaxTree().findVariable(name);
-      } else {
-        return Optional.ofNullable(parentPage.getVariable(name));
-      }
-    }
   }
 }
