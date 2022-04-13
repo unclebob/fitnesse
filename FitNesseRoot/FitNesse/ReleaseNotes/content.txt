@@ -1,11 +1,13 @@
 !2 Latest Release ${FITNESSE_VERSION}
 
 !2 Pending Changes
+* Bugfix: Handle instructions with embedded newlines ([[1363][https://github.com/unclebob/fitnesse/pull/1363]])
+* Add new responder to list the variables available on a page ([[1355][https://github.com/unclebob/fitnesse/pull/1355]])
 * Bugfix: Search string is not escaped in search page title ([[1360][https://github.com/unclebob/fitnesse/pull/1360]])
 * Bugfix: issues with !include and variables in page name ([[1359][https://github.com/unclebob/fitnesse/pull/1359]])
 
 !2 20220319
-* Add new responder to lists the Slim instructions suite to aid analysis/debugging ([[1356][https://github.com/unclebob/fitnesse/pull/1356]])
+* Add new responder to list the Slim instructions suite to aid analysis/debugging ([[1356][https://github.com/unclebob/fitnesse/pull/1356]])
 * Allow usage of variables inside include statement ([[1353][https://github.com/unclebob/fitnesse/pull/1353]])
 * Improved template for new suites ([[1343][https://github.com/unclebob/fitnesse/pull/1344]])
 * Allow more control over how a test suite is partitioned ([[1343][https://github.com/unclebob/fitnesse/pull/1343]])
