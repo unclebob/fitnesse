@@ -28,8 +28,8 @@ public class ScopeVariablesResponderTest {
     responder = new ScopeVariablesResponder();
     WikiPageUtil.addPage(root, PathParser.parse("SimplePageForInclude"), "!define y {Y}");
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("SimplePage"), "!define x {X}\n!include .SimplePageForInclude");
-    WikiPage childPage = WikiPageUtil.addPage(page, PathParser.parse("ChildPage"), "!define z {Z}");
-    WikiPageUtil.addPage(childPage, PathParser.parse("GrandChildPage"), "simple content");
+    WikiPage childPage = WikiPageUtil.addPage(page, PathParser.parse("ChildPage"), "!define z {Z}\n!define a {A}");
+    WikiPageUtil.addPage(childPage, PathParser.parse("GrandChildPage"), "!define a {B}\n!define b {BB}");
   }
 
   @Test
@@ -39,5 +39,7 @@ public class ScopeVariablesResponderTest {
     assertHasRegexp("<tr>.*?<td>x</td>.*?<td><a href=\"SimplePage\">SimplePage</a></td>.*?</tr>", response.getContent());
     assertHasRegexp("<tr>.*?<td>y</td>.*?<td><a href=\"SimplePage\">SimplePage</a></td>.*?</tr>", response.getContent());
     assertHasRegexp("<tr>.*?<td>z</td>.*?<td><a href=\"SimplePage.ChildPage\">SimplePage.ChildPage</a></td>.*?</tr>", response.getContent());
+    assertHasRegexp("<tr>.*?<td>a</td>.*?<td><a href=\"SimplePage.ChildPage.GrandChildPage\">SimplePage.ChildPage.GrandChildPage</a></td>.*?</tr>", response.getContent());
+    assertHasRegexp("<tr>.*?<td>b</td>.*?<td><a href=\"SimplePage.ChildPage.GrandChildPage\">SimplePage.ChildPage.GrandChildPage</a></td>.*?</tr>", response.getContent());
   }
 }

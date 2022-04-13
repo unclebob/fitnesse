@@ -29,26 +29,24 @@ public class ScopeVariablesResponder extends BasicResponder {
     Response response;
     if (requestedPage == null)
       response = pageNotFoundResponse(context, request);
-    else{
-      variables = listVariablesLoc(page);
+    else {
+      variables = new HashMap<>();
+      listVariablesLoc(page);
       response = makeResponse(request);
     }
     return response;
   }
 
-  private HashMap<String,String> listVariablesLoc(WikiPage page){
-    HashMap<String,String> variables = new HashMap<>();
+  private void listVariablesLoc(WikiPage page) {
     List<String> variableList = MarkUpSystem.listVariables(page);
 
-    for(String var : variableList){
-      if(variables.get(var) == null){
-        variables.put(var,page.getFullPath().toString());
+    for (String var : variableList) {
+      if (variables.get(var) == null) {
+        variables.put(var, page.getFullPath().toString());
       }
     }
 
-    if(page.getParent() != page) variables.putAll((listVariablesLoc(page.getParent())));
-
-    return variables;
+    if (page.getParent() != page) listVariablesLoc(page.getParent());
   }
 
   private Response makeResponse(Request request) throws UnsupportedEncodingException {
