@@ -60,4 +60,44 @@ public class ImageTest {
   }
 */
 
+    @Test
+    public void parsesImagesWithDataUrls() {
+        ParserTestHelper.assertParses("!img data:mime/type;base64,s0m/e+dAta=", "SymbolList[Image[Link[SymbolList[Text]]]]");
+    }
+
+    @Test
+    public void parsesImagesWithDataUrlsButInvalidPrefix() {
+        ParserTestHelper.assertParses("!img xyz:mime/type;base64,s0m/e+dAta=", "SymbolList[Image[Link[SymbolList[Text]]], Colon, Text, Comma, Text]");
+    }
+
+    @Test
+    public void parsesImagesWithDataUrlsButInvalidType() {
+        ParserTestHelper.assertParses("!img data:mime/type;xyz,s0m/e+dAta=", "SymbolList[Image[Link[SymbolList[Text]]], Colon, Text, Comma, Text]");
+    }
+
+    @Test
+    public void parsesImagesWithDataUrlsFollowedByOtherSymbol() {
+        ParserTestHelper.assertParses("!img data:mime/type;base64,s0m/e+dAta= :", "SymbolList[Image[Link[SymbolList[Text]]], Whitespace, Colon]");
+    }
+
+    
+    @Test
+    public void translatesImagesWithDataUrls() {
+        ParserTestHelper.assertTranslatesTo("!img data:image/png;base64,s0m/e+dAta=", "<img src=\"data:image/png;base64,s0m/e+dAta=\"/>");
+    }
+
+    @Test
+    public void translatesImagesWithDataUrlsButInvalidPrefix() {
+        ParserTestHelper.assertTranslatesTo("!img xyz:image/png;base64,s0m/e+dAta=", "<img src=\"xyz\"/>:image/png;base64,s0m/e+dAta=");
+    }
+
+    @Test
+    public void translatesImagesWithDataUrlsButInvalidType() {
+        ParserTestHelper.assertTranslatesTo("!img data:image/png;xyz,s0m/e+dAta=", "<img src=\"data\"/>:image/png;xyz,s0m/e+dAta=");
+    }
+
+    @Test
+    public void translatesImagesWithDataUrlsFollowedByOtherSymbol() {
+        ParserTestHelper.assertTranslatesTo("!img data:image/png;base64,s0m/e+dAta= :", "<img src=\"data:image/png;base64,s0m/e+dAta=\"/> :");
+    }
 }
