@@ -56,7 +56,8 @@ public class Image extends SymbolType implements Rule, Translation {
             return makeImageLink(current, link.getValue(), imageProperty);
         }
         else if (name.isType(SymbolType.Text) || name.isType(WikiWord.symbolType)) {
-            String imageUrl = parseImageUrl(parser);
+            String imageDataUrl = tryParseImageDataUrl(parser);
+            String imageUrl = (imageDataUrl == null) ? name.getContent() : imageDataUrl;
             Symbol list = new Symbol(SymbolType.SymbolList).add(new Symbol(SymbolType.Text, imageUrl));
             Symbol link = new Symbol(Link.symbolType).add(list);
             addOptions(link, options);
@@ -65,28 +66,27 @@ public class Image extends SymbolType implements Rule, Translation {
         else return Symbol.nothing;
     }
 
-    private String parseImageUrl(Parser parser) {
+    private String tryParseImageDataUrl(Parser parser) {
         List<Symbol> nextSymbols = parser.peek(new SymbolType[]{SymbolType.Colon, SymbolType.Text, SymbolType.Comma, SymbolType.Text});
         
         Symbol prefix = parser.getCurrent();
-        String fallback = prefix.getContent();
-        if (!prefix.isType(SymbolType.Text) || !prefix.getContent().equals("data")) return fallback;
+        if (!prefix.isType(SymbolType.Text) || !prefix.getContent().equals("data")) return null;
         StringBuilder imageUrl = new StringBuilder(prefix.getContent());
 
         Symbol colon = nextSymbols.get(0);
-        if (!colon.isType(SymbolType.Colon)) return fallback;
+        if (!colon.isType(SymbolType.Colon)) return null;
         imageUrl.append(colon.getContent());
 
         Symbol dataType = nextSymbols.get(1);
-        if (!dataType.isType(SymbolType.Text) || !dataType.getContent().endsWith(";base64")) return fallback;
+        if (!dataType.isType(SymbolType.Text) || !dataType.getContent().endsWith(";base64")) return null;
         imageUrl.append(dataType.getContent());
 
         Symbol comma = nextSymbols.get(2);
-        if (!comma.isType(SymbolType.Comma)) return fallback;
+        if (!comma.isType(SymbolType.Comma)) return null;
         imageUrl.append(comma.getContent());
 
         Symbol data = nextSymbols.get(3);
-        if (!data.isType(SymbolType.Text)) return fallback;
+        if (!data.isType(SymbolType.Text)) return null;
         imageUrl.append(data.getContent());
 
         parser.moveNext(nextSymbols.size());
