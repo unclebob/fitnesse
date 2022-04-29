@@ -62,42 +62,42 @@ public class ImageTest {
 
     @Test
     public void parsesImagesWithDataUrls() {
-        ParserTestHelper.assertParses("!img data:mime/type;base64,s0m/e+dAta=", "SymbolList[Image[Link[SymbolList[Text]]]]");
+        ParserTestHelper.assertParses("!img data:mime/type;base64,s0m/e+6dAta=", "SymbolList[Image[Link[SymbolList[Text]]]]");
     }
 
     @Test
     public void parsesImagesWithDataUrlsButInvalidPrefix() {
-        ParserTestHelper.assertParses("!img xyz:mime/type;base64,s0m/e+dAta=", "SymbolList[Image[Link[SymbolList[Text]]], Colon, Text, Comma, Text]");
+        ParserTestHelper.assertParses("!img xyz:mime/type;base64,s0m/e+6Ata=", "SymbolList[Image[Link[SymbolList[Text]]], Colon, Text, Comma, Text, Delta, Text]");
     }
 
     @Test
     public void parsesImagesWithDataUrlsButInvalidType() {
-        ParserTestHelper.assertParses("!img data:mime/type;xyz,s0m/e+dAta=", "SymbolList[Image[Link[SymbolList[Text]]], Colon, Text, Comma, Text]");
+        ParserTestHelper.assertParses("!img data:mime/type;xyz,s0m/e+6Ata=", "SymbolList[Image[Link[SymbolList[Text]]], Colon, Text, Comma, Text, Delta, Text]");
     }
 
     @Test
     public void parsesImagesWithDataUrlsFollowedByOtherSymbol() {
-        ParserTestHelper.assertParses("!img data:mime/type;base64,s0m/e+dAta= :", "SymbolList[Image[Link[SymbolList[Text]]], Whitespace, Colon]");
+        ParserTestHelper.assertParses("!img data:mime/type;base64,s0m/e+6Ata= :", "SymbolList[Image[Link[SymbolList[Text]]], Whitespace, Colon]");
     }
 
     
     @Test
     public void translatesImagesWithDataUrls() {
-        ParserTestHelper.assertTranslatesTo("!img data:image/png;base64,s0m/e+dAta=", "<img src=\"data:image/png;base64,s0m/e+dAta=\"/>");
+        ParserTestHelper.assertTranslatesTo("!img data:image/png;base64,s0m/e+6Ata=", "<img src=\"data:image/png;base64,s0m/e+6Ata=\"/>");
     }
 
     @Test
     public void translatesImagesWithDataUrlsButInvalidPrefix() {
-        ParserTestHelper.assertTranslatesTo("!img xyz:image/png;base64,s0m/e+dAta=", "<img src=\"xyz\"/>:image/png;base64,s0m/e+dAta=");
+        ParserTestHelper.assertTranslatesTo("!img xyz:image/png;base64,s0m/e+6Ata=", "<img src=\"xyz\"/>:image/png;base64,s0m/e+6Ata=");
     }
 
     @Test
     public void translatesImagesWithDataUrlsButInvalidType() {
-        ParserTestHelper.assertTranslatesTo("!img data:image/png;xyz,s0m/e+dAta=", "<img src=\"data\"/>:image/png;xyz,s0m/e+dAta=");
+        ParserTestHelper.assertTranslatesTo("!img data:image/png;xyz,s0m/e+6Ata=", "<img src=\"data\"/>:image/png;xyz,s0m/e+6Ata=");
     }
 
     @Test
     public void translatesImagesWithDataUrlsFollowedByOtherSymbol() {
-        ParserTestHelper.assertTranslatesTo("!img data:image/png;base64,s0m/e+dAta= :", "<img src=\"data:image/png;base64,s0m/e+dAta=\"/> :");
+        ParserTestHelper.assertTranslatesTo("!img data:image/png;base64,s0m/e+6Ata= :", "<img src=\"data:image/png;base64,s0m/e+6Ata=\"/> :");
     }
 }

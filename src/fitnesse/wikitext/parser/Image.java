@@ -65,9 +65,6 @@ public class Image extends SymbolType implements Rule, Translation {
         else return Symbol.nothing;
     }
 
-    /**
-     * https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
-     */
     private String parseImageUrl(Parser parser) {
         StringBuilder imageUrl = new StringBuilder();
         List<Symbol> nextSymbols = parser.peek(new SymbolType[]{SymbolType.Colon, SymbolType.Text, SymbolType.Comma, SymbolType.Text});
@@ -76,28 +73,34 @@ public class Image extends SymbolType implements Rule, Translation {
         String fallback = prefix.getContent();
         if (!prefix.isType(SymbolType.Text) || !prefix.getContent().equals("data")) return fallback;
         imageUrl.append(prefix.getContent());
-        
-        // Symbol colon = parser.moveNext(1);
+
         Symbol colon = nextSymbols.get(0);
         if (!colon.isType(SymbolType.Colon)) return fallback;
         imageUrl.append(colon.getContent());
 
-        // Symbol dataType = parser.moveNext(1);
         Symbol dataType = nextSymbols.get(1);
         if (!dataType.isType(SymbolType.Text) || !dataType.getContent().endsWith(";base64")) return fallback;
         imageUrl.append(dataType.getContent());
 
-        // Symbol comma = parser.moveNext(1);
         Symbol comma = nextSymbols.get(2);
         if (!comma.isType(SymbolType.Comma)) return fallback;
         imageUrl.append(comma.getContent());
 
-        // Symbol data = parser.moveNext(1);
         Symbol data = nextSymbols.get(3);
         if (!data.isType(SymbolType.Text)) return fallback;
         imageUrl.append(data.getContent());
 
         parser.moveNext(nextSymbols.size());
+
+        while(parser.peek().isType(SymbolType.Delta) && parser.peek().getContent().startsWith("+")) {
+            Symbol plusDelta = parser.moveNext(1);
+            imageUrl.append(plusDelta.getContent());
+
+            if (parser.peek().isType(SymbolType.Text)) {
+                Symbol dataAfterPlusDelta = parser.moveNext(1);
+                imageUrl.append(dataAfterPlusDelta.getContent());
+            }
+        }
         return imageUrl.toString();
     }
 
