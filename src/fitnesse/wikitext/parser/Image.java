@@ -66,13 +66,12 @@ public class Image extends SymbolType implements Rule, Translation {
     }
 
     private String parseImageUrl(Parser parser) {
-        StringBuilder imageUrl = new StringBuilder();
         List<Symbol> nextSymbols = parser.peek(new SymbolType[]{SymbolType.Colon, SymbolType.Text, SymbolType.Comma, SymbolType.Text});
-
+        
         Symbol prefix = parser.getCurrent();
         String fallback = prefix.getContent();
         if (!prefix.isType(SymbolType.Text) || !prefix.getContent().equals("data")) return fallback;
-        imageUrl.append(prefix.getContent());
+        StringBuilder imageUrl = new StringBuilder(prefix.getContent());
 
         Symbol colon = nextSymbols.get(0);
         if (!colon.isType(SymbolType.Colon)) return fallback;
