@@ -1,6 +1,7 @@
 !2 Latest Release ${FITNESSE_VERSION}
 !2 Pending Changes
- * Bugfix: render [[''!-!anchor-!''][UserGuide.FitNesseWiki.MarkupLanguageReference.LinksWithinPages]] as valid (non empty) element ([[1366][https://github.com/unclebob/fitnesse/pull/1366]])
+ * Add support for inline [[''!-!img-!''][UserGuide.FitNesseWiki.MarkupLanguageReference.MarkupPicture]] using base64 data url ([[1367][https://github.com/unclebob/fitnesse/pull/1367]])
+ * Bugfix: render [[''!-!anchor-!''][UserGuide.FitNesseWiki.MarkupLanguageReference.LinksWithinPages]] as valid (non empty) element ([[1366][https://github.com/unclebob/fitnesse/pull/1366]])
  * Bugfix: Handle instructions with embedded newlines ([[1363][https://github.com/unclebob/fitnesse/pull/1363]])
  * Add new responder to list the variables available on a page ([[1355][https://github.com/unclebob/fitnesse/pull/1355]])
  * Bugfix: Search string is not escaped in search page title ([[1360][https://github.com/unclebob/fitnesse/pull/1360]])
