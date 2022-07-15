@@ -1,6 +1,6 @@
 package fitnesse.wikitext.parser;
 
-public class Nesting extends SymbolType implements Rule, Translation{
+public class Nesting extends SymbolType implements Rule, Translation {
     public static final Nesting symbolType = new Nesting();
 
     public Nesting() {
@@ -13,7 +13,7 @@ public class Nesting extends SymbolType implements Rule, Translation{
     @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol nesting = parser.parseTo(SymbolType.CloseNesting, ParseSpecification.nestingPriority);
-        if (!parser.getCurrent().isType(SymbolType.CloseNesting)) return Symbol.nothing;
+        if (!parser.getCurrent().isType(SymbolType.CloseNesting)) return new Maybe<>(Symbol.listOf(current.asText(), nesting));
         current.add(nesting);
         return new Maybe<>(current);
     }

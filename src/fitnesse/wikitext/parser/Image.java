@@ -58,7 +58,7 @@ public class Image extends SymbolType implements Rule, Translation {
         else if (name.isType(SymbolType.Text) || name.isType(WikiWord.symbolType)) {
             String imageDataUrl = tryParseBase64DataUrl(parser);
             String imageUrl = (imageDataUrl == null) ? name.getContent() : imageDataUrl;
-            Symbol list = new Symbol(SymbolType.SymbolList).add(new Symbol(SymbolType.Text, imageUrl));
+            Symbol list = Symbol.listOf(new Symbol(SymbolType.Text, imageUrl));
             Symbol link = new Symbol(Link.symbolType).add(list);
             addOptions(link, options);
             return makeImageLink(current, link, imageProperty);
@@ -74,7 +74,7 @@ public class Image extends SymbolType implements Rule, Translation {
     private String tryParseBase64DataUrl(Parser parser) {
         List<Symbol> nextSymbols = parser.peek(new SymbolType[]{SymbolType.Colon, SymbolType.Text, SymbolType.Comma});
         if (nextSymbols.size() == 0) return null;
-        
+
         Symbol prefix = parser.getCurrent();
         if (!prefix.isType(SymbolType.Text) || !prefix.getContent().equals("data")) return null;
         StringBuilder imageUrl = new StringBuilder(prefix.getContent());

@@ -16,4 +16,9 @@ public class NestingTest {
         ParserTestHelper.assertTranslatesTo("|!(|a|\n)!|", ParserTestHelper.tableWithCell(ParserTestHelper.tableWithCell("a").trim()));
         ParserTestHelper.assertTranslatesTo("|!(|a|)!|", ParserTestHelper.tableWithCell(ParserTestHelper.tableWithCell("a").trim()));
     }
+
+    @Test
+    public void translatesIncomplete() {
+        ParserTestHelper.assertTranslatesTo("!(''body''", "!(<i>body</i>");
+    }
 }
