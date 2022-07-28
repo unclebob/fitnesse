@@ -27,6 +27,10 @@ public class MatchResult {
     if (check > 0) addLength(check); else noMatch();
   }
 
+  public void advance(ScanString scan) {
+    scan.moveNext(length);
+  }
+
   private int length;
   private final ArrayList<String> options = new ArrayList<>(1);
   private boolean matched;

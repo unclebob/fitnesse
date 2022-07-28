@@ -9,6 +9,7 @@ import fitnesse.testrunner.run.TestRunFactoryRegistry;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wiki.WikiPageFactoryRegistry;
+import fitnesse.wikitext.MarkUpSystems;
 import fitnesse.wikitext.parser.SymbolProvider;
 
 public interface PluginFeatureFactory {
@@ -49,4 +50,5 @@ public interface PluginFeatureFactory {
   default void registerTestRunFactories(TestRunFactoryRegistry runFactoryRegistry) throws PluginException {
   }
 
+  default void registerMarkupSystems(MarkUpSystems systems) {};
 }

@@ -134,6 +134,28 @@ public class Matcher {
       return this;
     }
 
+    public Matcher newLine() {
+      if (firsts == null) {
+        firsts = new ArrayList<>();
+        firsts.add('\r');
+        firsts.add('\n');
+      }
+      matches.add((input, symbols, match) -> {
+        if (input.matches("\r\n", match.getLength())) {
+          match.addLength(2);
+        }
+        else if (input.matches("\n", match.getLength())) {
+          match.addLength(1);
+        }
+        else match.noMatch();
+      });
+      return this;
+    }
+
+    public MatchResult makeMatch(ScanString input) {
+      return makeMatch(input, new SymbolStream());
+    }
+
     public MatchResult makeMatch(ScanString input, SymbolStream symbols)  {
         MatchResult result = new MatchResult();
         for (ScanMatch match: matches) {
@@ -141,5 +163,13 @@ public class Matcher {
             if (!result.isMatched()) return result;
         }
         return result;
+    }
+
+    public MatchResult findMatch(ScanString input) {
+      while (true) {
+        MatchResult match = makeMatch(input);
+        if (match.isMatched() || input.isEnd()) return match;
+        input.moveNext();
+      }
     }
 }
