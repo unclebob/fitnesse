@@ -47,7 +47,7 @@ public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFin
   }
 
   private void checkContent() {
-    MarkUpSystem.make().findWhereUsed(new WikiSourcePage(currentPage), name -> {
+    MarkUpSystem.make(currentPage.getData().getContent()).findWhereUsed(new WikiSourcePage(currentPage), name -> {
       WikiPage referencedPage = new WikiWordReference(currentPage, name).getReferencedPage();
       if (referencedPage != null && referencedPage.equals(subjectPage)) {
         addHit();
