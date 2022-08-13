@@ -1,12 +1,10 @@
-import org.gradle.api.tasks.InputDirectory
-import org.gradle.api.tasks.JavaExec
-import org.gradle.api.tasks.OutputFile
-import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.*
 
 class LessCompiler extends JavaExec {
   @InputDirectory
   def inputDir
 
+  @Input
   def mainLessFile
 
   @OutputFile
