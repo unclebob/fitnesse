@@ -7,9 +7,8 @@ public class MarkupSystemsTest {
   @Test
   public void findsName() {
     assertName("lang on first line", "name", "#lang name\nstuff");
-    assertName("skips front matter", "name", "---\nstuff\n---\n#lang name\nstuff");
+    assertName("skips leading blankspace", "name", "\n \n#lang name\nstuff");
     assertName("missing lang", "", "#langname\nstuff");
-    assertName("missing close front", "", "---\n#lang name\nstuff");
     assertName("alternate newline", "name", "#lang name\r\nstuff");
   }
 

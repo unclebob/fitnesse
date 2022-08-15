@@ -20,7 +20,8 @@ public interface MarkUpSystem {
 
   static List<String> listVariables(WikiPage page) {
     ParsingPage parsingPage = new ParsingPage(new WikiSourcePage(page));
-    MarkUpSystem.make().parse(parsingPage, page.getData().getContent());
+    String content = page.getData().getContent();
+    MarkUpSystem.make(content).parse(parsingPage, content);
     return parsingPage.listVariables();
   }
 }

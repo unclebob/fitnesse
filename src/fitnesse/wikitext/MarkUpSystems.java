@@ -25,12 +25,11 @@ public class MarkUpSystems {
 
   public static String findName(String content) {
     ScanString input = new ScanString(content, 0);
-    MatchResult startFrontMatch = FRONT_MATCHER.makeMatch(input);
-    if (startFrontMatch.isMatched()) {
-      startFrontMatch.advance(input);
-      MatchResult endFrontMatch = FRONT_MATCHER.findMatch(input);
-      if (!endFrontMatch.isMatched()) return "";
-      endFrontMatch.advance(input);
+
+    while (true) {
+      MatchResult leadingMatch = LEADING_MATCHER.makeMatch(input);
+      if (!leadingMatch.isMatched()) break;
+      leadingMatch.advance(input);
     }
 
     MatchResult langMatch = LANG_MATCHER.makeMatch(input);
@@ -48,6 +47,6 @@ public class MarkUpSystems {
   private static final Map<String, Supplier<MarkUpSystem>> systems = new HashMap<>();
 
   private static final Matcher LANG_MATCHER = new Matcher().string("#lang").whitespace();
-  private static final Matcher FRONT_MATCHER = new Matcher().string("---").newLine();
   private static final Matcher NEWLINE_MATCHER = new Matcher().newLine();
+  private static final Matcher LEADING_MATCHER = new Matcher().ignoreWhitespace().newLine();
 }
