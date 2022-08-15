@@ -233,6 +233,7 @@ task javadocJar(type: Jar) {
 task sourcesJar(type: Jar) {
   mustRunAfter check
   archiveClassifier = 'sources'
+  duplicatesStrategy = 'include'
   from sourceSets.main.allSource
 }
 
