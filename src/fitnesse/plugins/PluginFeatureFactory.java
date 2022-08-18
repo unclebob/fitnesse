@@ -50,5 +50,5 @@ public interface PluginFeatureFactory {
   default void registerTestRunFactories(TestRunFactoryRegistry runFactoryRegistry) throws PluginException {
   }
 
-  default void registerMarkupSystems(MarkUpSystems systems) {};
+  default void registerMarkupSystems(MarkUpSystems systems) {}
 }

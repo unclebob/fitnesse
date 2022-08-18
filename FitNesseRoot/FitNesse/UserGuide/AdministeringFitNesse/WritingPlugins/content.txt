@@ -12,29 +12,38 @@ The interface looks like this:
 
 {{{public interface PluginFeatureFactory {
 
-  Authenticator getAuthenticator();
+  default Authenticator getAuthenticator() { return null; }
 
-  ContentFilter getContentFilter();
+  default ContentFilter getContentFilter() { return null; }
 
-  void registerResponders(ResponderFactory responderFactory) throws PluginException;
+  default String getDefaultTheme() { return null; }
 
-  void registerSymbolTypes(SymbolProvider symbolProvider) throws PluginException;
+  default void registerResponders(ResponderFactory responderFactory) throws PluginException { }
 
-  void registerWikiPageFactories(WikiPageFactoryRegistry wikiPageFactoryRegistry) throws PluginException;
+  default void registerSymbolTypes(SymbolProvider symbolProvider) throws PluginException { }
 
-  void registerTestSystemFactories(TestSystemFactoryRegistry testSystemFactoryRegistry) throws PluginException;
+  default void registerWikiPageFactories(WikiPageFactoryRegistry wikiPageFactoryRegistry) throws PluginException { }
 
-  void registerSlimTables(SlimTableFactory slimTableFactory) throws PluginException;
+  default void registerFormatters(FormatterRegistry registrar) throws PluginException { }
 
-  void registerCustomComparators(CustomComparatorRegistry customComparatorRegistry) throws PluginException;
+  default void registerTestSystemFactories(TestSystemFactoryRegistry testSystemFactoryRegistry) throws PluginException { }
 
+  default void registerSlimTables(SlimTableFactory slimTableFactory) throws PluginException { }
+
+  default void registerCustomComparators(CustomComparatorRegistry customComparatorRegistry) throws PluginException { }
+
+  default void registerTestRunFactories(TestRunFactoryRegistry runFactoryRegistry) throws PluginException { }
+
+  default void registerMarkupSystems(MarkUpSystems systems) {}
 }
 }}}
 The methods ''getAuthenticator()'' should return one instance. If multiple plugins provide an authenticator, the first authenticator found will be used. The setting can be overridden by explicitly defining an authenticator in the configuration file.
 
 The same rules are applicable for ''getContentFilter()''.
 
-The ''registerXxx'' methods are invoked with the appropriate provider or registry. It is the responsibility of the plugin to register it's plugins with those providers.
+The ''registerXxx'' methods are invoked with the appropriate provider or registry. It is the responsibility of the plugin to register its plugins with those providers.
+
+>MarkupSystemPlugIns
 
 !2 Documentation
 Every plugin should provide documentation which should be placed in the .PlugIns folder. 
