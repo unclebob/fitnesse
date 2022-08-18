@@ -14,6 +14,7 @@ import fitnesse.testrunner.run.TestRunFactoryRegistry;
 import fitnesse.testsystems.slim.CustomComparatorRegistry;
 import fitnesse.testsystems.slim.tables.SlimTableFactory;
 import fitnesse.wiki.WikiPageFactoryRegistry;
+import fitnesse.wikitext.MarkUpSystems;
 import fitnesse.wikitext.parser.SymbolProvider;
 
 import java.io.File;
@@ -37,8 +38,7 @@ public class PluginsLoader {
   }
 
   private Collection<PluginFeatureFactory> findPluginFeatureFactories() throws PluginException {
-    List<PluginFeatureFactory> factories = new ArrayList<>();
-    factories.addAll(PropertyBasedPluginFeatureFactory.loadFromProperties(componentFactory));
+    List<PluginFeatureFactory> factories = new ArrayList<>(PropertyBasedPluginFeatureFactory.loadFromProperties(componentFactory));
 
     for (PluginFeatureFactory factory : ServiceLoader.load(PluginFeatureFactory.class, classLoader)) {
       factories.add(factory);
@@ -149,6 +149,12 @@ public class PluginsLoader {
   public void loadTestRunFactories(final TestRunFactoryRegistry registry) throws PluginException {
     for (PluginFeatureFactory pff : pluginFeatureFactories) {
       pff.registerTestRunFactories(registry);
+    }
+  }
+
+  public void loadMarkupSystems(MarkUpSystems systems) {
+    for (PluginFeatureFactory pff : pluginFeatureFactories) {
+      pff.registerMarkupSystems(systems);
     }
   }
 }

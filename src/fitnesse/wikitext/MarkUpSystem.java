@@ -15,11 +15,13 @@ public interface MarkUpSystem {
   void findWhereUsed(SourcePage page, Consumer<String> takeWhereUsed);
   String changeReferences(SourcePage page, Function<String, Optional<String>> changeReference);
 
-  static MarkUpSystem make() { return new MarkUpSystemV2(); } //todo: eventually can make different kinds of markup systems
+  static MarkUpSystem make() { return new MarkUpSystemV2(); }
+  static MarkUpSystem make(String content) { return MarkUpSystems.STORE.make(content); }
 
   static List<String> listVariables(WikiPage page) {
     ParsingPage parsingPage = new ParsingPage(new WikiSourcePage(page));
-    MarkUpSystem.make().parse(parsingPage, page.getData().getContent());
+    String content = page.getData().getContent();
+    MarkUpSystem.make(content).parse(parsingPage, content);
     return parsingPage.listVariables();
   }
 }

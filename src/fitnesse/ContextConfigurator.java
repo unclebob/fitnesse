@@ -21,6 +21,7 @@ import fitnesse.wiki.WikiPageFactoryRegistry;
 import fitnesse.wiki.fs.FileSystemPageFactory;
 import fitnesse.wiki.fs.VersionsController;
 import fitnesse.wiki.fs.ZipFileVersionsController;
+import fitnesse.wikitext.MarkUpSystems;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.decorator.SlimTableDefaultColoring;
 
@@ -190,6 +191,7 @@ public class ContextConfigurator {
     pluginsLoader.loadSlimTables(slimTableFactory);
     pluginsLoader.loadCustomComparators(customComparatorRegistry);
     pluginsLoader.loadTestRunFactories(context.testRunFactoryRegistry);
+    pluginsLoader.loadMarkupSystems(MarkUpSystems.STORE);
 
     ContentFilter contentFilter = pluginsLoader.loadContentFilter();
 
