@@ -7,6 +7,7 @@
  * Bugfix: Search string is not escaped in search page title ([[1360][https://github.com/unclebob/fitnesse/pull/1360]])
  * Bugfix: issues with !include and variables in page name ([[1359][https://github.com/unclebob/fitnesse/pull/1359]])
  * Performance: improve parser performance for some incomplete wiki syntax ([[1371][https://github.com/unclebob/fitnesse/pull/1371]])
+ * Ability to create plugins for new markup syntax. ([[1382][https://github.com/unclebob/fitnesse/pull/1382]])
 
 !2 20220319
  * Add new responder to list the Slim instructions suite to aid analysis/debugging ([[1356][https://github.com/unclebob/fitnesse/pull/1356]])
