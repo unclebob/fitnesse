@@ -15,4 +15,4 @@ Symbols should show the raw (in this case HTML) content that is used in the test
 | show | echo | $Table |
 -! |
 | test results for page | TestPage | should contain | $Table&lt;-[&lt;table&gt;&lt;tr&gt;&lt;td&gt;Test&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;] |
-| ensure | content contains | $Table-&gt;[&lt;table&gt;&lt;tr&gt;&lt;td&gt;Test&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;] |
+| ensure | content contains | $Table->[<table><tr><td>Test</td></tr></table>] |

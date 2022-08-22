@@ -15,7 +15,7 @@ The widget should translate into a ? link of the form:
  * ''!->SubPage-!<a title="create page" href="!-SuperPage.SubPage-!?edit&amp;nonExistent=true">[?]</a>''
 !|Response Examiner.|
 |type  |pattern|matches?|value|
-|contents|&gt;SubPage<a title="create page" href="SuperPage.SubPage\?edit&nonExistent=true">\[\?\]</a>|true||
+|contents|>SubPage<a title="create page" href="SuperPage.SubPage\?edit&nonExistent=true">\[\?\]</a>|true||
 
 If the sub page is already present, then the widget should translate into a normal link.
 
@@ -29,4 +29,4 @@ If the sub page is already present, then the widget should translate into a norm
 
 !|Response Examiner.|
 |type  |pattern|matches?|value|
-|contents|<a href="SuperPage.SubPage">&gt;SubPage</a>|true||
+|contents|<a href="SuperPage.SubPage">>SubPage</a>|true||

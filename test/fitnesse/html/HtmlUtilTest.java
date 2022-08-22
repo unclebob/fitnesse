@@ -4,7 +4,6 @@ package fitnesse.html;
 
 import fitnesse.FitNesseContext;
 import fitnesse.html.template.HtmlPage;
-import fitnesse.http.Request;
 import fitnesse.reporting.JavascriptUtil;
 import fitnesse.responders.WikiPageActions;
 import fitnesse.testutil.FitNesseUtil;
@@ -81,6 +80,11 @@ public class HtmlUtilTest {
   @Test
   public void shouldEscapeMultipleOccurencesOfTheSameCharacter() {
     assertEquals("ab&amp;cd&amp;ef&amp;", HtmlUtil.escapeHTML("ab&cd&ef&"));
+  }
+
+  @Test
+  public void shouldUnescape() {
+    assertEquals("& < > &lt; &gt; &amp;", HtmlUtil.unescapeHTML("&amp; &lt; &gt; &amp;lt; &amp;gt; &amp;amp;"));
   }
 
   private String getActionsHtml(String pageName) {
