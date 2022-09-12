@@ -349,7 +349,9 @@ public abstract class SlimTable {
 
     @Override
     protected SlimTestResult createEvaluationMessage(String actual, String expected) {
-      table.substitute(getCol(), getRow(), replaceSymbolsWithFullExpansion(expected));
+      String replacement = replaceSymbolsWithFullExpansion(expected);
+      if (!replacement.equals(expected))
+        table.substitute(getCol(), getRow(), replacement);
       return SlimTestResult.plain();
     }
   }
