@@ -358,7 +358,7 @@ public abstract class SlimTable {
   class SilentReturnExpectation implements SlimExpectation {
     private final int row;
 
-    public SilentReturnExpectation(int row, int col) {
+    public SilentReturnExpectation(int col, int row) {
       this.row = row;
     }
 
