@@ -27,6 +27,8 @@ public class PublisherTest {
     assertChildPage("my child", "my child");
     assertChildPage("<a href=\"../TestParent/TestSibling.html\">TestSibling</a>", "TestSibling");
     assertChildPage("<a href=\"../TestParent.html\">link</a>", "!-<a href=\"/TestParent\">link</a>-!");
+    assertChildPage("<a href=\"../TestParent/TestSibling.html\">link</a>", "!-<a href=\".TestParent.TestSibling\">link</a>-!");
+    assertChildPage("<a href=\"../TestParent.html\">.TestParent</a>", ".TestParent");
   }
 
   @Test public void headerAndFooter() {
@@ -51,6 +53,7 @@ public class PublisherTest {
     WikiPage page = WikiPageUtil.addPage(parent, PathParser.parse("TestPage"), pageContent);
     assertPublishes(expected, "TestParent/TestPage", "../", page);
     Assert.assertTrue(content, content.contains("t*TestParent.TestPage*t"));
+    Assert.assertTrue(content, content.contains("c*<li><a href=\"../TestParent.html\">TestParent</a></li>\n<li>TestPage</li>\n*c"));
   }
 
   private void assertTopPage(String expected, String pageContent) {
@@ -58,6 +61,7 @@ public class PublisherTest {
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), pageContent);
     assertPublishes(expected, "TestPage", "", page);
     Assert.assertTrue(content, content.contains("t*TestPage*t"));
+    Assert.assertTrue(content, content.contains("c*<li>TestPage</li>\n*c"));
   }
 
   private void assertPublishes(String pageContent, String pageName, String prefix, WikiPage page) {
@@ -73,7 +77,7 @@ public class PublisherTest {
     this.path = path;
   }
 
-  private static final String TEMPLATE = "t*$title$*t <link href=\"css/fitnesse_wiki.css\"> b*$body$*b f*$footer$*f";
+  private static final String TEMPLATE = "t*$title$*t <link href=\"css/fitnesse_wiki.css\"> c*$breadcrumbs$*c b*$body$*b f*$footer$*f";
 
   private String content;
   private String path;

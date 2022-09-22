@@ -46,10 +46,9 @@ public class Publisher {
 
   private String replaceKeywords(WikiPage page, String input) {
     StringTransform transform = new StringTransform(input);
-    WikiPagePath fullPath = page.getFullPath();
     String[][] keywords = new String[][] {
-      { "title", PathParser.render(fullPath) },
-      { "breadcrumbs", makeBreadCrumbs(fullPath) },
+      { "title", PathParser.render(page.getFullPath()) },
+      { "breadcrumbs", makeBreadCrumbs(page) },
       { "body", WikiPageUtil.makePageHtml(page) },
       { "footer", WikiPageUtil.getFooterPageHtml(page) },
       { "", ""}
@@ -67,12 +66,13 @@ public class Publisher {
     return transform.getOutput();
   }
 
-  private String makeBreadCrumbs(WikiPagePath fullPath) {
-    PageTitle pt = new PageTitle(fullPath);
+  private String makeBreadCrumbs(WikiPage page) {
+    PageTitle pt = new PageTitle(page.getFullPath());
     StringBuilder breadcrumbs = new StringBuilder();
     for (PageTitle.BreadCrumb breadcrumb : pt.getBreadCrumbs()) {
       breadcrumbs.append("<li><a href=\"").append(breadcrumb.getLink()).append("\">").append(breadcrumb.getName()).append("</a></li>\n");
     }
+    breadcrumbs.append("<li>").append(page.getName()).append("</li>\n");
     return breadcrumbs.toString();
   }
 
@@ -89,7 +89,7 @@ public class Publisher {
 
   private void fixWikiWord(StringTransform transform, long depth) {
     int wikiWordStart = transform.getCurrent();
-    if (transform.startsWith("/")) {
+    if (transform.startsWith("/") || transform.startsWith(".")) {
       wikiWordStart++;
     }
     int wikiWordLength = TextMaker.findWikiWordLength(transform.from(wikiWordStart));
