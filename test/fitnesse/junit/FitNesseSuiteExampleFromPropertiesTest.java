@@ -10,7 +10,6 @@ import fitnesse.junit.FitNesseRunner.OutputDir;
 import fitnesse.junit.FitNesseRunner.ConfigFile;
 
 
-@Ignore
 @RunWith(FitNesseSuite.class)
 @Name("FitNesse.SuiteAcceptanceTests.SuiteSlimTests")
 @FitnesseDir(systemProperty = "fitnesse.root.dir.parent")
