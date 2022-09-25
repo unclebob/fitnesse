@@ -14,7 +14,6 @@ import java.nio.file.Paths;
 public class PublishResponder implements Responder {
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-    //todo: write css and images from jar resources
     Path templatePath = Paths.get(context.getRootPagePath(), "files", "fitnesse", "publish.html");
     String template = String.join(System.lineSeparator(), Files.readAllLines(templatePath));
     Publisher publisher = new Publisher(template, request.getInput("destination"), context.getRootPage().getPageCrawler(), this::writePage);

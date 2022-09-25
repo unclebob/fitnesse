@@ -14,6 +14,8 @@ import java.io.File;
 import java.util.function.BiConsumer;
 
 public class Publisher {
+  //todo: downloads?
+  //todo: write css and images from jar resources
 
   public Publisher(String template, String destination, PageCrawler crawler, BiConsumer<String, String> writer) {
     this.template = template;
@@ -33,15 +35,19 @@ public class Publisher {
       result.append(e).append("<br>");
     }
     for (WikiPage child: page.getChildren()) {
-      //todo: skip pageheader pagefooter etc
-      if (!(child instanceof SymbolicPage))
-        result.append(traverse(child));
+      //todo: make constants for these names?
+      if (child.getName().equals("files")) continue;
+      if (child.getName().equals("PageHeader")) continue;
+      if (child.getName().equals("PageFooter")) continue;
+      //todo: skip others?
+      if ((child instanceof SymbolicPage)) continue;
+      result.append(traverse(child));
     }
     return result.toString();
   }
 
   private String pageContent(WikiPage page) {
-    return fixLinks(page, replaceKeywords(page, template));
+    return fixScripts(page, fixLinks(page, replaceKeywords(page, template)));
   }
 
   private String replaceKeywords(WikiPage page, String input) {
@@ -82,7 +88,17 @@ public class Publisher {
     while (transform.find(" href=\"")) {
       transform.advance();
       fixWikiWord(transform, depth);
-      fixCss(transform, depth);
+      fixFiles(transform, depth);
+    }
+    return transform.getOutput();
+  }
+
+  private String fixScripts(WikiPage page, String input) {
+    StringTransform transform = new StringTransform(input);
+    long depth = page.getFullPath().toString().chars().filter(c -> c == '.').count();
+    while (transform.find("script src=\"")) {
+      transform.advance();
+      fixFiles(transform, depth);
     }
     return transform.getOutput();
   }
@@ -106,8 +122,8 @@ public class Publisher {
     transform.move(wikiWordStart + wikiWordLength);
   }
 
-  private void fixCss(StringTransform transform, long depth) {
-    if (!transform.startsWith("css/")) return;
+  private void fixFiles(StringTransform transform, long depth) {
+    if (!transform.startsWith("files/")) return;
     for (int i = 0; i < depth; i++) transform.insert("../");
   }
 

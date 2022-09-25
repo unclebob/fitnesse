@@ -14,21 +14,43 @@ public class PublisherTest {
 
   @Before public void SetUp() {
     root = InMemoryPage.makeRoot("root");
+    paths = "";
   }
 
-  @Test public void topPage() {
+  @Test public void plainTopPage() {
     assertTopPage("plain content", "plain content");
+  }
+
+  @Test public void topPageSibling() {
     assertTopPage("<a href=\"TestSibling.html\">TestSibling</a>", "TestSibling");
+  }
+
+  @Test public void linkWithAnchor() {
     assertTopPage("<a href=\"TestSibling.html#anchor\">link</a>", "[[link][TestSibling#anchor]]");
+  }
+
+  @Test public void externalLink() {
     assertTopPage("<a href=\"http://test.org\">http://test.org</a>", "http://test.org");
   }
 
-  @Test public void childPage() {
+  @Test public void plainChildPage() {
     assertChildPage("my child", "my child");
+  }
+
+  @Test public void childPageSibling() {
     assertChildPage("<a href=\"../TestParent/TestSibling.html\">TestSibling</a>", "TestSibling");
+  }
+
+  @Test public void childAbsoluteLinkSlash() {
     assertChildPage("<a href=\"../TestParent.html\">link</a>", "!-<a href=\"/TestParent\">link</a>-!");
-    assertChildPage("<a href=\"../TestParent/TestSibling.html\">link</a>", "!-<a href=\".TestParent.TestSibling\">link</a>-!");
+  }
+
+  @Test public void childAbsoluteLinkDot() {
     assertChildPage("<a href=\"../TestParent.html\">.TestParent</a>", ".TestParent");
+  }
+
+  @Test public void childAbsolutePath() {
+    assertChildPage("<a href=\"../TestParent/TestSibling.html\">link</a>", "!-<a href=\".TestParent.TestSibling\">link</a>-!");
   }
 
   @Test public void headerAndFooter() {
@@ -36,6 +58,15 @@ public class PublisherTest {
     WikiPageUtil.addPage(root, PathParser.parse("PageFooter"), "footer");
     assertTopPage("header+body", "+body");
     Assert.assertTrue(content, content.contains("f*footer*f"));
+  }
+
+  @Test public void skipSpecialPages() {
+    WikiPageUtil.addPage(root, PathParser.parse("PageHeader"), "header");
+    WikiPageUtil.addPage(root, PathParser.parse("PageFooter"), "footer");
+    WikiPageUtil.addPage(root, PathParser.parse("files"), "files");
+    Publisher publisher = new Publisher(TEMPLATE, "out", root.getPageCrawler(), this::writer);
+    publisher.traverse(root);
+    Assert.assertEquals("out/root.html", paths);
   }
 
   @Test public void symbolicPage() {
@@ -67,19 +98,20 @@ public class PublisherTest {
   private void assertPublishes(String pageContent, String pageName, String prefix, WikiPage page) {
     Publisher publisher = new Publisher(TEMPLATE, "out", root.getPageCrawler(), this::writer);
     publisher.traverse(page);
-    Assert.assertEquals("out/" + pageName + ".html", path);
+    Assert.assertEquals("out/" + pageName + ".html", paths);
     Assert.assertTrue(content, content.contains("b*" + pageContent + "*b"));
-    Assert.assertTrue(content, content.contains("<link href=\"" + prefix + "css/fitnesse_wiki.css\">"));
+    Assert.assertTrue(content, content.contains("<link href=\"" + prefix + "files/path\">"));
+    Assert.assertTrue(content, content.contains("<script src=\"" + prefix + "files/path\">"));
   }
 
   private void writer(String content, String path) {
     this.content = content;
-    this.path = path;
+    this.paths += path;
   }
 
-  private static final String TEMPLATE = "t*$title$*t <link href=\"css/fitnesse_wiki.css\"> c*$breadcrumbs$*c b*$body$*b f*$footer$*f";
+  private static final String TEMPLATE = "t*$title$*t <link href=\"files/path\"> <script src=\"files/path\"> c*$breadcrumbs$*c b*$body$*b f*$footer$*f";
 
   private String content;
-  private String path;
+  private String paths;
   private WikiPage root;
 }
