@@ -43,7 +43,7 @@ public abstract class PageMovementResponder implements SecureResponder {
     }
 
     if (!getAndValidateNewParentPage(context, request)) {
-      return makeErrorMessageResponder(newParentPath == null ? "null" : newParentPath.toString() + " does not exist.").makeResponse(context, request);
+      return makeErrorMessageResponder(newParentPath == null ? "null" : newParentPath + " does not exist.").makeResponse(context, request);
     }
 
     if (!getAndValidateRefactoringParameters(request)) {
@@ -96,11 +96,11 @@ public abstract class PageMovementResponder implements SecureResponder {
 
   protected void movePage(WikiPage movedPage, WikiPage newParentPage, String pageName) throws RefactorException {
 
-  	if (isSymlinkedPage(movedPage)) {
-  	  if (isSymlinkedPage(movedPage.getParent())) {
+    if (movedPage.isSymbolicPage()) {
+      if (movedPage.getParent().isSymbolicPage()) {
   	    throw new RefactorException("Can not move symlink page when parent page is also a symlink");
   	  }
-  		WikiPage referencedPage = ((SymbolicPage) movedPage).getRealPage();
+  		WikiPage referencedPage = movedPage.getRealPage();
   		removeSymlink(movedPage);
   		createSymlink(referencedPage, newParentPage, pageName);
   	} else {
@@ -120,10 +120,6 @@ public abstract class PageMovementResponder implements SecureResponder {
     for (WikiPage page : children) {
       movePage(page, newParentPage, page.getName());
     }
-  }
-
-  private boolean isSymlinkedPage(WikiPage page) {
-	  return page instanceof SymbolicPage;
   }
 
   private void removeSymlink(WikiPage movedPage) {

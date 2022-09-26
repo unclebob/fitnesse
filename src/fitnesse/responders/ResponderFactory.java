@@ -15,6 +15,7 @@ import fitnesse.responders.files.CreateDirectoryResponder;
 import fitnesse.responders.files.DeleteConfirmationResponder;
 import fitnesse.responders.files.DeleteFileResponder;
 import fitnesse.responders.files.FileResponder;
+import fitnesse.responders.files.PublishResponder;
 import fitnesse.responders.files.RenameFileConfirmationResponder;
 import fitnesse.responders.files.RenameFileResponder;
 import fitnesse.responders.files.UploadResponder;
@@ -115,6 +116,7 @@ public class ResponderFactory {
     addResponder("overview", SuiteOverviewResponder.class);
     addResponder("compareVersions", VersionComparerResponder.class);
     addResponder("instruction", InstructionResponder.class);
+    addResponder("publish", PublishResponder.class);
     filterMap = new HashMap<>();
   }
 

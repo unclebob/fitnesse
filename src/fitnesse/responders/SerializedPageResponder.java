@@ -16,19 +16,13 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.util.XmlUtil;
 import fitnesse.wiki.fs.PageXmlizer;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.XmlizePageCondition;
 import org.w3c.dom.Document;
 
 public class SerializedPageResponder implements SecureResponder {
-  private XmlizePageCondition xmlizePageCondition = new XmlizePageCondition() {
-    @Override
-    public boolean canBeXmlized(WikiPage page) {
-      return !(page instanceof SymbolicPage);
-    }
-  };
+  private final XmlizePageCondition xmlizePageCondition = page -> !page.isSymbolicPage();
 
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -40,12 +34,10 @@ public class SerializedPageResponder implements SecureResponder {
       PageXmlizer pageXmlizer = new PageXmlizer();
       pageXmlizer.addPageCondition(xmlizePageCondition);
       Document doc = pageXmlizer.xmlize(page);
-      SimpleResponse response = makeResponseWithxml(doc);
-      return response;
+      return makeResponseWithxml(doc);
     } else if ("data".equals(request.getInput("type"))) {
       Document doc = new PageXmlizer().xmlize(page.getData());
-      SimpleResponse response = makeResponseWithxml(doc);
-      return response;
+      return makeResponseWithxml(doc);
     } else {
       Object object = getObjectToSerialize(request, page);
       byte[] bytes = serializeToBytes(object);
@@ -79,8 +71,7 @@ public class SerializedPageResponder implements SecureResponder {
   private WikiPage getRequestedPage(Request request, FitNesseContext context) {
     String resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = context.getRootPage().getPageCrawler().getPage(path);
-    return page;
+    return context.getRootPage().getPageCrawler().getPage(path);
   }
 
   private SimpleResponse responseWith(byte[] bytes) {
@@ -95,8 +86,7 @@ public class SerializedPageResponder implements SecureResponder {
     ObjectOutputStream os = new ObjectOutputStream(byteStream);
     os.writeObject(object);
     os.close();
-    byte[] bytes = byteStream.toByteArray();
-    return bytes;
+    return byteStream.toByteArray();
   }
 
   @Override

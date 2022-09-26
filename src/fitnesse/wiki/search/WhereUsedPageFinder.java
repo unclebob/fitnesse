@@ -37,8 +37,8 @@ public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFin
       Set<String> links = suiteProperty.keySet();
       for (String link : links) {
         WikiPage linkTarget = currentPage.getChildPage(link);
-        if (linkTarget instanceof SymbolicPage
-          && ((SymbolicPage) linkTarget).getRealPage().equals(subjectPage)) {
+        if (linkTarget != null && linkTarget.isSymbolicPage()
+          && linkTarget.getRealPage().equals(subjectPage)) {
           addHit();
           break;
         }

@@ -11,6 +11,7 @@ import fitnesse.socketservice.PlainServerSocketFactory;
 import fitnesse.socketservice.SslParameters;
 import fitnesse.socketservice.SslServerSocketFactory;
 import fitnesse.updates.WikiContentUpdater;
+import fitnesse.wiki.PathParser;
 
 import java.io.*;
 import java.net.BindException;
@@ -106,7 +107,7 @@ public class FitNesseMain {
 
   private boolean establishRequiredDirectories(String rootPagePath) {
     return establishDirectory(new File(rootPagePath)) &&
-            establishDirectory(new File(rootPagePath, "files"));
+            establishDirectory(new File(rootPagePath, PathParser.FILES));
   }
 
   private static boolean establishDirectory(File path) {
