@@ -7,6 +7,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.updates.ReplacingFileUpdate;
 import fitnesse.updates.Update;
+import fitnesse.wiki.PathParser;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,15 +17,17 @@ import java.nio.file.Paths;
 public class PublishResponder implements Responder {
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    report = new StringBuilder();
     destination = request.getInput("destination");
 
-    Path resourcePath = Paths.get(context.getRootPagePath(), "files", "fitnesse", "publishResources.txt");
+    Path resourcePath = Paths.get(context.getRootPagePath(), PathParser.FILES, "fitnesse", "publishResources.txt");
     Files.readAllLines(resourcePath).stream().map(this::makeUpdate).forEach(this::doUpdate);
 
-    Path templatePath = Paths.get(context.getRootPagePath(), "files", "fitnesse", "publishTemplate.html");
+    Path templatePath = Paths.get(context.getRootPagePath(), PathParser.FILES, "fitnesse", "publishTemplate.html");
     String template = String.join(System.lineSeparator(), Files.readAllLines(templatePath));
     Publisher publisher = new Publisher(template, destination, context.getRootPage().getPageCrawler(), this::writePage);
     report.append(publisher.traverse(context.getRootPage()));
+
     SimpleResponse response = new SimpleResponse();
     response.setContent(report.toString());
     return response;
@@ -40,7 +43,7 @@ public class PublishResponder implements Responder {
 
   private Update makeUpdate(String resource) {
     report.append(resource).append("<br>");
-    return new ReplacingFileUpdate("fitnesse/resources/" + resource, Paths.get(destination, "files", "fitnesse", resource).toFile().getParentFile());
+    return new ReplacingFileUpdate("fitnesse/resources/" + resource, Paths.get(destination, PathParser.FILES, "fitnesse", resource).toFile().getParentFile());
   }
 
   private void writePage(String content, String path) {
@@ -56,5 +59,5 @@ public class PublishResponder implements Responder {
   }
 
   private String destination;
-  private StringBuilder report = new StringBuilder();
+  private StringBuilder report;
 }

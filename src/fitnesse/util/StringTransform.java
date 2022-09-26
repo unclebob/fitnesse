@@ -9,21 +9,21 @@ public class StringTransform {
   public boolean find(String value) {
     int index = input.indexOf(value, start);
     if (index < 0) return false;
-    advance(index);
+    copy(index);
     current = index + value.length();
     return true;
   }
 
-  public void advance() {
-    advance(current);
+  public void copy() {
+    copy(current);
   }
 
-  public void move(int newStart) {
+  public void skipTo(int newStart) {
     start = newStart;
   }
 
   public void skip(int offset) {
-    move(current + offset);
+    skipTo(current + offset);
   }
 
   public void insert(String segment) {
@@ -47,14 +47,15 @@ public class StringTransform {
     return input.substring(begin);
   }
 
-  private void advance(int end) {
+  private void copy(int end) {
     output.append(input, start, end);
-    move(end);
+    skipTo(end);
   }
 
   private int start;
   private int current;
 
   private final String input;
+
   private final StringBuilder output = new StringBuilder();
 }

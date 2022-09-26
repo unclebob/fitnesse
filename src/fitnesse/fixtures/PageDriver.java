@@ -92,7 +92,7 @@ public class PageDriver {
     WikiPage root = FitnesseFixtureContext.context.getRootPage();
     WikiPagePath pagePath = PathParser.parse(pageName);
     WikiPage thePage = root.getPageCrawler().getPage(pagePath);
-    return thePage instanceof SymbolicPage;
+    return thePage.isSymbolicPage();
   }
 
   public boolean pageExists(String pageName) {

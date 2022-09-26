@@ -4,7 +4,6 @@ import fitnesse.html.template.PageTitle;
 import fitnesse.util.StringTransform;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
@@ -15,7 +14,6 @@ import java.util.function.BiConsumer;
 
 public class Publisher {
   //todo: downloads?
-  //todo: keyboard shortcuts
 
   public Publisher(String template, String destination, PageCrawler crawler, BiConsumer<String, String> writer) {
     this.template = template;
@@ -35,12 +33,11 @@ public class Publisher {
       result.append(e).append("<br>");
     }
     for (WikiPage child: page.getChildren()) {
-      //todo: make constants for these names?
-      if (child.getName().equals("files")) continue;
-      if (child.getName().equals("PageHeader")) continue;
-      if (child.getName().equals("PageFooter")) continue;
+      if (child.getName().equals(PathParser.FILES)) continue;
+      if (child.getName().equals(WikiPageUtil.PAGE_HEADER)) continue;
+      if (child.getName().equals(WikiPageUtil.PAGE_FOOTER)) continue;
       //todo: skip others?
-      if ((child instanceof SymbolicPage)) continue;
+      if (child.isSymbolicPage()) continue;
       result.append(traverse(child));
     }
     return result.toString();
@@ -61,7 +58,7 @@ public class Publisher {
     };
     while (transform.find("$")) {
       for (String[] keyword: keywords) {
-        if (keyword[0].length() == 0) transform.advance();
+        if (keyword[0].length() == 0) transform.copy();
         else if (transform.startsWith(keyword[0] + "$")) {
           transform.insert(keyword[1]);
           transform.skip(keyword[0].length() + 1);
@@ -86,7 +83,7 @@ public class Publisher {
     StringTransform transform = new StringTransform(input);
     long depth = page.getFullPath().toString().chars().filter(c -> c == '.').count();
     while (transform.find(" href=\"")) {
-      transform.advance();
+      transform.copy();
       fixWikiWord(transform, depth);
       fixFiles(transform, depth);
     }
@@ -97,7 +94,7 @@ public class Publisher {
     StringTransform transform = new StringTransform(input);
     long depth = page.getFullPath().toString().chars().filter(c -> c == '.').count();
     while (transform.find(" src=\"")) {
-      transform.advance();
+      transform.copy();
       fixFiles(transform, depth);
     }
     return transform.getOutput();
@@ -110,16 +107,11 @@ public class Publisher {
     }
     int wikiWordLength = TextMaker.findWikiWordLength(transform.from(wikiWordStart));
     if (wikiWordLength == 0) return;
-    String targetName = transform.from(wikiWordStart).substring(0, wikiWordLength);
-    WikiPagePath path = PathParser.parse(targetName);
-    WikiPage targetPage = crawler.getPage(path);
-    if (targetPage instanceof SymbolicPage) {
-      targetPage = ((SymbolicPage) targetPage).getRealPage();
-      targetName = targetPage.getFullPath().toString();
-    }
+    WikiPagePath path = PathParser.parse(transform.from(wikiWordStart).substring(0, wikiWordLength));
+    WikiPage targetPage = crawler.getPage(path).getRealPage();
     for (int i = 0; i < depth; i++) transform.insert("../");
-    transform.insert(targetName.replace('.', '/') + ".html");
-    transform.move(wikiWordStart + wikiWordLength);
+    transform.insert(targetPage.getFullPath().toString().replace('.', '/') + ".html");
+    transform.skipTo(wikiWordStart + wikiWordLength);
   }
 
   private void fixFiles(StringTransform transform, long depth) {
