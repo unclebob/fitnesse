@@ -15,7 +15,7 @@ import java.util.function.BiConsumer;
 
 public class Publisher {
   //todo: downloads?
-  //todo: write css and images from jar resources
+  //todo: keyboard shortcuts
 
   public Publisher(String template, String destination, PageCrawler crawler, BiConsumer<String, String> writer) {
     this.template = template;
@@ -47,7 +47,7 @@ public class Publisher {
   }
 
   private String pageContent(WikiPage page) {
-    return fixScripts(page, fixLinks(page, replaceKeywords(page, template)));
+    return fixSources(page, fixLinks(page, replaceKeywords(page, template)));
   }
 
   private String replaceKeywords(WikiPage page, String input) {
@@ -93,10 +93,10 @@ public class Publisher {
     return transform.getOutput();
   }
 
-  private String fixScripts(WikiPage page, String input) {
+  private String fixSources(WikiPage page, String input) {
     StringTransform transform = new StringTransform(input);
     long depth = page.getFullPath().toString().chars().filter(c -> c == '.').count();
-    while (transform.find("script src=\"")) {
+    while (transform.find(" src=\"")) {
       transform.advance();
       fixFiles(transform, depth);
     }
