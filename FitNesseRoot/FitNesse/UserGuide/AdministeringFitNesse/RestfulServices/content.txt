@@ -66,6 +66,8 @@
 | | format=xml | Returns an XML report.  See: >PageHistoryXml and [[!-RestfulTests-!][<UserGuide.WritingAcceptanceTests.RestfulTests]] |
 | properties | | Displays the properties form for the selected page. |
 | | format=json | shows the properties in JSON format   See >JsonProperties |
+| publish | | Publishes the site as a set of static HTML files. See [[!-PublishingHtml-!][>PublishingHtml]]. |
+| | destination | The root path where the HTML files will be written. |
 | purgeHistory | | Purges old test history files |
 | | days | The number of days of history to preserve |
 | raw | | returns the raw wiki-text of the selected page |

@@ -1,5 +1,11 @@
 !2 Latest Release ${FITNESSE_VERSION}
 !2 Pending Changes
+ * Ability to create plugins for new markup syntax. ([[1382][https://github.com/unclebob/fitnesse/pull/1382]])
+ * Bugfix: Unescaping HTML is done in the correct order. ([[1384][https://github.com/unclebob/fitnesse/issues/1384]])
+ * Bugfix: Slim decision table shows input cells correctly in test results ([[1388][https://github.com/unclebob/fitnesse/issues/1388]])
+ * Add new responder to publish a site as static HTML pages ([[1387][https://github.com/unclebob/fitnesse/issues/1387]])
+ 
+!2 20220815
  * Add support for inline [[''!-!img-!''][UserGuide.FitNesseWiki.MarkupLanguageReference.MarkupPicture]] using base64 data url ([[1367][https://github.com/unclebob/fitnesse/pull/1367]])
  * Bugfix: render [[''!-!anchor-!''][UserGuide.FitNesseWiki.MarkupLanguageReference.LinksWithinPages]] as valid (non empty) element ([[1366][https://github.com/unclebob/fitnesse/pull/1366]])
  * Bugfix: Handle instructions with embedded newlines ([[1363][https://github.com/unclebob/fitnesse/pull/1363]])
@@ -7,9 +13,6 @@
  * Bugfix: Search string is not escaped in search page title ([[1360][https://github.com/unclebob/fitnesse/pull/1360]])
  * Bugfix: issues with !include and variables in page name ([[1359][https://github.com/unclebob/fitnesse/pull/1359]])
  * Performance: improve parser performance for some incomplete wiki syntax ([[1371][https://github.com/unclebob/fitnesse/pull/1371]])
- * Ability to create plugins for new markup syntax. ([[1382][https://github.com/unclebob/fitnesse/pull/1382]])
- * Bugfix: Unescaping HTML is done in the correct order. ([[1384][https://github.com/unclebob/fitnesse/issues/1384]])
- * Bugfix: Slim decision table shows input cells correctly in test results ([[1388][https://github.com/unclebob/fitnesse/issues/1388]])
 
 !2 20220319
  * Add new responder to list the Slim instructions suite to aid analysis/debugging ([[1356][https://github.com/unclebob/fitnesse/pull/1356]])
