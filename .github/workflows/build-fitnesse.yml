@@ -28,3 +28,8 @@ jobs:
         with:
           name: libs
           path: build/libs
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          junit_files: build/test-results/test/*.xml
