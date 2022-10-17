@@ -30,6 +30,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static fitnesse.slim.SlimServer.EXCEPTION_IGNORE_ALL_TESTS_TAG;
+import static fitnesse.slim.SlimServer.EXCEPTION_IGNORE_SCRIPT_TEST_TAG;
 import static fitnesse.testsystems.slim.tables.ComparatorUtil.approximatelyEqual;
 
 public abstract class SlimTable {
@@ -258,8 +260,10 @@ public abstract class SlimTable {
     @Override
     public TestResult evaluateExpectation(Object returnValue) {
       SlimTestResult testResult;
-      if (returnValue == null || returnValue.toString().equals(StringConverter.IGNORE)) {
+      if (returnValue == null) {
         testResult = SlimTestResult.testNotRun();
+      } else if (returnValue.toString().equals("IGNORE_SCRIPT_TEST")) {
+        testResult = SlimTestResult.countTestNotRun();
       } else {
         String value;
         value = returnValue.toString();
@@ -282,7 +286,11 @@ public abstract class SlimTable {
     @Override
     public SlimExceptionResult evaluateException(SlimExceptionResult exceptionResult) {
       table.updateContent(col, row, exceptionResult);
-      getTestContext().incrementErroredTestsCount();
+      if(exceptionResult.getException().equals(EXCEPTION_IGNORE_SCRIPT_TEST_TAG) || exceptionResult.getException().equals(EXCEPTION_IGNORE_ALL_TESTS_TAG)){
+        getTestContext().incrementIgnoredTestsCount();
+      } else {
+        getTestContext().incrementErroredTestsCount();
+      }
       return exceptionResult;
     }
 
