@@ -116,15 +116,6 @@ public class ScriptTableTest {
     assertEquals(table, HtmlUtil.unescapeWiki(st.getTable().toString()));
   }
 
-  private void assertScriptResultsIgnore(String scriptStatements, List<List<String>> scriptResults, String table, boolean localized) throws Exception {
-    buildInstructionsFor(scriptStatements, localized);
-    List<List<?>> resultList = new ArrayList(scriptResults);
-    resultList.add(0, asList(localized ? "localizedScriptTable_id_0" : "scriptTable_id_0", "ignore"));
-    Map<String, Object> pseudoResults = SlimCommandRunningClient.resultToMap(resultList);
-    SlimAssertion.evaluateExpectations(assertions, pseudoResults);
-    assertEquals(table, HtmlUtil.unescapeWiki(st.getTable().toString()));
-  }
-
   private void buildInstructionsFor(String scriptStatements, boolean localized) throws Exception {
     String scriptTableHeader = "|Script|\n";
     String localizedScriptTableHeader = "|localized script|\n";
@@ -532,17 +523,6 @@ public class ScriptTableTest {
       "[[Script], [check, func, pass(3)]]", false
     );
   }
-
-  @Test
-  public void checkIgnores() throws Exception {
-    assertScriptResultsIgnore("|check|func|3|\n",
-      asList(
-        asList("scriptTable_id_0", "ignore")
-      ),
-      "[[Script], [check, func, ignore(Test not run)]]", false
-    );
-  }
-
   @Test
   public void localizedCheckPasses() throws Exception {
     assertScriptResults("|localized check|func|3|\n",

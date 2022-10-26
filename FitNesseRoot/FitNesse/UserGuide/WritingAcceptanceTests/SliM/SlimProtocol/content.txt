@@ -146,6 +146,12 @@ If a fixture throws an exception with a ''class'' name that contains "!style_cod
 
 To abort the test suite (stop execution directly), throw an exception with a class name that contains "!style_code(!-StopSuite-!)". The syntax is identical to !-StopTest-!.
 
+!4 Ignoring Test
+If a fixture throws an exception with a ''class'' name that contains "!style_code(!-IgnoreScriptTest-!)", then Slim should ignore and skip the instructions in the rest of that script table.   The response for this type of exception should be "!style_code(__EXCEPTION__:IGNORE_SCRIPT_TEST:)" which may have an optional suffix of: "!style_code(message:<<''reason''>>)".
+
+!4 Ignoring All Tests
+If a fixture throws an exception with a ''class'' name that contains "!style_code(!-IgnoreAllTests-!)", then Slim should ignore and skip all the instructions in the rest of the current batch.   The response for this type of exception should be "!style_code(__EXCEPTION__:IGNORE_ALL_TESTS:)" which may have an optional suffix of: "!style_code(message:<<''reason''>>)".
+
 !3 Type Conversions
 The only types in the instructions and responses are lists and strings, and since the leaves of the lists must eventually be strings, all we really have to worry about are strings.  But we don't want to restrict our fixtures to use only Strings.  So Slim comes with some standard type converters that allow fixtures to take more convenient data types.
 
