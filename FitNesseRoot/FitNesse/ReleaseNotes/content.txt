@@ -1,10 +1,9 @@
-!2 Latest Release ${FITNESSE_VERSION}
-!2 Pending Changes
+!2 ${FITNESSE_VERSION}
  * Ability to create plugins for new markup syntax. ([[1382][https://github.com/unclebob/fitnesse/pull/1382]])
  * Bugfix: Unescaping HTML is done in the correct order. ([[1384][https://github.com/unclebob/fitnesse/issues/1384]])
  * Bugfix: Slim decision table shows input cells correctly in test results ([[1388][https://github.com/unclebob/fitnesse/issues/1388]])
  * Add new responder to publish a site as static HTML pages ([[1387][https://github.com/unclebob/fitnesse/issues/1387]])
- 
+
 !2 20220815
  * Add support for inline [[''!-!img-!''][UserGuide.FitNesseWiki.MarkupLanguageReference.MarkupPicture]] using base64 data url ([[1367][https://github.com/unclebob/fitnesse/pull/1367]])
  * Bugfix: render [[''!-!anchor-!''][UserGuide.FitNesseWiki.MarkupLanguageReference.LinksWithinPages]] as valid (non empty) element ([[1366][https://github.com/unclebob/fitnesse/pull/1366]])
