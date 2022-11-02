@@ -38,7 +38,7 @@ public class FitNesse {
         LOG.log(Level.WARNING, "Could not handle request. Thread pool is exhausted.");
       }
     };
-    this.executorService = new ThreadPoolExecutor(5, 100, 10, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(),
+    this.executorService = new ThreadPoolExecutor(5, this.context.maximumWorkers, 10, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(),
             new DaemonThreadFactory(), rejectionHandler);
   }
 
