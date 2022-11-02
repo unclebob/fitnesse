@@ -1,4 +1,7 @@
-!2 ${FITNESSE_VERSION}
+!2 Latest Release ${FITNESSE_VERSION}
+!2 Pending Changes
+
+!2 20221102
  * Ability to create plugins for new markup syntax. ([[1382][https://github.com/unclebob/fitnesse/pull/1382]])
  * Bugfix: Unescaping HTML is done in the correct order. ([[1384][https://github.com/unclebob/fitnesse/issues/1384]])
  * Bugfix: Slim decision table shows input cells correctly in test results ([[1388][https://github.com/unclebob/fitnesse/issues/1388]])
