@@ -1,5 +1,6 @@
 !2 Latest Release ${FITNESSE_VERSION}
 !2 Pending Changes
+ * Add a new optional command line parameter to specify the maximum number of workers to use for handling incoming requests. 
 
 !2 20221102
  * Ability to create plugins for new markup syntax. ([[1382][https://github.com/unclebob/fitnesse/pull/1382]])
