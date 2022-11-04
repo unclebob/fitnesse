@@ -340,8 +340,6 @@ public class SlimTestSystemTableProcessingTest {
   private static class IgnoreOnNullPassOtherwiseSlimExpectation implements SlimExpectation {
     @Override
     public TestResult evaluateExpectation(Object returnValues) {
-//      if(returnValues.toString().contains("IGNORE_SCRIPT_TEST"))
-//        return new SlimTestResult(ExecutionResult.IGNORE);
       return new SlimTestResult((null == returnValues) || (returnValues.toString().contains("IGNORE_SCRIPT_TEST")) ? ExecutionResult.IGNORE : ExecutionResult.PASS);
     }
 
