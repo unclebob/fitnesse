@@ -1,7 +1,5 @@
 !2 ${FITNESSE_VERSION}
-
-!2 20221104
-* Ability to skip some or all parts of a test. ([[1350][https://github.com/unclebob/fitnesse/pull/1350]])
+* Ability to ignore the rest of a script table or test page by throwing an exception. ([[1350][https://github.com/unclebob/fitnesse/pull/1350]])
 
 !2 20211030
 * Switch community pages from Slack to Gitter. ([[1339][https://github.com/unclebob/fitnesse/pull/1339]])
