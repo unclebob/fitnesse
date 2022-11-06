@@ -5,6 +5,7 @@ package fitnesse.testsystems.slim.tables;
 import fitnesse.slim.MethodExecutionResult;
 import fitnesse.slim.SlimExpressionEvaluator;
 import fitnesse.slim.SlimSymbol;
+import fitnesse.slim.converters.StringConverter;
 import fitnesse.slim.instructions.AssignInstruction;
 import fitnesse.slim.instructions.CallAndAssignInstruction;
 import fitnesse.slim.instructions.CallInstruction;
@@ -30,6 +31,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
+import static fitnesse.slim.SlimServer.EXCEPTION_IGNORE_ALL_TESTS_TAG;
+import static fitnesse.slim.SlimServer.EXCEPTION_IGNORE_SCRIPT_TEST_TAG;
 import static fitnesse.testsystems.slim.tables.ComparatorUtil.approximatelyEqual;
 import static java.util.stream.Collectors.toList;
 
@@ -258,6 +261,8 @@ public abstract class SlimTable {
       SlimTestResult testResult;
       if (returnValue == null) {
         testResult = SlimTestResult.testNotRun();
+      } else if (returnValue.toString().equals("IGNORE_SCRIPT_TEST")) {
+        testResult = SlimTestResult.countTestNotRun();
       } else {
         String value;
         value = returnValue.toString();
@@ -280,7 +285,11 @@ public abstract class SlimTable {
     @Override
     public SlimExceptionResult evaluateException(SlimExceptionResult exceptionResult) {
       table.updateContent(col, row, exceptionResult);
-      getTestContext().incrementErroredTestsCount();
+      if(exceptionResult.getException().equals(EXCEPTION_IGNORE_SCRIPT_TEST_TAG) || exceptionResult.getException().equals(EXCEPTION_IGNORE_ALL_TESTS_TAG)){
+        getTestContext().incrementIgnoredTestsCount();
+      } else {
+        getTestContext().incrementErroredTestsCount();
+      }
       return exceptionResult;
     }
 

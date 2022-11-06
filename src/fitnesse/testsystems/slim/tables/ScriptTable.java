@@ -373,6 +373,8 @@ public class ScriptTable extends SlimTable {
         return SlimTestResult.fail();
       else if (actual.equals(BooleanConverter.TRUE))
         return SlimTestResult.pass();
+      else if (actual.equals("IGNORE_SCRIPT_TEST"))
+        return SlimTestResult.countTestNotRun();
       else
         return SlimTestResult.plain();
     }
