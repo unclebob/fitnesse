@@ -37,8 +37,8 @@ public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFin
       Set<String> links = suiteProperty.keySet();
       for (String link : links) {
         WikiPage linkTarget = currentPage.getChildPage(link);
-        if (linkTarget instanceof SymbolicPage
-          && ((SymbolicPage) linkTarget).getRealPage().equals(subjectPage)) {
+        if (linkTarget != null && linkTarget.isSymbolicPage()
+          && linkTarget.getRealPage().equals(subjectPage)) {
           addHit();
           break;
         }
@@ -47,7 +47,7 @@ public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFin
   }
 
   private void checkContent() {
-    MarkUpSystem.make().findWhereUsed(new WikiSourcePage(currentPage), name -> {
+    MarkUpSystem.make(currentPage.getData().getContent()).findWhereUsed(new WikiSourcePage(currentPage), name -> {
       WikiPage referencedPage = new WikiWordReference(currentPage, name).getReferencedPage();
       if (referencedPage != null && referencedPage.equals(subjectPage)) {
         addHit();

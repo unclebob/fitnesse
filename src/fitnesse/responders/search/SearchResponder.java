@@ -5,6 +5,7 @@ package fitnesse.responders.search;
 import java.util.regex.Pattern;
 
 import fitnesse.components.TraversalListener;
+import fitnesse.html.HtmlUtil;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.search.PageFinder;
 import fitnesse.wiki.search.RegularExpressionWikiPageFinder;
@@ -29,7 +30,7 @@ public class SearchResponder extends ResultResponder {
       return "Content";
   }
 
- 
+
   protected String getPageFooterInfo(int hits) {
     return "Found " + hits + " results for your search.";
   }
@@ -41,7 +42,9 @@ public class SearchResponder extends ResultResponder {
 
   @Override
   protected String getTitle() {
-    return (request.getInput("searchType") == null) ? "Search Form" : getSearchType() + " Search Results for '" + getSearchString() + "'";
+    return (request.getInput("searchType") == null)
+      ? "Search Form"
+      : getSearchType() + " Search Results for '" + HtmlUtil.escapeHTML(getSearchString()) + "'";
   }
 
   @Override

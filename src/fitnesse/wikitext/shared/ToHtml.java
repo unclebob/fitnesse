@@ -6,7 +6,7 @@ import fitnesse.wikitext.parser.Maybe;
 
 public class ToHtml {
   public static String anchorName(String[] strings) {
-    return HtmlTag.name("a").attribute("id", strings[0]).htmlInline();
+    return HtmlTag.name("a").attribute("id", strings[0]).body("").htmlInline();
   }
 
   public static String anchorReference(String[] strings) {

@@ -4,6 +4,7 @@ package fitnesse.html;
 
 import java.util.regex.Pattern;
 
+import static fitnesse.util.StringUtils.replace;
 import static fitnesse.util.StringUtils.replaceStrings;
 
 public class HtmlUtil {
@@ -19,8 +20,8 @@ public class HtmlUtil {
   // Source: http://dev.w3.org/html5/markup/common-models.html
   public static final String HTML_CELL_CONTENT_PATTERN_TEXT = "<(p|hr|pre|ul|ol|dl|div|h[1-6]|hgroup|address|" +
               "blockquote|ins|del|object|map|video|audio|figure|table|fieldset|canvas|a|em|strong|small|mark|" +
-              "abbr|dfn|i|b|s|u|code|var|samp|kbd|sup|sub|q|cite|span|br|ins|del|img|embed|object|video|audio|label|" +
-              "output|datalist|progress|command|canvas|time|meter)([ >].*</\\1>|[^>]*/>)";
+              "abbr|dfn|i|b|s|u|code|var|samp|kbd|sup|sub|q|cite|span|br|img|embed|label|" +
+              "output|datalist|progress|command|time|meter)([ >].*</\\1>|[^>]*/>)";
   private static final Pattern HTML_PATTERN = Pattern.compile("^" + HTML_CELL_CONTENT_PATTERN_TEXT + "$",
                                                         Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
@@ -58,7 +59,7 @@ public class HtmlUtil {
   }
 
   public static String unescapeHTML(String value) {
-    return replaceStrings(value, specialHtmlEscapes, specialHtmlChars);
+    return replace(replace(replace(value, "&gt;", ">"), "&lt;", "<"), "&amp;", "&");
   }
 
   public static String unescapeWiki(String value) {

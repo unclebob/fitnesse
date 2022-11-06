@@ -12,6 +12,12 @@ public class Symbol extends Tree<Symbol> implements PropertyStore {
     public static final Maybe<Symbol> nothing = new Maybe<>();
     public static final Symbol emptySymbol = new Symbol(SymbolType.Empty);
 
+    public static Symbol listOf(Symbol... children) {
+      Symbol result = new Symbol(SymbolType.SymbolList);
+      for (Symbol child : children) result.add(child);
+      return result;
+    }
+
     private SymbolType type;
     private String content;
     private List<Symbol> branches;
@@ -55,6 +61,7 @@ public class Symbol extends Tree<Symbol> implements PropertyStore {
     public Symbol childAt(int index) { return getChildren().get(index); }
     public Symbol lastChild() { return childAt(getChildren().size() - 1); }
     public List<Symbol> getChildren() { return branches; }
+    public Symbol asText() { return new Symbol(SymbolType.Text, content); }
 
   @Override protected List<Symbol> getBranches() { return branches; }
   @Override protected Symbol getNode() { return this; }

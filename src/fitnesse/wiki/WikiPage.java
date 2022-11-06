@@ -91,6 +91,9 @@ public interface WikiPage extends Comparable<WikiPage> {
     String name = getName();
     return (PageData.SUITE_SETUP_NAME.equals(name) || PageData.SUITE_TEARDOWN_NAME.equals(name));
   }
+
+  default WikiPage getRealPage() { return this; }
+  default boolean isSymbolicPage() { return this != getRealPage(); }
 }
 
 

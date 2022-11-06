@@ -9,7 +9,7 @@ To get started, check out [http://fitnesse.org](http://fitnesse.org)!
 ## Quick start
 
 * [A One-Minute Description of FitNesse](http://fitnesse.org/FitNesse.UserGuide.OneMinuteDescription)
-* [Download FitNesse](http://fitnesse.org/FitNesseDownLoad) and [Plugins](http://fitnesse.org/PlugIns)
+* [Download FitNesse](http://fitnesse.org/FitNesseDownload) and [Plugins](http://fitnesse.org/PlugIns)
 * [The FitNesse User Guide](http://fitnesse.org/.FitNesse.UserGuide)
 
 
@@ -25,9 +25,9 @@ Have a question that's not a feature request or bug report? [Join the Gitter Com
 
 ## Edge builds
 
-The latest stable build of FitNesse can be [downloaded here](https://cleancoder.ci.cloudbees.com/job/fitnesse/lastStableBuild/).
+The latest stable build of FitNesse can be [downloaded here](https://github.com/unclebob/fitnesse/actions) by clicking the latest workflow and clicking the `libs` artifact.
 
-**Note**: the edge Jenkins build produces 2 jars. `fitnesse.jar` is for use in Maven or Ivy. Users who just want to run FitNesse by itself should download `fitnesse-standalone.jar` instead of `fitnesse.jar`.
+**Note**: the `libs` artifact contains 2 jars. `fitnesse.jar` is for use in Maven or Ivy. Users who just want to run FitNesse by itself should use `fitnesse-standalone.jar` instead of `fitnesse.jar`.
 
 ## Developers
 

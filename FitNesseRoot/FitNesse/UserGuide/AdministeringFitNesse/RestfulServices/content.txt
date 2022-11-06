@@ -46,6 +46,7 @@
 | | remoteUrl | The url to the complete pathname of the parent page to be imported. |
 | | autoUpdate | If present, will cause a re-import of changed pages whenever a test is run. |
 | importAndView | | imports (if necessary) and views the selected page. |
+| instruction | | displays the Slim instructions for a suite of Slim tests. This is intended as input for further analysis or for low level debugging.|
 | movePage | | moves the selected page below a different parent. |
 | | newLocation | The full path name of the page that will be the new parent. |
 | names | | Displays a list of the pages at the current level.  If no page name is supplied, then the list is all the pages at the top level.  Otherwise it is the list of direct children (not grandchildren) of the supplied page. |
@@ -65,6 +66,8 @@
 | | format=xml | Returns an XML report.  See: >PageHistoryXml and [[!-RestfulTests-!][<UserGuide.WritingAcceptanceTests.RestfulTests]] |
 | properties | | Displays the properties form for the selected page. |
 | | format=json | shows the properties in JSON format   See >JsonProperties |
+| publish | | Publishes the site as a set of static HTML files. See [[!-PublishingHtml-!][>PublishingHtml]]. |
+| | destination | The root path where the HTML files will be written. |
 | purgeHistory | | Purges old test history files |
 | | days | The number of days of history to preserve |
 | raw | | returns the raw wiki-text of the selected page |
@@ -124,5 +127,6 @@
 | viewVersion | | Shows the selected version of the wiki page. |
 | | version | The version identifier.  The version identifier is just the name of the zip file (without the .zip) that holds the version.  The format of this file name is (generally) ''user''-''id''-''yyyyMMddHHmmss'' where user might not be present. |
 | whereUsed | | Returns a list of pages that contains references (links) to the selected page |
+| variables | | Returns a list of variables that are available on this page |
 
  * ''nochunk''  can be added to many urls to turn off chunking.  This is most useful for test and suite urls when writing programs to parse the output.

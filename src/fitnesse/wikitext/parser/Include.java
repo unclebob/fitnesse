@@ -7,6 +7,8 @@ import fitnesse.wikitext.SourcePage;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 public class Include extends SymbolType implements Rule, Translation {
   private static final String[] setUpSymbols = {"COLLAPSE_SETUP"};
@@ -26,21 +28,14 @@ public class Include extends SymbolType implements Rule, Translation {
 
   @Override
   public Maybe<Symbol> parse(Symbol current, Parser parser) {
-    Symbol next = parser.moveNext(1);
-    if (!next.isType(SymbolType.Whitespace)) return Symbol.nothing;
+    if (!parser.moveNext(1).isType(SymbolType.Whitespace)) return Symbol.nothing;
 
-    next = parser.moveNext(1);
-    String option = "";
-    if ((next.isType(SymbolType.Text) && next.getContent().startsWith("-")) || next.isType(SymbolType.DateFormatOption)) {
-      option = next.getContent() + (next.isType(SymbolType.DateFormatOption) ? parser.moveNext(1).getContent() : "");
-      next = parser.moveNext(1);
-      if (!next.isType(SymbolType.Whitespace)) return Symbol.nothing;
-      next = parser.moveNext(1);
-    }
+    String option = parseOption(parser);
+    if (!parser.getCurrent().isType(SymbolType.Whitespace)) return Symbol.nothing;
     current.add(option);
-    if (!next.isType(SymbolType.Text) && !next.isType(WikiWord.symbolType)) return Symbol.nothing;
 
-    String includedPageName = getIncludedPageName(parser, next.getContent());
+    String includedPageName = parseIncludedPageName(parser);
+    if (includedPageName.length() == 0) return Symbol.nothing;
 
     SourcePage sourcePage = parser.getPage().getNamedPage();
 
@@ -67,7 +62,7 @@ public class Include extends SymbolType implements Rule, Translation {
         included,
         includedPage.getValue().getContent())
         .parse());
-      if (option.equals(SETUP_ARG)) current.evaluateVariables(setUpSymbols, parser.getVariableSource());
+      if (option.equals(SETUP_ARG)) current.copyVariables(setUpSymbols, parser.getVariableSource());
     }
 
     // Remove trailing newline so we do not introduce excessive whitespace in the page.
@@ -78,13 +73,44 @@ public class Include extends SymbolType implements Rule, Translation {
     return new Maybe<>(current);
   }
 
-  private String getIncludedPageName(Parser parser, String nextContent) {
-    StringBuilder includedPageName = new StringBuilder(nextContent);
-    while (parser.peek().isType(SymbolType.Text) || parser.peek().isType(WikiWord.symbolType)) {
-      Symbol remainderOfPageName = parser.moveNext(1);
-      includedPageName.append(remainderOfPageName.getContent());
+  private String parseOption(Parser parser) {
+    String option = "";
+    Symbol next = parser.peek();
+    if ((next.isType(SymbolType.Text) && next.getContent().startsWith("-")) || next.isType(SymbolType.DateFormatOption)) {
+      next = parser.moveNext(1);
+      option = next.getContent();
+
+      // terrible hack because -teardown gets parsed as dateformatoption '-t' and text 'eardown'
+      // doesn't work if -t used by mistake
+      if (next.isType(SymbolType.DateFormatOption)) {
+        next = parser.moveNext(1);
+        option += next.getContent();
+      }
+
+      parser.moveNext(1);
     }
-    return includedPageName.toString();
+    return option;
+  }
+
+  private String parseIncludedPageName(Parser parser) {
+    StringBuilder name = new StringBuilder();
+    while (true) {
+      Optional<String> segment = parseNameSegment(parser);
+      if (!segment.isPresent()) break;
+      segment.map(name::append);
+    }
+    return name.toString();
+  }
+
+  private Optional<String> parseNameSegment(Parser parser) {
+    Symbol next = parser.peek();
+    if (next.isType(SymbolType.Text) || next.isType(WikiWord.symbolType)) return Optional.of(parser.moveNext(1).getContent());
+    if (!next.isType(Variable.symbolType)) return Optional.empty();
+    List<Symbol> variable = parser.peek(3);
+    if (!variable.get(1).isType(SymbolType.Text) || !variable.get(2).isType(SymbolType.CloseBrace)) return Optional.empty();
+    Optional<String> value = parser.getVariableSource().findVariable(variable.get(1).getContent());
+    if (value.isPresent()) parser.moveNext(3);
+    return value;
   }
 
   @Override
@@ -108,7 +134,7 @@ public class Include extends SymbolType implements Rule, Translation {
   }
 
   private String stateForOption(String option, Symbol symbol) {
-    return ((option.equals(SETUP_ARG) || option.equals(TEARDOWN_ARG)) && symbol.getVariable("COLLAPSE_SETUP", "true").equals("true"))
+    return ((option.equals(SETUP_ARG) || option.equals(TEARDOWN_ARG)) && symbol.findProperty("COLLAPSE_SETUP", "true").equals("true"))
       || option.equals(COLLAPSE_ARG)
       ? Collapsible.CLOSED
       : "";

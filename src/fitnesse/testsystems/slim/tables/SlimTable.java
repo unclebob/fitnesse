@@ -29,10 +29,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 import static fitnesse.slim.SlimServer.EXCEPTION_IGNORE_ALL_TESTS_TAG;
 import static fitnesse.slim.SlimServer.EXCEPTION_IGNORE_SCRIPT_TEST_TAG;
 import static fitnesse.testsystems.slim.tables.ComparatorUtil.approximatelyEqual;
+import static java.util.stream.Collectors.toList;
 
 public abstract class SlimTable {
 
@@ -40,7 +42,7 @@ public abstract class SlimTable {
   private int instructionNumber = 0;
   private String fixtureName;
 
-  private List<SlimTable> children = new LinkedList<>();
+  private final List<SlimTable> children = new LinkedList<>();
   private SlimTable parent = null;
 
   private final SlimTestContext testContext;
@@ -157,6 +159,7 @@ public abstract class SlimTable {
 
   protected Object[] gatherConstructorArgumentsStartingAt(int startingColumn, int row) {
     int columnCount = table.getColumnCountInRow(row);
+
     List<String> arguments = new ArrayList<>();
     for (int col = startingColumn; col < columnCount; col++) {
       arguments.add(table.getCellContents(col, row));
@@ -190,19 +193,15 @@ public abstract class SlimTable {
   }
 
   protected List<List<String>> tableAsList() {
-    List<List<String>> tableArgument = new ArrayList<>();
-    int rows = table.getRowCount();
-    for (int row = 1; row < rows; row++)
-      tableArgument.add(tableRowAsList(row));
-    return tableArgument;
+    return IntStream.range(1, table.getRowCount())
+      .mapToObj(this::tableRowAsList)
+      .collect(toList());
   }
 
   private List<String> tableRowAsList(int row) {
-    List<String> rowList = new ArrayList<>();
-    int cols = table.getColumnCountInRow(row);
-    for (int col = 0; col < cols; col++)
-      rowList.add(table.getCellContents(col, row));
-    return rowList;
+    return IntStream.range(0, table.getColumnCountInRow(row))
+      .mapToObj(col -> table.getCellContents(col, row))
+      .collect(toList());
   }
 
   public List<SlimTable> getChildren() {
@@ -311,7 +310,7 @@ public abstract class SlimTable {
   }
 
   class SymbolReplacer extends SlimSymbol {
-    private String toReplace;
+    private final String toReplace;
 
     public SymbolReplacer(String s) {
       super();
@@ -358,17 +357,17 @@ public abstract class SlimTable {
 
     @Override
     protected SlimTestResult createEvaluationMessage(String actual, String expected) {
-      table.substitute(getCol(), getRow(), replaceSymbolsWithFullExpansion(expected));
+      String replacement = replaceSymbolsWithFullExpansion(expected);
+      if (!replacement.equals(expected))
+        table.substitute(getCol(), getRow(), replacement);
       return SlimTestResult.plain();
     }
   }
 
   class SilentReturnExpectation implements SlimExpectation {
-    private final int col;
     private final int row;
 
     public SilentReturnExpectation(int col, int row) {
-      this.col = col;
       this.row = row;
     }
 
@@ -403,7 +402,7 @@ public abstract class SlimTable {
   }
 
   class SymbolAssignmentExpectation extends RowExpectation {
-    private String symbolName;
+    private final String symbolName;
 
     SymbolAssignmentExpectation(String symbolName, int col, int row) {
       super(col, row);
@@ -490,13 +489,8 @@ public abstract class SlimTable {
   }
 
   class ReturnedSymbolExpectation extends ReturnedValueExpectation {
-    private String symbolName;
+    private final String symbolName;
     private String assignToName = null;
-
-    public ReturnedSymbolExpectation(int col, int row, String symbolName) {
-      super(col, row);
-      this.symbolName = symbolName;
-    }
 
     public ReturnedSymbolExpectation(String expected, int col, int row, String symbolName) {
       super(col, row, expected);
@@ -555,8 +549,8 @@ public abstract class SlimTable {
       "\\A\\s*(-?\\d*\\.?\\d+)\\s*<(=?)\\s*_\\s*<(=?)\\s*(-?\\d*\\.?\\d+)\\s*\\Z"
     );
 
-    private Pattern regexPattern = Pattern.compile("\\s*=~/(.*)/");
-    private Pattern customComparatorPattern = Pattern.compile("\\s*(\\w*):(.*)", Pattern.DOTALL);
+    private final Pattern regexPattern = Pattern.compile("\\s*=~/(.*)/");
+    private final Pattern customComparatorPattern = Pattern.compile("\\s*(\\w*):(.*)", Pattern.DOTALL);
     private double v;
     private double arg1;
     private double arg2;

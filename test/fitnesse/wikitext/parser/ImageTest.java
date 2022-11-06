@@ -60,4 +60,73 @@ public class ImageTest {
   }
 */
 
+    @Test
+    public void parseBase64() {
+        ParserTestHelper.assertParses("!img data:mediatype;base64,somedata", "SymbolList[Image[Link[SymbolList[Text]]]]");
+    }
+
+    @Test
+    public void parseBase64Wikiword() {
+        ParserTestHelper.assertParses("!img data:mediatype;base64,somedataQm2Ic50", "SymbolList[Image[Link[SymbolList[Text]]]]");
+    }
+
+    @Test
+    public void parseBase64Delta() {
+        ParserTestHelper.assertParses("!img data:mediatype;base64,somedata+1m-3k", "SymbolList[Image[Link[SymbolList[Text]]]]");
+    }
+
+    @Test
+    public void parseBase64InvalidPrefix() {
+        ParserTestHelper.assertParses("!img xyz:mediatype;base64,somedata", "SymbolList[Image[Link[SymbolList[Text]]], Colon, Text, Comma, Text]");
+    }
+
+    @Test
+    public void parseBase64InvalidFormat() {
+        ParserTestHelper.assertParses("!img data,mediatype;base64:somedata", "SymbolList[Image[Link[SymbolList[Text]]], Comma, Text, Colon, Text]");
+    }
+
+    @Test
+    public void parseBase64ToWhitespace() {
+        ParserTestHelper.assertParses("!img data:mediatype;base64,somedata otherdata", "SymbolList[Image[Link[SymbolList[Text]]], Whitespace, Text]");
+    }
+
+    @Test
+    public void parseBase64ToOtherSymbol() {
+        ParserTestHelper.assertParses("!img data:mediatype;base64,somedata}}}", "SymbolList[Image[Link[SymbolList[Text]]], ClosePreformat]");
+    }
+
+    @Test
+    public void translateBase64() {
+        ParserTestHelper.assertTranslatesTo("!img data:mediatype;base64,somedata", "<img src=\"data:mediatype;base64,somedata\"/>");
+    }
+
+    @Test
+    public void translateBase64Wikiword() {
+        ParserTestHelper.assertTranslatesTo("!img data:mediatype;base64,somedataQm2Ic50", "<img src=\"data:mediatype;base64,somedataQm2Ic50\"/>");
+    }
+
+    @Test
+    public void translateBase64Delta() {
+        ParserTestHelper.assertTranslatesTo("!img data:mediatype;base64,somedata+1m-3k", "<img src=\"data:mediatype;base64,somedata+1m-3k\"/>");
+    }
+
+    @Test
+    public void translateBase64ButInvalidPrefix() {
+        ParserTestHelper.assertTranslatesTo("!img xyz:mediatype;base64,somedata", "<img src=\"xyz\"/>:mediatype;base64,somedata");
+    }
+
+    @Test
+    public void translateBase64InvalidFormat() {
+        ParserTestHelper.assertTranslatesTo("!img data,mediatype;base64:somedata", "<img src=\"data\"/>,mediatype;base64:somedata");
+    }
+
+    @Test
+    public void translateBase64ToWhitespace() {
+        ParserTestHelper.assertTranslatesTo("!img data:mediatype;base64,somedata otherdata", "<img src=\"data:mediatype;base64,somedata\"/> otherdata");
+    }
+
+    @Test
+    public void translateBase64ToOtherSymbol() {
+        ParserTestHelper.assertTranslatesTo("!img data:mediatype;base64,somedata}}}", "<img src=\"data:mediatype;base64,somedata\"/>}}}");
+    }
 }
