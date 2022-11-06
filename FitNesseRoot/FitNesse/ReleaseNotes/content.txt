@@ -1,6 +1,7 @@
 !2 Latest Release ${FITNESSE_VERSION}
 !2 Pending Changes
-* Ability to ignore the rest of a script table or test page by throwing an exception. ([[1350][https://github.com/unclebob/fitnesse/pull/1350]])
+ * Add a new optional command line parameter to specify the maximum number of workers to use for handling incoming requests. 
+ * Ability to ignore the rest of a script table or test page by throwing an exception. ([[1350][https://github.com/unclebob/fitnesse/pull/1350]])
 
 !2 20221102
  * Ability to create plugins for new markup syntax. ([[1382][https://github.com/unclebob/fitnesse/pull/1382]])
