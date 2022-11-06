@@ -29,6 +29,8 @@ public class SlimServer implements SocketServer {
   public static final String TIMED_OUT = "TIMED_OUT";
   public static final String EXCEPTION_TAG = "__EXCEPTION__:";
   public static final String EXCEPTION_STOP_TEST_TAG = "__EXCEPTION__:ABORT_SLIM_TEST:";
+  public static final String EXCEPTION_IGNORE_SCRIPT_TEST_TAG = "__EXCEPTION__:IGNORE_SCRIPT_TEST:";
+  public static final String EXCEPTION_IGNORE_ALL_TESTS_TAG = "__EXCEPTION__:IGNORE_ALL_TESTS:";
   public static final String EXCEPTION_STOP_SUITE_TAG = "__EXCEPTION__:ABORT_SLIM_SUITE:";
 
   private final SlimFactory slimFactory;

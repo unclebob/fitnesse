@@ -165,6 +165,10 @@ tr.exception-detail {
     background-color: #ffffaa;
 }
 
+tr.ignore-detail {
+  background-color: #afd9ee;
+}
+
 #progressBar,
 #test-summary.pass,
 #test-summary.fail,

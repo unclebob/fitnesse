@@ -25,7 +25,8 @@ public abstract class SlimTestSystem implements TestSystem {
   private final String testSystemName;
 
   private SlimTestContextImpl testContext;
-  boolean stopTestCalled;
+  private boolean stopTestCalled;
+  private boolean ignoreAllTestsCalled;
   private boolean stopSuiteCalled;
   private boolean testSystemIsStopped;
 
@@ -106,6 +107,7 @@ public abstract class SlimTestSystem implements TestSystem {
   protected void initializeTest(TestPage testPage) {
     testContext = createTestContext(testPage);
     stopTestCalled = false;
+    ignoreAllTestsCalled = false;
   }
 
   protected SlimTestContextImpl createTestContext(TestPage testPage) {
@@ -119,8 +121,13 @@ public abstract class SlimTestSystem implements TestSystem {
     final Map<String, Object> instructionResults;
     if (stopTestCalled && !table.isTearDown()) {
       instructionResults = Collections.emptyMap();
+    } else if (ignoreAllTestsCalled && !table.isTearDown()){
+      instructionResults = Collections.emptyMap();
     } else {
       boolean tearDownOfAlreadyStartedTest = stopTestCalled && table.isTearDown();
+      if(ignoreAllTestsCalled && table.isTearDown()){
+        ignoreAllTestsCalled = false;
+      }
       if (stopSuiteCalled && !isSuiteTearDownPage && !tearDownOfAlreadyStartedTest) {
         instructionResults = Collections.emptyMap();
       } else {
@@ -132,9 +139,23 @@ public abstract class SlimTestSystem implements TestSystem {
   }
 
   protected void evaluateTables(List<SlimAssertion> assertions, Map<String, Object> instructionResults) throws SlimCommunicationException {
+    boolean IgnoreTestTable = false;
     for (SlimAssertion a : assertions) {
       final String key = a.getInstruction().getId();
-      final Object returnValue = instructionResults.get(key);
+      Object returnValue = instructionResults.get(key);
+
+      //Ignore management
+      if(!ignoreAllTestsCalled) {
+        if (returnValue != null && returnValue.toString().contains(EXCEPTION_IGNORE_ALL_TESTS_TAG)) {
+          ignoreAllTestsCalled = IgnoreTestTable = true;
+        } else if (returnValue != null && returnValue.toString().contains(EXCEPTION_IGNORE_SCRIPT_TEST_TAG)) {
+          IgnoreTestTable = true;
+        } else if (IgnoreTestTable) {
+          returnValue = "IGNORE_SCRIPT_TEST";
+        }
+      } else {
+        returnValue = "IGNORE_SCRIPT_TEST";
+      }
       //Exception management
       if (returnValue != null && returnValue instanceof String && ((String) returnValue).startsWith(EXCEPTION_TAG)) {
         SlimExceptionResult exceptionResult = new SlimExceptionResult(key, (String) returnValue);

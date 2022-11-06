@@ -4,6 +4,8 @@ package fitnesse.slim.converters;
 
 public class StringConverter extends ConverterBase<String> {
 
+  public static final String IGNORE = "ignore";
+
   @Override
   public String fromString(String arg) {
     return arg;
