@@ -23,7 +23,7 @@ public class PublishResponder implements Responder {
     Path resourcePath = Paths.get(context.getRootPagePath(), PathParser.FILES, "fitnesse", "publishResources.txt");
     Files.readAllLines(resourcePath).stream().map(this::makeUpdate).forEach(this::doUpdate);
 
-    Path templatePath = Paths.get(context.getRootPagePath(), PathParser.FILES, "fitnesse", "publishTemplate.html");
+    Path templatePath = Paths.get(context.getRootPagePath(), PathParser.FILES, "fitnesse", "publish.vm");
     String template = String.join(System.lineSeparator(), Files.readAllLines(templatePath));
     Publisher publisher = new Publisher(template, destination, context.getRootPage().getPageCrawler(), this::writePage);
     report.append(publisher.traverse(context.getRootPage()));

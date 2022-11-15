@@ -109,8 +109,7 @@ public class PublisherTest {
     this.paths += path;
   }
 
-  private static final String TEMPLATE = "t*$title$*t <link href=\"files/path\"> <script src=\"files/path\"> c*$breadcrumbs$*c b*$body$*b f*$footer$*f";
-
+  private static final String TEMPLATE = "t*$title*t <link href=\"files/path\"> <script src=\"files/path\"> c*$breadcrumbs*c b*$body*b f*$footer*f";
   private String content;
   private String paths;
   private WikiPage root;

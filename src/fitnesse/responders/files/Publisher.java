@@ -8,8 +8,11 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wikitext.parser.TextMaker;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
 
 import java.io.File;
+import java.io.StringWriter;
 import java.util.function.BiConsumer;
 
 public class Publisher {
@@ -44,29 +47,18 @@ public class Publisher {
   }
 
   private String pageContent(WikiPage page) {
-    return fixSources(page, fixLinks(page, replaceKeywords(page, template)));
+    return fixSources(page, fixLinks(page, renderPage(page)));
   }
 
-  private String replaceKeywords(WikiPage page, String input) {
-    StringTransform transform = new StringTransform(input);
-    String[][] keywords = new String[][] {
-      { "title", PathParser.render(page.getFullPath()) },
-      { "breadcrumbs", makeBreadCrumbs(page) },
-      { "body", WikiPageUtil.makePageHtml(page) },
-      { "footer", WikiPageUtil.getFooterPageHtml(page) },
-      { "", ""}
-    };
-    while (transform.find("$")) {
-      for (String[] keyword: keywords) {
-        if (keyword[0].length() == 0) transform.copy();
-        else if (transform.startsWith(keyword[0] + "$")) {
-          transform.insert(keyword[1]);
-          transform.skip(keyword[0].length() + 1);
-          break;
-        }
-      }
-    }
-    return transform.getOutput();
+  private String renderPage(WikiPage page) {
+    VelocityContext context = new VelocityContext();
+    context.put("body", WikiPageUtil.makePageHtml(page));
+    context.put("title", PathParser.render(page.getFullPath()));
+    context.put("breadcrumbs", makeBreadCrumbs(page));
+    context.put("footer", WikiPageUtil.getFooterPageHtml(page));
+    StringWriter output = new StringWriter();
+    Velocity.evaluate(context, output, "", template);
+    return output.toString();
   }
 
   private String makeBreadCrumbs(WikiPage page) {
