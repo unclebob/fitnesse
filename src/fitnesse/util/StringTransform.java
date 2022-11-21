@@ -22,8 +22,10 @@ public class StringTransform {
     start = newStart;
   }
 
-  public void skip(int offset) {
-    skipTo(current + offset);
+  public void skipOver(String value) {
+    int index = input.indexOf(value, start);
+    if (index < 0) return;
+    skipTo(index + value.length());
   }
 
   public void insert(String segment) {

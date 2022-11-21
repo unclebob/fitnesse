@@ -2,6 +2,7 @@
 !2 Pending Changes
  * Add a new optional command line parameter to specify the maximum number of workers to use for handling incoming requests. 
  * Ability to ignore the rest of a script table or test page by throwing an exception. ([[1350][https://github.com/unclebob/fitnesse/pull/1350]])
+ * Change the publish responder to use Apache Velocity ([[1387][https://github.com/unclebob/fitnesse/issues/1387]])
 
 !2 20221102
  * Ability to create plugins for new markup syntax. ([[1382][https://github.com/unclebob/fitnesse/pull/1382]])

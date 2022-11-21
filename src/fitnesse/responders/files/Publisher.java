@@ -4,12 +4,17 @@ import fitnesse.html.template.PageTitle;
 import fitnesse.util.StringTransform;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.RecentChanges;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wikitext.parser.TextMaker;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
 
 import java.io.File;
+import java.io.StringWriter;
 import java.util.function.BiConsumer;
 
 public class Publisher {
@@ -30,13 +35,14 @@ public class Publisher {
       writer.accept(pageContent(page), path);
     }
     catch (Exception e) {
+      e.printStackTrace();
       result.append(e).append("<br>");
     }
     for (WikiPage child: page.getChildren()) {
       if (child.getName().equals(PathParser.FILES)) continue;
       if (child.getName().equals(WikiPageUtil.PAGE_HEADER)) continue;
       if (child.getName().equals(WikiPageUtil.PAGE_FOOTER)) continue;
-      //todo: skip others?
+      if (child.getName().equals(RecentChanges.RECENT_CHANGES)) continue;
       if (child.isSymbolicPage()) continue;
       result.append(traverse(child));
     }
@@ -44,39 +50,27 @@ public class Publisher {
   }
 
   private String pageContent(WikiPage page) {
-    return fixSources(page, fixLinks(page, replaceKeywords(page, template)));
+    return fixSources(page, fixLinks(page, fixMissing(renderPage(page))));
   }
 
-  private String replaceKeywords(WikiPage page, String input) {
+  private String renderPage(WikiPage page) {
+    VelocityContext context = new VelocityContext();
+    context.put("content", WikiPageUtil.makePageHtml(page));
+    context.put("title", PathParser.render(page.getFullPath()));
+    context.put("pageTitle", new PageTitle(page.getFullPath()).notLinked());
+    context.put("footerContent", WikiPageUtil.getFooterPageHtml(page));
+    context.put("helpText", page.getData().getProperties().get(WikiPageProperty.HELP));
+    StringWriter output = new StringWriter();
+    Velocity.evaluate(context, output, "publish", template);
+    return output.toString();
+  }
+
+  private String fixMissing(String input) {
     StringTransform transform = new StringTransform(input);
-    String[][] keywords = new String[][] {
-      { "title", PathParser.render(page.getFullPath()) },
-      { "breadcrumbs", makeBreadCrumbs(page) },
-      { "body", WikiPageUtil.makePageHtml(page) },
-      { "footer", WikiPageUtil.getFooterPageHtml(page) },
-      { "", ""}
-    };
-    while (transform.find("$")) {
-      for (String[] keyword: keywords) {
-        if (keyword[0].length() == 0) transform.copy();
-        else if (transform.startsWith(keyword[0] + "$")) {
-          transform.insert(keyword[1]);
-          transform.skip(keyword[0].length() + 1);
-          break;
-        }
-      }
+    while (transform.find("<a title=\"create page\"")) {
+      transform.skipOver("[?]</a>");
     }
     return transform.getOutput();
-  }
-
-  private String makeBreadCrumbs(WikiPage page) {
-    PageTitle pt = new PageTitle(page.getFullPath());
-    StringBuilder breadcrumbs = new StringBuilder();
-    for (PageTitle.BreadCrumb breadcrumb : pt.getBreadCrumbs()) {
-      breadcrumbs.append("<li><a href=\"").append(breadcrumb.getLink()).append("\">").append(breadcrumb.getName()).append("</a></li>\n");
-    }
-    breadcrumbs.append("<li>").append(page.getName()).append("</li>\n");
-    return breadcrumbs.toString();
   }
 
   private String fixLinks(WikiPage page, String input) {
@@ -108,7 +102,9 @@ public class Publisher {
     int wikiWordLength = TextMaker.findWikiWordLength(transform.from(wikiWordStart));
     if (wikiWordLength == 0) return;
     WikiPagePath path = PathParser.parse(transform.from(wikiWordStart).substring(0, wikiWordLength));
-    WikiPage targetPage = crawler.getPage(path).getRealPage();
+    WikiPage target = crawler.getPage(path);
+    if (target == null) return;
+    WikiPage targetPage = target.getRealPage();
     for (int i = 0; i < depth; i++) transform.insert("../");
     transform.insert(targetPage.getFullPath().toString().replace('.', '/') + ".html");
     transform.skipTo(wikiWordStart + wikiWordLength);
