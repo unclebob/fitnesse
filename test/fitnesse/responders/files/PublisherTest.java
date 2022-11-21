@@ -4,6 +4,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Assert;
@@ -27,6 +28,10 @@ public class PublisherTest {
 
   @Test public void linkWithAnchor() {
     assertTopPage("<a href=\"TestSibling.html#anchor\">link</a>", "[[link][TestSibling#anchor]]");
+  }
+
+  @Test public void missingPage() {
+    assertTopPage("MissingPage", "MissingPage");
   }
 
   @Test public void externalLink() {
@@ -90,8 +95,13 @@ public class PublisherTest {
   private void assertTopPage(String expected, String pageContent) {
     WikiPageUtil.addPage(root, PathParser.parse("TestSibling"), "");
     WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("TestPage"), pageContent);
+    PageData data = page.getData();
+    data.setAttribute(WikiPageProperty.HELP, "sos");
+    page.commit(data);
+    page.getData().setAttribute(WikiPageProperty.HELP, "sos");
     assertPublishes(expected, "TestPage", "", page);
     Assert.assertTrue(content, content.contains("t*TestPage*t"));
+    Assert.assertTrue(content, content.contains("h*sos*h"));
     Assert.assertTrue(content, content.contains("c*<li>TestPage</li>\n*c"));
   }
 
@@ -109,7 +119,11 @@ public class PublisherTest {
     this.paths += path;
   }
 
-  private static final String TEMPLATE = "t*$title*t <link href=\"files/path\"> <script src=\"files/path\"> c*$breadcrumbs*c b*$body*b f*$footer*f";
+  private static final String TEMPLATE =
+    "t*$title*t <link href=\"files/path\"> <script src=\"files/path\"> h*$helpText*h " +
+    "c*#foreach($breadCrumb in $pageTitle.BreadCrumbs)<li><a href=\"$breadCrumb.Link\">$breadCrumb.Name</a></li>\n#end" +
+    "<li>$pageTitle.Title</li>\n" +
+    "*c b*$content*b f*$footerContent*f";
   private String content;
   private String paths;
   private WikiPage root;

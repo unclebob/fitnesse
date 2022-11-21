@@ -21,7 +21,7 @@ public class PublishResponder implements Responder {
     destination = request.getInput("destination");
 
     Path resourcePath = Paths.get(context.getRootPagePath(), PathParser.FILES, "fitnesse", "publishResources.txt");
-    Files.readAllLines(resourcePath).stream().map(this::makeUpdate).forEach(this::doUpdate);
+    Files.readAllLines(resourcePath).stream().filter(l -> !l.trim().isEmpty()).map(this::makeUpdate).forEach(this::doUpdate);
 
     Path templatePath = Paths.get(context.getRootPagePath(), PathParser.FILES, "fitnesse", "publish.vm");
     String template = String.join(System.lineSeparator(), Files.readAllLines(templatePath));
