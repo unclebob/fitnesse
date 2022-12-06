@@ -16,6 +16,8 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperty;
+import fitnesse.wiki.WikiPageUtil;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -32,7 +34,7 @@ public class DeletePageResponder implements SecureResponder {
     intializeResponse(request);
 
     if (shouldNotDelete())
-      response.redirect(context.contextRoot, "FrontPage");
+      response.redirect(context.contextRoot, WikiPageUtil.FRONT_PAGE);
     else
       tryToDeletePage(request);
 
@@ -54,7 +56,7 @@ public class DeletePageResponder implements SecureResponder {
   }
 
   private boolean shouldNotDelete() {
-    return "FrontPage".equals(qualifiedPageName);
+    return WikiPageUtil.FRONT_PAGE.equals(qualifiedPageName);
   }
 
   private void intializeResponse(Request request) {
@@ -82,7 +84,7 @@ public class DeletePageResponder implements SecureResponder {
     WikiPage wikiPage = crawler.getPage(path);
     if(wikiPage != null) {
       PageData pageData = wikiPage.getData();
-      tags = pageData.getAttribute(PageData.PropertySUITES);
+      tags = pageData.getAttribute(WikiPageProperty.SUITES);
     }
 
     html.setTitle("Delete Confirmation");

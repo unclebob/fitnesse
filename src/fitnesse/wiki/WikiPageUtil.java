@@ -12,6 +12,7 @@ public class WikiPageUtil {
 
   public static final String PAGE_HEADER = "PageHeader";
   public static final String PAGE_FOOTER = "PageFooter";
+  public static final String FRONT_PAGE = "FrontPage";
 
   public static void setPageContents(WikiPage page, String pageContents) {
     PageData pageData = page.getData();
