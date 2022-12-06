@@ -83,6 +83,13 @@ public class PublisherTest {
     assertPublishes("<a href=\"PageTwo.html\">&gt;SymPage</a>", "PageOne", "", pageOne);
   }
 
+  @Test public void frontPageCopiedToIndex() {
+    WikiPageUtil.addPage(root, PathParser.parse("FrontPage"), "stuff");
+    Publisher publisher = new Publisher(TEMPLATE, "out", root.getPageCrawler(), this::writer);
+    publisher.traverse(root);
+    Assert.assertEquals("out/root.htmlout/FrontPage.htmlout/index.html", paths);
+  }
+
   private void assertChildPage(String expected, String pageContent) {
     WikiPage parent = WikiPageUtil.addPage(root, PathParser.parse("TestParent"), "");
     WikiPageUtil.addPage(parent, PathParser.parse("TestSibling"), "");

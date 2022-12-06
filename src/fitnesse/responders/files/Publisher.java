@@ -32,7 +32,11 @@ public class Publisher {
     String path = destinationPath(page);
     result.append(path).append("<br>");
     try {
-      writer.accept(pageContent(page), path);
+      String content = pageContent(page);
+      writer.accept(content, path);
+      if (page.getFullPath().toString().equals(WikiPageUtil.FRONT_PAGE)) {
+        writer.accept(content, destinationPath("index"));
+      }
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -117,6 +121,10 @@ public class Publisher {
 
   private String destinationPath(WikiPage page) {
     String pagePath = page.getFullPath().toString().replace(".", File.separator);
+    return destinationPath(pagePath);
+  }
+
+  private String destinationPath(String pagePath) {
     return destination + File.separator + (pagePath.length() > 0 ? pagePath : "root") + ".html";
   }
 

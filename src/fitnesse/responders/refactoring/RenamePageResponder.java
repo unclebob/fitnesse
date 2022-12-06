@@ -3,6 +3,7 @@
 package fitnesse.responders.refactoring;
 
 import fitnesse.FitNesseContext;
+import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wiki.refactoring.ChangeReference;
 import fitnesse.wiki.refactoring.PageReferenceRenamer;
 import fitnesse.http.Request;
@@ -22,7 +23,7 @@ public class RenamePageResponder extends PageMovementResponder {
   @Override
   protected boolean getAndValidateRefactoringParameters(Request request) {
     newName = request.getInput("newName");
-    return (newName != null && PathParser.isSingleWikiWord(newName) && !"FrontPage".equals(oldNameOfPageToBeMoved));
+    return (newName != null && PathParser.isSingleWikiWord(newName) && !WikiPageUtil.FRONT_PAGE.equals(oldNameOfPageToBeMoved));
   }
 
   @Override
