@@ -2,15 +2,15 @@
 
 Welcome to FitNesse, the fully integrated stand-alone acceptance testing framework and wiki.
 
-To get started, check out [http://fitnesse.org](http://fitnesse.org)!
+To get started, check out the [FitNesse website](https://fitnesse.github.io/fitnessedotorg/)!
 
 
 
 ## Quick start
 
-* [A One-Minute Description of FitNesse](http://fitnesse.org/FitNesse.UserGuide.OneMinuteDescription)
-* [Download FitNesse](http://fitnesse.org/FitNesseDownload) and [Plugins](http://fitnesse.org/PlugIns)
-* [The FitNesse User Guide](http://fitnesse.org/.FitNesse.UserGuide)
+* [A One-Minute Description of FitNesse](https://fitnesse.github.io/fitnessedotorg/FitNesse/UserGuide/OneMinuteDescription.html)
+* [Download FitNesse](https://fitnesse.github.io/fitnessedotorg/FitNesseDownload.html) and [Plugins](https://fitnesse.github.io/fitnessedotorg/PlugIns.html)
+* [The FitNesse User Guide](https://fitnesse.github.io/fitnessedotorg/FitNesse/UserGuide.html)
 
 
 
