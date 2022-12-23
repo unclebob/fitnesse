@@ -15,6 +15,7 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -191,6 +192,15 @@ public abstract class ExecutionReport {
 
   public void setDate(Date date) {
     this.date = new Date(date.getTime());
+  }
+
+  public String getDateString() {
+    return DateTimeUtil.formatDate(date);
+  }
+
+  public String getResultDate() {
+    SimpleDateFormat pageHistoryFormatter = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
+    return pageHistoryFormatter.format(date);
   }
 
   public boolean hasRunTimes() {

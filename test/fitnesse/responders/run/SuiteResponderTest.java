@@ -402,6 +402,10 @@ public class SuiteResponderTest {
     Document testResultsDocument = XmlTestUtilities.getXmlDocumentFromResults(results);
     Element testResultsElement = testResultsDocument.getDocumentElement();
     assertEquals("testResults", testResultsElement.getNodeName());
+    assertEquals("SuitePage", XmlUtil.getTextValue(testResultsElement, "rootPath"));
+    assertEquals("2008-12-05T01:19:00+01:00", XmlUtil.getTextValue(testResultsElement, "date"));
+    assertEquals("SuitePage?pageHistory&resultDate=20081205011900", XmlUtil.getTextValue(testResultsElement, "pageHistoryLink"));
+
     NodeList resultList = testResultsElement.getElementsByTagName("result");
     assertEquals(2, resultList.getLength());
     Element testResult;
