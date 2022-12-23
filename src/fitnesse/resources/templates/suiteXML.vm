@@ -2,6 +2,8 @@
 <testResults>
   <FitNesseVersion>$suiteExecutionReport.version</FitNesseVersion>
   <rootPath>#escape($suiteExecutionReport.rootPath)</rootPath>
+  <date>$suiteExecutionReport.dateString</date>
+  <pageHistoryLink>#escape($suiteExecutionReport.rootPath)?pageHistory&amp;resultDate=$suiteExecutionReport.resultDate</pageHistoryLink>
   #foreach ($reference in $suiteExecutionReport.pageHistoryReferences)
   <result>
     <counts>
@@ -13,7 +15,7 @@
     <date>$reference.dateString</date>
     <runTimeInMillis>$reference.runTimeInMillis</runTimeInMillis>
     <relativePageName>#escape($reference.relativePageName)</relativePageName>
-    <pageHistoryLink>$reference.pageName?pageHistory&amp;resultDate=$reference.resultDate</pageHistoryLink>
+    <pageHistoryLink>#escape($reference.pageName)?pageHistory&amp;resultDate=$reference.resultDate</pageHistoryLink>
     #set($testResult = $formatter.getTestResult($reference))
     #if($testResult.tags)
     <tags>#escape($testResult.tags)</tags>

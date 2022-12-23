@@ -186,7 +186,7 @@ public class SuiteExecutionReport extends ExecutionReport {
     }
 
     public String getResultDate() {
-      SimpleDateFormat pageHistoryFormatter = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
+      SimpleDateFormat pageHistoryFormatter = PageHistory.getDateFormat();
       return pageHistoryFormatter.format(new Date(time));
     }
 

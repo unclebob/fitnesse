@@ -1,10 +1,24 @@
 package fitnesse.responders.testHistory;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static util.RegexTestCase.assertHasRegexp;
-import static util.RegexTestCase.assertSubString;
+import fitnesse.FitNesseContext;
+import fitnesse.FitNesseVersion;
+import fitnesse.http.MockRequest;
+import fitnesse.http.SimpleResponse;
+import fitnesse.reporting.history.PageHistory;
+import fitnesse.reporting.history.SuiteExecutionReport;
+import fitnesse.reporting.history.TestExecutionReport;
+import fitnesse.reporting.history.TestHistory;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.util.DateTimeUtil;
+import fitnesse.util.TimeMeasurement;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import util.FileUtil;
+import util.RegexTestCase;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -15,30 +29,15 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.SortedSet;
 
-import fitnesse.reporting.history.PageHistory;
-import fitnesse.reporting.history.TestHistory;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import fitnesse.util.DateTimeUtil;
-import util.FileUtil;
-import util.RegexTestCase;
-import fitnesse.util.TimeMeasurement;
-import fitnesse.FitNesseContext;
-import fitnesse.FitNesseVersion;
-import fitnesse.http.MockRequest;
-import fitnesse.http.SimpleResponse;
-import fitnesse.reporting.history.SuiteExecutionReport;
-import fitnesse.reporting.history.TestExecutionReport;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testutil.FitNesseUtil;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertSubString;
 
 public class PageHistoryResponderTest {
   private File resultsDirectory;
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormat = PageHistory.getDateFormat();
   private PageHistoryResponder responder;
   private SimpleResponse response;
   private MockRequest request;
