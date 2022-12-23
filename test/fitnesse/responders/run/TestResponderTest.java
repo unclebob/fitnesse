@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,7 +58,7 @@ import static util.RegexTestCase.assertSubString;
 import static util.RegexTestCase.divWithIdAndContent;
 
 public class TestResponderTest {
-  private static final String TEST_TIME = "12/5/2008 01:19:00";
+  private static final String TEST_TIME = "2008-12-05T13:19:00Z";
   private WikiPage root;
   private MockRequest request;
   private SuiteResponder responder;
@@ -81,7 +82,7 @@ public class TestResponderTest {
     request = new MockRequest();
     responder = new TestResponder();
     properties.setProperty("FITNESSE_PORT", String.valueOf(context.port));
-    new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).advanceMillisOnEachQuery();
+    new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME), TimeZone.getTimeZone("CET")).advanceMillisOnEachQuery();
   }
 
   @After
