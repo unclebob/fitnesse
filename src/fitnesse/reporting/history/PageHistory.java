@@ -189,8 +189,7 @@ public class PageHistory extends PageHistoryReader{
     private ExecutionResult result;
 
     public PassFailReport(Date date, ExecutionResult result) {
-      SimpleDateFormat dateFormat = new SimpleDateFormat(TEST_RESULT_FILE_DATE_PATTERN);
-      this.date = dateFormat.format(date);
+      this.date = getDateFormat().format(date);
       this.result = result;
     }
 
