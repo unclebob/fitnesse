@@ -10,6 +10,7 @@ import fitnesse.updates.Update;
 import fitnesse.wiki.PathParser;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -51,7 +52,7 @@ public class PublishResponder implements Responder {
     try {
       if (!Files.exists(directory))
         Files.createDirectories(directory);
-      Files.write(Paths.get(path), content.getBytes());
+      Files.write(Paths.get(path), content.getBytes(StandardCharsets.UTF_8));
     }
     catch (IOException e) {
       throw new RuntimeException(e);
