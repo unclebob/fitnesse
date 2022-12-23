@@ -404,7 +404,7 @@ public class SuiteResponderTest {
     assertEquals("testResults", testResultsElement.getNodeName());
     assertEquals("SuitePage", XmlUtil.getTextValue(testResultsElement, "rootPath"));
     assertEquals("2008-12-05T14:19:00+14:00", XmlUtil.getTextValue(testResultsElement, "date"));
-    assertEquals("SuitePage?pageHistory&resultDate=20081205011900", XmlUtil.getTextValue(testResultsElement, "pageHistoryLink"));
+    assertEquals("SuitePage?pageHistory&resultDate=20081205141900", XmlUtil.getTextValue(testResultsElement, "pageHistoryLink"));
 
     NodeList resultList = testResultsElement.getElementsByTagName("result");
     assertEquals(2, resultList.getLength());
@@ -504,7 +504,7 @@ public class SuiteResponderTest {
 
   private File expectedXmlResultsFile() {
     TestSummary counts = new TestSummary(3, 0, 0, 0);
-    String resultsFileName = String.format("%s/SuitePage/20081205011900_%d_%d_%d_%d.xml",
+    String resultsFileName = String.format("%s/SuitePage/20081205141900_%d_%d_%d_%d.xml",
       context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
     return new File(resultsFileName);
   }
@@ -512,7 +512,7 @@ public class SuiteResponderTest {
   @Test
   public void normalSuiteRunProducesIndivualTestHistoryFile() throws Exception {
     TestSummary counts = new TestSummary(1, 0, 0, 0);
-    String resultsFileName = String.format("%s/SuitePage.SlimTest/20081205011900_%d_%d_%d_%d.xml",
+    String resultsFileName = String.format("%s/SuitePage.SlimTest/20081205141900_%d_%d_%d_%d.xml",
       context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
     File xmlResultsFile = new File(resultsFileName);
 

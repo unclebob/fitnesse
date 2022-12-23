@@ -103,7 +103,7 @@ public class SuiteHistoryFormatterTest {
     assertEquals(new FitNesseVersion().toString(), XmlUtil.getTextValue(suiteResultsElement, "FitNesseVersion"));
     assertEquals("SuitePage", XmlUtil.getTextValue(suiteResultsElement, "rootPath"));
     assertEquals("1952-12-05T14:19:00+14:00", XmlUtil.getTextValue(suiteResultsElement, "date"));
-    assertEquals("SuitePage?pageHistory&resultDate=19521205011900", XmlUtil.getTextValue(suiteResultsElement, "pageHistoryLink"));
+    assertEquals("SuitePage?pageHistory&resultDate=19521205141900", XmlUtil.getTextValue(suiteResultsElement, "pageHistoryLink"));
 
 
     NodeList xmlPageReferences = suiteResultsElement.getElementsByTagName("pageHistoryReference");
@@ -112,7 +112,7 @@ public class SuiteHistoryFormatterTest {
       Element pageHistoryReferenceElement = (Element) xmlPageReferences.item(referenceIndex);
       assertEquals("SuitePage.TestPage", XmlUtil.getTextValue(pageHistoryReferenceElement, "name"));
       assertEquals(DateTimeUtil.formatDate(testTime), XmlUtil.getTextValue(pageHistoryReferenceElement, "date"));
-      String link = "SuitePage.TestPage?pageHistory&resultDate=19521205011900";
+      String link = "SuitePage.TestPage?pageHistory&resultDate=19521205141900";
       assertEquals(link, XmlUtil.getTextValue(pageHistoryReferenceElement, "pageHistoryLink"));
       Element countsElement = XmlUtil.getElementByTagName(pageHistoryReferenceElement, "counts");
       assertEquals("1", XmlUtil.getTextValue(countsElement, "right"));

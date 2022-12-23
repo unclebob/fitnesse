@@ -325,7 +325,7 @@ public class TestResponderTest {
 
 
   private void ensureXmlResultFileDoesNotExist(TestSummary counts) throws IOException {
-    String resultsFileName = String.format("%s/TestPage/20081205011900_%d_%d_%d_%d.xml",
+    String resultsFileName = String.format("%s/TestPage/20081205141900_%d_%d_%d_%d.xml",
       context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
     xmlResultsFile = new File(resultsFileName);
 
