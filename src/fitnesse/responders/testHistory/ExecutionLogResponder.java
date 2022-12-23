@@ -40,7 +40,8 @@ public class ExecutionLogResponder implements SecureResponder {
       try {
         resultDate = dateFormat.parse(date);
       } catch (ParseException e) {
-        throw new IllegalArgumentException("Invalid date format provided: should be " + PageHistory.getDateFormat().toPattern() + ".", e);
+        String message = "Invalid date format provided: should be " + PageHistory.getDateFormat().toPattern() + ".";
+        return new ErrorResponder(message).makeResponse(context, request);
       }
     }
     TestResultRecord testResultRecord = pageHistory.get(resultDate);
