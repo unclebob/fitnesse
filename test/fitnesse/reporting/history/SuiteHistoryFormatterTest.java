@@ -102,7 +102,7 @@ public class SuiteHistoryFormatterTest {
     assertEquals("suiteResults", suiteResultsElement.getNodeName());
     assertEquals(new FitNesseVersion().toString(), XmlUtil.getTextValue(suiteResultsElement, "FitNesseVersion"));
     assertEquals("SuitePage", XmlUtil.getTextValue(suiteResultsElement, "rootPath"));
-    assertEquals("1952-12-05T01:19:00+01:00", XmlUtil.getTextValue(suiteResultsElement, "date"));
+    assertEquals("1952-12-05T14:19:00+14:00", XmlUtil.getTextValue(suiteResultsElement, "date"));
     assertEquals("SuitePage?pageHistory&resultDate=19521205011900", XmlUtil.getTextValue(suiteResultsElement, "pageHistoryLink"));
 
 
