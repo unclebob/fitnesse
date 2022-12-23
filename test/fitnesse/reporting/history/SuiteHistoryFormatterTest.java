@@ -37,7 +37,7 @@ public class SuiteHistoryFormatterTest {
 
   @Before
   public void setup() throws Exception {
-    testTime = DateTimeUtil.getDateFromString("12/5/1952 1:19:00");
+    testTime = DateTimeUtil.getDateFromString("1952-12-05T14:19:00+14:00");
     clock = new DateAlteringClock(testTime).freeze();
 
     FitNesseContext context = FitNesseUtil.makeTestContext();

@@ -42,7 +42,7 @@ import static util.RegexTestCase.assertNotSubString;
 import static util.RegexTestCase.assertSubString;
 
 public class SuiteResponderTest {
-  private static final String TEST_TIME = "12/5/2008 01:19:00";
+  private static final String TEST_TIME = "2008-12-05T14:19:00+14:00";
   private MockRequest request;
   private SuiteResponder responder;
   private WikiPage root;
