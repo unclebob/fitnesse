@@ -1,8 +1,5 @@
 package fitnesse.responders.testHistory;
 
-import java.io.File;
-import java.io.IOException;
-
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -11,6 +8,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
+
+import java.io.File;
+import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
@@ -65,5 +65,18 @@ public class ExecutionLogResponderTest {
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
 
     assertThat(response.getContent(), containsString("No execution log available."));
+  }
+
+  @Test
+  public void provideMessageOnInvalidResultDateFormat() throws Exception {
+    ExecutionLogResponder responder = new ExecutionLogResponder();
+    responder.setResultsDirectory(resultsDirectory);
+    MockRequest request = new MockRequest();
+    request.setResource("TestPage");
+    request.setQueryString("resultDate=babawds");
+
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+
+    assertThat(response.getContent(), containsString("Invalid date format provided: should be yyyyMMddHHmmss."));
   }
 }

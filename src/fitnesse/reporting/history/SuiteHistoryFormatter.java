@@ -22,6 +22,7 @@ import util.FileUtil;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Date;
 import java.util.List;
 
 public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLogListener, Closeable {
@@ -43,8 +44,10 @@ public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLog
 
   @Override
   public void testSystemStarted(TestSystem testSystem) {
-    if (suiteTime == null)
+    if (suiteTime == null) {
       suiteTime = new TimeMeasurement().start();
+      getSuiteExecutionReport().setDate(new Date(suiteTime.startedAt()));
+    }
   }
 
   @Override

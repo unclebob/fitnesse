@@ -18,6 +18,8 @@ import java.io.StringWriter;
 import java.util.function.BiConsumer;
 
 public class Publisher {
+  private final String ROOT_PAGE_NAME_LINK = PathParser.ROOT_PAGE_NAME + "\"";
+  private final String PAGE_EXTENSION = ".html";
   //todo: downloads?
 
   public Publisher(String template, String destination, PageCrawler crawler, BiConsumer<String, String> writer) {
@@ -82,6 +84,7 @@ public class Publisher {
     long depth = page.getFullPath().toString().chars().filter(c -> c == '.').count();
     while (transform.find(" href=\"")) {
       transform.copy();
+      fixRootLink(transform, depth);
       fixWikiWord(transform, depth);
       fixFiles(transform, depth);
     }
@@ -98,6 +101,12 @@ public class Publisher {
     return transform.getOutput();
   }
 
+  private void fixRootLink(StringTransform transform, long depth) {
+    if (transform.startsWith(ROOT_PAGE_NAME_LINK)) {
+      transform.insert(PathParser.ROOT_PAGE_NAME + PAGE_EXTENSION + "\"");
+      transform.skipOver(ROOT_PAGE_NAME_LINK);
+    }
+  }
   private void fixWikiWord(StringTransform transform, long depth) {
     int wikiWordStart = transform.getCurrent();
     if (transform.startsWith("/") || transform.startsWith(".")) {
@@ -110,7 +119,7 @@ public class Publisher {
     if (target == null) return;
     WikiPage targetPage = target.getRealPage();
     for (int i = 0; i < depth; i++) transform.insert("../");
-    transform.insert(targetPage.getFullPath().toString().replace('.', '/') + ".html");
+    transform.insert(targetPage.getFullPath().toString().replace('.', '/') + PAGE_EXTENSION);
     transform.skipTo(wikiWordStart + wikiWordLength);
   }
 
@@ -125,7 +134,7 @@ public class Publisher {
   }
 
   private String destinationPath(String pagePath) {
-    return destination + File.separator + (pagePath.length() > 0 ? pagePath : "root") + ".html";
+    return destination + File.separator + (pagePath.length() > 0 ? pagePath : PathParser.ROOT_PAGE_NAME) + PAGE_EXTENSION;
   }
 
   private final String template;

@@ -90,7 +90,7 @@ public class HistoryPurger {
   }
 
   private Date tryExtractDateFromTestHistoryName(String testHistoryName) throws ParseException {
-    SimpleDateFormat dateFormat = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
+    SimpleDateFormat dateFormat = PageHistory.getDateFormat();
     String dateString = testHistoryName.split("_")[0];
     return dateFormat.parse(dateString);
   }

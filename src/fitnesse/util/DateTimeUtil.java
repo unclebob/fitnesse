@@ -6,7 +6,6 @@ import org.apache.commons.lang3.time.DateUtils;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 
 public class DateTimeUtil {
   private static final String DATE_FORMAT = "MM/dd/yyyy HH:mm:ss";
@@ -21,7 +20,7 @@ public class DateTimeUtil {
   }
 
   public static String formatDate(Date date) {
-    return DateFormatUtils.format(date, ISO_DATE_FORMAT, TimeZone.getDefault(), Locale.US);
+    return DateFormatUtils.format(date, ISO_DATE_FORMAT, Clock.currentTimeZone(), Locale.US);
   }
 
   public static boolean datesNullOrEqual(Date d1, Date d2) {
