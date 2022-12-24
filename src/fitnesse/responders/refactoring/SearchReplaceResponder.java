@@ -30,9 +30,8 @@ public class SearchReplaceResponder extends ResultResponder {
   protected PageFinder getPageFinder(TraversalListener<WikiPage> webOutputObserver) {
     String searchString = getSearchString();
     String replacementString = getReplacementString();
-    boolean isReplaceMethod = isReplaceMethod();
 
-    if (isReplaceMethod) {
+    if (isMethodReplace()) {
       MethodReplacingSearchObserver methodReplaceObserver =
         new MethodReplacingSearchObserver(searchString, replacementString);
 
@@ -46,8 +45,8 @@ public class SearchReplaceResponder extends ResultResponder {
     }
   }
 
-  private boolean isReplaceMethod() {
-    return request.hasInput("methodReplaceCheckbox");
+  private boolean isMethodReplace() {
+    return request.hasInput("isMethodReplace");
   }
 
   private String getReplacementString() {

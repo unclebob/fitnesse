@@ -1,6 +1,6 @@
 #if( !$type || $type == "replace" )
-<h2>Replace</h2>
 <form action="$refactoredRootPage" method="post">
+<h2>Replace Text</h2>
  <input type="hidden" name="responder" value="replace"/>
  <fieldset>
   <label for="searchString">Search String:</label>
@@ -11,19 +11,32 @@
   <input type="text" size="50" id="replacementString" name="replacementString" value="#if ($request.hasInput("replacementString"))$request.getInput("replacementString")#end"/>
  </fieldset>
  <fieldset class="buttons">
-  <label style="width:100%;text-align:left" for="methodReplaceCheckbox"><input type="checkbox" id="methodReplaceCheckbox" name="methodReplaceCheckbox"/>Replace Method? (See notes below)**</label>
- </fieldset>
- <fieldset class="buttons">
   <input type="submit" name="replace" value="Replace!"/>
   <a class="button" href="$viewLocation">Cancel</a>
  </fieldset>
- <br />
+
  <p><strong>Search &amp; Replace: </strong>
- <p>Please note that this feature is experimental!</p>
- <p> For regex replace (when checkbox is not selected), it uses <a href="http://java.sun.com/javase/6/docs/api/java/util/regex/Pattern.html" target="_new">java-based regular expressions</a>.
- </p>
- <p>
-  ** When you change a method or a scenario name and you want to reflect the changes across all your tests, you can select the checkbox. You can use existing line in wiki page. e.g. <strong>|Go to|url|</strong> can be changed to <strong>|Navigate to|url|</strong>. Keep in mind following.
+  Please note that this feature is experimental! It uses java-based regular expressions. For an introduction, take a look <a href="http://java.sun.com/javase/6/docs/api/java/util/regex/Pattern.html" target="_new">here</a> (new window).</p>
+</form>
+
+<form action="$refactoredRootPage" method="post">
+<h2>Replace Method</h2>
+ <input type="hidden" name="responder" value="replace"/>
+ <input type="hidden" name="isMethodReplace"/>
+ <fieldset>
+  <label for="searchString">Search Method:</label>
+  <input type="text" size="50" id="searchStringMethod" name="searchString" value="#if ($request.hasInput("searchString"))$request.getInput("searchString")#end"/>
+ </fieldset>
+ <fieldset>
+  <label for="replacementString">Replacing Method:</label>
+  <input type="text" size="50" id="replacementString" name="replacementString" value="#if ($request.hasInput("replacementString"))$request.getInput("replacementString")#end"/>
+ </fieldset>
+ <fieldset class="buttons">
+  <input type="submit" name="replace" value="Replace Method!"/>
+  <a class="button" href="$viewLocation">Cancel</a>
+ </fieldset>
+<p>
+  You may change a method/scenario name and want to reflect this name change across all existing test cases. To accomplish this, you can supply a relevant existing line using that method from any test page. e.g. <strong>|Go to|url|</strong> can be changed to <strong>|Navigate to|url|</strong>. Keep in mind following.
   <ul>
    <li>This will keep the original parameters (if any) in the wiki which is good in most cases.</li>
    <li>This will replace any line which evaluates to a method name including a line in script table, a scenario or a decision table having similar name. This will be desired in most cases. If you used same method in multiple classes, all of them will be impacted in the wiki pages.</li>

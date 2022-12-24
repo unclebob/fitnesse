@@ -194,7 +194,7 @@ public class SearchReplaceMethodResponderTest extends ResponderTestCase {
   private String getResponseContentUsingSearchReplace(String searchString, String replacementString) throws Exception {
     request.addInput("searchString", searchString);
     request.addInput("replacementString", replacementString);
-    request.addInput("methodReplaceCheckbox", "true");
+    request.addInput("isMethodReplace", "true");
     Response response = responder.makeResponse(context, request);
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
