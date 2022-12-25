@@ -40,7 +40,7 @@
   <ul>
    <li>This will not change the parameters (if any) in the wiki.</li>
    <li>This will replace any line which evaluates to a method name including a line in script table, a scenario or a decision table having a similar name. This will be desired in most cases. But if you have multiple classes with the same method of which you only changed one this will not work as desired, since all calls are replaced.</li>
-   <li>It is a good idea to review the replaced lines locally (e.g. using Git) and undo any undesired changes before sharing/committing the tests. Most IDE has version control comparison and selective undo feature.</li>
+   <li>It is a good idea to review the updated lines locally (e.g. using Git) and undo any undesired changes before sharing/committing the tests. Most IDE have a version control comparison and selective undo feature.</li>
   </ul>
  </p>
 </form>
