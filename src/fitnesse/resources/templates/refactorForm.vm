@@ -38,7 +38,7 @@
 <p>
   Reflect an updated method/scenario name across all existing test cases. To accomplish this, you can supply an existing line using that method from any test page. e.g. <strong>|Go to|url|</strong> can be changed to <strong>|Navigate to|url|</strong>. Keep the following in mind:
   <ul>
-   <li>This will keep the original parameters (if any) in the wiki which is good in most cases.</li>
+   <li>This will not change the parameters (if any) in the wiki.</li>
    <li>This will replace any line which evaluates to a method name including a line in script table, a scenario or a decision table having similar name. This will be desired in most cases. If you used same method in multiple classes, all of them will be impacted in the wiki pages.</li>
    <li>It is a good idea to review the replaced lines locally (e.g. using Git) and undo any undesired changes before sharing/committing the tests. Most IDE has version control comparison and selective undo feature.</li>
   </ul>
