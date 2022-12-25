@@ -36,7 +36,7 @@
   <a class="button" href="$viewLocation">Cancel</a>
  </fieldset>
 <p>
-  You may change a method/scenario name and want to reflect this name change across all existing test cases. To accomplish this, you can supply a relevant existing line using that method from any test page. e.g. <strong>|Go to|url|</strong> can be changed to <strong>|Navigate to|url|</strong>. Keep in mind following.
+  Reflect an updated method/scenario name across all existing test cases. To accomplish this, you can supply an existing line using that method from any test page. e.g. <strong>|Go to|url|</strong> can be changed to <strong>|Navigate to|url|</strong>. Keep the following in mind:
   <ul>
    <li>This will keep the original parameters (if any) in the wiki which is good in most cases.</li>
    <li>This will replace any line which evaluates to a method name including a line in script table, a scenario or a decision table having similar name. This will be desired in most cases. If you used same method in multiple classes, all of them will be impacted in the wiki pages.</li>
