@@ -1,14 +1,14 @@
 #if( !$type || $type == "replace" )
-<h2>Replace</h2>
 <form action="$refactoredRootPage" method="post">
+<h2>Replace Text</h2>
  <input type="hidden" name="responder" value="replace"/>
  <fieldset>
   <label for="searchString">Search String:</label>
-  <input type="text" id="searchString" name="searchString" value="#if ($request.hasInput("searchString"))$request.getInput("searchString")#end"/>
+  <input type="text" size="50" id="searchString" name="searchString" value="#if ($request.hasInput("searchString"))$request.getInput("searchString")#end"/>
  </fieldset>
  <fieldset>
   <label for="replacementString">Replacement:</label>
-  <input type="text" id="replacementString" name="replacementString" value="#if ($request.hasInput("replacementString"))$request.getInput("replacementString")#end"/>
+  <input type="text" size="50" id="replacementString" name="replacementString" value="#if ($request.hasInput("replacementString"))$request.getInput("replacementString")#end"/>
  </fieldset>
  <fieldset class="buttons">
   <input type="submit" name="replace" value="Replace!"/>
@@ -16,7 +16,33 @@
  </fieldset>
 
  <p><strong>Search &amp; Replace: </strong>
- Please note that this feature is experimental! It uses java-based regular expressions. For an introduction, take a look <a href="http://java.sun.com/javase/6/docs/api/java/util/regex/Pattern.html" target="_new">here</a> (new window).
+  Please note that this feature is experimental! It uses java-based regular expressions. For an introduction, take a look <a href="http://java.sun.com/javase/6/docs/api/java/util/regex/Pattern.html" target="_new">here</a> (new window).</p>
+</form>
+
+<form action="$refactoredRootPage" method="post">
+<h2>Replace Method</h2>
+ <input type="hidden" name="responder" value="replace"/>
+ <input type="hidden" name="isMethodReplace"/>
+ <fieldset>
+  <label for="searchString">Search Method:</label>
+  <input type="text" size="50" id="searchStringMethod" name="searchString" value="#if ($request.hasInput("searchString"))$request.getInput("searchString")#end"/>
+ </fieldset>
+ <fieldset>
+  <label for="replacementString">Replacing Method:</label>
+  <input type="text" size="50" id="replacementString" name="replacementString" value="#if ($request.hasInput("replacementString"))$request.getInput("replacementString")#end"/>
+ </fieldset>
+ <fieldset class="buttons">
+  <input type="submit" name="replace" value="Replace Method!"/>
+  <a class="button" href="$viewLocation">Cancel</a>
+ </fieldset>
+<p>
+  Reflect an updated method/scenario name across all existing test cases. To accomplish this, you can supply an existing line using that method from any test page. e.g. <strong>|Go to|url|</strong> can be changed to <strong>|Navigate to|url|</strong>. Keep the following in mind:
+  <ul>
+   <li>This will not change the parameters (if any) in the wiki.</li>
+   <li>This will replace any line which evaluates to a method name including a line in script table, a scenario or a decision table having a similar name. This will be desired in most cases. But if you have multiple classes with the same method of which you only changed one this will not work as desired, since all calls are replaced.</li>
+   <li>It is a good idea to review the updated lines locally (e.g. using Git) and undo any undesired changes before sharing/committing the tests. Most IDE have a version control comparison and selective undo feature.</li>
+  </ul>
+ </p>
 </form>
 #end
 
