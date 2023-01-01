@@ -14,6 +14,7 @@ import fitnesse.wiki.WikiPageUtil;
 import org.junit.Before;
 import org.junit.Test;
 
+import static util.RegexTestCase.assertDoesntHaveRegexp;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
 
@@ -34,6 +35,62 @@ public class SearchResponderTest {
     responder = new SearchResponder();
   }
 
+  @Test
+  public void testHtmlWithMethod() throws Exception {
+
+    WikiPage somePage = context.getRootPage().getChildPage("SomePage").getChildPage("SomeSuite");
+    WikiPageUtil.addPage(somePage, PathParser.parse("Test1"), "|Some method|");
+    WikiPageUtil.addPage(somePage, PathParser.parse("Test2"), "|Some           method|");
+    WikiPageUtil.addPage(somePage, PathParser.parse("Test3"), "|ensure|Some method|");
+    WikiPageUtil.addPage(somePage, PathParser.parse("Test4"), "|reject|Some method|");
+    WikiPageUtil.addPage(somePage, PathParser.parse("Test5"), "|show|Some method|");
+    WikiPageUtil.addPage(somePage, PathParser.parse("Test6"), "|note|Some method|");
+    WikiPageUtil.addPage(somePage, PathParser.parse("Test7"), "|check|Some method|checkValue|");
+    WikiPageUtil.addPage(somePage, PathParser.parse("Test8"), "|check not|Some method|checkNotValue|");
+
+    WikiPageUtil.addPage(somePage, PathParser.parse("Test11"), "|Some methods|");
+
+    String content = getResponseContentUsingMethodName("|Some method|");
+
+    assertHasRegexp("Test1", content);
+    assertHasRegexp("Test2", content);
+    assertHasRegexp("Test3", content);
+    assertHasRegexp("Test4", content);
+    assertHasRegexp("Test5", content);
+    assertHasRegexp("Test6", content);
+    assertHasRegexp("Test7", content);
+    assertHasRegexp("Test8", content);
+    assertDoesntHaveRegexp("Test11", content);
+  }
+
+  @Test
+  public void testHtmlWithMethodWithOneParameter() throws Exception {
+
+    WikiPage somePage = context.getRootPage().getChildPage("SomePage").getChildPage("SomeSuite");
+    WikiPageUtil.addPage(somePage, PathParser.parse("Test1"), "|Method with|one|param|");
+    WikiPageUtil.addPage(somePage, PathParser.parse("Test2"), "|Method     with   |some|   param|");
+    WikiPageUtil.addPage(somePage, PathParser.parse("Test3"), "|ensure|Method with|1|param|");
+    WikiPageUtil.addPage(somePage, PathParser.parse("Test4"), "|reject|Method with|1|param|");
+    WikiPageUtil.addPage(somePage, PathParser.parse("Test5"), "|show|Method with|1|param|");
+    WikiPageUtil.addPage(somePage, PathParser.parse("Test6"), "|note|Method with|1|param|");
+    WikiPageUtil.addPage(somePage, PathParser.parse("Test7"), "|check|Method with|1|param|checkValue|");
+    WikiPageUtil.addPage(somePage, PathParser.parse("Test8"), "|check not|Method with|1|param|checkNotValue|");
+
+    WikiPageUtil.addPage(somePage, PathParser.parse("Test11"), "|Method with params|");
+
+    String content = getResponseContentUsingMethodName("|Method with |1| param|");
+
+    assertHasRegexp("Test1", content);
+    assertHasRegexp("Test2", content);
+    assertHasRegexp("Test3", content);
+    assertHasRegexp("Test4", content);
+    assertHasRegexp("Test5", content);
+    assertHasRegexp("Test6", content);
+    assertHasRegexp("Test7", content);
+    assertHasRegexp("Test8", content);
+    assertDoesntHaveRegexp("Test11", content);
+  }
+  
   @Test
   public void testHtml() throws Exception {
     String content = getResponseContentUsingSearchString("something");
@@ -81,6 +138,16 @@ public class SearchResponderTest {
 
   private String getResponseContentUsingSearchString(String searchString) throws Exception {
     request.addInput("searchString", searchString);
+    request.addInput(Request.NOCHUNK, "");
+    Response response = responder.makeResponse(context, request);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    return sender.sentData();
+  }
+
+  private String getResponseContentUsingMethodName(String searchString) throws Exception {
+    request.addInput("searchString", searchString);
+    request.addInput("isMethodSearch", "true");
     request.addInput(Request.NOCHUNK, "");
     Response response = responder.makeResponse(context, request);
     MockResponseSender sender = new MockResponseSender();
