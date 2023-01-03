@@ -36,6 +36,37 @@ public class SearchResponderTest {
   }
 
   @Test
+  public void testHtmlWithMethodWithAllScope() throws Exception {
+    WikiPage somePage = context.getRootPage().getChildPage("SomePage");
+    WikiPageUtil.addPage(somePage, PathParser.parse("PageOne"), "has PageOne content");
+    WikiPageUtil.addPage(somePage, PathParser.parse("PageOne.PageOneChild"),
+      "|Some method|");
+    WikiPageUtil.addPage(somePage, PathParser.parse("PageTwo"), "has PageTwo content");
+    WikiPageUtil.addPage(somePage, PathParser.parse("PageTwo.PageTwoChild"),
+      "|Some method|");
+
+    String content = getResponseContentUsingMethodName("|Some method|", "root");
+
+    assertHasRegexp("SomePage.PageOne.PageOneChild", content);
+    assertHasRegexp("SomePage.PageTwo.PageTwoChild", content);
+  }
+
+  @Test
+  public void testHtmlWithMethodWithDefinedScope() throws Exception {
+    WikiPage somePage = context.getRootPage().getChildPage("SomePage");
+    WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("Test1"), "|Some method|");
+    WikiPage suite11 = WikiPageUtil.addPage(somePage, PathParser.parse("Suite11"), "some content");
+    WikiPageUtil.addPage(suite11, PathParser.parse("Suite11Test1"), "|Some method|");
+
+    String content = getResponseContentUsingMethodName("|Some method|", "Suite11");
+
+    assertHasRegexp("SomePage.Suite11.Suite11Test1", content);
+    //Exception is thrown if page is not formed properly. Below assert ensures, the page content is valid one.
+    assertDoesntHaveRegexp("NullPointerException", content);
+    assertDoesntHaveRegexp("SomePage.Test1", content);
+  }
+
+  @Test
   public void testHtmlWithMethod() throws Exception {
 
     WikiPage somePage = context.getRootPage().getChildPage("SomePage").getChildPage("SomeSuite");
@@ -50,7 +81,7 @@ public class SearchResponderTest {
 
     WikiPageUtil.addPage(somePage, PathParser.parse("Test11"), "|Some methods|");
 
-    String content = getResponseContentUsingMethodName("|Some method|");
+    String content = getResponseContentUsingMethodName("|Some method|", "");
 
     assertHasRegexp("Test1", content);
     assertHasRegexp("Test2", content);
@@ -78,7 +109,7 @@ public class SearchResponderTest {
 
     WikiPageUtil.addPage(somePage, PathParser.parse("Test11"), "|Method with params|");
 
-    String content = getResponseContentUsingMethodName("|Method with |1| param|");
+    String content = getResponseContentUsingMethodName("|Method with |1| param|", "root");
 
     assertHasRegexp("Test1", content);
     assertHasRegexp("Test2", content);
@@ -90,7 +121,7 @@ public class SearchResponderTest {
     assertHasRegexp("Test8", content);
     assertDoesntHaveRegexp("Test11", content);
   }
-  
+
   @Test
   public void testHtml() throws Exception {
     String content = getResponseContentUsingSearchString("something");
@@ -145,9 +176,14 @@ public class SearchResponderTest {
     return sender.sentData();
   }
 
-  private String getResponseContentUsingMethodName(String searchString) throws Exception {
+  private String getResponseContentUsingMethodName(String searchString, String searchScope) throws Exception {
     request.addInput("searchString", searchString);
     request.addInput("isMethodSearch", "true");
+    request.addInput("searchScope", searchScope);
+    if (!(searchScope.equals("root") || searchScope.isEmpty())) {
+      //This is specific to test data defined in testHtmlWithMethodWithDefinedScope when specific option is selected.
+      request.setResource("SomePage.Suite11.Suite11Test1");
+    }
     request.addInput(Request.NOCHUNK, "");
     Response response = responder.makeResponse(context, request);
     MockResponseSender sender = new MockResponseSender();
