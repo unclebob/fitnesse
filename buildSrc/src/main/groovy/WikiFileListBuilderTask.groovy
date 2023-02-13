@@ -1,9 +1,5 @@
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputFiles
 import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.OutputFile
-import org.gradle.api.tasks.SourceSet;
-import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.tasks.*
 
 public class WikiFileListBuilderTask extends DefaultTask {
   @InputFiles
@@ -16,6 +12,7 @@ public class WikiFileListBuilderTask extends DefaultTask {
   @OutputFile
   File updateDoNotCopyOverListFile
 
+  @OutputFiles
   Collection<String> wikiFiles
 
   @TaskAction

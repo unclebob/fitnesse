@@ -7,6 +7,7 @@ class LessCompiler extends JavaExec {
   @InputDirectory
   def inputDir
 
+  @OutputFile
   def mainLessFile
 
   @OutputFile
