@@ -8,9 +8,10 @@ import java.util.regex.Pattern;
 public class PathParser {
   public static final String PATH_SEPARATOR = ".";
   public static final String ROOT_PAGE_NAME = "root";
+  public static final String FILES = "files";
 
   private static final Pattern WIKI_WORD_PATTERN = Pattern.compile("\\w[\\w-]*");
-  private static final Pattern WIKI_PATH_PATTERN = Pattern.compile("[<>^\\.]?\\w[\\w-]*(\\.\\w[\\w-]+)*");
+  private static final Pattern WIKI_PATH_PATTERN = Pattern.compile("[<>^.]?\\w[\\w-]*(\\.\\w[\\w-]+)*");
 
   public static WikiPagePath parse(String pathName) {
 	return PathParser.makePath(pathName, new WikiPagePath());
@@ -50,7 +51,7 @@ public class PathParser {
 
   public static boolean isSingleWikiWord(String name) {
     return WIKI_WORD_PATTERN.matcher(name).matches()
-            && !"files".equals(name)
+            && !FILES.equals(name)
             && !ROOT_PAGE_NAME.equals(name);
   }
 

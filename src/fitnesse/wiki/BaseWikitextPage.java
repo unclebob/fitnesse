@@ -56,7 +56,8 @@ public abstract class BaseWikitextPage extends BaseWikiPage implements WikitextP
   private void parse() {
     if (syntaxTree == null) {
       parsingPage = makeParsingPage(this);
-      syntaxTree = MarkUpSystem.make().parse(parsingPage, getData().getContent());
+      String content = getData().getContent();
+      syntaxTree = MarkUpSystem.make(content).parse(parsingPage, content);
     }
   }
 

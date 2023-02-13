@@ -523,7 +523,6 @@ public class ScriptTableTest {
       "[[Script], [check, func, pass(3)]]", false
     );
   }
-
   @Test
   public void localizedCheckPasses() throws Exception {
     assertScriptResults("|localized check|func|3|\n",

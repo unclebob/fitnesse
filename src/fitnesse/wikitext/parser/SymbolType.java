@@ -89,7 +89,7 @@ public class SymbolType implements Matchable {
             .wikiRule(new EqualPairRule())
             .htmlTranslation(Translate.with(ToHtml::pair).text("strike").child(0));
     public static final SymbolType Style = new SymbolType("Style")
-            .wikiMatcher(new Matcher().string("!style_").endsWith(new char[] {'(', '{', '['}))
+            .wikiMatcher(new Matcher().string("!style_").endsWith('(', '{', '['))
             .wikiRule(new StyleRule())
             .htmlTranslation(new HtmlBuilder("span").body(0).attribute("class", -1).inline());
     public static final SymbolType SymbolList = new SymbolType("SymbolList");
@@ -141,8 +141,8 @@ public class SymbolType implements Matchable {
     @Override
     public SymbolMatch makeMatch(ScanString input, SymbolStream symbols) {
         for (Matcher matcher: getWikiMatchers()) {
-            Maybe<Integer> matchLength = matcher.makeMatch(input, symbols);
-            if (!matchLength.isNothing()) return new SymbolMatch(this, input, matchLength.getValue());
+            MatchResult result = matcher.makeMatch(input, symbols);
+            if (result.isMatched()) return new SymbolMatch(this, input, result);
         }
         return SymbolMatch.noMatch;
     }

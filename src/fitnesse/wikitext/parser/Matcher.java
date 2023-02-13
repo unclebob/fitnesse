@@ -1,20 +1,19 @@
 package fitnesse.wikitext.parser;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class Matcher {
 
     private interface ScanMatch {
-        Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset);
+        void match(ScanString input, SymbolStream symbols, MatchResult match);
     }
 
-    private static final List<Character> defaultList =
-            Collections.unmodifiableList(Arrays.asList('\0'));
+    private static final List<Character> defaultList = Collections.singletonList('\0');
 
-    private List<ScanMatch> matches = new ArrayList<>(4);
+    private final List<ScanMatch> matches = new ArrayList<>(4);
     private List<Character> firsts = null;
 
     public List<Character> getFirsts() {
@@ -23,34 +22,17 @@ public class Matcher {
 
     public Matcher whitespace() {
         if (firsts == null) firsts = defaultList;
-        matches.add(new ScanMatch() {
-            @Override
-            public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
-                int length = input.whitespaceLength(offset);
-                return length > 0 ? new Maybe<>(length) : Maybe.noInteger;
-            }
-        });
+        matches.add((input, symbols, match) -> match.checkLength(input.whitespaceLength(match.getLength())));
         return this;
     }
 
     public Matcher startLine() {
-        matches.add(new ScanMatch() {
-            @Override
-            public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
-                return isStartLine(input, symbols, offset) ? new Maybe<>(0) : Maybe.noInteger;
-            }
-        });
+        matches.add((input, symbols, match) -> match.setMatched(isStartLine(input, symbols, match.getLength())));
         return this;
     }
 
     public Matcher startLineOrCell() {
-        matches.add(new ScanMatch() {
-            @Override
-            public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
-                return isStartLine(input, symbols, offset) || isStartCell(symbols)
-                 ? new Maybe<>(0) : Maybe.noInteger;
-            }
-        });
+        matches.add((input, symbols, match) -> match.setMatched(isStartLine(input, symbols, match.getLength()) || isStartCell(symbols)));
         return this;
     }
 
@@ -68,29 +50,23 @@ public class Matcher {
         if (firsts == null) {
             firsts = Collections.singletonList(delimiter.charAt(0));
         }
-        matches.add(new ScanMatch() {
-            @Override
-            public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
-                return input.matches(delimiter, offset) ? new Maybe<>(delimiter.length()) : Maybe.noInteger;
-            }
+        matches.add((input, symbols, match) -> {
+          if (input.matches(delimiter, match.getLength())) match.addLength(delimiter.length()); else match.noMatch();
         });
         return this;
     }
 
     public Matcher listDigit() {
         firstIsDigit('1');
-        matches.add(new ScanMatch() {
-            @Override
-            public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
-                return isDigitInput('1', input, offset) ? new Maybe<>(1) : Maybe.noInteger;
-            }
+        matches.add((input, symbols, match) -> {
+          if (isDigitInput('1', input, match.getLength())) match.addLength(1); else match.noMatch();
         });
         return this;
     }
 
     private boolean isDigitInput(char firstDigit, ScanString input, int offset) {
         for (char i = firstDigit; i <= '9'; i++) {
-           if (input.matches(new String(new char[] {i}), offset)) return true;
+           if (input.matches(String.valueOf(i), offset)) return true;
         }
         return false;
     }
@@ -104,24 +80,16 @@ public class Matcher {
 
     public Matcher digits() {
         firstIsDigit('0');
-        matches.add(new ScanMatch() {
-            @Override
-            public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
-                int size = 0;
-                while (isDigitInput('0', input, offset + size)) size++;
-                return size > 0 ? new Maybe<>(size) : Maybe.noInteger;
-            }
+        matches.add((input, symbols, match) -> {
+            int size = 0;
+            while (isDigitInput('0', input, match.getLength() + size)) size++;
+            match.checkLength(size);
         });
         return this;
     }
 
     public Matcher ignoreWhitespace() {
-        matches.add(new ScanMatch() {
-            @Override
-            public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
-                return new Maybe<>(input.whitespaceLength(offset));
-            }
-        });
+        matches.add((input, symbols, match) -> match.addLength(input.whitespaceLength(match.getLength())));
         return this;
     }
 
@@ -129,48 +97,79 @@ public class Matcher {
         if (firsts == null) {
             firsts = Collections.singletonList(delimiter);
         }
-        matches.add(new ScanMatch() {
-            @Override
-            public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
-                int size = 0;
-                while (input.charAt(offset + size) == delimiter) size++;
-                return size > 0 ? new Maybe<>(size) : Maybe.noInteger;
-            }
+        matches.add((input, symbols, match) -> {
+            int size = 0;
+            while (input.charAt(match.getLength() + size) == delimiter) size++;
+            match.checkLength(size);
         });
         return this;
     }
 
-    public Matcher endsWith(final char[] terminators) {
-        matches.add(new ScanMatch() {
-            @Override
-            public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
-                int size = 0;
-                while (true) {
-                    char candidate = input.charAt(offset + size);
-                    if (candidate == 0) return Maybe.noInteger;
-                    if (contains(terminators, candidate)) break;
-                    size++;
-                }
-                return size > 0 ? new Maybe<>(size + 1) : Maybe.noInteger;
+    public Matcher endsWith(int... terminators) {
+        matches.add((input, symbols, match) -> {
+          int size = 0;
+          while (true) {
+            int candidate = input.charAt(match.getLength() + size);
+            if (candidate == 0) {
+              match.noMatch();
+              return;
             }
-
-            private boolean contains(char[] terminators, char candidate) {
-                for (char terminator: terminators) if (candidate == terminator) return true;
-                return false;
-            }
+            if (IntStream.of(terminators).anyMatch(t -> t == candidate)) break;
+            size++;
+          }
+          if (size > 0) match.addLength(size + 1); else match.noMatch();
         });
         return this;
     }
 
-    public Maybe<Integer> makeMatch(ScanString input, SymbolStream symbols)  {
-        int totalLength = 0;
-        for (ScanMatch match: matches) {
-            Maybe<Integer> matchLength = match.match(input, symbols, totalLength);
-            if (matchLength.isNothing()) return Maybe.noInteger;
-            totalLength += matchLength.getValue();
+    public Matcher optional(String... options) {
+      matches.add((input, symbols, match) -> {
+        for (String option : options) {
+          if (input.matches(option, match.getLength())) {
+            match.addOption(option);
+            return;
+          }
         }
-
-        return new Maybe<>(totalLength);
+      });
+      return this;
     }
 
+    public Matcher newLine() {
+      if (firsts == null) {
+        firsts = new ArrayList<>();
+        firsts.add('\r');
+        firsts.add('\n');
+      }
+      matches.add((input, symbols, match) -> {
+        if (input.matches("\r\n", match.getLength())) {
+          match.addLength(2);
+        }
+        else if (input.matches("\n", match.getLength())) {
+          match.addLength(1);
+        }
+        else match.noMatch();
+      });
+      return this;
+    }
+
+    public MatchResult makeMatch(ScanString input) {
+      return makeMatch(input, new SymbolStream());
+    }
+
+    public MatchResult makeMatch(ScanString input, SymbolStream symbols)  {
+        MatchResult result = new MatchResult();
+        for (ScanMatch match: matches) {
+            match.match(input, symbols, result);
+            if (!result.isMatched()) return result;
+        }
+        return result;
+    }
+
+    public MatchResult findMatch(ScanString input) {
+      while (true) {
+        MatchResult match = makeMatch(input);
+        if (match.isMatched() || input.isEnd()) return match;
+        input.moveNext();
+      }
+    }
 }

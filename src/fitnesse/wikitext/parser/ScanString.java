@@ -19,6 +19,7 @@ public class ScanString {
     public void setOffset(int offset) { this.offset = offset; }
     public int getOffset() { return offset; }
     public void moveNext() { offset++; }
+    public void moveNext(int length) { offset += length; }
     public boolean isEnd() { return isEnd(0); }
     public boolean isEnd(int startAt) { return offset + startAt >= input.length(); }
     public void markStart(int markStartOffset) { this.markStartOffset = markStartOffset; }
@@ -95,4 +96,5 @@ public class ScanString {
         }
         return true;
     }
+
 }
