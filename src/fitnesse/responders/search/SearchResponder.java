@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import fitnesse.components.TraversalListener;
 import fitnesse.html.HtmlUtil;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.search.MethodWikiPageFinder;
 import fitnesse.wiki.search.PageFinder;
 import fitnesse.wiki.search.RegularExpressionWikiPageFinder;
 import fitnesse.wiki.search.TitleWikiPageFinder;
@@ -55,11 +56,19 @@ public class SearchResponder extends ResultResponder {
       if ("Title".equals(searchType))
         return new TitleWikiPageFinder(searchString, observer);
       else {
-        Pattern regularExpression = Pattern.compile(searchString, CASE_INSENSITIVE + LITERAL);
-        return new RegularExpressionWikiPageFinder(regularExpression, observer);
+        if (isMethodSearch()) {
+          return new MethodWikiPageFinder(searchString, observer);
+        } else {
+          Pattern regularExpression = Pattern.compile(searchString, CASE_INSENSITIVE + LITERAL);
+          return new RegularExpressionWikiPageFinder(regularExpression, observer);
+        }
       }
     }
     return null;
+  }
+
+  private boolean isMethodSearch() {
+    return request.hasInput("isMethodSearch");
   }
 
   @Override

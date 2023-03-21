@@ -1,5 +1,10 @@
 !2 Pending Changes
- * Add a new optional command line parameter to specify the maximum number of workers to use for handling incoming requests. 
+ * Add date and page history link to XML responses. ([[1396][https://github.com/unclebob/fitnesse/issues/1396]])
+ * Search and replace method/scenario names with new name. ([[1403][https://github.com/unclebob/fitnesse/pull/1403]])
+ * Search method or scenario in pages. ([[1409][https://github.com/unclebob/fitnesse/pull/1409]])
+
+!2 20221219
+ * Add a new optional command line parameter to specify the maximum number of workers to use for handling incoming requests.
  * Ability to ignore the rest of a script table or test page by throwing an exception. ([[1350][https://github.com/unclebob/fitnesse/pull/1350]])
  * Change the publish responder to use Apache Velocity, and create index page ([[1387][https://github.com/unclebob/fitnesse/issues/1387]])
 

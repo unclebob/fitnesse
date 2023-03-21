@@ -1,6 +1,7 @@
 package fitnesse.util;
 
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Use an instance of this class to rebase the Date
@@ -10,15 +11,22 @@ import java.util.Date;
  */
 public class DateAlteringClock extends Clock {
   private long rebaseToTime;
+
+  private TimeZone timeZone;
   private final long baseSystemTime;
   private boolean frozen, advanceOnEachQuery;
-  
+
   public DateAlteringClock(Date rebaseToDate) {
+    this(rebaseToDate, TimeZone.getTimeZone("Etc/GMT-14"));
+  }
+
+  public DateAlteringClock(Date rebaseToDate, TimeZone timeZone) {
     super(true);
     this.rebaseToTime = rebaseToDate.getTime();
+    this.timeZone = timeZone;
     this.baseSystemTime = SYSTEM_CLOCK.currentClockTimeInMillis();
   }
-  
+
   @Override
   public long currentClockTimeInMillis() {
     if (frozen) {
@@ -27,6 +35,11 @@ public class DateAlteringClock extends Clock {
       return ++rebaseToTime;
     }
     return rebaseToTime + SYSTEM_CLOCK.currentClockTimeInMillis() - baseSystemTime;
+  }
+
+  @Override
+  protected TimeZone getTimeZone() {
+    return timeZone;
   }
 
   public DateAlteringClock freeze() {

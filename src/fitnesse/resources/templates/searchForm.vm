@@ -1,19 +1,23 @@
 #macro( checked $type $attr )#if( $request.getInput($type).contains($attr) ) checked="checked"#end#end
 
-#set( $focusPropertiesTab = $request.getInput("responder").contains("Properties"))
-#set ($focusTextTab = !$focusPropertiesTab )
+#set ($focusTextTab = $request.hasInput("isTextSearch"))
+#set ($focusMethodTab = $request.hasInput("isMethodSearch"))
+#set ($focusPropertiesTab = $request.getInput("responder").contains("searchProperties"))
+#set ($hasOneInFocus = ( $focusTextTab || $focusMethodTab || $focusPropertiesTab ))
 
 <ul class="nav nav-tabs">
- <li#if( $focusTextTab ) class="active"#end><a href="#text" data-toggle="tab">Text search</a></li>
+ <li#if( $focusTextTab || !$hasOneInFocus ) class="active"#end><a href="#text" data-toggle="tab">Text search</a></li>
+ <li#if( $focusMethodTab ) class="active"#end><a href="#method" data-toggle="tab">Method search</a></li>
  <li#if( $focusPropertiesTab ) class="active"#end><a href="#properties" data-toggle="tab">Properties search</a></li>
 </ul>
 
 <div class="tab-content">
-<form id="text" class="tab-pane#if( $focusTextTab ) active#end">
+<form id="text" class="tab-pane#if( $focusTextTab || !$hasOneInFocus) active#end">
  <input type="hidden" name="responder" value="search"/>
+ <input type="hidden" name="isTextSearch"/>
  <fieldset>
   <label for="searchString">Text:</label>
-  <input type="text" id="searchString" name="searchString" value="#if ($request.hasInput("searchString"))#escape($request.getInput("searchString"))#end" placeholder="Enter search text"/>
+  <input type="text" size="50" id="searchString" name="searchString" value="#if ($request.hasInput("searchString"))#escape($request.getInput("searchString"))#end" placeholder="Enter search text"/>
  </fieldset>
   <fieldset>
    <label for="searchScope">Scope:</label>
@@ -29,12 +33,38 @@
 	<a class="button" href="$viewLocation">Back</a>
  </fieldset>
 </form>
+<form id="method" class="tab-pane#if( $focusMethodTab ) active#end">
+ <input type="hidden" name="responder" value="search"/>
+ <input type="hidden" name="isMethodSearch"/>
+ <p>
+  <ul>
+    <li>Use this if you want to find out where a method/scenario is in use.</li>
+    <li>Supply a valid wiki line <strong>(e.g. |Go to|url|)</strong> which will evaluate to an executable method/scenario.</li>
+   </ul>
+ </p>
+ <fieldset>
+  <label for="searchString">Text:</label>
+  <input type="text" size="50" id="searchString" name="searchString" value="#if ($request.hasInput("searchString"))#escape($request.getInput("searchString"))#end" placeholder="Enter search method/scenario"/>
+ </fieldset>
+  <fieldset>
+   <label for="searchScope">Scope:</label>
+   <input type="radio" id="root" name="searchScope" value="root" #checked( "searchScope" "root")/>All
+   #foreach( $breadCrumb in $pageTitle.BreadCrumbs )
+	<input type="radio" id="$breadCrumb" name="searchScope" value="$breadCrumb.Name" #checked( "searchScope" $breadCrumb.Name)/>$breadCrumb.Name
+   #end
+   <input type="radio" id="leaf" name="searchScope" value="" #if( !$request.hasInput("searchScope") || $request.getInput("searchScope").equals("") ) checked="checked"#end#/>$page.getName()
+  </fieldset>
+ <fieldset class="buttons">
+	  <input type="submit" name="searchType" value="Search Content" data-toggle="tooltip" data-placement="bottom" title="Searches in the content of every page. Don't hold your breath."/>
+	<a class="button" href="$viewLocation">Back</a>
+ </fieldset>
+</form>
 
 <form id="properties" class="tab-pane#if( $focusPropertiesTab ) active#end">
  <input type="hidden" name="responder" value="searchProperties"/>
  <fieldset>
   <label for="Suites">Tags:</label>
-  <input type="text"  name="Suites"#if ($request.hasInput("Suites")) value="$request.getInput("Suites")"#end placeholder="Enter search Tags, separated with comma"/>
+  <input type="text" size="50" name="Suites"#if ($request.hasInput("Suites")) value="$request.getInput("Suites")"#end placeholder="Enter search Tags, separated with comma"/>
  </fieldset>
 
   <fieldset>
@@ -91,10 +121,16 @@
 </div>
 
 <script type="text/javascript">
-#if ( $focusTextTab )
-	document.forms[0].searchString.focus();
-#else
-	document.forms[1].Suites.focus();
+#if ( !($hasOneInFocus) ) {
+   document.forms[0].searchString.focus();
+   $hasOneInFocus = false;
+}
+#elseif ( $focusTextTab )
+	  document.forms[0].searchString.focus();
+#elseif ( $focusMethodTab )
+  document.forms[1].searchString.focus();
+#elseif ( $focusPropertiesTab )
+	 document.forms[2].Suites.focus();
 #end
  $('input').tooltip();
 </script>

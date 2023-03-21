@@ -2,11 +2,13 @@
 <suiteResults>
   <FitNesseVersion>$suiteExecutionReport.version</FitNesseVersion>
   <rootPath>#escape($suiteExecutionReport.rootPath)</rootPath>
+  <date>$suiteExecutionReport.dateString</date>
+  <pageHistoryLink>#escape($suiteExecutionReport.rootPath)?pageHistory&amp;resultDate=$suiteExecutionReport.resultDate</pageHistoryLink>
 #foreach ($reference in $suiteExecutionReport.pageHistoryReferences)
   <pageHistoryReference>
     <name>#escape($reference.pageName)</name>
     <date>$reference.dateString</date>
-    <pageHistoryLink>$reference.pageName?pageHistory&amp;resultDate=$reference.resultDate</pageHistoryLink>
+    <pageHistoryLink>#escape($reference.pageName)?pageHistory&amp;resultDate=$reference.resultDate</pageHistoryLink>
     <counts>
       <right>$reference.testSummary.right</right>
       <wrong>$reference.testSummary.wrong</wrong>

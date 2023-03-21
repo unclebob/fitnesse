@@ -30,6 +30,10 @@ public class PublisherTest {
     assertTopPage("<a href=\"TestSibling.html#anchor\">link</a>", "[[link][TestSibling#anchor]]");
   }
 
+  @Test public void linkToRoot() {
+    assertTopPage("<a href=\"root.html\">root</a>", "[[root][root]]");
+  }
+
   @Test public void missingPage() {
     assertTopPage("MissingPage", "MissingPage");
   }
