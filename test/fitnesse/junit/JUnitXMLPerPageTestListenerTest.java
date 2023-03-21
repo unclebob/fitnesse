@@ -1,6 +1,7 @@
 package fitnesse.junit;
 
 import org.gradle.api.tasks.testing.TestDescriptor;
+import org.gradle.api.tasks.testing.TestFailure;
 import org.gradle.api.tasks.testing.TestResult;
 import org.junit.Test;
 
@@ -246,6 +247,11 @@ public class JUnitXMLPerPageTestListenerTest {
       @Override
       public Throwable getException() {
         return throwable;
+      }
+
+      @Override
+      public List<TestFailure> getFailures() {
+        return null;
       }
 
       @Override
