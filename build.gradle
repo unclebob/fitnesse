@@ -46,9 +46,6 @@ configurations {
     transitive = false
     extendsFrom optional
   }
-  runtime {
-    transitive = false
-  }
 }
 
 sourceSets {
@@ -145,7 +142,7 @@ processResources.dependsOn "fitNesseVersion", "compileBootstrap", "createUpdateL
 
 task copyRuntimeLibs(type: Copy) {
   into "lib"
-  from configurations.runtime
+  from(sourceSets.main.runtimeClasspath) { include '*.jar' }
 }
 
 test {
