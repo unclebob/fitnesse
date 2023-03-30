@@ -31,6 +31,12 @@ public class SlimSerializerTest {
   }
 
   @Test
+  public void oneItemListSerializeWithSurrogatePair() throws Exception {
+    list.add("\ud802\udd00 is only one character.");
+    assertEquals("[000001:000024:\ud802\udd00 is only one character.:]", SlimSerializer.serialize(list));
+  }
+
+  @Test
   public void twoItemListSerialize() throws Exception {
     list.add("hello");
     list.add("world");

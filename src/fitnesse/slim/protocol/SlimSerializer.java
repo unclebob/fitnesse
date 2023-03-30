@@ -34,7 +34,7 @@ public class SlimSerializer {
 
     for (Object o : list) {
       String s = marshalObjectToString(o);
-      appendLength(s.length());
+      appendLength(s.codePointCount(0, s.length()));
       appendString(s);
     }
     result.append(']');
