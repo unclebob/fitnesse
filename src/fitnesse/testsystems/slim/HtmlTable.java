@@ -450,6 +450,9 @@ public class HtmlTable implements Table {
         case IGNORE:
           // IGNORE + does not count === Test Not Run
           if (testResult.doesCount()) {
+            if(testResult.getMessage() != null){
+              return String.format("%s <span class=\"ignore\">%s</span>", originalContent, message);
+            }
             return String.format("<span class=\"ignore\">%s</span>", message);
           } else {
             return String.format("%s <span class=\"ignore\">%s</span>", originalContent, message);

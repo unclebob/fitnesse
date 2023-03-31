@@ -1,4 +1,5 @@
 !2 Pending Changes
+ * Fixed issue where a cells original value was overwritten when ignoring rest of a script table or page
  * Add date and page history link to XML responses. ([[1396][https://github.com/unclebob/fitnesse/issues/1396]])
  * Search and replace method/scenario names with new name. ([[1403][https://github.com/unclebob/fitnesse/pull/1403]])
  * Search method or scenario in pages. ([[1409][https://github.com/unclebob/fitnesse/pull/1409]])

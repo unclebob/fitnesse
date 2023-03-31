@@ -133,7 +133,7 @@ public class HtmlTableTest {
 
     cell.setTestResult(SlimTestResult.ignore("a message"));
 
-    assertThat(cell.formatTestResult(), is("<span class=\"ignore\">a message</span>"));
+    assertThat(cell.formatTestResult(), is("original content <span class=\"ignore\">a message</span>"));
   }
 
   private HtmlTable getDummyTable() {
