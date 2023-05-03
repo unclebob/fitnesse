@@ -1,3 +1,5 @@
+!2 Pending Changes
+
 !2 20230503
  * Add date and page history link to XML responses. ([[1396][https://github.com/unclebob/fitnesse/issues/1396]])
  * Search and replace method/scenario names with new name. ([[1403][https://github.com/unclebob/fitnesse/pull/1403]])
