@@ -95,7 +95,7 @@ To support symbol assignments in Decision Tables which are implemented with a Sc
 !3 Strings and Lists
 As we will see, slim views a list as a special kind of string.  Therefore functions can take and return lists as well as strings.  The lists must be lists of strings, but since a list is a special kind of string, lists of lists of lists of ... are possible.  The Slim executor will convert back and forth between these forms as needed.
 
-A string is encoded as six or more digits followed by a colon, followed by the characters of the string.  The six+ digits are the number of characters in the string, not including the digits themselves.  Thus, the empty string is "000000:".  This length encoding scheme is used in other places so we'll use the token ''<length>'' to mean six digits followed by a colon.
+A string is encoded as six or more digits followed by a colon, followed by the characters of the string, represented as UTF-16 code units.  The six+ digits are the number of UTF-16 code units in the string, not including the digits themselves.  Thus, the empty string is "000000:".  This length encoding scheme is used in other places so we'll use the token ''<length>'' to mean six digits followed by a colon.
 
 If a string is ''<null>'', then the four character string ''null'' will replace it.
 
@@ -109,7 +109,7 @@ As you can see, each item of a list is a string.  But since a string can encode 
 So when you send a list of instructions, what you are really sending is a string.  When you receive a list of responses, what you are really receiving is a string.  So the high level protocol of Slim is just strings.  It looks like this:
 
  1 !-FitNesse-! invokes the Slim Server via a command line.  One of the command line arguments is the port number of the socket to listen on. If the port number is 1 than the communication happens via !-StdIn and Stdout-!. For any other port number the !-Slim Server-! opens that socket and start listening. !-FitNesse-! connects to that socket.
- 1 Slim Server responds to the connect request with the string "Slim !----! ''V<version>''\n", where ''<version>'' is the version number of the slim ''protocol''.  If this protocol ever changes, ''that'' version number will change.  This is the only string that is ever sent without the ''<length>'' encoding.  It is terminated by the '''\n''' instead.  Every other message that slim sends will be prefixed by a ''<length>'' in ''!style_red(bytes)'', followed by a colon.  !style_red(NOTE:) Every other length in this document is in UTF-8 ''characters''.  This one length is in bytes.
+ 1 Slim Server responds to the connect request with the string "Slim !----! ''V<version>''\n", where ''<version>'' is the version number of the slim ''protocol''.  If this protocol ever changes, ''that'' version number will change.  This is the only string that is ever sent without the ''<length>'' encoding.  It is terminated by the '''\n''' instead.  Every other message that slim sends will be prefixed by a ''<length>'' in ''!style_red(bytes)'', followed by a colon.  !style_red(NOTE:) Every other length in this document is in UTF-16 ''code units''.  This one length is in bytes.
  1 !-FitNesse-! sends a list of instructions encoded as a string of course.
  1 Slim Server sends a list of responses similarly encoded.
  1 3 and 4 repeat until !-FitNesse-! sends a ''bye'' directive.  This is simply the string ''bye'' properly encoded with ''<length>''.  e.g. "000003:bye".
