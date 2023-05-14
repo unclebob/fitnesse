@@ -19,10 +19,6 @@ To get started, check out the [FitNesse website](https://fitnesse.github.io/fitn
 Have a bug or a feature request? [Please open a new issue](https://github.com/unclebob/fitnesse/issues).
 
 
-## Community
-
-Have a question that's not a feature request or bug report? [Join the Gitter Community.](https://gitter.im/fitnesse-org/fitnesse)
-
 ## Edge builds
 
 The latest stable build of FitNesse can be [downloaded here](https://github.com/unclebob/fitnesse/actions) by clicking the latest workflow and clicking the `libs` artifact.
@@ -69,7 +65,6 @@ To run the acceptance tests:
 $ ./gradlew acceptanceTest
 ```
 
-Direct any questions to the [Gitter Community.](https://gitter.im/fitnesse-org/fitnesse).
 
 
 ### Working with Eclipse and IntelliJ
