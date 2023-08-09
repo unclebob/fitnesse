@@ -38,6 +38,13 @@ public class SlimSerializerTest {
   }
 
   @Test
+  public void listWithSurrogatePairSerialize() throws Exception {
+    list.add("h🀜llo");
+    list.add("world");
+    assertEquals("[000002:000006:h🀜llo:000005:world:]", SlimSerializer.serialize(list));
+  }
+
+  @Test
   public void serializeNestedList() throws Exception {
     List<String> sublist = new ArrayList<>();
     sublist.add("element");

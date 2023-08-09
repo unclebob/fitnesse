@@ -62,6 +62,13 @@ public class SlimDeserializerTest {
   }
 
   @Test
+  public void listWithSurrogatePair() throws Exception {
+    list.add("h🀜llo");
+    list.add("world");
+    check();
+  }
+
+  @Test
   public void listWithSubList() throws Exception {
     List<String> sublist = new ArrayList<>();
     sublist.add("hello");

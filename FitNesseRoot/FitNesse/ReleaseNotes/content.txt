@@ -1,7 +1,10 @@
 !2 Pending Changes
+
+!2 20230503
  * Add date and page history link to XML responses. ([[1396][https://github.com/unclebob/fitnesse/issues/1396]])
  * Search and replace method/scenario names with new name. ([[1403][https://github.com/unclebob/fitnesse/pull/1403]])
  * Search method or scenario in pages. ([[1409][https://github.com/unclebob/fitnesse/pull/1409]])
+ * Updated dependencies
 
 !2 20221219
  * Add a new optional command line parameter to specify the maximum number of workers to use for handling incoming requests.
