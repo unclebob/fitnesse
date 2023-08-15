@@ -12,7 +12,7 @@ public class WikiFileListBuilderTask extends DefaultTask {
   @OutputFile
   File updateDoNotCopyOverListFile
 
-  @OutputFiles
+  @Input
   Collection<String> wikiFiles
 
   @TaskAction

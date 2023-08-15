@@ -1,3 +1,4 @@
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.OutputFile
@@ -7,7 +8,7 @@ class LessCompiler extends JavaExec {
   @InputDirectory
   def inputDir
 
-  @OutputFile
+  @Input
   def mainLessFile
 
   @OutputFile
