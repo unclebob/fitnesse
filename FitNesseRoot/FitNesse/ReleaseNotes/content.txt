@@ -1,4 +1,5 @@
 !2 Pending Changes
+* Updated README and dependencies
 
 !2 20231029
  * Drop Java 8 compatibility and compile with Java 11, Use OpenJDK's nashorn dependency to evaluate JS expressions ([[1426][https://github.com/unclebob/fitnesse/pull/1426]])

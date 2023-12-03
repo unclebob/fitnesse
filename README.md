@@ -1,16 +1,16 @@
-# [FitNesse](http://fitnesse.org/)  [![maven central](https://maven-badges.herokuapp.com/maven-central/org.fitnesse/fitnesse/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.fitnesse/fitnesse) [![SonarQube Tech Debt](https://img.shields.io/sonar/http/nemo.sonarqube.org/org.fitnesse:fitnesse/tech_debt.svg)](http://nemo.sonarqube.org/dashboard/index?id=org.fitnesse%3Afitnesse)
+# [FitNesse](https://fitnesse.org/)  [![maven central](https://maven-badges.herokuapp.com/maven-central/org.fitnesse/fitnesse/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.fitnesse/fitnesse) [![SonarQube Tech Debt](https://img.shields.io/sonar/http/nemo.sonarqube.org/org.fitnesse:fitnesse/tech_debt.svg)](http://nemo.sonarqube.org/dashboard/index?id=org.fitnesse%3Afitnesse)
 
 Welcome to FitNesse, the fully integrated stand-alone acceptance testing framework and wiki.
 
-To get started, check out the [FitNesse website](https://fitnesse.github.io/fitnessedotorg/)!
+To get started, check out the [FitNesse website](https://fitnesse.org/)!
 
 
 
 ## Quick start
 
-* [A One-Minute Description of FitNesse](https://fitnesse.github.io/fitnessedotorg/FitNesse/UserGuide/OneMinuteDescription.html)
-* [Download FitNesse](https://fitnesse.github.io/fitnessedotorg/FitNesseDownload.html) and [Plugins](https://fitnesse.github.io/fitnessedotorg/PlugIns.html)
-* [The FitNesse User Guide](https://fitnesse.github.io/fitnessedotorg/FitNesse/UserGuide.html)
+* [A One-Minute Description of FitNesse](https://fitnesse.org/FitNesse/UserGuide/OneMinuteDescription.html)
+* [Download FitNesse](https://fitnesse.org/FitNesseDownload.html) and [Plugins](https://fitnesse.org/PlugIns.html)
+* [The FitNesse User Guide](https://fitnesse.org/FitNesse/UserGuide.html)
 
 
 
@@ -103,28 +103,4 @@ There are a few things to keep in mind when working from an IDE:
 
 ### The release process
 
-FitNesse releases are deployed to Maven Central via [OSS Sonatype](https://oss.sonatype.org/#welcome).
-
-Sufficient permissions are required to perform a release.
-
-Release builds denote "blessed" releases. Those are tagged in Git along with being released. The releases will be available from
-Maven Central.
-
-   ```
-   $ ./gradlew release
-   ```
-
-For this to work you'll need to add some properties to your ~/.gradle/gradle.properties
-
-```
-sonatypeUsername=...
-sonatypePassword=...
-
-signing.keyId=...
-signing.password=...
-signing.secretKeyRingFile=...
-```
-
-Details on what values to provide can be found on
-[Deploy to Maven Central using API key ](https://blog.solidsoft.pl/2015/09/08/deploy-to-maven-central-using-api-key-aka-auth-token/)
-and the [documentation of the Signing Plugin](https://docs.gradle.org/current/userguide/signing_plugin.html).
+FitNesse releases are created using https://github.com/fitnesse/fitnesse-release
