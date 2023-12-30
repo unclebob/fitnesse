@@ -91,6 +91,7 @@ public class FitNesseUtil {
               .withAuthenticator(authenticator)
               .withVersionsController(new ZipFileVersionsController())
               .withRecentChanges(new RecentChangesWikiPage())
+              .withAccount()
               .updatedWith(properties)
               .makeFitNesseContext();
     } catch (IOException | PluginException e) {

@@ -5,4 +5,7 @@
  <input type="hidden" name="searchScope" value="root" />
  <input type="text" id="searchString" name="searchString" class="form-control" placeholder="Search for page" />
  <input type="hidden" name="searchType" value="Search Titles" />
+ #if ($request.authorizationUsername)
+  User: <a href="$localPath?account">$request.authorizationUsername</a>
+ #end
 </form>

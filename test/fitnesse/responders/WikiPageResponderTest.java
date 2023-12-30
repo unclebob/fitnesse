@@ -4,6 +4,7 @@ package fitnesse.responders;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,13 +36,24 @@ public class WikiPageResponderTest {
   }
 
   @Test
-  public void testResponse() throws Exception {
-    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ChildPage"), "child content");
-    PageData data = page.getData();
-    WikiPageProperty properties = data.getProperties();
-    properties.set(PageData.PropertySUITES, "Wiki Page tags");
-    page.commit(data);
+  public void testResponseForAuthenticatedPage() throws Exception {
+    createBasicPage();
+    final MockRequest request = new MockRequest();
+    request.setCredentials("admin", "admin");
+    request.setResource("ChildPage");
+    final Responder responder = new WikiPageResponder();
+    final SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
 
+    assertEquals(200, response.getStatus());
+
+    final String body = response.getContent();
+    assertBasicContent(response, body);
+    assertSubString("User: <a href=\"ChildPage?account\">admin</a>", body);
+  }
+
+  @Test
+  public void testResponse() throws Exception {
+    createBasicPage();
     final MockRequest request = new MockRequest();
     request.setResource("ChildPage");
 
@@ -52,12 +64,24 @@ public class WikiPageResponderTest {
 
     final String body = response.getContent();
 
+    assertBasicContent(response, body);
+  }
+
+  private static void assertBasicContent(SimpleResponse response, String body) {
     assertSubString("<html>", body);
     assertSubString("<body", body);
     assertSubString("child content", body);
     assertSubString("href=\"ChildPage?whereUsed\"", body);
     assertSubString("Cache-Control: max-age=0", response.makeHttpHeaders());
     assertSubString("<span class=\"tag\">Wiki Page tags</span>", body);
+  }
+
+  private void createBasicPage() {
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ChildPage"), "child content");
+    PageData data = page.getData();
+    WikiPageProperty properties = data.getProperties();
+    properties.set(PageData.PropertySUITES, "Wiki Page tags");
+    page.commit(data);
   }
 
   @Test

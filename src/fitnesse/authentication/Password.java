@@ -28,6 +28,20 @@ public class Password {
     System.out.println("password saved in " + password.passwords.getName());
   }
 
+  public void savePasswordToDefaultFile(String username, String passwordString) throws Exception {
+    Password password = new Password();
+    HashingCipher cipher = new HashingCipher();
+    passwords = new PasswordFile(defaultFile, cipher);
+    password.cipher = passwords.instantiateCipher(defaultCipher);
+    password.username = username;
+    password.password = passwordString;
+    password.savePassword();
+  }
+
+  public void deletePasswordInDefaultFile(String username) throws Exception {
+    passwords.deleteUser(username);
+  }
+
   public static void printUsage() {
     System.err.println("Usage: java fitnesse.authentication.Password [-f <password file>] [-c <password cipher>] <user>");
     System.err.println("\t-f <password file> {" + defaultFile + "}");
