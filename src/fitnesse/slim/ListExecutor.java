@@ -2,14 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import fitnesse.slim.instructions.Instruction;
-import fitnesse.slim.instructions.InstructionFactory;
-import fitnesse.slim.instructions.InstructionResult;
+import fitnesse.slim.instructions.*;
+import util.*;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import static java.util.Arrays.asList;
+import static java.util.Arrays.*;
 
 /**
  * executes a list of SLIM statements, and returns a list of return values.
@@ -18,6 +17,7 @@ public class ListExecutor {
   private StatementExecutorInterface executor;
   private NameTranslator methodNameTranslator;
   private boolean verbose;
+  private static LogView logView = null;
 
   public ListExecutor(SlimFactory slimFactory) {
     this(false, slimFactory);
@@ -63,6 +63,13 @@ public class ListExecutor {
   }
 
   private class LoggingExecutive extends Executive {
+    private static final String imgPath = "fitnesse_dbg.png";
+
+    public LoggingExecutive() {
+      if(logView==null) {
+        logView = new LogView("slim instructions", LogView.getImageIconFromPath(imgPath));
+      }
+    }
     @Override
     public void prepareToExecute() {
       verboseMessage("!1 Instructions");
@@ -92,6 +99,9 @@ public class ListExecutor {
   }
 
   private void verboseMessage(Object message) {
-    if (verbose) System.out.println(message);
+    if (verbose) {
+      System.out.println(message);
+      logView.append(message + "\n");
+    }
   }
 }
