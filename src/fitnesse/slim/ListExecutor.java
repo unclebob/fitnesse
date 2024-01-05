@@ -2,13 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import fitnesse.slim.instructions.*;
-import util.*;
+import fitnesse.slim.instructions.Instruction;
+import fitnesse.slim.instructions.InstructionFactory;
+import fitnesse.slim.instructions.InstructionResult;
+import util.LogView;
 
 import java.util.ArrayList;
-import java.util.*;
+import java.util.List;
 
-import static java.util.Arrays.*;
+import static java.util.Arrays.asList;
 
 /**
  * executes a list of SLIM statements, and returns a list of return values.

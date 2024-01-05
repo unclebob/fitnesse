@@ -3,9 +3,16 @@ package util;
 
 // https://stackoverflow.com/questions/21682761/reading-a-log-file-and-displaying-it-in-jtextarea
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
+import java.awt.BorderLayout;
+import java.awt.Window;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class LogView {
 

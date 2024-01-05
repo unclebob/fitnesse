@@ -23,9 +23,14 @@
 package util;
 
 import java.awt.Component;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.text.*;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
+import javax.swing.BoundedRangeModel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+import javax.swing.text.DefaultCaret;
+import javax.swing.text.JTextComponent;
 
 // https://github.com/tips4java/tips4java/blob/main/source/SmartScroller.java
 

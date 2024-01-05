@@ -1,6 +1,6 @@
 package util;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
 
 public class LogViewTest {
 
