@@ -43,10 +43,8 @@ public class AccountResponderTest {
     String body = response.getContent();
     assertSubString("<html>", body);
     assertSubString("<title>Account: ChildPage</title>", body);
-    assertSubString("Manage My Account", body);
+    assertSubString("Change Password", body);
     assertSubString("Log in to view details.", body);
-    assertSubString("Manage Other Users", body);
-    assertSubString("Login as admin to manage other users.", body);
   }
 
 
@@ -70,8 +68,8 @@ public class AccountResponderTest {
     assertEquals(4, getCountOfString("<input type=\"text\"", body));
     assertEquals(3, getCountOfString("<input type=\"submit\"", body));
     assertSubString("<title>Account: ChildPage</title>", body);
-    assertSubString("Manage My Account", body);
-    assertSubString("Manage Other Users", body);
+    assertSubString("Change Password", body);
+    assertSubString("Create / Delete Users", body);
     assertSubString("placeholder=\"Not used for deleting users.\"", body);
     assertSubString("<input type=\"submit\" name=\"changePassword\" value=\"Change My Password\"/>", body);
     assertSubString("<input type=\"submit\" name=\"createUser\" value=\"Create User\"/>", body);
@@ -99,9 +97,7 @@ public class AccountResponderTest {
     assertEquals(2, getCountOfString("<input type=\"text\"", body));
     assertEquals(1, getCountOfString("<input type=\"submit\"", body));
     assertSubString("<title>Account: ChildPage</title>", body);
-    assertSubString("Manage My Account", body);
-    assertSubString("Manage Other Users", body);
-    assertSubString("Login as admin to manage other users.", body);
+    assertSubString("Change Password", body);
     assertSubString("<input type=\"submit\" name=\"changePassword\" value=\"Change My Password\"/>", body);
   }
 

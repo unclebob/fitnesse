@@ -28,17 +28,11 @@ public class Password {
     System.out.println("password saved in " + password.passwords.getName());
   }
 
-  public void savePasswordToDefaultFile(String username, String passwordString) throws Exception {
-    Password password = new Password();
-    HashingCipher cipher = new HashingCipher();
-    passwords = new PasswordFile(defaultFile, cipher);
-    password.cipher = passwords.instantiateCipher(defaultCipher);
-    password.username = username;
-    password.password = passwordString;
-    password.savePassword();
+  public boolean doesUserExist(String name) {
+    return passwords.getPasswordMap().get(name) != null;
   }
 
-  public void deletePasswordInDefaultFile(String username) throws Exception {
+  public void deletePassword(String username) throws Exception {
     passwords.deleteUser(username);
   }
 
@@ -58,7 +52,11 @@ public class Password {
     this(defaultFile);
   }
 
-  public void savePassword() throws Exception {
+  public void savePassword(String usernamePassed, String passwordPassed) throws Exception {
+    passwords.savePassword(usernamePassed, passwordPassed);
+  }
+
+  private void savePassword() throws Exception {
     passwords.savePassword(username, password);
   }
 

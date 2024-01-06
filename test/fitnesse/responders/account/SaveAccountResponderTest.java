@@ -148,20 +148,20 @@ public class SaveAccountResponderTest {
   }
 
   @Test
-  public void testCreateDuplicateAdminUser() throws Exception {
+  public void testCreateExistingUser() throws Exception {
     createRequest();
     addDefaultRequestInputs();
     request.setCredentials("admin", "admin");
     request.addInput("createUser", "Create User");
-    request.addInput("UserNameText", "admin");
-    request.addInput("UserPasswordText", "admin");
+    request.addInput("UserNameText", "nonadmin");
+    request.addInput("UserPasswordText", "nonadmin");
 
     File file = new File(Password.defaultFile);
-    FileUtil.createFile(file, "admin:admin");
+    FileUtil.createFile(file, "!fitnesse.authentication.HashingCipher\nadmin:admin\nnonadmin:nonadmin");
 
     Response response = responder.makeResponse(context, request);
     assertEquals(412, response.getStatus());
-    assertTrue(((SimpleResponse) response).getContent().contains("You cannot create admin user again."));
+    assertTrue(((SimpleResponse) response).getContent().contains("User already exists."));
   }
 
   @Test

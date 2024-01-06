@@ -15,32 +15,31 @@ public class SaveAccountResponder extends BasicResponder {
     if (request.getAuthorizationUsername() == null) {
       return getResponse(context, "You have to be logged in to use this feature.");
     }
+    Password password = new Password();
     if (request.hasInput("changePassword")) {
       String passwordText = StringUtils.trim(request.getInput("PasswordText"));
       String confirmPasswordText = StringUtils.trim(request.getInput("ConfirmPasswordText"));
-      if (passwordText.length() == 0 || !passwordText.equals(confirmPasswordText)) {
+      if (passwordText.isEmpty() || !passwordText.equals(confirmPasswordText)) {
         return getResponse(context, "Password should not be empty and they should match.");
       }
-      new Password().savePasswordToDefaultFile(request.getAuthorizationUsername(), passwordText);
+      password.savePassword(request.getAuthorizationUsername(), passwordText);
     } else if ("admin".equals(request.getAuthorizationUsername())) {
       if (request.hasInput("createUser")) {
         String newUserNameText = StringUtils.trim(request.getInput("UserNameText"));
         String newUserPasswordText = StringUtils.trim(request.getInput("UserPasswordText"));
-        if ("admin".equals(newUserNameText)) {
-          return getResponse(context, "You cannot create admin user again.");
-        }
-        if (newUserNameText.length() == 0 || newUserPasswordText.length() == 0) {
+        if (newUserNameText.isEmpty() || newUserPasswordText.isEmpty()) {
           return getResponse(context, "Username or password field is empty.");
+        } else if (password.doesUserExist(newUserNameText)) {
+          return getResponse(context, "User already exists.");
         }
-        new Password().savePasswordToDefaultFile(newUserNameText, newUserPasswordText);
+        password.savePassword(newUserNameText, newUserPasswordText);
       } else if (request.hasInput("deleteUser")) {
         String newUserNameText = StringUtils.trim(request.getInput("UserNameText"));
         if ("admin".equals(newUserNameText)) {
           return getResponse(context, "You cannot delete admin user.");
         }
-        Password password = new Password();
         try {
-          password.deletePasswordInDefaultFile(newUserNameText);
+          password.deletePassword(newUserNameText);
         } catch (Exception ex) {
           return getResponse(context, ex.getMessage());
         }

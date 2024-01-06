@@ -23,12 +23,12 @@ public class PasswordTest {
   public void testSavingUserAgainWithDifferentPassword() throws Exception {
     File file = new File(Password.defaultFile);
     FileUtil.createFile(file, "");
-    saveFileWithUser(file, "admin", "admin");
+    saveFileWithUser("admin", "admin");
 
     List<String> fileLines = FileUtil.getFileLines(file);
     String text = fileLines.get(1);
     assertTrue(text.contains("admin"));
-    saveFileWithUser(file, "admin", "differentPassword");
+    saveFileWithUser("admin", "differentPassword");
     fileLines = FileUtil.getFileLines(file);
     String newText = fileLines.get(1);
     assertNotEquals(text, newText);
@@ -41,7 +41,7 @@ public class PasswordTest {
     FileUtil.createFile(file, "");
     List<String> beforeSaving = FileUtil.getFileLines(file);
     assertEquals(0, beforeSaving.size());
-    password.savePasswordToDefaultFile("admin", "admin");
+    password.savePassword("admin", "admin");
     List<String> afterSaving = FileUtil.getFileLines(file);
     assertEquals(2, FileUtil.getFileLines(file).size());
     assertEquals("!fitnesse.authentication.HashingCipher", afterSaving.get(0));
@@ -52,10 +52,10 @@ public class PasswordTest {
   public void testDeletingNonExistingUser() throws Exception {
     File file = new File(Password.defaultFile);
     FileUtil.createFile(file, "");
-    saveFileWithUser(file, "admin", "admin");
+    saveFileWithUser("admin", "admin");
     Exception exception = assertThrows(Exception.class, () -> {
       Password passwordToDelete = new Password(Password.defaultFile);
-      passwordToDelete.deletePasswordInDefaultFile("DoesNotExist");
+      passwordToDelete.deletePassword("DoesNotExist");
     });
     assertEquals("User does not exist.", exception.getMessage());
   }
@@ -64,21 +64,20 @@ public class PasswordTest {
   public void testDeletingUser() throws Exception {
     File file = new File(Password.defaultFile);
     FileUtil.createFile(file, "");
-    saveFileWithUser(file, "admin", "admin");
-    saveFileWithUser(file, "WillBeDeleted", "WillBeDeleted");
+    saveFileWithUser("admin", "admin");
+    saveFileWithUser("WillBeDeleted", "WillBeDeleted");
     assertEquals(3, FileUtil.getFileLines(file).size());
 
     Password passwordToDelete = new Password(Password.defaultFile);
-    passwordToDelete.deletePasswordInDefaultFile("WillBeDeleted");
+    passwordToDelete.deletePassword("WillBeDeleted");
     assertEquals(2, FileUtil.getFileLines(file).size());
     List<String> afterSaving = FileUtil.getFileLines(file);
     assertEquals("!fitnesse.authentication.HashingCipher", afterSaving.get(0));
     assertEquals("admin:UqKBNj590CeI3kOLiZXL", afterSaving.get(1));
   }
 
-  private static void saveFileWithUser(File file, String username, String password) throws Exception {
-    Password passwordToSave = new Password(Password.defaultFile);
-    passwordToSave.savePasswordToDefaultFile(username, password);
+  private static void saveFileWithUser(String username, String password) throws Exception {
+    new Password().savePassword(username, password);
   }
 
   @Test
