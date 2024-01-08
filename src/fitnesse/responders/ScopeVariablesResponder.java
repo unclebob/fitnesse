@@ -30,7 +30,7 @@ public class ScopeVariablesResponder extends BasicResponder {
     if (requestedPage == null)
       response = pageNotFoundResponse(context, request);
     else {
-      variables = new HashMap<>();
+      variables = new ArrayList<>();
       listVariablesLoc(page);
       response = makeResponse(request);
     }
@@ -41,7 +41,7 @@ public class ScopeVariablesResponder extends BasicResponder {
     Map<String, String> variableList = MarkUpSystem.listVariablesWithValues(page);
 
     for (Map.Entry<String, String> var : variableList.entrySet())
-      if (variables.parallelStream().noneMatch(variable -> var.getKey().equals(variable.getKey()))
+      if (variables.parallelStream().noneMatch(variable -> var.getKey().equals(variable.getKey())))
         variables.add(new ScopeVariable(var.getKey(), page.getFullPath().toString(), var.getValue()));
 
     if (page.getParent() != page) listVariablesLoc(page.getParent());
