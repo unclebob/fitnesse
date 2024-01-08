@@ -13,7 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 public class ScopeVariablesResponder extends BasicResponder {
-  private HashMap<String,String> variables;
+  private List<ScopeVariable> variables;
   private HtmlPage responsePage;
 
   @Override
@@ -38,13 +38,11 @@ public class ScopeVariablesResponder extends BasicResponder {
   }
 
   private void listVariablesLoc(WikiPage page) {
-    List<String> variableList = MarkUpSystem.listVariables(page);
+    Map<String, String> variableList = MarkUpSystem.listVariablesWithValues(page);
 
-    for (String var : variableList) {
-      if (variables.get(var) == null) {
-        variables.put(var, page.getFullPath().toString());
-      }
-    }
+    for (Map.Entry<String, String> var : variableList.entrySet())
+      if (variables.parallelStream().noneMatch(variable -> var.getKey().equals(variable.getKey()))
+        variables.add(new ScopeVariable(var.getKey(), page.getFullPath().toString(), var.getValue()));
 
     if (page.getParent() != page) listVariablesLoc(page.getParent());
   }
@@ -60,5 +58,29 @@ public class ScopeVariablesResponder extends BasicResponder {
     SimpleResponse response = new SimpleResponse();
     response.setContent(responsePage.html(request));
     return response;
+  }
+
+  private ScopeVariable {
+    private String key;
+    private String location;
+    private String value;
+
+    public ScopeVariable(String key, String location, String value) {
+      this.key = key;
+      this.location = location;
+      this.value = value;
+    }
+    
+    public String getKey() {
+      return this.key;
+    }
+
+    public String getLocation() {
+      return this.location;
+    }
+
+    public String getValue() {
+      return this.value;
+    }
   }
 }
