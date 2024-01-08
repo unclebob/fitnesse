@@ -60,7 +60,7 @@ public class ScopeVariablesResponder extends BasicResponder {
     return response;
   }
 
-  private ScopeVariable {
+  private class ScopeVariable {
     private String key;
     private String location;
     private String value;
