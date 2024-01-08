@@ -24,4 +24,13 @@ public interface MarkUpSystem {
     MarkUpSystem.make(content).parse(parsingPage, content);
     return parsingPage.listVariables();
   }
+
+  static Map<String, String> listVariablesWithValues(WikiPage page) {
+    Map<String, String> variablesWithValues = new HashMap<>();
+    ParsingPage parsingPage = new ParsingPage(new WikiSourcePage(page));
+    for (String listVariable : listVariables(page)) {
+      variablesWithValues.put(listVariable, parsingPage.findVariable(listVariable));
+    }
+    return variablesWithValues;
+  }
 }
