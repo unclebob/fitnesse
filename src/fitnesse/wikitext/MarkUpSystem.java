@@ -31,7 +31,7 @@ public interface MarkUpSystem {
     Map<String, String> variablesWithValues = new HashMap<>();
     ParsingPage parsingPage = new ParsingPage(new WikiSourcePage(page));
     for (String listVariable : listVariables(page)) {
-      variablesWithValues.put(listVariable, parsingPage.findVariable(listVariable));
+      variablesWithValues.put(listVariable, parsingPage.findVariable(listVariable).orElse(""));
     }
     return variablesWithValues;
   }
