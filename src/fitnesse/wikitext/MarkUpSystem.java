@@ -29,11 +29,12 @@ public interface MarkUpSystem {
 
   static Map<String, String> listVariablesWithValues(WikiPage page) {
     Map<String, String> variablesWithValues = new HashMap<>();
-    for (String listVariable : listVariables(page)) {
-      String currentVariable = page.getVariable(listVariable);
-      variablesWithValues.put(listVariable, currentVariable != null ? currentVariable : "");
+    ParsingPage parsingPage = new ParsingPage(new WikiSourcePage(page));
+    String content = page.getData().getContent();
+    MarkUpSystem.make(content).parse(parsingPage, content);
+    for (String listVariable : parsingPage.listVariables()) {
+      variablesWithValues.put(listVariable, parsingPage.findVariable(listVariable).orElse(""));
     }
-    
     return variablesWithValues;
   }
 }
