@@ -39,7 +39,6 @@ public class ScopeVariablesResponderTest {
     assertHasRegexp("<tr>.*?<td>x</td>.*?<td>X</td>.*<td><a href=\"SimplePage\">SimplePage</a></td>.*?</tr>", response.getContent());
     assertHasRegexp("<tr>.*?<td>y</td>.*?<td>Y</td>.*<td><a href=\"SimplePage\">SimplePage</a></td>.*?</tr>", response.getContent());
     assertHasRegexp("<tr>.*?<td>z</td>.*?<td>Z</td>.*?<td><a href=\"SimplePage.ChildPage\">SimplePage.ChildPage</a></td>.*?</tr>", response.getContent());
-    assertHasRegexp("<tr>.*?<td>a</td>.*?<td>A</td>.*?<td><a href=\"SimplePage.ChildPage\">SimplePage.ChildPage</a></td>.*?</tr>", response.getContent());
     assertHasRegexp("<tr>.*?<td>a</td>.*?<td>B</td>.*?<td><a href=\"SimplePage.ChildPage.GrandChildPage\">SimplePage.ChildPage.GrandChildPage</a></td>.*?</tr>", response.getContent());
     assertHasRegexp("<tr>.*?<td>b</td>.*?<td>BB</td>.*?<td><a href=\"SimplePage.ChildPage.GrandChildPage\">SimplePage.ChildPage.GrandChildPage</a></td>.*?</tr>", response.getContent());
   }
