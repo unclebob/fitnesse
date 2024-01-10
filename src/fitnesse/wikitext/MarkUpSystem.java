@@ -20,21 +20,14 @@ public interface MarkUpSystem {
   static MarkUpSystem make() { return new MarkUpSystemV2(); }
   static MarkUpSystem make(String content) { return MarkUpSystems.STORE.make(content); }
 
-  static List<String> listVariables(WikiPage page) {
-    ParsingPage parsingPage = new ParsingPage(new WikiSourcePage(page));
-    String content = page.getData().getContent();
-    MarkUpSystem.make(content).parse(parsingPage, content);
-    return parsingPage.listVariables();
-  }
-
-  static Map<String, String> listVariablesWithValues(WikiPage page) {
-    Map<String, String> variablesWithValues = new HashMap<>();
+  static Map<String, String> listVariables(WikiPage page) {
+    Map<String, String> listVariables = new HashMap<>();
     ParsingPage parsingPage = new ParsingPage(new WikiSourcePage(page));
     String content = page.getData().getContent();
     MarkUpSystem.make(content).parse(parsingPage, content);
     for (String listVariable : parsingPage.listVariables()) {
-      variablesWithValues.put(listVariable, parsingPage.findVariable(listVariable).orElse(""));
+      listVariables.put(listVariable, parsingPage.findVariable(listVariable).orElse(""));
     }
-    return variablesWithValues;
+    return listVariables;
   }
 }
