@@ -40,9 +40,11 @@ public class ScopeVariablesResponder extends BasicResponder {
   private void listVariablesLoc(WikiPage page) {
     Map<String, String> variableList = MarkUpSystem.listVariables(page);
 
-    for (Map.Entry<String, String> var : variableList.entrySet())
-      if (variables.stream().noneMatch(variable -> var.getKey().equals(variable.getKey())))
+    for (Map.Entry<String, String> var : variableList.entrySet()) {
+      if (variables.stream().noneMatch(variable -> var.getKey().equals(variable.getKey()))) {
         variables.add(new ScopeVariable(var.getKey(), page.getFullPath().toString(), var.getValue()));
+      }
+    }
 
     if (page.getParent() != page) listVariablesLoc(page.getParent());
   }
