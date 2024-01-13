@@ -63,16 +63,6 @@ public class HtmlBuilder implements Translation {
         return index < 0 ? "" : translator.translate(symbol.childAt(index));
     }
 
-    public HtmlBuilder bodyContent() {
-        builders.add(new TagBuilder() {
-            @Override
-            public void build(Translator translator, Symbol symbol, HtmlTag tag) {
-                tag.add(new HtmlText(symbol.getContent()));
-            }
-        });
-        return this;
-    }
-
     @Override
     public String toTarget(Translator translator, Symbol symbol) {
         HtmlTag result = new HtmlTag(tagName);

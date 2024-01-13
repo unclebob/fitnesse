@@ -19,6 +19,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageUtil;
 
 public class ImportAndViewResponder implements SecureResponder, WikiImporterClient {
   private static final Logger LOG = Logger.getLogger(ImportAndViewResponder.class.getName());
@@ -30,7 +31,7 @@ public class ImportAndViewResponder implements SecureResponder, WikiImporterClie
     String resource = request.getResource();
 
     if ("".equals(resource))
-      resource = "FrontPage";
+      resource = WikiPageUtil.FRONT_PAGE;
 
     loadPage(resource, context);
     if (page == null)

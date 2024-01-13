@@ -1,8 +1,6 @@
 package fitnesse.wiki;
 
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiSourcePage;
-import fitnesse.wikitext.parser.SourcePage;
+import fitnesse.wikitext.SourcePage;
 import fitnesse.wikitext.parser.TestRoot;
 import org.junit.Test;
 
@@ -26,12 +24,6 @@ public class WikiSourcePageTest {
         assertEquals(2, names.size());
         assertTrue(names.contains("PageTwo"));
         assertTrue(names.contains("PageThree"));
-    }
-
-    @Test
-    public void getsUrlForPage() {
-        WikiPage test = new TestRoot().makePage("MyPage");
-        assertEquals("WikiPath", new WikiSourcePage(test).makeUrl("WikiPath"));
     }
 
   @Test

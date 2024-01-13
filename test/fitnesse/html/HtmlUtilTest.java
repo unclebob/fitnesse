@@ -4,7 +4,6 @@ package fitnesse.html;
 
 import fitnesse.FitNesseContext;
 import fitnesse.html.template.HtmlPage;
-import fitnesse.http.Request;
 import fitnesse.reporting.JavascriptUtil;
 import fitnesse.responders.WikiPageActions;
 import fitnesse.testutil.FitNesseUtil;
@@ -83,6 +82,11 @@ public class HtmlUtilTest {
     assertEquals("ab&amp;cd&amp;ef&amp;", HtmlUtil.escapeHTML("ab&cd&ef&"));
   }
 
+  @Test
+  public void shouldUnescape() {
+    assertEquals("& < > &lt; &gt; &amp;", HtmlUtil.unescapeHTML("&amp; &lt; &gt; &amp;lt; &amp;gt; &amp;amp;"));
+  }
+
   private String getActionsHtml(String pageName) {
     WikiPageUtil.addPage(context.getRootPage(), PathParser.parse(pageName), "");
     HtmlPage htmlPage = context.pageFactory.newPage();
@@ -153,18 +157,4 @@ public class HtmlUtilTest {
     HtmlTag tag = JavascriptUtil.makeSilentLink("test?responder", new RawHtml("string with \"quotes\""));
     assertSubString("<a href=\"#\" onclick=\"doSilentRequest('test?responder')\">string with \"quotes\"</a>", tag.html());
   }
-
-  @Test
-  public void testRemainRfc3986UnreservedCharacters_WhenMixedStringGiven_ExpectedCleanString() {
-    String mixedString = "abcdefghijklmnopqrstuvwxyzäöü" +
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜ" +
-      "0123456789" +
-      "-._~" + "^°!\"§$%&/()=?`'´{[]}+*#,;:";
-    String cleanString = "abcdefghijklmnopqrstuvwxyz" +
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-      "0123456789" +
-      "-._~";
-    assertEquals(cleanString, HtmlUtil.remainRfc3986UnreservedCharacters(mixedString));
-  }
-
 }

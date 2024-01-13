@@ -33,7 +33,7 @@ public class TestTextFormatter extends BaseFormatter implements Closeable {
   }
 
   @Override
-  public void testOutputChunk(String output) {
+  public void testOutputChunk(TestPage testPage, String output) {
   }
 
   @Override

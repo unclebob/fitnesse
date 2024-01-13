@@ -1,5 +1,7 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.SourcePage;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,8 +11,7 @@ public class WikiTranslator extends Translator {
     static {
         translations = new HashMap<>();
         addTranslation(Alias.symbolType, new WikiBuilder().text("[[").children("][").text("]]"));
-        addTranslation(Link.symbolType, new WikiBuilder().property("image", "", " ")
-                .property("image", "left", " ").property("image", "right", " ").content().child(0));
+        addTranslation(Link.symbolType, new WikiBuilder().content().child(0));
         addTranslation(Literal.symbolType, new WikiBuilder().text("!-").content().text("-!"));
         addTranslation(Path.symbolType, new WikiBuilder().text("!path ").child(0));
         addTranslation(Preformat.symbolType, new WikiBuilder().text("{{{").child(0).text("}}}"));

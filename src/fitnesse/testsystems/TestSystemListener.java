@@ -3,17 +3,44 @@
 package fitnesse.testsystems;
 
 public interface TestSystemListener {
-  void testSystemStarted(TestSystem testSystem);
+  default void testSystemStarted(TestSystem testSystem) {
+  }
 
-  void testOutputChunk(String output);
+  /**
+   * Appends content to test output.
+   * This method only exists to provide forward compatibility while Listeners are migrated to the overload also accepting a TestPage.
+   * @param output content to append
+   * @deprecated implement {@link #testOutputChunk(TestPage, String)}
+   */
+  @Deprecated
+  default void testOutputChunk(String output) {
+    throw new UnsupportedOperationException("This overload is deprecated, and should not be called any more. " +
+      "It only exists to provide forward compatibility while Listeners are migrated to the overload also accepting a TestPage.");
+  }
 
-  void testStarted(TestPage testPage);
+  /**
+   * Appends content to test output.
+   * This method only has a default implementation to provide backwards compatibility for Listeners not yet migrated to implement it.
+   * All TestSystemListeners should implement it.
+   * @param testPage current test page
+   * @param output content to append
+   */
+  default void testOutputChunk(TestPage testPage, String output) {
+    testOutputChunk(output);
+  }
 
-  void testComplete(TestPage testPage, TestSummary testSummary);
+  default void testStarted(TestPage testPage) {
+  }
 
-  void testSystemStopped(TestSystem testSystem, Throwable cause /* may be null */);
+  default void testComplete(TestPage testPage, TestSummary testSummary) {
+  }
 
-  void testAssertionVerified(Assertion assertion, TestResult testResult);
+  default void testSystemStopped(TestSystem testSystem, Throwable cause /* may be null */) {
+  }
 
-  void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult);
+  default void testAssertionVerified(Assertion assertion, TestResult testResult) {
+  }
+
+  default void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
+  }
 }

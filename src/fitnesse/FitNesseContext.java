@@ -18,7 +18,7 @@ import fitnesse.wiki.UrlPathVariableSource;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.fs.VersionsController;
-import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.VariableSource;
 
 import java.io.File;
 import java.util.Map;
@@ -46,6 +46,7 @@ public class FitNesseContext {
   private final WikiPageFactory wikiPageFactory;
   public final String rootPath;
   private final String rootDirectoryName;
+  public final Integer maximumWorkers;
   public final String contextRoot;
   public final ResponderFactory responderFactory;
   public final String theme;
@@ -59,8 +60,8 @@ public class FitNesseContext {
   private final Properties properties;
 
   protected FitNesseContext(FitNesseVersion version, WikiPageFactory wikiPageFactory, String rootPath,
-                            String rootDirectoryName, String contextRoot, VersionsController versionsController,
-                            RecentChanges recentChanges, int port,
+                            String rootDirectoryName, int maximumWorkers, String contextRoot,
+                            VersionsController versionsController, RecentChanges recentChanges, int port,
                             Authenticator authenticator, Logger logger,
                             TestSystemFactory testSystemFactory, TestSystemListener testSystemListener,
                             FormatterFactory formatterFactory,
@@ -72,6 +73,7 @@ public class FitNesseContext {
     this.wikiPageFactory = wikiPageFactory;
     this.rootPath = rootPath;
     this.rootDirectoryName = rootDirectoryName;
+    this.maximumWorkers = maximumWorkers;
     this.contextRoot = contextRoot;
     this.versionsController = versionsController;
     this.recentChanges = recentChanges;

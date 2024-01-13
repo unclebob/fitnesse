@@ -3,8 +3,9 @@
 package fitnesse.responders.refactoring;
 
 import fitnesse.FitNesseContext;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.refactoring.ChangeReference;
 import fitnesse.wiki.refactoring.PageReferenceRenamer;
-import fitnesse.wiki.refactoring.ReferenceRenamer;
 import fitnesse.http.Request;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -22,12 +23,12 @@ public class RenamePageResponder extends PageMovementResponder {
   @Override
   protected boolean getAndValidateRefactoringParameters(Request request) {
     newName = request.getInput("newName");
-    return (newName != null && PathParser.isSingleWikiWord(newName) && !"FrontPage".equals(oldNameOfPageToBeMoved));
+    return (newName != null && PathParser.isSingleWikiWord(newName) && !WikiPageUtil.FRONT_PAGE.equals(oldNameOfPageToBeMoved));
   }
 
   @Override
-  protected ReferenceRenamer getReferenceRenamer(FitNesseContext context) {
-    return new PageReferenceRenamer(context.getRootPage(), oldRefactoredPage, getNewPageName());
+  protected ChangeReference getReferenceRenamer() {
+    return new PageReferenceRenamer(oldRefactoredPage, getNewPageName());
   }
 
   @Override

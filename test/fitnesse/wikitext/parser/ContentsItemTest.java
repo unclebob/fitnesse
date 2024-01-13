@@ -1,5 +1,6 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.shared.ContentsItemBuilder;
 import org.junit.Test;
 
 import fitnesse.html.HtmlElement;
@@ -7,6 +8,7 @@ import fitnesse.wiki.*;
 import fitnesse.wiki.fs.InMemoryPage;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ContentsItemTest {
     @Test
@@ -47,9 +49,49 @@ public class ContentsItemTest {
     }
 
     @Test
+    public void buildsTestPageCountForASuitePageWithNoChildren() throws Exception {
+      assertBuildsOption("PlainItem", new String[]{"Suite=true"}, "-c", "TEST_PAGE_COUNT_TOC",
+        "<a href=\"PlainItem\" class=\"suite\">PlainItem ( 0 )</a>");
+    }
+
+    @Test
+    public void buildsTestPageCountForASuiteWithTestPage() throws Exception {
+      TestRoot root = new TestRoot();
+      WikiPage pageOne = root.makePage("PageOne", "!contents -R1 -g -p -f -h -c");
+      setPageProperties(pageOne,"Suite");
+      WikiPage pageTwo = pageOne.addChildPage("PageTwo");
+      setPageProperties(pageTwo,"Suite");
+      setPageProperties(pageTwo.addChildPage("TestOne"),"Test");
+      //SuiteSetUp and SuiteTearDown should be counted as test just like they are counted when run
+      setPageProperties(pageTwo.addChildPage("SuiteSetUp"),"Static");
+      setPageProperties(pageTwo.addChildPage("SuiteTearDown"),"Static");
+      assertTrue(pageOne.getHtml().contains("Page Two (  3 ) *"));
+    }
+
+    @Test
+    public void buildsTestPageCountForASuiteWithSetUpAndTearDown() throws Exception {
+      TestRoot root = new TestRoot();
+      WikiPage pageOne = root.makePage("PageOne", "!contents -R1 -g -p -f -h -c");
+      setPageProperties(pageOne,"Suite");
+      WikiPage pageTwo = pageOne.addChildPage("PageTwo");
+      setPageProperties(pageTwo,"Suite");
+      setPageProperties(pageTwo.addChildPage("SampleTest"),"Test");
+      //SetUp and TearDown should not be counted as tests.
+      setPageProperties(pageTwo.addChildPage("SetUp"),"Static");
+      setPageProperties(pageTwo.addChildPage("TearDown"),"Static");
+      assertTrue(pageOne.getHtml().contains("Page Two (  1 ) *"));
+    }
+
+    @Test
+    public void buildsTestPageCountForATest() throws Exception {
+      assertBuildsOption("PlainItem", new String[]{"Test=true"}, "-c", "TEST_PAGE_COUNT_TOC",
+        "<a href=\"PlainItem\" class=\"test\">PlainItem</a>");
+    }
+
+    @Test
     public void assertBuildsSymbolicLinkSuffix() throws Exception{
         Symbol contents = new Symbol(new Contents());
-        contents.add(new Symbol(SymbolType.Text, "-p"));
+        contents.putProperty("-p", "");
 
         WikiPage root = InMemoryPage.makeRoot("RooT");
         WikiPage pageOne = WikiPageUtil.addPage(root, PathParser.parse("PageOne"), "page one");
@@ -76,8 +118,8 @@ public class ContentsItemTest {
 
     private void assertBuilds(String page, String[] properties, String option, String variable, String result) throws Exception {
         Symbol contents = new Symbol(new Contents());
-        contents.add(new Symbol(SymbolType.Text, option));
-        contents.evaluateVariables(new String[] {variable},new TestVariableSource(variable, "true"));
+        contents.putProperty(option, "");
+        contents.copyVariables(new String[] {variable},new TestVariableSource(variable, "true"));
         ContentsItemBuilder builder = new ContentsItemBuilder(contents, 1);
         assertEquals("<li>" + HtmlElement.endl + "\t" + result + HtmlElement.endl + "</li>" + HtmlElement.endl,
                 builder.buildItem(new WikiSourcePage(withProperties(new TestRoot().makePage(page), properties))).html());
@@ -94,6 +136,12 @@ public class ContentsItemTest {
 
         page.commit(data);
         return page;
+    }
+
+    private void setPageProperties(WikiPage pageOne, String properties){
+      PageData pageOneData = pageOne.getData();
+      pageOneData.setAttribute(properties);
+      pageOne.commit(pageOneData);
     }
 
 }

@@ -31,6 +31,11 @@ public class PerTestSystemTestRun implements TestRun {
     }
   }
 
+  @Override
+  public List<WikiPage> getPages() {
+    return pagesByTestSystem.testsToRun();
+  }
+
   private void startTestSystemAndExecutePages(WikiPageIdentity identity, List<TestPage> testSystemPages) throws TestExecutionException {
     testSystem = null;
     try {

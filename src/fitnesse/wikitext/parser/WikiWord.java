@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlText;
+import fitnesse.wikitext.SourcePage;
 import util.GracefulNamer;
 
 public class WikiWord extends SymbolType implements Translation {
@@ -36,7 +37,7 @@ public class WikiWord extends SymbolType implements Translation {
     private String buildEditableLink(String pagePath, String linkBody) {
         return new WikiWordBuilder(sourcePage, pagePath, linkBody).makeEditabeLink(pagePath);
     }
-    
+
     private String formatWikiWord(Symbol symbol) {
       return new HtmlText(formatWikiWord(symbol.getContent(), symbol)).html();
     }

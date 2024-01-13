@@ -15,6 +15,7 @@ import fitnesse.responders.files.CreateDirectoryResponder;
 import fitnesse.responders.files.DeleteConfirmationResponder;
 import fitnesse.responders.files.DeleteFileResponder;
 import fitnesse.responders.files.FileResponder;
+import fitnesse.responders.files.PublishResponder;
 import fitnesse.responders.files.RenameFileConfirmationResponder;
 import fitnesse.responders.files.RenameFileResponder;
 import fitnesse.responders.files.UploadResponder;
@@ -23,6 +24,7 @@ import fitnesse.responders.refactoring.MovePageResponder;
 import fitnesse.responders.refactoring.RefactorPageResponder;
 import fitnesse.responders.refactoring.RenamePageResponder;
 import fitnesse.responders.refactoring.SearchReplaceResponder;
+import fitnesse.responders.run.InstructionResponder;
 import fitnesse.responders.run.PartitionPreviewResponder;
 import fitnesse.responders.run.StopTestResponder;
 import fitnesse.responders.run.SuiteResponder;
@@ -80,6 +82,7 @@ public class ResponderFactory {
     addResponder("properties", PropertiesResponder.class);
     addResponder("saveProperties", SavePropertiesResponder.class);
     addResponder("searchProperties", SearchPropertiesResponder.class);
+    addResponder("variables", ScopeVariablesResponder.class);
     // Deprecated:
     addResponder("executeSearchProperties", SearchPropertiesResponder.class);
     addResponder("whereUsed", WhereUsedResponder.class);
@@ -112,6 +115,8 @@ public class ResponderFactory {
     addResponder("replace", SearchReplaceResponder.class);
     addResponder("overview", SuiteOverviewResponder.class);
     addResponder("compareVersions", VersionComparerResponder.class);
+    addResponder("instruction", InstructionResponder.class);
+    addResponder("publish", PublishResponder.class);
     filterMap = new HashMap<>();
   }
 

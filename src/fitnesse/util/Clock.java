@@ -3,6 +3,7 @@
 package fitnesse.util;
 
 import java.util.Date;
+import java.util.TimeZone;
 
 public abstract class Clock {
   static final SystemClock SYSTEM_CLOCK = new SystemClock();
@@ -10,21 +11,23 @@ public abstract class Clock {
   static {
     restoreDefaultClock();
   }
-  
+
   protected Clock() {
     this(false);
   }
-  
+
   protected Clock(boolean setAsInstance) {
     if (setAsInstance) instance = this;
   }
 
   protected abstract long currentClockTimeInMillis() ;
 
+  protected abstract TimeZone getTimeZone();
+
   protected Date currentClockDate() {
     return new Date(currentClockTimeInMillis());
   }
-  
+
   public static long currentTimeInMillis() {
       return instance.currentClockTimeInMillis();
   }
@@ -32,7 +35,11 @@ public abstract class Clock {
   public static Date currentDate() {
     return instance.currentClockDate();
   }
-  
+
+  public static TimeZone currentTimeZone() {
+    return instance.getTimeZone();
+  }
+
   public static void restoreDefaultClock() {
     Clock.instance = SYSTEM_CLOCK;
   }
@@ -43,5 +50,9 @@ class SystemClock extends Clock {
   @Override
   protected long currentClockTimeInMillis() {
     return System.currentTimeMillis();
-  }  
+  }
+
+  protected TimeZone getTimeZone() {
+    return TimeZone.getDefault();
+  }
 }

@@ -85,7 +85,7 @@ public class SuiteOverviewTree {
 
   }
 
-  private SimpleDateFormat dateFormatter = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormatter = PageHistory.getDateFormat();
 
   public class TreeItem
   {

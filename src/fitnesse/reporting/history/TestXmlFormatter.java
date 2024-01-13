@@ -71,7 +71,7 @@ public class TestXmlFormatter extends BaseFormatter implements ExecutionLogListe
   }
 
   @Override
-  public void testOutputChunk(String output) {
+  public void testOutputChunk(TestPage testPage, String output) {
     appendHtmlToBuffer(output);
   }
 

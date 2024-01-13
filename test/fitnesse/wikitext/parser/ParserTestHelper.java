@@ -1,13 +1,14 @@
 package fitnesse.wikitext.parser;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import fitnesse.html.HtmlElement;
-import fitnesse.wiki.BaseWikitextPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.WikiSourcePage;
+import fitnesse.wikitext.*;
+
+import java.util.Optional;
+
+import static org.junit.Assert.*;
 
 public class ParserTestHelper {
   public static final String newLineRendered = "<br/>";
@@ -27,7 +28,7 @@ public class ParserTestHelper {
         return;
       }
     }
-    assertTrue(!found);
+    assertFalse(found);
   }
 
   public static void assertScans(String expected, Scanner scanner) {
@@ -74,16 +75,16 @@ public class ParserTestHelper {
     assertEquals(expected, translateTo(new WikiSourcePage(page)));
   }
 
+  public static String translateTo(String input) {
+    return translateTo(new TestSourcePage(), input);
+  }
+
   public static String translateTo(WikiPage page, String input) {
-    ParsingPage.Cache cache = new ParsingPage.Cache();
-    VariableSource variableSource = new CompositeVariableSource(cache, new BaseWikitextPage.ParentPageVariableSource(page));
-    Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page), variableSource, cache), input).parse();
-    return new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page))).translateTree(list);
+    return translate(input, new ParsingPage(page, new EmptyVariables()));
   }
 
   public static String translateTo(SourcePage page, String input) {
-    Symbol list = Parser.make(new ParsingPage(page), input).parse();
-    return new HtmlTranslator(page, new ParsingPage(page)).translateTree(list);
+    return translate(input, new ParsingPage(page));
   }
 
   public static String roundTrip(SourcePage page, String input) {
@@ -92,10 +93,7 @@ public class ParserTestHelper {
   }
 
   public static String translateToHtml(WikiPage page, String input, VariableSource variableSource) {
-    ParsingPage.Cache cache = new ParsingPage.Cache();
-    ParsingPage currentPage = new ParsingPage(new WikiSourcePage(page), new CompositeVariableSource(cache, variableSource), cache);
-    Symbol list = Parser.make(currentPage, input, SymbolProvider.wikiParsingProvider).parse();
-    return new HtmlTranslator(new WikiSourcePage(page), currentPage).translateTree(list);
+    return translate(input, new ParsingPage(page, variableSource));
   }
 
   public static String translateTo(WikiPage page) {
@@ -103,12 +101,11 @@ public class ParserTestHelper {
   }
 
   public static String translateTo(SourcePage page, VariableSource variableSource) {
-    ParsingPage.Cache cache = new ParsingPage.Cache();
-    return new HtmlTranslator(page, new ParsingPage(page)).translateTree(Parser.make(new ParsingPage(page, new CompositeVariableSource(cache, variableSource), cache), page.getContent(), SymbolProvider.wikiParsingProvider).parse());
+    return translate(page.getContent(), new ParsingPage(page, variableSource));
   }
 
   public static String translateTo(SourcePage page) {
-    return new HtmlTranslator(page, new ParsingPage(page)).translateTree(Parser.make(new ParsingPage(page), page.getContent()).parse());
+    return translate(page.getContent(), new ParsingPage(page));
   }
 
   public static void assertParses(String input, String expected) {
@@ -128,6 +125,10 @@ public class ParserTestHelper {
 
   public static Symbol parse(WikiPage page) {
     return Parser.make(new ParsingPage(new WikiSourcePage(page)), page.getData().getContent()).parse();
+  }
+
+  public static SyntaxTree parseSyntax(WikiPage page) {
+    return parse(page.getData().getContent(), new ParsingPage(new WikiSourcePage(page)));
   }
 
   public static Symbol parse(WikiPage page, String input) {
@@ -161,13 +162,6 @@ public class ParserTestHelper {
     return result.toString();
   }
 
-  public static String serializeContent(Symbol symbol) {
-    StringBuilder result = new StringBuilder();
-    if (symbol.getContent() != null) result.append(symbol.getContent());
-    for (Symbol child : symbol.getChildren()) result.append(serializeContent(child));
-    return result.toString();
-  }
-
   public static String metaHtml(String message) {
     return "<span class=\"meta\">" + message + "</span>";
   }
@@ -194,12 +188,24 @@ public class ParserTestHelper {
   }
 
   public static String nestedTableWithCellAndRow(String cellContent, String firstRow) {
-    StringBuilder tableWithCellAndRow = new StringBuilder();
-    tableWithCellAndRow.append("<table>").append(HtmlElement.endl)
-      .append("\t").append(firstRow).append(HtmlElement.endl)
-      .append("\t\t<td>").append(cellContent).append("</td>").append(HtmlElement.endl)
-      .append("\t</tr>").append(HtmlElement.endl).append("</table>");
-    return tableWithCellAndRow.toString();
+    return "<table>" + HtmlElement.endl +
+      "\t" + firstRow + HtmlElement.endl +
+      "\t\t<td>" + cellContent + "</td>" + HtmlElement.endl +
+      "\t</tr>" + HtmlElement.endl + "</table>";
   }
 
+  private static String translate(String input, ParsingPage page) {
+    return parse(input, page).translateToHtml();
+  }
+
+  private static SyntaxTree parse(String input, ParsingPage page) {
+    SyntaxTreeV2 syntaxTree = new SyntaxTreeV2();
+    syntaxTree.parse(input, page);
+    return syntaxTree;
+  }
+
+  public static class EmptyVariables implements VariableSource {
+    @Override
+    public Optional<String> findVariable(String name) { return Optional.empty(); }
+  }
 }

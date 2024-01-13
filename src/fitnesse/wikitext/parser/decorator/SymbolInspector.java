@@ -1,7 +1,6 @@
 package fitnesse.wikitext.parser.decorator;
 
 import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.SymbolTreeWalker;
 import fitnesse.wikitext.parser.SymbolType;
 
 import static java.lang.String.format;
@@ -30,18 +29,10 @@ public class SymbolInspector {
 
   public String getRawContent() {
     final StringBuilder buffer = new StringBuilder();
-    symbol.walkPreOrder(new SymbolTreeWalker() {
-      @Override
-      public boolean visit(Symbol node) {
-        buffer.append(node.getContent());
-        return true;
-      }
-
-      @Override
-      public boolean visitChildren(Symbol node) {
-        return true;
-      }
+    symbol.walkPreOrder(node -> {
+      buffer.append(node.getContent());
     });
+
     return buffer.toString().trim();
   }
 }

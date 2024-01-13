@@ -1,18 +1,13 @@
 package fitnesse.wiki;
 
 import fitnesse.wikitext.parser.Maybe;
-import fitnesse.wikitext.parser.SourcePage;
-import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.SymbolType;
+import fitnesse.wikitext.SourcePage;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class WikiSourcePage implements SourcePage {
-    private WikiPage page;
+    private final WikiPage page;
 
     public WikiSourcePage(WikiPage page) { this.page = page; }
 
@@ -82,7 +77,7 @@ public class WikiSourcePage implements SourcePage {
         else if (isParentOf(includedPage))
            return Maybe.nothingBecause("Error! Cannot include parent page (" + pageName + ").");
         else {
-            return new Maybe<SourcePage>(new WikiSourcePage(includedPage));
+            return new Maybe<>(new WikiSourcePage(includedPage));
         }
     }
 
@@ -114,11 +109,6 @@ public class WikiSourcePage implements SourcePage {
         return false;
     }
 
-    @Override
-    public String makeUrl(String wikiWordPath) {
-        return makeFullPathOfTarget(wikiWordPath) ;
-    }
-
     private boolean isParentOf(WikiPage possibleParent) {
         for (WikiPage candidate = page; candidate.getParent() != candidate; candidate = candidate.getParent()) {
             if (possibleParent == candidate)
@@ -131,10 +121,4 @@ public class WikiSourcePage implements SourcePage {
     public int compareTo(SourcePage other) {
         return getName().compareTo(other.getName());
     }
-
-  @Override
-  public List<Symbol> getSymbols(final SymbolType symbolType) {
-    return WikiPageUtil.getSymbols(page, symbolType);
-  }
-
 }

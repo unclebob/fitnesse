@@ -1,16 +1,15 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.SourcePage;
+
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
 public class TestSourcePage implements SourcePage {
   public String content;
   public HashMap<String, String> properties = new HashMap<>();
   public SourcePage includedPage;
-  public String targetPath;
-  public String url;
+  public String targetPath = "";
 
   public TestSourcePage withContent(String content) {
     this.content = content;
@@ -29,11 +28,6 @@ public class TestSourcePage implements SourcePage {
 
   public TestSourcePage withTarget(String targetPath) {
     this.targetPath = targetPath;
-    return this;
-  }
-
-  public TestSourcePage withUrl(String url) {
-    this.url = url;
     return this;
   }
 
@@ -64,7 +58,7 @@ public class TestSourcePage implements SourcePage {
 
   @Override
   public boolean targetExists(String wikiWordPath) {
-    return targetPath != null;
+    return !targetPath.contains("Non");
   }
 
   @Override
@@ -79,7 +73,7 @@ public class TestSourcePage implements SourcePage {
 
   @Override
   public Maybe<SourcePage> findIncludedPage(String pageName) {
-    return includedPage != null ? new Maybe<>(includedPage) : Maybe.<SourcePage>nothingBecause("missing");
+    return includedPage != null ? new Maybe<>(includedPage) : Maybe.nothingBecause("missing");
   }
 
   @Override
@@ -94,21 +88,11 @@ public class TestSourcePage implements SourcePage {
 
   @Override
   public String getProperty(String propertyKey) {
-    return properties.containsKey(propertyKey) ? properties.get(propertyKey) : "";
-  }
-
-  @Override
-  public String makeUrl(String wikiWordPath) {
-    return url;
+    return properties.getOrDefault(propertyKey, "");
   }
 
   @Override
   public int compareTo(SourcePage other) {
     return getName().compareTo(other.getName());
-  }
-
-  @Override
-  public List<Symbol> getSymbols(final SymbolType symbolType) {
-    return Collections.emptyList();
   }
 }

@@ -5,6 +5,8 @@ package fitnesse.util;
 import org.junit.After;
 import org.junit.Test;
 
+import java.util.TimeZone;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
@@ -16,7 +18,7 @@ public class ClockTest {
   public void restoreSystemClock() {
     Clock.restoreDefaultClock();
   }
-  
+
   @SuppressWarnings("static-access")
   @Test
   public void systemClockTimeInMillisShouldIncreaseAsTimeFlies() throws Exception {
@@ -29,7 +31,13 @@ public class ClockTest {
       }
     }
   }
-  
+
+  @Test
+  public void defaultTimeZoneReturned() {
+    Clock clock = new SystemClock();
+    assertThat(clock.getTimeZone(), is(TimeZone.getDefault()));
+  }
+
   @Test
   public void staticTimeMethodShouldDelegateToInstance() throws Exception {
     newConstantTimeClock(1, true);
@@ -42,9 +50,14 @@ public class ClockTest {
       public long currentClockTimeInMillis() {
         return theConstantTime;
       }
+
+      @Override
+      protected TimeZone getTimeZone() {
+        return TimeZone.getTimeZone("Antarctica/Casey");
+      }
     };
   }
-  
+
   @Test
   public void dateMethodShouldDelegateToCurrentTimeInMillis() throws Exception {
     Clock constantTimeClock = newConstantTimeClock(2, false);
@@ -56,7 +69,13 @@ public class ClockTest {
     newConstantTimeClock(3, true);
     assertThat(Clock.currentDate().getTime(), is(3L));
   }
-  
+
+  @Test
+  public void staticTimeZoneMethodShouldDelegateToInstance() throws Exception {
+    newConstantTimeClock(3, true);
+    assertThat(Clock.currentTimeZone(), is(TimeZone.getTimeZone("Antarctica/Casey")));
+  }
+
   @Test
   public void booleanConstructorArgShouldDetermineWhetherToReplaceGlobalInstance() throws Exception {
     Clock constantTimeClock = newConstantTimeClock(4, false);

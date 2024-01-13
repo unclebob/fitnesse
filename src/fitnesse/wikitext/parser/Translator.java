@@ -1,8 +1,10 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.SourcePage;
+
 public abstract class Translator {
 
-  private SourcePage currentPage;
+  private final SourcePage currentPage;
 
   protected abstract Translation getTranslation(SymbolType symbolType);
 

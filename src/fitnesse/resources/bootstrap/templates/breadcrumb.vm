@@ -5,7 +5,7 @@
 
 <ol class="breadcrumb">
 #foreach($breadCrumb in $pageTitle.BreadCrumbs)
- <li><a href="${contextRoot}$breadCrumb.Link">$breadCrumb.Name</a></li>
+ <li><a href="${contextRoot}#escape($breadCrumb.Link)">#escape($breadCrumb.Name)</a></li>
 #end
- <li>#if($pageTitle.Link)<a href="${contextRoot}$pageTitle.Link">$pageTitle.Title</a>#else$pageTitle.Title#end#if($pageTitle.pageTags) #foreach($tag in $!pageTitle.pageTagsArray)<span class="tag">$tag</span>#end#end</li>
+ <li>#if($pageTitle.Link)<a href="${contextRoot}#escape($pageTitle.Link)">#escape($pageTitle.Title)</a>#else#escape($pageTitle.Title)#end#if($pageTitle.pageTags) #foreach($tag in $!pageTitle.pageTagsArray)<span class="tag">#escape($tag)</span>#end#end</li>
 </ol>

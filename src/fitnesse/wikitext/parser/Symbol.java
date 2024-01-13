@@ -1,21 +1,27 @@
 package fitnesse.wikitext.parser;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import fitnesse.util.Tree;
+import fitnesse.wikitext.VariableSource;
+import fitnesse.wikitext.shared.PropertyStore;
 
-public class Symbol {
+import java.util.*;
+
+public class Symbol extends Tree<Symbol> implements PropertyStore {
     private static final List<Symbol> NO_CHILDREN = Collections.emptyList();
 
     public static final Maybe<Symbol> nothing = new Maybe<>();
     public static final Symbol emptySymbol = new Symbol(SymbolType.Empty);
 
+    public static Symbol listOf(Symbol... children) {
+      Symbol result = new Symbol(SymbolType.SymbolList);
+      for (Symbol child : children) result.add(child);
+      return result;
+    }
+
     private SymbolType type;
     private String content;
-    private List<Symbol> children;
-    private Map<String,String> variables;
+    private List<Symbol> branches;
+    private Map<String,String> variables; // deprecated - use properties, no need for 2 maps
     private Map<String,String> properties;
     private int startOffset = -1;
     private int endOffset = -1;
@@ -25,7 +31,7 @@ public class Symbol {
     public Symbol(SymbolType type, String content) {
         this.type = type;
         this.content = content;
-        this.children = NO_CHILDREN;
+        this.branches = NO_CHILDREN;
     }
 
     public Symbol(SymbolType type, String content, int startOffset) {
@@ -54,18 +60,33 @@ public class Symbol {
 
     public Symbol childAt(int index) { return getChildren().get(index); }
     public Symbol lastChild() { return childAt(getChildren().size() - 1); }
-    public List<Symbol> getChildren() { return children; }
+    public List<Symbol> getChildren() { return branches; }
+    public Symbol asText() { return new Symbol(SymbolType.Text, content); }
+
+  @Override protected List<Symbol> getBranches() { return branches; }
+  @Override protected Symbol getNode() { return this; }
+
+  @Override
+  public Optional<String> findProperty(String key) {
+    return hasProperty(key) ? Optional.of(properties.get(key)) : Optional.empty();
+  }
+
+  @Override
+  public boolean hasProperty(String key) {
+    return properties != null && properties.containsKey(key);
+  }
+
+  @Override
+  public void putProperty(String key, String value) {
+    if (properties == null) properties = new HashMap<>(1);
+    properties.put(key, value);
+  }
 
     private List<Symbol> children() {
-        if (children == NO_CHILDREN) {
-            children = new LinkedList<>();
+        if (branches == NO_CHILDREN) {
+            branches = new LinkedList<>();
         }
-        return children;
-    }
-
-    public Symbol addToFront(Symbol child) {
-        children().add(0, child);
-        return this;
+        return branches;
     }
 
     public Symbol add(Symbol child) {
@@ -80,57 +101,35 @@ public class Symbol {
 
     public Symbol childrenAfter(int after) {
         Symbol result = new Symbol(SymbolType.SymbolList);
-        for (int i = after + 1; i < children.size(); i++) result.add(children.get(i));
+        for (int i = after + 1; i < branches.size(); i++) result.add(branches.get(i));
         return result;
     }
 
-    public boolean walkPostOrder(SymbolTreeWalker walker) {
-        if (walker.visitChildren(this)) {
-            for (Symbol child: children) {
-                if (!child.walkPostOrder(walker)) return false;
-            }
-        }
-        return walker.visit(this);
-    }
-
-    public boolean walkPreOrder(SymbolTreeWalker walker) {
-        if (!walker.visit(this)) return false;
-        if (walker.visitChildren(this)) {
-            for (Symbol child: children) {
-                if (!child.walkPreOrder(walker)) return false;
-            }
-        }
-        return true;
-    }
-
+    // @deprecated use copyVariables
+    @Deprecated
     public void evaluateVariables(String[] names, VariableSource source) {
         if (variables == null) variables = new HashMap<>(names.length);
         for (String name: names) {
-            Maybe<String> value = source.findVariable(name);
-            if (!value.isNothing()) variables.put(name, value.getValue());
+            source.findVariable(name).ifPresent(value -> variables.put(name, value));
         }
     }
 
+    // @deprecated use findProperty
+    @Deprecated
     public String getVariable(String name, String defaultValue) {
         return variables != null && variables.containsKey(name) ? variables.get(name) : defaultValue;
     }
 
-    public Symbol putProperty(String key, String value) {
-        if (properties == null) properties = new HashMap<>(1);
-        properties.put(key, value);
-        return this;
-    }
-
-    public boolean hasProperty(String key) {
-        return properties != null && properties.containsKey(key);
-    }
-
+    // @deprecated use findProperty
+    @Deprecated
     public String getProperty(String key, String defaultValue) {
-        return properties != null && properties.containsKey(key) ? properties.get(key) : defaultValue;
+        return findProperty(key, defaultValue);
     }
 
+    // @deprecated use findProperty
+    @Deprecated
     public String getProperty(String key) {
-        return getProperty(key, "");
+        return findProperty(key, "");
     }
 
     public boolean hasOffset() {
@@ -146,9 +145,8 @@ public class Symbol {
       return startOffset;
     }
 
-    Symbol setEndOffset(int endOffset) {
+    void setEndOffset(int endOffset) {
       this.endOffset = endOffset;
-      return this;
     }
 
     public int getEndOffset() {

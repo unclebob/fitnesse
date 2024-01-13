@@ -23,7 +23,7 @@ FitNesseRoot/properties
 FitNesseRoot/ErrorLogs/*
 FitNesseRoot/files/testResults/*
 FitNesseRoot/RecentChanges*
-FitNesseRoot/RerunLastFailures.wiki
+FitNesseRoot/RerunLastFailures*.wiki
 junit*.properties
 FitNesseRoot/updateDoNotCopyOverList
 FitNesseRoot/updateList

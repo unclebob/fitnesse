@@ -5,7 +5,7 @@ import fitnesse.ContextConfigurator;
 /**
  * ClassUtils allows for class resolution (Class.forName) on a specially defined
  * class loader. In practice this will be the class loader created when the plugins
- * are loaded from <tt>plugins/</tt>.
+ * are loaded from <code>plugins/</code>.
  *
  * This class, however, exposes some a habit and I (Arjan) would love to get rid
  * of it again: the class loader value is kept in a <em>mutable</em>
@@ -13,7 +13,7 @@ import fitnesse.ContextConfigurator;
  * unpredictable ways.
  *
  * Currently this class loader is set from {@link ContextConfigurator#makeFitNesseContext()} whenever a new FitNesseContext is
- * created. <tt>getClassLoader</tt>
+ * created. <code>getClassLoader</code>
  *
  * Note that there are still direct invocations of Class.forName in the code. Those pieces of code are executed on
  * the SUT or have otherwise no relation with the plugins system.

@@ -2,6 +2,7 @@ package fitnesse.testrunner.run;
 
 import fitnesse.FitNesseContext;
 import fitnesse.util.partitioner.ListPartitioner;
+import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
 import java.io.BufferedReader;
@@ -52,7 +53,7 @@ public class FileBasedTestRunFactory extends PartitioningTestRunFactory {
   }
 
   protected File getPartitionFile(String paramValue) {
-    return new File(new File(context.getRootPagePath(), "files"), paramValue);
+    return new File(new File(context.getRootPagePath(), PathParser.FILES), paramValue);
   }
 
   protected String getFilename(List<WikiPage> pages) {

@@ -52,7 +52,7 @@ public class EchoTestSystemFactory implements TestSystemFactory {
     @Override
     public void runTests(TestPage pageToTest) {
       testSystemListener.testStarted(pageToTest);
-      testSystemListener.testOutputChunk("<pre>" + pageToTest.getHtml() + "</pre>");
+      testSystemListener.testOutputChunk(pageToTest, "<pre>" + pageToTest.getHtml() + "</pre>");
       testSystemListener.testComplete(pageToTest, new TestSummary(1, 0, 0, 0));
     }
 

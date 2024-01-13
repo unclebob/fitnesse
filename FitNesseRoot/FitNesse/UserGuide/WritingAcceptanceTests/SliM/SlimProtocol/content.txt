@@ -95,7 +95,7 @@ To support symbol assignments in Decision Tables which are implemented with a Sc
 !3 Strings and Lists
 As we will see, slim views a list as a special kind of string.  Therefore functions can take and return lists as well as strings.  The lists must be lists of strings, but since a list is a special kind of string, lists of lists of lists of ... are possible.  The Slim executor will convert back and forth between these forms as needed.
 
-A string is encoded as six or more digits followed by a colon, followed by the characters of the string.  The six+ digits are the number of characters in the string, not including the digits themselves.  Thus, the empty string is "000000:".  This length encoding scheme is used in other places so we'll use the token ''<length>'' to mean six digits followed by a colon.
+A string is encoded as six or more digits followed by a colon, followed by the characters of the string, represented as UTF-16 code units.  The six+ digits are the number of UTF-16 code units in the string, not including the digits themselves.  Thus, the empty string is "000000:".  This length encoding scheme is used in other places so we'll use the token ''<length>'' to mean six digits followed by a colon.
 
 If a string is ''<null>'', then the four character string ''null'' will replace it.
 
@@ -109,7 +109,7 @@ As you can see, each item of a list is a string.  But since a string can encode 
 So when you send a list of instructions, what you are really sending is a string.  When you receive a list of responses, what you are really receiving is a string.  So the high level protocol of Slim is just strings.  It looks like this:
 
  1 !-FitNesse-! invokes the Slim Server via a command line.  One of the command line arguments is the port number of the socket to listen on. If the port number is 1 than the communication happens via !-StdIn and Stdout-!. For any other port number the !-Slim Server-! opens that socket and start listening. !-FitNesse-! connects to that socket.
- 1 Slim Server responds to the connect request with the string "Slim !----! ''V<version>''\n", where ''<version>'' is the version number of the slim ''protocol''.  If this protocol ever changes, ''that'' version number will change.  This is the only string that is ever sent without the ''<length>'' encoding.  It is terminated by the '''\n''' instead.  Every other message that slim sends will be prefixed by a ''<length>'' in ''!style_red(bytes)'', followed by a colon.  !style_red(NOTE:) Every other length in this document is in UTF-8 ''characters''.  This one length is in bytes.
+ 1 Slim Server responds to the connect request with the string "Slim !----! ''V<version>''\n", where ''<version>'' is the version number of the slim ''protocol''.  If this protocol ever changes, ''that'' version number will change.  This is the only string that is ever sent without the ''<length>'' encoding.  It is terminated by the '''\n''' instead.  Every other message that slim sends will be prefixed by a ''<length>'' in ''!style_red(bytes)'', followed by a colon.  !style_red(NOTE:) Every other length in this document is in UTF-16 ''code units''.  This one length is in bytes.
  1 !-FitNesse-! sends a list of instructions encoded as a string of course.
  1 Slim Server sends a list of responses similarly encoded.
  1 3 and 4 repeat until !-FitNesse-! sends a ''bye'' directive.  This is simply the string ''bye'' properly encoded with ''<length>''.  e.g. "000003:bye".
@@ -118,14 +118,14 @@ So when you send a list of instructions, what you are really sending is a string
 !3 !-StdOut and StdErr-! from the SUT
 Everything written to !-StdOut and StdErr-! by the SUT is added by !-FitNesse-! to the Execution Log and stored with the test results.
 
-''[0.5]'' In case the port number is 1 the communication is happening via !-StdIn and StdOut-!. As !-StdOut-! is in use for testing everything written to !-StdOut-! by the SUT is tunneled via !-StdErr-! 
- * the Slim Server is prefixing every line from !-StdOut-! with "SOUT :". In case a single message spans multiple lines all following lines will be prefixed with "SOUT.:".  
+''[0.5]'' In case the port number is 1 the communication is happening via !-StdIn and StdOut-!. As !-StdOut-! is in use for testing everything written to !-StdOut-! by the SUT is tunneled via !-StdErr-!
+ * the Slim Server is prefixing every line from !-StdOut-! with "SOUT :". In case a single message spans multiple lines all following lines will be prefixed with "SOUT.:".
  * the Slim Server is prefixing every line from !-StdErr-! with "SERR :". In case a single message spans multiple lines all following lines will be prefixed with "SERR.:".
  * both types of messages are then send via !-StdErr-!
  * !-FitNesse-! splits incoming text again into stdout and stderr and adds it to the appropriate section in the Execution Log
  * The above prefixes are never visible for the !-FitNesse-! user
  * if !-FitNesse-! receives text without such a prefix it adds the text as it is to the stdout section from the Execution Log
- 
+
 !3 Exceptions
 Sometimes a function or a constructor will throw an exception in response to a ''make'', ''call'', or ''callAndAssign'' instruction. When this happens, the response value for that instruction will be: "__EXCEPTION__:''<exception string>''".  The ''<exception string>'' ought to be a stack trace or some other relevant debugging information.  If you want a nice yellow message to appear in one of the SLIM tables, then somewhere in the ''<<exception string>>'' put ''message:<<'' in front of the message and ''>>'' after it.  e.g.   !style_code(message:<<can't find constructor>>)
 
@@ -141,10 +141,16 @@ There are some standard exception messages that every Slim implementation should
 | MALFORMED_INSTRUCTION [''instruction list''] | Where ''instruction list'' is a comma separated list of the instruction strings. |
 | TIMED_OUT ''<n>'' | The instruction timed out after ''<n>'' seconds. To enforce timeouts, set the ''-s xx'' flag (via the ''slim.flags'' variable) |
 
-!4 Aborting a Test 
+!4 Aborting a Test
 If a fixture throws an exception with a ''class'' name that contains "!style_code(!-StopTest-!)", then Slim should stop executing the instructions in the current batch, and return immediately.   The response for this type of exception should be "!style_code(__EXCEPTION__:ABORT_SLIM_TEST:)" which may have an optional suffix of: "!style_code(message:<<''reason''>>)".
 
 To abort the test suite (stop execution directly), throw an exception with a class name that contains "!style_code(!-StopSuite-!)". The syntax is identical to !-StopTest-!.
+
+!4 Ignoring Test
+If a fixture throws an exception with a ''class'' name that contains "!style_code(!-IgnoreScriptTest-!)", then Slim should ignore and skip the instructions in the rest of that script table.   The response for this type of exception should be "!style_code(__EXCEPTION__:IGNORE_SCRIPT_TEST:)" which may have an optional suffix of: "!style_code(message:<<''reason''>>)".
+
+!4 Ignoring All Tests
+If a fixture throws an exception with a ''class'' name that contains "!style_code(!-IgnoreAllTests-!)", then Slim should ignore and skip all the instructions in the rest of that test.   The response for this type of exception should be "!style_code(__EXCEPTION__:IGNORE_ALL_TESTS:)" which may have an optional suffix of: "!style_code(message:<<''reason''>>)".
 
 !3 Type Conversions
 The only types in the instructions and responses are lists and strings, and since the leaves of the lists must eventually be strings, all we really have to worry about are strings.  But we don't want to restrict our fixtures to use only Strings.  So Slim comes with some standard type converters that allow fixtures to take more convenient data types.

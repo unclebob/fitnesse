@@ -1,12 +1,15 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.SourcePage;
+import fitnesse.wikitext.VariableSource;
+
 import java.util.regex.Pattern;
 
 public class TextMaker {
   public static final String eMailPattern = "[\\w-_.]+@[\\w-_.]+\\.[\\w-_.]+";
 
-  private VariableSource variableSource;
-  private SourcePage sourcePage;
+  private final VariableSource variableSource;
+  private final SourcePage sourcePage;
 
   public TextMaker(VariableSource variableSource, SourcePage sourcePage) {
     this.variableSource = variableSource;
@@ -32,7 +35,7 @@ public class TextMaker {
     return text.indexOf("@") > 0 && Pattern.matches(eMailPattern, text);
   }
 
-  public int findWikiWordLength(String text) {
+  public static int findWikiWordLength(String text) {
     String candidate = text + ".";
     int offset = "<>^.".contains(candidate.substring(0, 1)) ? 1 : 0;
     while (offset < candidate.length()) {
@@ -45,7 +48,7 @@ public class TextMaker {
     return text.length();
   }
 
-  private int wikiWordLength(String candidate) {
+  private static int wikiWordLength(String candidate) {
     if (candidate.length() < 3) return 0;
     if (!isUpperCaseLetter(candidate, 0)) return 0;
     if (!isDigit(candidate, 1) && !isLowerCaseLetter(candidate, 1)) return 0;
@@ -63,23 +66,23 @@ public class TextMaker {
     return 0;
   }
 
-  private boolean isUpperCaseLetter(String candidate, int offset) {
+  private static boolean isUpperCaseLetter(String candidate, int offset) {
     return candidate.charAt(offset) >= 'A' && candidate.charAt(offset) <= 'Z';
   }
 
-  private boolean isLowerCaseLetter(String candidate, int offset) {
+  private static boolean isLowerCaseLetter(String candidate, int offset) {
     return candidate.charAt(offset) >= 'a' && candidate.charAt(offset) <= 'z';
   }
 
-  private boolean isDigit(String candidate, int offset) {
+  private static boolean isDigit(String candidate, int offset) {
     return candidate.charAt(offset) >= '0' && candidate.charAt(offset) <= '9';
   }
 
-  private boolean isLetter(String candidate, int offset) {
+  private static boolean isLetter(String candidate, int offset) {
     return isUpperCaseLetter(candidate, offset) || isLowerCaseLetter(candidate, offset);
   }
 
-  private boolean isCharacter(String candidate, char character, int offset) {
+  private static boolean isCharacter(String candidate, char character, int offset) {
     return candidate.charAt(offset) == character;
   }
 

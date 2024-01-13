@@ -1,7 +1,6 @@
-package fitnesse.wikitext.parser;
+package fitnesse.wikitext;
 
-import fitnesse.wikitext.parser.Maybe;
-import fitnesse.wikitext.parser.VariableSource;
+import java.util.Optional;
 
 public class CompositeVariableSource implements VariableSource {
 
@@ -12,13 +11,13 @@ public class CompositeVariableSource implements VariableSource {
   }
 
   @Override
-  public Maybe<String> findVariable(String name) {
+  public Optional<String> findVariable(String name) {
     for (VariableSource variableSource : variableSources) {
       if (variableSource != null) {
-        Maybe<String> result = variableSource.findVariable(name);
-        if (!result.isNothing()) return result;
+        Optional<String> result = variableSource.findVariable(name);
+        if (result.isPresent()) return result;
       }
     }
-    return Maybe.noString;
+    return Optional.empty();
   }
 }

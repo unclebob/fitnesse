@@ -2,14 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim.tables;
 
-import java.util.Collections;
-import java.util.List;
-
 import fitnesse.testrunner.WikiTestPage;
 import fitnesse.testsystems.slim.SlimTestContextImpl;
 import fitnesse.wiki.WikiPageDummy;
-
 import org.junit.Test;
+
+import java.util.Collections;
+import java.util.List;
 
 import static fitnesse.testsystems.slim.tables.Disgracer.disgraceClassName;
 import static fitnesse.testsystems.slim.tables.Disgracer.disgraceMethodName;
@@ -47,6 +46,13 @@ public class SlimTableTest {
     SlimTable table = new MockTable();
     table.setSymbol("x", "a");
     assertEquals("this is a", table.replaceSymbols("this is $x"));
+  }
+
+  @Test
+  public void replaceSymbolsShouldReplaceSecretSymbol() throws Exception {
+    SlimTable table = new MockTable();
+    table.setSymbol("SECRET_x", "a");
+    assertEquals("this is *****", table.replaceSymbols("this is $SECRET_x"));
   }
 
   @Test
@@ -89,6 +95,13 @@ public class SlimTableTest {
   }
 
   @Test
+  public void replaceSymbolsFullExpansion_ShouldReplaceSecretSymbol() throws Exception {
+    SlimTable table = new MockTable();
+    table.setSymbol("SECRET_x", "a");
+    assertEquals("this is $SECRET_x->[*****]", table.replaceSymbolsWithFullExpansion("this is $SECRET_x"));
+  }
+
+  @Test
   public void replaceSymbolsFullExpansion_ShouldReplaceMoreThanOneSymbol() throws Exception {
     SlimTable table = new MockTable();
     table.setSymbol("x", "a");
@@ -113,11 +126,11 @@ public class SlimTableTest {
   }
 
   @Test
-  public void replaceSymbols_ShouldReplaceConcutenatedSymbols() throws Exception {
+  public void replaceSymbols_ShouldReplaceConcatenatedSymbols() throws Exception {
     SlimTable table = new MockTable();
     table.setSymbol("x", "1");
     table.setSymbol("y", "a");
-    assertEquals("this is $x1->[11] and $yb->[ab]", table.replaceSymbolsWithFullExpansion("this is $x1 and $yb"));
+    assertEquals("this is $x->[1]1 and $y->[a]b", table.replaceSymbolsWithFullExpansion("this is $x1 and $yb"));
   }
 
 

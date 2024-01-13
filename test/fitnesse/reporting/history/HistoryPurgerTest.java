@@ -1,13 +1,5 @@
 package fitnesse.reporting.history;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
 import fitnesse.util.Clock;
 import fitnesse.util.DateAlteringClock;
 import fitnesse.wiki.PathParser;
@@ -16,7 +8,19 @@ import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
 
-import static org.junit.Assert.*;
+import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class HistoryPurgerTest {
 
@@ -29,7 +33,7 @@ public class HistoryPurgerTest {
     removeResultsDirectory();
     resultsDirectory.mkdir();
 
-    new DateAlteringClock(makeDate("20090616000000")).freeze();
+    new DateAlteringClock(makeDate("20090616000000"), TimeZone.getDefault()).freeze();
     historyPurger = new HistoryPurger(resultsDirectory, 1);
   }
 
@@ -41,7 +45,7 @@ public class HistoryPurgerTest {
   @Test
   public void shouldBeAbleToSubtractDaysFromDates() throws Exception {
     Date date = makeDate("20090616171615");
-    new DateAlteringClock(date).freeze();
+    new DateAlteringClock(date, Clock.currentTimeZone()).freeze();
     Date resultDate = historyPurger.getDateDaysAgo(10);
     Date tenDaysEarlier = makeDate("20090606171615");
     assertEquals(tenDaysEarlier, resultDate);
@@ -152,7 +156,7 @@ public class HistoryPurgerTest {
   }
 
   private Date makeDate(String dateString) throws ParseException {
-    SimpleDateFormat format = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
+    SimpleDateFormat format = PageHistory.getDateFormat();
     Date date = format.parse(dateString);
     return date;
   }

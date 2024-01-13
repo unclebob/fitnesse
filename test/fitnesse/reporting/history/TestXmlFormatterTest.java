@@ -1,39 +1,39 @@
 package fitnesse.reporting.history;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
+import fitnesse.FitNesseContext;
+import fitnesse.reporting.history.TestExecutionReport.TestResult;
+import fitnesse.reporting.history.TestXmlFormatter.WriterFactory;
+import fitnesse.responders.run.SuiteResponder;
+import fitnesse.testrunner.WikiTestPage;
+import fitnesse.testsystems.ExecutionLogListener;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.util.Clock;
+import fitnesse.util.DateAlteringClock;
+import fitnesse.util.DateTimeUtil;
+import fitnesse.util.XmlUtil;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageDummy;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.text.ParseException;
 import java.util.LinkedList;
+import java.util.TimeZone;
 
-import fitnesse.responders.run.SuiteResponder;
-import fitnesse.testrunner.WikiTestPage;
-import fitnesse.testsystems.ExecutionLogListener;
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.util.XmlUtil;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import fitnesse.util.Clock;
-import fitnesse.util.DateAlteringClock;
-import fitnesse.util.DateTimeUtil;
-import fitnesse.FitNesseContext;
-import fitnesse.reporting.history.TestExecutionReport.TestResult;
-import fitnesse.reporting.history.TestXmlFormatter.WriterFactory;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageDummy;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class TestXmlFormatterTest {
   private static final String TEST_TIME = "4/13/2009 15:21:43";
@@ -42,7 +42,7 @@ public class TestXmlFormatterTest {
 
   @Before
   public void setUp() throws ParseException {
-    clock = new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).freeze();
+    clock = new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME), TimeZone.getDefault()).freeze();
     context = FitNesseUtil.makeTestContext();
   }
 
@@ -78,7 +78,7 @@ public class TestXmlFormatterTest {
     };
     final long startTime = clock.currentClockTimeInMillis();
 
-    formatter.testOutputChunk("outputChunk");
+    formatter.testOutputChunk(page, "outputChunk");
 
     formatter.testStarted(page);
 

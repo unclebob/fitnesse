@@ -2,16 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testsystems.slim;
 
-import java.util.LinkedList;
 import java.util.List;
-import org.htmlparser.Parser;
-import org.htmlparser.lexer.Lexer;
-import org.htmlparser.lexer.Page;
-import org.htmlparser.util.NodeList;
-import org.htmlparser.util.ParserException;
 
 import fitnesse.wiki.PageData;
-import fitnesse.slim.SlimError;
 import fitnesse.testsystems.TestExecutionException;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.slim.results.SlimTestResult;
@@ -21,13 +14,12 @@ import fitnesse.testsystems.slim.tables.SyntaxError;
 
 public class HtmlSlimTestSystem extends SlimTestSystem {
 
-
   private static final SlimTable START_OF_TEST = null;
   private static final SlimTable END_OF_TEST = null;
 
   private final SlimTableFactory slimTableFactory;
   private final CustomComparatorRegistry customComparatorRegistry;
-  private HtmlTableScanner tableScanner;
+  private SlimPage slimPage;
 
   public HtmlSlimTestSystem(String testSystemName, SlimClient slimClient,
                             SlimTableFactory slimTableFactory,
@@ -39,13 +31,13 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
 
   @Override
   protected void processAllTablesOnPage(TestPage pageToTest) throws TestExecutionException {
-    List<SlimTable> allTables = createSlimTables(pageToTest);
-
+    slimPage = SlimPage.Make(pageToTest, getTestContext(), slimTableFactory, customComparatorRegistry);
+    List<SlimTable> allTables = slimPage.getTables();
     boolean isSuiteTearDownPage = PageData.SUITE_TEARDOWN_NAME.equals(pageToTest.getName());
 
     if (allTables.isEmpty()) {
       String html = createHtmlResults(START_OF_TEST, END_OF_TEST);
-      testOutputChunk(html);
+      testOutputChunk(pageToTest, html);
     } else {
       for (int index = 0; index < allTables.size(); index++) {
         SlimTable theTable = allTables.get(index);
@@ -61,48 +53,14 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
         }
 
         String html = createHtmlResults(startWithTable, nextTable);
-        testOutputChunk(html);
+        testOutputChunk(pageToTest, html);
       }
-    }
-  }
-
-  private List<SlimTable> createSlimTables(TestPage pageToTest) {
-    NodeList nodeList = makeNodeList(pageToTest);
-    tableScanner = new HtmlTableScanner(nodeList);
-    return createSlimTables(tableScanner);
-  }
-
-  private NodeList makeNodeList(TestPage pageToTest) {
-    String html = pageToTest.getHtml();
-    Parser parser = new Parser(new Lexer(new Page(html)));
-    try {
-      return parser.parse(null);
-    } catch (ParserException e) {
-      throw new SlimError(e);
     }
   }
 
   private String createHtmlResults(SlimTable startWithTable, SlimTable stopBeforeTable) {
     HtmlTable start = (startWithTable != null) ? (HtmlTable) startWithTable.getTable() : null;
     HtmlTable end = (stopBeforeTable != null) ? (HtmlTable) stopBeforeTable.getTable() : null;
-    return tableScanner.toHtml(start, end);
-  }
-
-  private List<SlimTable> createSlimTables(TableScanner<? extends Table> tableScanner) {
-    List<SlimTable> allTables = new LinkedList<>();
-    for (Table table : tableScanner)
-      createSlimTable(allTables, table);
-
-    return allTables;
-  }
-
-  private void createSlimTable(List<SlimTable> allTables, Table table) {
-    String tableId = "" + allTables.size();
-    SlimTable slimTable = slimTableFactory.makeSlimTable(table, tableId, getTestContext());
-    // TODO: should customComparatorRegistry be baked into the slimTableFactory?
-    if (slimTable != null) {
-      slimTable.setCustomComparatorRegistry(customComparatorRegistry);
-      allTables.add(slimTable);
-    }
+    return slimPage.getTableScanner().toHtml(start, end);
   }
 }

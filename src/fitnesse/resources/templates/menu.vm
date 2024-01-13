@@ -43,7 +43,6 @@
             #if( $actions.withVersions )
                 <li#group(1)><a href="$localPath?versions" accesskey="v">Versions</a></li>
             #end
-
             #if( $actions.withRefactor )
                 <li#group(2)><a href="$localPath?refactor&amp;type=rename">Rename</a></li>
                 <li><a href="$localPath?refactor&amp;type=move">Move</a></li>
@@ -71,8 +70,11 @@
                 <li#group(4)><a href="?suite&amp;remote_debug">Remote Debug</a></li>
             #end
 
+            #if( $actions.withVariablesScope )
+                <li#group(5)><a href="$localPath?variables" accesskey="v">Variables</a></li>
+            #end
             #if( $actions.withUserGuide )
-                <li#group(5)><a href="${contextRoot}FitNesse.UserGuide" accesskey="">User Guide</a></li>
+                <li#group(6)><a href="${contextRoot}FitNesse.UserGuide" accesskey="">User Guide</a></li>
             #end
         </ul>
     </li>

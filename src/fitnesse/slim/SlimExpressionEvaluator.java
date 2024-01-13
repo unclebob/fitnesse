@@ -2,9 +2,9 @@ package fitnesse.slim;
 
 import fitnesse.slim.converters.ConverterRegistry;
 import fitnesse.slim.converters.GenericCollectionConverter;
+import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,21 +14,13 @@ import java.util.Map;
  * Evaluates slim expressions.
  */
 public class SlimExpressionEvaluator {
-  private static final ScriptEngineManager ENGINE_MANAGER = new ScriptEngineManager();
 
-  private ScriptEngine engine;
+  private final ScriptEngine engine;
 
   public SlimExpressionEvaluator() {
-    this("JavaScript");
+    this.engine = new NashornScriptEngineFactory().getScriptEngine();
   }
 
-  public SlimExpressionEvaluator(String engineName) {
-    this(ENGINE_MANAGER.getEngineByName(engineName));
-  }
-
-  public SlimExpressionEvaluator(ScriptEngine engine) {
-    this.engine = engine;
-  }
 
   public void setContext(String expr, Map<String, MethodExecutionResult> variables) {
     Converter<Map> mapCnv = ConverterRegistry.getConverterForClass(Map.class);
@@ -80,8 +72,7 @@ public class SlimExpressionEvaluator {
   }
 
   protected Object convertNestedWikiHashes(Converter<Map> cnv, Map<String, ?> value) {
-    Map<String, Object> newValue = new LinkedHashMap<>();
-    newValue.putAll(value);
+    Map<String, Object> newValue = new LinkedHashMap<>(value);
     for (Map.Entry<String, Object> nestedEntry : newValue.entrySet()) {
       Object nestedValue = convertWikiHashes(cnv, nestedEntry.getValue());
       newValue.put(nestedEntry.getKey(), nestedValue);

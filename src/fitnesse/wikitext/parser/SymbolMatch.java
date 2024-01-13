@@ -12,10 +12,11 @@ public class SymbolMatch {
         this.matchLength = matchLength;
     }
 
-    public SymbolMatch(SymbolType symbolType, ScanString input, int matchLength) {
-      this.offset = input.getOffset();
-      this.matchLength = matchLength;
-      this.symbol = new Symbol(symbolType, input.substring(0, matchLength), offset);
+    public SymbolMatch(SymbolType symbolType, ScanString input, MatchResult match) {
+      offset = input.getOffset();
+      matchLength = match.getLength();
+      symbol = new Symbol(symbolType, input.substring(0, matchLength), offset);
+      for (String option: match.getOptions()) symbol.putProperty(option, "");
     }
 
     public SymbolMatch(SymbolType symbolType, String text, int offset) {

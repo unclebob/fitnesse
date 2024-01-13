@@ -74,9 +74,15 @@ public class SlimException extends Exception {
     StringBuilder sb = new StringBuilder();
 
     if (isStopTestException(getCause())) {
-      sb.append(SlimServer.EXCEPTION_STOP_TEST_TAG);
+        sb.append(SlimServer.EXCEPTION_STOP_TEST_TAG);
     } else if (isStopSuiteException(getCause())) {
         sb.append(SlimServer.EXCEPTION_STOP_SUITE_TAG);
+    } else if (isIgnoreScriptTestException(getCause())) {
+      sb.append(SlimServer.EXCEPTION_IGNORE_SCRIPT_TEST_TAG);
+      return sb.toString();
+    } else if (isIgnoreAllTestsException(getCause())) {
+      sb.append(SlimServer.EXCEPTION_IGNORE_ALL_TESTS_TAG);
+      return sb.toString();
     } else {
       sb.append(SlimServer.EXCEPTION_TAG);
     }
@@ -115,5 +121,13 @@ public class SlimException extends Exception {
 
   public static boolean isStopSuiteException(Throwable t) {
     return t != null && t.getClass().toString().contains("StopSuite") || t instanceof InterruptedException;
+  }
+
+  public static boolean isIgnoreScriptTestException(Throwable t) {
+    return t != null && t.getClass().toString().contains("IgnoreScriptTest");
+  }
+
+  public static boolean isIgnoreAllTestsException(Throwable t) {
+    return t != null && t.getClass().toString().contains("IgnoreAllTests");
   }
 }

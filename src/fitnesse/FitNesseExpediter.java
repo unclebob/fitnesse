@@ -5,6 +5,7 @@ package fitnesse;
 import fitnesse.components.LogData;
 import fitnesse.http.*;
 import fitnesse.responders.ErrorResponder;
+import fitnesse.wiki.WikiPageUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -90,12 +91,9 @@ public class FitNesseExpediter implements ResponseSender, Runnable {
     Response response;
     try {
       try {
-        executorService.submit(new Callable<Request>() {
-          @Override
-          public Request call() throws Exception {
-            request.parse();
-            return request;
-          }
+        executorService.submit(() -> {
+          request.parse();
+          return request;
         }).get(requestParsingTimeLimit, TimeUnit.MILLISECONDS);
       } catch (ExecutionException e) {
         if (e.getCause() instanceof Exception) {
@@ -139,7 +137,7 @@ public class FitNesseExpediter implements ResponseSender, Runnable {
 
   public Response createGoodResponse(Request request) throws Exception {
     if (StringUtils.isBlank(request.getResource()) && StringUtils.isBlank(request.getQueryString()))
-      request.setResource("FrontPage");
+      request.setResource(WikiPageUtil.FRONT_PAGE);
     Responder responder = context.responderFactory.makeResponder(request);
     responder = context.authenticator.authenticate(context, request, responder);
     return responder.makeResponse(context, request);

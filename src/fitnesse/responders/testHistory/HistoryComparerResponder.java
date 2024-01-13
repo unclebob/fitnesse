@@ -1,13 +1,5 @@
 package fitnesse.responders.testHistory;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
-
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.html.template.HtmlPage;
@@ -23,10 +15,17 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
+
 public class HistoryComparerResponder implements Responder {
   public HistoryComparer comparer;
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(
-      PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormat = PageHistory.getDateFormat();
   private String firstFileName = "";
   private String secondFileName = "";
   private String firstFilePath;

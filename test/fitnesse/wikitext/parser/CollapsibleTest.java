@@ -8,7 +8,7 @@ public class CollapsibleTest {
         ParserTestHelper.assertScansTokenType("!* title\ncontent\n*!", "Collapsible", true);
     }
 
-    @Test public void parsesCollapsible() throws Exception {
+    @Test public void parsesCollapsible() {
         ParserTestHelper.assertParses("!* title\ncontent\n*!", "SymbolList[Collapsible[SymbolList[Text], SymbolList[Text, Newline]]]");
         ParserTestHelper.assertParses("!* title\n\n*!", "SymbolList[Collapsible[SymbolList[Text], SymbolList[Newline]]]");
         ParserTestHelper.assertParses("!**\n**!", "SymbolList[Text, Newline, CloseCollapsible]");
@@ -27,6 +27,10 @@ public class CollapsibleTest {
 
         ParserTestHelper.assertTranslatesTo("!*< Some title\n content \n*!",
           sectionWithClass("collapsible invisible", " content <br/>"));
+    }
+
+    @Test public void translatesIncomplete() {
+      ParserTestHelper.assertTranslatesTo("!* '''title'''\n''body''\n", "!* <b>title</b><br/><i>body</i><br/>");
     }
 
     private String sectionWithClass(String sectionClasses, String content) {

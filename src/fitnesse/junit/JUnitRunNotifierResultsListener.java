@@ -20,6 +20,8 @@ import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
+import static fitnesse.testsystems.ExecutionResult.getExecutionResult;
+
 public class JUnitRunNotifierResultsListener
         implements TestSystemListener, TestsRunnerListener, Closeable {
   private static final Logger LOG = Logger.getLogger(JUnitRunNotifierResultsListener.class.getName());
@@ -57,18 +59,23 @@ public class JUnitRunNotifierResultsListener
   public void testComplete(TestPage test, TestSummary testSummary) {
     increaseCompletedTests();
     Description description = descriptionFor(test);
+
+
     if (firstFailure != null) {
       notifier.fireTestFailure(new Failure(description, firstFailure));
     } else if (testSummary.getExceptions() > 0) {
       notifier.fireTestFailure(new Failure(description, new Exception("Exception occurred on page " + test.getFullPath())));
     } else if (testSummary.getWrong() > 0) {
       notifier.fireTestFailure(new Failure(description, new AssertionError("Test failures occurred on page " + test.getFullPath())));
+    } else if (getExecutionResult(testSummary) == ExecutionResult.IGNORE) {
+      notifier.fireTestIgnored(description);
+      return;
     }
     notifier.fireTestFinished(description);
   }
 
   @Override
-  public void testOutputChunk(String output) {
+  public void testOutputChunk(TestPage testPage, String output) {
   }
 
   @Override

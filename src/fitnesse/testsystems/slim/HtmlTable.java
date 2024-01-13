@@ -37,6 +37,8 @@ public class HtmlTable implements Table {
                                                                 HtmlUtil.HTML_CELL_CONTENT_PATTERN_TEXT +
                                                                 SYMBOL_ASSIGNMENT_SUFFIX + "?$",
                                                           Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+  private static final Pattern CONTAINS_TABLE_HTML_PATTERN = Pattern.compile(".*(<table.*?>.*</table>).*",
+                                                                          Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
   private static final Pattern SYMBOL_REPLACEMENT_PATTERN = Pattern.compile("^(" + SYMBOL_ASSIGNMENT + ")(.*)(" +
           SYMBOL_ASSIGNMENT_SUFFIX + ")$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
@@ -364,6 +366,10 @@ public class HtmlTable implements Table {
 
     public void setExceptionResult(SlimExceptionResult exceptionResult) {
       if (this.exceptionResult == null) {
+        if(exceptionResult.getException().contains("IGNORE_")){
+          setIgnoreResult(exceptionResult);
+          return;
+        }
         this.exceptionResult = exceptionResult;
         String exceptionText = exceptionResult.getMessage();
         if (exceptionText != null) {
@@ -377,6 +383,18 @@ public class HtmlTable implements Table {
               exceptionResult.getExecutionResult().toString(),
               asHtml(exceptionText)
           );
+        }
+      }
+    }
+
+    public void setIgnoreResult(SlimExceptionResult exceptionResult) {
+      if (this.exceptionResult == null) {
+        this.exceptionResult = exceptionResult;
+        String exceptionText = exceptionResult.getException();
+        if (exceptionText != null) {
+          setContent(String.format("%s <span class=\"%s\">%s</span>",
+            originalContent, exceptionResult.getIgnoreExecutionResult().toString(),
+            asHtml(exceptionText)));
         }
       }
     }
@@ -453,6 +471,9 @@ public class HtmlTable implements Table {
       }
       return text;
     }
+    if (containsHtmlTable(text) && qualifiesAsConvertedList(text)) {
+      return text;
+    }
     return HtmlUtil.escapeHTML(text);
   }
 
@@ -466,6 +487,19 @@ public class HtmlTable implements Table {
 
   static boolean qualifiesAsSymbolReplacement(String text) {
     return text.startsWith("$") && SYMBOL_REPLACEMENT_PATTERN.matcher(text).matches();
+  }
+
+  public static boolean qualifiesAsConvertedList(String text) {
+    if (qualifiesAsSymbolReplacement(text)) {
+      int contentOffset = text.indexOf('[');
+      String symbolContent = text.substring(contentOffset + 1, text.length() -1);
+      return qualifiesAsConvertedList(symbolContent);
+    }
+    return text.startsWith("[") && text.endsWith("]");
+  }
+
+  static boolean containsHtmlTable(String text) {
+    return text.contains("<") && CONTAINS_TABLE_HTML_PATTERN.matcher(text).matches();
   }
 
   private static String[] parseSymbol(String text) {
@@ -487,5 +521,3 @@ public class HtmlTable implements Table {
   }
 
 }
-
-

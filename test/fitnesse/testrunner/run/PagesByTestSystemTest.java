@@ -69,6 +69,9 @@ public class PagesByTestSystemTest {
     assertEquals(setUp, ((WikiTestPage) slimList.get(0)).getSourcePage());
     assertEquals(slimPage, ((WikiTestPage) slimList.get(1)).getSourcePage());
     assertEquals(tearDown, ((WikiTestPage) slimList.get(2)).getSourcePage());
+
+    assertEquals(6, pagesByTestSystem.totalTestsToRun());
+    assertEquals(6, pagesByTestSystem.testsToRun().size());
   }
 
   @Test

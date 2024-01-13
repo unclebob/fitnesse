@@ -4,13 +4,15 @@ package fitnesse.wiki;
 
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.SymbolType;
-
 public class WikiPageUtil {
+
+  public static final String PAGE_HEADER = "PageHeader";
+  public static final String PAGE_FOOTER = "PageFooter";
+  public static final String FRONT_PAGE = "FrontPage";
 
   public static void setPageContents(WikiPage page, String pageContents) {
     PageData pageData = page.getData();
@@ -19,11 +21,11 @@ public class WikiPageUtil {
   }
 
   public static WikiPage getHeaderPage(WikiPage wikiPage) {
-    return wikiPage.getPageCrawler().getClosestInheritedPage("PageHeader");
+    return wikiPage.getPageCrawler().getClosestInheritedPage(PAGE_HEADER);
   }
 
   public static WikiPage getFooterPage(WikiPage wikiPage) {
-    return wikiPage.getPageCrawler().getClosestInheritedPage("PageFooter");
+    return wikiPage.getPageCrawler().getClosestInheritedPage(PAGE_FOOTER);
   }
 
 
@@ -85,14 +87,9 @@ public class WikiPageUtil {
 
   public static List<String> getXrefPages(WikiPage page) {
     if (page instanceof WikitextPage) {
-      return WikitextPageUtil.getXrefPages((WikitextPage) page);
-    }
-    return Collections.emptyList();
-  }
-
-  public static List<Symbol> getSymbols(final WikiPage page, final SymbolType symbolType) {
-    if (page instanceof WikitextPage) {
-      return WikitextPageUtil.getSymbols((WikitextPage) page, symbolType);
+      List<String> result = new ArrayList<>();
+      ((WikitextPage) page).getSyntaxTree().findXrefs(result::add);
+      return result;
     }
     return Collections.emptyList();
   }

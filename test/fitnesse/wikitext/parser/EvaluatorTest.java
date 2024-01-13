@@ -16,6 +16,7 @@ public class EvaluatorTest {
         ParserTestHelper.assertTranslatesTo("${==}", "");
         ParserTestHelper.assertTranslatesTo("${= =}", "");
         ParserTestHelper.assertTranslatesTo("${=3+4=}", "7");
-        ParserTestHelper.assertTranslatesTo("${=abort=}", "<span class=\"meta\">invalid expression: abort</span>");
+        ParserTestHelper.assertTranslatesTo("${=abort=}", " <span class=\"fail\">invalid expression: abort</span> ");
+        ParserTestHelper.assertTranslatesTo("${=''body''", "${=<i>body</i>");
     }
 }

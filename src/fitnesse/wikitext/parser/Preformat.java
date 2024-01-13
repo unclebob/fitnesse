@@ -1,5 +1,7 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.shared.ToHtml;
+
 public class Preformat extends SymbolType implements Rule {
     public static final Preformat symbolType = new Preformat();
 
@@ -7,7 +9,7 @@ public class Preformat extends SymbolType implements Rule {
         super("Preformat");
         wikiMatcher(new Matcher().string("{{{"));
         wikiRule(this);
-        htmlTranslation(new HtmlBuilder("pre").body(0));
+        htmlTranslation(Translate.with(ToHtml::pair).text("pre").child(0));
     }
 
     @Override

@@ -23,6 +23,6 @@ public class AnchorNameTest {
     }
 
     private String anchorWithName(String name) {
-        return "<a name=\"" + name + "\"> </a>";
+        return "<a id=\"" + name + "\"></a>";
     }
 }

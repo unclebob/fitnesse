@@ -8,36 +8,26 @@ import java.util.Collections;
 
 public class Collapsible extends SymbolType implements Rule, Translation {
 
-    private static final String STATE = "State";
     public static final String CLOSED = " closed";
     private static final String INVISIBLE = " invisible";
 
     public Collapsible() {
       super("Collapsible");
-      wikiMatcher(new Matcher().startLine().string("!").repeat('*'));
+      wikiMatcher(new Matcher().startLine().string("!").repeat('*').optional(">", "<").whitespace());
       wikiRule(this);
       htmlTranslation(this);
-  }
+    }
 
     @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
-        String state = "";
-        Symbol next = parser.moveNext(1);
-        if (next.getContent().equals(">")) {
-            state = CLOSED;
-            next = parser.moveNext(1);
-        }
-        else if (next.getContent().equals("<")) {
-            state = INVISIBLE;
-            next = parser.moveNext(1);
-        }
-        if (!next.isType(SymbolType.Whitespace)) return Symbol.nothing;
-
         Symbol titleText = parser.parseToIgnoreFirst(SymbolType.Newline);
         if (parser.atEnd()) return Symbol.nothing;
 
         Symbol bodyText = parser.parseTo(SymbolType.CloseCollapsible);
-        if (parser.atEnd()) return Symbol.nothing;
+        if (parser.atEnd()) {
+            return new Maybe<>(Symbol.listOf(
+              current.asText(), titleText, new Symbol(SymbolType.Newline), bodyText));
+        }
 
         // Remove trailing newline so we do not introduce excessive whitespace in the page.
         if (parser.peek().isType(SymbolType.Newline)) {
@@ -45,21 +35,20 @@ public class Collapsible extends SymbolType implements Rule, Translation {
         }
 
         return new Maybe<>(current
-          .putProperty(STATE, state)
           .add(titleText)
           .add(bodyText));
     }
 
     @Override
     public String toTarget(Translator translator, Symbol symbol) {
-        String option = symbol.getProperty(Collapsible.STATE);
+        String option = symbol.hasProperty(">") ? CLOSED : symbol.hasProperty("<") ? INVISIBLE : "";
         String title = translator.translate(symbol.childAt(0));
         String body = translator.translate(symbol.childAt(1));
         return generateHtml(option, title, body);
     }
 
     public static String generateHtml(String state, String titleText, String bodyText) {
-        return generateHtml(state, titleText, bodyText, Collections.<String>emptySet());
+        return generateHtml(state, titleText, bodyText, Collections.emptySet());
     }
 
     public static String generateHtml(String state, String titleText, String bodyText, Collection<String> extraClasses) {
@@ -85,6 +74,4 @@ public class Collapsible extends SymbolType implements Rule, Translation {
 
         return outerBlock.html();
     }
-
-
 }

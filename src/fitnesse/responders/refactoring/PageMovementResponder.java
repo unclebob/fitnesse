@@ -11,14 +11,9 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.SymbolicPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.WikiPageProperty;
-import fitnesse.wiki.refactoring.ReferenceRenamer;
+import fitnesse.wiki.*;
+import fitnesse.wiki.refactoring.ChangeReference;
+import fitnesse.wiki.refactoring.ReferenceRenamingTraverser;
 
 import java.util.List;
 
@@ -33,7 +28,7 @@ public abstract class PageMovementResponder implements SecureResponder {
 
   protected abstract boolean getAndValidateRefactoringParameters(Request request);
 
-  protected abstract ReferenceRenamer getReferenceRenamer(FitNesseContext context);
+  protected abstract ChangeReference getReferenceRenamer();
 
   protected abstract String getNewPageName();
 
@@ -48,7 +43,7 @@ public abstract class PageMovementResponder implements SecureResponder {
     }
 
     if (!getAndValidateNewParentPage(context, request)) {
-      return makeErrorMessageResponder(newParentPath == null ? "null" : newParentPath.toString() + " does not exist.").makeResponse(context, request);
+      return makeErrorMessageResponder(newParentPath == null ? "null" : newParentPath + " does not exist.").makeResponse(context, request);
     }
 
     if (!getAndValidateRefactoringParameters(request)) {
@@ -60,7 +55,7 @@ public abstract class PageMovementResponder implements SecureResponder {
     }
 
     if (request.hasInput("refactorReferences")) {
-      getReferenceRenamer(context).renameReferences();
+      ReferenceRenamingTraverser.renameReferences(context.getRootPage(), getReferenceRenamer());
     }
     execute();
 
@@ -101,11 +96,11 @@ public abstract class PageMovementResponder implements SecureResponder {
 
   protected void movePage(WikiPage movedPage, WikiPage newParentPage, String pageName) throws RefactorException {
 
-  	if (isSymlinkedPage(movedPage)) {
-  	  if (isSymlinkedPage(movedPage.getParent())) {
+    if (movedPage.isSymbolicPage()) {
+      if (movedPage.getParent().isSymbolicPage()) {
   	    throw new RefactorException("Can not move symlink page when parent page is also a symlink");
   	  }
-  		WikiPage referencedPage = ((SymbolicPage) movedPage).getRealPage();
+  		WikiPage referencedPage = movedPage.getRealPage();
   		removeSymlink(movedPage);
   		createSymlink(referencedPage, newParentPage, pageName);
   	} else {
@@ -125,10 +120,6 @@ public abstract class PageMovementResponder implements SecureResponder {
     for (WikiPage page : children) {
       movePage(page, newParentPage, page.getName());
     }
-  }
-
-  private boolean isSymlinkedPage(WikiPage page) {
-	  return page instanceof SymbolicPage;
   }
 
   private void removeSymlink(WikiPage movedPage) {

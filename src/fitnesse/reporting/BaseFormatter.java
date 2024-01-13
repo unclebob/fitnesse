@@ -1,6 +1,5 @@
 package fitnesse.reporting;
 
-import fitnesse.testsystems.*;
 import fitnesse.wiki.WikiPage;
 
 public abstract class BaseFormatter implements Formatter {
@@ -19,36 +18,18 @@ public abstract class BaseFormatter implements Formatter {
     return page;
   }
 
+  /**
+   * This implementation remains to allow existing subclasses that override it to work.
+   * Code should be rewritten to override #testOutputChunk(TestPage, String) and not this overload.
+   * @param output content to append
+   * @deprecated implement {@link Formatter#testOutputChunk(fitnesse.testsystems.TestPage, String)}
+   */
   @Override
-  public void testSystemStarted(TestSystem testSystem) {
-  }
-
-  @Override
-  public void testStarted(TestPage testPage) {
-  }
-
-  @Override
+  @Deprecated
   public void testOutputChunk(String output) {
-  }
-
-  @Override
-  public void testComplete(TestPage test, TestSummary summary) {
   }
 
   public int getErrorCount() {
     return 0;
   }
-
-  @Override
-  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
-  }
-
-  @Override
-  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
-  }
-
-  @Override
-  public void testSystemStopped(TestSystem testSystem, Throwable cause) {
-  }
 }
-

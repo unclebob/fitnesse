@@ -19,8 +19,8 @@ var Wysiwyg = function (textarea, options) {
     };
 
 	CodeMirror.commands.save = function(cm) {
-    	$(document.f).submit(); 
-    	return false; 
+    	$(document.f).submit();
+    	return false;
     };
 
     this.codeMirrorEditor = CodeMirror.fromTextArea(textarea, {
@@ -1302,10 +1302,10 @@ Wysiwyg.prototype.spanTableColumns = function (table) {
     var maxCells = Math.max.apply(Math, $.map(rows, function (e) {
         var tds = $('> td', e);
         tds.removeAttr('colspan');
-        return tds.size();
+        return tds.length;
     }));
     rows.each(function () {
-        var s = $('> td', this).size();
+        var s = $('> td', this).length;
         if (s < maxCells) {
             $('td:last', this).attr('colspan', maxCells - s + 1);
         }

@@ -1,12 +1,12 @@
  <form method="post" action="?">
   <input type="hidden" name="responder" value="renameFile"/>
-  <input type="hidden" name="filename" value="$filename"/>
+  <input type="hidden" name="filename" value="#escape($filename)"/>
   <fieldset  class="buttons">
-    <p>Rename <b>$filename</b>.</p>
+    <p>Rename <b>#escape($filename)</b>.</p>
   </fieldset>
   <fieldset>
     <label for="rename-file">Rename to:</label>
-    <input id="rename-file" type="text" name="newName" value="$filename"/>
+    <input id="rename-file" type="text" name="newName" value="#escape($filename)"/>
   </fieldset>
   <fieldset  class="buttons">
       <input type="submit" name="renameFile" value="Rename"/>

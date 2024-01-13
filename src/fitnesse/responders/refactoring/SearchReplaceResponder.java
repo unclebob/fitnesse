@@ -1,11 +1,13 @@
 package fitnesse.responders.refactoring;
 
-import fitnesse.wiki.refactoring.ContentReplacingSearchObserver;
-import fitnesse.wiki.search.PageFinder;
-import fitnesse.wiki.search.RegularExpressionWikiPageFinder;
 import fitnesse.components.TraversalListener;
 import fitnesse.responders.search.ResultResponder;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.refactoring.ContentReplacingSearchObserver;
+import fitnesse.wiki.refactoring.MethodReplacingSearchObserver;
+import fitnesse.wiki.search.MethodWikiPageFinder;
+import fitnesse.wiki.search.PageFinder;
+import fitnesse.wiki.search.RegularExpressionWikiPageFinder;
 
 public class SearchReplaceResponder extends ResultResponder {
 
@@ -21,7 +23,7 @@ public class SearchReplaceResponder extends ResultResponder {
   @Override
   protected String getTitle() {
     return String.format("Replacing matching content \"%s\" with content \"%s\"",
-        getSearchString(), getReplacementString());
+      getSearchString(), getReplacementString());
   }
 
   @Override
@@ -29,11 +31,22 @@ public class SearchReplaceResponder extends ResultResponder {
     String searchString = getSearchString();
     String replacementString = getReplacementString();
 
-    ContentReplacingSearchObserver contentReplaceObserver =
-            new ContentReplacingSearchObserver(searchString, replacementString);
+    if (isMethodReplace()) {
+      MethodReplacingSearchObserver methodReplaceObserver =
+        new MethodReplacingSearchObserver(searchString, replacementString);
 
-    return new RegularExpressionWikiPageFinder(searchString,
-            new SearchReplaceTraverser(contentReplaceObserver, webOutputObserver));
+      return new MethodWikiPageFinder(searchString,
+        new SearchReplaceTraverser(methodReplaceObserver, webOutputObserver));
+    } else {
+      ContentReplacingSearchObserver contentReplaceObserver =
+        new ContentReplacingSearchObserver(searchString, replacementString);
+      return new RegularExpressionWikiPageFinder(searchString,
+        new SearchReplaceTraverser(contentReplaceObserver, webOutputObserver));
+    }
+  }
+
+  private boolean isMethodReplace() {
+    return request.hasInput("isMethodReplace");
   }
 
   private String getReplacementString() {

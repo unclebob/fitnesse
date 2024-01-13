@@ -3,12 +3,12 @@ package fitnesse.slim.converters;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.slim.Converter;
+import fitnesse.testsystems.slim.HtmlTable;
 import org.htmlparser.Node;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.TagNameFilter;
 import org.htmlparser.tags.CompositeTag;
 import org.htmlparser.util.NodeList;
-import org.htmlparser.util.ParserException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +54,7 @@ public class MapConverter implements Converter<Map> {
 
   protected void addCellContent(HtmlTag valueCell, Object cellValue) {
     String valueToAdd = ElementConverterHelper.elementToString(cellValue);
-    if (!HtmlUtil.isValidTableCellContent(valueToAdd))
+    if (!HtmlUtil.isValidTableCellContent(valueToAdd) && !HtmlTable.qualifiesAsConvertedList(valueToAdd))
       valueToAdd = HtmlUtil.escapeHTML(valueToAdd);
 
     valueCell.add(valueToAdd.trim());
