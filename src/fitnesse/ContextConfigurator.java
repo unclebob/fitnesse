@@ -310,10 +310,6 @@ public class ContextConfigurator {
     return this;
   }
 
-  public ContextConfigurator withAccount() {
-    return this;
-  }
-
   public ContextConfigurator withClassLoader(ClassLoader classLoader) {
     this.classLoader = classLoader;
     return this;

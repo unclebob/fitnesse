@@ -65,7 +65,7 @@ public class AccountResponderTest {
     assertSubString("name=\"responder\"", body);
     assertEquals(2, getCountOfString("method=\"post\"", body));
     assertEquals(2, getCountOfString("name=\"responder\"", body));
-    assertEquals(4, getCountOfString("<input type=\"text\"", body));
+    assertEquals(5, getCountOfString("<input type=\"text\"", body));
     assertEquals(3, getCountOfString("<input type=\"submit\"", body));
     assertSubString("<title>Account: ChildPage</title>", body);
     assertSubString("Change Password", body);
@@ -94,7 +94,7 @@ public class AccountResponderTest {
     assertSubString("name=\"responder\"", body);
     assertEquals(1, getCountOfString("method=\"post\"", body));
     assertEquals(1, getCountOfString("name=\"responder\"", body));
-    assertEquals(2, getCountOfString("<input type=\"text\"", body));
+    assertEquals(3, getCountOfString("<input type=\"text\"", body));
     assertEquals(1, getCountOfString("<input type=\"submit\"", body));
     assertSubString("<title>Account: ChildPage</title>", body);
     assertSubString("Change Password", body);

@@ -68,7 +68,8 @@ public class SaveAccountResponderTest {
     addDefaultRequestInputs();
     request.setCredentials("admin", "admin");
     request.addInput("changePassword", "Change My Password");
-    request.addInput("PasswordText", "admin");
+    request.addInput("CurrentPasswordText", "admin");
+    request.addInput("NewPasswordText", "admin");
     request.addInput("ConfirmPasswordText", "admin1");
 
     Response response = responder.makeResponse(context, request);
@@ -77,12 +78,28 @@ public class SaveAccountResponderTest {
   }
 
   @Test
-  public void testChangePasswordResponse() throws Exception {
+  public void testChangePasswordWithWrongCurrentPassword() throws Exception {
     createRequest();
     addDefaultRequestInputs();
     request.setCredentials("admin", "admin");
     request.addInput("changePassword", "Change My Password");
-    request.addInput("PasswordText", "admin");
+    request.addInput("CurrentPasswordText", "nonadmin");
+    request.addInput("NewPasswordText", "admin");
+    request.addInput("ConfirmPasswordText", "admin");
+
+    Response response = responder.makeResponse(context, request);
+    assertEquals(412, response.getStatus());
+    assertTrue(((SimpleResponse) response).getContent().contains("Current password is incorrect."));
+  }
+
+  @Test
+  public void testChangePasswordResponse() throws Exception {
+    createRequest();
+    addDefaultRequestInputs();
+    request.setCredentials("admin", "oldadmin");
+    request.addInput("changePassword", "Change My Password");
+    request.addInput("CurrentPasswordText","oldadmin");
+    request.addInput("NewPasswordText", "admin");
     request.addInput("ConfirmPasswordText", "admin");
 
     File file = new File(Password.defaultFile);

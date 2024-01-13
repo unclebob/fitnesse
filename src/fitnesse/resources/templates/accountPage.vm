@@ -4,8 +4,12 @@
    <form method="post">
     <input type="hidden" name="responder" value="saveAccount"/>
      <fieldset>
-      <label for="PasswordText">New Password:</label>
-      <input type="text" id="PasswordText" name="PasswordText" size="70"/>
+      <label for="CurrentPasswordText">Current Password:</label>
+      <input type="text" id="CurrentPasswordText" name="CurrentPasswordText" size="70"/>
+     </fieldset>
+     <fieldset>
+      <label for="NewPasswordText">New Password:</label>
+      <input type="text" id="NewPasswordText" name="NewPasswordText" size="70"/>
      </fieldset>
      <fieldset>
       <label for="ConfirmPasswordText">Confirm Password:</label>

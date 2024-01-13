@@ -17,12 +17,16 @@ public class SaveAccountResponder extends BasicResponder {
     }
     Password password = new Password();
     if (request.hasInput("changePassword")) {
-      String passwordText = StringUtils.trim(request.getInput("PasswordText"));
+      String currentPassword = StringUtils.trim(request.getInput("CurrentPasswordText"));
+      String newPasswordText = StringUtils.trim(request.getInput("NewPasswordText"));
       String confirmPasswordText = StringUtils.trim(request.getInput("ConfirmPasswordText"));
-      if (passwordText.isEmpty() || !passwordText.equals(confirmPasswordText)) {
+      if (newPasswordText.isEmpty() || !newPasswordText.equals(confirmPasswordText)) {
         return getResponse(context, "Password should not be empty and they should match.");
       }
-      password.savePassword(request.getAuthorizationUsername(), passwordText);
+      if (!currentPassword.equals(request.getAuthorizationPassword())) {
+        return getResponse(context, "Current password is incorrect.");
+      }
+      password.savePassword(request.getAuthorizationUsername(), newPasswordText);
     } else if ("admin".equals(request.getAuthorizationUsername())) {
       if (request.hasInput("createUser")) {
         String newUserNameText = StringUtils.trim(request.getInput("UserNameText"));

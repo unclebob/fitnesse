@@ -9,7 +9,12 @@ import util.FileUtil;
 import java.io.File;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThrows;
+
 
 public class PasswordTest {
   private Password password;
