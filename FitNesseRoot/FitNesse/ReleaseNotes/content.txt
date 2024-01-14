@@ -1,4 +1,5 @@
 !2 Pending Changes
+* Ability to change password and additionally create/delete users feature for admin([[1468][https://github.com/unclebob/fitnesse/pull/1468])
 
 !2 20231203
 * Updated README and dependencies
