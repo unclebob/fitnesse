@@ -24,7 +24,7 @@ The password file can be managed  in the following two ways:
     * Ensure you have passwords.txt file located in the same location where fitnesse jar is present. Create admin user in that file, using the command line tool described below (passing the -c option creates the file).
     * More passwords can be created in the FitNesse UI after logging in as admin user. Click on the link with admin user on any page to manage users. This uses the default PasswordCipher and default passwords.txt file.
  * '''Updating the password file via the command line'''
-		* The password files can be created using the -c command line argument.
+		* Call the Password program supplied with !-FitNesse-! to add a user with a password (passing the '-c' command line argument creates the file)
 	    {{{Usage: java fitnesse.authentication.Password [-f <password file>] [-c <password cipher>] <user>
         -f <password file> {passwords.txt}
         -c <password cipher> {fitnesse.authentication.HashingCipher} }}}
