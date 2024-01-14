@@ -21,7 +21,7 @@ This should be left as is in the file.  It tells the program with PasswordCipher
 
 The password file can be managed  in the following two ways:
  * '''Passwords Created In The FitNesse UI'''
-    * Ensure you have passwords.txt file located in the same location where fitnesse jar is present. Create admin user in that file.
+    * Ensure you have passwords.txt file located in the same location where fitnesse jar is present. Create admin user in that file, using the command line tool described below (passing the -c option creates the file).
     * More passwords can be created in the FitNesse UI after logging in as admin user. Click on the link with admin user on any page to manage users. This uses the default PasswordCipher and default passwords.txt file.
  * '''Updating the password file via the command line'''
 		* The password files can be created using the -c command line argument.
