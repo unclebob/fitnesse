@@ -19,7 +19,7 @@ You can see that the passwords have been hashed and are not humanly readable.  Y
 !-!fitnesse.authentication.HashingCipher-!
 This should be left as is in the file.  It tells the program with PasswordCipher to use when hashing the passwords.  You may create your own PasswordCipher by implementing the ''!-fitnesse.authentication.PasswordCipher-!'' interface and use it for creating password files.
 
-The Password program can be used in the following two ways.
+The password file can be managed  in the following two ways:
  * '''Passwords Created In The FitNesse UI'''
     * Ensure you have passwords.txt file located in the same location where fitnesse jar is present. Create admin user in that file.
     * More passwords can be created in the FitNesse UI after logging in as admin user. Click on the link with admin user on any page to manage users. This uses the default PasswordCipher and default passwords.txt file.
