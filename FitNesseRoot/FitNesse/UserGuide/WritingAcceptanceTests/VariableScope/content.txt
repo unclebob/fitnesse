@@ -5,3 +5,5 @@ For example, lets say the variable we are interested in is X.
  * If X is defined on this page then it is definately in scope.
  * If X is not defined on this page but is defined in the page .FitNesse (this page's parent), then X is still in scope.
  * If X is defined on .FitNesse.UserGuide.FitNesseWiki then X is not in scope because .FitNesse.UserGuide.FitNesseWiki is not a parent of this page.
+
+All variables that have been declared using !define can be checked by adding ?variables at the end. For example .FitNesse.UserGuide.FitNesseWiki?variables will show a table with the names, their values and their location on the pages path.
