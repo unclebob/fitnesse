@@ -1,5 +1,5 @@
 !2 Pending Changes
- * Added the values to the variables page. ([[1472][https://github.com/unclebob/fitnesse/pull/1472]])
+ * Added the defined values to the overview of all variables in scope. ([[1472][https://github.com/unclebob/fitnesse/pull/1472]])
 
 !2 20231203
 * Updated README and dependencies
