@@ -24,13 +24,13 @@ public class MethodReplacingSearchObserver implements TraversalListener<WikiPage
     PageData pageData = page.getData();
 
     String content = pageData.getContent();
-    String[] lines = content.split(System.lineSeparator());
+    String[] lines = content.split(PageData.PAGE_LINE_SEPARATOR);
     String newPageContent = "";
     boolean isModified = false;
     String targetMethod = getMethodNameFromLine(searchMethodString);
     for (String eachLineOfFile : lines) {
       if (!eachLineOfFile.startsWith("|") || !getMethodNameFromLine(eachLineOfFile).equals(targetMethod)) {
-        newPageContent += eachLineOfFile + System.lineSeparator();
+        newPageContent += eachLineOfFile + PageData.PAGE_LINE_SEPARATOR;
       } else {
         isModified = true;
         String modifiedLine = "";
@@ -68,7 +68,7 @@ public class MethodReplacingSearchObserver implements TraversalListener<WikiPage
           modifiedLine += getLastColumn(eachLineOfFile);
         }
         modifiedLine = (!modifiedLine.isEmpty() && !modifiedLine.endsWith("|")) ? modifiedLine + "|" : modifiedLine;
-        newPageContent += modifiedLine + System.lineSeparator();
+        newPageContent += modifiedLine + PageData.PAGE_LINE_SEPARATOR;
       }
     }
     if (isModified) {
