@@ -41,7 +41,14 @@ public class SlimSerializerTest {
   public void listWithSurrogatePairSerialize() throws Exception {
     list.add("h🀜llo");
     list.add("world");
-    assertEquals("[000002:000006:h🀜llo:000005:world:]", SlimSerializer.serialize(list));
+    /*Surrogate Length is different depending on OS */
+    if (System.lineSeparator().length() == 2){
+      /*Windows */
+      assertEquals("[000002:000008:h🀜llo:000005:world:]", SlimSerializer.serialize(list));
+    }else{
+      /*Linux & Mac */
+      assertEquals("[000002:000006:h🀜llo:000005:world:]", SlimSerializer.serialize(list));
+    }
   }
 
   @Test
