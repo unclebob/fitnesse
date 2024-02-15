@@ -403,6 +403,17 @@ public class RequestTest {
   }
 
   @Test
+  public void testCanGetCredentialsWithColonsInPassword() throws Exception {
+    appendToMessage("GET /abc?something HTTP/1.1\r\n");
+    appendToMessage("Authorization: Basic QWxhZGRpbjpvcGVuOnNlc2FtZTpub3c=\r\n");
+    appendToMessage("\r\n");
+    parseMessage();
+    request.getCredentials();
+    assertEquals("Aladdin", request.getAuthorizationUsername());
+    assertEquals("open:sesame:now", request.getAuthorizationPassword());
+  }
+
+  @Test
   public void testCanGetCredentialsWithNonASCII() throws Exception {
     appendToMessage("GET /abc?something HTTP/1.1\r\n");
     appendToMessage("Authorization: Basic w4Rsw6JkZMOtbjrDtnDDqG4gc8Oqw5/DpG3DqSDDvHJn4oKsbnRsw78=\r\n");

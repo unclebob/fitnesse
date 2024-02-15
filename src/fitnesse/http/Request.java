@@ -331,7 +331,8 @@ public class Request {
     if (hasHeader("Authorization")) {
       String authHeader = getHeader("Authorization");
       String userpass = getUserpass(authHeader);
-      String[] values = userpass.split(":");
+      // limit=2 in order to stop splitting after 1st colon. Following colons are part of the password.
+      String[] values = userpass.split(":", 2);
       if (values.length == 2) {
         authorizationUsername = values[0];
         authorizationPassword = values[1];
