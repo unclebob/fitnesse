@@ -20,8 +20,10 @@ public class Base64 {
     base64Value[pad] = 0;
   }}
 
-  public static String decode(String value) throws UnsupportedEncodingException {
-    return new String(decode(value.getBytes(FileUtil.CHARENCODING)));
+  public static String decode(String base64) throws UnsupportedEncodingException {
+    // The INPUT's charset is irrelevant because Base64 is US-ASCII which is compatible to any charset
+    // The OUTPUT of decode() will most likely be UTF-8 as most browsers encode basic auth in UTF-8 now
+    return new String(decode(base64.getBytes()), FileUtil.CHARENCODING);
   }
 
   public static byte[] decode(byte[] bytes) {
