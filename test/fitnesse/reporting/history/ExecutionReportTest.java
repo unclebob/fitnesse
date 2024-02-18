@@ -1,26 +1,29 @@
 package fitnesse.reporting.history;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.StringWriter;
-
+import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.util.Clock;
+import fitnesse.util.DateTimeUtil;
+import fitnesse.util.TimeMeasurement;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import fitnesse.util.DateTimeUtil;
-import fitnesse.util.TimeMeasurement;
-import fitnesse.FitNesseContext;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testutil.FitNesseUtil;
+import java.io.StringWriter;
+import java.util.TimeZone;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ExecutionReportTest {
   private FitNesseContext context;
@@ -28,6 +31,11 @@ public class ExecutionReportTest {
   @Before
   public void setup() throws Exception {
     context = FitNesseUtil.makeTestContext();
+  }
+
+  @After
+  public void tearDown() {
+    Clock.restoreDefaultClock();
   }
 
   @Test
@@ -39,8 +47,11 @@ public class ExecutionReportTest {
     original.toXml(writer, context.pageFactory.getVelocityEngine());
     ExecutionReport report = ExecutionReport.makeReport(writer.toString());
     assertTrue(report instanceof TestExecutionReport);
-    assertEquals(original, report);
     assertEquals(42, report.getTotalRunTimeInMillis());
+    // report creation date is not present in XML so this is the only difference between the two
+    assertNotEquals(original, report);
+    report.date = original.date;
+    assertEquals(original, report);
   }
 
   private TimeMeasurement totalTimeMeasurementWithElapsedMillis(final long millis) {
@@ -113,8 +124,34 @@ public class ExecutionReportTest {
 
   @Test
   public void testHashCode() {
+    setupFixedTimeClock();
     TestExecutionReport original = new TestExecutionReport(new FitNesseVersion("version"), "rootPath");
 
-    assertEquals(-836274316, original.hashCode());
+    assertEquals(-836264316, original.hashCode());
+  }
+
+  @Test
+  public void defaultsDateOnTestSystemStartFailure() throws Exception {
+    setupFixedTimeClock();
+
+    SuiteExecutionReport original = new SuiteExecutionReport(new FitNesseVersion("version"), "rootPath");
+    assertEquals(Clock.currentDate(), original.getDate());
+    assertEquals("1970-01-01T08:00:10+08:00", original.getDateString());
+    assertEquals("19700101080010", original.getResultDate());
+    assertEquals(-1, original.getTotalRunTimeInMillis());
+  }
+
+  private static void setupFixedTimeClock() {
+    new Clock(true) {
+      @Override
+      public long currentClockTimeInMillis() {
+        return 10000L;
+      }
+
+      @Override
+      protected TimeZone getTimeZone() {
+        return TimeZone.getTimeZone("Antarctica/Casey");
+      }
+    };
   }
 }
