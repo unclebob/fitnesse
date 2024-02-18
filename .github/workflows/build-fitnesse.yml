@@ -15,7 +15,7 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
       - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v1
+        uses: gradle/wrapper-validation-action@v2
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v3
         with:
