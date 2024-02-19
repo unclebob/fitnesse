@@ -1,6 +1,8 @@
 !2 Pending Changes
  * Added the defined values to the overview of all variables in scope. ([[1472][https://github.com/unclebob/fitnesse/pull/1472]])
- * Ability to change password and additionally create/delete users feature for admin([[1468][https://github.com/unclebob/fitnesse/pull/1468])
+ * Ability to change password and additionally create/delete users feature for admin ([[1468][https://github.com/unclebob/fitnesse/pull/1468]])
+ * Improved error reporting when test system fails to start
+ * Updated dependencies
 
 !2 20231203
  * Updated README and dependencies
