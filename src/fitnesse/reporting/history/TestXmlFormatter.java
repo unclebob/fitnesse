@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.reporting.history;
 
+import fitnesse.ConfigurationParameter;
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.BaseFormatter;
 import fitnesse.testrunner.WikiTestPageUtil;
@@ -20,7 +21,10 @@ import fitnesse.util.DateTimeUtil;
 import fitnesse.util.TimeMeasurement;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
@@ -174,7 +178,17 @@ public class TestXmlFormatter extends BaseFormatter implements ExecutionLogListe
   }
 
   protected void writeResults() throws IOException {
-    writeResults(writerFactory.getWriter(context, getPage(), getPageCounts(), totalTimeMeasurement.startedAt()));
+    if (!getPage().getData().getProperties().has(WikiPageProperty.DISABLE_TESTHISTORY)) {
+      writeResults(writerFactory.getWriter(context, getPage(), getPageCounts(), totalTimeMeasurement.startedAt()));
+    }
+
+    // Delete histories if they exceed the max count for the page
+		String testhistoryMaxCount = context.getProperties().getProperty(ConfigurationParameter.TESTHISTORY_MAX_COUNT.getKey());
+		if(testhistoryMaxCount != null && StringUtils.isNumeric(testhistoryMaxCount)) {
+			// The given number of days (0) is irrelevant here since we purge the history by their amount
+			HistoryPurger historyPurger = new HistoryPurger(context.getTestHistoryDirectory(), 0);
+			historyPurger.deleteTestHistoryByCount(getPage().getFullPath(), Integer.parseInt(testhistoryMaxCount));
+		}
   }
 
   @Override

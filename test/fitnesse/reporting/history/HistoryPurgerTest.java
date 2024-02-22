@@ -132,6 +132,37 @@ public class HistoryPurgerTest {
     assertEquals(1, svnFiles.length);
   }
 
+  @Test
+  public void shouldBeAbleToDeleteSomeTestHistoriesIfMoreThanThree() throws Exception {
+    int testHistoryCount = 3;
+
+    File pageDirectory = addPageDirectory("SomePage");
+    addTestResult(pageDirectory, "20090614000000_1_0_0_0");
+    addTestResult(pageDirectory, "20090615000000_1_0_0_0");
+    addTestResult(pageDirectory, "20090616000000_1_0_0_0");
+    addTestResult(pageDirectory, "20090617000000_1_0_0_0");
+
+    historyPurger.deleteTestHistoryByCount(PathParser.parse("SomePage"), testHistoryCount);
+
+    TestHistory history = new TestHistory(resultsDirectory);
+    PageHistory pageHistory = history.getPageHistory("SomePage");
+    assertEquals(testHistoryCount, pageHistory.size());
+    assertNull(pageHistory.get(makeDate("20090614000000")));
+    assertNotNull(pageHistory.get(makeDate("20090615000000")));
+    assertNotNull(pageHistory.get(makeDate("20090616000000")));
+    assertNotNull(pageHistory.get(makeDate("20090617000000")));
+  }
+
+  @Test
+  public void shouldDeletePageHistoryDirectoryIfEmpty() throws Exception {
+    addPageDirectory("SomePage");
+
+    historyPurger.deleteTestHistoryByCount(PathParser.parse("SomePage"), 0);
+
+    String[] files = resultsDirectory.list();
+    assertEquals(0, files.length);
+  }
+
   private void removeResultsDirectory() throws IOException {
     if (resultsDirectory.exists())
       FileUtil.deleteFileSystemDirectory(resultsDirectory);

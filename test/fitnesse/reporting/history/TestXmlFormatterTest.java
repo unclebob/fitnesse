@@ -1,5 +1,6 @@
 package fitnesse.reporting.history;
 
+import fitnesse.ConfigurationParameter;
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.history.TestExecutionReport.TestResult;
 import fitnesse.reporting.history.TestXmlFormatter.WriterFactory;
@@ -34,6 +35,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 public class TestXmlFormatterTest {
   private static final String TEST_TIME = "4/13/2009 15:21:43";
@@ -221,4 +224,20 @@ public class TestXmlFormatterTest {
     });
   }
 
+  @Test
+  public void shouldTryToDeleteHistoriesByCount() throws Exception {
+    context.getProperties().setProperty(ConfigurationParameter.TESTHISTORY_MAX_COUNT.getKey(), "2");
+    FitNesseContext spyContext = spy(context);
+    try (TestXmlFormatter formatter = new TestXmlFormatter(spyContext, new WikiPageDummy("name", "content", null),
+        new WriterFactory() {
+          @Override
+          public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time)
+              throws IOException {
+            return new StringWriter();
+          }
+        })) {
+    }
+
+    verify(spyContext).getTestHistoryDirectory();
+  }
 }

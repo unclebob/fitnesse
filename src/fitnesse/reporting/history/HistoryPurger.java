@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -94,4 +96,54 @@ public class HistoryPurger {
     String dateString = testHistoryName.split("_")[0];
     return dateFormat.parse(dateString);
   }
+
+  public void deleteTestHistoryByCount(WikiPagePath path, int testHistoryCount) {
+		String pageName = path.toString();
+		String subPagePrefix = pageName + ".";
+		File[] files = FileUtil.getDirectoryListing(resultsDirectory);
+		for (File file : files) {
+			String fileName = file.getName();
+			if (fileName.equals(pageName) || fileName.startsWith(subPagePrefix)) {
+				deleteIfCountReached(file, testHistoryCount);
+			}
+		}
+	}
+	
+	private void deleteIfCountReached(File file, int testHistoryCount) {
+		try {
+			if (file.isDirectory()) {
+				deleteDirectoryIfCountReached(file, testHistoryCount);
+			} else {
+				deleteFilesIfCountReached(new File[] {file}, testHistoryCount);
+			}
+		} catch (IOException e) {
+			LOG.log(Level.SEVERE, e.getMessage(), e);
+			LOG.log(Level.INFO, format("Unable to remove test history file %s", file.getPath()));
+		}
+	}
+	
+	private void deleteDirectoryIfCountReached(File file, int testHistoryCount) throws IOException {
+		File[] files = FileUtil.listFiles(file);
+		if(testHistoryCount > 0) {
+			deleteFilesIfCountReached(files, testHistoryCount);
+		}
+		// Deleting the folder if it is empty
+		if (FileUtil.isEmpty(file)) {
+			FileUtil.deleteFileSystemDirectory(file);
+		}
+	}
+	
+	private void deleteFilesIfCountReached(File[] files, int testHistoryCount) throws IOException {
+		// Sorting the files to have them in ascending order of creation
+    Arrays.sort(files, Comparator.comparingLong(file -> getDateFromPageHistoryFileName(file.getName()).getTime()));
+		// Only delete histories when there are more histories than the count expects
+		if((files.length - testHistoryCount) > 0) {
+			File[] filesToDelete = new File[files.length - testHistoryCount];
+			// Putting all files up to the count in a list for deletion
+			System.arraycopy(files, 0, filesToDelete, 0, files.length - testHistoryCount);
+			for (File fileToDelete : filesToDelete) {
+				FileUtil.deleteFile(fileToDelete);
+			}
+		}
+	}
 }

@@ -35,6 +35,15 @@
 	<label for="$security"><input type="checkbox" id="$security" name="$security"#checked( $security )/>$security</label>
     #end
    </fieldset>
+
+   #if ($testhistoryTypes.size() > 0)
+    <fieldset class="col-md-6 col-lg-2">
+     <legend>Test History:</legend>
+     #foreach( $testhistoryType in $testhistoryTypes )
+      <label for="$testhistoryType"><input type="checkbox" id="$testhistoryType" name="$testhistoryType"#checked( $testhistoryType )/>$testhistoryType</label>
+     #end
+    </fieldset>
+  #end
   </div>
 
   <div class="virtual-wiki-properties">
