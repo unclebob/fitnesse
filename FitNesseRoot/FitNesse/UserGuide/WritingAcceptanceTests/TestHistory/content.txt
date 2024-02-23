@@ -11,10 +11,13 @@ The test result files are named using the following scheme !style_code(YYYYMMDDH
 
 The test files contain the XML that describes the test run.  The format of this XML is identical to the XML packet returned by the format=xml flag when you run a test.  (See <UserGuide.RestfulTests).
 
+You also have the possibility to disable !style_code(Test Histories) for a selected page by going to the !style_code(?properties) page and check the ''disableTestHistory'' option.
+
 !4 Purging
-There are buttons at the top of the ''Test History'' page that allow you to purge old history files.  You have your choice of ''all'', ''>7 days'', or ''>30 days''.  If you want to purge a different number of days, you can use the RESTful URL form.  (See [[!-RestfulServices-!][<UserGuide.AdministeringFitNesse.RestfulServices]]).
+There are buttons at the top of the ''Test History'' page that allow you to purge old history files.  You have your choice of ''all'', ''> 30 days'', ''> 60 days'', or ''> 90 days''.  If you want to purge a different number of days, you can change the ''TestHistory.purgeTime'' in the [[configuration file][<UserGuide.AdministeringFitNesse.ConfigurationFile]] to allow additional purge times or you can use the RESTful URL form.  (See [[!-RestfulServices-!][<UserGuide.AdministeringFitNesse.RestfulServices]])
 
 You can also clean up the test history right after a test execution. To do so, configure a property ''test.history.days'' in the [[configuration file][<UserGuide.AdministeringFitNesse.ConfigurationFile]] or as a [[page variable][<UserGuide.FitNesseWiki.MarkupLanguageReference.MarkupVariables]] and assign it the number of days you want to keep history.
+Additionally to this, you can configure a number to the property ''TestHistory.maxCount''. This will define how many histories will be kept for each page.
 
 !4 Comparing History
 When viewing the history for a page, you can select any two test results by clicking in their checkboxes.  Then, if you click the ''Compare'' button, you will be shown the two test results side-by-side along with an indicator that tells you if the results are identical or not.
