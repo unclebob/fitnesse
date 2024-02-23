@@ -37,7 +37,7 @@
    </fieldset>
 
    #if ($testhistoryTypes.size() > 0)
-    <fieldset class="col-md-6 col-lg-2">
+    <fieldset>
      <legend>Test History:</legend>
      #foreach( $testhistoryType in $testhistoryTypes )
       <label for="$testhistoryType"><input type="checkbox" id="$testhistoryType" name="$testhistoryType"#checked( $testhistoryType )/>$testhistoryType</label>
