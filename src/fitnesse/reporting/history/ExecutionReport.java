@@ -3,6 +3,7 @@ package fitnesse.reporting.history;
 import fitnesse.FitNesseVersion;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestSummary;
+import fitnesse.util.Clock;
 import fitnesse.util.DateTimeUtil;
 import fitnesse.util.TimeMeasurement;
 import fitnesse.util.XmlUtil;
@@ -33,12 +34,13 @@ public abstract class ExecutionReport {
   private List<ExecutionLogReport> executionLogs = new ArrayList<>();
 
   protected ExecutionReport() {
-    version = new FitNesseVersion().toString();
+    this(new FitNesseVersion(), null);
   }
 
   public ExecutionReport(FitNesseVersion version, String rootPath) {
     this.version = version == null ? "null" : version.toString();
     this.rootPath = rootPath;
+    this.date = Clock.currentDate();
   }
 
   public void tallyPageCounts(ExecutionResult result) {
