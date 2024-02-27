@@ -15,6 +15,7 @@ import fitnesse.util.XmlUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
+import fitnesse.wiki.WikiPageProperty;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +34,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class TestXmlFormatterTest {
@@ -221,4 +223,23 @@ public class TestXmlFormatterTest {
     });
   }
 
+  @Test
+  public void shouldNotCreateTestHistory() throws Exception {
+    WikiTestPage page = new WikiTestPage(new WikiPageDummy("name", "content", null));
+    page.getData().setAttribute(WikiPageProperty.DISABLE_TESTHISTORY, "true");
+    final LinkedList<StringWriter> writers = new LinkedList<>();
+    try (TestXmlFormatter formatter = new TestXmlFormatter(context,
+        page.getSourcePage(), new WriterFactory() {
+          @Override
+          public Writer getWriter(FitNesseContext context, WikiPage page,
+              TestSummary counts, long time) throws IOException {
+            StringWriter writer = new StringWriter();
+            writers.add(writer);
+            return writer;
+          }
+        })) {
+    }
+    
+    assertTrue(writers.isEmpty());
+  }
 }

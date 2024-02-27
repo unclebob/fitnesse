@@ -35,11 +35,13 @@ import java.util.List;
 import java.util.Set;
 
 import static fitnesse.wiki.PageData.ACTION_ATTRIBUTES;
+import static fitnesse.wiki.PageData.DISABLE_ATTRIBUTES;
 import static fitnesse.wiki.PageData.NAVIGATION_ATTRIBUTES;
 import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTES;
 import static fitnesse.wiki.PageData.SECURITY_ATTRIBUTES;
 import static fitnesse.wiki.PageType.SUITE;
 import static fitnesse.wiki.PageType.TEST;
+import static fitnesse.wiki.WikiPageProperty.DISABLE_TESTHISTORY;
 import static fitnesse.wiki.WikiPageProperty.EDIT;
 import static fitnesse.wiki.WikiPageProperty.FILES;
 import static fitnesse.wiki.WikiPageProperty.HELP;
@@ -99,7 +101,7 @@ public class PropertiesResponder implements SecureResponder {
         EDIT, PROPERTIES, VERSIONS, REFACTOR,
         WHERE_USED, RECENT_CHANGES, SUITE.toString(),
         PRUNE, SECURE_READ, SECURE_WRITE,
-        SECURE_TEST, FILES };
+        SECURE_TEST, FILES, DISABLE_TESTHISTORY };
     for (String attribute : attributes)
       addJsonAttribute(jsonObject, attribute);
     if (pageData.hasAttribute(HELP)) {
@@ -180,6 +182,7 @@ public class PropertiesResponder implements SecureResponder {
     makeTestActionCheckboxesHtml();
     makeNavigationCheckboxesHtml();
     makeSecurityCheckboxesHtml();
+    makeDisableCheckboxesHtml();
   }
 
   public void makePageTypeRadiosHtml(PageData pageData) {
@@ -260,6 +263,10 @@ public class PropertiesResponder implements SecureResponder {
 
   public void makeSecurityCheckboxesHtml() {
     html.put("securityTypes", SECURITY_ATTRIBUTES);
+  }
+  
+  public void makeDisableCheckboxesHtml() {
+    html.put("disableTypes", DISABLE_ATTRIBUTES);
   }
 
 
