@@ -4,10 +4,15 @@ package fitnesse.reporting;
 
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
+import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.ExceptionResult;
+import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.slim.HtmlTable;
 import fitnesse.util.TimeMeasurement;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -18,7 +23,7 @@ import java.io.Writer;
 
 import static fitnesse.testsystems.ExecutionResult.getExecutionResult;
 
-public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeable {
+public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeable, ExecutionLogListener  {
   private static final String TEST_SUMMARIES_ID = "test-summaries";
 
   private TestSummary pageCounts = new TestSummary();
@@ -177,6 +182,37 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
       writeData(insertScript.html());
     }
   }
+  
+  @Override
+  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+    String sbys = getPage().getVariable("slim.sbys");
+    if("SHOWINSTRUCTIONS".equals(sbys)){
+      String html ="";
+      //html = ((HtmlTable) table.getTable()).getTableNode().toHtml().toString();
+      String instructionText;
+      try {
+        instructionText = assertion.getInstruction().toString();
+        if (testResult != null){
+          instructionText = instructionText + "-->" + testResult.toString();
+        } else {
+          instructionText = instructionText + "--> VOID";
+        }
+        instructionText = HtmlUtil.escapeHTML(instructionText);
+        html = "<h2>"+instructionText+"</h2>" + html;
+        String insertScript = JavascriptUtil.makeReplaceElementScript("step-by-step-Id2", html).html();
+        writeData(insertScript);
+        if ("SLEEP".equals(getPage().getVariable("slim.sbys.sleep")))
+        Thread.sleep(500);
+      } catch (Exception e){
+        html = e.getMessage();
+    }
+    }
+  }
+
+  @Override
+  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
+  }
+
 
   @Override
   protected String makeSummaryContent() {
@@ -189,8 +225,39 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
     return summaryContent;
   }
 
+
   protected boolean hasTestSummaries() {
     return testSummariesPresent;
+  }
+
+  @Override
+  public void commandStarted(ExecutionContext context) {
+    // TODO Auto-generated method stub
+    //throw new UnsupportedOperationException("Unimplemented method 'commandStarted'");
+  }
+
+  @Override
+  public void stdOut(String output) {
+    // TODO Auto-generated method stub
+    //throw new UnsupportedOperationException("Unimplemented method 'stdOut'");
+  }
+
+  @Override
+  public void stdErr(String output) {
+    // TODO Auto-generated method stub
+    //throw new UnsupportedOperationException("Unimplemented method 'stdErr'");
+  }
+
+  @Override
+  public void exitCode(int exitCode) {
+    // TODO Auto-generated method stub
+    //throw new UnsupportedOperationException("Unimplemented method 'exitCode'");
+  }
+
+  @Override
+  public void exceptionOccurred(Throwable e) {
+    // TODO Auto-generated method stub
+    //throw new UnsupportedOperationException("Unimplemented method 'exceptionOccurred'");
   }
 }
 
