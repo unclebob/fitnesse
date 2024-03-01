@@ -5,6 +5,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.WikiPagePath;
 
 import org.junit.After;
 import static org.junit.Assert.*;
@@ -50,6 +51,7 @@ public class PurgeHistoryResponderTest {
   public void shouldDeleteHistoryFromRequestAndRedirect() throws Exception {
     StubbedPurgeHistoryResponder responder = new StubbedPurgeHistoryResponder();
     request.addInput("days", "30");
+    request.addInput("purgeGlobal", "true");
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(30, responder.daysDeleted);
     assertEquals(303, response.getStatus());
@@ -68,14 +70,23 @@ public class PurgeHistoryResponderTest {
     request.addInput("days", "bob");
     Response response = responder.makeResponse(context, request);
     assertEquals(400, response.getStatus());
-
+  }
+  
+  @Test
+  public void shouldDeleteHistoryFromRequestForWikiPath() throws Exception {
+    StubbedPurgeHistoryResponder responder = new StubbedPurgeHistoryResponder();
+    request.addInput("days", "0");
+    request.addInput("purgeGlobal", "false");
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+    assertEquals(303, response.getStatus());
+    assertEquals("?testHistory", response.getHeader("Location"));
   }
 
   private static class StubbedPurgeHistoryResponder extends PurgeHistoryResponder {
     public int daysDeleted = -1;
 
     @Override
-    public void deleteTestHistoryOlderThanDays(File resultsDirectory, int days) {
+    public void deleteTestHistoryOlderThanDays(File resultsDirectory, int days, WikiPagePath path) {
       daysDeleted = days;
     }
   }

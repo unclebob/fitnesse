@@ -5,8 +5,11 @@ import java.io.UnsupportedEncodingException;
 
 import fitnesse.reporting.history.TestHistory;
 import fitnesse.wiki.PathParser;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.VelocityContext;
 
+import fitnesse.ConfigurationParameter;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -43,6 +46,8 @@ public class TestHistoryResponder implements SecureResponder {
     page.setNavTemplate("viewNav");
     page.put("viewLocation", request.getResource());
     page.put("testHistory", testHistory);
+    String purgeTimes = context.getProperties().getProperty(ConfigurationParameter.PURGE_TIME.getKey());
+    page.put("purgeTimes", StringUtils.isBlank(purgeTimes) ? new String[] { "0", "7", "30" } : purgeTimes.split(","));
     page.setMainTemplate("testHistory");
     SimpleResponse response = new SimpleResponse();
     response.setContent(page.html(request));
