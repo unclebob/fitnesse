@@ -35,6 +35,15 @@
 	<label for="$security"><input type="checkbox" id="$security" name="$security"#checked( $security )/>$security</label>
     #end
    </fieldset>
+   
+   #if ($disableTypes.size() > 0)
+    <fieldset>
+     <legend>Disable:</legend>
+     #foreach( $disableType in $disableTypes )
+      <label for="$disableType"><input type="checkbox" id="$disableType" name="$disableType"#checked( $disableType )/>$disableType</label>
+     #end
+    </fieldset>
+   #end
   </div>
 
   <div class="virtual-wiki-properties">
