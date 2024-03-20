@@ -155,9 +155,11 @@ public abstract class SlimTestSystem implements TestSystem {
                 instructionText = instructionText + "-->" + instructionResult.toString().substring(0, Math.min(instructionResult.toString().length(),10));
               }
               instructionText = HtmlUtil.escapeHTML(instructionText);
-              html = "<h2>"+instructionText+"</h2>" + html;
+              html = "<h4>"+instructionText+"</h4>" + html;
               String insertScript = JavascriptUtil.makeReplaceElementScript("step-by-step-Id", html).html();
               testOutputChunk(null, insertScript);
+              String expandScript = JavascriptUtil.expandCurrentRow("step-by-step-Id").html();
+              testOutputChunk(null, expandScript);
               if ("SLEEP".equals(getTestContext().getPageToTest().getVariable("slim.sbys.sleep")))
                 Thread.sleep(500);
               } catch (Exception e){
@@ -204,11 +206,13 @@ public abstract class SlimTestSystem implements TestSystem {
     if (InstructionResult != null && InstructionResult instanceof String && ((String) InstructionResult).startsWith(EXCEPTION_TAG)) {
       SlimExceptionResult exceptionResult = new SlimExceptionResult(key, (String) InstructionResult);
       if (exceptionResult.isStopTestException()) {
-        IgnoreTestTable = stopTestCalled = true;
+        //IgnoreTestTable = stopTestCalled = true;
+        stopTestCalled = true;
         stopSuiteCalled = PageData.SUITE_SETUP_NAME.equals(testContext.getPageToTest().getName());
       }
       if (exceptionResult.isStopSuiteException()) {
-        IgnoreTestTable = stopTestCalled = stopSuiteCalled = true;
+        //IgnoreTestTable = stopTestCalled = stopSuiteCalled = true;
+        stopTestCalled = stopSuiteCalled = true;
       }
       exceptionResult = a.getExpectation().evaluateException(exceptionResult);
       if (exceptionResult != null) {
