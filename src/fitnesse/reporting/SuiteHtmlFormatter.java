@@ -12,7 +12,6 @@ import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
-import fitnesse.testsystems.slim.HtmlTable;
 import fitnesse.util.TimeMeasurement;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -20,6 +19,9 @@ import fitnesse.wiki.WikiPage;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.LinkedList;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 import static fitnesse.testsystems.ExecutionResult.getExecutionResult;
 
@@ -36,6 +38,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
   private String testSummariesId = TEST_SUMMARIES_ID;
   private boolean testSummariesPresent;
   private TimeMeasurement totalTimeMeasurement;
+  private LinkedList<String> instructionsHtmlText;
 
 
   public SuiteHtmlFormatter(WikiPage page, boolean testSummariesPresent, Writer writer) {
@@ -43,6 +46,15 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
     this.testSummariesPresent = testSummariesPresent;
     totalTimeMeasurement = new TimeMeasurement().start();
     testBasePathName = PathParser.render(page.getFullPath());
+    String sbys = getPage().getVariable("slim.sbys");
+    int sbysLinesTotal;
+    if("SHOWINSTRUCTIONS".equals(sbys)){
+      String sbysLines = getPage().getVariable("slim.sbys.size");
+      sbysLinesTotal = Integer.parseInt(sbysLines);
+    } else {
+      sbysLinesTotal = 10; 
+    }
+    this.instructionsHtmlText = new LinkedList<String>(Collections.nCopies(sbysLinesTotal,"<br>"));
   }
 
   @Override
@@ -198,7 +210,10 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
           instructionText = instructionText + "--> VOID";
         }
         instructionText = HtmlUtil.escapeHTML(instructionText);
-        html = "<h2>"+instructionText+"</h2>" + html;
+        this.instructionsHtmlText.addLast(instructionText);
+        this.instructionsHtmlText.removeFirst();
+        String allInstructionsText = this.instructionsHtmlText.stream().collect(Collectors.joining("<br>"));
+        html = "<h4>"+allInstructionsText+"</h4>" + html;
         String insertScript = JavascriptUtil.makeReplaceElementScript("step-by-step-Id2", html).html();
         writeData(insertScript);
         if ("SLEEP".equals(getPage().getVariable("slim.sbys.sleep")))
