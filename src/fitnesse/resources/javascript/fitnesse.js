@@ -119,19 +119,19 @@ $(document)
 $(document)
     .on('change', '.testHistory #purgeGlobal', function() {
         const purgeGlobal = "&purgeGlobal=true";
-        let elems = $("a[href^='?responder=purgeHistory']");
+        const elems = $("a[href^='?responder=purgeHistory']");
 
-        if(this.checked) {
+        if (this.checked) {
             elems.each((index, link) => {
                 // Only adjust the href if it was not already adjusted
-                if(!link.href.includes(purgeGlobal)) {
+                if (!link.href.includes(purgeGlobal)) {
                     link.href = link.href.substring(link.href.indexOf("?")) + purgeGlobal;
                 }
             });
         } else {
             elems.each((index, link) => {
                 // Only adjust the href if it was adjusted before
-                if(link.href.includes(purgeGlobal)) {
+                if (link.href.includes(purgeGlobal)) {
                     link.href = link.href.substring(link.href.indexOf("?"), link.href.length - purgeGlobal.length);
                 }
             });
@@ -140,7 +140,7 @@ $(document)
 
 // When clicking on a purge link then ask before deletion
 function purgeConfirmation(event) {
-    if(!confirm('Are you sure you want to purge the test histories?')) {
+    if (!confirm('Are you sure you want to purge the test histories?')) {
         event.preventDefault();
         return false;
     }
