@@ -9,6 +9,8 @@ import fitnesse.wiki.WikiPagePath;
 
 import org.junit.After;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
@@ -71,15 +73,27 @@ public class PurgeHistoryResponderTest {
     Response response = responder.makeResponse(context, request);
     assertEquals(400, response.getStatus());
   }
-  
+
   @Test
-  public void shouldDeleteHistoryFromRequestForWikiPath() throws Exception {
-    StubbedPurgeHistoryResponder responder = new StubbedPurgeHistoryResponder();
-    request.addInput("days", "0");
+  public void shouldDeleteHistoryFromRequestForWikiPathWhenPurgeGlobalNotSet() throws Exception {
+    assertThatPurgeGlobalIsNotUsed();
+  }
+
+  @Test
+  public void shouldDeleteHistoryFromRequestForWikiPathWhenPurgeGlobalFalse() throws Exception {
     request.addInput("purgeGlobal", "false");
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+    assertThatPurgeGlobalIsNotUsed();
+  }
+
+  private void assertThatPurgeGlobalIsNotUsed() throws Exception {
+    request.addInput("days", "0");
+    StubbedPurgeHistoryResponder responderSpy = spy(new StubbedPurgeHistoryResponder());
+    WikiPagePath expectedPath = new WikiPagePath(request.getResource().split("\\."));
+
+    SimpleResponse response = (SimpleResponse) responderSpy.makeResponse(context, request);
     assertEquals(303, response.getStatus());
     assertEquals("?testHistory", response.getHeader("Location"));
+    verify(responderSpy).deleteTestHistoryOlderThanDays(resultsDirectory, 0, expectedPath);
   }
 
   private static class StubbedPurgeHistoryResponder extends PurgeHistoryResponder {

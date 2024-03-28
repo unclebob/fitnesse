@@ -46,12 +46,24 @@ public class TestHistoryResponder implements SecureResponder {
     page.setNavTemplate("viewNav");
     page.put("viewLocation", request.getResource());
     page.put("testHistory", testHistory);
-    String purgeTimes = context.getProperties().getProperty(ConfigurationParameter.PURGE_TIME.getKey());
-    page.put("purgeTimes", StringUtils.isBlank(purgeTimes) ? new String[] { "0", "7", "30" } : purgeTimes.split(","));
+    page.put("purgeOptions", getPurgeOptions());
     page.setMainTemplate("testHistory");
     SimpleResponse response = new SimpleResponse();
     response.setContent(page.html(request));
     return response;
+  }
+
+  private String[] getPurgeOptions() {
+    String configuredPurgeOptions = context.getProperties().getProperty(ConfigurationParameter.PURGE_OPTIONS.getKey());
+    String[] purgeOptionsForPage;
+    if(configuredPurgeOptions == null) {
+      purgeOptionsForPage = new String[] { "0", "7", "30" };
+    } else if (configuredPurgeOptions.isBlank()) {
+      purgeOptionsForPage = new String[0];
+    } else {
+      purgeOptionsForPage = configuredPurgeOptions.split(",");
+    }
+    return purgeOptionsForPage;
   }
 
   private Response makeTestHistoryXmlResponse(TestHistory history) throws UnsupportedEncodingException {

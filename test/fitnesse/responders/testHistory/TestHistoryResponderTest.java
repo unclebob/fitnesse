@@ -345,24 +345,37 @@ public class TestHistoryResponderTest {
   }
   
   @Test
-  public void shouldShowDefaultPurgeTimes() throws Exception {
+  public void shouldShowDefaultPurgeOptions() throws Exception {
     MockRequest request = new MockRequest();
     SimpleResponse response = (SimpleResponse) new TestHistoryResponder().makeResponse(context, request);
     String html = response.getContent();
     assertSubString("<a class=\"button\" href=\"?responder=purgeHistory&days=0\" onclick=\"purgeConfirmation(event)\">Purge all</a>", html);
     assertSubString("<a class=\"button\" href=\"?responder=purgeHistory&days=7\" onclick=\"purgeConfirmation(event)\">Purge &gt; 7 days</a>", html);
     assertSubString("<a class=\"button\" href=\"?responder=purgeHistory&days=30\" onclick=\"purgeConfirmation(event)\">Purge &gt; 30 days</a>", html);
+    assertSubString("<label for=\"purgeGlobal\"><input type=\"checkbox\" id=\"purgeGlobal\" />Purge global</label>", html);
   }
 
   @Test
-  public void shouldShowConfiguredPurgeTimes() throws Exception {
+  public void shouldShowConfiguredPurgeOptions() throws Exception {
     MockRequest request = new MockRequest();
-    context.getProperties().setProperty(ConfigurationParameter.PURGE_TIME.getKey(), "30,60,90");
+    context.getProperties().setProperty(ConfigurationParameter.PURGE_OPTIONS.getKey(), "30,60,90");
     SimpleResponse response = (SimpleResponse) new TestHistoryResponder().makeResponse(context, request);
     String html = response.getContent();
     assertNotSubString("<a class=\"button\" href=\"?responder=purgeHistory&days=0\" onclick=\"purgeConfirmation(event)\">Purge all</a>", html);
     assertSubString("<a class=\"button\" href=\"?responder=purgeHistory&days=30\" onclick=\"purgeConfirmation(event)\">Purge &gt; 30 days</a>", html);
     assertSubString("<a class=\"button\" href=\"?responder=purgeHistory&days=60\" onclick=\"purgeConfirmation(event)\">Purge &gt; 60 days</a>", html);
     assertSubString("<a class=\"button\" href=\"?responder=purgeHistory&days=90\" onclick=\"purgeConfirmation(event)\">Purge &gt; 90 days</a>", html);
+    assertSubString("<label for=\"purgeGlobal\"><input type=\"checkbox\" id=\"purgeGlobal\" />Purge global</label>", html);
+  }
+  
+  @Test
+  public void shouldShowNoPurgeOptions() throws Exception {
+    MockRequest request = new MockRequest();
+    context.getProperties().setProperty(ConfigurationParameter.PURGE_OPTIONS.getKey(), "");
+    SimpleResponse response = (SimpleResponse) new TestHistoryResponder().makeResponse(context, request);
+    String html = response.getContent();
+    assertNotSubString("<a class=\"button\" href=\"?responder=purgeHistory&days=0\" onclick=\"purgeConfirmation(event)\">Purge all</a>", html);
+    assertNotSubString("<a class=\"button\" href=\"?responder=purgeHistory&days=7\" onclick=\"purgeConfirmation(event)\">Purge &gt; 7 days</a>", html);
+    assertNotSubString("<label for=\"purgeGlobal\"><input type=\"checkbox\" id=\"purgeGlobal\" />Purge global</label>", html);
   }
 }

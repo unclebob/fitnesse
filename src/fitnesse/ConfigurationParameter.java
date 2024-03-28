@@ -44,7 +44,7 @@ public enum ConfigurationParameter {
   LOCALHOST_ONLY("LocalhostOnly"),
   MAXIMUM_WORKERS("MaximumWorkers"),
   THEME("Theme"),
-  PURGE_TIME("TestHistory.purgeTime");
+  PURGE_OPTIONS("TestHistory.purgeOptions");
 
   private static final Logger LOG = Logger.getLogger(ConfigurationParameter.class.getName());
 
