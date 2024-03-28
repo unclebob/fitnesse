@@ -2,6 +2,8 @@ package fitnesse.responders.testHistory;
 
 import java.io.File;
 
+import org.apache.commons.lang3.StringUtils;
+
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -11,6 +13,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.reporting.history.HistoryPurger;
 import fitnesse.responders.ErrorResponder;
+import fitnesse.wiki.WikiPagePath;
 
 public class PurgeHistoryResponder implements SecureResponder {
 
@@ -31,13 +34,26 @@ public class PurgeHistoryResponder implements SecureResponder {
   }
 
   private void purgeHistory(Request request, FitNesseContext context) {
+    WikiPagePath currentPath = new WikiPagePath(request.getResource().split("\\."));
+    String purgeGlobalInput = request.getInput("purgeGlobal");
+    
     File resultsDirectory = context.getTestHistoryDirectory();
     int days = getDaysInput(request);
-    deleteTestHistoryOlderThanDays(resultsDirectory, days);
+    // If purgeGlobal is not set then only delete current path
+    if (StringUtils.isBlank(purgeGlobalInput) || !Boolean.parseBoolean(purgeGlobalInput)) {
+      deleteTestHistoryOlderThanDays(resultsDirectory, days, currentPath);
+    } else {
+      deleteTestHistoryOlderThanDays(resultsDirectory, days, null);
+    }
   }
 
-  public void deleteTestHistoryOlderThanDays(File resultsDirectory, int days) {
-    new HistoryPurger(resultsDirectory, days).deleteTestHistoryOlderThanDays();
+  public void deleteTestHistoryOlderThanDays(File resultsDirectory, int days, WikiPagePath path) {
+    HistoryPurger historyPurger = new HistoryPurger(resultsDirectory, days);
+    if (path != null) {
+      historyPurger.deleteTestHistoryOlderThanDays(path);
+    } else {
+      historyPurger.deleteTestHistoryOlderThanDays();
+    }
   }
 
   private Integer getDaysInput(Request request) {
