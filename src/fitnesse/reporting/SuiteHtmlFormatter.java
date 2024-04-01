@@ -6,12 +6,16 @@ import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.testsystems.Assertion;
 import fitnesse.testsystems.ExceptionResult;
-import fitnesse.testsystems.ExecutionLogListener;
 import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.Expectation;
+import fitnesse.testsystems.TableCell;
 import fitnesse.testsystems.TestPage;
 import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.slim.HtmlTable;
+import fitnesse.testsystems.slim.Table;
+import static fitnesse.testsystems.slim.SlimTestSystem.SLIM_SHOW;
 import fitnesse.util.TimeMeasurement;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -25,7 +29,7 @@ import java.util.stream.Collectors;
 
 import static fitnesse.testsystems.ExecutionResult.getExecutionResult;
 
-public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeable, ExecutionLogListener  {
+public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeable  {
   private static final String TEST_SUMMARIES_ID = "test-summaries";
 
   private TestSummary pageCounts = new TestSummary();
@@ -39,6 +43,9 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
   private boolean testSummariesPresent;
   private TimeMeasurement totalTimeMeasurement;
   private LinkedList<String> instructionsHtmlText;
+  private int testSystemListenerShowInstructions;
+  private boolean testSystemListenerShowHtmlTable;
+  private int testSystemListenerSleep;
 
 
   public SuiteHtmlFormatter(WikiPage page, boolean testSummariesPresent, Writer writer) {
@@ -46,15 +53,30 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
     this.testSummariesPresent = testSummariesPresent;
     totalTimeMeasurement = new TimeMeasurement().start();
     testBasePathName = PathParser.render(page.getFullPath());
-    String sbys = getPage().getVariable("slim.sbys");
-    int sbysLinesTotal;
-    if("SHOWINSTRUCTIONS".equals(sbys)){
-      String sbysLines = getPage().getVariable("slim.sbys.size");
-      sbysLinesTotal = Integer.parseInt(sbysLines);
-    } else {
-      sbysLinesTotal = 10; 
-    }
-    this.instructionsHtmlText = new LinkedList<String>(Collections.nCopies(sbysLinesTotal,"<br>"));
+    String sbys = getPage().getVariable(SLIM_SHOW);
+    testSystemListenerShowHtmlTable = (sbys != null);
+    testSystemListenerShowInstructions = 0;
+    if(testSystemListenerShowHtmlTable){
+      testSystemListenerShowInstructions = 10;
+      String sbysLines = getPage().getVariable("slim.show.size");
+      if (sbysLines != null)
+      try{
+        testSystemListenerShowInstructions = Integer.parseInt(sbysLines);
+      }catch (NumberFormatException e){
+        // ignore and keep default
+      }
+      // This is for making nice videos of a test run :)
+      testSystemListenerSleep = 0;
+      String sbysSleep = getPage().getVariable("slim.show.sleep");
+      if (sbysSleep != null)
+      try{
+        testSystemListenerSleep = Integer.parseInt(sbysSleep);
+      }catch (NumberFormatException e){
+        // ignore and keep default
+      }
+    } 
+    //Fill the list with empty lines to reserve the space on the screen
+    this.instructionsHtmlText = new LinkedList<String>(Collections.nCopies(testSystemListenerShowInstructions,""));
   }
 
   @Override
@@ -107,7 +129,6 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
     super.testStarted(testPage);
 
     String fullPathName = testPage.getFullPath();
-
     announceStartNewTest(getRelativeName(), fullPathName);
   }
 
@@ -195,37 +216,67 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
     }
   }
   
-  @Override
-  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
-    String sbys = getPage().getVariable("slim.sbys");
-    if("SHOWINSTRUCTIONS".equals(sbys)){
-      String html ="";
-      //html = ((HtmlTable) table.getTable()).getTableNode().toHtml().toString();
-      String instructionText;
+
+  
+  protected void showAssertionResult(Assertion assertion, String testResult) {
+    if(testSystemListenerShowInstructions >0){
       try {
-        instructionText = assertion.getInstruction().toString();
-        if (testResult != null){
-          instructionText = instructionText + "-->" + testResult.toString();
+        String instructionText;
+        String position;
+        Expectation expectation = assertion.getExpectation();
+        if (expectation instanceof TableCell) {
+          TableCell cell = (TableCell) expectation;
+          position = String.format("% 3d,% 3d", cell.getRow(), cell.getCol());
         } else {
-          instructionText = instructionText + "--> VOID";
+          position = "       ";
         }
+        assertion.getInstruction();
+        instructionText = assertion.getInstruction().toString();
+        instructionText = position + ": " + instructionText + "-->" + testResult;
         instructionText = HtmlUtil.escapeHTML(instructionText);
         this.instructionsHtmlText.addLast(instructionText);
         this.instructionsHtmlText.removeFirst();
         String allInstructionsText = this.instructionsHtmlText.stream().collect(Collectors.joining("<br>"));
-        html = "<h4>"+allInstructionsText+"</h4>" + html;
+        String html = "<h4>"+allInstructionsText+"</h4>";
         String insertScript = JavascriptUtil.makeReplaceElementScript("step-by-step-Id2", html).html();
         writeData(insertScript);
-        if ("SLEEP".equals(getPage().getVariable("slim.sbys.sleep")))
-        Thread.sleep(500);
       } catch (Exception e){
-        html = e.getMessage();
+        String html = e.getMessage();
+      }
     }
+    if(testSystemListenerShowHtmlTable){
+      try{
+        Expectation expectation = assertion.getExpectation();
+        if (expectation instanceof TableCell) {
+          TableCell cell = (TableCell) expectation;
+          Table t = cell.getTable();
+          if (t instanceof HtmlTable) {
+            HtmlTable ht = (HtmlTable) t;
+            String html = ht.getTableNode().toHtml().toString();
+            String insertScript = JavascriptUtil.makeReplaceElementScript("step-by-step-Id", html).html();
+            testOutputChunk(null, insertScript);
+            String expandScript = JavascriptUtil.expandCurrentRow("step-by-step-Id").html();
+            testOutputChunk(null, expandScript);
+          }
+        }
+        if (testSystemListenerSleep > 0)
+          Thread.sleep(testSystemListenerSleep);
+      } catch (Exception e){
+        String em = e.getMessage();
+      }
     }
+  }
+  
+  @Override
+  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+    String resultString = testResult != null ? testResult.toString() : "VOID";
+    showAssertionResult(assertion,resultString);
   }
 
   @Override
   public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
+    String resultString = exceptionResult!= null ? exceptionResult.toString() : "EXCEPTION";
+    showAssertionResult(assertion,resultString);
   }
 
 
@@ -245,35 +296,6 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
     return testSummariesPresent;
   }
 
-  @Override
-  public void commandStarted(ExecutionContext context) {
-    // TODO Auto-generated method stub
-    //throw new UnsupportedOperationException("Unimplemented method 'commandStarted'");
-  }
-
-  @Override
-  public void stdOut(String output) {
-    // TODO Auto-generated method stub
-    //throw new UnsupportedOperationException("Unimplemented method 'stdOut'");
-  }
-
-  @Override
-  public void stdErr(String output) {
-    // TODO Auto-generated method stub
-    //throw new UnsupportedOperationException("Unimplemented method 'stdErr'");
-  }
-
-  @Override
-  public void exitCode(int exitCode) {
-    // TODO Auto-generated method stub
-    //throw new UnsupportedOperationException("Unimplemented method 'exitCode'");
-  }
-
-  @Override
-  public void exceptionOccurred(Throwable e) {
-    // TODO Auto-generated method stub
-    //throw new UnsupportedOperationException("Unimplemented method 'exceptionOccurred'");
-  }
 }
 
 

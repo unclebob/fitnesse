@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import fitnesse.html.HtmlUtil;
-import fitnesse.reporting.JavascriptUtil;
 import fitnesse.slim.instructions.AssignInstruction;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.testsystems.*;
@@ -22,6 +20,12 @@ import fitnesse.wiki.PageData;
 import static fitnesse.slim.SlimServer.*;
 
 public abstract class SlimTestSystem implements TestSystem {
+  // BULK   - Process a full table by the Slim Client in one go
+  // SINGLE - Process a single instruction and give control back to the test system
+  // Default Mode is BULK
+  public static final String SLIM_MODE = "slim.mode";
+  // This will force the mode SINGLE to allow a more interactive user experience
+  public static final String SLIM_SHOW = "slim.show";
   private final SlimClient slimClient;
   private final CompositeTestSystemListener testSystemListener;
   private final String testSystemName;
@@ -42,6 +46,19 @@ public abstract class SlimTestSystem implements TestSystem {
   public SlimTestContext getTestContext() {
     return testContext;
   }
+
+  private boolean isModeSingle(){
+    String sbys = getTestContext().getPageToTest().getVariable(SLIM_MODE);
+    if (sbys != null){
+      if ("SINGLE".equals(sbys)) return true;
+    }
+    sbys = getTestContext().getPageToTest().getVariable(SLIM_SHOW);
+    if (sbys != null){
+       return true;
+    }
+    return false;
+  }
+
 
   @Override
   public String getName() {
@@ -136,36 +153,15 @@ public abstract class SlimTestSystem implements TestSystem {
         instructionResults = Collections.emptyMap();
         evaluateTables(assertions, instructionResults);
       } else {
-        String sbys = getTestContext().getPageToTest().getVariable("slim.sbys");
-        if (sbys != null){
+        if (isModeSingle()){
           boolean IgnoreTestTable = false;
-          for (SlimAssertion a : assertions) {
-            List<SlimAssertion> oneA = new ArrayList<>();
-            oneA.add(a);
-            instructionResults = slimClient.invokeAndGetResponse(SlimAssertion.getInstructions(oneA));
-            final String key = a.getInstruction().getId();
-            Object instructionResult = instructionResults.get(key);
-            IgnoreTestTable = evaluateAssertion(instructionResult,IgnoreTestTable, a, key);
-            //evaluateTables(oneA, instructionResults);
-            if(sbys.equals("SHOWTABLE")){
-              try{
-              String html = ((HtmlTable) table.getTable()).getTableNode().toHtml().toString();
-              String instructionText = a.getInstruction().toString();
-              if(instructionResult != null){
-                instructionText = instructionText + "-->" + instructionResult.toString().substring(0, Math.min(instructionResult.toString().length(),10));
-              }
-              instructionText = HtmlUtil.escapeHTML(instructionText);
-              html = "<h4>"+instructionText+"</h4>" + html;
-              String insertScript = JavascriptUtil.makeReplaceElementScript("step-by-step-Id", html).html();
-              testOutputChunk(null, insertScript);
-              String expandScript = JavascriptUtil.expandCurrentRow("step-by-step-Id").html();
-              testOutputChunk(null, expandScript);
-              if ("SLEEP".equals(getTestContext().getPageToTest().getVariable("slim.sbys.sleep")))
-                Thread.sleep(500);
-              } catch (Exception e){
-                String em = e.getMessage();
-              }
-            }
+          for (SlimAssertion assertion : assertions) {
+            List<SlimAssertion> oneAssertion = new ArrayList<>();
+            oneAssertion.add(assertion);
+            instructionResults = slimClient.invokeAndGetResponse(SlimAssertion.getInstructions(oneAssertion));
+            final String instructionId = assertion.getInstruction().getId();
+            Object instructionResult = instructionResults.get(instructionId);
+            IgnoreTestTable = evaluateAssertion(instructionResult,IgnoreTestTable, assertion, instructionId);
           }
         } else {
             instructionResults = slimClient.invokeAndGetResponse(SlimAssertion.getInstructions(assertions));
