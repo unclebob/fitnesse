@@ -18,6 +18,7 @@ import fitnesse.util.XmlUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
 import org.junit.After;
 import org.junit.Before;
@@ -477,6 +478,25 @@ public class SuiteResponderTest {
       xmlResultsFile.delete();
 
     request.addInput("nohistory", "true");
+    addTestToSuite("SlimTestOne", simpleSlimDecisionTable);
+    addTestToSuite("SlimTestTwo", simpleSlimDecisionTable);
+    runSuite();
+    assertFalse(xmlResultsFile.exists());
+  }
+
+  @Test
+  public void DisableHistory_avoidsProducingSuiteResultFile() throws Exception {
+    File xmlResultsFile = expectedXmlResultsFile();
+
+    if (xmlResultsFile.exists())
+      xmlResultsFile.delete();
+    
+    PageData data = suite.getData();
+    data.setAttribute(WikiPageProperty.DISABLE_TESTHISTORY);
+    suite.commit(data);
+    suite.getData();
+    responder.page = suite;
+    
     addTestToSuite("SlimTestOne", simpleSlimDecisionTable);
     addTestToSuite("SlimTestTwo", simpleSlimDecisionTable);
     runSuite();
