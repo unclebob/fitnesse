@@ -176,8 +176,7 @@ public class TestXmlFormatter extends BaseFormatter implements ExecutionLogListe
   }
 
   protected void writeResults() throws IOException {
-    if (!getPage().getData().getProperties()
-        .has(WikiPageProperty.DISABLE_TESTHISTORY)) {
+    if (!getPage().getData().hasAttribute(WikiPageProperty.DISABLE_TESTHISTORY)) {
       writeResults(writerFactory.getWriter(context, getPage(), getPageCounts(),
           totalTimeMeasurement.startedAt()));
     }
