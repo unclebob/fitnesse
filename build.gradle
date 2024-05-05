@@ -53,7 +53,7 @@ sourceSets {
   main {
     java.srcDir 'src'
     resources.srcDir 'src'
-    output.resourcesDir java.outputDir
+    output.resourcesDir java.classesDirectory 
   }
   test {
     java.srcDir 'test'
@@ -163,7 +163,7 @@ pitest {
 task run(type: JavaExec) {
   dependsOn classes, copyRuntimeLibs
   classpath = sourceSets.main.runtimeClasspath
-  main "fitnesseMain.FitNesseMain"
+  mainClass = "fitnesseMain.FitNesseMain"
   args "-p", "8001", "-e", "0"
 }
 
@@ -221,7 +221,7 @@ task acceptanceTest(type: JavaExec) {
   mustRunAfter test
   onlyIf { test.didWork }
   classpath = standaloneJar.outputs.files
-  main "fitnesseMain.FitNesseMain"
+  mainClass = "fitnesseMain.FitNesseMain"
   args "-o", "-c", "FitNesse.SuiteAcceptanceTests?suite&format=text"
 }
 
