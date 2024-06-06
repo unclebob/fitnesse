@@ -15,13 +15,16 @@ import fitnesse.util.Clock;
 import fitnesse.util.DateAlteringClock;
 import fitnesse.util.DateTimeUtil;
 import fitnesse.util.XmlUtil;
+import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -47,6 +50,8 @@ public class SuiteResponderTest {
   private SuiteResponder responder;
   private WikiPage root;
   private WikiPage suite;
+  private PageCrawler pageCrawler;
+  private WikiPagePath wikiPagePath;
   private FitNesseContext context;
   private final String fitPassFixture = "|!-fitnesse.testutil.PassFixture-!|\n";
   private final String fitFailFixture = "|!-fitnesse.testutil.FailFixture-!|\n";
@@ -563,6 +568,48 @@ public class SuiteResponderTest {
     runSuite();
 
     assertTrue(FooFormatter.initialized);
+  }
+  
+  @Test
+  public void testRerunLastFailuresScenario() {
+    String fullPathName = "RerunLastFailures_TestPage";
+    Mockito.when(PathParser.render(wikiPagePath)).thenReturn(fullPathName);
+
+    String result = responder.getRerunPageName();
+    assertEquals("RerunLastFailures_TestPage(2)", result);
+  }
+
+  @Test
+  public void testRerunLastFailuresWithSubsetQueryTestScenario() {
+    String fullPathName = "RerunLastFailures_SubsetQueryTest";
+    Mockito.when(PathParser.render(wikiPagePath)).thenReturn(fullPathName);
+
+    String result = responder.getRerunPageName();
+    assertEquals("RerunLastFailures_SubsetQueryTest(1)", result);
+  }
+
+  @Test
+  public void testNormalPageScenario() {
+    String fullPathName = "NormalPage";
+    Mockito.when(PathParser.render(wikiPagePath)).thenReturn(fullPathName);
+
+    String result = responder.getRerunPageName();
+    assertEquals("RerunLastFailures_NormalPage", result);
+  }
+
+  @Test
+  public void testRerunLastFailuresWithNumber() {
+    String fullPathName = "RerunLastFailures_TestPage(3)";
+    Mockito.when(PathParser.render(wikiPagePath)).thenReturn(fullPathName);
+
+    String result = responder.getRerunPageName();
+    assertEquals("RerunLastFailures_TestPage(4)", result);
+  }
+
+  @Test
+  public void testExtractNumber() {
+    assertEquals(3, responder.extractNumber("TestPage(3)"));
+    assertEquals(-1, responder.extractNumber("TestPage"));
   }
 
   private String runSuite() throws Exception {
