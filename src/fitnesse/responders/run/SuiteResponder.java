@@ -57,8 +57,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static fitnesse.responders.WikiImportingTraverser.ImportError;
 import static fitnesse.wiki.WikiImportProperty.isAutoUpdated;
@@ -299,27 +297,10 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     String fullPathName = PathParser.render(fullPath);
     if (fullPathName.startsWith("RerunLastFailures_")) {
       String newFullPathName = fullPathName.replace(".", "-");
-      if (!(newFullPathName.endsWith("(1)"))) {
-        return newFullPathName.replaceAll("\\(\\d+\\)", "(" + 2 + ")");
-      } else if (newFullPathName.endsWith("SubsetQueryTest")) {
-        return newFullPathName + "(1)";
-      } else {
-        int number = extractNumber(newFullPathName) + 1;
-        return newFullPathName.replaceAll("\\(\\d+\\)", "(" + number + ")");
-
-      }
+      return newFullPathName;
     } else {
       return "RerunLastFailures_" + fullPathName.replace(".", "-");
     }
-  }
-
-  public static int extractNumber(String input) {
-    Pattern pattern = Pattern.compile("\\((\\d+)\\)");
-    Matcher matcher = pattern.matcher(input);
-    if (matcher.find()) {
-      return Integer.parseInt(matcher.group(1));
-    }
-    return -1; // return -1 if no number found
   }
 
   protected String getTitle() {

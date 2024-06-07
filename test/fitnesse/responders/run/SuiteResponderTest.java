@@ -39,6 +39,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
 import static util.RegexTestCase.assertDoesntHaveRegexp;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertNotSubString;
@@ -571,47 +572,27 @@ public class SuiteResponderTest {
   }
   
   @Test
-  public void testRerunLastFailuresScenario() {
-    String fullPathName = "RerunLastFailures_TestPage";
-    Mockito.when(PathParser.render(wikiPagePath)).thenReturn(fullPathName);
+  public void testGetRerunPageName_withRerunPrefix() {
+
+    String fullPathName = "RerunLastFailures_SomePage";
+    when(PathParser.render(wikiPagePath)).thenReturn(fullPathName);
 
     String result = responder.getRerunPageName();
-    assertEquals("RerunLastFailures_TestPage(2)", result);
+
+    assertEquals("RerunLastFailures_SomePage".replace(".", "-"), result);
   }
 
   @Test
-  public void testRerunLastFailuresWithSubsetQueryTestScenario() {
-    String fullPathName = "RerunLastFailures_SubsetQueryTest";
-    Mockito.when(PathParser.render(wikiPagePath)).thenReturn(fullPathName);
+  public void testGetRerunPageName_withoutRerunPrefix() {
+
+    String fullPathName = "SomeOtherPage";
+    when(PathParser.render(wikiPagePath)).thenReturn(fullPathName);
 
     String result = responder.getRerunPageName();
-    assertEquals("RerunLastFailures_SubsetQueryTest(1)", result);
+
+    assertEquals("RerunLastFailures_SomeOtherPage".replace(".", "-"), result);
   }
-
-  @Test
-  public void testNormalPageScenario() {
-    String fullPathName = "NormalPage";
-    Mockito.when(PathParser.render(wikiPagePath)).thenReturn(fullPathName);
-
-    String result = responder.getRerunPageName();
-    assertEquals("RerunLastFailures_NormalPage", result);
-  }
-
-  @Test
-  public void testRerunLastFailuresWithNumber() {
-    String fullPathName = "RerunLastFailures_TestPage(3)";
-    Mockito.when(PathParser.render(wikiPagePath)).thenReturn(fullPathName);
-
-    String result = responder.getRerunPageName();
-    assertEquals("RerunLastFailures_TestPage(4)", result);
-  }
-
-  @Test
-  public void testExtractNumber() {
-    assertEquals(3, responder.extractNumber("TestPage(3)"));
-    assertEquals(-1, responder.extractNumber("TestPage"));
-  }
-
+  
   private String runSuite() throws Exception {
     Response response = responder.makeResponse(context, request);
 
