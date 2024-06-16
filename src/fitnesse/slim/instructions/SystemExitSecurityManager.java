@@ -36,9 +36,9 @@ public class SystemExitSecurityManager extends SecurityManager {
     } catch (SecurityException e) {
       System.err.println("Security manager could not be updated");
     } catch (UnsupportedOperationException e) {
-      System.err.println("Security manager could not be updated. If you are usin a JDK version >=18, you need to set " +
-        "-Djava.security.manager=allow to allow this. Or use -Dprevent.system.exit=false to disable this feature inside " +
-        "fitnesse. Exception was :" + e.getMessage());
+      System.err.println("Security manager could not be updated. If you are using a JDK version >=18, you need to set " +
+        "-Djava.security.manager=allow to allow this. Or use -Dprevent.system.exit=false to disable the FitNesse feature" +
+        " blocking System.exit() calls and prevent this message.");
     }
   }
 
