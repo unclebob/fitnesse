@@ -2,19 +2,12 @@ package fitnesse.testrunner;
 
 import fitnesse.testsystems.ClassPath;
 import fitnesse.testsystems.TestPage;
-import fitnesse.wiki.BaseWikitextPage;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.SymbolicPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 import fitnesse.wikitext.MarkUpSystem;
 import fitnesse.wikitext.parser.Include;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 // TODO: need 2 implementations, one for wiki text pages (Fit, Slim) and one for non-wiki text pages. See PagesByTestSystem
@@ -192,9 +185,15 @@ public class WikiTestPage implements TestPage {
     return includeScenarios || (!notIncludeScenarios && isSlim);
   }
 
+  public boolean shouldIncludeTagLibraries() {
+    String includeVar = sourcePage.getVariable("INCLUDE_TAG_LIBRARIES");
+    return includeVar != null && "true".equalsIgnoreCase(includeVar);
+  }
+
   public List<WikiPage> getScenarioLibraries() {
     if (scenarioLibraries == null) {
       scenarioLibraries = findScenarioLibraries();
+      scenarioLibraries.addAll(findTagLibraries());
     }
     return scenarioLibraries;
   }
@@ -226,9 +225,25 @@ public class WikiTestPage implements TestPage {
     if (shouldIncludeScenarioLibraries()) {
       uncles = findUncles(SCENARIO_LIBRARY);
     } else {
-      uncles = Collections.emptyList();
+      uncles = new LinkedList<>();
     }
     return uncles;
+  }
+
+  private List<WikiPage> findTagLibraries() {
+    List<WikiPage> pages = new LinkedList<>();
+    WikiPageProperty suitesProperty = sourcePage.getData().getProperties().getProperty(WikiPageProperty.SUITES);
+    if (shouldIncludeTagLibraries() && suitesProperty != null){
+      String[] tags1 = Arrays.stream(suitesProperty.getValue().split(",")).map(e -> e.trim()).filter(e -> checkIfTagIsNotReserved(e)).toArray(String[]::new);
+      for(int i=0;i<tags1.length;i++){
+        pages.addAll(findUncles(tags1[i].trim()));
+      }
+    }
+    return pages;
+  }
+
+  private boolean checkIfTagIsNotReserved(String s){
+    return !(s.trim().equals(SET_UP) || s.trim().equals(TEAR_DOWN) || s.trim().equals(SCENARIO_LIBRARY));
   }
 
   protected List<WikiPage> findUncles(String uncleName) {
