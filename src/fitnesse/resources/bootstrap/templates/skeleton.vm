@@ -61,5 +61,18 @@
   </footer>
   #end
 
+  <script>
+   function adjustPadding() {
+    var navHeight = document.querySelector('nav').offsetHeight;
+    document.body.style.paddingTop = navHeight + 'px';
+   }
+
+   // Making sure the padding is correct when loading a page
+   window.onload = adjustPadding;
+
+   // Changing the padding when the window gets resized
+   window.onresize = adjustPadding;
+  </script>
+
  </body>
 </html>
