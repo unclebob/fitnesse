@@ -13,17 +13,17 @@ Request the page
 
 Examine the requested page to ensure the correct links are displayed in the correct order.
 
-!| Response Examiner.                                                  |
-|line                                                         |inOrder?|
-|<a href="SomePage?test" accesskey="t">Test</a>               |true    |
-|<a href="SomePage?edit" accesskey="e">Edit</a>               |true    |
-|<a href="SomePage?properties" accesskey="p">Properties</a>   |true    |
-|<a href="SomePage?whereUsed" accesskey="w">Where Used</a>    |true    |
-|<a href="SomePage?versions" accesskey="v">Versions</a>       |true    |
-|<a href="/files" accesskey="f">Files</a>                     |true    |
-|<a href="?search" accesskey="s">Search</a>                   |true    |
-|<a href="/RecentChanges" accesskey="">Recent Changes</a>     |true    |
-|<a href="?testHistory">Test History</a>                      |true    |
-|<a href="SomePage?pageHistory" accesskey="h">Page History</a>|true    |
-|<a href="?test&amp;remote_debug">Remote Debug</a>            |true    |
-|<a href="/FitNesse.UserGuide" accesskey="">User Guide</a>    |true    |
+!| Response Examiner.                                                                        |
+|line                                                                               |inOrder?|
+|<a class="nav-link text-secondary" href="SomePage?test" accesskey="t">Test</a>     |true    |
+|<a class="nav-link text-secondary" href="SomePage?edit" accesskey="e">Edit</a>     |true    |
+|<a class="dropdown-item" href="SomePage?properties" accesskey="p">Properties</a>   |true    |
+|<a class="dropdown-item" href="SomePage?whereUsed" accesskey="w">Where Used</a>    |true    |
+|<a class="dropdown-item" href="SomePage?versions" accesskey="v">Versions</a>       |true    |
+|<a class="dropdown-item" href="/files" accesskey="f">Files</a>                     |true    |
+|<a class="dropdown-item" href="?search" accesskey="s">Search</a>                   |true    |
+|<a class="dropdown-item" href="/RecentChanges" accesskey="">Recent Changes</a>     |true    |
+|<a class="dropdown-item" href="?testHistory">Test History</a>                      |true    |
+|<a class="dropdown-item" href="SomePage?pageHistory" accesskey="h">Page History</a>|true    |
+|<a class="dropdown-item" href="?test&amp;remote_debug">Remote Debug</a>            |true    |
+|<a class="dropdown-item" href="/FitNesse.UserGuide" accesskey="">User Guide</a>    |true    |
