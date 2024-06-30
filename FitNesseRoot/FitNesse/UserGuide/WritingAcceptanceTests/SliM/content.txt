@@ -49,7 +49,7 @@ When a SLIM test is run the the webpage will update each time a table has been f
 -!If you want to get quicker an undate you have to set the property: ''slim.show''
 
 At the top of the test page you will then see 2 additional outputs
-1. A list of the last 10 instructions the SLIM server is sending to the SLIM Client and the results of the same. Limitation: An instruction is shown only after it has been executed. So you don't see the currently executing instruction.
+1. A list of the last 10 instructions the SLIM server is sending to the SLIM Client and the results of the same. 
 2. The current table and how its cells are updated after each instruction executed.
 
 

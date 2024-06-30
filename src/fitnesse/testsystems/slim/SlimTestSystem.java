@@ -158,6 +158,7 @@ public abstract class SlimTestSystem implements TestSystem {
           for (SlimAssertion assertion : assertions) {
             List<SlimAssertion> oneAssertion = new ArrayList<>();
             oneAssertion.add(assertion);
+            testAssertionWillBeExecuted(assertion);
             instructionResults = slimClient.invokeAndGetResponse(SlimAssertion.getInstructions(oneAssertion));
             final String instructionId = assertion.getInstruction().getId();
             Object instructionResult = instructionResults.get(instructionId);
@@ -216,7 +217,12 @@ public abstract class SlimTestSystem implements TestSystem {
           testExceptionOccurred(a, exceptionResult);
         else
           testAssertionVerified(a, exceptionResult.catchTestResult());
+      } else {
+        // Silently ignored exception for optional decision table functions
+        // see class SilentReturnExpectation
+        testAssertionVerified(a, null);
       }
+
     } else {
       //Normal results
       TestResult testResult = a.getExpectation().evaluateExpectation(InstructionResult);
@@ -266,6 +272,9 @@ public abstract class SlimTestSystem implements TestSystem {
     testSystemListener.testExceptionOccurred(assertion, exceptionResult);
   }
 
+  protected void testAssertionWillBeExecuted(Assertion assertion) {
+    testSystemListener.testAssertionWillBeExecuted(assertion);
+  }
   // Ensure testSystemStopped is called only once per test system. First call counts.
   protected void testSystemStopped(Throwable e) {
     if (testSystemIsStopped) return;

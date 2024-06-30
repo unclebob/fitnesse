@@ -218,7 +218,7 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
   
 
   
-  protected void showAssertionResult(Assertion assertion, String testResult) {
+  protected void showAssertionResult(Assertion assertion, String testResult, boolean overwriteLastMessage) {
     if(testSystemListenerShowInstructions >0){
       try {
         String instructionText;
@@ -234,8 +234,12 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
         instructionText = assertion.getInstruction().toString();
         instructionText = position + ": " + instructionText + "-->" + testResult;
         instructionText = HtmlUtil.escapeHTML(instructionText);
+        if (overwriteLastMessage){
+          this.instructionsHtmlText.removeLast();
+        } else {
+          this.instructionsHtmlText.removeFirst();
+        }        
         this.instructionsHtmlText.addLast(instructionText);
-        this.instructionsHtmlText.removeFirst();
         String allInstructionsText = this.instructionsHtmlText.stream().collect(Collectors.joining("<br>"));
         String html = "<h4>"+allInstructionsText+"</h4>";
         String insertScript = JavascriptUtil.makeReplaceElementScript("step-by-step-Id2", html).html();
@@ -270,15 +274,20 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
   @Override
   public void testAssertionVerified(Assertion assertion, TestResult testResult) {
     String resultString = testResult != null ? testResult.toString() : "VOID";
-    showAssertionResult(assertion,resultString);
+    showAssertionResult(assertion,resultString, true);
   }
 
   @Override
   public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
     String resultString = exceptionResult!= null ? exceptionResult.toString() : "EXCEPTION";
-    showAssertionResult(assertion,resultString);
+    showAssertionResult(assertion,resultString, true);
   }
 
+  @Override
+  public void testAssertionWillBeExecuted(Assertion assertion) {
+    String resultString =  "in progress";
+    showAssertionResult(assertion,resultString, false);
+  }
 
   @Override
   protected String makeSummaryContent() {
