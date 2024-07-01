@@ -63,8 +63,10 @@
 
   <script>
    function adjustPadding() {
-    var navHeight = document.querySelector('nav').offsetHeight;
-    document.body.style.paddingTop = navHeight + 'px';
+    if(document.querySelector('nav')) {
+     var navHeight = document.querySelector('nav').offsetHeight;
+     document.body.style.paddingTop = navHeight + 'px';
+    }
    }
 
    // Making sure the padding is correct when loading a page
