@@ -6,10 +6,6 @@ Use the property slim.timeout to define how long the test system should wait for
 In this test we set it to 1 second.
 
 # To run this test interactive don't forget to add at the end "&remote_debug" to the rest test command
-#!define TEST_SYSTEM {SLIM}
-#!define slim.timeout {1}
-#!define SLIM_PORT {8099}
-#!define MANUALLY_START_TEST_RUNNER_ON_DEBUG (true)
 
 !| script                         |
 |create page|TestPage|with content|!-
