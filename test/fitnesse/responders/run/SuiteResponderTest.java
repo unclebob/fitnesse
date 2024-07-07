@@ -565,6 +565,36 @@ public class SuiteResponderTest {
     assertTrue(FooFormatter.initialized);
   }
 
+  @Test
+  public void testGetRerunPageName_withRerunPrefix() throws Exception {
+    String rerunPageName = "RerunLastFailures_SuitePage";
+    suite = WikiPageUtil.addPage(root, PathParser.parse(rerunPageName), "This is a rerun page\n");
+    request.setResource(rerunPageName);
+    responder.makeResponse(context, request);
+
+    String result = responder.getRerunPageName();
+    assertEquals(rerunPageName, result);
+  }
+
+  @Test
+  public void testGetRerunPageName_ReplacesPeriod() throws Exception {
+    addTestToSuite("TestTwo", "|!-fitnesse.testutil.FailFixture-!|\n\n|!-fitnesse.testutil.FailFixture-!|\n");
+    request.setResource("SuitePage.TestTwo");
+    responder.makeResponse(context, request);
+
+    String result = responder.getRerunPageName();
+    assertEquals("RerunLastFailures_SuitePage-TestTwo", result);
+  }
+
+  @Test
+  public void testGetRerunPageName_withoutRerunPrefix() throws Exception {
+    request.setResource("SuitePage");
+    responder.makeResponse(context, request);
+
+    String result = responder.getRerunPageName();
+    assertEquals("RerunLastFailures_SuitePage", result);
+  }
+
   private String runSuite() throws Exception {
     Response response = responder.makeResponse(context, request);
 
