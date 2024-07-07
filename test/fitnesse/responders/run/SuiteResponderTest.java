@@ -15,16 +15,13 @@ import fitnesse.util.Clock;
 import fitnesse.util.DateAlteringClock;
 import fitnesse.util.DateTimeUtil;
 import fitnesse.util.XmlUtil;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -39,7 +36,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.when;
 import static util.RegexTestCase.assertDoesntHaveRegexp;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertNotSubString;
@@ -51,8 +47,6 @@ public class SuiteResponderTest {
   private SuiteResponder responder;
   private WikiPage root;
   private WikiPage suite;
-  private PageCrawler pageCrawler;
-  private WikiPagePath wikiPagePath;
   private FitNesseContext context;
   private final String fitPassFixture = "|!-fitnesse.testutil.PassFixture-!|\n";
   private final String fitFailFixture = "|!-fitnesse.testutil.FailFixture-!|\n";
@@ -570,29 +564,37 @@ public class SuiteResponderTest {
 
     assertTrue(FooFormatter.initialized);
   }
-  
-  @Test
-  public void testGetRerunPageName_withRerunPrefix() {
 
-    String fullPathName = "RerunLastFailures_SomePage";
-    when(PathParser.render(wikiPagePath)).thenReturn(fullPathName);
+  @Test
+  public void testGetRerunPageName_withRerunPrefix() throws Exception {
+    String rerunPageName = "RerunLastFailures_SuitePage";
+    suite = WikiPageUtil.addPage(root, PathParser.parse(rerunPageName), "This is a rerun page\n");
+    request.setResource(rerunPageName);
+    responder.makeResponse(context, request);
 
     String result = responder.getRerunPageName();
-
-    assertEquals("RerunLastFailures_SomePage".replace(".", "-"), result);
+    assertEquals(rerunPageName, result);
   }
 
   @Test
-  public void testGetRerunPageName_withoutRerunPrefix() {
-
-    String fullPathName = "SomeOtherPage";
-    when(PathParser.render(wikiPagePath)).thenReturn(fullPathName);
+  public void testGetRerunPageName_ReplacesPeriod() throws Exception {
+    addTestToSuite("TestTwo", "|!-fitnesse.testutil.FailFixture-!|\n\n|!-fitnesse.testutil.FailFixture-!|\n");
+    request.setResource("SuitePage.TestTwo");
+    responder.makeResponse(context, request);
 
     String result = responder.getRerunPageName();
-
-    assertEquals("RerunLastFailures_SomeOtherPage".replace(".", "-"), result);
+    assertEquals("RerunLastFailures_SuitePage-TestTwo", result);
   }
-  
+
+  @Test
+  public void testGetRerunPageName_withoutRerunPrefix() throws Exception {
+    request.setResource("SuitePage");
+    responder.makeResponse(context, request);
+
+    String result = responder.getRerunPageName();
+    assertEquals("RerunLastFailures_SuitePage", result);
+  }
+
   private String runSuite() throws Exception {
     Response response = responder.makeResponse(context, request);
 
