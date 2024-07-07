@@ -1,5 +1,7 @@
 !2 Pending Changes
-* Do not add 'RerunLastFailures_' prefix on failure of re-run ([[1519][https://github.com/unclebob/fitnesse/pull/1519]])/
+ * Allow usage of JDK > 18 ([[1513][https://github.com/unclebob/fitnesse/pull/1513]]).
+ * Added a new configuration to limit the total amount of test histories per page. ([[1510][https://github.com/unclebob/fitnesse/pull/1510]])
+ * Do not add 'RerunLastFailures_' prefix on failure of re-run ([[1519][https://github.com/unclebob/fitnesse/pull/1519]])/
 
 !2 20240219
  * Added the defined values to the overview of all variables in scope. ([[1472][https://github.com/unclebob/fitnesse/pull/1472]])

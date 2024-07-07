@@ -1,5 +1,6 @@
 package fitnesse.reporting.history;
 
+import fitnesse.ConfigurationParameter;
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.BaseFormatter;
 import fitnesse.testrunner.WikiTestPageUtil;
@@ -124,6 +125,15 @@ public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLog
         FileUtil.close(writer);
       }
     }
+    
+    String testhistoryMaxCount = context.getProperties()
+        .getProperty(ConfigurationParameter.TESTHISTORY_MAX_COUNT.getKey());
+    // The given number of days (0) is irrelevant here since we purge the
+    // history by their amount
+    HistoryPurger historyPurger = new HistoryPurger(
+        context.getTestHistoryDirectory(), 0);
+    historyPurger.deleteTestHistoryByCount(getPage().getFullPath(),
+        testhistoryMaxCount);
   }
 
   @Override
