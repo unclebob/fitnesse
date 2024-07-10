@@ -1,5 +1,5 @@
 ## The error navigator is also hidden until page is complete.
-<div id="error-nav" class="hidden navbar-right">
+<div id="error-nav" class="hidden">
  <span class="title">Failure Navigator</span>
  <div class="btn-group">
   <button id="error-nav-prev" class="btn btn-default">&laquo;</button>
@@ -7,6 +7,6 @@
   <button id="error-nav-next" class="btn btn-default">&raquo;</button>
  </div>
 #if ($rerunPage)
- <a class="btn btn-default" href="$rerunPage?suite">Rerun Failed</a>
+ <a class="btn btn-default btn-light" href="$rerunPage?suite">Rerun Failed</a>
 #end
 </div>
