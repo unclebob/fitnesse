@@ -1,4 +1,5 @@
 !2 Pending Changes
+ * Fix SLF4J logging ([[1522][https://github.com/unclebob/fitnesse/pull/1522]])
 
 !2 20240707
  * Allow usage of JDK > 18 ([[1513][https://github.com/unclebob/fitnesse/pull/1513]]).
