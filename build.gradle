@@ -53,7 +53,7 @@ sourceSets {
   main {
     java.srcDir 'src'
     resources.srcDir 'src'
-    output.resourcesDir java.classesDirectory 
+    output.resourcesDir java.classesDirectory
   }
   test {
     java.srcDir 'test'
@@ -189,7 +189,10 @@ task standaloneJar(type: Jar) {
   from {
     configurations.runtimeClasspath.collect { zipTree(it) }
   } {
-    exclude 'META-INF/**'
+    exclude { FileTreeElement details ->
+      details.relativePath.pathString.startsWith('META-INF/') &&
+        !details.relativePath.pathString.equals('META-INF/services/org.slf4j.spi.SLF4JServiceProvider')
+    }
   }
   from jar.outputs.files.collect {
     zipTree(it)
