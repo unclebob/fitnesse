@@ -11,6 +11,7 @@
 #if($finalCounts)
 <div id="test-summary" class="$ExecutionResult.getExecutionResult($suiteExecutionReport.getRootPath(), $finalCounts)">
     <strong>Test Pages:</strong>
+    &nbsp;
     $finalCounts.Right right,
     $finalCounts.Wrong wrong,
     $finalCounts.Ignores ignored,
@@ -18,6 +19,7 @@
     #if($suiteExecutionReport.hasRunTimes())
     ($suiteExecutionReport.totalRunTimeInMillis ms)
     #end
+    &nbsp;
     <input type="checkbox" id="hidePassedTests">Hide passed tests</input>
 </div>
 #end

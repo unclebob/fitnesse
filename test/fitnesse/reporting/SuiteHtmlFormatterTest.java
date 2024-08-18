@@ -49,8 +49,8 @@ public class SuiteHtmlFormatterTest {
     formatter.processTestResults("TestName3", new TestSummary(1, 1, 0, 0));
     formatter.finishWritingOutput();
 
-    assertPageBufferContains("<strong>Test Pages:</strong> 2 right, 1 wrong, 0 ignored, 0 exceptions");
-    assertPageBufferContains("<strong>Assertions:</strong> 51 right, 1 wrong, 2 ignored, 0 exceptions");
+    assertPageBufferContains("<strong>Test Pages:</strong>&nbsp;2 right, 1 wrong, 0 ignored, 0 exceptions");
+    assertPageBufferContains("<strong>Assertions:</strong>&nbsp;51 right, 1 wrong, 2 ignored, 0 exceptions");
   }
 
   private void testSuiteMetaTestSummaryWithTestResults(String pageName) throws Exception {
@@ -58,8 +58,8 @@ public class SuiteHtmlFormatterTest {
     formatter.finishWritingOutput();
 
     assertPageBufferContains("<span class=\\\"results pass\\\">2 right, 0 wrong, 0 ignored, 0 exceptions</span>");
-    assertPageBufferContains("<strong>Test Pages:</strong> 1 right, 0 wrong, 0 ignored, 0 exceptions");
-    assertPageBufferContains("<strong>Assertions:</strong> 2 right, 0 wrong, 0 ignored, 0 exceptions");
+    assertPageBufferContains("<strong>Test Pages:</strong>&nbsp;1 right, 0 wrong, 0 ignored, 0 exceptions");
+    assertPageBufferContains("<strong>Assertions:</strong>&nbsp;2 right, 0 wrong, 0 ignored, 0 exceptions");
   }
 
   @Test
@@ -77,8 +77,8 @@ public class SuiteHtmlFormatterTest {
     formatter.finishWritingOutput();
 
     assertPageBufferContains("<span class=\\\"results pass\\\">0 right, 0 wrong, 0 ignored, 0 exceptions</span>");
-    assertPageBufferContains("<strong>Test Pages:</strong> 1 right, 0 wrong, 0 ignored, 0 exceptions");
-    assertPageBufferContains("<strong>Assertions:</strong> 0 right, 0 wrong, 0 ignored, 0 exceptions");
+    assertPageBufferContains("<strong>Test Pages:</strong>&nbsp;1 right, 0 wrong, 0 ignored, 0 exceptions");
+    assertPageBufferContains("<strong>Assertions:</strong>&nbsp;0 right, 0 wrong, 0 ignored, 0 exceptions");
   }
 
   @Test
@@ -203,7 +203,7 @@ public class SuiteHtmlFormatterTest {
     formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4));
     clock.elapse(900);
     formatter.close();
-    assertPageBufferContains("<strong>Assertions:</strong> 1 right, 2 wrong, 3 ignored, 4 exceptions (0" + getDecimalSeparator() + "900 seconds)");
+    assertPageBufferContains("<strong>Assertions:</strong>&nbsp;1 right, 2 wrong, 3 ignored, 4 exceptions (0" + getDecimalSeparator() + "900 seconds)");
   }
 
   @Test
