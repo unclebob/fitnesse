@@ -1,5 +1,5 @@
 !2 Pending Changes
- * IMPORTANT: !style_code[System.exit()] is no longer prevented by default, to allow functioning without issue on JDK > 18. On lower Java versions it can be prevented by setting the system property !style_code[prevent.system.exit] to !style_code[true].
+ * IMPORTANT: !style_code[System.exit()] is no longer prevented by default ([[1524][https://github.com/unclebob/fitnesse/pull/1524]]).
  * Fix SLF4J logging ([[1522][https://github.com/unclebob/fitnesse/pull/1522]])
 
 !2 20240707
