@@ -6,6 +6,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        java-version: [ '11', '17' ]
+
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
@@ -13,7 +17,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '11'
+          java-version: ${{ matrix.java-version }}
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v2
       - name: Build with Gradle
