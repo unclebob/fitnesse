@@ -54,7 +54,7 @@ public class SystemExitSecurityManager extends SecurityManager {
     if (preventSystemExitString != null) {
       return Boolean.parseBoolean(preventSystemExitString);
     } else {
-      return true;
+      return false;
     }
   }
 
