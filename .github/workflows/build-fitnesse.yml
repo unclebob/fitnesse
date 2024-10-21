@@ -19,17 +19,18 @@ jobs:
           distribution: 'zulu'
           java-version: ${{ matrix.java-version }}
       - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v2
+        uses: gradle/actions/wrapper-validation@v4
       - name: Remove Java 21 incompatible tests
         if: ${{ matrix.java-version == '21' }}
         run: rm -rf FitNesseRoot/FitNesse/SuiteAcceptanceTests/SuiteSlimTests/SystemExitIsPrevented
-      - name: Build with Gradle
-        uses: gradle/gradle-build-action@v3
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
         with:
-          arguments: build slimJar sourcesJar javadocJar
           # Only write to the cache for builds on the 'master' branch.
           # Builds on other branches will only read existing entries from the cache.
           cache-read-only: ${{ github.ref != 'refs/heads/master' }}
+      - name: Build with Gradle
+        run: ./gradlew build slimJar sourcesJar javadocJar
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
