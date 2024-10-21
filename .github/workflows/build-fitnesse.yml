@@ -30,7 +30,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: libs
+          name: libs-java-${{ matrix.java-version }}
           path: build/libs
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
