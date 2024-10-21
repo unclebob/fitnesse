@@ -3,6 +3,7 @@
 !| script |
 | given page | TestPage | with content | ${SUT_PATH} !-
 !define TEST_SYSTEM {slim}
+!define SLIM_PORT {0}
 
 | import |
 | fitnesse.slim.test |
