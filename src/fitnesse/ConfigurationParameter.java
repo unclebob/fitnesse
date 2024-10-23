@@ -43,7 +43,9 @@ public enum ConfigurationParameter {
   CONTEXT_ROOT("ContextRoot"),
   LOCALHOST_ONLY("LocalhostOnly"),
   MAXIMUM_WORKERS("MaximumWorkers"),
-  THEME("Theme");
+  THEME("Theme"),
+  PURGE_OPTIONS("TestHistory.purgeOptions"),
+  TESTHISTORY_MAX_COUNT("TestHistory.maxCount");
 
   private static final Logger LOG = Logger.getLogger(ConfigurationParameter.class.getName());
 

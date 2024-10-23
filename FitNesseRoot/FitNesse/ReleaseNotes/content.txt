@@ -1,8 +1,31 @@
 !2 Pending Changes
+ * Support using Java 17 and 21, 11 remains supported too ([[1525][https://github.com/unclebob/fitnesse/pull/1525]])
+ * IMPORTANT: !style_code[System.exit()] is no longer prevented by default ([[1524][https://github.com/unclebob/fitnesse/pull/1524]]).
+ * Fix SLF4J logging ([[1522][https://github.com/unclebob/fitnesse/pull/1522]])
+ * When serializing Slim streams, count surrogate pairs as a single character in character counts.
+
+!2 20240707
+ * Allow usage of JDK > 18 ([[1513][https://github.com/unclebob/fitnesse/pull/1513]]).
+ * Added a new configuration to limit the total amount of test histories per page. ([[1510][https://github.com/unclebob/fitnesse/pull/1510]])
+ * Do not add 'RerunLastFailures_' prefix on failure of re-run ([[1519][https://github.com/unclebob/fitnesse/pull/1519]])/
+
+!2 20240219
+ * Added the defined values to the overview of all variables in scope. ([[1472][https://github.com/unclebob/fitnesse/pull/1472]])
+ * Ability to change password and additionally create/delete users feature for admin ([[1468][https://github.com/unclebob/fitnesse/pull/1468]])
+ * Improved error reporting when test system fails to start
+ * Updated dependencies
+
+!2 20231203
+ * Updated README and dependencies
+
+!2 20231029
+ * Drop Java 8 compatibility and compile with Java 11, Use OpenJDK's nashorn dependency to evaluate JS expressions ([[1426][https://github.com/unclebob/fitnesse/pull/1426]])
+
+!2 20230503
  * Add date and page history link to XML responses. ([[1396][https://github.com/unclebob/fitnesse/issues/1396]])
  * Search and replace method/scenario names with new name. ([[1403][https://github.com/unclebob/fitnesse/pull/1403]])
  * Search method or scenario in pages. ([[1409][https://github.com/unclebob/fitnesse/pull/1409]])
- * When serializing Slim streams, count surrogate pairs as a single character in character counts.
+ * Updated dependencies
 
 !2 20221219
  * Add a new optional command line parameter to specify the maximum number of workers to use for handling incoming requests.

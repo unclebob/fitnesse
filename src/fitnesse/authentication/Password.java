@@ -28,6 +28,14 @@ public class Password {
     System.out.println("password saved in " + password.passwords.getName());
   }
 
+  public boolean doesUserExist(String name) {
+    return passwords.getPasswordMap().get(name) != null;
+  }
+
+  public void deletePassword(String username) throws Exception {
+    passwords.deleteUser(username);
+  }
+
   public static void printUsage() {
     System.err.println("Usage: java fitnesse.authentication.Password [-f <password file>] [-c <password cipher>] <user>");
     System.err.println("\t-f <password file> {" + defaultFile + "}");
@@ -44,7 +52,11 @@ public class Password {
     this(defaultFile);
   }
 
-  public void savePassword() throws Exception {
+  public void savePassword(String usernamePassed, String passwordPassed) throws Exception {
+    passwords.savePassword(usernamePassed, passwordPassed);
+  }
+
+  private void savePassword() throws Exception {
     passwords.savePassword(username, password);
   }
 

@@ -9,7 +9,6 @@ import org.htmlparser.Parser;
 import org.htmlparser.filters.TagNameFilter;
 import org.htmlparser.tags.CompositeTag;
 import org.htmlparser.util.NodeList;
-import org.htmlparser.util.ParserException;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -15,16 +15,16 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.6.0'
+        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.9.0'
     }
 }
 
 plugins {
   id 'java'
   id "maven-publish"
-  id "io.github.gradle-nexus.publish-plugin" version "1.1.0"
+  id "io.github.gradle-nexus.publish-plugin" version "2.0.0"
   id 'signing'
-  id "com.github.ben-manes.versions" version "0.44.0"
+  id "com.github.ben-manes.versions" version "0.51.0"
   id "groovy"
 }
 
@@ -53,7 +53,7 @@ sourceSets {
   main {
     java.srcDir 'src'
     resources.srcDir 'src'
-    output.resourcesDir java.outputDir
+    output.resourcesDir java.classesDirectory
   }
   test {
     java.srcDir 'test'
@@ -62,7 +62,7 @@ sourceSets {
 
 java {
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of(8))
+    languageVersion.set(JavaLanguageVersion.of(11))
   }
 }
 
@@ -73,21 +73,23 @@ dependencies {
     exclude group:"org.apache.commons", module: "commons-lang3"
     exclude group: 'org.slf4j', module: 'slf4j-api'
   }
-  implementation "org.apache.commons:commons-lang3:3.12.0"
-  implementation "org.slf4j:slf4j-api:2.0.7"
-  implementation "org.slf4j:slf4j-jdk14:2.0.7"
-  implementation "org.json:json:20230227"
+  implementation "org.apache.commons:commons-lang3:3.14.0"
+  implementation "org.slf4j:slf4j-api:2.0.16"
+  implementation "org.slf4j:slf4j-jdk14:2.0.16"
+  implementation "org.json:json:20240303"
   implementation "com.googlecode.java-diff-utils:diffutils:1.3.0"
-  implementation "org.apache.commons:commons-text:1.10.0"
+  implementation "org.apache.commons:commons-text:1.11.0"
+  implementation "org.openjdk.nashorn:nashorn-core:15.4"
+
   compileOnly gradleApi()
-  compileOnly "org.apache.ant:ant:1.10.13"
+  compileOnly "org.apache.ant:ant:1.10.14"
   compileOnly "junit:junit:4.13.2"
 
   testImplementation gradleApi()
   testImplementation "junit:junit:4.13.2"
   testImplementation "org.mockito:mockito-core:3.12.4"
   testImplementation "org.hamcrest:hamcrest-all:1.3"
-  testImplementation "net.javacrumbs.json-unit:json-unit:2.37.0"
+  testImplementation "net.javacrumbs.json-unit:json-unit:2.40.0"
 
   lesscss "org.mozilla:rhino:1.7.14"
 }
@@ -161,7 +163,7 @@ pitest {
 task run(type: JavaExec) {
   dependsOn classes, copyRuntimeLibs
   classpath = sourceSets.main.runtimeClasspath
-  main "fitnesseMain.FitNesseMain"
+  mainClass = "fitnesseMain.FitNesseMain"
   args "-p", "8001", "-e", "0"
 }
 
@@ -180,13 +182,17 @@ jar {
 }
 
 task standaloneJar(type: Jar) {
+  duplicatesStrategy = 'include'
   dependsOn jar
   archiveBaseName = 'fitnesse'
   archiveClassifier = 'standalone'
   from {
     configurations.runtimeClasspath.collect { zipTree(it) }
   } {
-    exclude 'META-INF/**'
+    exclude { FileTreeElement details ->
+      details.relativePath.pathString.startsWith('META-INF/') &&
+        !details.relativePath.pathString.equals('META-INF/services/org.slf4j.spi.SLF4JServiceProvider')
+    }
   }
   from jar.outputs.files.collect {
     zipTree(it)
@@ -218,7 +224,7 @@ task acceptanceTest(type: JavaExec) {
   mustRunAfter test
   onlyIf { test.didWork }
   classpath = standaloneJar.outputs.files
-  main "fitnesseMain.FitNesseMain"
+  mainClass = "fitnesseMain.FitNesseMain"
   args "-o", "-c", "FitNesse.SuiteAcceptanceTests?suite&format=text"
 }
 
@@ -296,7 +302,7 @@ nexusPublishing {
 }
 
 wrapper {
-  gradleVersion = '6.9.1'
+  gradleVersion = '7.6'
 }
 
 

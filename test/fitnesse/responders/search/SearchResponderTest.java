@@ -8,9 +8,7 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,6 +25,7 @@ public class SearchResponderTest {
   public void setUp() throws Exception {
     context = FitNesseUtil.makeTestContext();
     WikiPage somePage = WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("SomePage"), "has something in it");
+
     WikiPageUtil.addPage(somePage, PathParser.parse("SomeTest"), "test page content");
     WikiPageUtil.addPage(somePage, PathParser.parse("SomeSuite"), "suite page content");
     request = new MockRequest();
@@ -217,5 +216,15 @@ public class SearchResponderTest {
     String searchPageContent = getResponseContentUsingSearchString("suite page");
 
     assertSubString("<a href=\"SomePage.SomeSuite?suite\">Suite</a>", searchPageContent);
+  }
+  @Test
+  public void tagsShouldBeEscaped() throws Exception {
+    WikiPage somePage = context.getRootPage().getChildPage("SomePage");
+    PageData data = somePage.getData();
+    data.setAttribute(WikiPageProperty.SUITES, " <script>TEST</script> ");
+    somePage.commit(data);
+    String searchPageContent = getResponseContentUsingSearchString("something");
+
+    assertSubString("&lt;script&gt;TEST&lt;/script&gt;", searchPageContent);
   }
 }

@@ -35,7 +35,7 @@
    </td>
    <td style="text-align: right;">
    #set ( $tags = $result.getData().getAttribute("Suites") )
-	<label>#if ($tags && !$tags.equals("null"))$tags#end</label>
+	<label>#if ($tags && !$tags.equals("null"))#escape($tags)#end</label>
    </td>
    <td>$result.getData().getProperties().getLastModificationTime()
    </td>

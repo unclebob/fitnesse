@@ -86,12 +86,12 @@ public class MethodReplacingSearchObserverTest {
 
   @Test
   public void replacesMultiLinedContent() throws Exception {
-    wikiPage = createPageWithContent("|update no param|" + System.lineSeparator() + "|$value=|update          no param|");
+    wikiPage = createPageWithContent("|update no param|" + PageData.PAGE_LINE_SEPARATOR + "|$value=|update          no param|");
     observer = new MethodReplacingSearchObserver("|updateNoParam|", "|Updated no param|");
 
     observer.process(wikiPage);
 
-    assertTrue(wikiPage.getData().getContent().contains("|Updated no param|" + System.lineSeparator() + "|$value=|Updated no param|"));
+    assertTrue(wikiPage.getData().getContent().contains("|Updated no param|" + PageData.PAGE_LINE_SEPARATOR + "|$value=|Updated no param|"));
   }
 
   private WikiPage createPageWithContent(String pageContent) throws Exception {

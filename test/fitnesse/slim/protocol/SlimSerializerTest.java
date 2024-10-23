@@ -44,6 +44,20 @@ public class SlimSerializerTest {
   }
 
   @Test
+  public void listWithSurrogatePairSerialize() throws Exception {
+    list.add("h🀜llo");
+    list.add("world");
+    /*Surrogate Length is different depending on OS */
+    if (System.lineSeparator().length() == 2){
+      /*Windows */
+      assertEquals("[000002:000008:h🀜llo:000005:world:]", SlimSerializer.serialize(list));
+    }else{
+      /*Linux & Mac */
+      assertEquals("[000002:000006:h🀜llo:000005:world:]", SlimSerializer.serialize(list));
+    }
+  }
+
+  @Test
   public void serializeNestedList() throws Exception {
     List<String> sublist = new ArrayList<>();
     sublist.add("element");

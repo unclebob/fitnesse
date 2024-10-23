@@ -11,7 +11,7 @@ public class SystemExitSecurityManager extends SecurityManager {
    * The {@link SystemExitSecurityManager} overrides the behavior of the wrapped
    * original {@link SecurityManager} to prevent {@link System#exit(int)} calls
    * from being executed.
-   * 
+   *
    * @author Anis Ben Hamidene
    *
    */
@@ -35,6 +35,10 @@ public class SystemExitSecurityManager extends SecurityManager {
       System.setSecurityManager(securityManager);
     } catch (SecurityException e) {
       System.err.println("Security manager could not be updated");
+    } catch (UnsupportedOperationException e) {
+      System.err.println("Security manager could not be updated. If you are using a JDK version >=18, you need to set " +
+        "-Djava.security.manager=allow to allow this. Or use -Dprevent.system.exit=false to disable the FitNesse feature" +
+        " blocking System.exit() calls and prevent this message.");
     }
   }
 
@@ -48,9 +52,9 @@ public class SystemExitSecurityManager extends SecurityManager {
   private static boolean isPreventSystemExit() {
     String preventSystemExitString = System.getProperty(PREVENT_SYSTEM_EXIT);
     if (preventSystemExitString != null) {
-      return Boolean.parseBoolean(preventSystemExitString);      
+      return Boolean.parseBoolean(preventSystemExitString);
     } else {
-      return true;
+      return false;
     }
   }
 
@@ -200,35 +204,10 @@ public class SystemExitSecurityManager extends SecurityManager {
   }
 
   @Override
-  public boolean checkTopLevelWindow(Object window) {
-    if (delegate != null) {
-      return delegate.checkTopLevelWindow(window);
-    } else {
-      return false;
-    }
-  }
-
-  @Override
   public void checkPrintJobAccess() {
 
     if (delegate != null) {
       delegate.checkPrintJobAccess();
-    }
-  }
-
-  @Override
-  public void checkSystemClipboardAccess() {
-
-    if (delegate != null) {
-      delegate.checkSystemClipboardAccess();
-    }
-  }
-
-  @Override
-  public void checkAwtEventQueueAccess() {
-
-    if (delegate != null) {
-      delegate.checkAwtEventQueueAccess();
     }
   }
 
@@ -252,14 +231,6 @@ public class SystemExitSecurityManager extends SecurityManager {
   public void checkSetFactory() {
     if (delegate != null) {
       delegate.checkSetFactory();
-    }
-  }
-
-  @Override
-  public void checkMemberAccess(Class<?> clazz, int which) {
-
-    if (delegate != null) {
-      delegate.checkMemberAccess(clazz, which);
     }
   }
 

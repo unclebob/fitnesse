@@ -18,6 +18,7 @@ import java.io.StringWriter;
 import java.util.function.BiConsumer;
 
 public class Publisher {
+  private final String HTML_PATH_SEPARATOR = "/";
   private final String ROOT_PAGE_NAME_LINK = PathParser.ROOT_PAGE_NAME + "\"";
   private final String PAGE_EXTENSION = ".html";
   //todo: downloads?
@@ -129,12 +130,12 @@ public class Publisher {
   }
 
   private String destinationPath(WikiPage page) {
-    String pagePath = page.getFullPath().toString().replace(".", File.separator);
+    String pagePath = page.getFullPath().toString().replace(".", HTML_PATH_SEPARATOR);
     return destinationPath(pagePath);
   }
 
   private String destinationPath(String pagePath) {
-    return destination + File.separator + (pagePath.length() > 0 ? pagePath : PathParser.ROOT_PAGE_NAME) + PAGE_EXTENSION;
+    return destination + HTML_PATH_SEPARATOR + (pagePath.length() > 0 ? pagePath : PathParser.ROOT_PAGE_NAME) + PAGE_EXTENSION;
   }
 
   private final String template;

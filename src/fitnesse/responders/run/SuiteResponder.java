@@ -295,7 +295,12 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     PageCrawler pageCrawler = page.getPageCrawler();
     WikiPagePath fullPath = pageCrawler.getFullPath();
     String fullPathName = PathParser.render(fullPath);
-    return "RerunLastFailures_"+fullPathName.replace(".","-");
+    if (fullPathName.startsWith("RerunLastFailures_")) {
+      String newFullPathName = fullPathName.replace(".", "-");
+      return newFullPathName;
+    } else {
+      return "RerunLastFailures_" + fullPathName.replace(".", "-");
+    }
   }
 
   protected String getTitle() {

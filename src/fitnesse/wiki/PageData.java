@@ -38,6 +38,12 @@ public class PageData implements ReadOnlyPageData, Serializable {
   @Deprecated
   public static final String PropertySUITES = WikiPageProperty.SUITES;
 
+  /* Wiki page content is saved always with LineFeed as separor even on Windows
+   * see function set Content
+   * To simplify writing test cases the below is defined
+   */
+  public static final String PAGE_LINE_SEPARATOR ="\n";
+  
   public static final String PAGE_TYPE_ATTRIBUTE = "PageType";
   public static final String[] PAGE_TYPE_ATTRIBUTES = { STATIC.toString(),
       TEST.toString(), SUITE.toString() };
