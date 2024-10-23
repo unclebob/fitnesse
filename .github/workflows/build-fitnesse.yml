@@ -6,6 +6,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        java-version: [ '11', '17', '21' ]
+
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
@@ -13,9 +17,12 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '11'
+          java-version: ${{ matrix.java-version }}
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v2
+      - name: Remove Java 21 incompatible tests
+        if: ${{ matrix.java-version == '21' }}
+        run: rm -rf FitNesseRoot/FitNesse/SuiteAcceptanceTests/SuiteSlimTests/SystemExitIsPrevented
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v3
         with:
@@ -26,7 +33,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: libs
+          name: libs-java-${{ matrix.java-version }}
           path: build/libs
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2

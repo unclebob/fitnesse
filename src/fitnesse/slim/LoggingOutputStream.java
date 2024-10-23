@@ -10,6 +10,8 @@ import java.io.PrintStream;
  * An OutputStream that writes contents to a Logger upon each call to flush()
  */
 class LoggingOutputStream extends ByteArrayOutputStream {
+  private static final int JAVA_VERSION = Runtime.version().feature();
+  private static final boolean EXTRA_NEWLINE_EXPECTED = JAVA_VERSION >= 17;
 
   private String lineSeparator;
 
@@ -49,6 +51,10 @@ class LoggingOutputStream extends ByteArrayOutputStream {
     if (record.length() == 0 || record.equals(lineSeparator)) {
       // avoid empty records
       return;
+    }
+    if (EXTRA_NEWLINE_EXPECTED) {
+      // extra newlines after each message, strip those
+      record = record.substring(0, record.length() - 1);
     }
     // Prefix each new line with: newline + level + DOT + ":"
     record = record.replace("\n", "\n" + level

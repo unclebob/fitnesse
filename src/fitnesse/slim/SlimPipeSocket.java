@@ -2,16 +2,17 @@
 
 package fitnesse.slim;
 
+import fitnesse.util.MockSocket;
+import util.FileUtil;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import util.FileUtil;
-import fitnesse.util.MockSocket;
 
 public class SlimPipeSocket extends ServerSocket {
   public static final String STDOUT_PREFIX = "SOUT";
@@ -42,13 +43,14 @@ public class SlimPipeSocket extends ServerSocket {
     this.stdin = System.in;
 
     // bind System.stdout/System.stderr to original stderr
-    System.setOut(new PrintStream(new LoggingOutputStream(this.stderr, STDOUT_PREFIX),
-        true, FileUtil.CHARENCODING));
-    System.setErr(new PrintStream(new LoggingOutputStream(this.stderr, STDERR_PREFIX),
-        true, FileUtil.CHARENCODING));
+    System.setOut(wrapStream(this.stderr, STDOUT_PREFIX));
+    System.setErr(wrapStream(this.stderr, STDERR_PREFIX));
 
     LOG.log(Level.FINER, "Creating Slim Server with pipe socket.");
+  }
 
+  static PrintStream wrapStream(PrintStream original, String prefix) throws UnsupportedEncodingException {
+    return new PrintStream(new LoggingOutputStream(original, prefix), true, FileUtil.CHARENCODING);
   }
 
   @Override
