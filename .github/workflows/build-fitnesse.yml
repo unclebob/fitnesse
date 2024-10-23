@@ -19,7 +19,7 @@ jobs:
           distribution: 'zulu'
           java-version: ${{ matrix.java-version }}
       - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v2
+        uses: gradle/wrapper-validation-action@v3
       - name: Remove Java 21 incompatible tests
         if: ${{ matrix.java-version == '21' }}
         run: rm -rf FitNesseRoot/FitNesse/SuiteAcceptanceTests/SuiteSlimTests/SystemExitIsPrevented
