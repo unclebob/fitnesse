@@ -26,6 +26,7 @@ plugins {
   id 'signing'
   id "com.github.ben-manes.versions" version "0.51.0"
   id "groovy"
+  id "io.miret.etienne.sass" version "1.5.0"
 }
 
 apply plugin: "info.solidsoft.pitest"
@@ -104,12 +105,9 @@ task fitNesseVersion {
   }
 }
 
-task compileBootstrap(type: LessCompiler) {
-  mainClass.set('org.mozilla.javascript.tools.shell.Main')
-  inputDir file('src/fitnesse/resources/bootstrap/less')
-  mainLessFile = 'fitnesse-bootstrap.less'
-  cssFile file("${sourceSets.main.output.resourcesDir}/fitnesse/resources/bootstrap/css/fitnesse-bootstrap.css")
-  classpath configurations.lesscss
+compileSass {
+  sourceDir = project.file ("src/fitnesse/resources/scss/custom")
+  outputDir = project.file ("${sourceSets.main.output.resourcesDir}/fitnesse/resources/bootstrap/css")
 }
 
 task createUpdateLists(type: WikiFileListBuilderTask) {
@@ -141,7 +139,7 @@ task createUpdateLists(type: WikiFileListBuilderTask) {
     "FitNesseRoot/TemplateLibrary/TestPage/properties.xml" ]
 }
 
-processResources.dependsOn "fitNesseVersion", "compileBootstrap", "createUpdateLists"
+processResources.dependsOn "fitNesseVersion", "compileSass", "createUpdateLists"
 
 task copyRuntimeLibs(type: Copy) {
   into "lib"
