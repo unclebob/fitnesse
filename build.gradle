@@ -82,7 +82,7 @@ dependencies {
   implementation "org.openjdk.nashorn:nashorn-core:15.4"
 
   compileOnly gradleApi()
-  compileOnly "org.apache.ant:ant:1.10.14"
+  compileOnly "org.apache.ant:ant:1.10.15"
   compileOnly "junit:junit:4.13.2"
 
   testImplementation gradleApi()
