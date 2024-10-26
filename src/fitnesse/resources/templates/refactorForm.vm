@@ -4,11 +4,11 @@
  <input type="hidden" name="responder" value="replace"/>
  <fieldset>
   <label for="searchString">Search String:</label>
-  <input type="text" size="50" id="searchString" name="searchString" value="#if ($request.hasInput("searchString"))$request.getInput("searchString")#end"/>
+  <input type="text" size="50" id="searchString" name="searchString" value="#if ($request.hasInput("searchString"))#escape($request.getInput("searchString"))#end"/>
  </fieldset>
  <fieldset>
   <label for="replacementString">Replacement:</label>
-  <input type="text" size="50" id="replacementString" name="replacementString" value="#if ($request.hasInput("replacementString"))$request.getInput("replacementString")#end"/>
+  <input type="text" size="50" id="replacementString" name="replacementString" value="#if ($request.hasInput("replacementString"))#escape($request.getInput("replacementString"))#end"/>
  </fieldset>
  <fieldset class="buttons">
   <input type="submit" name="replace" value="Replace!"/>
@@ -25,11 +25,11 @@
  <input type="hidden" name="isMethodReplace"/>
  <fieldset>
   <label for="searchString">Search Method:</label>
-  <input type="text" size="50" id="searchStringMethod" name="searchString" value="#if ($request.hasInput("searchString"))$request.getInput("searchString")#end"/>
+  <input type="text" size="50" id="searchStringMethod" name="searchString" value="#if ($request.hasInput("searchString"))#escape($request.getInput("searchString"))#end"/>
  </fieldset>
  <fieldset>
   <label for="replacementString">Replacing Method:</label>
-  <input type="text" size="50" id="replacementString" name="replacementString" value="#if ($request.hasInput("replacementString"))$request.getInput("replacementString")#end"/>
+  <input type="text" size="50" id="replacementString" name="replacementString" value="#if ($request.hasInput("replacementString"))#escape($request.getInput("replacementString"))#end"/>
  </fieldset>
  <fieldset class="buttons">
   <input type="submit" name="replace" value="Replace Method!"/>
