@@ -64,7 +64,7 @@
  <input type="hidden" name="responder" value="searchProperties"/>
  <fieldset>
   <label for="Suites">Tags:</label>
-  <input type="text" size="50" name="Suites"#if ($request.hasInput("Suites")) value="$request.getInput("Suites")"#end placeholder="Enter search Tags, separated with comma"/>
+  <input type="text" size="50" name="Suites"#if ($request.hasInput("Suites")) value="#escape($request.getInput("Suites"))"#end placeholder="Enter search Tags, separated with comma"/>
  </fieldset>
 
   <fieldset>
