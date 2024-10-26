@@ -1,4 +1,5 @@
 !2 Pending Changes
+ * Fixed multiple security issues and updated some dependencies
 
 !2 20241023
  * Support using Java 17 and 21, 11 remains supported too ([[1525][https://github.com/unclebob/fitnesse/pull/1525]])
