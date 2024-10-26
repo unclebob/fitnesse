@@ -1,24 +1,25 @@
 package fitnesse.responders.testHistory;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static util.RegexTestCase.assertHasRegexp;
+import fitnesse.FitNesseContext;
+import fitnesse.http.MockRequest;
+import fitnesse.http.SimpleResponse;
+import fitnesse.testutil.FitNesseUtil;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import util.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import util.FileUtil;
-import fitnesse.FitNesseContext;
-import fitnesse.http.MockRequest;
-import fitnesse.http.SimpleResponse;
-import fitnesse.testutil.FitNesseUtil;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static util.RegexTestCase.assertHasRegexp;
 
 public class HistoryComparerResponderTest {
   public HistoryComparerResponder responder;
@@ -97,10 +98,25 @@ public class HistoryComparerResponderTest {
     request.addInput("TestResult_secondFile", "");
     request.setResource("TestFolder");
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context,
+      request);
+    assertEquals(400, response.getStatus());
+    assertHasRegexp("Compare Failed because the files were not found.",
+      response.getContent());
+    verify(mockedComparer, never()).compare(anyString(), anyString());
+  }
+
+  @Test
+  public void shouldReturnErrorPageIfFilesAreNotInTestHistory() throws Exception {
+    request = new MockRequest();
+    request.addInput("TestResult_../../../../../../../../../etc/passwd", "");
+    request.addInput("TestResult_../../../../../../../../../../etc/passwd", "");
+    request.setResource("TestFolder");
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context,
         request);
     assertEquals(400, response.getStatus());
     assertHasRegexp("Compare Failed because the files were not found.",
         response.getContent());
+    verify(mockedComparer, never()).compare(anyString(), anyString());
   }
 
   @Test
@@ -115,6 +131,7 @@ public class HistoryComparerResponderTest {
     assertHasRegexp(
         "Compare Failed because the wrong number of Input Files were given. Select two please.",
         response.getContent());
+    verify(mockedComparer, never()).compare(anyString(), anyString());
   }
 
   @Test
@@ -127,6 +144,7 @@ public class HistoryComparerResponderTest {
     assertHasRegexp(
         "Compare Failed because the wrong number of Input Files were given. Select two please.",
         response.getContent());
+    verify(mockedComparer, never()).compare(anyString(), anyString());
   }
 
   @Test

@@ -9,6 +9,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.reporting.history.PageHistory;
 import fitnesse.responders.ErrorResponder;
+import fitnesse.util.StringUtils;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -16,7 +17,9 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -72,8 +75,10 @@ public class HistoryComparerResponder implements Responder {
   }
 
   private boolean filesExist() {
-    return ((new File(firstFilePath)).exists())
-        || ((new File(secondFilePath)).exists());
+    if (StringUtils.isBlank(firstFileName) || StringUtils.isBlank(secondFileName)) {
+      return false;
+    }
+    return (new File(firstFilePath)).exists() || (new File(secondFilePath)).exists();
   }
 
   private void initializeReponseComponents() {
@@ -82,8 +87,18 @@ public class HistoryComparerResponder implements Responder {
   }
 
   private String composeFileName(Request request, String fileName) {
-    return context.getTestHistoryDirectory().getPath() + File.separator
-        + request.getResource() + File.separator + fileName;
+    try {
+      String basePath = context.getTestHistoryDirectory().getPath();
+      String absoluteBase = new File(basePath).getCanonicalPath() + File.separator;
+      Path filePath = Path.of(basePath, request.getResource(), fileName);
+      String absoluteFile = filePath.toFile().getCanonicalPath();
+      if (absoluteFile.startsWith(absoluteBase)) {
+        return filePath.toString();
+      }
+    } catch (IOException e) {
+      // ignore we will just return empty string
+    }
+    return "";
   }
 
   private boolean getFileNameFromRequest(Request request) {
