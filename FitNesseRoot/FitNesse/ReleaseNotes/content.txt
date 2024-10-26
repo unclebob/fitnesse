@@ -1,4 +1,6 @@
 !2 Pending Changes
+
+!2 20241026
  * Fixed multiple security issues and updated some dependencies
 
 !2 20241023
