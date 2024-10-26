@@ -97,10 +97,10 @@ public class JUnitXMLPerPageRunListener extends RunListener {
   protected long getExecutionTime() {
     long executionTime = 0;
     if (timeMeasurement != null) {
-      executionTime = timeMeasurement.elapsed();
       if (!timeMeasurement.isStopped()) {
         timeMeasurement.stop();
       }
+      executionTime = timeMeasurement.elapsed();
     }
     return executionTime;
   }
