@@ -69,11 +69,8 @@ java {
 dependencies {
   implementation "org.htmlparser:htmlparser:2.1"
   implementation "org.htmlparser:htmllexer:2.1"
-  implementation ("org.apache.velocity:velocity-engine-core:2.4.1") {
-    exclude group:"org.apache.commons", module: "commons-lang3"
-    exclude group: 'org.slf4j', module: 'slf4j-api'
-  }
-  implementation "org.apache.commons:commons-lang3:3.14.0"
+  implementation "org.apache.velocity:velocity-engine-core:2.4.1"
+  implementation "org.apache.commons:commons-lang3:3.17.0"
   implementation "org.slf4j:slf4j-api:2.0.16"
   implementation "org.slf4j:slf4j-jdk14:2.0.16"
   implementation "org.json:json:20240303"
