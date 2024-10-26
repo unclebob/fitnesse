@@ -191,7 +191,7 @@ public class StatementExecutor implements StatementExecutorInterface {
 
 
   private void checkExceptionForStop(Throwable exception) {
-    if (isStopTestException(exception) || isStopSuiteException(exception)) {
+    if (isStopTestException(exception) || isStopSuiteException(exception) || isIgnoreAllTestsException(exception) || isIgnoreScriptTestException(exception)) {
       stopRequested = true;
     }
   }
