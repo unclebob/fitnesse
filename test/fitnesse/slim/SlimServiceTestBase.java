@@ -244,6 +244,26 @@ public abstract class SlimServiceTestBase {
   }
 
   @Test
+  public void IgnoreAllTestExceptionThrownAndNextStatementResultIsNull() throws Exception {
+    addImportAndMake();
+    statements.add(new CallInstruction("id", "testSlim", "throwIgnoreAllStopping"));
+    statements.add(new CallInstruction("id2", "testSlim", "echoString", new Object[] { "hello" }));
+    Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
+    assertContainsException("__EXCEPTION__:IGNORE_ALL_TESTS:", "id", results);
+    assertNull(results.get("id2"));
+  }
+
+  @Test
+  public void IgnoreScriptTestExceptionThrownAndNextStatementResultIsNull() throws Exception {
+    addImportAndMake();
+    statements.add(new CallInstruction("id", "testSlim", "throwIgnoreScriptStopping"));
+    statements.add(new CallInstruction("id2", "testSlim", "echoString", new Object[] { "hello" }));
+    Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
+    assertContainsException("__EXCEPTION__:IGNORE_SCRIPT_TEST:", "id", results);
+    assertNull(results.get("id2"));
+  }
+
+  @Test
   public void canSpecifyAnInteractionClass() {
     final SlimService.Options options = SlimService.parseCommandLine(new String[]{"-i", "fitnesse.slim.fixtureInteraction.DefaultInteraction"});
     assertNotNull("should parse correctly", options);
@@ -273,5 +293,4 @@ public abstract class SlimServiceTestBase {
     assertTrue("should be verbose", options.verbose);
     assertEquals("should have set port", 7890, options.port);
   }
-
 }
