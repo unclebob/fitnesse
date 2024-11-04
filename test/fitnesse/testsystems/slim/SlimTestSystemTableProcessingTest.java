@@ -59,8 +59,9 @@ public class SlimTestSystemTableProcessingTest {
     String exceptionId = SlimServer.EXCEPTION_IGNORE_SCRIPT_TEST_TAG + "table1 with random ignore exception";
     slimTestSystem.processTable(table(exceptionId), false);
     slimTestSystem.processTable(table("Table2"), false);
+    slimTestSystem.processTable(table("Table3"), false);
 
-    assertTestRecords(ignore(exceptionId), pass("Table2"));
+    assertTestRecords(ignore(exceptionId), pass("Table2"), pass("Table3"));
   }
 
   @Test
@@ -68,8 +69,9 @@ public class SlimTestSystemTableProcessingTest {
     String exceptionId = SlimServer.EXCEPTION_IGNORE_ALL_TESTS_TAG + "table1 with random ignore exception";
     slimTestSystem.processTable(table(exceptionId), false);
     slimTestSystem.processTable(table("Table2"), false);
+    slimTestSystem.processTable(table("Table3"), false);
 
-    assertTestRecords(ignore(exceptionId), ignore("Table2"));
+    assertTestRecords(ignore(exceptionId), ignore("Table2"), ignore("Table3"));
   }
 
   @Test
