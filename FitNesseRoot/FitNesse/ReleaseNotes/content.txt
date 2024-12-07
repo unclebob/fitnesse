@@ -1,5 +1,7 @@
 !2 Pending Changes
- * Fix IgnoreAllTests exception and IgnoreScriptTest exception issue whereby if either exception is thrown it would still execute subsequent statements in the script table ([[1538][https://github.com/unclebob/fitnesse/pull/1538]]).
+
+!2 220241207
+ * Fix !-IgnoreAllTests-! exception and !-IgnoreScriptTest-! exception issue whereby if either exception is thrown it would still execute subsequent statements in the script table ([[1538][https://github.com/unclebob/fitnesse/pull/1538]]).
 
 !2 20241026
  * Fixed multiple security issues and updated some dependencies
