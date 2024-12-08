@@ -6,9 +6,9 @@
 #set ($hasOneInFocus = ( $focusTextTab || $focusMethodTab || $focusPropertiesTab ))
 
 <ul class="nav nav-tabs">
- <li#if( $focusTextTab || !$hasOneInFocus ) class="active"#end><a href="#text" data-toggle="tab">Text search</a></li>
- <li#if( $focusMethodTab ) class="active"#end><a href="#method" data-toggle="tab">Method search</a></li>
- <li#if( $focusPropertiesTab ) class="active"#end><a href="#properties" data-toggle="tab">Properties search</a></li>
+ <li><a href="#text" data-toggle="tab" class="#if( $focusTextTab || !$hasOneInFocus ) active#end nav-link">Text search</a></li>
+ <li><a href="#method" data-toggle="tab" class="#if( $focusMethodTab ) active#end nav-link">Method search</a></li>
+ <li><a href="#properties" data-toggle="tab" class="#if( $focusPropertiesTab ) active#end nav-link">Properties search</a></li>
 </ul>
 
 <div class="tab-content">

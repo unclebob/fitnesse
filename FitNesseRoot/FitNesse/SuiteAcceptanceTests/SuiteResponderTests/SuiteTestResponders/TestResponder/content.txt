@@ -24,7 +24,7 @@ The bgcolor of the cell should turn green
 |Response Examiner.|
 |type  |pattern|matches?|
 |contents|class="pass"|true|
-|contents|Assertions:.*\s+.*?1 right, 0 wrong, 0 ignored, 0 exceptions|true|
+|contents|Assertions:.*1 right, 0 wrong, 0 ignored, 0 exceptions|true|
 
 The error log page should not have any errors
 
