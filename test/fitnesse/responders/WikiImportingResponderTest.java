@@ -326,8 +326,8 @@ public class WikiImportingResponderTest {
     content = getContentAfterSpecialImportHandling();
 
     assertTrue(WikiImportProperty.isImportedSubWiki(data));
-    assertSubString("<a href=\"SamplePage?edit\" accesskey=\"e\">Edit Locally</a>", content);
-    assertSubString("<a href=\"blah?responder=edit&amp;redirectToReferer=true&amp;redirectAction=importAndView\">Edit Remotely</a>", content);
+    assertSubString("<a class=\"nav-link text-secondary\" href=\"SamplePage?edit\" accesskey=\"e\">Edit Locally</a>", content);
+    assertSubString("<a class=\"nav-link text-secondary\" href=\"blah?responder=edit&amp;redirectToReferer=true&amp;redirectAction=importAndView\">Edit Remotely</a>", content);
   }
 
   private String getContentAfterSpecialImportHandling() {

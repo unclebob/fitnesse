@@ -229,7 +229,7 @@ public class TestResponderTest {
   public void pageHistoryLinkIsIncluded() throws Exception {
     responder.turnOffChunking();
     doSimpleRun(passFixtureTable());
-    assertSubString("<a href=\"TestPage?pageHistory\"", results);
+    assertSubString("<a class=\"dropdown-item\" href=\"TestPage?pageHistory\"", results);
     assertSubString("Page History", results);
   }
 
