@@ -180,11 +180,11 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
 
   @Override
   protected String makeSummaryContent() {
-    String summaryContent = "<strong>Test Pages:</strong> " + pageCounts.toString() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+    String summaryContent = "<strong>Test Pages:</strong>&nbsp;" + pageCounts.toString() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
     if (latestTestTime != null) {
-      summaryContent += String.format("<strong>Assertions:</strong> %s (%.03f seconds)", getAssertionCounts(), latestTestTime.elapsedSeconds());
+      summaryContent += String.format("<strong>Assertions:</strong>&nbsp;%s (%.03f seconds)", getAssertionCounts(), latestTestTime.elapsedSeconds());
     } else {
-      summaryContent += String.format("<strong>Assertions:</strong> %s ", getAssertionCounts());
+      summaryContent += String.format("<strong>Assertions:</strong>&nbsp;%s ", getAssertionCounts());
     }
     return summaryContent;
   }
