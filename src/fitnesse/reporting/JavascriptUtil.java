@@ -41,6 +41,13 @@ public class JavascriptUtil {
     return scriptTag;
   }
 
+  public static HtmlTag expandCurrentRow(String idElement) {
+    HtmlTag scriptTag = new HtmlTag("script");
+    String escapedIdElement = escapeHtmlForJavaScript(idElement);
+    scriptTag.add("$( '#" + escapedIdElement + "' ).find( '.closed-detail' ).css( 'display', 'initial' );");
+    return scriptTag;
+  }
+
   public static HtmlTag makeInitErrorMetadataScript() {
     HtmlTag scriptTag = new HtmlTag("script");
     scriptTag.add("initErrorMetadata();");
