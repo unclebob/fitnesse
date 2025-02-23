@@ -363,7 +363,7 @@ span.ignore * {
   white-space: nowrap;
   position: relative;
   float: left;
-  padding: $input-btn-padding-y/2 $input-btn-padding-x;
+  padding: $input-btn-padding-y*0.5 $input-btn-padding-x;
 }
 .btn-text input {
   border-width: 2px;

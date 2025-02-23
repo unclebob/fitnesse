@@ -1,4 +1,5 @@
 !2 Pending Changes
+ * Upgrade Bootstrap to version 4 ([[1516][https://github.com/unclebob/fitnesse/pull/1516]])
 
 !2 220241207
  * Fix !-IgnoreAllTests-! exception and !-IgnoreScriptTest-! exception issue whereby if either exception is thrown it would still execute subsequent statements in the script table ([[1538][https://github.com/unclebob/fitnesse/pull/1538]]).
