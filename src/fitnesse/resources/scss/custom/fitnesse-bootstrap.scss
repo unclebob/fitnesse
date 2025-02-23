@@ -1,0 +1,70 @@
+/*!
+ * FitNesse Bootstrap theme.
+ *
+ * Bootstrap theme is Copyright 2012 Twitter, Inc
+ * Licensed under the Apache License v2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Designed and built with all the love in the world @twitter by @mdo and @fat.
+ */
+
+// Core variables and mixins
+@import "../../bootstrap/scss/functions";
+@import "../../bootstrap/scss/variables";
+@import "../../bootstrap/scss/mixins";
+
+// Default variable overrides
+$navbar-margin-bottom: 0;
+$font-family-sans-serif:  Avenir, Verdana, sans-serif;
+
+  // Reset
+//@import "normalize.less";
+@import "../../bootstrap/scss/reboot";
+@import "../../bootstrap/scss/print";
+
+  // Core CSS
+//@import "scaffolding.less";
+@import "../../bootstrap/scss/type";
+@import "../../bootstrap/scss/code";
+@import "../../bootstrap/scss/grid";
+@import "../../bootstrap/scss/tables";
+@import "../../bootstrap/scss/forms";
+@import "../../bootstrap/scss/buttons";
+
+  // Components
+@import "../../bootstrap/scss/card";
+//@import "component-animations.less";
+//@import "glyphicons.less";
+@import "../../bootstrap/scss/dropdown";
+@import "../../bootstrap/scss/button-group";
+//@import "input-groups.less";
+@import "../../bootstrap/scss/nav";
+@import "../../bootstrap/scss/navbar";
+@import "../../bootstrap/scss/breadcrumb";
+//@import "pagination.less";
+//@import "pager.less";
+//@import "labels.less";
+@import "../../bootstrap/scss/badge";
+//@import "jumbotron.less";
+//@import "thumbnails.less";
+@import "../../bootstrap/scss/alert";
+//@import "progress-bars.less";
+@import "../../bootstrap/scss/progress";
+//@import "media.less";
+//@import "list-group.less";
+//@import "panels.less";
+//@import "wells.less";
+@import "../../bootstrap/scss/close";
+
+  // Components w/ JavaScript
+//@import "modals.less";
+@import "../../bootstrap/scss/tooltip";
+@import "../../bootstrap/scss/popover";
+//@import "carousel.less";
+
+  // Utility classes
+@import "../../bootstrap/scss/utilities";
+//@import "responsive-utilities.less";
+    
+  // How FitNesse applies it
+@import "../customize";

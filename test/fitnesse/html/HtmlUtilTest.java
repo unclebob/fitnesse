@@ -45,7 +45,7 @@ public class HtmlUtilTest {
     String pageName = "TestSomething";
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
-    assertSubString("<a href=\"" + pageName + "?test\" accesskey=\"t\">Test</a>", html);
+    assertSubString("<a class=\"nav-link text-secondary\" href=\"" + pageName + "?test\" accesskey=\"t\">Test</a>", html);
   }
 
   @Test
@@ -53,7 +53,7 @@ public class HtmlUtilTest {
     String pageName = "SomethingTest";
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
-    assertSubString("<a href=\"" + pageName + "?test\" accesskey=\"t\">Test</a>", html);
+    assertSubString("<a class=\"nav-link text-secondary\" href=\"" + pageName + "?test\" accesskey=\"t\">Test</a>", html);
   }
 
   @Test
@@ -61,7 +61,7 @@ public class HtmlUtilTest {
     String pageName = "SuiteNothings";
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
-    assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"t\">Suite</a>", html);
+    assertSubString("<a class=\"nav-link text-secondary\" href=\"" + pageName + "?suite\" accesskey=\"t\">Suite</a>", html);
   }
 
   @Test
@@ -69,7 +69,7 @@ public class HtmlUtilTest {
     String pageName = "NothingsSuite";
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
-    assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"t\">Suite</a>", html);
+    assertSubString("<a class=\"nav-link text-secondary\" href=\"" + pageName + "?suite\" accesskey=\"t\">Suite</a>", html);
   }
 
   @Test
@@ -96,14 +96,14 @@ public class HtmlUtilTest {
   }
 
   private void verifyDefaultLinks(String html, String pageName) {
-    assertSubString("<a href=\"" + pageName + "?edit\" accesskey=\"e\">Edit</a>", html);
-    assertSubString("<a href=\"" + pageName + "?versions\" accesskey=\"v\">Versions</a>", html);
-    assertSubString("<a href=\"" + pageName + "?properties\" accesskey=\"p\">Properties</a>", html);
-    assertSubString("<a href=\"" + pageName + "?refactor&amp;type=rename\">Rename</a>", html);
-    assertSubString("<a href=\"" + pageName + "?whereUsed\" accesskey=\"w\">Where Used</a>", html);
-    assertSubString("<a href=\"/files\" accesskey=\"f\">Files</a>", html);
-    assertSubString("<a href=\"?search\" accesskey=\"s\">Search</a>", html);
-    assertSubString("<a href=\"/FitNesse.UserGuide\" accesskey=\"\">User Guide</a>", html);
+    assertSubString("<a class=\"nav-link text-secondary\" href=\"" + pageName + "?edit\" accesskey=\"e\">Edit</a>", html);
+    assertSubString("<a class=\"dropdown-item\" href=\"" + pageName + "?versions\" accesskey=\"v\">Versions</a>", html);
+    assertSubString("<a class=\"dropdown-item\" href=\"" + pageName + "?properties\" accesskey=\"p\">Properties</a>", html);
+    assertSubString("<a class=\"dropdown-item\" href=\"" + pageName + "?refactor&amp;type=rename\">Rename</a>", html);
+    assertSubString("<a class=\"dropdown-item\" href=\"" + pageName + "?whereUsed\" accesskey=\"w\">Where Used</a>", html);
+    assertSubString("<a class=\"dropdown-item\" href=\"/files\" accesskey=\"f\">Files</a>", html);
+    assertSubString("<a class=\"dropdown-item\" href=\"?search\" accesskey=\"s\">Search</a>", html);
+    assertSubString("<a class=\"dropdown-item\" href=\"/FitNesse.UserGuide\" accesskey=\"\">User Guide</a>", html);
   }
 
   @Test
