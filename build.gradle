@@ -26,7 +26,7 @@ plugins {
   id 'signing'
   id "com.github.ben-manes.versions" version "0.52.0"
   id "groovy"
-  id "io.miret.etienne.sass" version "1.5.0"
+  id "io.miret.etienne.sass" version "1.5.2"
 }
 
 apply plugin: "info.solidsoft.pitest"
