@@ -8,10 +8,12 @@
  #set($trimPrefix = $request.getInput("trim"))
 #end
 #set($noHistory = true)
-<div>
- <a class="btn btn-outline-secondary" href="?responder=overview">View as Overview</a>
- <a class="btn btn-outline-secondary" href="$viewLocation">Cancel</a>
- <label for="hidePassedTests"><input type="checkbox" id="hidePassedTests"/>Hide passed tests</label>
+<div class="d-flex align-items-center mb-2">
+ <a class="btn btn-outline-secondary mr-2" href="?responder=overview">View as Overview</a>
+ <a class="btn btn-outline-secondary mr-2" href="$viewLocation">Cancel</a>
+ <label for="hidePassedTests" class="mb-0 text-nowrap">
+  <input type="checkbox" id="hidePassedTests" class="mr-1"/>Hide passed tests
+ </label>
 </div>
 <div>
  #if(!$purgeOptions.isEmpty())
@@ -22,13 +24,13 @@
  #end
 </div>
 <div class="btn-group mt-2" role="group" aria-label="Show last N results">
- <a class="btn btn-outline-secondary#if($resultsToShow==3) active#end"  href="?responder=testHistory&results=3">Last 3</a>
- <a class="btn btn-outline-secondary#if($resultsToShow==5) active#end"  href="?responder=testHistory&results=5">Last 5</a>
- <a class="btn btn-outline-secondary#if($resultsToShow==10) active#end" href="?responder=testHistory&results=10">Last 10</a>
- <a class="btn btn-outline-secondary#if($resultsToShow==20) active#end" href="?responder=testHistory&results=20">Last 20</a>
+ <a class="btn btn-outline-secondary#if($resultsToShow==3) active#end" href="?responder=testHistory&results=3#if($trimPrefix!='')&trim=$trimPrefix#end">Last 3</a>
+ <a class="btn btn-outline-secondary#if($resultsToShow==5) active#end" href="?responder=testHistory&results=5#if($trimPrefix!='')&trim=$trimPrefix#end">Last 5</a>
+ <a class="btn btn-outline-secondary#if($resultsToShow==10) active#end" href="?responder=testHistory&results=10#if($trimPrefix!='')&trim=$trimPrefix#end">Last 10</a>
+ <a class="btn btn-outline-secondary#if($resultsToShow==20) active#end" href="?responder=testHistory&results=20#if($trimPrefix!='')&trim=$trimPrefix#end">Last 20</a>
 </div>
 
-<form class="form-inline mt-2" method="get">
+<form class="form-inline my-2" method="get">
  <input type="hidden" name="responder" value="testHistory"/>
  #if($request.hasInput("results"))
   <input type="hidden" name="results" value="$resultsToShow"/>
