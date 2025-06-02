@@ -10,7 +10,7 @@
 #set($noHistory = true)
 <div class="d-flex align-items-center mb-2">
  <a class="btn btn-outline-secondary mr-2" href="?responder=overview">View as Overview</a>
- <a class="btn btn-outline-secondary mr-2" href="$viewLocation">Cancel</a>
+ <a class="btn btn-outline-secondary mr-4" href="$viewLocation">Cancel</a>
  <label for="hidePassedTests" class="mb-0 text-nowrap">
   <input type="checkbox" id="hidePassedTests" class="mr-1"/>Hide passed tests
  </label>
@@ -20,7 +20,7 @@
   #foreach($purgeOption in $purgeOptions)
    <a class="btn btn-outline-secondary" href="?responder=purgeHistory&days=$purgeOption" onclick="purgeConfirmation(event)">Purge#if ($purgeOption == 0) all#else &gt; $purgeOption days#end</a>
   #end
-  <label for="purgeGlobal"><input type="checkbox" id="purgeGlobal" />Purge global</label>
+  <label for="purgeGlobal" class="mb-0 text-nowrap"><input type="checkbox" id="purgeGlobal" />Purge global</label>
  #end
 </div>
 <div class="btn-group mt-2" role="group" aria-label="Show last N results">
@@ -30,28 +30,39 @@
  <a class="btn btn-outline-secondary#if($resultsToShow==20) active#end" href="?responder=testHistory&results=20#if($trimPrefix!='')&trim=$trimPrefix#end">Last 20</a>
 </div>
 
-<form class="form-inline my-2" method="get">
- <input type="hidden" name="responder" value="testHistory"/>
- #if($request.hasInput("results"))
-  <input type="hidden" name="results" value="$resultsToShow"/>
+#set($trimPrefixSuggestion = "")
+#foreach($p in $testHistory.pageNames)
+ #set($firstPage = $p)
+ #break
+#end
+#if($firstPage)
+ #set($parts = $firstPage.split("\."))
+ #if($parts.size() > 2)
+  #set($trimPrefixSuggestion = "${parts[0]}.${parts[1]}.")
  #end
- <label class="mr-1" for="trimPrefix">Trim path:</label>
- <input type="text" class="form-control form-control-sm" id="trimPrefix" name="trim" value="$!trimPrefix" placeholder="Common prefix"/>
- <span class="ml-1 mr-2 text-muted align-self-center" style="cursor:help" data-toggle="tooltip" title="Enter the full common prefix to remove from each page name">&#9432;</span>
- <button type="submit" class="btn btn-secondary btn-sm">Apply</button>
-</form>
+#end
+<div class="my-2">
+#if($trimPrefix == "")
+ <a class="btn btn-outline-secondary mr-2#if($trimPrefixSuggestion=='') disabled#end"
+  href="?responder=testHistory&results=$resultsToShow#if($trimPrefixSuggestion!='')&trim=$trimPrefixSuggestion#end">
+  Trim Page Names
+ </a>
+#else
+ <a class="btn btn-outline-secondary mr-2 active"
+  href="?responder=testHistory&results=$resultsToShow">
+  Show Full Page Names
+ </a>
+#end
+</div>
 
 <table class="table-striped">
-  <tr>
-    <th>Page <span class="ml-1 text-muted" style="cursor:help" data-toggle="tooltip" title="Test page name">&#9432;</span></th>
-    <th>Pass <span class="ml-1 text-muted" style="cursor:help" data-toggle="tooltip" title="Number of tests passed">&#9432;</span></th>
-    <th>Fail <span class="ml-1 text-muted" style="cursor:help" data-toggle="tooltip" title="Number of tests failed">&#9432;</span></th>
-    <th>Latest <span class="ml-1 text-muted" style="cursor:help" data-toggle="tooltip" title="Latest test run date and time">&#9432;</span></th>
-    <th colspan="$resultsToShow">
-      Last $resultsToShow Results
-      <span class="ml-1 text-muted" style="cursor:help" data-toggle="tooltip" title="‘+’ = passed, ‘–’ = failed. Most-recent result is on the left">&#9432;</span>
-    </th>
-  </tr>
+<tr>
+  <th class="text-nowrap">Page <span class="ml-1 text-muted" style="cursor:help" data-toggle="tooltip" title="Test page name">&#9432;</span></th>
+  <th class="text-nowrap">Pass <span class="ml-1 text-muted" style="cursor:help" data-toggle="tooltip" title="Number of tests passed">&#9432;</span></th>
+  <th class="text-nowrap">Fail <span class="ml-1 text-muted" style="cursor:help" data-toggle="tooltip" title="Number of tests failed">&#9432;</span></th>
+  <th class="text-nowrap">Latest <span class="ml-1 text-muted" style="cursor:help" data-toggle="tooltip" title="Latest test run date and time">&#9432;</span></th>
+  <th colspan="$resultsToShow">Last $resultsToShow Results <span class="ml-1 text-muted" style="cursor:help" data-toggle="tooltip" title="‘+’ = passed, ‘–’ = failed. Most-recent result is on the left">&#9432;</span></th>
+</tr>
 
   #foreach ($page in $testHistory.pageNames)
   #set ($pageHistory = $testHistory.getPageHistory($page))
@@ -60,15 +71,12 @@
 
   <tr>
     #set ($barGraph = $pageHistory.getBarGraph())
-
     #if($pageHistory.passes==0) #set ($passClass = "ignore")
     #else #set ($passClass = "pass")
     #end
-
     #if($pageHistory.failures==0) #set ($failClass = "ignore")
     #else #set ($failClass = "fail")
     #end
-
     #set($displayPage = $page)
     #if($trimPrefix != "" && $page.startsWith($trimPrefix))
       #set($displayPage = $page.substring($trimPrefix.length()))
