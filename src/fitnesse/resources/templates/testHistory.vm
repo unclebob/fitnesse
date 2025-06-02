@@ -1,4 +1,7 @@
 <h1>Test history</h1>
+<head>
+  <link rel="stylesheet" href="../scss/customize.scss">
+</head>
 #set($resultsToShow = 20)
 #if($request.hasInput("results"))
  #set($resultsToShow = $request.getInput("results"))
@@ -11,16 +14,20 @@
 <div class="d-flex align-items-center mb-2">
  <a class="btn btn-outline-secondary mr-2" href="?responder=overview">View as Overview</a>
  <a class="btn btn-outline-secondary mr-4" href="$viewLocation">Cancel</a>
- <label for="hidePassedTests" class="mb-0 text-nowrap">
-  <input type="checkbox" id="hidePassedTests" class="mr-1"/>Hide passed tests
- </label>
+ <nobr>
+  <label for="hidePassedTests">
+   <input type="checkbox" id="hidePassedTests" class="mr-1"/>Hide passed tests
+  </label>
+ <nobr>
 </div>
 <div>
  #if(!$purgeOptions.isEmpty())
   #foreach($purgeOption in $purgeOptions)
    <a class="btn btn-outline-secondary" href="?responder=purgeHistory&days=$purgeOption" onclick="purgeConfirmation(event)">Purge#if ($purgeOption == 0) all#else &gt; $purgeOption days#end</a>
   #end
-  <label for="purgeGlobal" class="mb-0 text-nowrap"><input type="checkbox" id="purgeGlobal" />Purge global</label>
+  <nobr>
+   <label for="purgeGlobal"><input type="checkbox" id="purgeGlobal" />Purge global</label>
+  </nobr>
  #end
 </div>
 <div class="d-flex align-items-center my-2">
@@ -48,17 +55,19 @@
  <form class="mb-0" method="get">
   <input type="hidden" name="responder" value="testHistory"/>
   <input type="hidden" name="results"   value="$resultsToShow"/>
-  <label for="trimPath" class="mb-0 text-nowrap">
-   <input type="checkbox"
-          id="trimPath"
-          class="mr-1"
-          name="trim"
-          value="$trimPrefixSuggestion"
-          #if($trimPrefixSuggestion=="")disabled#end
-          #if($trimPrefix!="")checked#end
-          onchange="this.form.submit()"/>
-   Trim page names
-  </label>
+  <nobr>
+   <label for="trimPath">
+    <input type="checkbox"
+           id="trimPath"
+           class="mr-1"
+           name="trim"
+           value="$trimPrefixSuggestion"
+           #if($trimPrefixSuggestion=="")disabled#end
+           #if($trimPrefix!="")checked#end
+           onchange="this.form.submit()"/>
+    Trim page names
+   </label>
+  </nobr>
  </form>
 </div>
 <table class="table-striped">
