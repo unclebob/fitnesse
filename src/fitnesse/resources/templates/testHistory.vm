@@ -23,38 +23,44 @@
   <label for="purgeGlobal" class="mb-0 text-nowrap"><input type="checkbox" id="purgeGlobal" />Purge global</label>
  #end
 </div>
-<div class="btn-group mt-2" role="group" aria-label="Show last N results">
- <a class="btn btn-outline-secondary#if($resultsToShow==3) active#end" href="?responder=testHistory&results=3#if($trimPrefix!='')&trim=$trimPrefix#end">Last 3</a>
- <a class="btn btn-outline-secondary#if($resultsToShow==5) active#end" href="?responder=testHistory&results=5#if($trimPrefix!='')&trim=$trimPrefix#end">Last 5</a>
- <a class="btn btn-outline-secondary#if($resultsToShow==10) active#end" href="?responder=testHistory&results=10#if($trimPrefix!='')&trim=$trimPrefix#end">Last 10</a>
- <a class="btn btn-outline-secondary#if($resultsToShow==20) active#end" href="?responder=testHistory&results=20#if($trimPrefix!='')&trim=$trimPrefix#end">Last 20</a>
-</div>
-
-#set($trimPrefixSuggestion = "")
-#foreach($p in $testHistory.pageNames)
- #set($firstPage = $p)
- #break
-#end
-#if($firstPage)
- #set($parts = $firstPage.split("\."))
- #if($parts.size() > 2)
-  #set($trimPrefixSuggestion = "${parts[0]}.${parts[1]}.")
+<div class="d-flex align-items-center my-2">
+ <div class="btn-group mr-4" role="group" aria-label="Show last N results">
+  <a class="btn btn-outline-secondary#if($resultsToShow==3) active#end"
+     href="?responder=testHistory&results=3#if($trimPrefix!='')&trim=$trimPrefix#end">Last 3</a>
+  <a class="btn btn-outline-secondary#if($resultsToShow==5) active#end"
+     href="?responder=testHistory&results=5#if($trimPrefix!='')&trim=$trimPrefix#end">Last 5</a>
+  <a class="btn btn-outline-secondary#if($resultsToShow==10) active#end"
+     href="?responder=testHistory&results=10#if($trimPrefix!='')&trim=$trimPrefix#end">Last 10</a>
+  <a class="btn btn-outline-secondary#if($resultsToShow==20) active#end"
+     href="?responder=testHistory&results=20#if($trimPrefix!='')&trim=$trimPrefix#end">Last 20</a>
+ </div>
+ #set($trimPrefixSuggestion = "")
+ #foreach($p in $testHistory.pageNames)
+  #set($firstPage = $p)
+  #break
  #end
-#end
-<div class="my-2">
-#if($trimPrefix == "")
- <a class="btn btn-outline-secondary mr-2#if($trimPrefixSuggestion=='') disabled#end"
-  href="?responder=testHistory&results=$resultsToShow#if($trimPrefixSuggestion!='')&trim=$trimPrefixSuggestion#end">
-  Trim Page Names
- </a>
-#else
- <a class="btn btn-outline-secondary mr-2 active"
-  href="?responder=testHistory&results=$resultsToShow">
-  Show Full Page Names
- </a>
-#end
+ #if($firstPage)
+  #set($parts = $firstPage.split("\."))
+  #if($parts.size() > 2)
+   #set($trimPrefixSuggestion = "${parts[0]}.${parts[1]}.")
+  #end
+ #end
+ <form class="mb-0" method="get">
+  <input type="hidden" name="responder" value="testHistory"/>
+  <input type="hidden" name="results"   value="$resultsToShow"/>
+  <label for="trimPath" class="mb-0 text-nowrap">
+   <input type="checkbox"
+          id="trimPath"
+          class="mr-1"
+          name="trim"
+          value="$trimPrefixSuggestion"
+          #if($trimPrefixSuggestion=="")disabled#end
+          #if($trimPrefix!="")checked#end
+          onchange="this.form.submit()"/>
+   Trim page names
+  </label>
+ </form>
 </div>
-
 <table class="table-striped">
 <tr>
   <th class="text-nowrap">Page <span class="ml-1 text-muted" style="cursor:help" data-toggle="tooltip" title="Test page name">&#9432;</span></th>
