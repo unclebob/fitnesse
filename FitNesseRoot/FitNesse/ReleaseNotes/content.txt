@@ -1,5 +1,5 @@
 !2 Pending Changes
- * Added functionality to include pages based on tags defined for test page ([[1368][https://github.com/unclebob/fitnesse/pull/1516]])
+ * Added functionality to include pages based on tags defined for test page ([[1368][https://github.com/unclebob/fitnesse/pull/1368]])
 
 !2 20250223
  * Upgrade Bootstrap to version 4 ([[1516][https://github.com/unclebob/fitnesse/pull/1516]])
