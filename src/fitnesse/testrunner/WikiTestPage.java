@@ -2,7 +2,13 @@ package fitnesse.testrunner;
 
 import fitnesse.testsystems.ClassPath;
 import fitnesse.testsystems.TestPage;
-import fitnesse.wiki.*;
+import fitnesse.wiki.BaseWikitextPage;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.SymbolicPage;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wikitext.MarkUpSystem;
 import fitnesse.wikitext.parser.Include;
 
@@ -234,9 +240,9 @@ public class WikiTestPage implements TestPage {
     List<WikiPage> pages = new LinkedList<>();
     WikiPageProperty suitesProperty = sourcePage.getData().getProperties().getProperty(WikiPageProperty.SUITES);
     if (shouldIncludeTagLibraries() && suitesProperty != null){
-      String[] tags1 = Arrays.stream(suitesProperty.getValue().split(",")).map(e -> e.trim()).filter(e -> checkIfTagIsNotReserved(e)).toArray(String[]::new);
-      for(int i=0;i<tags1.length;i++){
-        pages.addAll(findUncles(tags1[i].trim()));
+      String[] tags = Arrays.stream(suitesProperty.getValue().split(",")).map(e -> e.trim()).filter(e -> checkIfTagIsNotReserved(e)).toArray(String[]::new);
+      for(int i = 0; i < tags.length; i++){
+        pages.addAll(findUncles(tags[i].trim()));
       }
     }
     return pages;
