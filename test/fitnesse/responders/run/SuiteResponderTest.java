@@ -42,7 +42,7 @@ import static util.RegexTestCase.assertNotSubString;
 import static util.RegexTestCase.assertSubString;
 
 public class SuiteResponderTest {
-  private static final String TEST_TIME = "12/5/2008 01:19:00";
+  private static final String TEST_TIME = "2008-12-05T14:19:00+14:00";
   private MockRequest request;
   private SuiteResponder responder;
   private WikiPage root;
@@ -402,6 +402,10 @@ public class SuiteResponderTest {
     Document testResultsDocument = XmlTestUtilities.getXmlDocumentFromResults(results);
     Element testResultsElement = testResultsDocument.getDocumentElement();
     assertEquals("testResults", testResultsElement.getNodeName());
+    assertEquals("SuitePage", XmlUtil.getTextValue(testResultsElement, "rootPath"));
+    assertEquals("2008-12-05T14:19:00+14:00", XmlUtil.getTextValue(testResultsElement, "date"));
+    assertEquals("SuitePage?pageHistory&resultDate=20081205141900", XmlUtil.getTextValue(testResultsElement, "pageHistoryLink"));
+
     NodeList resultList = testResultsElement.getElementsByTagName("result");
     assertEquals(2, resultList.getLength());
     Element testResult;
@@ -500,7 +504,7 @@ public class SuiteResponderTest {
 
   private File expectedXmlResultsFile() {
     TestSummary counts = new TestSummary(3, 0, 0, 0);
-    String resultsFileName = String.format("%s/SuitePage/20081205011900_%d_%d_%d_%d.xml",
+    String resultsFileName = String.format("%s/SuitePage/20081205141900_%d_%d_%d_%d.xml",
       context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
     return new File(resultsFileName);
   }
@@ -508,7 +512,7 @@ public class SuiteResponderTest {
   @Test
   public void normalSuiteRunProducesIndivualTestHistoryFile() throws Exception {
     TestSummary counts = new TestSummary(1, 0, 0, 0);
-    String resultsFileName = String.format("%s/SuitePage.SlimTest/20081205011900_%d_%d_%d_%d.xml",
+    String resultsFileName = String.format("%s/SuitePage.SlimTest/20081205141900_%d_%d_%d_%d.xml",
       context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
     File xmlResultsFile = new File(resultsFileName);
 
@@ -559,6 +563,36 @@ public class SuiteResponderTest {
     runSuite();
 
     assertTrue(FooFormatter.initialized);
+  }
+
+  @Test
+  public void testGetRerunPageName_withRerunPrefix() throws Exception {
+    String rerunPageName = "RerunLastFailures_SuitePage";
+    suite = WikiPageUtil.addPage(root, PathParser.parse(rerunPageName), "This is a rerun page\n");
+    request.setResource(rerunPageName);
+    responder.makeResponse(context, request);
+
+    String result = responder.getRerunPageName();
+    assertEquals(rerunPageName, result);
+  }
+
+  @Test
+  public void testGetRerunPageName_ReplacesPeriod() throws Exception {
+    addTestToSuite("TestTwo", "|!-fitnesse.testutil.FailFixture-!|\n\n|!-fitnesse.testutil.FailFixture-!|\n");
+    request.setResource("SuitePage.TestTwo");
+    responder.makeResponse(context, request);
+
+    String result = responder.getRerunPageName();
+    assertEquals("RerunLastFailures_SuitePage-TestTwo", result);
+  }
+
+  @Test
+  public void testGetRerunPageName_withoutRerunPrefix() throws Exception {
+    request.setResource("SuitePage");
+    responder.makeResponse(context, request);
+
+    String result = responder.getRerunPageName();
+    assertEquals("RerunLastFailures_SuitePage", result);
   }
 
   private String runSuite() throws Exception {

@@ -1,0 +1,47 @@
+<div class="well">
+ <h2>Change Password</h2>
+ #if($request.getAuthorizationUsername())
+   <form method="post">
+    <input type="hidden" name="responder" value="saveAccount"/>
+     <fieldset>
+      <label for="CurrentPasswordText">Current Password:</label>
+      <input type="text" id="CurrentPasswordText" name="CurrentPasswordText" size="70"/>
+     </fieldset>
+     <fieldset>
+      <label for="NewPasswordText">New Password:</label>
+      <input type="text" id="NewPasswordText" name="NewPasswordText" size="70"/>
+     </fieldset>
+     <fieldset>
+      <label for="ConfirmPasswordText">Confirm Password:</label>
+      <input type="text" id="ConfirmPasswordText" name="ConfirmPasswordText" size="70"/>
+     </fieldset>
+     <fieldset class="buttons">
+      <input type="submit" name="changePassword" value="Change My Password"/>
+     </fieldset>
+   </form>
+ #else
+  Log in to view details.
+ #end
+</div>
+
+#if($request.getAuthorizationUsername().equals("admin"))
+ <div class="well">
+  <h2>Create / Delete Users</h2>
+   <form  method="post">
+    <input type="hidden" name="responder" value="saveAccount"/>
+    <p>For password reset, you can delete and re-create the user.</p>
+    <fieldset>
+     <label for="UserNameText">Username:</label>
+     <input type="text" id="UserNameText" name="UserNameText" size="70"/>
+    </fieldset>
+    <fieldset>
+     <label for="UserPasswordText">Password:</label>
+     <input type="text" id="UserPasswordText" name="UserPasswordText" placeholder="Not used for deleting users." size="70"/>
+    </fieldset>
+    <fieldset class="buttons">
+     <input type="submit" name="createUser" value="Create User"/>
+     <input type="submit" name="deleteUser" value="Delete User"/>
+    </fieldset>
+   </form>
+ </div>
+#end

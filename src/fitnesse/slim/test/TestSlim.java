@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim.test;
 
+import fitnesse.slim.SlimIgnoreAllTestsException;
+import fitnesse.slim.SlimIgnoreScriptTestException;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -38,7 +41,7 @@ public class TestSlim implements TestSlimInterface {
     this.constructorArg = constructorArg;
     stringArg = other.getStringArg();
   }
-  
+
   public TestSlim createTestSlimWithString(String string) {
     TestSlim testSlim = new TestSlim();
     testSlim.setString(string);
@@ -49,7 +52,7 @@ public class TestSlim implements TestSlimInterface {
   public String toString() {
     return "TestSlim: " + constructorArg + ", " + stringArg;
   }
-  
+
   public void nilad() {
     niladWasCalled = true;
   }
@@ -113,7 +116,7 @@ public class TestSlim implements TestSlimInterface {
   public Date getDateArg() {
     return new Date(dateArg.getTime());
   }
-  
+
   public void oneInt(int arg) {
     intArg = arg;
   }
@@ -236,11 +239,11 @@ public class TestSlim implements TestSlimInterface {
   public boolean isSame(Object other) {
     return this == other;
   }
-  
+
   public String getStringFromOther(TestSlim other) {
     return other.getStringArg();
   }
-  
+
   public Zork oneZork(Zork zork) {
     this.zork = zork;
     return zork;
@@ -253,22 +256,30 @@ public class TestSlim implements TestSlimInterface {
 
   class NoSuchConverter {
   }
-  
+
   public boolean throwNormal() throws Exception {
     throw  new Exception("This is my exception");
   }
-  
+
   public boolean throwStopping() throws Exception {
     throw new StopTestException("This is a stop test exception");
   }
-  
+
+  public boolean throwIgnoreAllStopping() throws Exception {
+    throw new SlimIgnoreAllTestsException("This is an ignore all script test exception");
+  }
+
+  public boolean throwIgnoreScriptStopping() throws Exception {
+    throw new SlimIgnoreScriptTestException("This is an ignore script test exception");
+  }
+
   public boolean throwExceptionWithMessage() throws Exception {
     throw new Exception("message:<<Test message>>");
   }
-  
+
   public boolean throwStopTestExceptionWithMessage() throws Exception {
     throw new StopTestException("message:<<Stop Test>>");
-  }  
+  }
 
   public String concatenateThreeArgs(String first, String second, String third) {
     return first + " " + second + " " + third;
@@ -281,7 +292,7 @@ public class TestSlim implements TestSlimInterface {
   public Map<String, String> getMap() {
     return  map;
   }
-  
+
   @SuppressWarnings("serial")
   class StopTestException extends Exception {
     public StopTestException(String description) {

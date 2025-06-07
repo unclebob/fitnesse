@@ -18,8 +18,8 @@ import static org.junit.Assert.fail;
 public class StackTraceEnricherTest {
   private static final String JUNIT_JAR_PATTERN = "[junit";
   private static final String RT_JAR = "rt.jar";
-  private static final String COMMONS_LANG_VERSION = "3.12.0";
-  private static final Pattern COMMONS_LANG_JAR = Pattern.compile("commons-lang3(-3.12.0)?.jar");
+  private static final String COMMONS_LANG_VERSION = "3.17.0";
+  private static final Pattern COMMONS_LANG_JAR = Pattern.compile("commons-lang3(-3.17.0)?.jar");
 
   private Throwable exception;
   private Throwable exceptionWithCause;

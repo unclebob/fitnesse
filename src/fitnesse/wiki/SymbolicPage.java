@@ -20,6 +20,7 @@ public class SymbolicPage extends BaseWikitextPage {
     this.realPage = realPage;
   }
 
+  @Override
   public WikiPage getRealPage() {
     return realPage;
   }

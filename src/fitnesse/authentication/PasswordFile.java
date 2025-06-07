@@ -44,6 +44,13 @@ public class PasswordFile {
     savePasswords();
   }
 
+  public void deleteUser(String user) throws Exception {
+    if (passwordMap.remove(user) == null) {
+      throw new Exception("User does not exist.");
+    }
+    savePasswords();
+  }
+
   private void loadFile() throws IOException, ReflectiveOperationException {
     LinkedList<String> lines = getPasswordFileLines();
     loadCipher(lines);

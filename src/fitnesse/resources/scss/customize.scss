@@ -1,0 +1,448 @@
+$enable-gradients: true;
+
+$page-margin-horizontal: 46px;
+$navbar-default-bg: #f8f8f8;
+$navbar-height: 50px;
+$navbar-default-border: darken($navbar-default-bg, 6.5%);
+
+$alert-success-bg: #dff0d8;
+$alert-success-text: #3c763d;
+
+$alert-info-bg: #d9edf7;
+$alert-info-text: #31708f;
+
+body {
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+
+header,
+article {
+  margin: 0 $page-margin-horizontal;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 15px $page-margin-horizontal;
+  background-color: $navbar-default-bg;
+  min-height: $navbar-height;
+  border-top: 1px solid $navbar-default-border;
+}
+
+table {
+  @extend .table;
+  @extend .table-bordered;
+  @extend .table-sm;
+  width: auto;
+
+  &.hash_table {
+    margin-bottom: 0;
+  }
+}
+
+label {
+  display: inline-block;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+.navbar-nav {
+  font-size: $font-size-lg;
+}
+
+.navbar-brand {
+  display: block;
+  background-image: url(../../images/fitnesse-logo-small.png);
+  width: 200px;
+  height: 37px;
+  margin: 5px 15px 5px 5px;
+
+  span {
+    display: none;
+  }
+}
+
+.navbar-form.search {
+  float: right;
+  margin-right: 25px;
+}
+
+a[name] {
+  position: relative;
+  display: inline-block;
+  top: -120px;
+  visibility: hidden;
+}
+
+#add > ul {
+  max-height: 300px;
+  overflow-x: hidden;
+}
+
+.page-actions {
+  display: none;
+  float: right;
+  padding: 8px $page-margin-horizontal;
+  background-color: #fff;
+  li {
+    display: inline;
+    @extend .btn;
+    @extend .btn-secondary;
+    @extend .btn-sm;
+  }
+}
+
+.breadcrumb {
+  padding: 8px $page-margin-horizontal;
+  margin: 0;
+  @include gradient-y-three-colors(#ffffff, #ffffff, 80%, rgba(255, 255, 255, 0.0));
+  background-color: transparent;
+  border-radius: 0;
+  li + li:before {
+    content: "/ ";
+    color: #ccc;
+    padding: 0 5px;
+  }
+}
+button,
+a.button,
+input[type="button"] {
+  @extend .btn;
+  @extend .btn-secondary;
+}
+
+input[type="submit"] {
+  @extend .btn;
+  @extend .btn-primary;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    margin: 0 4px 0 0;
+}
+
+input[type="file"] {
+  display: inline;
+}
+
+// Reset .divider class to something we can work with
+.dropdown-menu .divider {
+  *width: 100%;
+  height: auto;
+  margin: 0;
+  background-color: transparent;
+  border-bottom: none;
+  border-top: 1px solid #e5e5e5;
+}
+
+.validationerror {
+  margin-top: 0;
+  margin-left: 145px;
+}
+
+/** Rich text editor style */
+.editor-toggle label {
+  @extend .form-check;
+  @extend .form-check-inline;
+  padding-left: 20px;
+  font-weight: normal;
+}
+
+.editor-toggle input {
+    margin-left: -18px;
+}
+
+/** Collapsible section */
+.collapsible {
+  margin: 0;
+  @extend .card;
+  padding: 0;
+  max-width: 100%;
+}
+
+.collapsible > div {
+  margin: 0;
+  @extend .card-body;
+}
+
+.collapsible.closed > div {
+  display: none;
+}
+
+.collapsible.invisible {
+  display: none;
+}
+
+.collapsible p.title,
+.collapsible.closed p.title {
+  @extend .card-header;
+  padding:  5px 15px 5px 30px;
+  background-image: url(../img/minus-sign.png);
+  background-repeat: no-repeat;
+  background-position: 12px 7px;
+}
+
+.collapsible.closed p.title {
+  background-image: url(../img/plus-sign.png);
+  border-bottom: 0;
+}
+
+.collapsible > ul {
+  @extend .d-flex;
+  @extend .justify-content-end;
+  margin: 0;
+  padding: 4px 4px;
+  position: absolute;
+  right: 0%;
+  li {
+    border: none;
+    padding: 0;
+    display: inline;
+    a {
+      @extend .btn;
+      @extend .btn-secondary;
+      @extend .btn-sm;
+      float: left;
+      position: relative;
+    }
+    a.expandall {
+      @include border-right-radius(0);
+    }
+    a.expandall:hover {
+      z-index: 2;
+
+    }
+    a.collapseall {
+      @include border-left-radius(0);
+      margin-left: -1px;
+    }
+    a:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+tr.scenario > td:first-child {
+  background-image: url("../img/minus-sign.png");
+  background-position: 2px 7px;
+}
+
+tr.scenario.closed > td:first-child {
+  background-image: url("../img/plus-sign.png");
+  padding-left: 18px;
+}
+
+.pass,
+span.pass * {
+  background-color: darken($alert-success-bg, 10%);
+  color: darken($alert-success-text, 30%);
+}
+span.error,
+span.error * {
+  background-position: 0, -2px;
+  padding-right: 3px;
+  border: 1px solid darken(theme-color("warning"), 30%);
+  border-radius: 4px;
+}
+.ignore,
+span.ignore * {
+  background-color: darken($alert-info-bg, 10%);
+  color: darken($alert-info-text, 30%);
+}
+#test-action {
+  @mixin test-button($bgColor) {
+    @extend .badge;
+    @extend .badge-#{$bgColor};
+    display: block;
+    float: left;
+    font-size: 14px;
+    margin-top: 10px;
+    padding: 9px 6px;
+  }
+  .output,
+  .ok {
+    @include test-button("success");
+  }
+  .error,
+  .stop {
+    @include test-button("danger");
+  }
+
+  @include media-breakpoint-down(sm) {
+    float: right;
+    clear: left;
+  }
+}
+
+@mixin progress-variant($background) {
+  @extend .badge-#{$background};
+}
+
+#progressBar {
+  @extend .progress-bar;
+  height: auto;
+  &.pass {
+    background-color: theme-color("success");
+  }
+  &.fail {
+    background-color: theme-color("danger");
+  }
+  &.error {
+    background-color: theme-color("warning");
+  }
+}
+
+#test-summary {
+  @extend .progress;
+  height: auto;
+  line-height: inherit;
+  font-size: 0.875rem;
+  &.pass {
+    @include progress-variant("success");
+  }
+  &.fail {
+    @include progress-variant("danger");
+  }
+  &.error {
+    @include progress-variant("warning");
+  }
+}
+
+@mixin test-summary-item($background) {
+  @extend .badge;
+  @extend .badge-#{$background};
+  padding-left: 18px;
+}
+
+#test-summaries {
+  .pass {
+    @include test-summary-item("success");
+  }
+  .fail {
+    @include test-summary-item('danger');
+  }
+  .error {
+    @include test-summary-item('warning');
+  }
+  .ignore {
+    @include test-summary-item('info');
+  }
+}
+
+#error-nav {
+  margin-top: 8px;
+  margin-left: auto;
+  margin-right: 8px;
+
+  @include media-breakpoint-down(md) {
+    float: right;
+  }
+  @include media-breakpoint-down(sm) {
+    clear: left;
+  }
+
+}
+#error-nav .title {
+  padding-left: 15px;
+  @include media-breakpoint-down(md) {
+    display: none;
+  }
+}
+
+.btn-text {
+  @extend .btn-default;
+  display: inline-block;
+  font-weight: $btn-font-weight;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  border-width: 1px;
+  border-style: solid none;
+  white-space: nowrap;
+  position: relative;
+  float: left;
+  padding: $input-btn-padding-y*0.5 $input-btn-padding-x;
+}
+.btn-text input {
+  border-width: 2px;
+  height: 26px;
+}
+
+.btn-default {
+  background-color: #ffffff;
+  border-color: #cccccc;
+}
+
+.propertiesPage form,
+.searchForm form,
+.refactorForm form,
+.deletePage form {
+  @extend .card;
+  background-color: theme-color("light");
+  margin-bottom: 20px;
+  padding: 9px;
+  display: block;
+}
+
+
+fieldset {
+  margin: 0 0 0.5em 0;
+}
+
+.nav-tabs {
+  margin-bottom: 12px;
+}
+
+// Specific pages:
+
+.editPage #editor {
+  margin: 0 $page-margin-horizontal;
+}
+
+.editPage .textarea-toolbar,
+.editPage .wysiwyg-toolbar {
+    margin-left: 4px;
+}
+
+.editPage textarea#pageContent {
+    padding: 4px;
+}
+
+.editPage .textarea-toolbar input[type="button"] {
+  @extend .btn-secondary;
+  @extend .btn-sm;
+  margin: 3px 0 6px 0;
+}
+
+.tag {
+  @extend .badge;
+  background-color: theme-color("info");
+  border: none;
+}
+
+.tag a {
+  color: theme-color("danger");
+}
+
+.editPage #save_buttons {
+  margin: 8px $page-margin-horizontal;
+}
+
+#tt-wrap-text {
+  font-weight: normal;
+}
+
+@media print {
+  nav { display: none; }
+}
+
+pre {
+  padding: 9.5px;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #f5f5f5;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+}

@@ -295,7 +295,12 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     PageCrawler pageCrawler = page.getPageCrawler();
     WikiPagePath fullPath = pageCrawler.getFullPath();
     String fullPathName = PathParser.render(fullPath);
-    return "RerunLastFailures_"+fullPathName.replace(".","-");
+    if (fullPathName.startsWith("RerunLastFailures_")) {
+      String newFullPathName = fullPathName.replace(".", "-");
+      return newFullPathName;
+    } else {
+      return "RerunLastFailures_" + fullPathName.replace(".", "-");
+    }
   }
 
   protected String getTitle() {
@@ -468,7 +473,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   }
 
   public static String makeResultFileName(TestSummary summary, long time) {
-    SimpleDateFormat format = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
+    SimpleDateFormat format = PageHistory.getDateFormat();
     String datePart = format.format(new Date(time));
     return String.format("%s_%d_%d_%d_%d.xml", datePart, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions());
   }

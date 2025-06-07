@@ -20,7 +20,7 @@ public class GenericCollectionConverter<T, C extends Collection<T>> extends Conv
   @SuppressWarnings("unchecked")
   public GenericCollectionConverter(Class<?> collectionClass, Converter<T> componentConverter) {
     if (collectionClass.isInterface())
-      collectionClass = (Class<C>) DEFAULT_COLLECTION_IMPL.get(collectionClass);
+      collectionClass = DEFAULT_COLLECTION_IMPL.get(collectionClass);
 
     this.collectionClass = (Class<C>) collectionClass;
     this.componentConverter = componentConverter;
@@ -50,7 +50,7 @@ public class GenericCollectionConverter<T, C extends Collection<T>> extends Conv
   public C getObject(String arg) {
     C collection;
     try {
-      collection = collectionClass.newInstance();
+      collection = collectionClass.getDeclaredConstructor().newInstance();
     } catch (Exception e) {
       throw new IllegalStateException("Collection should have a default constructor", e);
     }

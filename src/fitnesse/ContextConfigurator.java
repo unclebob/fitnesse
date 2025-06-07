@@ -21,6 +21,7 @@ import fitnesse.wiki.WikiPageFactoryRegistry;
 import fitnesse.wiki.fs.FileSystemPageFactory;
 import fitnesse.wiki.fs.VersionsController;
 import fitnesse.wiki.fs.ZipFileVersionsController;
+import fitnesse.wikitext.MarkUpSystems;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.decorator.SlimTableDefaultColoring;
 
@@ -55,12 +56,14 @@ public class ContextConfigurator {
   public static final int DEFAULT_PORT = 80;
   public static final String DEFAULT_CONFIG_FILE = "plugins.properties";
   public static final String DEFAULT_THEME = "bootstrap";
+  public static final int DEFAULT_MAXIMUM_WORKERS = 100;
 
   /** Some properties are stored in typed fields: */
   private WikiPageFactory wikiPageFactory;
   private Integer port;
   private String rootPath = DEFAULT_PATH;
   private String rootDirectoryName = DEFAULT_ROOT;
+  private Integer maximumWorkers = DEFAULT_MAXIMUM_WORKERS;
   private String contextRoot;
   private Logger logger;
   private Authenticator authenticator;
@@ -157,6 +160,7 @@ public class ContextConfigurator {
           wikiPageFactory,
           rootPath,
           rootDirectoryName,
+          maximumWorkers,
           contextRoot,
           versionsController,
           recentChanges,
@@ -190,6 +194,7 @@ public class ContextConfigurator {
     pluginsLoader.loadSlimTables(slimTableFactory);
     pluginsLoader.loadCustomComparators(customComparatorRegistry);
     pluginsLoader.loadTestRunFactories(context.testRunFactoryRegistry);
+    pluginsLoader.loadMarkupSystems(MarkUpSystems.STORE);
 
     ContentFilter contentFilter = pluginsLoader.loadContentFilter();
 
@@ -265,6 +270,9 @@ public class ContextConfigurator {
       case PORT:
         port = Integer.parseInt(value);
         break;
+      case MAXIMUM_WORKERS:
+        maximumWorkers = Integer.parseInt(value);
+        break;
       default:
         properties.setProperty(parameter.getKey(), value);
         break;
@@ -317,6 +325,8 @@ public class ContextConfigurator {
         return contextRoot;
       case PORT:
         return String.valueOf(port);
+      case MAXIMUM_WORKERS:
+        return String.valueOf(maximumWorkers);
       default:
         return properties.getProperty(parameter.getKey());
     }

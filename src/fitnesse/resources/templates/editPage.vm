@@ -68,7 +68,7 @@
 
  <fieldset id="save_buttons">
   <input type="submit" name="save" value="Save" accesskey="s"/>
-  <a class="button" href="#if($!redirect)$redirect#else$resource#end">Cancel</a>
+  <a class="button" href="#if($!redirect)#escape($redirect)#else$resource#end">Cancel</a>
  </fieldset>
 </form>
 
@@ -82,15 +82,15 @@ $(function () {
   var editor = Wysiwyg.initialize(document.getElementById('pageContent'));
   if (editor) {
     // On cancel button:
-    
+
     function fieldValues () {
       return $.map($('#pageContent,#helptext,#suites', document.f), function(e) { return $(e).val(); });
     }
-    
+
     var originalFieldValues = fieldValues();
-    
+
     var performingSubmit = false;
-    
+
     $(document.f).submit(function () {
       performingSubmit = true;
     });
@@ -130,13 +130,13 @@ $(function () {
   #end
 
     Mousetrap.bind('ctrl+s', function(e) {
-    	performingSubmit = true; 
-    	$(document.f).submit(); 
-    	return false; 
+    	performingSubmit = true;
+    	$(document.f).submit();
+    	return false;
     });
     Mousetrap.bind('esc', function(e) {
-    	window.location.href ="#if($!redirect)$redirect#else$resource#end";
-     	return false; 
+    	window.location.href ="#if($!redirect)#escape($redirect)#else$resource#end";
+     	return false;
     });
 
 });

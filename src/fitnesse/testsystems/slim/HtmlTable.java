@@ -366,6 +366,10 @@ public class HtmlTable implements Table {
 
     public void setExceptionResult(SlimExceptionResult exceptionResult) {
       if (this.exceptionResult == null) {
+        if(exceptionResult.getException().contains("IGNORE_")){
+          setIgnoreResult(exceptionResult);
+          return;
+        }
         this.exceptionResult = exceptionResult;
         String exceptionText = exceptionResult.getMessage();
         if (exceptionText != null) {
@@ -379,6 +383,18 @@ public class HtmlTable implements Table {
               exceptionResult.getExecutionResult().toString(),
               asHtml(exceptionText)
           );
+        }
+      }
+    }
+
+    public void setIgnoreResult(SlimExceptionResult exceptionResult) {
+      if (this.exceptionResult == null) {
+        this.exceptionResult = exceptionResult;
+        String exceptionText = exceptionResult.getException();
+        if (exceptionText != null) {
+          setContent(String.format("%s <span class=\"%s\">%s</span>",
+            originalContent, exceptionResult.getIgnoreExecutionResult().toString(),
+            asHtml(exceptionText)));
         }
       }
     }

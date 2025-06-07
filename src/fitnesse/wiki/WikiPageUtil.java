@@ -10,6 +10,10 @@ import java.util.List;
 
 public class WikiPageUtil {
 
+  public static final String PAGE_HEADER = "PageHeader";
+  public static final String PAGE_FOOTER = "PageFooter";
+  public static final String FRONT_PAGE = "FrontPage";
+
   public static void setPageContents(WikiPage page, String pageContents) {
     PageData pageData = page.getData();
     pageData.setContent(pageContents);
@@ -17,11 +21,11 @@ public class WikiPageUtil {
   }
 
   public static WikiPage getHeaderPage(WikiPage wikiPage) {
-    return wikiPage.getPageCrawler().getClosestInheritedPage("PageHeader");
+    return wikiPage.getPageCrawler().getClosestInheritedPage(PAGE_HEADER);
   }
 
   public static WikiPage getFooterPage(WikiPage wikiPage) {
-    return wikiPage.getPageCrawler().getClosestInheritedPage("PageFooter");
+    return wikiPage.getPageCrawler().getClosestInheritedPage(PAGE_FOOTER);
   }
 
 

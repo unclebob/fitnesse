@@ -11,7 +11,7 @@ import static fitnesse.ContextConfigurator.*;
 public class Arguments {
 
   private final CommandLine commandLine = new CommandLine(
-          "[-v][-p port][-d dir][-r root][-l logDir][-f config][-e days][-o][-i][-a credentials][-c command][-b output][-lh]");
+          "[-v][-p port][-d dir][-r root][-l logDir][-f config][-e days][-o][-i][-a credentials][-c command][-b output][-lh][-w workers]");
 
   private final String rootPath;
   private final Integer port;
@@ -26,6 +26,7 @@ public class Arguments {
   private final String configFile;
   private final boolean verboseLogging;
   private final boolean localhostOnly;
+  private final Integer maximumWorkers;
 
   public Arguments(String... args) {
     if (!commandLine.parse(args)) {
@@ -46,6 +47,8 @@ public class Arguments {
     this.omitUpdate = commandLine.hasOption("o");
     this.installOnly = commandLine.hasOption("i");
     this.localhostOnly = commandLine.hasOption("lh");
+    String maximumWorkers = commandLine.getOptionArgument("w", "workers");
+    this.maximumWorkers = maximumWorkers != null ? Integer.valueOf(maximumWorkers) : null;
   }
 
   static void printUsage() {
@@ -70,6 +73,7 @@ public class Arguments {
     System.err.println("\t-b <filename> redirect command output.");
     System.err.println("\t-v {off} Verbose logging");
     System.err.println("\t-lh {off} Only bind to loopback interface (localhost only access)");
+    System.err.println("\t-w <workers> The maximum number of workers to use to handle incoming requests (must be at least 5)");
   }
 
   public String getRootPath(ContextConfigurator configurator) {
@@ -108,6 +112,8 @@ public class Arguments {
       result = result.withParameter(CREDENTIALS, credentials);
     if (localhostOnly)
       result = result.withParameter(LOCALHOST_ONLY, "true");
+    if (maximumWorkers != null)
+      result = result.withParameter(MAXIMUM_WORKERS, String.valueOf(maximumWorkers));
 
     return result;
   }

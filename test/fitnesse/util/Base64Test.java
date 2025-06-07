@@ -20,6 +20,7 @@ package fitnesse.util;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import java.nio.charset.StandardCharsets;
 
 public class Base64Test {
 
@@ -97,8 +98,26 @@ public class Base64Test {
 
   @Test
   public void testDecodeBinary() throws Exception {
-    assertEquals(Base64.decode("////"), new String(new byte [] { -1,-1,-1 }));
-    assertEquals(Base64.decode("WqVapVql"), new String(new byte [] { 90,-91,90,-91,90,-91 }));
+    assertEquals(
+      new String(new byte [] { -1,-1,-1 }, StandardCharsets.UTF_8),
+      Base64.decode("////"));
+    assertEquals(
+      new String(new byte [] { 90,-91,90,-91,90,-91 }, StandardCharsets.UTF_8),
+      Base64.decode("WqVapVql"));  // "Z¥Z¥Z¥" as ISO-8859-1 input converted to Base64
+    assertEquals(
+      "\u005A\u00A5\u005A\u00A5\u005A\u00A5",
+      Base64.decode("WsKlWsKlWsKl"));   // "Z¥Z¥Z¥" as UTF-8 input converted to Base64
+  }
+
+  @Test
+  public void testDecodeNonASCII() throws Exception {
+    // https://dencode.com/string
+    assertEquals(
+      "\u00F6p\u00E8n s\u00EA\u00DF\u00E4m\u00E9 \u00FCrg\u20ACntl\u00FF",  // öpèn sêßämé ürg€ntlÿ
+      Base64.decode("w7Zww6huIHPDqsOfw6Rtw6kgw7xyZ+KCrG50bMO/"));
+    assertEquals(
+      "\u00E4\u00F6\u00FC\u00DF\u00C4\u00D6\u00DC",   // äöüßÄÖÜ
+      Base64.decode("w6TDtsO8w5/DhMOWw5w="));
   }
 
 }

@@ -4,14 +4,16 @@
  <thead>
   <tr>
    <th><a href="javascript:void(tableSorter.sort(0));">Variable name</a></th>
-   <th><a href="javascript:void(tableSorter.sort(1));">Variable location</a></th>
+   <th><a href="javascript:void(tableSorter.sort(1));">Variable value</a></th>
+   <th><a href="javascript:void(tableSorter.sort(2));">Variable location</a></th>
   </tr>
  </thead>
  <tbody>
-  #foreach ($entry in $variables.keySet())
+  #foreach ($entry in $variables)
     <tr>
-      <td>$entry</td>
-      <td><a href="$variables.get($entry)">$variables.get($entry)</a></td>
+      <td>$entry.getKey()</td>
+      <td>$entry.getValue()</td>
+      <td><a href="$entry.getLocation()">$entry.getLocation()</a></td>
      </tr>
   #end
  </tbody>

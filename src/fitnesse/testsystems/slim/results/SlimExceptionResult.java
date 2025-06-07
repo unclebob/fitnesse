@@ -24,7 +24,17 @@ public class SlimExceptionResult implements ExceptionResult {
 
   @Override
   public ExecutionResult getExecutionResult() {
+    if( isIgnoreScriptTestException() || isIgnoreAllTestException()) {
+      return ExecutionResult.IGNORE;
+    }
     return isStopTestException() ? ExecutionResult.FAIL : ExecutionResult.ERROR;
+  }
+
+  public ExecutionResult getIgnoreExecutionResult() {
+    if(isIgnoreScriptTestException() || isIgnoreAllTestException()){
+      return ExecutionResult.IGNORE;
+    }
+    return ExecutionResult.ERROR;
   }
 
   public boolean hasMessage() {
@@ -44,6 +54,10 @@ public class SlimExceptionResult implements ExceptionResult {
     Matcher exceptionMessageMatcher = EXCEPTION_MESSAGE_PATTERN.matcher(exceptionValue);
     if (exceptionMessageMatcher.find()) {
       return exceptionMessageMatcher.group(1);
+    } else if( exceptionValue.equals(EXCEPTION_IGNORE_SCRIPT_TEST_TAG)){
+      return EXCEPTION_IGNORE_SCRIPT_TEST_TAG;
+    } else if (exceptionValue.equals(EXCEPTION_IGNORE_ALL_TESTS_TAG)){
+      return EXCEPTION_IGNORE_ALL_TESTS_TAG;
     }
     return null;
   }
@@ -76,6 +90,14 @@ public class SlimExceptionResult implements ExceptionResult {
     return exceptionValue.contains(EXCEPTION_STOP_SUITE_TAG);
   }
 
+  public boolean isIgnoreScriptTestException() {
+    return exceptionValue.contains(EXCEPTION_IGNORE_SCRIPT_TEST_TAG);
+  }
+
+  public boolean isIgnoreAllTestException(){
+    return exceptionValue.contains(EXCEPTION_IGNORE_ALL_TESTS_TAG);
+  }
+
   public boolean isNoMethodInClassException() {
     return isExceptionOfType(NO_METHOD_IN_CLASS);
   }
@@ -95,7 +117,7 @@ public class SlimExceptionResult implements ExceptionResult {
       case COULD_NOT_INVOKE_CONSTRUCTOR:
         return "Could not invoke constructor for " + tokens[1];
       case NO_METHOD_IN_CLASS:
-	if (tokens.length == 3){ // Legacy from Slim.Version <= 0.5 
+	if (tokens.length == 3){ // Legacy from Slim.Version <= 0.5
           return String.format("Method %s not found in %s", tokens[1], tokens[2]);
 	} else {
 	  return exceptionMessage.substring(exceptionMessage.indexOf(" ") + 1);

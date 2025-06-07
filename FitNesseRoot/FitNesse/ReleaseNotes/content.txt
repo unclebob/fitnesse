@@ -1,10 +1,61 @@
-!2 Latest Release ${FITNESSE_VERSION}
 !2 Pending Changes
- * Bugfix: render [[''!-!anchor-!''][UserGuide.FitNesseWiki.MarkupLanguageReference.LinksWithinPages]] as valid (non empty) element ([[1366][https://github.com/unclebob/fitnesse/pull/1366]])
+
+!2 20250223
+ * Upgrade Bootstrap to version 4 ([[1516][https://github.com/unclebob/fitnesse/pull/1516]])
+
+!2 20241207
+ * Fix !-IgnoreAllTests-! exception and !-IgnoreScriptTest-! exception issue whereby if either exception is thrown it would still execute subsequent statements in the script table ([[1538][https://github.com/unclebob/fitnesse/pull/1538]]).
+
+!2 20241026
+ * Fixed multiple security issues and updated some dependencies
+
+!2 20241023
+ * Support using Java 17 and 21, 11 remains supported too ([[1525][https://github.com/unclebob/fitnesse/pull/1525]])
+ * IMPORTANT: !style_code[System.exit()] is no longer prevented by default ([[1524][https://github.com/unclebob/fitnesse/pull/1524]]).
+ * Fix SLF4J logging ([[1522][https://github.com/unclebob/fitnesse/pull/1522]])
+
+!2 20240707
+ * Allow usage of JDK > 18 ([[1513][https://github.com/unclebob/fitnesse/pull/1513]]).
+ * Added a new configuration to limit the total amount of test histories per page. ([[1510][https://github.com/unclebob/fitnesse/pull/1510]])
+ * Do not add 'RerunLastFailures_' prefix on failure of re-run ([[1519][https://github.com/unclebob/fitnesse/pull/1519]])/
+
+!2 20240219
+ * Added the defined values to the overview of all variables in scope. ([[1472][https://github.com/unclebob/fitnesse/pull/1472]])
+ * Ability to change password and additionally create/delete users feature for admin ([[1468][https://github.com/unclebob/fitnesse/pull/1468]])
+ * Improved error reporting when test system fails to start
+ * Updated dependencies
+
+!2 20231203
+ * Updated README and dependencies
+
+!2 20231029
+ * Drop Java 8 compatibility and compile with Java 11, Use OpenJDK's nashorn dependency to evaluate JS expressions ([[1426][https://github.com/unclebob/fitnesse/pull/1426]])
+
+!2 20230503
+ * Add date and page history link to XML responses. ([[1396][https://github.com/unclebob/fitnesse/issues/1396]])
+ * Search and replace method/scenario names with new name. ([[1403][https://github.com/unclebob/fitnesse/pull/1403]])
+ * Search method or scenario in pages. ([[1409][https://github.com/unclebob/fitnesse/pull/1409]])
+ * Updated dependencies
+
+!2 20221219
+ * Add a new optional command line parameter to specify the maximum number of workers to use for handling incoming requests.
+ * Ability to ignore the rest of a script table or test page by throwing an exception. ([[1350][https://github.com/unclebob/fitnesse/pull/1350]])
+ * Change the publish responder to use Apache Velocity, and create index page ([[1387][https://github.com/unclebob/fitnesse/issues/1387]])
+
+!2 20221102
+ * Ability to create plugins for new markup syntax. ([[1382][https://github.com/unclebob/fitnesse/pull/1382]])
+ * Bugfix: Unescaping HTML is done in the correct order. ([[1384][https://github.com/unclebob/fitnesse/issues/1384]])
+ * Bugfix: Slim decision table shows input cells correctly in test results ([[1388][https://github.com/unclebob/fitnesse/issues/1388]])
+ * Add new responder to publish a site as static HTML pages ([[1387][https://github.com/unclebob/fitnesse/issues/1387]])
+
+!2 20220815
+ * Add support for inline [[''!-!img-!''][UserGuide.FitNesseWiki.MarkupLanguageReference.MarkupPicture]] using base64 data url ([[1367][https://github.com/unclebob/fitnesse/pull/1367]])
+ * Bugfix: render [[''!-!anchor-!''][UserGuide.FitNesseWiki.MarkupLanguageReference.LinksWithinPages]] as valid (non empty) element ([[1366][https://github.com/unclebob/fitnesse/pull/1366]])
  * Bugfix: Handle instructions with embedded newlines ([[1363][https://github.com/unclebob/fitnesse/pull/1363]])
  * Add new responder to list the variables available on a page ([[1355][https://github.com/unclebob/fitnesse/pull/1355]])
  * Bugfix: Search string is not escaped in search page title ([[1360][https://github.com/unclebob/fitnesse/pull/1360]])
  * Bugfix: issues with !include and variables in page name ([[1359][https://github.com/unclebob/fitnesse/pull/1359]])
+ * Performance: improve parser performance for some incomplete wiki syntax ([[1371][https://github.com/unclebob/fitnesse/pull/1371]])
 
 !2 20220319
  * Add new responder to list the Slim instructions suite to aid analysis/debugging ([[1356][https://github.com/unclebob/fitnesse/pull/1356]])

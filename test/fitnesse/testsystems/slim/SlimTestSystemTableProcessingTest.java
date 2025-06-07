@@ -55,6 +55,26 @@ public class SlimTestSystemTableProcessingTest {
   }
 
   @Test
+  public void tableFollowingIgnoreScriptTestExceptionExecuted() throws TestExecutionException {
+    String exceptionId = SlimServer.EXCEPTION_IGNORE_SCRIPT_TEST_TAG + "table1 with random ignore exception";
+    slimTestSystem.processTable(table(exceptionId), false);
+    slimTestSystem.processTable(table("Table2"), false);
+    slimTestSystem.processTable(table("Table3"), false);
+
+    assertTestRecords(ignore(exceptionId), pass("Table2"), pass("Table3"));
+  }
+
+  @Test
+  public void tableFollowingIgnoreAllTestsExceptionIgnored() throws TestExecutionException {
+    String exceptionId = SlimServer.EXCEPTION_IGNORE_ALL_TESTS_TAG + "table1 with random ignore exception";
+    slimTestSystem.processTable(table(exceptionId), false);
+    slimTestSystem.processTable(table("Table2"), false);
+    slimTestSystem.processTable(table("Table3"), false);
+
+    assertTestRecords(ignore(exceptionId), ignore("Table2"), ignore("Table3"));
+  }
+
+  @Test
   public void tableFollowingStopTestExceptionSkipped() throws TestExecutionException {
     String exceptionId = SlimServer.EXCEPTION_STOP_TEST_TAG + "StopTestException";
     slimTestSystem.processTable(table(exceptionId), false);
@@ -322,7 +342,7 @@ public class SlimTestSystemTableProcessingTest {
   private static class IgnoreOnNullPassOtherwiseSlimExpectation implements SlimExpectation {
     @Override
     public TestResult evaluateExpectation(Object returnValues) {
-      return new SlimTestResult(null == returnValues ? ExecutionResult.IGNORE : ExecutionResult.PASS);
+      return new SlimTestResult((null == returnValues) || (returnValues.toString().contains("IGNORE_SCRIPT_TEST")) ? ExecutionResult.IGNORE : ExecutionResult.PASS);
     }
 
     @Override

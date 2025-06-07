@@ -2,19 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import fitnesse.FitNesseExpediter;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
+import fitnesse.reporting.history.PageHistory;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.util.MockSocket;
 import fitnesse.util.SerialExecutorService;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import org.htmlparser.Node;
@@ -28,6 +25,9 @@ import org.htmlparser.lexer.Lexer;
 import org.htmlparser.lexer.Page;
 import org.htmlparser.util.NodeList;
 import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class PageDriver {
   private PageCreator creator = new PageCreator();
@@ -92,7 +92,7 @@ public class PageDriver {
     WikiPage root = FitnesseFixtureContext.context.getRootPage();
     WikiPagePath pagePath = PathParser.parse(pageName);
     WikiPage thePage = root.getPageCrawler().getPage(pagePath);
-    return thePage instanceof SymbolicPage;
+    return thePage.isSymbolicPage();
   }
 
   public boolean pageExists(String pageName) {
@@ -204,7 +204,7 @@ public class PageDriver {
   }
 
   public String pageHistoryDateSignatureOf(Date date) {
-    SimpleDateFormat dateFormat = new SimpleDateFormat(fitnesse.reporting.history.PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
+    SimpleDateFormat dateFormat = PageHistory.getDateFormat();
     return dateFormat.format(date);
   }
 

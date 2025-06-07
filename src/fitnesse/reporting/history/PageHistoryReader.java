@@ -1,17 +1,17 @@
 package fitnesse.reporting.history;
 
+import util.FileUtil;
+
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import util.FileUtil;
-
 import static java.lang.String.format;
 
 public class PageHistoryReader {
 
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormat = PageHistory.getDateFormat();
   public static final String TEST_FILE_FORMAT = "\\A\\d{14}_\\d+_\\d+_\\d+_\\d+(.xml)*\\Z";
 
   void readHistoryFromPageDirectory(File pageDirectory) {

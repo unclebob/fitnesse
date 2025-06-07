@@ -3,6 +3,7 @@ package fitnesse.reporting.history;
 import fitnesse.FitNesseVersion;
 import fitnesse.testsystems.ExecutionResult;
 import fitnesse.testsystems.TestSummary;
+import fitnesse.util.Clock;
 import fitnesse.util.DateTimeUtil;
 import fitnesse.util.TimeMeasurement;
 import fitnesse.util.XmlUtil;
@@ -15,6 +16,7 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,12 +34,13 @@ public abstract class ExecutionReport {
   private List<ExecutionLogReport> executionLogs = new ArrayList<>();
 
   protected ExecutionReport() {
-    version = new FitNesseVersion().toString();
+    this(new FitNesseVersion(), null);
   }
 
   public ExecutionReport(FitNesseVersion version, String rootPath) {
     this.version = version == null ? "null" : version.toString();
     this.rootPath = rootPath;
+    this.date = Clock.currentDate();
   }
 
   public void tallyPageCounts(ExecutionResult result) {
@@ -191,6 +194,15 @@ public abstract class ExecutionReport {
 
   public void setDate(Date date) {
     this.date = new Date(date.getTime());
+  }
+
+  public String getDateString() {
+    return DateTimeUtil.formatDate(date);
+  }
+
+  public String getResultDate() {
+    SimpleDateFormat pageHistoryFormatter = PageHistory.getDateFormat();
+    return pageHistoryFormatter.format(date);
   }
 
   public boolean hasRunTimes() {

@@ -1,5 +1,6 @@
 package fitnesse.reporting.history;
 
+import fitnesse.ConfigurationParameter;
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.BaseFormatter;
 import fitnesse.testrunner.WikiTestPageUtil;
@@ -22,6 +23,7 @@ import util.FileUtil;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Date;
 import java.util.List;
 
 public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLogListener, Closeable {
@@ -43,8 +45,10 @@ public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLog
 
   @Override
   public void testSystemStarted(TestSystem testSystem) {
-    if (suiteTime == null)
+    if (suiteTime == null) {
       suiteTime = new TimeMeasurement().start();
+      getSuiteExecutionReport().setDate(new Date(suiteTime.startedAt()));
+    }
   }
 
   @Override
@@ -121,6 +125,15 @@ public class SuiteHistoryFormatter extends BaseFormatter implements ExecutionLog
         FileUtil.close(writer);
       }
     }
+    
+    String testhistoryMaxCount = context.getProperties()
+        .getProperty(ConfigurationParameter.TESTHISTORY_MAX_COUNT.getKey());
+    // The given number of days (0) is irrelevant here since we purge the
+    // history by their amount
+    HistoryPurger historyPurger = new HistoryPurger(
+        context.getTestHistoryDirectory(), 0);
+    historyPurger.deleteTestHistoryByCount(getPage().getFullPath(),
+        testhistoryMaxCount);
   }
 
   @Override

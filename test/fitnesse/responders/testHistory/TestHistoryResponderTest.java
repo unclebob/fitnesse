@@ -1,12 +1,18 @@
 package fitnesse.responders.testHistory;
 
-import static fitnesse.reporting.history.PageHistory.BarGraph;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static util.RegexTestCase.assertDoesntHaveRegexp;
-import static util.RegexTestCase.assertHasRegexp;
+import fitnesse.ConfigurationParameter;
+import fitnesse.FitNesseContext;
+import fitnesse.http.MockRequest;
+import fitnesse.http.SimpleResponse;
+import fitnesse.reporting.history.PageHistory;
+import fitnesse.reporting.history.TestHistory;
+import fitnesse.reporting.history.TestResultRecord;
+import fitnesse.testsystems.TestSummary;
+import fitnesse.testutil.FitNesseUtil;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import util.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,23 +21,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 
-import fitnesse.reporting.history.PageHistory;
-import fitnesse.reporting.history.TestHistory;
-import fitnesse.reporting.history.TestResultRecord;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import fitnesse.FitNesseContext;
-import fitnesse.http.MockRequest;
-import fitnesse.http.SimpleResponse;
-import fitnesse.testsystems.TestSummary;
-import fitnesse.testutil.FitNesseUtil;
-import util.FileUtil;
+import static fitnesse.reporting.history.PageHistory.BarGraph;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertDoesntHaveRegexp;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
 
 public class TestHistoryResponderTest {
   private File resultsDirectory;
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(PageHistory.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormat = PageHistory.getDateFormat();
   private TestHistoryResponder responder;
   private SimpleResponse response;
   private FitNesseContext context;
@@ -340,5 +342,40 @@ public class TestHistoryResponderTest {
     request.addInput("format", "xML");
     response = (SimpleResponse) responder.makeResponse(context, request);
     assertHasRegexp("text/xml", response.getContentType());
+  }
+  
+  @Test
+  public void shouldShowDefaultPurgeOptions() throws Exception {
+    MockRequest request = new MockRequest();
+    SimpleResponse response = (SimpleResponse) new TestHistoryResponder().makeResponse(context, request);
+    String html = response.getContent();
+    assertSubString("<a class=\"btn btn-outline-secondary\" href=\"?responder=purgeHistory&days=0\" onclick=\"purgeConfirmation(event)\">Purge all</a>", html);
+    assertSubString("<a class=\"btn btn-outline-secondary\" href=\"?responder=purgeHistory&days=7\" onclick=\"purgeConfirmation(event)\">Purge &gt; 7 days</a>", html);
+    assertSubString("<a class=\"btn btn-outline-secondary\" href=\"?responder=purgeHistory&days=30\" onclick=\"purgeConfirmation(event)\">Purge &gt; 30 days</a>", html);
+    assertSubString("<label for=\"purgeGlobal\"><input type=\"checkbox\" id=\"purgeGlobal\" />Purge global</label>", html);
+  }
+
+  @Test
+  public void shouldShowConfiguredPurgeOptions() throws Exception {
+    MockRequest request = new MockRequest();
+    context.getProperties().setProperty(ConfigurationParameter.PURGE_OPTIONS.getKey(), "30,60,90");
+    SimpleResponse response = (SimpleResponse) new TestHistoryResponder().makeResponse(context, request);
+    String html = response.getContent();
+    assertNotSubString("<a class=\"btn btn-outline-secondary\" href=\"?responder=purgeHistory&days=0\" onclick=\"purgeConfirmation(event)\">Purge all</a>", html);
+    assertSubString("<a class=\"btn btn-outline-secondary\" href=\"?responder=purgeHistory&days=30\" onclick=\"purgeConfirmation(event)\">Purge &gt; 30 days</a>", html);
+    assertSubString("<a class=\"btn btn-outline-secondary\" href=\"?responder=purgeHistory&days=60\" onclick=\"purgeConfirmation(event)\">Purge &gt; 60 days</a>", html);
+    assertSubString("<a class=\"btn btn-outline-secondary\" href=\"?responder=purgeHistory&days=90\" onclick=\"purgeConfirmation(event)\">Purge &gt; 90 days</a>", html);
+    assertSubString("<label for=\"purgeGlobal\"><input type=\"checkbox\" id=\"purgeGlobal\" />Purge global</label>", html);
+  }
+  
+  @Test
+  public void shouldShowNoPurgeOptions() throws Exception {
+    MockRequest request = new MockRequest();
+    context.getProperties().setProperty(ConfigurationParameter.PURGE_OPTIONS.getKey(), "");
+    SimpleResponse response = (SimpleResponse) new TestHistoryResponder().makeResponse(context, request);
+    String html = response.getContent();
+    assertNotSubString("<a class=\"btn btn-outline-secondary\" href=\"?responder=purgeHistory&days=0\" onclick=\"purgeConfirmation(event)\">Purge all</a>", html);
+    assertNotSubString("<a class=\"btn btn-outline-secondary\" href=\"?responder=purgeHistory&days=7\" onclick=\"purgeConfirmation(event)\">Purge &gt; 7 days</a>", html);
+    assertNotSubString("<label for=\"purgeGlobal\"><input type=\"checkbox\" id=\"purgeGlobal\" />Purge global</label>", html);
   }
 }

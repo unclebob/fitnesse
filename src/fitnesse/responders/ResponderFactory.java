@@ -4,6 +4,7 @@ package fitnesse.responders;
 
 import fitnesse.Responder;
 import fitnesse.http.Request;
+import fitnesse.responders.account.SaveAccountResponder;
 import fitnesse.responders.editing.AddChildPageResponder;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.editing.NewPageResponder;
@@ -11,10 +12,12 @@ import fitnesse.responders.editing.PropertiesResponder;
 import fitnesse.responders.editing.SavePropertiesResponder;
 import fitnesse.responders.editing.SaveResponder;
 import fitnesse.responders.editing.SymbolicLinkResponder;
+import fitnesse.responders.account.AccountResponder;
 import fitnesse.responders.files.CreateDirectoryResponder;
 import fitnesse.responders.files.DeleteConfirmationResponder;
 import fitnesse.responders.files.DeleteFileResponder;
 import fitnesse.responders.files.FileResponder;
+import fitnesse.responders.files.PublishResponder;
 import fitnesse.responders.files.RenameFileConfirmationResponder;
 import fitnesse.responders.files.RenameFileResponder;
 import fitnesse.responders.files.UploadResponder;
@@ -82,6 +85,8 @@ public class ResponderFactory {
     addResponder("saveProperties", SavePropertiesResponder.class);
     addResponder("searchProperties", SearchPropertiesResponder.class);
     addResponder("variables", ScopeVariablesResponder.class);
+    addResponder("account", AccountResponder.class);
+    addResponder("saveAccount", SaveAccountResponder.class);
     // Deprecated:
     addResponder("executeSearchProperties", SearchPropertiesResponder.class);
     addResponder("whereUsed", WhereUsedResponder.class);
@@ -115,6 +120,7 @@ public class ResponderFactory {
     addResponder("overview", SuiteOverviewResponder.class);
     addResponder("compareVersions", VersionComparerResponder.class);
     addResponder("instruction", InstructionResponder.class);
+    addResponder("publish", PublishResponder.class);
     filterMap = new HashMap<>();
   }
 

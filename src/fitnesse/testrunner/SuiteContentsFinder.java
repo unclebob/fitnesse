@@ -3,15 +3,13 @@
 package fitnesse.testrunner;
 
 import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -39,7 +37,6 @@ public class SuiteContentsFinder {
         testPageList = runner.testPages();
     } else {
       testPageList = getAllTestPagesUnder();
-      testPageList.addAll(gatherCrossReferencedTestPages());
     }
     return testPageList;
   }
@@ -47,22 +44,17 @@ public class SuiteContentsFinder {
   private List<WikiPage> getAllTestPagesUnder() {
     List<WikiPage> testPages = addTestPagesToSuite(pageToRun, suiteFilter);
 
-    Collections.sort(testPages, new Comparator<WikiPage>() {
-      @Override
-      public int compare(WikiPage p1, WikiPage p2) {
-        try {
-          WikiPagePath path1 = p1.getFullPath();
-          WikiPagePath path2 = p2.getFullPath();
+    testPages.sort((p1, p2) -> {
+      try {
+        WikiPagePath path1 = p1.getFullPath();
+        WikiPagePath path2 = p2.getFullPath();
 
-          return path1.compareTo(path2);
-        }
-        catch (Exception e) {
-          LOG.log(Level.WARNING, "Unable to compare " + p1 + " and " + p2, e);
-          return 0;
-        }
+        return path1.compareTo(path2);
+      } catch (Exception e) {
+        LOG.log(Level.WARNING, "Unable to compare " + p1 + " and " + p2, e);
+        return 0;
       }
-    }
-    );
+    });
 
     return testPages;
   }
@@ -73,40 +65,22 @@ public class SuiteContentsFinder {
     if (suiteFilter.isMatchingTest(page) && includePage) {
       testPages.add(page);
     }
+    addXrefPages(testPages, page);
 
     SuiteFilter suiteFilterForChildren = includePage ? suiteFilter.getFilterForTestsInSuite(page) : SuiteFilter.NO_MATCHING;
 
-    for (WikiPage child : getChildren(page)) {
+    for (WikiPage child : page.getChildren()) {
       testPages.addAll(addTestPagesToSuite(child, suiteFilterForChildren));
     }
     return testPages;
   }
 
   private boolean isPruned(WikiPage page) {
-    return page.getData().hasAttribute(PageData.PropertyPRUNE);
+    return page.getData().hasAttribute(WikiPageProperty.PRUNE);
   }
 
   private boolean isTopPage(WikiPage page) {
     return page == pageToRun;
-  }
-
-  private static List<WikiPage> getChildren(WikiPage page) {
-	    List<WikiPage> children = new ArrayList<>();
-	    children.addAll(page.getChildren());
-	    return children;
-	  }
-
-  protected List<WikiPage> gatherCrossReferencedTestPages() {
-    List<WikiPage> pages = new LinkedList<>();
-    addAllXRefs(pages, pageToRun);
-    return pages;
-  }
-
-  private void addAllXRefs(List<WikiPage> xrefPages, WikiPage page) {
-    List<WikiPage> children = page.getChildren();
-    addXrefPages(xrefPages, page);
-    for (WikiPage child: children)
-       addAllXRefs(xrefPages, child);
   }
 
   private void addXrefPages(List<WikiPage> pages, WikiPage thePage) {

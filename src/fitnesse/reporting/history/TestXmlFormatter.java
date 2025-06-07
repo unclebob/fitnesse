@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.reporting.history;
 
+import fitnesse.ConfigurationParameter;
 import fitnesse.FitNesseContext;
 import fitnesse.reporting.BaseFormatter;
 import fitnesse.testrunner.WikiTestPageUtil;
@@ -175,6 +176,15 @@ public class TestXmlFormatter extends BaseFormatter implements ExecutionLogListe
 
   protected void writeResults() throws IOException {
     writeResults(writerFactory.getWriter(context, getPage(), getPageCounts(), totalTimeMeasurement.startedAt()));
+    
+    String testhistoryMaxCount = context.getProperties()
+        .getProperty(ConfigurationParameter.TESTHISTORY_MAX_COUNT.getKey());
+    // The given number of days (0) is irrelevant here since we purge the
+    // history by their amount
+    HistoryPurger historyPurger = new HistoryPurger(
+        context.getTestHistoryDirectory(), 0);
+    historyPurger.deleteTestHistoryByCount(getPage().getFullPath(),
+        testhistoryMaxCount);
   }
 
   @Override

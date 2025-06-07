@@ -1,12 +1,17 @@
 <h1>Test history</h1>
 #set($noHistory = true)
 <div>
- <a class="button" href="?responder=overview">View as Overview</a>
- <a class="button" href="?responder=purgeHistory&days=30">Purge &gt; 30 days</a>
- <a class="button" href="?responder=purgeHistory&days=7">Purge &gt; 7 days</a>
- <a class="button" href="?responder=purgeHistory&days=0">Purge all</a>
- <a class="button" href="$viewLocation">Cancel</a>
+ <a class="btn btn-outline-secondary" href="?responder=overview">View as Overview</a>
+ <a class="btn btn-outline-secondary" href="$viewLocation">Cancel</a>
  <label for="hidePassedTests"><input type="checkbox" id="hidePassedTests"/>Hide passed tests</label>
+</div>
+<div>
+ #if(!$purgeOptions.isEmpty())
+  #foreach($purgeOption in $purgeOptions)
+   <a class="btn btn-outline-secondary" href="?responder=purgeHistory&days=$purgeOption" onclick="purgeConfirmation(event)">Purge#if ($purgeOption == 0) all#else &gt; $purgeOption days#end</a>
+  #end
+  <label for="purgeGlobal"><input type="checkbox" id="purgeGlobal" />Purge global</label>
+ #end
 </div>
 
 <table>

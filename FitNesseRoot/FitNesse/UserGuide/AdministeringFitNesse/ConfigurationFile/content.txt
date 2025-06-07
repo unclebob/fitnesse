@@ -177,6 +177,8 @@ There are more properties which can be used to tweak parts of FitNesse:
  * '''VersionsController.days''' - number of days to keep old page versions around when using the Zip file based versions controller.
  * '''test.history.days''' - The number of days to keep test results around. Cleaned up after a new test run.
  * '''test.history.path''' - Location to store the test results. The default location is ''!-FitNesseRoot-!/files/testResults''.
+ * '''TestHistory.purgeOptions''' - A comma separated list of the age, in number of days, to offer as purge options on the ''Test History'' page.
+ * '''TestHistory.maxCount''' - The number of histories to keep around per page. Cleaned up after a new test run.
  * Any variable that can be defined on a wiki page.
 
 The Slim test system has a set of [[custom properties][<UserGuide.WritingAcceptanceTests.SliM]] that can either be set on a page or in the configuration file.

@@ -16,6 +16,7 @@ import java.util.Date;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.util.Clock;
+import fitnesse.wiki.PathParser;
 import util.FileUtil;
 import util.StreamReader;
 import fitnesse.FitNesseContext;
@@ -170,12 +171,12 @@ public class FileResponder implements SecureResponder {
   }
 
   public static boolean isInFilesDirectory(File rootPath, File file) throws IOException {
-    return isInSubDirectory(new File(rootPath, "files").getCanonicalFile(),
+    return isInSubDirectory(new File(rootPath, PathParser.FILES).getCanonicalFile(),
       file.getCanonicalFile());
   }
 
   public static boolean isInFilesFitNesseDirectory(File rootPath, File file) throws IOException {
-    return isInSubDirectory(new File(new File(rootPath, "files"), "fitnesse").getCanonicalFile(),
+    return isInSubDirectory(new File(new File(rootPath, PathParser.FILES), "fitnesse").getCanonicalFile(),
       file.getCanonicalFile());
   }
 
@@ -185,14 +186,11 @@ public class FileResponder implements SecureResponder {
 
   @Override
   public SecureOperation getSecureOperation() {
-    return new SecureOperation() {
-      @Override
-      public boolean shouldAuthenticate(FitNesseContext context, Request request) {
-        try {
-          return new File(context.getRootPagePath(), URLDecoder.decode(request.getResource(), FileUtil.CHARENCODING)).isDirectory();
-        } catch (UnsupportedEncodingException e) {
-          throw new IllegalArgumentException("Invalid URL encoding", e);
-        }
+    return (context, request) -> {
+      try {
+        return new File(context.getRootPagePath(), URLDecoder.decode(request.getResource(), FileUtil.CHARENCODING)).isDirectory();
+      } catch (UnsupportedEncodingException e) {
+        throw new IllegalArgumentException("Invalid URL encoding", e);
       }
     };
   }

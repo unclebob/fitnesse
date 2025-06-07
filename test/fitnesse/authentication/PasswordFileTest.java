@@ -43,6 +43,15 @@ public class PasswordFileTest {
   }
 
   @Test
+  public void testDeleteUser() throws Exception {
+    passwords.savePassword("WillBeDeleted", "WillBeDeleted");
+    int beforeDeleting = passwords.getPasswordMap().size();
+    passwords.deleteUser("WillBeDeleted");
+    int afterDeleting = passwords.getPasswordMap().size();
+    assertEquals(1, beforeDeleting - afterDeleting);
+  }
+
+  @Test
   public void testChangePasswordForFirstUser() throws Exception {
     passwords.savePassword("Aladdin", "open sesame");
     passwords.savePassword("Aladdin", "open please");

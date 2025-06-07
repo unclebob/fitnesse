@@ -4,7 +4,6 @@ package fitnesse.html;
 
 import fitnesse.FitNesseContext;
 import fitnesse.html.template.HtmlPage;
-import fitnesse.http.Request;
 import fitnesse.reporting.JavascriptUtil;
 import fitnesse.responders.WikiPageActions;
 import fitnesse.testutil.FitNesseUtil;
@@ -46,7 +45,7 @@ public class HtmlUtilTest {
     String pageName = "TestSomething";
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
-    assertSubString("<a href=\"" + pageName + "?test\" accesskey=\"t\">Test</a>", html);
+    assertSubString("<a class=\"nav-link text-secondary\" href=\"" + pageName + "?test\" accesskey=\"t\">Test</a>", html);
   }
 
   @Test
@@ -54,7 +53,7 @@ public class HtmlUtilTest {
     String pageName = "SomethingTest";
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
-    assertSubString("<a href=\"" + pageName + "?test\" accesskey=\"t\">Test</a>", html);
+    assertSubString("<a class=\"nav-link text-secondary\" href=\"" + pageName + "?test\" accesskey=\"t\">Test</a>", html);
   }
 
   @Test
@@ -62,7 +61,7 @@ public class HtmlUtilTest {
     String pageName = "SuiteNothings";
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
-    assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"t\">Suite</a>", html);
+    assertSubString("<a class=\"nav-link text-secondary\" href=\"" + pageName + "?suite\" accesskey=\"t\">Suite</a>", html);
   }
 
   @Test
@@ -70,7 +69,7 @@ public class HtmlUtilTest {
     String pageName = "NothingsSuite";
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
-    assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"t\">Suite</a>", html);
+    assertSubString("<a class=\"nav-link text-secondary\" href=\"" + pageName + "?suite\" accesskey=\"t\">Suite</a>", html);
   }
 
   @Test
@@ -83,6 +82,11 @@ public class HtmlUtilTest {
     assertEquals("ab&amp;cd&amp;ef&amp;", HtmlUtil.escapeHTML("ab&cd&ef&"));
   }
 
+  @Test
+  public void shouldUnescape() {
+    assertEquals("& < > &lt; &gt; &amp;", HtmlUtil.unescapeHTML("&amp; &lt; &gt; &amp;lt; &amp;gt; &amp;amp;"));
+  }
+
   private String getActionsHtml(String pageName) {
     WikiPageUtil.addPage(context.getRootPage(), PathParser.parse(pageName), "");
     HtmlPage htmlPage = context.pageFactory.newPage();
@@ -92,14 +96,14 @@ public class HtmlUtilTest {
   }
 
   private void verifyDefaultLinks(String html, String pageName) {
-    assertSubString("<a href=\"" + pageName + "?edit\" accesskey=\"e\">Edit</a>", html);
-    assertSubString("<a href=\"" + pageName + "?versions\" accesskey=\"v\">Versions</a>", html);
-    assertSubString("<a href=\"" + pageName + "?properties\" accesskey=\"p\">Properties</a>", html);
-    assertSubString("<a href=\"" + pageName + "?refactor&amp;type=rename\">Rename</a>", html);
-    assertSubString("<a href=\"" + pageName + "?whereUsed\" accesskey=\"w\">Where Used</a>", html);
-    assertSubString("<a href=\"/files\" accesskey=\"f\">Files</a>", html);
-    assertSubString("<a href=\"?search\" accesskey=\"s\">Search</a>", html);
-    assertSubString("<a href=\"/FitNesse.UserGuide\" accesskey=\"\">User Guide</a>", html);
+    assertSubString("<a class=\"nav-link text-secondary\" href=\"" + pageName + "?edit\" accesskey=\"e\">Edit</a>", html);
+    assertSubString("<a class=\"dropdown-item\" href=\"" + pageName + "?versions\" accesskey=\"v\">Versions</a>", html);
+    assertSubString("<a class=\"dropdown-item\" href=\"" + pageName + "?properties\" accesskey=\"p\">Properties</a>", html);
+    assertSubString("<a class=\"dropdown-item\" href=\"" + pageName + "?refactor&amp;type=rename\">Rename</a>", html);
+    assertSubString("<a class=\"dropdown-item\" href=\"" + pageName + "?whereUsed\" accesskey=\"w\">Where Used</a>", html);
+    assertSubString("<a class=\"dropdown-item\" href=\"/files\" accesskey=\"f\">Files</a>", html);
+    assertSubString("<a class=\"dropdown-item\" href=\"?search\" accesskey=\"s\">Search</a>", html);
+    assertSubString("<a class=\"dropdown-item\" href=\"/FitNesse.UserGuide\" accesskey=\"\">User Guide</a>", html);
   }
 
   @Test

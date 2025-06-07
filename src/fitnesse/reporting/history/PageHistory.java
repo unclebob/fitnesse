@@ -1,13 +1,30 @@
 package fitnesse.reporting.history;
 
+import fitnesse.testsystems.ExecutionResult;
+import fitnesse.util.Clock;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.*;
-
-import fitnesse.testsystems.ExecutionResult;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class PageHistory extends PageHistoryReader{
-  public static final String TEST_RESULT_FILE_DATE_PATTERN = "yyyyMMddHHmmss";
+  private static final String TEST_RESULT_FILE_DATE_PATTERN = "yyyyMMddHHmmss";
+
+  public static SimpleDateFormat getDateFormat() {
+    SimpleDateFormat format = new SimpleDateFormat(TEST_RESULT_FILE_DATE_PATTERN);
+    format.setTimeZone(Clock.currentTimeZone());
+    return format;
+  }
 
   private int failures = 0;
   private int passes = 0;
@@ -172,8 +189,7 @@ public class PageHistory extends PageHistoryReader{
     private ExecutionResult result;
 
     public PassFailReport(Date date, ExecutionResult result) {
-      SimpleDateFormat dateFormat = new SimpleDateFormat(TEST_RESULT_FILE_DATE_PATTERN);
-      this.date = dateFormat.format(date);
+      this.date = getDateFormat().format(date);
       this.result = result;
     }
 
