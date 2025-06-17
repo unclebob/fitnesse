@@ -1,0 +1,56 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Template Watcher",
+            "type": "shell",
+            "command": "./gradlew",
+            "args": [
+                "watchTemplates"
+            ],
+            "group": "build",
+            "isBackground": true,
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [
+                {
+                    "pattern": {
+                        "regexp": ".*"
+                    },
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": ".*Starting template watcher.*",
+                        "endsPattern": ".*Waiting for changes.*"
+                    }
+                }
+            ],
+            "runOptions": {}
+        },
+        {
+            "label": "Start Debug with Template Watcher",
+            "dependsOrder": "parallel",
+            "dependsOn": [
+                "Template Watcher"
+            ]
+        },
+        {
+            "label": "Stop Template Watcher",
+            "type": "shell",
+            "command": "./gradlew",
+            "args": [
+                "stopTemplateWatcher"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared"
+            }
+        }
+    ]
+}
