@@ -89,17 +89,17 @@ There are a few things to keep in mind when working from an IDE:
 1. Clone the FitNesse Git repository from https://github.com/unclebob/fitnesse.
 2. Import FitNesse via _File_ -> _Import..._ -> _Gradle Project_.
 3. Select the just cloned project folder. Follow the wizard.
-4. Ensure the project properties have a Java 8 compiler or newer set.
+4. Ensure the project properties have a Java 11 compiler or newer set.
 
-#### Import FitNesse in IntelliJ IDEA (16)
+#### Import FitNesse in IntelliJ IDEA (2025.1)
 
-1. Clone the FitNesse Git repository from https://github.com/unclebob/fitnesse.
-2. From the welcome screen (the one you get when all projects are closed), click _Import Project_.
-3. Select the file `build.gradle` in the fitnesse folder.
-4. Follow the wizard. Deselect the option `Create separate module per source set`. You can use the
-   `Use gradle wrapper task configuration`. Use Java 8 or newer. It should find source and test folders and
-    show you two modules: `fitnesse` and `:buildSrc`; import both.
-5. Open the Gradle Build tool, select the task `copyRuntimeLibs` and (right-click) mark it as _Execute After Make_.
+1. Create a new project from https://github.com/unclebob/fitnesse (i.e. from the menu select _File_ -> _New_ -> _Project from Version Control..._,
+   ensure the 'Version control' selectbox contains 'Git', enter the project's URL and press 'Clone').
+2. Ensure the project structure is set to use Java 11 SDK or newer.
+3. Open the Gradle pane Tool Window (little elephant icon on the right side of the screen). Its 'Tasks' folder contains
+   the various gradle tasks defined for the project.
+4. To launch the wiki: open 'Tasks/other' and look for the cog-icon 'run', right-click and select either 'Run' or 'Debug'
+5. Wiki should now be accessible by opening http://localhost:8001 in your browser.
 
 ### The release process
 
