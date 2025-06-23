@@ -1,27 +1,84 @@
 <h1>Test history</h1>
+<head>
+  <link rel="stylesheet" href="../scss/customize.scss">
+</head>
+#set($resultsToShow = 20)
+#if($request.hasInput("results"))
+ #set($resultsToShow = $request.getInput("results"))
+#end
+#set($trimPrefix = "")
+#if($request.hasInput("trim"))
+ #set($trimPrefix = $request.getInput("trim"))
+#end
 #set($noHistory = true)
-<div>
- <a class="btn btn-outline-secondary" href="?responder=overview">View as Overview</a>
- <a class="btn btn-outline-secondary" href="$viewLocation">Cancel</a>
- <label for="hidePassedTests"><input type="checkbox" id="hidePassedTests"/>Hide passed tests</label>
+<div class="d-flex align-items-center mb-2">
+ <a class="btn btn-outline-secondary mr-2" href="?responder=overview">View as Overview</a>
+ <a class="btn btn-outline-secondary mr-4" href="$viewLocation">Cancel</a>
+ <nobr>
+  <label for="hidePassedTests">
+   <input type="checkbox" id="hidePassedTests" class="mr-1"/>Hide passed tests
+  </label>
+ <nobr>
 </div>
 <div>
  #if(!$purgeOptions.isEmpty())
   #foreach($purgeOption in $purgeOptions)
    <a class="btn btn-outline-secondary" href="?responder=purgeHistory&days=$purgeOption" onclick="purgeConfirmation(event)">Purge#if ($purgeOption == 0) all#else &gt; $purgeOption days#end</a>
   #end
-  <label for="purgeGlobal"><input type="checkbox" id="purgeGlobal" />Purge global</label>
+  <nobr>
+   <label for="purgeGlobal"><input type="checkbox" id="purgeGlobal" />Purge global</label>
+  </nobr>
  #end
 </div>
+<div class="d-flex align-items-center my-2">
+ <div class="btn-group mr-4" role="group" aria-label="Show last N results">
+  <a class="btn btn-outline-secondary#if($resultsToShow==3) active#end"
+     href="?responder=testHistory&results=3#if($trimPrefix!='')&trim=$trimPrefix#end">Last 3</a>
+  <a class="btn btn-outline-secondary#if($resultsToShow==5) active#end"
+     href="?responder=testHistory&results=5#if($trimPrefix!='')&trim=$trimPrefix#end">Last 5</a>
+  <a class="btn btn-outline-secondary#if($resultsToShow==10) active#end"
+     href="?responder=testHistory&results=10#if($trimPrefix!='')&trim=$trimPrefix#end">Last 10</a>
+  <a class="btn btn-outline-secondary#if($resultsToShow==20) active#end"
+     href="?responder=testHistory&results=20#if($trimPrefix!='')&trim=$trimPrefix#end">Last 20</a>
+ </div>
+ #set($trimPrefixSuggestion = "")
+ #foreach($p in $testHistory.pageNames)
+  #set($firstPage = $p)
+  #break
+ #end
+ #if($firstPage)
+  #set($parts = $firstPage.split("\."))
+  #if($parts.size() > 2)
+   #set($trimPrefixSuggestion = "${parts[0]}.${parts[1]}.")
+  #end
+ #end
+ <form class="mb-0" method="get">
+  <input type="hidden" name="responder" value="testHistory"/>
+  <input type="hidden" name="results"   value="$resultsToShow"/>
+  <nobr>
+   <label for="trimPath">
+    <input type="checkbox"
+           id="trimPath"
+           class="mr-1"
+           name="trim"
+           value="$trimPrefixSuggestion"
+           #if($trimPrefixSuggestion=="")disabled#end
+           #if($trimPrefix!="")checked#end
+           onchange="this.form.submit()"/>
+    Trim page names
+   </label>
+  </nobr>
+ </form>
+</div>
+<table class="table-striped">
+<tr>
+  <th class="text-nowrap">Page <span class="ml-1 text-muted" style="cursor:help" data-toggle="tooltip" title="Test page name">&#9432;</span></th>
+  <th class="text-nowrap">Pass <span class="ml-1 text-muted" style="cursor:help" data-toggle="tooltip" title="Number of tests passed">&#9432;</span></th>
+  <th class="text-nowrap">Fail <span class="ml-1 text-muted" style="cursor:help" data-toggle="tooltip" title="Number of tests failed">&#9432;</span></th>
+  <th class="text-nowrap">Latest <span class="ml-1 text-muted" style="cursor:help" data-toggle="tooltip" title="Latest test run date and time">&#9432;</span></th>
+  <th colspan="$resultsToShow">Last $resultsToShow Results <span class="ml-1 text-muted" style="cursor:help" data-toggle="tooltip" title="‘+’ = passed, ‘–’ = failed. Most-recent result is on the left">&#9432;</span></th>
+</tr>
 
-<table>
- <tr>
-  <th>Page</th>
-  <th>Pass</th>
-  <th>Fail</th>
-  <th>Latest</th>
-  <th colspan="20">Last 20 Results</th>
- </tr>
   #foreach ($page in $testHistory.pageNames)
   #set ($pageHistory = $testHistory.getPageHistory($page))
   #if($pageHistory)
@@ -29,21 +86,25 @@
 
   <tr>
     #set ($barGraph = $pageHistory.getBarGraph())
-
     #if($pageHistory.passes==0) #set ($passClass = "ignore")
     #else #set ($passClass = "pass")
     #end
-
     #if($pageHistory.failures==0) #set ($failClass = "ignore")
     #else #set ($failClass = "fail")
     #end
-
-    <td><a href="${contextRoot}$page?pageHistory">$page</a></td>
+    #set($displayPage = $page)
+    #if($trimPrefix != "" && $page.startsWith($trimPrefix))
+      #set($displayPage = $page.substring($trimPrefix.length()))
+      #if($displayPage.startsWith(".")) #set($displayPage = $displayPage.substring(1)) #end
+    #end
+    <td><a href="${contextRoot}$page?pageHistory">$displayPage</a></td>
     <td class="$passClass">$pageHistory.passes</td>
     <td class="$failClass">$pageHistory.failures</td>
     <td>$barGraph.formatEndingDate("dd MMM yy, HH:mm")</td>
+    #set($i = 0)
     #foreach($passFail in $barGraph.passFailArray())
-    <td class="$passFail.result"><a href="$page?pageHistory&resultDate=$passFail.Date">#if($passFail.pass)+#else-#end</a></td>
+      #if($i < $resultsToShow)<td class="$passFail.result"><a href="$page?pageHistory&resultDate=$passFail.Date">#if($passFail.pass)+#else-#end</a></td>#end
+      #set($i = $i + 1)
     #end
 
   </tr>

@@ -378,4 +378,37 @@ public class TestHistoryResponderTest {
     assertNotSubString("<a class=\"btn btn-outline-secondary\" href=\"?responder=purgeHistory&days=7\" onclick=\"purgeConfirmation(event)\">Purge &gt; 7 days</a>", html);
     assertNotSubString("<label for=\"purgeGlobal\"><input type=\"checkbox\" id=\"purgeGlobal\" />Purge global</label>", html);
   }
+
+  @Test
+  public void shouldShowLastNResultButtons() throws Exception {
+    MockRequest request = new MockRequest();
+    SimpleResponse resp  = (SimpleResponse) new TestHistoryResponder().makeResponse(context, request);
+    String html = resp.getContent();
+    assertSubString("?responder=testHistory&results=3", html);
+    assertSubString(">Last 3<", html);
+    assertSubString("?responder=testHistory&results=5", html);
+    assertSubString("?responder=testHistory&results=10", html);
+    assertSubString("?responder=testHistory&results=20", html);
+  }
+
+  @Test
+  public void shouldOfferTrimCheckboxWhenSuggestionExists() throws Exception {
+    addPageDirectoryWithOneResult("FitNesse.SuiteAcceptanceTests.DummyPage", "20090418123103_1_0_0_0");
+    makeResponse();                               
+    String html = response.getContent();
+    assertSubString("id=\"trimPath\"", html);
+    assertDoesntHaveRegexp("id=\"trimPath\"[^\n]+checked", html);
+    assertSubString("Trim page names", html);
+  }
+
+  @Test
+  public void shouldRenderTrimCheckboxCheckedWhenTrimIsApplied() throws Exception {
+    addPageDirectoryWithOneResult("FitNesse.SuiteAcceptanceTests.DummyPage", "20090418123103_1_0_0_0");
+    MockRequest req = new MockRequest();
+    req.addInput("trim", "FitNesse.SuiteAcceptanceTests.");
+    SimpleResponse resp = (SimpleResponse) new TestHistoryResponder().makeResponse(context, req);
+    String html = resp.getContent();
+    assertSubString("id=\"trimPath\"", html);
+    assertHasRegexp("id=\"trimPath\"[\\s\\S]*?checked", html);
+  }
 }

@@ -1,8 +1,12 @@
 Every time you run a test or a suite, the results are recorded in the ''test history database''.  You can view the history by clicking on the !style_code(Test History) button.  The reports are pretty self-explanatory.
 
-When you click on !style_code(Test History) you will be shown the directory of all tests and suites that are in the ''test history database''.  This directory also shows you the status of the last 20 results from each test or suite.  You can click on the name of the test or suite to get a detailed ''page history'', or you can click on any of the individual status elements to see the particular test result.
+When you click on !style_code(Test History) you will be shown the directory of all tests and suites that are in the ''test history database''.  This directory also shows you the status of the most recent results from each test or suite. By default, the last 20 results are shown, but you can now choose to display only the !style_code(Last 3), !style_code(Last 5), !style_code(Last 10), or !style_code(Last 20) results using the button group at the top of the page. This makes it easier to focus on recent trends or reduce clutter from older test runs.
 
-The detailed ''page history'' shows you a directory of all the test results for that test or suite.  The bar chart shows how how the number of tests (for suites) or assertions (for tests) has grown over time, and the pass/fail ratio.  Clicking on an entry takes you to that specific test result.
+Each row in the table shows a test or suite name, the number of passed and failed runs, the date of the latest run, and a bar graph with the recent outcomes (!style_code(+) for pass, !style_code(-) for fail). You can click on the name of the test or suite to get a detailed ''page history'', or you can click on any of the individual status symbols to view the specific test result.
+
+If a shared prefix exists in test or suite names (e.g., !style_code(FitNesse.SuiteAcceptanceTests.)), a checkbox labeled !style_code(Trim page names) will appear. When selected, this option trims the redundant prefix from the displayed names, improving readability of deeply nested pages.
+
+To further improve clarity and usability, the table is now displayed with alternating row stripes. Column headers also include small info icons with tooltips, offering helpful explanations such as "Number of tests passed", "Latest test run", or "Recent result status" when hovered over.
 
 !4 Details
 The ''test history database'' is kept in !style_code(!-FitNesseRoot/files/testResults-!).  Beneath this directory there is a subdirectory for each test or suite.  These directories contain the ''page history'' and are named for the page that contains the test or suite.  Beneath the page history directory is a file for each test result.
