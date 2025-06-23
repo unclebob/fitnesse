@@ -34,3 +34,6 @@ Remember, that the order tests run is alphabetical.  So in the above example, !-
 
 ''Please note:'' if your test run is not failing from a certain point onwards, but has a few failures that you want to rerun the 'Rerun Failed' feature is probably more appropriate than 'startTest'.
 It can be accessed via the button on the suite result page (top right hand corner), or directly by going to: !style_code(!-http://&lt;host>:&lt;port>/RerunLastFailures?suite-!)
+
+!3 Including pages with tags
+You can include pages on current test page, by using tags. To turn this option on, you need to define variable INCLUDE_TAG_PAGES anywhere in test tree and set it's value to "yes". Turning this option on, makes FitNesse search whole parent tree for pages wchich name is excactly like tag name and includes those pages at top of tested page (see [[!-SpecialPages-!][<FitNesse.FullReferenceGuide.UserGuide.WritingAcceptanceTests.SpecialPages]]). 

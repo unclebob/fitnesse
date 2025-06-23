@@ -3,10 +3,7 @@
 package fitnesse.testrunner;
 
 import fitnesse.testsystems.TestPage;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wiki.*;
 import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +29,7 @@ public class WikiTestPageTest {
     addPage("TearDown", "teardown");
     addPage("SuiteSetUp", "suiteSetUp");
     addPage("SuiteTearDown", "suiteTearDown");
+    addPage("TestTag", "TestTag");
 
     WikiPage subPage = WikiPageUtil.addPage(wikiPage, PathParser.parse("SubPage"), "sub page");
     WikiPageUtil.addPage(wikiPage, PathParser.parse("ScenarioLibrary"), "scenario library 2");
@@ -203,6 +201,48 @@ public class WikiTestPageTest {
 
     String expected = "fitnesse.jar" + "|" + "my.jar";
     assertEquals(expected, new WikiTestPage(page).getClassPath().toString());
+  }
+
+  @Test
+  public void shouldIncludeTestPagesIfIncludeTagLibrariesSetToTrue() throws Exception {
+    WikiPage page = addPage("ParentPage", "!define INCLUDE_TAG_LIBRARIES {true}\n");
+    WikiPage testPage = WikiPageUtil.addPage(page, PathParser.parse("TestPage"), "TestPage");
+    PageData data = page.getData();
+    data.getProperties().set(WikiPageProperty.SUITES,"TestTag, DummyTag");
+    testPage.commit(data);
+
+    TestPage runningTestPage = new WikiTestPage(testPage);
+
+    String html = runningTestPage.getHtml();
+    assertSubString("TestTag",html);
+  }
+
+  @Test
+  public void shouldNotIncludeTestPagesIfIncludeTagLibrariesSetToFalse() throws Exception {
+    WikiPage page = addPage("ParentPage", "!define INCLUDE_TAG_LIBRARIES {false}\n");
+    WikiPage testPage = WikiPageUtil.addPage(page, PathParser.parse("TestPage"), "TestPage");
+    PageData data = page.getData();
+    data.getProperties().set(WikiPageProperty.SUITES,"TestTag, DummyTag");
+    testPage.commit(data);
+
+    TestPage runningTestPage = new WikiTestPage(testPage);
+
+    String html = runningTestPage.getHtml();
+    assertNotSubString("TestTag",html);
+  }
+
+  @Test
+  public void shouldNotIncludeTestPagesIfIncludeTagLibrariesIsNotSet() throws Exception {
+    WikiPage page = addPage("ParentPage", "ParentPage");
+    WikiPage testPage = WikiPageUtil.addPage(page, PathParser.parse("TestPage"), "TestPage");
+    PageData data = page.getData();
+    data.getProperties().set(WikiPageProperty.SUITES,"TestTag, DummyTag");
+    testPage.commit(data);
+
+    TestPage runningTestPage = new WikiTestPage(testPage);
+
+    String html = runningTestPage.getHtml();
+    assertNotSubString("TestTag",html);
   }
 
 }

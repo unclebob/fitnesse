@@ -39,6 +39,11 @@ These pages are intended for scenario tables.  They are included just after the 
 !3 !-TemplateLibrary-!
 These pages act as a marker to find templates to show as available for insertion when editing a page. All children of a !-TemplateLibrary-! will be shown in the drop-down list of templates available for insertion. Unlike the other special pages, ''all'' brother and uncle !-TemplateLibrary-! pages are included.  The oldest (grandest uncle) is included first.  The brother, if it exists, is included last.  This allows younger !-TemplateLibrary-! pages to override older ones.
 
+!3 !-TagLibrary-!
+Tag library lets you find pages with the same name as tags defined for your test page and includes them as a part of !-ScenarioLibraries-! element. Including works the same way as for standard !-ScenarioLibrary-!. If page has more than one tag defined, then pages are included in order in which tags appear in page definition (all pages for first tag, then all pages for second tag and so on).
+
+To turn this option on, you need to define somewhere in test tree following variable:
+'''!-!define INCLUDE_TAG_LIBRARIES {true}-!'''
 
 !3 Suites.
 A special word about suites. If the suite has a deep hierarchy, and there are !-SuiteSetUp-! and/or !-SuiteTearDown-! pages below the suite page, they will not be included (unless the tests at those lower levels will also be executed). The !-SuiteSetUp-! and !-SuiteTearDown-! that are included in a suite run are (by default) the pages that are the nearest brothers or uncles of the ''Suite'' page.  
