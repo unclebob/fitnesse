@@ -3,7 +3,7 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Debug FitNesse + Template Watcher",
+            "name": "FitNesse + Template Watcher",
             "request": "launch",
             "mainClass": "fitnesseMain.FitNesseMain",
             "args": [
@@ -20,7 +20,7 @@
         },
         {
             "type": "java",
-            "name": "Debug FitNesse",
+            "name": "FitNesse",
             "request": "launch",
             "mainClass": "fitnesseMain.FitNesseMain",
             "args": [
