@@ -101,6 +101,23 @@ There are a few things to keep in mind when working from an IDE:
 4. To launch the wiki: open 'Tasks/other' and look for the cog-icon 'run', right-click and select either 'Run' or 'Debug'
 5. Wiki should now be accessible by opening http://localhost:8001 in your browser.
 
+
+
+
+
+### Working with VSCode and Docker Dev Container
+
+For this option, nothing other than VSCode and Docker needs to be installed.
+
+1. Clone the FitNesse Git repository from https://github.com/unclebob/fitnesse.
+2. Open the fitnesse folder in VSCode
+3. Wait for the popup `Folder contains a Dev Container configuration file. Reopen folder to develop in a container (learn more).`
+4. Click the button `Reopen in Container`
+5. Wait until init routines are finished
+6. Use _Run & Debug_ or _Gradle_ buttons in the left toolbar
+
+
+
 ### The release process
 
 FitNesse releases are created using https://github.com/fitnesse/fitnesse-release

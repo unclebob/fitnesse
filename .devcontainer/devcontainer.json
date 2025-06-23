@@ -1,0 +1,27 @@
+{
+  "name": "FitNesse",
+  "image": "mcr.microsoft.com/vscode/devcontainers/base:focal",
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "11",
+      "installMaven": "false",
+      "installGradle": "false"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "redhat.java",
+        "vscjava.vscode-java-pack",
+        "vscjava.vscode-java-debug",
+        "vscjava.vscode-java-test",
+        "vscjava.vscode-gradle",
+        "SonarSource.sonarlint-vscode"
+      ]
+    }
+  },
+  "forwardPorts": [
+    8081
+  ],
+  "remoteUser": "vscode"
+}

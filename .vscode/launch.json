@@ -1,0 +1,37 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "FitNesse + Template Watcher",
+            "request": "launch",
+            "mainClass": "fitnesseMain.FitNesseMain",
+            "args": [
+                "-p",
+                "8081",
+                "-e",
+                "0"
+            ],
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Start Debug with Template Watcher",
+            "postDebugTask": "Stop Template Watcher"
+        },
+        {
+            "type": "java",
+            "name": "FitNesse",
+            "request": "launch",
+            "mainClass": "fitnesseMain.FitNesseMain",
+            "args": [
+                "-p",
+                "8081",
+                "-e",
+                "0"
+            ],
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
