@@ -21,6 +21,7 @@ import fitnesse.util.DateTimeUtil;
 import fitnesse.util.TimeMeasurement;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -175,7 +176,10 @@ public class TestXmlFormatter extends BaseFormatter implements ExecutionLogListe
   }
 
   protected void writeResults() throws IOException {
-    writeResults(writerFactory.getWriter(context, getPage(), getPageCounts(), totalTimeMeasurement.startedAt()));
+    if (!getPage().getData().hasAttribute(WikiPageProperty.DISABLE_TESTHISTORY)) {
+      writeResults(writerFactory.getWriter(context, getPage(), getPageCounts(),
+          totalTimeMeasurement.startedAt()));
+    }
     
     String testhistoryMaxCount = context.getProperties()
         .getProperty(ConfigurationParameter.TESTHISTORY_MAX_COUNT.getKey());
