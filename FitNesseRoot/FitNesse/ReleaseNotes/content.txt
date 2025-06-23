@@ -1,4 +1,6 @@
 !2 Pending Changes
+ * Improvements to the test history pages ([[1494][https://github.com/unclebob/fitnesse/pull/1494]] and [[1567][https://github.com/unclebob/fitnesse/pull/1567]])
+ * Dev Container support ([[1569][https://github.com/unclebob/fitnesse/pull/1569]])
 
 !2 20250223
  * Upgrade Bootstrap to version 4 ([[1516][https://github.com/unclebob/fitnesse/pull/1516]])
