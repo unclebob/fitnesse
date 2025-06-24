@@ -15,3 +15,4 @@ Instead of defining arguments on the ''!contents'' widget, variables can be defi
 -!Defaults:  Suite(*), Test(+), Imported(@), Symbolic(>), Skip(-).                           | PROPERTY_TOC {true} !-
 -!PROPERTY_CHARACTERS {*+@>-}|
 |-c            |Show number of test pages in a suite.                                        |                                |
+|-tFOO      |Only include pages whose 'Suites' property contains FOO.|   |
