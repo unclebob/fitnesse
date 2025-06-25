@@ -1,5 +1,6 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.html.HtmlTag;
 import fitnesse.wikitext.shared.ContentsItemBuilder;
 import org.junit.Test;
 
@@ -9,6 +10,7 @@ import fitnesse.wiki.fs.InMemoryPage;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class ContentsItemTest {
     @Test
@@ -109,6 +111,41 @@ public class ContentsItemTest {
         ContentsItemBuilder builder = new ContentsItemBuilder(contents, 1, rootPage);
         assertEquals("<li>" + HtmlElement.endl + "\t" + "<a href=\"SymPage\" class=\"static\">SymPage ></a>"
                 + HtmlElement.endl + "</li>" + HtmlElement.endl, builder.buildItem(symWikiPage).html());
+    }
+
+    @Test
+    public void includesPageWhenTagMatches() throws Exception {
+      Symbol contents = new Symbol(new Contents());
+      contents.putProperty("-tag", "important");
+
+      TestRoot root = new TestRoot();
+      WikiPage parent = root.makePage("Parent", "!contents");
+      WikiPage taggedChild = parent.addChildPage("TaggedPage");
+      PageData childData = taggedChild.getData();
+      childData.getProperties().set("Suites", "important");
+      taggedChild.commit(childData);
+
+      WikiSourcePage parentSource = new WikiSourcePage(parent);
+
+      ContentsItemBuilder builder = new ContentsItemBuilder(contents, 1, parentSource);
+      HtmlTag html = builder.buildLevel(parentSource);
+
+      assertTrue(html.html().contains("TaggedPage"));
+    }
+
+    @Test
+    public void excludesPageWhenTagDoesNotMatch() throws Exception {
+      Symbol contents = new Symbol(new Contents());
+      contents.putProperty("-tag", "important");
+
+      WikiPage page = new TestRoot().makePage("OtherPage", "!contents");
+      PageData data = page.getData();
+      data.getProperties().set("Suites", "notImportant");
+      page.commit(data);
+
+      ContentsItemBuilder builder = new ContentsItemBuilder(contents, 1);
+      HtmlTag html = builder.buildLevel(new WikiSourcePage(page));
+      assertFalse(html.html().contains("OtherPage"));
     }
 
     private void assertBuildsOption(String page, String[] properties, String option, String variable, String result) throws Exception {
