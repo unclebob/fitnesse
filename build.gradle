@@ -12,7 +12,7 @@
 
 buildscript {
     repositories {
-      sonatype()
+      mavenCentral()
     }
     repositories {
       // see https://central.sonatype.org/publish/publish-portal-ossrh-staging-api/#configuration
