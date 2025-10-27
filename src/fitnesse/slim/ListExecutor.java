@@ -5,6 +5,7 @@ package fitnesse.slim;
 import fitnesse.slim.instructions.Instruction;
 import fitnesse.slim.instructions.InstructionFactory;
 import fitnesse.slim.instructions.InstructionResult;
+import util.LogView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ public class ListExecutor {
   private StatementExecutorInterface executor;
   private NameTranslator methodNameTranslator;
   private boolean verbose;
+  private static LogView logView = null;
 
   public ListExecutor(SlimFactory slimFactory) {
     this(false, slimFactory);
@@ -63,6 +65,13 @@ public class ListExecutor {
   }
 
   private class LoggingExecutive extends Executive {
+    private static final String imgPath = "fitnesse_dbg.png";
+
+    public LoggingExecutive() {
+      if(logView==null) {
+        logView = new LogView("slim instructions", LogView.getImageIconFromPath(imgPath));
+      }
+    }
     @Override
     public void prepareToExecute() {
       verboseMessage("!1 Instructions");
@@ -92,6 +101,9 @@ public class ListExecutor {
   }
 
   private void verboseMessage(Object message) {
-    if (verbose) System.out.println(message);
+    if (verbose) {
+      System.out.println(message);
+      logView.append(message + "\n");
+    }
   }
 }
