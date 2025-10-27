@@ -32,7 +32,7 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build slimJar sourcesJar javadocJar
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: libs-java-${{ matrix.java-version }}
           path: build/libs
