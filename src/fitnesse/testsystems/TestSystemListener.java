@@ -43,4 +43,8 @@ public interface TestSystemListener {
 
   default void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
   }
+
+  /* This is only useful for interactive Listeners, it is called before the assertion is passed to the SUT */
+  default void testAssertionWillBeExecuted(Assertion assertion) {
+  }
 }

@@ -224,6 +224,12 @@ public class MultipleTestsRunner implements Stoppable {
     public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
       formatters.testExceptionOccurred(assertion, exceptionResult);
     }
+
+    @Override
+    public void testAssertionWillBeExecuted(Assertion assertion) {
+      formatters.testAssertionWillBeExecuted(assertion);
+    }
+
   }
 
   private boolean isNotStopped() {
