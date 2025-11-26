@@ -2,6 +2,7 @@
  <input type="hidden" name="responder" value="saveData"/>
  <input type="hidden" name="editTime" value="$editTime"/>
  <input type="hidden" name="ticketId" value="$ticketId"/>
+ <input type="hidden" name="suites" value="$suites"/>
  
  #if( $!pageType )
  <input type="hidden" name="PageType" value="$pageType" checked="checked" />
