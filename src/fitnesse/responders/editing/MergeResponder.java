@@ -5,6 +5,7 @@ package fitnesse.responders.editing;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -42,8 +43,11 @@ public class MergeResponder implements Responder {
     existingContent = page.getData().getContent();
     newContent = this.request.getInput(EditResponder.CONTENT_INPUT_NAME);
     // Combining the tags from the first edit with the second one
-    String oldSuites = page.getData().getProperties().get(WikiPageProperty.SUITES);
-    String newSuites = request.getInput(EditResponder.SUITES);
+    String oldSuites = Optional
+        .ofNullable(page.getData().getProperties().get(WikiPageProperty.SUITES))
+        .orElse("");
+    String newSuites = Optional
+        .ofNullable(request.getInput(EditResponder.SUITES)).orElse("");
     Stream.of(oldSuites.split(",")).forEach(suites::add);
     Stream.of(newSuites.split(",")).forEach(suites::add);
 
