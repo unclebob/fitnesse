@@ -47,7 +47,7 @@ public class MergeResponder implements Responder {
         .ofNullable(page.getData().getProperties().get(WikiPageProperty.SUITES))
         .orElse("");
     String newSuites = Optional
-        .ofNullable(request.getInput(EditResponder.SUITES)).orElse("");
+        .ofNullable(this.request.getInput(EditResponder.SUITES)).orElse("");
     Stream.of(oldSuites.split(",")).forEach(suites::add);
     Stream.of(newSuites.split(",")).forEach(suites::add);
 

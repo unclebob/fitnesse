@@ -9,8 +9,10 @@ import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +26,12 @@ public class MergeResponderTest {
     context = FitNesseUtil.makeTestContext();
     WikiPage source = context.getRootPage();
     WikiPageUtil.addPage(source, PathParser.parse("SimplePage"), "this is SimplePage");
+    WikiPage page = context.getRootPage().getPageCrawler().getPage(PathParser.parse("SimplePage"));
+
+    PageData d = new PageData(page.getData());
+    d.getProperties().set(WikiPageProperty.SUITES, "tag1");
+    page.commit(d);
+
     request = new MockRequest();
     request.setResource("SimplePage");
     request.addInput(EditResponder.TIME_STAMP, "");
@@ -45,6 +53,7 @@ public class MergeResponderTest {
     request.addInput("Edit", "On");
     request.addInput("PageType", "Test");
     request.addInput("Search", "On");
+    request.addInput(EditResponder.SUITES, "tag2");
     Responder responder = new MergeResponder(request);
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
 
@@ -52,5 +61,7 @@ public class MergeResponderTest {
     assertHasRegexp("name=\"Edit\"", response.getContent());
     assertHasRegexp("name=\"PageType\" value=\"Test\" checked", response.getContent());
     assertHasRegexp("name=\"Search\"", response.getContent());
+    assertHasRegexp("name=\"suites\"", response.getContent());
+    assertHasRegexp("^(?=.*\\btag1\\b)(?=.*\\btag2\\b)*$", response.getContent());
   }
 }
