@@ -404,6 +404,19 @@ public class TestHistoryResponderTest {
   }
 
   @Test
+  public void shouldShowConfiguredNResultButtonsLimitedByMaxCount() throws Exception {
+    MockRequest request = new MockRequest();
+    context.getProperties().setProperty(ConfigurationParameter.TESTHISTORY_MAX_COUNT.getKey(), "60");
+    context.getProperties().setProperty(ConfigurationParameter.TESTHISTORY_OPTIONS.getKey(), "1,50,999");
+    SimpleResponse resp = (SimpleResponse) new TestHistoryResponder().makeResponse(context, request);
+    String html = resp.getContent();
+    assertNotSubString("?responder=testHistory&results=3", html);
+    assertSubString("?responder=testHistory&results=1", html);
+    assertSubString("?responder=testHistory&results=50", html);
+    assertNotSubString("?responder=testHistory&results=999", html);
+  }
+
+  @Test
   public void shouldShowNoNResultButtons() throws Exception {
     MockRequest request = new MockRequest();
     context.getProperties().setProperty(ConfigurationParameter.TESTHISTORY_OPTIONS.getKey(), "");
