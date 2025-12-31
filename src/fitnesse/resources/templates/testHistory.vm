@@ -2,10 +2,13 @@
 <head>
   <link rel="stylesheet" href="../scss/customize.scss">
 </head>
-#set($resultsToShow = 20)
+
 #if($request.hasInput("results"))
  #set($resultsToShow = $request.getInput("results"))
+#else
+ #set($resultsToShow = $maxValueOfHistoryOptions)
 #end
+
 #set($trimPrefix = "")
 #if($request.hasInput("trim"))
  #set($trimPrefix = $request.getInput("trim"))
