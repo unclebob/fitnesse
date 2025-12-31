@@ -32,14 +32,11 @@
 </div>
 <div class="d-flex align-items-center my-2">
  <div class="btn-group mr-4" role="group" aria-label="Show last N results">
-  <a class="btn btn-outline-secondary#if($resultsToShow==3) active#end"
-     href="?responder=testHistory&results=3#if($trimPrefix!='')&trim=$trimPrefix#end">Last 3</a>
-  <a class="btn btn-outline-secondary#if($resultsToShow==5) active#end"
-     href="?responder=testHistory&results=5#if($trimPrefix!='')&trim=$trimPrefix#end">Last 5</a>
-  <a class="btn btn-outline-secondary#if($resultsToShow==10) active#end"
-     href="?responder=testHistory&results=10#if($trimPrefix!='')&trim=$trimPrefix#end">Last 10</a>
-  <a class="btn btn-outline-secondary#if($resultsToShow==20) active#end"
-     href="?responder=testHistory&results=20#if($trimPrefix!='')&trim=$trimPrefix#end">Last 20</a>
+   #if(!$historyOptions.isEmpty())
+    #foreach($historyOption in $historyOptions)
+     <a class="btn btn-outline-secondary#if($resultsToShow==$historyOption) active#end" href="?responder=testHistory&results=$historyOption#if($trimPrefix!='')&trim=$trimPrefix#end">Last $historyOption</a>
+    #end
+   #end
  </div>
  #set($trimPrefixSuggestion = "")
  #foreach($p in $testHistory.pageNames)

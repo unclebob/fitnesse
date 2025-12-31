@@ -46,24 +46,25 @@ public class TestHistoryResponder implements SecureResponder {
     page.setNavTemplate("viewNav");
     page.put("viewLocation", request.getResource());
     page.put("testHistory", testHistory);
-    page.put("purgeOptions", getPurgeOptions());
+    page.put("purgeOptions", getConfiguredOptions(ConfigurationParameter.PURGE_OPTIONS, new String[] { "0", "7", "30" }));
+    page.put("historyOptions", getConfiguredOptions(ConfigurationParameter.TESTHISTORY_OPTIONS, new String[] {"3", "5", "10", "20"}));
     page.setMainTemplate("testHistory");
     SimpleResponse response = new SimpleResponse();
     response.setContent(page.html(request));
     return response;
   }
-
-  private String[] getPurgeOptions() {
-    String configuredPurgeOptions = context.getProperties().getProperty(ConfigurationParameter.PURGE_OPTIONS.getKey());
-    String[] purgeOptionsForPage;
-    if(configuredPurgeOptions == null) {
-      purgeOptionsForPage = new String[] { "0", "7", "30" };
-    } else if (configuredPurgeOptions.isBlank()) {
-      purgeOptionsForPage = new String[0];
+  
+  private String[] getConfiguredOptions(ConfigurationParameter config, String[] defaultValues) {
+    String configuredOptions = context.getProperties().getProperty(config.getKey());
+    String[] optionsForPage;
+    if(configuredOptions == null) {
+      optionsForPage = defaultValues;
+    } else if (configuredOptions.isBlank()) {
+      optionsForPage = new String[0];
     } else {
-      purgeOptionsForPage = configuredPurgeOptions.split(",");
+      optionsForPage = configuredOptions.split(",");
     }
-    return purgeOptionsForPage;
+    return optionsForPage;
   }
 
   private Response makeTestHistoryXmlResponse(TestHistory history) throws UnsupportedEncodingException {
