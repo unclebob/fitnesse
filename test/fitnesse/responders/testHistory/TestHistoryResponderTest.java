@@ -398,6 +398,7 @@ public class TestHistoryResponderTest {
     SimpleResponse resp = (SimpleResponse) new TestHistoryResponder().makeResponse(context, request);
     String html = resp.getContent();
     assertNotSubString("?responder=testHistory&results=3", html);
+    assertSubString(">Last 999<", html);
     assertSubString("?responder=testHistory&results=1", html);
     assertSubString("?responder=testHistory&results=50", html);
     assertSubString("?responder=testHistory&results=999", html);
@@ -411,6 +412,7 @@ public class TestHistoryResponderTest {
     SimpleResponse resp = (SimpleResponse) new TestHistoryResponder().makeResponse(context, request);
     String html = resp.getContent();
     assertNotSubString("?responder=testHistory&results=3", html);
+    assertSubString(">Last 50<", html);
     assertSubString("?responder=testHistory&results=1", html);
     assertSubString("?responder=testHistory&results=50", html);
     assertNotSubString("?responder=testHistory&results=999", html);
@@ -423,6 +425,7 @@ public class TestHistoryResponderTest {
     SimpleResponse resp  = (SimpleResponse) new TestHistoryResponder().makeResponse(context, request);
     String html = resp.getContent();
     assertNotSubString("?responder=testHistory&results=3", html);
+    assertNotSubString(">Last 20<", html);
     assertNotSubString("?responder=testHistory&results=20", html);
   }
 

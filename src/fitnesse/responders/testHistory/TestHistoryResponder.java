@@ -50,9 +50,9 @@ public class TestHistoryResponder implements SecureResponder {
     page.put("viewLocation", request.getResource());
     page.put("testHistory", testHistory);
     page.put("purgeOptions", getConfiguredOptions(ConfigurationParameter.PURGE_OPTIONS, List.of( "0", "7", "30" )));
-    List<String> options = getHistoryOptions();
-    page.put("historyOptions", options);
-    page.put("maxValueOfHistoryOptions", options.stream().mapToInt(Integer::parseInt).max().orElse(20));
+    List<String> historyOptions = getHistoryOptions();
+    page.put("historyOptions", historyOptions);
+    page.put("maxValueOfHistoryOptions", historyOptions.stream().mapToInt(Integer::parseInt).max().orElse(20));
     page.setMainTemplate("testHistory");
     SimpleResponse response = new SimpleResponse();
     response.setContent(page.html(request));
