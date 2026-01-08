@@ -18,7 +18,8 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public class NewPageResponder implements Responder {
-  public static final String DEFAULT_PAGE_CONTENT_PROPERTY = "newpage.default.content";
+  public static final String DEFAULT_PAGE_CONTENT_PROPERTY = "NewPage.default.content";
+  public static final String DEFAULT_PAGE_CONTENT_PROPERTY_DEPRECATED = "newpage.default.content";
   public static final String DEFAULT_PAGE_CONTENT = "!contents -R2 -g -p -f -h";
 
   public static final String PAGE_TEMPLATE = "pageTemplate";
@@ -73,6 +74,7 @@ public class NewPageResponder implements Responder {
 
   public static String getDefaultContent(WikiPage page) {
     String content = page.getVariable(DEFAULT_PAGE_CONTENT_PROPERTY);
+    content = content == null ? page.getVariable(DEFAULT_PAGE_CONTENT_PROPERTY_DEPRECATED) : content;
     if (content == null) {
       content = DEFAULT_PAGE_CONTENT;
     }

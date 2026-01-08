@@ -106,11 +106,12 @@ public class FitNesseContext {
 
   }
   public File getTestHistoryDirectory() {
-    String testHistoryPath = getProperty("test.history.path");
-    if (testHistoryPath == null) {
-      testHistoryPath = String.format(unifiedPathPattern("%s/files/%s"), getRootPagePath(), testResultsDirectoryName);
+    String testHistoryPath = getProperty("TestHistory.path");
+    String testHistoryPathDeprecated = testHistoryPath == null ? getProperty("test.history.path") : testHistoryPath;
+    if (testHistoryPathDeprecated == null) {
+      testHistoryPathDeprecated = String.format(unifiedPathPattern("%s/files/%s"), getRootPagePath(), testResultsDirectoryName);
     }
-    return new File(testHistoryPath);
+    return new File(testHistoryPathDeprecated);
   }
 
   public String getTestProgressPath() {

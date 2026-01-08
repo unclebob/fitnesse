@@ -37,7 +37,7 @@
 }
 
 *!
-After a test run, the test history is cleaned up. In order to do so, the property ''test.history.days'' has been set to ${TEST_HISTORY_DAYS} days.
+After a test run, the test history is cleaned up. In order to do so, the property ''TestHistory.days'' has been set to ${TEST_HISTORY_DAYS} days.
 
 Precondition:
 

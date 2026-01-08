@@ -136,9 +136,12 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   }
 
   private void cleanHistoryForSuite() {
-    String testHistoryDays = context.getProperty("test.history.days");
-    if (withSuiteHistoryFormatter() && StringUtils.isNumeric(testHistoryDays)) {
-      new HistoryPurger(context.getTestHistoryDirectory(), Integer.parseInt(testHistoryDays))
+    String testHistoryDays = context.getProperty("TestHistory.days");
+    String testHistoryDaysDeprecated = StringUtils.isBlank(testHistoryDays)
+        ? context.getProperty("test.history.days")
+        : testHistoryDays;
+    if (withSuiteHistoryFormatter() && StringUtils.isNumeric(testHistoryDaysDeprecated)) {
+      new HistoryPurger(context.getTestHistoryDirectory(), Integer.parseInt(testHistoryDaysDeprecated))
               .deleteTestHistoryOlderThanDays(path);
     }
   }
