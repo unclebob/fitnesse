@@ -33,7 +33,7 @@ public class PurgeHistoryResponderTest {
     resultsDirectory.mkdir();
     responder = new PurgeHistoryResponder();
     Properties properties = new Properties();
-    properties.setProperty("test.history.path", resultsDirectory.getPath());
+    properties.setProperty("TestHistory.path", resultsDirectory.getPath());
     context = FitNesseUtil.makeTestContext(properties);
     request = new MockRequest();
     request.setResource("TestPage");

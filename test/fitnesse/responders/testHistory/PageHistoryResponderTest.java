@@ -51,7 +51,7 @@ public class PageHistoryResponderTest {
     resultsDirectory.mkdir();
     responder = new PageHistoryResponder();
     Properties properties = new Properties();
-    properties.setProperty("test.history.path", resultsDirectory.getPath());
+    properties.setProperty("TestHistory.path", resultsDirectory.getPath());
     context = FitNesseUtil.makeTestContext(properties);
   }
 
