@@ -179,6 +179,7 @@ There are more properties which can be used to tweak parts of FitNesse:
  * '''test.history.path''' - Location to store the test results. The default location is ''!-FitNesseRoot-!/files/testResults''.
  * '''TestHistory.purgeOptions''' - A comma separated list of the age, in number of days, to offer as purge options on the ''Test History'' page.
  * '''TestHistory.maxCount''' - The number of histories to keep around per page. Cleaned up after a new test run.
+ * '''TestHistory.historyOptions''' - A comma separated list of options to offer on the ''Test History'' page, to change the displayed numbers of Histories. This value is limited by the maxCount configuration.
  * Any variable that can be defined on a wiki page.
 
 The Slim test system has a set of [[custom properties][<UserGuide.WritingAcceptanceTests.SliM]] that can either be set on a page or in the configuration file.

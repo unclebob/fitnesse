@@ -45,7 +45,8 @@ public enum ConfigurationParameter {
   MAXIMUM_WORKERS("MaximumWorkers"),
   THEME("Theme"),
   PURGE_OPTIONS("TestHistory.purgeOptions"),
-  TESTHISTORY_MAX_COUNT("TestHistory.maxCount");
+  TESTHISTORY_MAX_COUNT("TestHistory.maxCount"),
+  TESTHISTORY_OPTIONS("TestHistory.historyOptions");
 
   private static final Logger LOG = Logger.getLogger(ConfigurationParameter.class.getName());
 

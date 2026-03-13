@@ -2,6 +2,9 @@ package fitnesse.responders.testHistory;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import fitnesse.reporting.history.TestHistory;
 import fitnesse.wiki.PathParser;
@@ -46,24 +49,36 @@ public class TestHistoryResponder implements SecureResponder {
     page.setNavTemplate("viewNav");
     page.put("viewLocation", request.getResource());
     page.put("testHistory", testHistory);
-    page.put("purgeOptions", getPurgeOptions());
+    page.put("purgeOptions", getConfiguredOptions(ConfigurationParameter.PURGE_OPTIONS, List.of( "0", "7", "30" )));
+    List<String> historyOptions = getHistoryOptions();
+    page.put("historyOptions", historyOptions);
+    page.put("maxValueOfHistoryOptions", historyOptions.stream().mapToInt(Integer::parseInt).max().orElse(20));
     page.setMainTemplate("testHistory");
     SimpleResponse response = new SimpleResponse();
     response.setContent(page.html(request));
     return response;
   }
 
-  private String[] getPurgeOptions() {
-    String configuredPurgeOptions = context.getProperties().getProperty(ConfigurationParameter.PURGE_OPTIONS.getKey());
-    String[] purgeOptionsForPage;
-    if(configuredPurgeOptions == null) {
-      purgeOptionsForPage = new String[] { "0", "7", "30" };
-    } else if (configuredPurgeOptions.isBlank()) {
-      purgeOptionsForPage = new String[0];
+  private List<String> getConfiguredOptions(ConfigurationParameter config, List<String> defaultValues) {
+    String configuredOptions = context.getProperties().getProperty(config.getKey());
+    List<String> optionsForPage;
+    if(configuredOptions == null) {
+      optionsForPage = defaultValues;
+    } else if (configuredOptions.isBlank()) {
+      optionsForPage = List.of();
     } else {
-      purgeOptionsForPage = configuredPurgeOptions.split(",");
+      optionsForPage = Arrays.asList(configuredOptions.split(","));
     }
-    return purgeOptionsForPage;
+    return optionsForPage;
+  }
+  
+  private List<String> getHistoryOptions() {
+    String historyMaxCount = context.getProperties().getProperty(ConfigurationParameter.TESTHISTORY_MAX_COUNT.getKey());
+    List<String> historyOptions = getConfiguredOptions(ConfigurationParameter.TESTHISTORY_OPTIONS, List.of("3", "5", "10", "20")).stream().collect(Collectors.toList());
+    if (StringUtils.isNotBlank(historyMaxCount)) {
+      historyOptions.removeIf(option -> Integer.parseInt(option) > Integer.parseInt(historyMaxCount));
+    }
+    return historyOptions;
   }
 
   private Response makeTestHistoryXmlResponse(TestHistory history) throws UnsupportedEncodingException {
