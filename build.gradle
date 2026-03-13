@@ -89,7 +89,7 @@ dependencies {
   testImplementation "org.hamcrest:hamcrest-all:1.3"
   testImplementation "net.javacrumbs.json-unit:json-unit:2.40.0"
 
-  lesscss "org.mozilla:rhino-tools:1.8.0"
+  lesscss "org.mozilla:rhino-tools:1.9.1"
 }
 
 task watchTemplates {
