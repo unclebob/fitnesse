@@ -1,4 +1,5 @@
 !2 Pending Changes
+ * Updated some dependencies
 
 !2 20251025
  * Improvements to the test history pages ([[1494][https://github.com/unclebob/fitnesse/pull/1494]] and [[1567][https://github.com/unclebob/fitnesse/pull/1567]])
