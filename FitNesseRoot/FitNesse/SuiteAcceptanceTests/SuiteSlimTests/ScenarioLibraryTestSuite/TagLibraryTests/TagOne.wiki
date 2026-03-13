@@ -1,0 +1,5 @@
+---
+Test
+---
+!|scenario|one|
+|$ONE=|echo|1|
