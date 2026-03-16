@@ -1,0 +1,2 @@
+!|scenario|two|
+|$TWO=|echo|2|

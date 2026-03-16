@@ -1,0 +1,6 @@
+---
+Test
+---
+!define INCLUDE_TAG_LIBRARIES {true}
+
+!contents
