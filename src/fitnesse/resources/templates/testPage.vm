@@ -16,6 +16,13 @@ $!headerContent.render()
 ## Filled with stop/output buttons
 </div>
 
+<div id="step-by-step-Id2">
+## Current Instruction updates here
+</div>
+<div id="step-by-step-Id">
+## Current Table updates here
+</div>
+
 #if ($multipleTestsRun)
 <div id="test-summaries">
     <h2>Test Summaries</h2>

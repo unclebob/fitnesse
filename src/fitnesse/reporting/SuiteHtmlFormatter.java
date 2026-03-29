@@ -4,10 +4,18 @@ package fitnesse.reporting;
 
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
+import fitnesse.testsystems.Assertion;
+import fitnesse.testsystems.ExceptionResult;
 import fitnesse.testsystems.ExecutionResult;
+import fitnesse.testsystems.Expectation;
+import fitnesse.testsystems.TableCell;
 import fitnesse.testsystems.TestPage;
+import fitnesse.testsystems.TestResult;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testsystems.TestSystem;
+import fitnesse.testsystems.slim.HtmlTable;
+import fitnesse.testsystems.slim.Table;
+import static fitnesse.testsystems.slim.SlimTestSystem.SLIM_SHOW;
 import fitnesse.util.TimeMeasurement;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -15,10 +23,13 @@ import fitnesse.wiki.WikiPage;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.LinkedList;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 import static fitnesse.testsystems.ExecutionResult.getExecutionResult;
 
-public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeable {
+public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeable  {
   private static final String TEST_SUMMARIES_ID = "test-summaries";
 
   private TestSummary pageCounts = new TestSummary();
@@ -31,6 +42,10 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
   private String testSummariesId = TEST_SUMMARIES_ID;
   private boolean testSummariesPresent;
   private TimeMeasurement totalTimeMeasurement;
+  private LinkedList<String> instructionsHtmlText;
+  private int testSystemListenerShowInstructions;
+  private boolean testSystemListenerShowHtmlTable;
+  private int testSystemListenerSleep;
 
 
   public SuiteHtmlFormatter(WikiPage page, boolean testSummariesPresent, Writer writer) {
@@ -38,6 +53,30 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
     this.testSummariesPresent = testSummariesPresent;
     totalTimeMeasurement = new TimeMeasurement().start();
     testBasePathName = PathParser.render(page.getFullPath());
+    String sbys = getPage().getVariable(SLIM_SHOW);
+    testSystemListenerShowHtmlTable = (sbys != null);
+    testSystemListenerShowInstructions = 0;
+    if(testSystemListenerShowHtmlTable){
+      testSystemListenerShowInstructions = 10;
+      String sbysLines = getPage().getVariable("slim.show.size");
+      if (sbysLines != null)
+      try{
+        testSystemListenerShowInstructions = Integer.parseInt(sbysLines);
+      }catch (NumberFormatException e){
+        // ignore and keep default
+      }
+      // This is for making nice videos of a test run :)
+      testSystemListenerSleep = 0;
+      String sbysSleep = getPage().getVariable("slim.show.sleep");
+      if (sbysSleep != null)
+      try{
+        testSystemListenerSleep = Integer.parseInt(sbysSleep);
+      }catch (NumberFormatException e){
+        // ignore and keep default
+      }
+    } 
+    //Fill the list with empty lines to reserve the space on the screen
+    this.instructionsHtmlText = new LinkedList<String>(Collections.nCopies(testSystemListenerShowInstructions,""));
   }
 
   @Override
@@ -90,7 +129,6 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
     super.testStarted(testPage);
 
     String fullPathName = testPage.getFullPath();
-
     announceStartNewTest(getRelativeName(), fullPathName);
   }
 
@@ -177,6 +215,79 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
       writeData(insertScript.html());
     }
   }
+  
+
+  
+  protected void showAssertionResult(Assertion assertion, String testResult, boolean overwriteLastMessage) {
+    if(testSystemListenerShowInstructions >0){
+      try {
+        String instructionText;
+        String position;
+        Expectation expectation = assertion.getExpectation();
+        if (expectation instanceof TableCell) {
+          TableCell cell = (TableCell) expectation;
+          position = String.format("% 3d,% 3d", cell.getRow(), cell.getCol());
+        } else {
+          position = "       ";
+        }
+        assertion.getInstruction();
+        instructionText = assertion.getInstruction().toString();
+        instructionText = position + ": " + instructionText + "-->" + testResult;
+        instructionText = HtmlUtil.escapeHTML(instructionText);
+        if (overwriteLastMessage){
+          this.instructionsHtmlText.removeLast();
+        } else {
+          this.instructionsHtmlText.removeFirst();
+        }        
+        this.instructionsHtmlText.addLast(instructionText);
+        String allInstructionsText = this.instructionsHtmlText.stream().collect(Collectors.joining("<br>"));
+        String html = "<h4>"+allInstructionsText+"</h4>";
+        String insertScript = JavascriptUtil.makeReplaceElementScript("step-by-step-Id2", html).html();
+        writeData(insertScript);
+      } catch (Exception e){
+        String html = e.getMessage();
+      }
+    }
+    if(testSystemListenerShowHtmlTable){
+      try{
+        Expectation expectation = assertion.getExpectation();
+        if (expectation instanceof TableCell) {
+          TableCell cell = (TableCell) expectation;
+          Table t = cell.getTable();
+          if (t instanceof HtmlTable) {
+            HtmlTable ht = (HtmlTable) t;
+            String html = ht.getTableNode().toHtml().toString();
+            String insertScript = JavascriptUtil.makeReplaceElementScript("step-by-step-Id", html).html();
+            testOutputChunk(null, insertScript);
+            String expandScript = JavascriptUtil.expandCurrentRow("step-by-step-Id").html();
+            testOutputChunk(null, expandScript);
+          }
+        }
+        if (testSystemListenerSleep > 0)
+          Thread.sleep(testSystemListenerSleep);
+      } catch (Exception e){
+        String em = e.getMessage();
+      }
+    }
+  }
+  
+  @Override
+  public void testAssertionVerified(Assertion assertion, TestResult testResult) {
+    String resultString = testResult != null ? testResult.toString() : "VOID";
+    showAssertionResult(assertion,resultString, true);
+  }
+
+  @Override
+  public void testExceptionOccurred(Assertion assertion, ExceptionResult exceptionResult) {
+    String resultString = exceptionResult!= null ? exceptionResult.toString() : "EXCEPTION";
+    showAssertionResult(assertion,resultString, true);
+  }
+
+  @Override
+  public void testAssertionWillBeExecuted(Assertion assertion) {
+    String resultString =  "in progress";
+    showAssertionResult(assertion,resultString, false);
+  }
 
   @Override
   protected String makeSummaryContent() {
@@ -189,9 +300,11 @@ public class SuiteHtmlFormatter extends InteractiveFormatter implements Closeabl
     return summaryContent;
   }
 
+
   protected boolean hasTestSummaries() {
     return testSummariesPresent;
   }
+
 }
 
 

@@ -60,4 +60,10 @@ public class CompositeTestSystemListener implements TestSystemListener {
     for (TestSystemListener listener : listeners)
       listener.testExceptionOccurred(assertion, exceptionResult);
   }
+
+  @Override
+  public void testAssertionWillBeExecuted(Assertion assertion) {
+    for (TestSystemListener listener : listeners)
+      listener.testAssertionWillBeExecuted(assertion);
+  }
 }
