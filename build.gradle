@@ -80,7 +80,7 @@ dependencies {
   implementation "org.codehaus.groovy:groovy-xml:3.0.25"
 
   compileOnly gradleApi()
-  compileOnly "org.apache.ant:ant:1.10.15"
+  compileOnly "org.apache.ant:ant:1.10.17"
   compileOnly "junit:junit:4.13.2"
 
   testImplementation gradleApi()
