@@ -42,15 +42,22 @@ public class RefactorPageResponderTest extends ResponderTestCase {
   }
 
   @Test
-  public void autoCompleteForMove() throws Exception {
-    WikiPageUtil.addPage(root, PathParser.parse("OtherPage"), "content");
-    WikiPageUtil.addPage(root, PathParser.parse("OtherPage.SubPage"), "content");
+  public void testMoveWithoutStartPath() throws Exception {
+    request.addInput("type", "move");
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+
+    String content = response.getContent();
+    assertSubString("<div id=\"configPath\" data-path=\"ROOT\"></div>", content);
+  }
+
+  @Test
+  public void testMoveWithStartPath() throws Exception {
+    context.getProperties().put("Refactor.StartPath", "SomeStartPath");
 
     request.addInput("type", "move");
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
 
     String content = response.getContent();
-    assertSubString("<option value=\".OtherPage\"/>", content);
-    assertSubString("<option value=\".OtherPage.SubPage\"/>", content);
+    assertSubString("<div id=\"configPath\" data-path=\"SomeStartPath\"></div>", content);
   }
 }

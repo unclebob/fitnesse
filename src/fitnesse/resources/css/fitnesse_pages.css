@@ -342,3 +342,59 @@ span.error {
     display: inline-block;
     padding: 0;
 }
+
+/* Page Tree for Copy and Move Start */
+.form-hint {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+#pageTreeContainer {
+    border: 1px solid #ccc;
+    height: 400px;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: auto;
+    padding: 6px;
+    background: #fafafa;
+}
+
+#pageTree {
+    list-style: none;
+    padding-left: 10px;
+    margin: 0;
+}
+
+#pageTree li {
+    cursor: pointer;
+    padding: 2px 4px;
+}
+
+.tree-label.selected {
+    background-color: #cce5ff;
+}
+
+.tree-icon {
+  transition: transform 0.15s ease;
+}
+
+.tree-toggle {
+    display: inline-block;
+    width: 16px;
+}
+
+.tree-toggle.expanded .tree-icon {
+  transform: rotate(90deg);
+}
+
+.tree-child {
+	list-style: none;
+	padding-left: 10px;
+}
+
+.loading {
+    color: #888;
+    font-style: italic;
+}
+/* Page Tree for Copy and Move End */

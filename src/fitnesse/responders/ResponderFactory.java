@@ -22,6 +22,7 @@ import fitnesse.responders.files.RenameFileConfirmationResponder;
 import fitnesse.responders.files.RenameFileResponder;
 import fitnesse.responders.files.UploadResponder;
 import fitnesse.responders.refactoring.DeletePageResponder;
+import fitnesse.responders.refactoring.LazyPageTreeResponder;
 import fitnesse.responders.refactoring.MovePageResponder;
 import fitnesse.responders.refactoring.RefactorPageResponder;
 import fitnesse.responders.refactoring.RenamePageResponder;
@@ -87,6 +88,7 @@ public class ResponderFactory {
     addResponder("variables", ScopeVariablesResponder.class);
     addResponder("account", AccountResponder.class);
     addResponder("saveAccount", SaveAccountResponder.class);
+    addResponder("lazyPageTree", LazyPageTreeResponder.class);
     // Deprecated:
     addResponder("executeSearchProperties", SearchPropertiesResponder.class);
     addResponder("whereUsed", WhereUsedResponder.class);
