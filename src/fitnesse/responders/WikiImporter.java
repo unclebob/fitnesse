@@ -310,8 +310,10 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiP
 
   @Override
   public void process(WikiPage page) {
-    WikiPagePath relativePath = relativePath(page);
-    pageCatalog.add(relativePath);
+    if (!page.isSymbolicPage()) {
+      WikiPagePath relativePath = relativePath(page);
+      pageCatalog.add(relativePath);
+    }
   }
 
   public void setDeleteOrphanOption(boolean shouldDeleteOrphans) {

@@ -10,6 +10,7 @@ import fitnesse.util.Clock;
 import fitnesse.util.XmlUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -224,6 +225,32 @@ public class WikiImporterTest implements WikiImporterClient {
   }
 
   @Test
+  public void testSymbolicLinksAreNotOrphansOnRepeatedImport() throws Exception {
+    WikiPage browserA = WikiPageUtil.addPage(remoteRoot, PathParser.parse("WebTests.BrowserA"), "browser A");
+    WikiPage browserB = WikiPageUtil.addPage(remoteRoot, PathParser.parse("WebTests.BrowserB"), "browser B");
+    WikiPageUtil.addPage(remoteRoot,
+      PathParser.parse("WebTests.SeleniumBrowserTestLibrary.SeleniumSuiteA.TestOne"), "test one");
+    addSymbolicLink(browserA, "SeleniumBrowserTests", ".WebTests.SeleniumBrowserTestLibrary");
+    addSymbolicLink(browserB, "SeleniumBrowserTests", ".WebTests.SeleniumBrowserTestLibrary");
+    localRoot = InMemoryPage.makeRoot("LocalRoot");
+
+    importer.importWiki(localRoot);
+
+    WikiImporter secondImporter = new WikiImporter(this);
+    secondImporter.parseUrl("http://localhost:" + FitNesseUtil.PORT);
+    secondImporter.importWiki(localRoot);
+
+    assertEquals(0, secondImporter.getOrphans().size());
+    assertNotNull(localRoot.getPageCrawler().getPage(
+      PathParser.parse("WebTests.BrowserA.SeleniumBrowserTests.SeleniumSuiteA.TestOne")));
+    assertNotNull(localRoot.getPageCrawler().getPage(
+      PathParser.parse("WebTests.BrowserB.SeleniumBrowserTests.SeleniumSuiteA.TestOne")));
+    assertNotNull(localRoot.getPageCrawler().getPage(
+      PathParser.parse("WebTests.SeleniumBrowserTestLibrary.SeleniumSuiteA.TestOne")));
+    assertEquals(0, secondImporter.getImportCount());
+  }
+
+  @Test
   public void testContextIsNotOrphanWhenUpdatingNonRoot() throws Exception {
     addLocalPageWithImportProperty(localRoot, "PageOne", false);
     importer.parseUrl("http://localhost:" + FitNesseUtil.PORT + "/PageOne");
@@ -288,6 +315,12 @@ public class WikiImporterTest implements WikiImporterClient {
     page.commit(data);
 
     return page;
+  }
+
+  private void addSymbolicLink(WikiPage page, String linkName, String target) {
+    PageData data = page.getData();
+    data.getProperties().set(SymbolicPage.PROPERTY_NAME).set(linkName, target);
+    page.commit(data);
   }
 
   @Override
