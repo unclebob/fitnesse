@@ -80,7 +80,7 @@
   <fieldset>
    <legend>Page type:</legend>
    #foreach( $pageType in $pageTypeAttributes )
-   <label for="$pageType"><input type="checkbox" id="$pageType" name="PageType" value="$pageType"#checked( "PageType" $pageType)/>$pageType</label>
+   <label for="$pageType"><input type="checkbox" id="$pageType" name="pageType" value="$pageType"#checked( "pageType" $pageType)/>$pageType</label>
    #end
 
    <label for="Prune"><input type="checkbox" id="Prune" name="Prune"#if( $request.hasInput("Prune")) checked="checked"#end/>Skip</label>

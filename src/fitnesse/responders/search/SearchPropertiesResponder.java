@@ -1,5 +1,6 @@
 package fitnesse.responders.search;
 
+import static fitnesse.wiki.PageData.LEGACY_PAGE_TYPE_ATTRIBUTE;
 import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTE;
 import static fitnesse.wiki.PageData.PropertySUITES;
 import static fitnesse.wiki.PageData.SECURITY_ATTRIBUTES;
@@ -36,7 +37,9 @@ public class SearchPropertiesResponder extends ResultResponder {
   }
 
   protected List<PageType> getPageTypesFromInput(Request request) {
-    String requestedPageTypes = request.getInput(PAGE_TYPE_ATTRIBUTE);
+    String requestedPageTypes = request.hasInput(PAGE_TYPE_ATTRIBUTE)
+      ? request.getInput(PAGE_TYPE_ATTRIBUTE)
+      : request.getInput(LEGACY_PAGE_TYPE_ATTRIBUTE);
     if (requestedPageTypes == null) {
       return null;
     }

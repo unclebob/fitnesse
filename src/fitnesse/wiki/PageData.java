@@ -44,7 +44,9 @@ public class PageData implements ReadOnlyPageData, Serializable {
    */
   public static final String PAGE_LINE_SEPARATOR ="\n";
   
-  public static final String PAGE_TYPE_ATTRIBUTE = "PageType";
+  public static final String PAGE_TYPE_ATTRIBUTE = "pageType";
+  // "PageType" input is used to make existing queries work
+  public static final String LEGACY_PAGE_TYPE_ATTRIBUTE = "PageType";
   public static final String[] PAGE_TYPE_ATTRIBUTES = { STATIC.toString(),
       TEST.toString(), SUITE.toString() };
 

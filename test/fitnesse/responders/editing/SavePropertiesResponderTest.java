@@ -36,7 +36,7 @@ public class SavePropertiesResponderTest {
     page = WikiPageUtil.addPage(root, PathParser.parse(PAGE_NAME), "");
 
     request = new MockRequest();
-    request.addInput("PageType", "Test");
+    request.addInput("pageType", "Test");
     request.addInput("Properties", "on");
     request.addInput("Search", "on");
     request.addInput("RecentChanges", "on");
