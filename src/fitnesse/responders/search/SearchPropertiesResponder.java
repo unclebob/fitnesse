@@ -65,6 +65,9 @@ public class SearchPropertiesResponder extends ResultResponder {
 
     getListboxAttributesFromRequest(request, ACTION, SEARCH_ACTION_ATTRIBUTES,
         attributes);
+    // the search form sends the navigation attributes as "Action" too
+    getListboxAttributesFromRequest(request, ACTION, SEARCH_NAVIGATION_ATTRIBUTES,
+        attributes);
     getListboxAttributesFromRequest(request, SECURITY, SECURITY_ATTRIBUTES,
         attributes);
 

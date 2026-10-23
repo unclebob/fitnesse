@@ -148,6 +148,18 @@ public class SearchPropertiesResponderTest {
   }
 
   @Test
+  public void testGetNavigationAttributesFromActionInput() {
+    MockRequest request = new MockRequest();
+    request.addInput(ACTION, "Edit,RecentChanges");
+
+    Map<String, Boolean> foundAttributes = responder.getAttributesFromInput(request);
+    assertTrue(foundAttributes.get("Edit"));
+    assertTrue(foundAttributes.get("RecentChanges"));
+    assertFalse(foundAttributes.get("Files"));
+    assertFalse(foundAttributes.get("Search"));
+  }
+
+  @Test
   public void testPageTypesAreOrEd() throws Exception {
     MockRequest request = setupRequest();
     request.addInput(PAGE_TYPE_ATTRIBUTE, "Test,Suite");
