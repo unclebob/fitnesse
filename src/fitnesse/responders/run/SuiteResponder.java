@@ -312,6 +312,10 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
     return "Test Results";
   }
 
+  protected String getRunType() {
+    return "suite";
+  }
+
   protected String mainTemplate() {
     return "testPage";
   }
@@ -339,7 +343,7 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
 
   protected void performExecution() throws TestExecutionException {
     MultipleTestsRunner runner = newMultipleTestsRunner(getPagesToRun());
-    runningTestingTracker.addStartedProcess(testRunId, runner);
+    runningTestingTracker.addStartedProcess(testRunId, runner, PathParser.render(page.getFullPath()), getRunType());
     if (isInteractive()) {
       ((InteractiveFormatter) mainFormatter).setTrackingId(testRunId);
     }

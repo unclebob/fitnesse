@@ -80,6 +80,8 @@
 | rollback | | Rollback the page to the selected version. |
 | | version | The version identifier of the version to rollback to.  See: ''viewVersion'' |
 | rss | | Returns an rss feed for the current page and all it's children.  See [[!-RssFeed-!][<UserGuide.AdministeringFitNesse.RestfulServices.RssFeed]] |
+| runningTests | | Returns all currently running tests and suites as JSON, e.g. !style_code({"running":[{"id":"1","path":"FrontPage.MySuite","type":"suite"}]}). With ''id=<id>'' only that run is reported, e.g. !style_code({"id":"1","path":"FrontPage.MySuite","type":"suite","running":true}). The id is the one returned in the ''X-FitNesse-Test-Id'' header and used by the ''stoptest'' responder; ''type'' is either ''test'' or ''suite''. |
+| | id | If present, only reports whether the test with this id is still running, e.g. !style_code({"id":"id1","running":true}). |
 | saveData | | Saves the data for a wiki page.  Usually called by the ''edit'' responder.  Usually invoked as a POST.  If the ''ticketId'' and ''saveTime'' suggest that a merge is needed, this responder will return the merge form without doing a save. |
 | | pageContent | The content to be saved into the page. |
 | | editTime | The time (in milliseconds) that the page was fetched for this edit.  Used to determine whether or not a merge is needed.  (Optional) |
