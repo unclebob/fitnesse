@@ -2,11 +2,13 @@ package fitnesse.responders.account;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
+import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wiki.WikiPageUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
+import static util.RegexTestCase.assertNotSubString;
 import static util.RegexTestCase.assertSubString;
 
 public class AccountResponderTest {
@@ -99,6 +102,24 @@ public class AccountResponderTest {
     assertSubString("<title>Account: ChildPage</title>", body);
     assertSubString("Change Password", body);
     assertSubString("<input type=\"submit\" name=\"changePassword\" value=\"Change My Password\"/>", body);
+  }
+
+  @Test
+  public void testFormatJsonStillReturnsAccountPage() throws Exception {
+    request.addInput("format", "json");
+    WikiPage page = WikiPageUtil.addPage(root, PathParser.parse("ChildPage"), "<html>");
+    PageData data = page.getData();
+    data.setAttribute(WikiPageProperty.HELP, "help text");
+    page.commit(data);
+
+    SimpleResponse response = makeResponse();
+    assertEquals(200, response.getStatus());
+    assertEquals(Response.Format.HTML.getContentType(), response.getContentType());
+
+    String body = response.getContent();
+    assertSubString("<title>Account: ChildPage</title>", body);
+    assertSubString("Change Password", body);
+    assertNotSubString("help text", body);
   }
 
   private static int getCountOfString(String textToFind, String body) {
