@@ -12,7 +12,7 @@ import fitnesse.testrunner.RunningTestingTracker.RunningProcess;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-/** GET ?responder=runningTests[&id=<X-FitNesse-Test-Id>] -> JSON */
+/** {@code GET ?responder=runningTests[&id=<X-FitNesse-Test-Id>]} returns JSON. */
 public class RunningTestsResponder implements Responder {
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
