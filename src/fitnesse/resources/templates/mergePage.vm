@@ -5,7 +5,7 @@
  <input type="hidden" name="suites" value="$suites"/>
  
  #if( $!pageType )
- <input type="hidden" name="PageType" value="$pageType" checked="checked" />
+ <input type="hidden" name="pageType" value="$pageType" checked="checked" />
  #end
  #foreach( $attr in $attributes )
  <input type="hidden" name="$attr" value="On"/>

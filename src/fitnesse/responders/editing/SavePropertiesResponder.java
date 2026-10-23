@@ -73,7 +73,9 @@ public class SavePropertiesResponder extends BasicResponder {
   }
 
   private String getPageType(Request request) {
-    return request.getInput(PageData.PAGE_TYPE_ATTRIBUTE);
+    return request.hasInput(PageData.PAGE_TYPE_ATTRIBUTE)
+      ? request.getInput(PageData.PAGE_TYPE_ATTRIBUTE)
+      : request.getInput(PageData.LEGACY_PAGE_TYPE_ATTRIBUTE);
   }
 
   private boolean isChecked(Request request, String name) {

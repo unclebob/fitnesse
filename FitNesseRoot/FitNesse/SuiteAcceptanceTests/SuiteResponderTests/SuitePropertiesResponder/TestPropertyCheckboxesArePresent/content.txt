@@ -14,9 +14,9 @@ Ensure that the Page type radios are present
 !|Response Examiner.|
 |type|pattern|matches?|
 |contents|Page type:|true|
-|contents|<input type="radio" id="Static" name="PageType" value="Static" checked="checked"/>|true|
-|contents|<input type="radio" id="Test" name="PageType" value="Test"/>|true|
-|contents|<input type="radio" id="Suite" name="PageType" value="Suite"/>|true|
+|contents|<input type="radio" id="Static" name="pageType" value="Static" checked="checked"/>|true|
+|contents|<input type="radio" id="Test" name="pageType" value="Test"/>|true|
+|contents|<input type="radio" id="Suite" name="pageType" value="Suite"/>|true|
 |contents|<input type="checkbox" id="Prune" name="Prune"/>|true|
 
 Ensure that the Action links are present

@@ -309,9 +309,9 @@ public class PropertiesResponderTest {
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
     assertSubString("Page type:", html);
-    assertSubString("<input type=\"radio\" id=\"Static\" name=\"PageType\" value=\"Static\" checked=\"checked\"/>", html);
-    assertSubString("<input type=\"radio\" id=\"Test\" name=\"PageType\" value=\"Test\"/>", html);
-    assertSubString("<input type=\"radio\" id=\"Suite\" name=\"PageType\" value=\"Suite\"/>", html);
+    assertSubString("<input type=\"radio\" id=\"Static\" name=\"pageType\" value=\"Static\" checked=\"checked\"/>", html);
+    assertSubString("<input type=\"radio\" id=\"Test\" name=\"pageType\" value=\"Test\"/>", html);
+    assertSubString("<input type=\"radio\" id=\"Suite\" name=\"pageType\" value=\"Suite\"/>", html);
     assertSubString("<input type=\"checkbox\" id=\"Prune\" name=\"Prune\"/>", html);
   }
 
@@ -326,9 +326,9 @@ public class PropertiesResponderTest {
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
     assertSubString("Page type:", html);
-    assertSubString("<input type=\"radio\" id=\"Static\" name=\"PageType\" value=\"Static\"/>", html);
-    assertSubString("<input type=\"radio\" id=\"Test\" name=\"PageType\" value=\"Test\"/>", html);
-    assertSubString("<input type=\"radio\" id=\"Suite\" name=\"PageType\" value=\"Suite\" checked=\"checked\"/>", html);
+    assertSubString("<input type=\"radio\" id=\"Static\" name=\"pageType\" value=\"Static\"/>", html);
+    assertSubString("<input type=\"radio\" id=\"Test\" name=\"pageType\" value=\"Test\"/>", html);
+    assertSubString("<input type=\"radio\" id=\"Suite\" name=\"pageType\" value=\"Suite\" checked=\"checked\"/>", html);
     assertSubString("<input type=\"checkbox\" id=\"Prune\" name=\"Prune\"/>", html);
   }
 
@@ -342,9 +342,9 @@ public class PropertiesResponderTest {
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
     assertSubString("Page type:", html);
-    assertSubString("<input type=\"radio\" id=\"Static\" name=\"PageType\" value=\"Static\"/>", html);
-    assertSubString("<input type=\"radio\" id=\"Test\" name=\"PageType\" value=\"Test\" checked=\"checked\"/>", html);
-    assertSubString("<input type=\"radio\" id=\"Suite\" name=\"PageType\" value=\"Suite\"/>", html);
+    assertSubString("<input type=\"radio\" id=\"Static\" name=\"pageType\" value=\"Static\"/>", html);
+    assertSubString("<input type=\"radio\" id=\"Test\" name=\"pageType\" value=\"Test\" checked=\"checked\"/>", html);
+    assertSubString("<input type=\"radio\" id=\"Suite\" name=\"pageType\" value=\"Suite\"/>", html);
     assertSubString("<input type=\"checkbox\" id=\"Prune\" name=\"Prune\"/>", html);
   }
 

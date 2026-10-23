@@ -16,6 +16,7 @@ import java.util.Map;
 
 import static fitnesse.responders.search.SearchPropertiesResponder.ACTION;
 import static fitnesse.responders.search.SearchPropertiesResponder.SPECIAL;
+import static fitnesse.wiki.PageData.LEGACY_PAGE_TYPE_ATTRIBUTE;
 import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTE;
 import static fitnesse.wiki.PageData.PropertyPRUNE;
 import static fitnesse.wiki.PageType.*;
@@ -71,6 +72,17 @@ public class SearchPropertiesResponderTest {
     String[] titles1 = { "Page", TEST.toString(), "Tags", "PageOne" };
     assertOutputHasRowWithLink(content, titles1);
     assertOutputHasRowWithLabels("filter1,filter2");
+  }
+
+  @Test
+  public void testLegacyPageTypeInputIsStillAccepted() throws Exception {
+    MockRequest request = setupRequest();
+    request.addInput(LEGACY_PAGE_TYPE_ATTRIBUTE, TEST.toString());
+
+    String content = invokeResponder(request);
+    String[] titles = { "Page", TEST.toString(), "PageOne"};
+
+    assertOutputHasRowWithLink(content, titles);
   }
 
 
@@ -145,6 +157,18 @@ public class SearchPropertiesResponderTest {
     request.addInput(ACTION, "Edit,Properties");
     foundAttributes = responder.getAttributesFromInput(request);
     assertTrue(foundAttributes.get("Properties"));
+  }
+
+  @Test
+  public void testGetNavigationAttributesFromActionInput() {
+    MockRequest request = new MockRequest();
+    request.addInput(ACTION, "Edit,RecentChanges");
+
+    Map<String, Boolean> foundAttributes = responder.getAttributesFromInput(request);
+    assertTrue(foundAttributes.get("Edit"));
+    assertTrue(foundAttributes.get("RecentChanges"));
+    assertFalse(foundAttributes.get("Files"));
+    assertFalse(foundAttributes.get("Search"));
   }
 
   @Test
