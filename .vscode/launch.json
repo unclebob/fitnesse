@@ -12,6 +12,10 @@
                 "-e",
                 "0"
             ],
+            "classPaths": [
+                "$Auto",
+                "${workspaceFolder}/build/classes/java/main"
+            ],
             "console": "internalConsole",
             "stopOnEntry": false,
             "cwd": "${workspaceFolder}",
@@ -29,9 +33,14 @@
                 "-e",
                 "0"
             ],
+            "classPaths": [
+                "$Auto",
+                "${workspaceFolder}/build/classes/java/main"
+            ],
             "console": "internalConsole",
             "stopOnEntry": false,
-            "cwd": "${workspaceFolder}"
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Gradle processResources"
         }
     ]
 }

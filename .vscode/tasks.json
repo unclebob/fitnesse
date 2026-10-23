@@ -31,9 +31,26 @@
             "runOptions": {}
         },
         {
+            "label": "Gradle processResources",
+            "type": "shell",
+            "command": "./gradlew",
+            "args": [
+                "processResources"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "Start Debug with Template Watcher",
-            "dependsOrder": "parallel",
+            "dependsOrder": "sequence",
             "dependsOn": [
+                "Gradle processResources",
                 "Template Watcher"
             ]
         },
