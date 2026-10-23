@@ -113,6 +113,8 @@
 | rollback | | Rollback the page to the selected version. |
 | | version | The version identifier of the version to rollback to.  See: ''viewVersion'' |
 | rss | | Returns an rss feed for the current page and all it's children.  See [[!-RssFeed-!][<UserGuide.AdministeringFitNesse.RestfulServices.RssFeed]] |
+| runningTests | | Returns the ids of all currently running tests and suites as JSON, e.g. !style_code({"running":["id1","id2"]}). The id is the one returned in the ''X-FitNesse-Test-Id'' header and used by the ''stoptest'' responder. |
+| | id | If present, only reports whether the test with this id is still running, e.g. !style_code({"id":"id1","running":true}). |
 | saveAccount | | Saves account changes.  Usually called from the ''account'' responder.  Requires a logged in user. |
 | | changePassword | If present, changes the password of the current user using !-CurrentPasswordText-!, !-NewPasswordText-! and !-ConfirmPasswordText-!. |
 | | createUser | (admin only) Creates the user given by !-UserNameText-! with the password !-UserPasswordText-!. |

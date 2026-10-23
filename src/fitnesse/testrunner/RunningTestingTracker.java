@@ -22,7 +22,7 @@ public class RunningTestingTracker {
   }
 
   /**
-   * @param ticket String
+   * @param ticket  String
    * @param process Stoppable process
    * @return id used to identify this process for use with the stop responder
    */
@@ -51,6 +51,14 @@ public class RunningTestingTracker {
       return "Stopped 1 test or suite";
     }
     return "Could not find test or suite to stop";
+  }
+
+  public boolean isRunning(String ticket) {
+    return processes.containsKey(ticket);
+  }
+
+  public java.util.Set<String> getRunningIds() {
+    return java.util.Collections.unmodifiableSet(new java.util.HashSet<>(processes.keySet()));
   }
 
   private void stopProcess(Stoppable process) {
