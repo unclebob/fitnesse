@@ -14,13 +14,10 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import org.apache.commons.lang3.StringUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 
-import static fitnesse.wiki.WikiPageProperty.*;
+import static fitnesse.wiki.WikiPageProperty.SUITES;
 
 public class AccountResponder implements Responder {
   private WikiPage page;
@@ -48,31 +45,8 @@ public class AccountResponder implements Responder {
   }
 
   private void makeContent(FitNesseContext context, Request request) throws UnsupportedEncodingException {
-    if ("json".equals(request.getInput("format"))) {
-      JSONObject jsonObject = makeJson();
-      response.setContent(jsonObject.toString(1));
-    } else {
-      String html = makeHtml(context, request);
-      response.setContent(html);
-    }
-  }
-
-  private JSONObject makeJson() {
-    response.setContentType(Response.Format.JSON);
-    JSONObject jsonObject = new JSONObject();
-    if (pageData.hasAttribute(HELP)) {
-      jsonObject.put(HELP, pageData.getAttribute(HELP));
-    }
-    if (pageData.hasAttribute(SUITES)) {
-      JSONArray tags = new JSONArray();
-      for (String tag : pageData.getAttribute(SUITES).split(",")) {
-        if (StringUtils.isNotBlank(tag)) {
-          tags.put(tag.trim());
-        }
-      }
-      jsonObject.put(SUITES, tags);
-    }
-    return jsonObject;
+    String html = makeHtml(context, request);
+    response.setContent(html);
   }
 
   private String makeHtml(FitNesseContext context, Request request) {
