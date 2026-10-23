@@ -1,13 +1,16 @@
 package fitnesse;
 
+import fitnesse.http.MockRequest;
 import fitnesse.plugins.PluginException;
 import fitnesse.plugins.PluginsLoaderTest;
+import fitnesse.responders.FilteringResponder;
 import fitnesse.util.ClassUtils;
 import org.junit.After;
 import org.junit.Test;
 
 import java.io.IOException;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -86,6 +89,20 @@ public class ContextConfiguratorTest {
       .theme;
 
     assertThat(theme, is("othertheme"));
+  }
+
+  @Test
+  public void contentFilterIsAppliedWhenSavingPages() throws Exception {
+    FitNesseContext context = ContextConfigurator
+      .empty()
+      .withParameter(ConfigurationParameter.CONTENT_FILTER, PluginsLoaderTest.TestContentFilter.class.getName())
+      .withClassLoader(getClass().getClassLoader())
+      .makeFitNesseContext();
+
+    MockRequest request = new MockRequest();
+    request.addInput("responder", "saveData");
+
+    assertThat(context.responderFactory.makeResponder(request), instanceOf(FilteringResponder.class));
   }
 
 }

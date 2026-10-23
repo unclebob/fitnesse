@@ -200,7 +200,7 @@ public class ContextConfigurator {
 
     // Need something like pre- and post- notifications to hook up this kind of functionality
     if (contentFilter != null)
-      context.responderFactory.addFilter("save", new ContentFilterResponder(contentFilter));
+      context.responderFactory.addFilter("saveData", new ContentFilterResponder(contentFilter));
 
     return context;
   }
