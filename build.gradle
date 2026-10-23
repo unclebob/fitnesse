@@ -66,6 +66,10 @@ java {
   }
 }
 
+tasks.withType(JavaCompile).configureEach {
+  options.encoding = 'UTF-8'
+}
+
 dependencies {
   implementation "org.htmlparser:htmlparser:2.1"
   implementation "org.htmlparser:htmllexer:2.1"
