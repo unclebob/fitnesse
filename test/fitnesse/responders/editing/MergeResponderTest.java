@@ -51,7 +51,7 @@ public class MergeResponderTest {
   @Test
   public void testAttributeValues() throws Exception {
     request.addInput("Edit", "On");
-    request.addInput("PageType", "Test");
+    request.addInput("pageType", "Test");
     request.addInput("Search", "On");
     request.addInput(EditResponder.SUITES, "tag2");
     Responder responder = new MergeResponder(request);
@@ -59,7 +59,7 @@ public class MergeResponderTest {
 
     assertHasRegexp("type=\"hidden\"", response.getContent());
     assertHasRegexp("name=\"Edit\"", response.getContent());
-    assertHasRegexp("name=\"PageType\" value=\"Test\" checked", response.getContent());
+    assertHasRegexp("name=\"pageType\" value=\"Test\" checked", response.getContent());
     assertHasRegexp("name=\"Search\"", response.getContent());
     assertHasRegexp("name=\"suites\"", response.getContent());
     assertHasRegexp("^(?=.*\\btag1\\b)(?=.*\\btag2\\b)*$", response.getContent());

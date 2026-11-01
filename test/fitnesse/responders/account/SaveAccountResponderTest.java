@@ -301,7 +301,7 @@ public class SaveAccountResponderTest {
   }
 
   private void addDefaultRequestInputs() {
-    request.addInput("PageType", "Test");
+    request.addInput("pageType", "Test");
     request.addInput("Properties", "on");
     request.addInput("Search", "on");
     request.addInput("RecentChanges", "on");

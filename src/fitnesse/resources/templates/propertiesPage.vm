@@ -9,7 +9,7 @@
    <fieldset>
     <legend>Page type:</legend>
     #foreach( $pageType in $pageTypes )
-    <label for="$pageType"><input type="radio" id="$pageType" name="PageType" value="$pageType"#if( $pageType == $selectedPageType) checked="checked"#end/>$pageType</label>
+    <label for="$pageType"><input type="radio" id="$pageType" name="pageType" value="$pageType"#if( $pageType == $selectedPageType) checked="checked"#end/>$pageType</label>
     #end
 
     <label for="Prune"><input type="checkbox" id="Prune" name="Prune"#checked( "Prune" )/>Skip (Recursive)</label>
