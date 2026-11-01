@@ -260,6 +260,11 @@ public class JUnitXMLPerPageTestListenerTest {
       }
 
       @Override
+      public TestFailure getAssumptionFailure() {
+        return null;
+      }
+
+      @Override
       public long getStartTime() {
         return 0;
       }
