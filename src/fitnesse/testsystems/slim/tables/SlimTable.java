@@ -302,6 +302,10 @@ public abstract class SlimTable {
     public int getRow() {
       return row;
     }
+    @Override
+    public Table getTable() {
+      return table;
+    }
 
     // Used only by TestXmlFormatter.SlimTestXmlFormatter
     public String getExpected() {
