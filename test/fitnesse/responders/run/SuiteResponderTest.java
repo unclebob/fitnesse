@@ -615,6 +615,36 @@ public class SuiteResponderTest {
     assertEquals("RerunLastFailures_SuitePage", result);
   }
 
+  @Test
+  public void testGetRerunPageName_withSuiteFilter() throws Exception {
+    request.setResource("SuitePage");
+    request.setQueryString("suiteFilter=smoke");
+    responder.makeResponse(context, request);
+
+    String result = responder.getRerunPageName();
+    assertEquals("RerunLastFailures_SuitePage_suiteFilter_smoke", result);
+  }
+
+  @Test
+  public void testGetRerunPageName_withMultipleSuiteFilters() throws Exception {
+    request.setResource("SuitePage");
+    request.setQueryString("suiteFilter=smoke,foo");
+    responder.makeResponse(context, request);
+
+    String result = responder.getRerunPageName();
+    assertEquals("RerunLastFailures_SuitePage_suiteFilter_smoke-foo", result);
+  }
+
+  @Test
+  public void testGetRerunPageName_withAnyTagFilterParam() throws Exception {
+    request.setResource("SuitePage");
+    request.setQueryString("runTestsMatchingAnyTag=smoke,foo");
+    responder.makeResponse(context, request);
+
+    String result = responder.getRerunPageName();
+    assertEquals("RerunLastFailures_SuitePage_suiteFilter_smoke-foo", result);
+  }
+
   private String runSuite() throws Exception {
     Response response = responder.makeResponse(context, request);
 

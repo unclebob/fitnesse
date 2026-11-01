@@ -304,8 +304,26 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
       String newFullPathName = fullPathName.replace(".", "-");
       return newFullPathName;
     } else {
-      return "RerunLastFailures_" + fullPathName.replace(".", "-");
+      String rerunPageName = "RerunLastFailures_" + fullPathName.replace(".", "-");
+      String rerunSuiteFilter = getRerunSuiteFilterName();
+      if (rerunSuiteFilter != null) {
+        rerunPageName += "_suiteFilter_" + rerunSuiteFilter;
+      }
+      return rerunPageName;
     }
+  }
+
+  private String getRerunSuiteFilterName() {
+    if (request == null) {
+      return null;
+    }
+    String orFilterString = getOrFilterString(request);
+    if (StringUtils.isBlank(orFilterString)) {
+      return null;
+    }
+    String normalized = orFilterString.trim().replaceAll("[^A-Za-z0-9]+", "-");
+    normalized = normalized.replaceAll("^-+|-+$", "");
+    return StringUtils.isBlank(normalized) ? null : normalized;
   }
 
   protected String getTitle() {

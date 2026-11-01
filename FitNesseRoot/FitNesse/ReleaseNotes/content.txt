@@ -1,4 +1,5 @@
 !2 Pending Changes
+* Rerun pages for filtered suite runs now include the !-suiteFilter-! tag in their name (e.g. !-RerunLastFailures_MySuite_suiteFilter_smoke-!), allowing parallel runs using different !-suiteFilter-! tags so each maintain their own independent set of failures for rerun. ([[1620][https://github.com/unclebob/fitnesse/pull/1620]])
 
 !2 20260313
  * Updated some dependencies
