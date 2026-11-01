@@ -1,5 +1,10 @@
 !2 Pending Changes
+* Refactor page shows tree structure ([[1617][https://github.com/unclebob/fitnesse/pull/1617]]).
+* Allow old versions to be removed when deleting a page ([[1618][https://github.com/unclebob/fitnesse/pull/1618]]).
 * Rerun pages for filtered suite runs now include the !-suiteFilter-! tag in their name (e.g. !-RerunLastFailures_MySuite_suiteFilter_smoke-!), allowing parallel runs using different !-suiteFilter-! tags so each maintain their own independent set of failures for rerun. ([[1620][https://github.com/unclebob/fitnesse/pull/1620]])
+* Fix symbolic links orphaned by wiki import ([[1622][https://github.com/unclebob/fitnesse/pull/1622]]).
+* Gradle 8.14.6.
+ * Updated some dependencies
 
 !2 20260313
  * Updated some dependencies
