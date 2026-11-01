@@ -81,13 +81,17 @@
 <form method="get" action="$refactoredRootPage">
  <input type="hidden" name="responder" value="movePage"/>
  <fieldset>
-  <label for="newLocation">New Location:</label>
-  <input type="text" name="newLocation" value="" size="80" class="wikipath" list="suites" placeholder="enter first two chars of suite name here" autocomplete="off" />
-  <datalist id="suites">
-    #foreach ($suiteEntry in $suiteMap)
-        <option value="#escape($suiteEntry)"/>
-    #end
-  </datalist>
+  <div class="d-flex">
+    <label for="newLocation">New Location:</label>
+    <span id="selectedLocation" class="ml-1"></span>
+  </div>
+  <div class="form-hint">
+	Choose the destination page in the tree. Click again to deselect. Configured root path: $rootpath
+  </div>
+  <input type="hidden" name="newLocation" id="newLocation" />
+  <div id="pageTreeContainer">
+	<ul id="pageTree"></ul>
+  </div>
  </fieldset>
  <fieldset>
   <label class="checkbox" for="refactorReferences_move"><input type="checkbox" id="refactorReferences_move" name="refactorReferences"/>Find all references to this page and change them accordingly (May take several minutes)</label>
@@ -97,4 +101,6 @@
   <a class="button" href="$viewLocation">Cancel</a>
  </fieldset>
 </form>
+<div id="configPath" data-path="$rootpath"></div>
+<script type="text/javascript" src="${contextRoot}files/fitnesse/javascript/refactorForm.js"></script>
 #end
