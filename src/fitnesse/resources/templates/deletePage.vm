@@ -1,6 +1,11 @@
 <h2>Delete $pageName?</h2>
 <form method="POST">
  <p>Are you sure you want to delete $pageName?</p>
+ <fieldset>
+  <label for="deleteVersions">
+    <input type="checkbox" id="deleteVersions" name="deleteVersions" value="Yes">Delete Versions
+  </label>
+ </fieldset>
  #if( $deleteSubPages )<p class="warning">Warning, this page contains one or more subpages.</p>#end
  <input type="submit" name="confirmed" value="Yes"/>
  <a class="button" href="$pageName" accesskey="n">No</a>
