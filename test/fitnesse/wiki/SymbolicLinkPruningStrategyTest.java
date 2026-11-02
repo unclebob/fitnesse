@@ -6,50 +6,56 @@ import fitnesse.wiki.fs.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
 
 public class SymbolicLinkPruningStrategyTest {
   private WikiPage root;
-  private WikiPage linkingPage;
-  private WikiPage symLink;
 
   @Before
   public void setUp() {
     root = InMemoryPage.makeRoot("RooT");
-    linkingPage = WikiPageUtil.addPage(root, PathParser.parse("LinkingPage"), "");
+    WikiPage linkingPage = WikiPageUtil.addPage(root, PathParser.parse("LinkingPage"), "");
     WikiPage linkedPage = WikiPageUtil.addPage(root, PathParser.parse("LinkedPage"), "");
     WikiPageUtil.addPage(linkedPage, PathParser.parse("ChildPage"), "");
-    symLink = new SymbolicPage("SymLink", linkedPage, linkingPage);
+    WikiPageUtil.addPage(root, PathParser.parse("OtherPage"), "");
+    addSymbolicLink(linkingPage, "SymLink", ".LinkedPage");
+    addSymbolicLink(linkedPage, "InnerLink", ".OtherPage");
   }
 
   @Test
-  public void skipsSymbolicLink() {
-    assertTrue(new SymbolicLinkPruningStrategy(root).skipPageAndChildren(symLink));
+  public void leavesOutSymbolicLinks() {
+    assertEquals(asList("", "LinkedPage", "LinkedPage.ChildPage", "LinkingPage", "OtherPage"),
+      traverse(root, new SymbolicLinkPruningStrategy()));
   }
 
   @Test
-  public void doesNotSkipRealPages() {
-    PagePruningStrategy strategy = new SymbolicLinkPruningStrategy(root);
-    assertFalse(strategy.skipPageAndChildren(root));
-    assertFalse(strategy.skipPageAndChildren(linkingPage));
+  public void followsSymbolicLinksWithoutPruning() {
+    assertEquals(asList("", "LinkedPage", "LinkedPage.ChildPage", "LinkedPage.InnerLink", "LinkingPage",
+        "LinkingPage.SymLink", "LinkingPage.SymLink.ChildPage", "LinkingPage.SymLink.InnerLink", "OtherPage"),
+      traverse(root, new NoPruningStrategy()));
   }
 
   @Test
-  public void doesNotSkipSymbolicLinkItStartsAt() {
-    assertFalse(new SymbolicLinkPruningStrategy(symLink).skipPageAndChildren(symLink));
+  public void traversesSymbolicLinkItStartsAtButNoSymbolicLinksBelow() {
+    WikiPage symLink = root.getChildPage("LinkingPage").getChildPage("SymLink");
+    assertEquals(asList("LinkingPage.SymLink", "LinkingPage.SymLink.ChildPage"),
+      traverse(symLink, new SymbolicLinkPruningStrategy()));
   }
 
-  @Test
-  public void skipsSymbolicLinkBelowSymbolicLinkItStartsAt() {
-    WikiPage innerLink = new SymbolicPage("InnerLink", new SymbolicPage("InnerLink", root, symLink.getRealPage()), symLink);
-    assertTrue(new SymbolicLinkPruningStrategy(symLink).skipPageAndChildren(innerLink));
+  private List<String> traverse(WikiPage startPage, PagePruningStrategy strategy) {
+    List<String> paths = new ArrayList<>();
+    startPage.getPageCrawler().traverse(page -> paths.add(page.getFullPath().toString()), strategy);
+    paths.sort(null);
+    return paths;
   }
 
-  @Test
-  public void doesNotSkipChildrenOfSymbolicLinkItStartsAt() {
-    WikiPage child = symLink.getChildPage("ChildPage");
-    assertTrue(child.isSymbolicPage());
-    assertFalse(new SymbolicLinkPruningStrategy(symLink).skipPageAndChildren(child));
+  private void addSymbolicLink(WikiPage page, String linkName, String linkPath) {
+    PageData data = page.getData();
+    data.getProperties().set(SymbolicPage.PROPERTY_NAME).set(linkName, linkPath);
+    page.commit(data);
   }
 }

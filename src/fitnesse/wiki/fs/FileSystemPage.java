@@ -103,6 +103,11 @@ public class FileSystemPage extends BaseWikitextPage implements FileBasedWikiPag
   }
 
   @Override
+  public List<WikiPage> getChildrenWithoutSymbolicLinks() {
+    return subWikiPageFactory.getChildrenWithoutSymbolicLinks(this);
+  }
+
+  @Override
   public WikiPage getChildPage(String childName) {
     return subWikiPageFactory.getChildPage(this, childName);
   }

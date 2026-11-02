@@ -68,6 +68,15 @@ public class SymbolicPage extends BaseWikitextPage {
     return symChildren;
   }
 
+  @Override
+  public List<WikiPage> getChildrenWithoutSymbolicLinks() {
+    List<WikiPage> symChildren = new LinkedList<>();
+    for (WikiPage child : realPage.getChildrenWithoutSymbolicLinks()) {
+      symChildren.add(createChildPage(child));
+    }
+    return symChildren;
+  }
+
   private WikiPage createChildPage(WikiPage child) {
     WikiPage cyclicReference = findCyclicReference(child);
     if (cyclicReference != null) {
