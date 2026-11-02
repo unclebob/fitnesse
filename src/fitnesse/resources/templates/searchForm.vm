@@ -27,6 +27,16 @@
    #end
    <input type="radio" id="leaf" name="searchScope" value="" #if( !$request.hasInput("searchScope") || $request.getInput("searchScope").equals("") ) checked="checked"#end#/>$page.getName()
   </fieldset>
+  <fieldset>
+   <label for="includeSymLinks">Options:</label>
+   <input type="checkbox" id="includeSymLinks" name="includeSymLinks"#if( $request.hasInput("includeSymLinks")) checked="checked"#end/>Include symbolic links
+   <input type="checkbox" id="useWildcards" name="useWildcards"#if( $request.hasInput("useWildcards")) checked="checked"#end/>Use wildcards (*)
+   <select id="searchThreads" name="searchThreads">
+    #foreach( $threads in $resultResponder.getSearchThreadChoices() )
+    <option value="$threads"#if( $threads == $resultResponder.getSelectedSearchThreads() ) selected="selected"#end>$threads</option>
+    #end
+   </select>Threads
+  </fieldset>
  <fieldset class="buttons">
 	  <input type="submit" name="searchType" value="Search Titles" data-toggle="tooltip" data-placement="bottom" title="Searches in page titles only. Will run fairly quickly."/>
 	  <input type="submit" name="searchType" value="Search Content" data-toggle="tooltip" data-placement="bottom" title="Searches in the content of every page. Don't hold your breath."/>
@@ -54,6 +64,15 @@
    #end
    <input type="radio" id="leaf" name="searchScope" value="" #if( !$request.hasInput("searchScope") || $request.getInput("searchScope").equals("") ) checked="checked"#end#/>$page.getName()
   </fieldset>
+  <fieldset>
+   <label for="includeSymLinks">Options:</label>
+   <input type="checkbox" id="includeSymLinks" name="includeSymLinks"#if( $request.hasInput("includeSymLinks")) checked="checked"#end/>Include symbolic links
+   <select id="searchThreads" name="searchThreads">
+    #foreach( $threads in $resultResponder.getSearchThreadChoices() )
+    <option value="$threads"#if( $threads == $resultResponder.getSelectedSearchThreads() ) selected="selected"#end>$threads</option>
+    #end
+   </select>Threads
+  </fieldset>
  <fieldset class="buttons">
 	  <input type="submit" name="searchType" value="Search Content" data-toggle="tooltip" data-placement="bottom" title="Searches in the content of every page. Don't hold your breath."/>
 	<a class="button" href="$viewLocation">Back</a>
@@ -74,6 +93,15 @@
 	<input type="radio" id="$breadCrumb" name="searchScope" value="$breadCrumb.Name" #checked( "searchScope" $breadCrumb.Name)/>$breadCrumb.Name
    #end
    <input type="radio" id="leaf" name="searchScope" value="" #if( !$request.hasInput("searchScope") || $request.getInput("searchScope").equals("") ) checked="checked"#end#/>$page.getName()
+  </fieldset>
+  <fieldset>
+   <label for="includeSymLinks">Options:</label>
+   <input type="checkbox" id="includeSymLinks" name="includeSymLinks"#if( $request.hasInput("includeSymLinks")) checked="checked"#end/>Include symbolic links
+   <select id="searchThreads" name="searchThreads">
+    #foreach( $threads in $resultResponder.getSearchThreadChoices() )
+    <option value="$threads"#if( $threads == $resultResponder.getSelectedSearchThreads() ) selected="selected"#end>$threads</option>
+    #end
+   </select>Threads
   </fieldset>
 
  <div class="properties">

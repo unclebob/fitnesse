@@ -10,12 +10,20 @@ import fitnesse.components.Traverser;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.responders.ChunkingResponder;
+import fitnesse.wiki.NoPruningStrategy;
 import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PagePruningStrategy;
 import fitnesse.wiki.PageType;
+import fitnesse.wiki.SymbolicLinkPruningStrategy;
+import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.search.PageFinder;
+import fitnesse.wiki.search.WikiPageFinder;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 
 import static fitnesse.wiki.PageData.PropertyEDIT;
 import static fitnesse.wiki.PageData.PropertyFILES;
@@ -37,6 +45,11 @@ public abstract class ResultResponder extends ChunkingResponder implements
   static final String[] SEARCH_NAVIGATION_ATTRIBUTES = { PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH };
   static final String SEARCH_ATTRIBUTE_SKIP = PropertyPRUNE;
   static final String[] SPECIAL_ATTRIBUTES = { "SetUp", "TearDown" };
+  static final String INCLUDE_SYMBOLIC_LINKS = "includeSymLinks";
+  static final String SEARCH_THREADS = "searchThreads";
+
+  private long searchStartTime;
+  private long searchEndTime;
 
   @Override
   protected PageCrawler getPageCrawler() {
@@ -90,10 +103,83 @@ public abstract class ResultResponder extends ChunkingResponder implements
 
   @Override
   public final void traverse(TraversalListener<WikiPage> observer) {
+    searchStartTime = System.nanoTime();
+    try {
+      search(observer);
+    } finally {
+      searchEndTime = System.nanoTime();
+    }
+  }
+
+  /**
+   * @return the time the search took, in seconds with two decimals.
+   */
+  public String getSearchTime() {
+    return String.format(Locale.ROOT, "%.2f", (searchEndTime - searchStartTime) / 1_000_000_000.0);
+  }
+
+  private void search(TraversalListener<WikiPage> observer) {
     PageFinder pageFinder = getPageFinder(observer);
-    if (pageFinder != null) {
+    if (pageFinder instanceof WikiPageFinder) {
+      PagePruningStrategy strategy = includeSymbolicLinks()
+        ? new NoPruningStrategy() : new SymbolicLinkPruningStrategy();
+      ((WikiPageFinder) pageFinder).search(getSearchScope(), strategy, getSearchThreads());
+    } else if (pageFinder != null) {
       pageFinder.search(getSearchScope());
     }
+  }
+
+  /**
+   * @return true to also search the pages behind symbolic links, as requested; false by default.
+   */
+  protected boolean includeSymbolicLinks() {
+    return request.hasInput(INCLUDE_SYMBOLIC_LINKS);
+  }
+
+  /**
+   * @return the number of threads to load pages with, as requested; 1 by default.
+   */
+  public int getSearchThreads() {
+    try {
+      int threads = Integer.parseInt(request.getInput(SEARCH_THREADS));
+      return Math.max(1, Math.min(threads, WikiPageFinder.MAX_THREADS));
+    } catch (NumberFormatException e) {
+      return 1;
+    }
+  }
+
+  /**
+   * @return the number of threads to preselect on the search form: as requested, or the most threads by default.
+   */
+  public int getSelectedSearchThreads() {
+    return request.hasInput(SEARCH_THREADS) ? getSearchThreads() : WikiPageFinder.MAX_THREADS;
+  }
+
+  /**
+   * @return the numbers of threads to choose from.
+   */
+  public int[] getSearchThreadChoices() {
+    int[] choices = new int[WikiPageFinder.MAX_THREADS];
+    for (int i = 0; i < choices.length; i++) {
+      choices[i] = i + 1;
+    }
+    return choices;
+  }
+
+  /**
+   * @param page a search result
+   * @return the pages making up the full path of the page, from the top level page down to the page itself
+   */
+  public List<WikiPage> getPathPages(WikiPage page) {
+    LinkedList<WikiPage> pathPages = new LinkedList<>();
+    for (WikiPage current = page; !current.isRoot(); current = current.getParent()) {
+      pathPages.addFirst(current);
+    }
+    return pathPages;
+  }
+
+  public boolean isSymbolicLink(WikiPage page) {
+    return SymbolicPage.isSymbolicLink(page);
   }
 
   protected abstract String getTemplate();
