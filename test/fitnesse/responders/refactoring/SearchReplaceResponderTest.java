@@ -144,6 +144,7 @@ public class SearchReplaceResponderTest extends ResponderTestCase {
 
     assertThat(content, not(containsString("class=\"changedLines\"")));
     assertThat(content, not(containsString("<th>Before</th>")));
+    assertThat(content, not(containsString("To save this search as a link")));
     assertEquals("has replacedthing in it", root.getChildPage("SomePage").getData().getContent());
   }
 

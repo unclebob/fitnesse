@@ -179,6 +179,13 @@ public abstract class ResultResponder extends ChunkingResponder implements
   }
 
   /**
+   * @return true if repeating the request only searches, so it can be saved as a link.
+   */
+  public boolean canBeSavedAsLink() {
+    return true;
+  }
+
+  /**
    * @return true to show the lines each result would change, see {@link #getChangedLines(WikiPage)}.
    */
   public boolean showsChangedLines() {

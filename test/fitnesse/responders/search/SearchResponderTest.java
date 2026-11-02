@@ -139,6 +139,22 @@ public class SearchResponderTest {
   }
 
   @Test
+  public void searchWithQueryStringCanBeSavedAsLink() throws Exception {
+    request.setQueryString("responder=search&searchType=content&searchString=something");
+    String content = getResponseContentUsingSearchString("something");
+
+    assertSubString("To save this search as a link", content);
+    assertSubString("?responder=search&searchType=content&searchString=something]]", content);
+  }
+
+  @Test
+  public void searchWithoutQueryStringCannotBeSavedAsLink() throws Exception {
+    String content = getResponseContentUsingSearchString("something");
+
+    assertDoesntHaveRegexp("To save this search as a link", content);
+  }
+
+  @Test
   public void testTableSorterScript() throws Exception {
     String content = getResponseContentUsingSearchString("something");
     // test only small part, since output is chunked

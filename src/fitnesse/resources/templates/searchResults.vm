@@ -76,8 +76,10 @@
 </fieldset>
 
 
+#if( $resultResponder.canBeSavedAsLink() && !$queryString.isEmpty() )
 <h4>To save this search as a link, paste the text below into a page.</h4>
 <pre>[[Search below !-$page.getName()-! for &lt;description&gt;][$page.getPageCrawler().getFullPath()?$queryString]]</pre>
+#end
 
 #if ($hits > 1)
 <script language="javascript">document.getElementById("feedback").innerHTML = 'Found $hits results for your search in $resultResponder.getSearchTime() seconds.'</script>

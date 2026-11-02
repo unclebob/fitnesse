@@ -60,6 +60,12 @@ public class SearchReplaceResponder extends ResultResponder {
   }
 
   @Override
+  public boolean canBeSavedAsLink() {
+    // following the link would replace again
+    return false;
+  }
+
+  @Override
   public boolean showsChangedLines() {
     return isDryRun();
   }
