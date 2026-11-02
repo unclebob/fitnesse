@@ -149,6 +149,13 @@ public abstract class ResultResponder extends ChunkingResponder implements
   }
 
   /**
+   * @return the number of threads to preselect on the search form: as requested, or the most threads by default.
+   */
+  public int getSelectedSearchThreads() {
+    return request.hasInput(SEARCH_THREADS) ? getSearchThreads() : WikiPageFinder.MAX_THREADS;
+  }
+
+  /**
    * @return the numbers of threads to choose from.
    */
   public int[] getSearchThreadChoices() {

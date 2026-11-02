@@ -33,7 +33,7 @@
    <label for="searchThreads">Threads:</label>
    <select id="searchThreads" name="searchThreads">
     #foreach( $threads in $resultResponder.getSearchThreadChoices() )
-    <option value="$threads"#if( $threads == $resultResponder.getSearchThreads() ) selected="selected"#end>$threads</option>
+    <option value="$threads"#if( $threads == $resultResponder.getSelectedSearchThreads() ) selected="selected"#end>$threads</option>
     #end
    </select>
   </fieldset>
@@ -70,7 +70,7 @@
    <label for="searchThreads">Threads:</label>
    <select id="searchThreads" name="searchThreads">
     #foreach( $threads in $resultResponder.getSearchThreadChoices() )
-    <option value="$threads"#if( $threads == $resultResponder.getSearchThreads() ) selected="selected"#end>$threads</option>
+    <option value="$threads"#if( $threads == $resultResponder.getSelectedSearchThreads() ) selected="selected"#end>$threads</option>
     #end
    </select>
   </fieldset>
@@ -101,7 +101,7 @@
    <label for="searchThreads">Threads:</label>
    <select id="searchThreads" name="searchThreads">
     #foreach( $threads in $resultResponder.getSearchThreadChoices() )
-    <option value="$threads"#if( $threads == $resultResponder.getSearchThreads() ) selected="selected"#end>$threads</option>
+    <option value="$threads"#if( $threads == $resultResponder.getSelectedSearchThreads() ) selected="selected"#end>$threads</option>
     #end
    </select>
   </fieldset>
