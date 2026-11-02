@@ -11,6 +11,14 @@
   <input type="text" size="50" id="replacementString" name="replacementString" value="#if ($request.hasInput("replacementString"))#escape($request.getInput("replacementString"))#end"/>
  </fieldset>
  <fieldset>
+  <label for="replaceScope">Scope:</label>
+  <input type="radio" id="replaceScopeRoot" name="searchScope" value="root"#if( $request.getInput("searchScope") == "root" ) checked="checked"#end/>All
+  #foreach( $breadCrumb in $pageTitle.BreadCrumbs )
+  <input type="radio" id="replaceScope$breadCrumb.Name" name="searchScope" value="$breadCrumb.Name"#if( $request.getInput("searchScope") == $breadCrumb.Name ) checked="checked"#end/>$breadCrumb.Name
+  #end
+  <input type="radio" id="replaceScopePage" name="searchScope" value=""#if( !$request.hasInput("searchScope") || $request.getInput("searchScope").equals("") ) checked="checked"#end/>$pageTitle.Title
+ </fieldset>
+ <fieldset>
   <label for="includeSymLinks">Options:</label>
   <input type="checkbox" id="includeSymLinks" name="includeSymLinks"#if( $request.hasInput("includeSymLinks")) checked="checked"#end/>Include symbolic links (changes the linked pages)
  </fieldset>
@@ -35,6 +43,14 @@
  <fieldset>
   <label for="replacementString">Replacing Method:</label>
   <input type="text" size="50" id="replacementString" name="replacementString" value="#if ($request.hasInput("replacementString"))#escape($request.getInput("replacementString"))#end"/>
+ </fieldset>
+ <fieldset>
+  <label for="replaceMethodScope">Scope:</label>
+  <input type="radio" id="replaceMethodScopeRoot" name="searchScope" value="root"#if( $request.getInput("searchScope") == "root" ) checked="checked"#end/>All
+  #foreach( $breadCrumb in $pageTitle.BreadCrumbs )
+  <input type="radio" id="replaceMethodScope$breadCrumb.Name" name="searchScope" value="$breadCrumb.Name"#if( $request.getInput("searchScope") == $breadCrumb.Name ) checked="checked"#end/>$breadCrumb.Name
+  #end
+  <input type="radio" id="replaceMethodScopePage" name="searchScope" value=""#if( !$request.hasInput("searchScope") || $request.getInput("searchScope").equals("") ) checked="checked"#end/>$pageTitle.Title
  </fieldset>
  <fieldset>
   <label for="includeSymLinksMethod">Options:</label>

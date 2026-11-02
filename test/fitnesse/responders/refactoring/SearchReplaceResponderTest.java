@@ -100,6 +100,19 @@ public class SearchReplaceResponderTest extends ResponderTestCase {
   }
 
   @Test
+  public void replacesInWholeWikiForScopeRoot() throws Exception {
+    request.setResource("SomePage.ChildPage");
+    WikiPageUtil.addPage(somePage, PathParser.parse("ChildPage"), "this page has something to replace.");
+    WikiPageUtil.addPage(root, PathParser.parse("OtherPage"), "other page has something too");
+    request.addInput("searchScope", "root");
+
+    getResponseContentUsingSearchReplaceString("something", "replacedthing");
+
+    assertEquals("other page has replacedthing too", root.getChildPage("OtherPage").getData().getContent());
+    assertEquals("has replacedthing in it", root.getChildPage("SomePage").getData().getContent());
+  }
+
+  @Test
   public void dryRunShowsChangedLinesWithoutSaving() throws Exception {
     request.addInput("dryRun", "Dry run");
     request.addInput(Request.NOCHUNK, "");

@@ -5,6 +5,7 @@
  * Text search supports * as wildcard when ''Use wildcards'' is checked (useWildcards input).
  * Search & replace skips symbolic links unless ''Include symbolic links'' is checked (includeSymLinks input), so it no longer changes linked pages outside the selected page by accident.
  * Search & replace has a ''Dry run'' (dryRun input) that shows the changed lines before and after, side by side, without saving anything.
+ * The search & replace forms offer the same scope choice as the search form.
 
 !2 20261101
  * Refactor page shows tree structure ([[1617][https://github.com/unclebob/fitnesse/pull/1617]]).
