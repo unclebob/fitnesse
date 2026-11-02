@@ -68,6 +68,15 @@ public class SymbolicPage extends BaseWikitextPage {
     return symChildren;
   }
 
+  @Override
+  public List<WikiPage> getChildrenWithoutSymbolicLinks() {
+    List<WikiPage> symChildren = new LinkedList<>();
+    for (WikiPage child : realPage.getChildrenWithoutSymbolicLinks()) {
+      symChildren.add(createChildPage(child));
+    }
+    return symChildren;
+  }
+
   private WikiPage createChildPage(WikiPage child) {
     WikiPage cyclicReference = findCyclicReference(child);
     if (cyclicReference != null) {
@@ -144,6 +153,16 @@ public class SymbolicPage extends BaseWikitextPage {
   @Override
   public int hashCode() {
     return realPage.hashCode();
+  }
+
+  /**
+   * @param wikiPage page to check
+   * @return true if the page is a symbolic link, false for real pages and for pages below a symbolic link
+   */
+  public static boolean isSymbolicLink(WikiPage wikiPage) {
+    // pages below a link wrap their real page, links below a link wrap that link
+    return wikiPage.isSymbolicPage()
+      && (!wikiPage.getParent().isSymbolicPage() || isSymbolicLink(wikiPage.getRealPage()));
   }
 
   public static boolean containsWikitext(WikiPage wikiPage) {

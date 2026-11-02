@@ -85,6 +85,11 @@ public class WikiFilePage extends BaseWikitextPage implements FileBasedWikiPage 
   }
 
   @Override
+  public List<WikiPage> getChildrenWithoutSymbolicLinks() {
+    return subWikiPageFactory.getChildrenWithoutSymbolicLinks(this);
+  }
+
+  @Override
   public PageData getData() {
     if (pageData == null) {
       try {

@@ -13,6 +13,11 @@ public class TitleWikiPageFinder extends WikiPageFinder {
   }
 
   @Override
+  protected boolean readsPageData() {
+    return false;
+  }
+
+  @Override
   protected boolean pageMatches(WikiPage page) {
     String content =  page.getName().toLowerCase();
     return content.contains(searchString);
