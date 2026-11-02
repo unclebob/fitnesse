@@ -117,12 +117,19 @@ public abstract class ResultResponder extends ChunkingResponder implements
 
   private void search(TraversalListener<WikiPage> observer) {
     PageFinder pageFinder = getPageFinder(observer);
-    if (pageFinder instanceof WikiPageFinder && !request.hasInput(INCLUDE_SYMBOLIC_LINKS)) {
+    if (pageFinder instanceof WikiPageFinder && !includeSymbolicLinks()) {
       WikiPage searchScope = getSearchScope();
       ((WikiPageFinder) pageFinder).search(searchScope, new SymbolicLinkPruningStrategy(searchScope));
     } else if (pageFinder != null) {
       pageFinder.search(getSearchScope());
     }
+  }
+
+  /**
+   * @return true to also search the pages behind symbolic links, as requested; false by default.
+   */
+  protected boolean includeSymbolicLinks() {
+    return request.hasInput(INCLUDE_SYMBOLIC_LINKS);
   }
 
   /**

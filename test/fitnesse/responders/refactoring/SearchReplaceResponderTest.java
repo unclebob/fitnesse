@@ -77,6 +77,19 @@ public class SearchReplaceResponderTest extends ResponderTestCase {
     assertThat(content, containsString("SomePage.ChildPage"));
   }
 
+  @Test
+  public void replacesInPagesBehindSymbolicLinks() throws Exception {
+    WikiPageUtil.addPage(root, PathParser.parse("LinkedPage"), "linked page has something too");
+    PageData data = somePage.getData();
+    data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymLink", ".LinkedPage");
+    somePage.commit(data);
+
+    String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
+
+    assertThat(content, containsString("SomePage.SymLink"));
+    assertEquals("linked page has replacedthing too", root.getChildPage("LinkedPage").getData().getContent());
+  }
+
   private String getResponseContentUsingSearchReplaceString(String searchString, String replacementString) throws Exception {
     request.addInput("searchString", searchString);
     request.addInput("replacementString", replacementString);
