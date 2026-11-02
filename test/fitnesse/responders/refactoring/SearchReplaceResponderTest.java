@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.http.MockResponseSender;
+import fitnesse.http.Request;
 import fitnesse.http.Response;
 
 public class SearchReplaceResponderTest extends ResponderTestCase {
@@ -96,6 +97,25 @@ public class SearchReplaceResponderTest extends ResponderTestCase {
 
     assertThat(content, containsString("SomePage.SymLink"));
     assertEquals("linked page has replacedthing too", root.getChildPage("LinkedPage").getData().getContent());
+  }
+
+  @Test
+  public void dryRunShowsChangedLinesWithoutSaving() throws Exception {
+    request.addInput("dryRun", "Dry run");
+    request.addInput(Request.NOCHUNK, "");
+    String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
+
+    assertThat(content, containsString("Dry run (nothing is saved)"));
+    assertThat(content, containsString("<td class=\"before\"><pre>has something in it</pre></td><td class=\"after\"><pre>has replacedthing in it</pre></td>"));
+    assertEquals("has something in it", root.getChildPage("SomePage").getData().getContent());
+  }
+
+  @Test
+  public void changedLinesAreOnlyShownForDryRun() throws Exception {
+    String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
+
+    assertThat(content, not(containsString("class=\"changedLines\"")));
+    assertEquals("has replacedthing in it", root.getChildPage("SomePage").getData().getContent());
   }
 
   private void addSymbolicLinkToLinkedPage() {

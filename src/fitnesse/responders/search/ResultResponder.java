@@ -17,6 +17,7 @@ import fitnesse.wiki.PageType;
 import fitnesse.wiki.SymbolicLinkPruningStrategy;
 import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.refactoring.ChangedLines;
 import fitnesse.wiki.search.PageFinder;
 import fitnesse.wiki.search.WikiPageFinder;
 
@@ -164,6 +165,15 @@ public abstract class ResultResponder extends ChunkingResponder implements
       choices[i] = i + 1;
     }
     return choices;
+  }
+
+  /**
+   * @param page a search result
+   * @return the lines of the page before and after the change this responder would make, to show with the result;
+   * null to show none
+   */
+  public List<ChangedLines> getChangedLines(WikiPage page) {
+    return null;
   }
 
   /**

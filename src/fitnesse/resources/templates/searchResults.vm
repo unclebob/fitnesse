@@ -39,6 +39,15 @@
    #else
 	<a href="$pagePath">$pagePath</a>
    #end
+   #set( $changes = $resultResponder.getChangedLines($result) )
+   #if( $changes )
+	<table class="changedLines">
+	 <tr><th>Before</th><th>After</th></tr>
+	 #foreach( $change in $changes )
+	 <tr><td class="before"><pre>#escape($change.getBefore())</pre></td><td class="after"><pre>#escape($change.getAfter())</pre></td></tr>
+	 #end
+	</table>
+   #end
    </td>
    <td style="text-align: right;">
    #set ( $tags = $result.getData().getAttribute("Suites") )

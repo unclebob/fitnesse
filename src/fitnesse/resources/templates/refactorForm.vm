@@ -15,6 +15,7 @@
   <input type="checkbox" id="includeSymLinks" name="includeSymLinks"#if( $request.hasInput("includeSymLinks")) checked="checked"#end/>Include symbolic links (changes the linked pages)
  </fieldset>
  <fieldset class="buttons">
+  <input type="submit" name="dryRun" value="Dry run" title="Shows the lines that would change, without saving anything"/>
   <input type="submit" name="replace" value="Replace!"/>
   <a class="button" href="$viewLocation">Cancel</a>
  </fieldset>
@@ -40,6 +41,7 @@
   <input type="checkbox" id="includeSymLinksMethod" name="includeSymLinks"#if( $request.hasInput("includeSymLinks")) checked="checked"#end/>Include symbolic links (changes the linked pages)
  </fieldset>
  <fieldset class="buttons">
+  <input type="submit" name="dryRun" value="Dry run" title="Shows the lines that would change, without saving anything"/>
   <input type="submit" name="replace" value="Replace Method!"/>
   <a class="button" href="$viewLocation">Cancel</a>
  </fieldset>

@@ -110,6 +110,7 @@
 | | replacementString | The string to replace the matches of ''searchString'' with. |
 | | isMethodReplace | If present, a method replace is performed instead of a text replace. |
 | | includeSymLinks | Also replace in the pages behind symbolic links, which changes the linked pages themselves. Without it, symbolic links and the pages below them are skipped. |
+| | dryRun | If present, nothing is saved: the pages that would change are listed with their changed lines before and after the replacement. |
 | | searchScope | See search |
 | rollback | | Rollback the page to the selected version. |
 | | version | The version identifier of the version to rollback to.  See: ''viewVersion'' |

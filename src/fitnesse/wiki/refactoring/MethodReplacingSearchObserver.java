@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 
 import static fitnesse.util.WikiPageLineProcessingUtil.*;
 
-public class MethodReplacingSearchObserver implements TraversalListener<WikiPage> {
+public class MethodReplacingSearchObserver implements TraversalListener<WikiPage>, ContentReplacer {
 
   private String searchMethodString;
   private String replacingMethodString;
@@ -24,6 +24,15 @@ public class MethodReplacingSearchObserver implements TraversalListener<WikiPage
     PageData pageData = page.getData();
 
     String content = pageData.getContent();
+    String newPageContent = replace(content);
+    if (newPageContent != content) {
+      pageData.setContent(newPageContent);
+    }
+    page.commit(pageData);
+  }
+
+  @Override
+  public String replace(String content) {
     String[] lines = content.split(PageData.PAGE_LINE_SEPARATOR);
     String newPageContent = "";
     boolean isModified = false;
@@ -71,10 +80,7 @@ public class MethodReplacingSearchObserver implements TraversalListener<WikiPage
         newPageContent += modifiedLine + PageData.PAGE_LINE_SEPARATOR;
       }
     }
-    if (isModified) {
-      pageData.setContent(newPageContent);
-    }
-    page.commit(pageData);
+    return isModified ? newPageContent : content;
   }
 
 }
