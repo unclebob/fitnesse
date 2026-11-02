@@ -90,6 +90,14 @@ public class SearchReplaceResponderTest extends ResponderTestCase {
     assertEquals("linked page has replacedthing too", root.getChildPage("LinkedPage").getData().getContent());
   }
 
+  @Test
+  public void replacesWithOneThreadOnly() {
+    request.addInput("searchThreads", "4");
+    SearchReplaceResponder searchReplaceResponder = (SearchReplaceResponder) responder;
+    searchReplaceResponder.setRequest(request);
+    assertEquals(1, searchReplaceResponder.getSearchThreads());
+  }
+
   private String getResponseContentUsingSearchReplaceString(String searchString, String replacementString) throws Exception {
     request.addInput("searchString", searchString);
     request.addInput("replacementString", replacementString);

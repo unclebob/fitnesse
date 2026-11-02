@@ -51,6 +51,12 @@ public class SearchReplaceResponder extends ResultResponder {
     return true;
   }
 
+  @Override
+  public int getSearchThreads() {
+    // replace changes pages while traversing, so pages must not be loaded ahead
+    return 1;
+  }
+
   private boolean isMethodReplace() {
     return request.hasInput("isMethodReplace");
   }
