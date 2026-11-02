@@ -10,7 +10,9 @@ import fitnesse.components.Traverser;
 import fitnesse.html.template.HtmlPage;
 import fitnesse.html.template.PageTitle;
 import fitnesse.responders.ChunkingResponder;
+import fitnesse.wiki.NoPruningStrategy;
 import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PagePruningStrategy;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.SymbolicLinkPruningStrategy;
 import fitnesse.wiki.SymbolicPage;
@@ -44,6 +46,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
   static final String SEARCH_ATTRIBUTE_SKIP = PropertyPRUNE;
   static final String[] SPECIAL_ATTRIBUTES = { "SetUp", "TearDown" };
   static final String INCLUDE_SYMBOLIC_LINKS = "includeSymLinks";
+  static final String SEARCH_THREADS = "searchThreads";
 
   private long searchStartTime;
   private long searchEndTime;
@@ -117,8 +120,10 @@ public abstract class ResultResponder extends ChunkingResponder implements
 
   private void search(TraversalListener<WikiPage> observer) {
     PageFinder pageFinder = getPageFinder(observer);
-    if (pageFinder instanceof WikiPageFinder && !includeSymbolicLinks()) {
-      ((WikiPageFinder) pageFinder).search(getSearchScope(), new SymbolicLinkPruningStrategy());
+    if (pageFinder instanceof WikiPageFinder) {
+      PagePruningStrategy strategy = includeSymbolicLinks()
+        ? new NoPruningStrategy() : new SymbolicLinkPruningStrategy();
+      ((WikiPageFinder) pageFinder).search(getSearchScope(), strategy, getSearchThreads());
     } else if (pageFinder != null) {
       pageFinder.search(getSearchScope());
     }
@@ -129,6 +134,29 @@ public abstract class ResultResponder extends ChunkingResponder implements
    */
   protected boolean includeSymbolicLinks() {
     return request.hasInput(INCLUDE_SYMBOLIC_LINKS);
+  }
+
+  /**
+   * @return the number of threads to load pages with, as requested; 1 by default.
+   */
+  public int getSearchThreads() {
+    try {
+      int threads = Integer.parseInt(request.getInput(SEARCH_THREADS));
+      return Math.max(1, Math.min(threads, WikiPageFinder.MAX_THREADS));
+    } catch (NumberFormatException e) {
+      return 1;
+    }
+  }
+
+  /**
+   * @return the numbers of threads to choose from.
+   */
+  public int[] getSearchThreadChoices() {
+    int[] choices = new int[WikiPageFinder.MAX_THREADS];
+    for (int i = 0; i < choices.length; i++) {
+      choices[i] = i + 1;
+    }
+    return choices;
   }
 
   /**

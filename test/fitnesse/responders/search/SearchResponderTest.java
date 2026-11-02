@@ -12,6 +12,13 @@ import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertDoesntHaveRegexp;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
@@ -210,6 +217,42 @@ public class SearchResponderTest {
 
     assertSubString("<a href=\"SomePage.SymLink.LinkedChild\">", content);
     assertDoesntHaveRegexp("SomePage\\.SymLink\\.InnerLink", content);
+  }
+
+  @Test
+  public void searchThreadsDefaultToOneAndAreLimited() {
+    responder.setRequest(request);
+    assertEquals(1, responder.getSearchThreads());
+    request.addInput("searchThreads", "3");
+    assertEquals(3, responder.getSearchThreads());
+    request.addInput("searchThreads", "99");
+    assertEquals(4, responder.getSearchThreads());
+    request.addInput("searchThreads", "0");
+    assertEquals(1, responder.getSearchThreads());
+    request.addInput("searchThreads", "many");
+    assertEquals(1, responder.getSearchThreads());
+  }
+
+  @Test
+  public void searchWithMoreThreadsFindsSamePages() throws Exception {
+    addSymbolicLinkToLinkedPage();
+    request.addInput("searchScope", "root");
+    request.addInput("includeSymLinks", "on");
+    String sequential = getResponseContentUsingSearchString("linked content");
+    request.addInput("searchThreads", "4");
+    String parallel = getResponseContentUsingSearchString("linked content");
+
+    assertEquals(resultRows(sequential), resultRows(parallel));
+    assertTrue(resultRows(parallel).contains("SomePage.SymLink.InnerLink"));
+  }
+
+  private List<String> resultRows(String content) {
+    List<String> rows = new ArrayList<>();
+    Matcher matcher = Pattern.compile("<a href=\"([^\"?]+)\">").matcher(content);
+    while (matcher.find()) {
+      rows.add(matcher.group(1));
+    }
+    return rows;
   }
 
   private void addSymbolicLinkToLinkedPage() {
