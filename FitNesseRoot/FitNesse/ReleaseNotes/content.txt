@@ -5,6 +5,11 @@
  * Allow old versions to be removed when deleting a page ([[1618][https://github.com/unclebob/fitnesse/pull/1618]]).
  * Rerun pages for filtered suite runs now include the !-suiteFilter-! tag in their name (e.g. !-RerunLastFailures_MySuite_suiteFilter_smoke-!), allowing parallel runs using different !-suiteFilter-! tags so each maintain their own independent set of failures for rerun. ([[1620][https://github.com/unclebob/fitnesse/pull/1620]])
  * Fix symbolic links orphaned by wiki import ([[1622][https://github.com/unclebob/fitnesse/pull/1622]]).
+ * Run processResources before launching !-FitNesse-! in VS Code ([[1623][https://github.com/unclebob/fitnesse/pull/1623]]).
+ * Compile Java sources as UTF-8 ([[1624][https://github.com/unclebob/fitnesse/pull/1624]]).
+ * Fix content filter not being applied when saving pages ([[1625][https://github.com/unclebob/fitnesse/pull/1625]]).
+ * The account page no longer returns page data as JSON for format=json ([[1626][https://github.com/unclebob/fitnesse/pull/1626]]).
+ * The page type input of the properties and search properties forms is now called pageType (!-PageType-! is still accepted), the navigation checkboxes of the property search now work and the !-RestfulServices-! documentation was updated ([[1627][https://github.com/unclebob/fitnesse/pull/1627]]).
  * Gradle 8.14.6.
  * Updated some dependencies
 
