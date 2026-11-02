@@ -30,12 +30,11 @@
   <fieldset>
    <label for="includeSymLinks">Options:</label>
    <input type="checkbox" id="includeSymLinks" name="includeSymLinks"#if( $request.hasInput("includeSymLinks")) checked="checked"#end/>Include symbolic links
-   <label for="searchThreads">Threads:</label>
    <select id="searchThreads" name="searchThreads">
     #foreach( $threads in $resultResponder.getSearchThreadChoices() )
     <option value="$threads"#if( $threads == $resultResponder.getSelectedSearchThreads() ) selected="selected"#end>$threads</option>
     #end
-   </select>
+   </select>Threads
   </fieldset>
  <fieldset class="buttons">
 	  <input type="submit" name="searchType" value="Search Titles" data-toggle="tooltip" data-placement="bottom" title="Searches in page titles only. Will run fairly quickly."/>
@@ -67,12 +66,11 @@
   <fieldset>
    <label for="includeSymLinks">Options:</label>
    <input type="checkbox" id="includeSymLinks" name="includeSymLinks"#if( $request.hasInput("includeSymLinks")) checked="checked"#end/>Include symbolic links
-   <label for="searchThreads">Threads:</label>
    <select id="searchThreads" name="searchThreads">
     #foreach( $threads in $resultResponder.getSearchThreadChoices() )
     <option value="$threads"#if( $threads == $resultResponder.getSelectedSearchThreads() ) selected="selected"#end>$threads</option>
     #end
-   </select>
+   </select>Threads
   </fieldset>
  <fieldset class="buttons">
 	  <input type="submit" name="searchType" value="Search Content" data-toggle="tooltip" data-placement="bottom" title="Searches in the content of every page. Don't hold your breath."/>
@@ -98,12 +96,11 @@
   <fieldset>
    <label for="includeSymLinks">Options:</label>
    <input type="checkbox" id="includeSymLinks" name="includeSymLinks"#if( $request.hasInput("includeSymLinks")) checked="checked"#end/>Include symbolic links
-   <label for="searchThreads">Threads:</label>
    <select id="searchThreads" name="searchThreads">
     #foreach( $threads in $resultResponder.getSearchThreadChoices() )
     <option value="$threads"#if( $threads == $resultResponder.getSelectedSearchThreads() ) selected="selected"#end>$threads</option>
     #end
-   </select>
+   </select>Threads
   </fieldset>
 
  <div class="properties">
