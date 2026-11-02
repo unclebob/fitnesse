@@ -12,7 +12,10 @@
 	<a href="javascript:void(tableSorter.sort(2));">Tags</a>
    </th>
    <th>
-	<a href="javascript:void(tableSorter.sort(3, 'date'));">LastModified</a>
+	<a href="javascript:void(tableSorter.sort(3));">Via SymLink</a>
+   </th>
+   <th>
+	<a href="javascript:void(tableSorter.sort(4, 'date'));">LastModified</a>
    </th>
   </tr>
  </thead>
@@ -31,12 +34,17 @@
    #end
    </td>
    <td>
+   #if( $result.isSymbolicPage() )
+	<a href="$pagePath">#foreach( $pathPage in $resultResponder.getPathPages($result) )#if( $resultResponder.isSymbolicLink($pathPage) )<span class="symlink" title="symbolic link">$pathPage.getName()</span>#else$pathPage.getName()#end#if( $foreach.hasNext ).#end#end</a>
+   #else
 	<a href="$pagePath">$pagePath</a>
+   #end
    </td>
    <td style="text-align: right;">
    #set ( $tags = $result.getData().getAttribute("Suites") )
 	<label>#if ($tags && !$tags.equals("null"))#escape($tags)#end</label>
    </td>
+   <td>#if($result.isSymbolicPage())yes#{else}no#end</td>
    <td>$result.getData().getProperties().getLastModificationTime()
    </td>
   </tr>
@@ -60,9 +68,9 @@
 <pre>[[Search below !-$page.getName()-! for &lt;description&gt;][$page.getPageCrawler().getFullPath()?$queryString]]</pre>
 
 #if ($hits > 1)
-<script language="javascript">document.getElementById("feedback").innerHTML = 'Found $hits results for your search.'</script>
+<script language="javascript">document.getElementById("feedback").innerHTML = 'Found $hits results for your search in $resultResponder.getSearchTime() seconds.'</script>
 #elseif ($hits == 1)
-<script language="javascript">document.getElementById("feedback").innerHTML = 'Found $hits result for your search.'</script>
+<script language="javascript">document.getElementById("feedback").innerHTML = 'Found $hits result for your search in $resultResponder.getSearchTime() seconds.'</script>
 #else
-<script language="javascript">document.getElementById("feedback").innerHTML = 'No pages matched your search criteria.'</script>
+<script language="javascript">document.getElementById("feedback").innerHTML = 'No pages matched your search criteria. Search took $resultResponder.getSearchTime() seconds.'</script>
 #end

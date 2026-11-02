@@ -1,4 +1,5 @@
 !2 Pending Changes
+ * Text, method and properties search skip symbolic links by default; check ''Include symbolic links'' to search them too.
 
 !2 20261101
  * Refactor page shows tree structure ([[1617][https://github.com/unclebob/fitnesse/pull/1617]]).
