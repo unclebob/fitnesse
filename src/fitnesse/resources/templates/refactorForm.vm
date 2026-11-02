@@ -12,8 +12,8 @@
  </fieldset>
  <fieldset>
   <label for="replaceScope">Scope:</label>
-  <input type="radio" id="replaceScopePage" name="searchScope" value="pageOnly"#if( $request.getInput("searchScope") == "pageOnly" ) checked="checked"#end/>$pageTitle.Title only
-  <input type="radio" id="replaceScopeChildren" name="searchScope" value=""#if( $request.getInput("searchScope") != "pageOnly" ) checked="checked"#end/>$pageTitle.Title and its children
+  <input type="radio" id="replaceScopePage" name="searchScope" value="pageOnly"#if( $request.getInput("searchScope") == "pageOnly" ) checked="checked"#end/>$pageTitle.Title
+  <input type="radio" id="replaceScopeChildren" name="searchScope" value=""#if( $request.getInput("searchScope") != "pageOnly" ) checked="checked"#end/>$pageTitle.Title and children
  </fieldset>
  <fieldset>
   <label for="includeSymLinks">Options:</label>
@@ -43,8 +43,8 @@
  </fieldset>
  <fieldset>
   <label for="replaceMethodScope">Scope:</label>
-  <input type="radio" id="replaceMethodScopePage" name="searchScope" value="pageOnly"#if( $request.getInput("searchScope") == "pageOnly" ) checked="checked"#end/>$pageTitle.Title only
-  <input type="radio" id="replaceMethodScopeChildren" name="searchScope" value=""#if( $request.getInput("searchScope") != "pageOnly" ) checked="checked"#end/>$pageTitle.Title and its children
+  <input type="radio" id="replaceMethodScopePage" name="searchScope" value="pageOnly"#if( $request.getInput("searchScope") == "pageOnly" ) checked="checked"#end/>$pageTitle.Title
+  <input type="radio" id="replaceMethodScopeChildren" name="searchScope" value=""#if( $request.getInput("searchScope") != "pageOnly" ) checked="checked"#end/>$pageTitle.Title and children
  </fieldset>
  <fieldset>
   <label for="includeSymLinksMethod">Options:</label>

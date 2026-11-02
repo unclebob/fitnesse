@@ -49,9 +49,9 @@ public class RefactorPageResponderTest extends ResponderTestCase {
     WikiPageUtil.addPage(root, PathParser.parse("ChildPage.GrandChild"), "content");
     String content = ((SimpleResponse) responder.makeResponse(context, request)).getContent();
 
-    assertHasRegexp("id=\"replaceScopePage\" name=\"searchScope\" value=\"pageOnly\"/>GrandChild only", content);
-    assertHasRegexp("id=\"replaceScopeChildren\" name=\"searchScope\" value=\"\" checked=\"checked\"/>GrandChild and its children", content);
-    assertHasRegexp("id=\"replaceMethodScopeChildren\" name=\"searchScope\" value=\"\" checked=\"checked\"/>GrandChild and its children", content);
+    assertHasRegexp("id=\"replaceScopePage\" name=\"searchScope\" value=\"pageOnly\"/>GrandChild\\s", content);
+    assertHasRegexp("id=\"replaceScopeChildren\" name=\"searchScope\" value=\"\" checked=\"checked\"/>GrandChild and children", content);
+    assertHasRegexp("id=\"replaceMethodScopeChildren\" name=\"searchScope\" value=\"\" checked=\"checked\"/>GrandChild and children", content);
     assertDoesntHaveRegexp("value=\"ChildPage\"", content);
     assertHasRegexp("<button type=\"submit\" name=\"dryRun\"", content);
   }
