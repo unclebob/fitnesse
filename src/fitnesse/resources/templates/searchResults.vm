@@ -1,3 +1,6 @@
+#set( $showChanges = $resultResponder.showsChangedLines() )
+## the changes column comes after the page column, the columns after it move one to the right
+#if( $showChanges )#set( $shift = 1 )#else#set( $shift = 0 )#end
 <p id="feedback">Searching...</p>
 <table id="searchResultsTable" class="dirListing">
  <thead>
@@ -8,14 +11,17 @@
    <th>
 	<a href="javascript:void(tableSorter.sort(1));">Page</a>
    </th>
+   #if( $showChanges )
+   <th>Changes</th>
+   #end
    <th>
-	<a href="javascript:void(tableSorter.sort(2));">Tags</a>
+	<a href="javascript:void(tableSorter.sort(#set( $column = 2 + $shift )$column));">Tags</a>
    </th>
    <th>
-	<a href="javascript:void(tableSorter.sort(3));">Via SymLink</a>
+	<a href="javascript:void(tableSorter.sort(#set( $column = 3 + $shift )$column));">Via SymLink</a>
    </th>
    <th>
-	<a href="javascript:void(tableSorter.sort(4, 'date'));">LastModified</a>
+	<a href="javascript:void(tableSorter.sort(#set( $column = 4 + $shift )$column, 'date'));">LastModified</a>
    </th>
   </tr>
  </thead>
@@ -39,16 +45,17 @@
    #else
 	<a href="$pagePath">$pagePath</a>
    #end
-   #set( $changes = $resultResponder.getChangedLines($result) )
-   #if( $changes )
+   </td>
+   #if( $showChanges )
+   <td>
 	<table class="changedLines">
 	 <tr><th>Before</th><th>After</th></tr>
-	 #foreach( $change in $changes )
+	 #foreach( $change in $resultResponder.getChangedLines($result) )
 	 <tr><td class="before"><pre>$change.getBeforeHtml()</pre></td><td class="after"><pre>$change.getAfterHtml()</pre></td></tr>
 	 #end
 	</table>
-   #end
    </td>
+   #end
    <td style="text-align: right;">
    #set ( $tags = $result.getData().getAttribute("Suites") )
 	<label>#if ($tags && !$tags.equals("null"))#escape($tags)#end</label>

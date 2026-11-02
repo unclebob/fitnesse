@@ -1,5 +1,6 @@
 package fitnesse.responders.refactoring;
 
+import java.util.Collections;
 import java.util.List;
 
 import fitnesse.components.TraversalListener;
@@ -59,9 +60,14 @@ public class SearchReplaceResponder extends ResultResponder {
   }
 
   @Override
+  public boolean showsChangedLines() {
+    return isDryRun();
+  }
+
+  @Override
   public List<ChangedLines> getChangedLines(WikiPage page) {
     if (!isDryRun() || replacer == null) {
-      return null;
+      return Collections.emptyList();
     }
     String content = page.getData().getContent();
     return ChangedLines.between(content, replacer.replace(content));

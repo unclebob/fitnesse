@@ -22,6 +22,7 @@ import fitnesse.wiki.search.PageFinder;
 import fitnesse.wiki.search.WikiPageFinder;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -178,12 +179,18 @@ public abstract class ResultResponder extends ChunkingResponder implements
   }
 
   /**
+   * @return true to show the lines each result would change, see {@link #getChangedLines(WikiPage)}.
+   */
+  public boolean showsChangedLines() {
+    return false;
+  }
+
+  /**
    * @param page a search result
-   * @return the lines of the page before and after the change this responder would make, to show with the result;
-   * null to show none
+   * @return the lines of the page before and after the change this responder would make, empty if there are none.
    */
   public List<ChangedLines> getChangedLines(WikiPage page) {
-    return null;
+    return Collections.emptyList();
   }
 
   /**
