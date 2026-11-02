@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
+import static org.junit.Assert.assertEquals;
 import static util.RegexTestCase.assertDoesntHaveRegexp;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
@@ -52,6 +53,12 @@ public class SearchFormResponderTest {
     assertSubString("type=\"submit\"", content);
     assertSubString("value=\"Search Titles\"", content);
     assertSubString("value=\"Search Content\"", content);
+  }
+
+  @Test
+  public void textSearchOffersWildcards() throws Exception {
+    assertSubString("name=\"useWildcards\"", content);
+    assertEquals(content.indexOf("name=\"useWildcards\""), content.lastIndexOf("name=\"useWildcards\""));
   }
 
   @Test

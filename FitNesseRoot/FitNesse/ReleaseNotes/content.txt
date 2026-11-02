@@ -2,6 +2,7 @@
  * Text, method and properties search skip symbolic links by default; check ''Include symbolic links'' to search them too.
  * Faster title search: when symbolic links are skipped, page files are no longer read just to find child pages.
  * Searches can read pages with up to 4 threads in parallel (''Threads'' on the search form, searchThreads input).
+ * Text search supports * as wildcard when ''Use wildcards'' is checked (useWildcards input).
 
 !2 20261101
  * Refactor page shows tree structure ([[1617][https://github.com/unclebob/fitnesse/pull/1617]]).

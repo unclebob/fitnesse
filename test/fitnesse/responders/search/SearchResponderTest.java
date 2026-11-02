@@ -220,6 +220,54 @@ public class SearchResponderTest {
   }
 
   @Test
+  public void wildcardPatternMatchesAnyCharactersForAsterisk() {
+    assertEquals("\\QSome\\E.*\\QTest\\E", SearchResponder.wildcardPattern("Some*Test").pattern());
+    assertEquals(".*", SearchResponder.wildcardPattern("*").pattern());
+    assertEquals("\\Qa.b\\E.*", SearchResponder.wildcardPattern("a.b*").pattern());
+  }
+
+  @Test
+  public void titleSearchWithWildcards() throws Exception {
+    request.addInput("searchType", "Search Titles");
+    request.addInput("useWildcards", "on");
+    String content = getResponseContentUsingSearchString("some*test");
+
+    assertSubString("<a href=\"SomePage.SomeTest\">", content);
+    assertDoesntHaveRegexp("<a href=\"SomePage.SomeSuite\">", content);
+  }
+
+  @Test
+  public void asteriskIsLiteralWithoutWildcards() throws Exception {
+    request.addInput("searchType", "Search Titles");
+    String content = getResponseContentUsingSearchString("some*test");
+
+    assertSubString("No pages matched your search criteria.", content);
+  }
+
+  @Test
+  public void asteriskAloneFindsAllPages() throws Exception {
+    request.addInput("searchType", "Search Titles");
+    request.addInput("searchScope", "root");
+    request.addInput("useWildcards", "on");
+    String content = getResponseContentUsingSearchString("*");
+
+    assertSubString("<a href=\"SomePage\">", content);
+    assertSubString("<a href=\"SomePage.SomeTest\">", content);
+    assertSubString("<a href=\"SomePage.SomeSuite\">", content);
+  }
+
+  @Test
+  public void contentSearchWithWildcards() throws Exception {
+    request.addInput("searchType", "Search Content");
+    request.addInput("useWildcards", "on");
+    request.addInput("searchScope", "root");
+    String content = getResponseContentUsingSearchString("TEST*content");
+
+    assertSubString("<a href=\"SomePage.SomeTest\">", content);
+    assertDoesntHaveRegexp("<a href=\"SomePage.SomeSuite\">", content);
+  }
+
+  @Test
   public void searchThreadsDefaultToOneAndAreLimited() {
     responder.setRequest(request);
     assertEquals(1, responder.getSearchThreads());

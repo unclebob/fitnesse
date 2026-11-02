@@ -133,6 +133,7 @@
 | | searchString | The string to search for.  For text search, this is a string, not a regular expression. For method search, it is a line from wiki which evaluates to a method or a scenario name. |
 | | searchType | May be "title" or "content".  If absent or "title" then searches for pages whose names contain the ''searchString'', otherwise searches for pages whose content contains the ''searchString''. |
 | | isMethodSearch | If present, a method search is performed instead of a text search.  Only works together with searchType=content. |
+| | useWildcards | Text search only: if present, an asterisk (*) in ''searchString'' matches any characters within a line, and * alone finds all pages. Without it, the ''searchString'' is matched literally. |
 | | searchScope | Limits the search to the pages below the given ancestor page name, or the word "root" to search the whole wiki.  Otherwise the selected page and its children are searched. |
 | | includeSymLinks | Also search the pages behind symbolic links. Without it, symbolic links and the pages below them are skipped. |
 | | searchThreads | Number of threads (1-4) reading pages during the search. 1, the default, searches sequentially; more threads read pages ahead in parallel, which makes searches on large wikis faster but puts more load on the server. |

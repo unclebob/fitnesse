@@ -1,15 +1,21 @@
 package fitnesse.wiki.search;
 
+import java.util.regex.Pattern;
+
 import fitnesse.components.TraversalListener;
 import fitnesse.wiki.WikiPage;
 
 public class TitleWikiPageFinder extends WikiPageFinder {
 
-  private String searchString;
+  private final Pattern pattern;
 
   public TitleWikiPageFinder(String searchString, TraversalListener<? super WikiPage> observer) {
+    this(Pattern.compile(searchString, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE | Pattern.LITERAL), observer);
+  }
+
+  public TitleWikiPageFinder(Pattern pattern, TraversalListener<? super WikiPage> observer) {
     super(observer);
-    this.searchString = searchString.toLowerCase();
+    this.pattern = pattern;
   }
 
   @Override
@@ -19,8 +25,7 @@ public class TitleWikiPageFinder extends WikiPageFinder {
 
   @Override
   protected boolean pageMatches(WikiPage page) {
-    String content =  page.getName().toLowerCase();
-    return content.contains(searchString);
+    return pattern.matcher(page.getName()).find();
   }
 
 }

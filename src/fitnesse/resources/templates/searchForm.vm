@@ -30,6 +30,7 @@
   <fieldset>
    <label for="includeSymLinks">Options:</label>
    <input type="checkbox" id="includeSymLinks" name="includeSymLinks"#if( $request.hasInput("includeSymLinks")) checked="checked"#end/>Include symbolic links
+   <input type="checkbox" id="useWildcards" name="useWildcards"#if( $request.hasInput("useWildcards")) checked="checked"#end/>Use wildcards (*)
    <select id="searchThreads" name="searchThreads">
     #foreach( $threads in $resultResponder.getSearchThreadChoices() )
     <option value="$threads"#if( $threads == $resultResponder.getSelectedSearchThreads() ) selected="selected"#end>$threads</option>
