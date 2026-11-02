@@ -111,7 +111,7 @@
 | | isMethodReplace | If present, a method replace is performed instead of a text replace. |
 | | includeSymLinks | Also replace in the pages behind symbolic links, which changes the linked pages themselves. Without it, symbolic links and the pages below them are skipped. |
 | | dryRun | If present, nothing is saved: the pages that would change are listed with their changed lines before and after the replacement. |
-| | searchScope | See search |
+| | searchScope | See search. Also "pageOnly" to replace in the selected page only, without its children. |
 | rollback | | Rollback the page to the selected version. |
 | | version | The version identifier of the version to rollback to.  See: ''viewVersion'' |
 | rss | | Returns an rss feed for the current page and all it's children.  See [[!-RssFeed-!][<UserGuide.AdministeringFitNesse.RestfulServices.RssFeed]] |
@@ -136,7 +136,7 @@
 | | searchType | May be "title" or "content".  If absent or "title" then searches for pages whose names contain the ''searchString'', otherwise searches for pages whose content contains the ''searchString''. |
 | | isMethodSearch | If present, a method search is performed instead of a text search.  Only works together with searchType=content. |
 | | useWildcards | Text search only: if present, an asterisk (*) in ''searchString'' matches any characters within a line, and * alone finds all pages. Without it, the ''searchString'' is matched literally. |
-| | searchScope | Limits the search to the pages below the given ancestor page name, or the word "root" to search the whole wiki.  Otherwise the selected page and its children are searched. |
+| | searchScope | Limits the search to the pages below the given ancestor page name, the word "root" to search the whole wiki, or "pageOnly" to search the selected page only.  Otherwise the selected page and its children are searched. |
 | | includeSymLinks | Also search the pages behind symbolic links. Without it, symbolic links and the pages below them are skipped. |
 | | searchThreads | Number of threads (1-4) reading pages during the search. 1, the default, searches sequentially; more threads read pages ahead in parallel, which makes searches on large wikis faster but puts more load on the server. |
 | searchForm | | Returns the search form that allows users to specify a search. |

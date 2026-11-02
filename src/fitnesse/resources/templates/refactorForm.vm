@@ -12,11 +12,8 @@
  </fieldset>
  <fieldset>
   <label for="replaceScope">Scope:</label>
-  <input type="radio" id="replaceScopeRoot" name="searchScope" value="root"#if( $request.getInput("searchScope") == "root" ) checked="checked"#end/>All
-  #foreach( $breadCrumb in $pageTitle.BreadCrumbs )
-  <input type="radio" id="replaceScope$breadCrumb.Name" name="searchScope" value="$breadCrumb.Name"#if( $request.getInput("searchScope") == $breadCrumb.Name ) checked="checked"#end/>$breadCrumb.Name
-  #end
-  <input type="radio" id="replaceScopePage" name="searchScope" value=""#if( !$request.hasInput("searchScope") || $request.getInput("searchScope").equals("") ) checked="checked"#end/>$pageTitle.Title
+  <input type="radio" id="replaceScopePage" name="searchScope" value="pageOnly"#if( $request.getInput("searchScope") == "pageOnly" ) checked="checked"#end/>$pageTitle.Title only
+  <input type="radio" id="replaceScopeChildren" name="searchScope" value=""#if( $request.getInput("searchScope") != "pageOnly" ) checked="checked"#end/>$pageTitle.Title and its children
  </fieldset>
  <fieldset>
   <label for="includeSymLinks">Options:</label>
@@ -46,11 +43,8 @@
  </fieldset>
  <fieldset>
   <label for="replaceMethodScope">Scope:</label>
-  <input type="radio" id="replaceMethodScopeRoot" name="searchScope" value="root"#if( $request.getInput("searchScope") == "root" ) checked="checked"#end/>All
-  #foreach( $breadCrumb in $pageTitle.BreadCrumbs )
-  <input type="radio" id="replaceMethodScope$breadCrumb.Name" name="searchScope" value="$breadCrumb.Name"#if( $request.getInput("searchScope") == $breadCrumb.Name ) checked="checked"#end/>$breadCrumb.Name
-  #end
-  <input type="radio" id="replaceMethodScopePage" name="searchScope" value=""#if( !$request.hasInput("searchScope") || $request.getInput("searchScope").equals("") ) checked="checked"#end/>$pageTitle.Title
+  <input type="radio" id="replaceMethodScopePage" name="searchScope" value="pageOnly"#if( $request.getInput("searchScope") == "pageOnly" ) checked="checked"#end/>$pageTitle.Title only
+  <input type="radio" id="replaceMethodScopeChildren" name="searchScope" value=""#if( $request.getInput("searchScope") != "pageOnly" ) checked="checked"#end/>$pageTitle.Title and its children
  </fieldset>
  <fieldset>
   <label for="includeSymLinksMethod">Options:</label>

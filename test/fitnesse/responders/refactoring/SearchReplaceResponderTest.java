@@ -113,6 +113,18 @@ public class SearchReplaceResponderTest extends ResponderTestCase {
   }
 
   @Test
+  public void replacesInCurrentPageOnlyForScopePageOnly() throws Exception {
+    WikiPageUtil.addPage(somePage, PathParser.parse("ChildPage"), "this page has something to replace.");
+    request.addInput("searchScope", "pageOnly");
+
+    String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
+
+    assertThat(content, not(containsString("SomePage.ChildPage")));
+    assertEquals("has replacedthing in it", root.getChildPage("SomePage").getData().getContent());
+    assertEquals("this page has something to replace.", somePage.getChildPage("ChildPage").getData().getContent());
+  }
+
+  @Test
   public void dryRunShowsChangedLinesWithoutSaving() throws Exception {
     request.addInput("dryRun", "Dry run");
     request.addInput(Request.NOCHUNK, "");

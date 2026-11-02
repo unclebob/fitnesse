@@ -48,6 +48,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
   static final String[] SPECIAL_ATTRIBUTES = { "SetUp", "TearDown" };
   static final String INCLUDE_SYMBOLIC_LINKS = "includeSymLinks";
   static final String SEARCH_THREADS = "searchThreads";
+  static final String SEARCH_SCOPE_PAGE_ONLY = "pageOnly";
 
   private long searchStartTime;
   private long searchEndTime;
@@ -60,7 +61,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
   protected WikiPage getSearchScope() {
     String searchScope = request.getInput("searchScope");
 
-    if (searchScope == null || searchScope.isEmpty())
+    if (searchScope == null || searchScope.isEmpty() || isPageOnly())
       return page;
     else if(searchScope.equalsIgnoreCase("root"))
       return root;
@@ -122,12 +123,21 @@ public abstract class ResultResponder extends ChunkingResponder implements
   private void search(TraversalListener<WikiPage> observer) {
     PageFinder pageFinder = getPageFinder(observer);
     if (pageFinder instanceof WikiPageFinder) {
-      PagePruningStrategy strategy = includeSymbolicLinks()
-        ? new NoPruningStrategy() : new SymbolicLinkPruningStrategy();
-      ((WikiPageFinder) pageFinder).search(getSearchScope(), strategy, getSearchThreads());
+      WikiPage searchScope = getSearchScope();
+      PagePruningStrategy strategy;
+      if (isPageOnly()) {
+        strategy = candidate -> candidate != searchScope;
+      } else {
+        strategy = includeSymbolicLinks() ? new NoPruningStrategy() : new SymbolicLinkPruningStrategy();
+      }
+      ((WikiPageFinder) pageFinder).search(searchScope, strategy, getSearchThreads());
     } else if (pageFinder != null) {
       pageFinder.search(getSearchScope());
     }
+  }
+
+  private boolean isPageOnly() {
+    return SEARCH_SCOPE_PAGE_ONLY.equalsIgnoreCase(request.getInput("searchScope"));
   }
 
   /**

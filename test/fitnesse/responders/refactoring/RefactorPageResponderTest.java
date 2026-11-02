@@ -3,6 +3,7 @@
 package fitnesse.responders.refactoring;
 
 import static org.junit.Assert.assertEquals;
+import static util.RegexTestCase.assertDoesntHaveRegexp;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
 
@@ -43,15 +44,15 @@ public class RefactorPageResponderTest extends ResponderTestCase {
   }
 
   @Test
-  public void replaceFormsOfferScopeWithPageSelected() throws Exception {
+  public void replaceFormsOfferPageOnlyOrWithChildren() throws Exception {
     request.setResource("ChildPage.GrandChild");
     WikiPageUtil.addPage(root, PathParser.parse("ChildPage.GrandChild"), "content");
     String content = ((SimpleResponse) responder.makeResponse(context, request)).getContent();
 
-    assertHasRegexp("id=\"replaceScopeRoot\" name=\"searchScope\" value=\"root\"/>All", content);
-    assertHasRegexp("id=\"replaceScopeChildPage\" name=\"searchScope\" value=\"ChildPage\"/>ChildPage", content);
-    assertHasRegexp("id=\"replaceScopePage\" name=\"searchScope\" value=\"\" checked=\"checked\"/>GrandChild", content);
-    assertHasRegexp("id=\"replaceMethodScopePage\" name=\"searchScope\" value=\"\" checked=\"checked\"/>GrandChild", content);
+    assertHasRegexp("id=\"replaceScopePage\" name=\"searchScope\" value=\"pageOnly\"/>GrandChild only", content);
+    assertHasRegexp("id=\"replaceScopeChildren\" name=\"searchScope\" value=\"\" checked=\"checked\"/>GrandChild and its children", content);
+    assertHasRegexp("id=\"replaceMethodScopeChildren\" name=\"searchScope\" value=\"\" checked=\"checked\"/>GrandChild and its children", content);
+    assertDoesntHaveRegexp("value=\"ChildPage\"", content);
     assertHasRegexp("<button type=\"submit\" name=\"dryRun\"", content);
   }
 
