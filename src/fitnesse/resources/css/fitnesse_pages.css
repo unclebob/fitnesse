@@ -303,34 +303,33 @@ span.error {
   font-style: italic;
   font-weight: bold;
 }
-.changedLines {
-  width: 100%;
-  table-layout: fixed;
-  margin-top: 4px;
-}
-.changedLines td {
-  width: 50%;
+td.changedLines {
   vertical-align: top;
+}
+td.changedLines.before {
+  background-color: #fde8e8;
+}
+td.changedLines.after {
+  background-color: #e6f6e6;
 }
 .changedLines pre {
   margin: 0;
   white-space: pre-wrap;
   word-break: break-word;
 }
-.changedLines td.before {
-  background-color: #fde8e8;
-}
-.changedLines td.after {
-  background-color: #e6f6e6;
+.changedLines pre + pre {
+  margin-top: 2px;
+  padding-top: 2px;
+  border-top: 1px dashed #bbb;
 }
 .changedLines mark {
   padding: 0;
   color: inherit;
 }
-.changedLines td.before mark {
+.changedLines.before mark {
   background-color: #f4b4b4;
 }
-.changedLines td.after mark {
+.changedLines.after mark {
   background-color: #a6dca6;
 }
 

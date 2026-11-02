@@ -200,7 +200,7 @@ public class SearchReplaceMethodResponderTest extends ResponderTestCase {
     request.addInput(Request.NOCHUNK, "");
     String content = getResponseContentUsingSearchReplace("|update with|param|", "|updated with|param|");
 
-    assertThat(content, containsString("<td class=\"before\"><pre>|ensure|<mark>update</mark> with|param|</pre></td><td class=\"after\"><pre>|ensure|<mark>updated</mark> with|param|</pre></td>"));
+    assertThat(content, containsString("<td class=\"changedLines before\"><pre>|ensure|<mark>update</mark> with|param|</pre></td>\n   <td class=\"changedLines after\"><pre>|ensure|<mark>updated</mark> with|param|</pre></td>"));
     assertThat(content, not(containsString("<pre>first line</pre>")));
     assertEquals("first line\n|ensure|update with|param|\nlast line", somePage.getChildPage("ChildPage").getData().getContent());
   }
