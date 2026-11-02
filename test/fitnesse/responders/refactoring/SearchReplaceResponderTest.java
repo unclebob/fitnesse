@@ -119,7 +119,7 @@ public class SearchReplaceResponderTest extends ResponderTestCase {
     String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
 
     assertThat(content, containsString("Dry run (nothing is saved)"));
-    assertThat(content, containsString("<td class=\"before\"><pre>has something in it</pre></td><td class=\"after\"><pre>has replacedthing in it</pre></td>"));
+    assertThat(content, containsString("<td class=\"before\"><pre>has <mark>something</mark> in it</pre></td><td class=\"after\"><pre>has <mark>replacedthing</mark> in it</pre></td>"));
     assertEquals("has something in it", root.getChildPage("SomePage").getData().getContent());
   }
 

@@ -323,6 +323,16 @@ span.error {
 .changedLines td.after {
   background-color: #e6f6e6;
 }
+.changedLines mark {
+  padding: 0;
+  color: inherit;
+}
+.changedLines td.before mark {
+  background-color: #f4b4b4;
+}
+.changedLines td.after mark {
+  background-color: #a6dca6;
+}
 
 .CodeMirror {
   border: 1px solid #d7d7d7;

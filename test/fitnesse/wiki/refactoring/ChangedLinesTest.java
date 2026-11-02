@@ -37,6 +37,30 @@ public class ChangedLinesTest {
   }
 
   @Test
+  public void changedWordsAreMarked() {
+    ChangedLines change = new ChangedLines("|enter|userName|with|bob|", "|enter|loginName|with|bob|");
+
+    assertEquals("|enter|<mark>userName</mark>|with|bob|", change.getBeforeHtml());
+    assertEquals("|enter|<mark>loginName</mark>|with|bob|", change.getAfterHtml());
+  }
+
+  @Test
+  public void addedWordsAreOnlyMarkedAfter() {
+    ChangedLines change = new ChangedLines("|go to|url|", "|go to|url|now|");
+
+    assertEquals("|go to|url|", change.getBeforeHtml());
+    assertEquals("|go to|url|<mark>now|</mark>", change.getAfterHtml());
+  }
+
+  @Test
+  public void markedLinesAreEscaped() {
+    ChangedLines change = new ChangedLines("a < b", "a <= b");
+
+    assertEquals("a &lt; b", change.getBeforeHtml());
+    assertEquals("a &lt;<mark>=</mark> b", change.getAfterHtml());
+  }
+
+  @Test
   public void addedAndRemovedLinesHaveEmptyCounterpart() {
     List<ChangedLines> changes = ChangedLines.between("a\nc", "a\nb\nc");
 
