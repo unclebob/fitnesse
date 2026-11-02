@@ -10,6 +10,10 @@
   <label for="replacementString">Replacement:</label>
   <input type="text" size="50" id="replacementString" name="replacementString" value="#if ($request.hasInput("replacementString"))#escape($request.getInput("replacementString"))#end"/>
  </fieldset>
+ <fieldset>
+  <label for="includeSymLinks">Options:</label>
+  <input type="checkbox" id="includeSymLinks" name="includeSymLinks"#if( $request.hasInput("includeSymLinks")) checked="checked"#end/>Include symbolic links (changes the linked pages)
+ </fieldset>
  <fieldset class="buttons">
   <input type="submit" name="replace" value="Replace!"/>
   <a class="button" href="$viewLocation">Cancel</a>
@@ -30,6 +34,10 @@
  <fieldset>
   <label for="replacementString">Replacing Method:</label>
   <input type="text" size="50" id="replacementString" name="replacementString" value="#if ($request.hasInput("replacementString"))#escape($request.getInput("replacementString"))#end"/>
+ </fieldset>
+ <fieldset>
+  <label for="includeSymLinksMethod">Options:</label>
+  <input type="checkbox" id="includeSymLinksMethod" name="includeSymLinks"#if( $request.hasInput("includeSymLinks")) checked="checked"#end/>Include symbolic links (changes the linked pages)
  </fieldset>
  <fieldset class="buttons">
   <input type="submit" name="replace" value="Replace Method!"/>

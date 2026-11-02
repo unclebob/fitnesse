@@ -78,16 +78,31 @@ public class SearchReplaceResponderTest extends ResponderTestCase {
   }
 
   @Test
-  public void replacesInPagesBehindSymbolicLinks() throws Exception {
-    WikiPageUtil.addPage(root, PathParser.parse("LinkedPage"), "linked page has something too");
-    PageData data = somePage.getData();
-    data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymLink", ".LinkedPage");
-    somePage.commit(data);
+  public void doesNotReplaceInPagesBehindSymbolicLinksByDefault() throws Exception {
+    addSymbolicLinkToLinkedPage();
+
+    String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
+
+    assertThat(content, not(containsString("SomePage.SymLink")));
+    assertEquals("linked page has something too", root.getChildPage("LinkedPage").getData().getContent());
+  }
+
+  @Test
+  public void replacesInPagesBehindSymbolicLinksOnRequest() throws Exception {
+    addSymbolicLinkToLinkedPage();
+    request.addInput("includeSymLinks", "on");
 
     String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
 
     assertThat(content, containsString("SomePage.SymLink"));
     assertEquals("linked page has replacedthing too", root.getChildPage("LinkedPage").getData().getContent());
+  }
+
+  private void addSymbolicLinkToLinkedPage() {
+    WikiPageUtil.addPage(root, PathParser.parse("LinkedPage"), "linked page has something too");
+    PageData data = somePage.getData();
+    data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymLink", ".LinkedPage");
+    somePage.commit(data);
   }
 
   @Test

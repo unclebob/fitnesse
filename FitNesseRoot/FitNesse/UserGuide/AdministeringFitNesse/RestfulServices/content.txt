@@ -109,6 +109,7 @@
 | | searchString | For text replace, this is a regular expression.  For method replace, it is a line from wiki which evaluates to a method or a scenario name. |
 | | replacementString | The string to replace the matches of ''searchString'' with. |
 | | isMethodReplace | If present, a method replace is performed instead of a text replace. |
+| | includeSymLinks | Also replace in the pages behind symbolic links, which changes the linked pages themselves. Without it, symbolic links and the pages below them are skipped. |
 | | searchScope | See search |
 | rollback | | Rollback the page to the selected version. |
 | | version | The version identifier of the version to rollback to.  See: ''viewVersion'' |
