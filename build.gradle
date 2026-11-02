@@ -26,7 +26,7 @@ plugins {
   id 'signing'
   id "io.github.ben-manes.versions" version "0.67.0"
   id "groovy"
-  id "io.miret.etienne.sass" version "1.6.1"
+  id "io.miret.etienne.sass" version "2.0.0"
   id "info.solidsoft.pitest" version "1.19.0"
 }
 
