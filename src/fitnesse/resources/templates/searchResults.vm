@@ -72,5 +72,6 @@
 #elseif ($hits == 1)
 <script language="javascript">document.getElementById("feedback").innerHTML = 'Found $hits result for your search in $resultResponder.getSearchTime() seconds.'</script>
 #else
-<script language="javascript">document.getElementById("feedback").innerHTML = 'No pages matched your search criteria. Search took $resultResponder.getSearchTime() seconds.'</script>
+<script language="javascript">document.getElementById("feedback").innerHTML = 'No pages matched your search criteria. Search took $resultResponder.getSearchTime() seconds.'
+ document.getElementById("searchResultsTable").style.display = 'none'</script>
 #end

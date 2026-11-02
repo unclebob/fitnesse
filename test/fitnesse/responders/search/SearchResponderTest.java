@@ -128,6 +128,7 @@ public class SearchResponderTest {
     assertHasRegexp("something", content);
     assertHasRegexp("SomePage", content);
     assertHasRegexp("Found 1 result for your search in \\d+\\.\\d\\d seconds\\.", content);
+    assertDoesntHaveRegexp("searchResultsTable\"\\)\\.style\\.display", content);
   }
 
   @Test
@@ -159,6 +160,7 @@ public class SearchResponderTest {
   public void testNoSearchStringBringsUpNoResults() throws Exception {
     String content = getResponseContentUsingSearchString("");
     assertHasRegexp("No pages matched your search criteria\\. Search took \\d+\\.\\d\\d seconds\\.", content);
+    assertSubString("document.getElementById(\"searchResultsTable\").style.display = 'none'", content);
   }
 
   @Test
