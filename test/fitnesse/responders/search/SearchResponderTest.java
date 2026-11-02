@@ -12,6 +12,13 @@ import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertDoesntHaveRegexp;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
@@ -127,6 +134,24 @@ public class SearchResponderTest {
 
     assertHasRegexp("something", content);
     assertHasRegexp("SomePage", content);
+    assertHasRegexp("Found 1 result for your search in \\d+\\.\\d\\d seconds\\.", content);
+    assertDoesntHaveRegexp("searchResultsTable\"\\)\\.style\\.display", content);
+  }
+
+  @Test
+  public void searchWithQueryStringCanBeSavedAsLink() throws Exception {
+    request.setQueryString("responder=search&searchType=content&searchString=something");
+    String content = getResponseContentUsingSearchString("something");
+
+    assertSubString("To save this search as a link", content);
+    assertSubString("?responder=search&searchType=content&searchString=something]]", content);
+  }
+
+  @Test
+  public void searchWithoutQueryStringCannotBeSavedAsLink() throws Exception {
+    String content = getResponseContentUsingSearchString("something");
+
+    assertDoesntHaveRegexp("To save this search as a link", content);
   }
 
   @Test
@@ -151,19 +176,162 @@ public class SearchResponderTest {
   @Test
   public void testLastModifiedSortLink() throws Exception {
     String content = getResponseContentUsingSearchString("something");
-    assertSubString("<a href=\"javascript:void(tableSorter.sort(3, 'date'));\">LastModified</a>", content);
+    assertSubString("<a href=\"javascript:void(tableSorter.sort(4, 'date'));\">LastModified</a>", content);
   }
 
   @Test
   public void testNoSearchStringBringsUpNoResults() throws Exception {
     String content = getResponseContentUsingSearchString("");
-    assertSubString("No pages matched your search criteria.", content);
+    assertHasRegexp("No pages matched your search criteria\\. Search took \\d+\\.\\d\\d seconds\\.", content);
+    assertSubString("document.getElementById(\"searchResultsTable\").style.display = 'none'", content);
   }
 
   @Test
   public void testEscapesSearchString() throws Exception {
     String content = getResponseContentUsingSearchString("!+-<&>");
     assertSubString("<title>Content Search Results for '!+-&lt;&amp;&gt;'</title>", content);
+  }
+
+  @Test
+  public void symbolicLinksAreSkippedByDefault() throws Exception {
+    addSymbolicLinkToLinkedPage();
+    request.addInput("searchScope", "root");
+    String content = getResponseContentUsingSearchString("linked content");
+
+    assertHasRegexp("LinkedPage", content);
+    assertDoesntHaveRegexp("SomePage\\.SymLink", content);
+  }
+
+  @Test
+  public void symbolicLinksAreSearchedOnRequest() throws Exception {
+    addSymbolicLinkToLinkedPage();
+    request.addInput("searchScope", "root");
+    request.addInput("includeSymLinks", "on");
+    String content = getResponseContentUsingSearchString("linked content");
+
+    assertHasRegexp("LinkedPage\">LinkedPage</a>.*?<label></label>\\s*</td>\\s*<td>no</td>", content);
+    assertHasRegexp("SomePage\\.SymLink\">SomePage\\.<span class=\"symlink\" title=\"symbolic link\">SymLink</span></a>.*?<label></label>\\s*</td>\\s*<td>yes</td>", content);
+    assertSubString("<a href=\"SomePage.SymLink.LinkedChild\">SomePage.<span class=\"symlink\" title=\"symbolic link\">SymLink</span>.LinkedChild</a>", content);
+  }
+
+  @Test
+  public void allSymbolicLinksInPathAreMarked() throws Exception {
+    addSymbolicLinkToLinkedPage();
+    request.addInput("searchScope", "root");
+    request.addInput("includeSymLinks", "on");
+    String content = getResponseContentUsingSearchString("linked content");
+
+    assertSubString("<a href=\"LinkedPage.InnerLink\">LinkedPage.<span class=\"symlink\" title=\"symbolic link\">InnerLink</span></a>", content);
+    assertSubString("<a href=\"SomePage.SymLink.InnerLink\">SomePage.<span class=\"symlink\" title=\"symbolic link\">SymLink</span>.<span class=\"symlink\" title=\"symbolic link\">InnerLink</span></a>", content);
+  }
+
+  @Test
+  public void searchStartingAtSymbolicLinkSearchesLinkedPages() throws Exception {
+    addSymbolicLinkToLinkedPage();
+    request.setResource("SomePage.SymLink");
+    String content = getResponseContentUsingSearchString("linked content");
+
+    assertSubString("<a href=\"SomePage.SymLink.LinkedChild\">", content);
+    assertDoesntHaveRegexp("SomePage\\.SymLink\\.InnerLink", content);
+  }
+
+  @Test
+  public void wildcardPatternMatchesAnyCharactersForAsterisk() {
+    assertEquals("\\QSome\\E.*\\QTest\\E", SearchResponder.wildcardPattern("Some*Test").pattern());
+    assertEquals(".*", SearchResponder.wildcardPattern("*").pattern());
+    assertEquals("\\Qa.b\\E.*", SearchResponder.wildcardPattern("a.b*").pattern());
+  }
+
+  @Test
+  public void titleSearchWithWildcards() throws Exception {
+    request.addInput("searchType", "Search Titles");
+    request.addInput("useWildcards", "on");
+    String content = getResponseContentUsingSearchString("some*test");
+
+    assertSubString("<a href=\"SomePage.SomeTest\">", content);
+    assertDoesntHaveRegexp("<a href=\"SomePage.SomeSuite\">", content);
+  }
+
+  @Test
+  public void asteriskIsLiteralWithoutWildcards() throws Exception {
+    request.addInput("searchType", "Search Titles");
+    String content = getResponseContentUsingSearchString("some*test");
+
+    assertSubString("No pages matched your search criteria.", content);
+  }
+
+  @Test
+  public void asteriskAloneFindsAllPages() throws Exception {
+    request.addInput("searchType", "Search Titles");
+    request.addInput("searchScope", "root");
+    request.addInput("useWildcards", "on");
+    String content = getResponseContentUsingSearchString("*");
+
+    assertSubString("<a href=\"SomePage\">", content);
+    assertSubString("<a href=\"SomePage.SomeTest\">", content);
+    assertSubString("<a href=\"SomePage.SomeSuite\">", content);
+  }
+
+  @Test
+  public void contentSearchWithWildcards() throws Exception {
+    request.addInput("searchType", "Search Content");
+    request.addInput("useWildcards", "on");
+    request.addInput("searchScope", "root");
+    String content = getResponseContentUsingSearchString("TEST*content");
+
+    assertSubString("<a href=\"SomePage.SomeTest\">", content);
+    assertDoesntHaveRegexp("<a href=\"SomePage.SomeSuite\">", content);
+  }
+
+  @Test
+  public void searchThreadsDefaultToOneAndAreLimited() {
+    responder.setRequest(request);
+    assertEquals(1, responder.getSearchThreads());
+    request.addInput("searchThreads", "3");
+    assertEquals(3, responder.getSearchThreads());
+    request.addInput("searchThreads", "99");
+    assertEquals(4, responder.getSearchThreads());
+    request.addInput("searchThreads", "0");
+    assertEquals(1, responder.getSearchThreads());
+    request.addInput("searchThreads", "many");
+    assertEquals(1, responder.getSearchThreads());
+  }
+
+  @Test
+  public void searchWithMoreThreadsFindsSamePages() throws Exception {
+    addSymbolicLinkToLinkedPage();
+    request.addInput("searchScope", "root");
+    request.addInput("includeSymLinks", "on");
+    String sequential = getResponseContentUsingSearchString("linked content");
+    request.addInput("searchThreads", "4");
+    String parallel = getResponseContentUsingSearchString("linked content");
+
+    assertEquals(resultRows(sequential), resultRows(parallel));
+    assertTrue(resultRows(parallel).contains("SomePage.SymLink.InnerLink"));
+  }
+
+  private List<String> resultRows(String content) {
+    List<String> rows = new ArrayList<>();
+    Matcher matcher = Pattern.compile("<a href=\"([^\"?]+)\">").matcher(content);
+    while (matcher.find()) {
+      rows.add(matcher.group(1));
+    }
+    return rows;
+  }
+
+  private void addSymbolicLinkToLinkedPage() {
+    WikiPage root = context.getRootPage();
+    WikiPage linkedPage = WikiPageUtil.addPage(root, PathParser.parse("LinkedPage"), "linked content");
+    WikiPageUtil.addPage(linkedPage, PathParser.parse("LinkedChild"), "linked content");
+    WikiPageUtil.addPage(root, PathParser.parse("OtherPage"), "linked content");
+    addSymbolicLink(linkedPage, "InnerLink", ".OtherPage");
+    addSymbolicLink(root.getChildPage("SomePage"), "SymLink", ".LinkedPage");
+  }
+
+  private void addSymbolicLink(WikiPage page, String linkName, String linkPath) {
+    PageData data = page.getData();
+    data.getProperties().set(SymbolicPage.PROPERTY_NAME).set(linkName, linkPath);
+    page.commit(data);
   }
 
   private String getResponseContentUsingSearchString(String searchString) throws Exception {

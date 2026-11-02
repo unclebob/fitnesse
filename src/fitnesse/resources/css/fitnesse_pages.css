@@ -298,6 +298,42 @@ span.error {
   font-style: italic;
 }
 
+/** Search results **/
+.symlink {
+  font-style: italic;
+  font-weight: bold;
+}
+.changedLines {
+  width: 100%;
+  table-layout: fixed;
+  margin-top: 4px;
+}
+.changedLines td {
+  width: 50%;
+  vertical-align: top;
+}
+.changedLines pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.changedLines td.before {
+  background-color: #fde8e8;
+}
+.changedLines td.after {
+  background-color: #e6f6e6;
+}
+.changedLines mark {
+  padding: 0;
+  color: inherit;
+}
+.changedLines td.before mark {
+  background-color: #f4b4b4;
+}
+.changedLines td.after mark {
+  background-color: #a6dca6;
+}
+
 .CodeMirror {
   border: 1px solid #d7d7d7;
 }

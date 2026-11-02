@@ -3,6 +3,7 @@
 
 package fitnesse.wiki;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -53,6 +54,22 @@ public interface WikiPage extends Comparable<WikiPage> {
    * @return children, an empty list if there are none.
    */
   List<WikiPage> getChildren();
+
+  /**
+   * Get child pages for this wiki page, leaving out symbolic links. Implementations that can list their children
+   * without resolving symbolic links override this, to avoid loading page data.
+   *
+   * @return children that are no symbolic links, an empty list if there are none.
+   */
+  default List<WikiPage> getChildrenWithoutSymbolicLinks() {
+    List<WikiPage> children = new ArrayList<>();
+    for (WikiPage child : getChildren()) {
+      if (!SymbolicPage.isSymbolicLink(child)) {
+        children.add(child);
+      }
+    }
+    return children;
+  }
 
   String getName();
 

@@ -3,6 +3,8 @@
 package fitnesse.responders.refactoring;
 
 import static org.junit.Assert.assertEquals;
+import static util.RegexTestCase.assertDoesntHaveRegexp;
+import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
 
 import fitnesse.Responder;
@@ -39,6 +41,19 @@ public class RefactorPageResponderTest extends ResponderTestCase {
     assertSubString("Delete Page", content);
     assertSubString("Rename Page", content);
     assertSubString("Move Page", content);
+  }
+
+  @Test
+  public void replaceFormsOfferPageOnlyOrWithChildren() throws Exception {
+    request.setResource("ChildPage.GrandChild");
+    WikiPageUtil.addPage(root, PathParser.parse("ChildPage.GrandChild"), "content");
+    String content = ((SimpleResponse) responder.makeResponse(context, request)).getContent();
+
+    assertHasRegexp("id=\"replaceScopePage\" name=\"searchScope\" value=\"pageOnly\"/>GrandChild\\s", content);
+    assertHasRegexp("id=\"replaceScopeChildren\" name=\"searchScope\" value=\"\" checked=\"checked\"/>GrandChild and children", content);
+    assertHasRegexp("id=\"replaceMethodScopeChildren\" name=\"searchScope\" value=\"\" checked=\"checked\"/>GrandChild and children", content);
+    assertDoesntHaveRegexp("value=\"ChildPage\"", content);
+    assertHasRegexp("<button type=\"submit\" name=\"dryRun\"", content);
   }
 
   @Test

@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.http.MockResponseSender;
+import fitnesse.http.Request;
 import fitnesse.http.Response;
 
 public class SearchReplaceResponderTest extends ResponderTestCase {
@@ -75,6 +76,90 @@ public class SearchReplaceResponderTest extends ResponderTestCase {
     String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
     assertThat(content, not(containsString("<a href=\"SomePage\">")));
     assertThat(content, containsString("SomePage.ChildPage"));
+  }
+
+  @Test
+  public void doesNotReplaceInPagesBehindSymbolicLinksByDefault() throws Exception {
+    addSymbolicLinkToLinkedPage();
+
+    String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
+
+    assertThat(content, not(containsString("SomePage.SymLink")));
+    assertEquals("linked page has something too", root.getChildPage("LinkedPage").getData().getContent());
+  }
+
+  @Test
+  public void replacesInPagesBehindSymbolicLinksOnRequest() throws Exception {
+    addSymbolicLinkToLinkedPage();
+    request.addInput("includeSymLinks", "on");
+
+    String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
+
+    assertThat(content, containsString("SomePage.SymLink"));
+    assertEquals("linked page has replacedthing too", root.getChildPage("LinkedPage").getData().getContent());
+  }
+
+  @Test
+  public void replacesInWholeWikiForScopeRoot() throws Exception {
+    request.setResource("SomePage.ChildPage");
+    WikiPageUtil.addPage(somePage, PathParser.parse("ChildPage"), "this page has something to replace.");
+    WikiPageUtil.addPage(root, PathParser.parse("OtherPage"), "other page has something too");
+    request.addInput("searchScope", "root");
+
+    getResponseContentUsingSearchReplaceString("something", "replacedthing");
+
+    assertEquals("other page has replacedthing too", root.getChildPage("OtherPage").getData().getContent());
+    assertEquals("has replacedthing in it", root.getChildPage("SomePage").getData().getContent());
+  }
+
+  @Test
+  public void replacesInCurrentPageOnlyForScopePageOnly() throws Exception {
+    WikiPageUtil.addPage(somePage, PathParser.parse("ChildPage"), "this page has something to replace.");
+    request.addInput("searchScope", "pageOnly");
+
+    String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
+
+    assertThat(content, not(containsString("SomePage.ChildPage")));
+    assertEquals("has replacedthing in it", root.getChildPage("SomePage").getData().getContent());
+    assertEquals("this page has something to replace.", somePage.getChildPage("ChildPage").getData().getContent());
+  }
+
+  @Test
+  public void dryRunShowsChangedLinesWithoutSaving() throws Exception {
+    request.addInput("dryRun", "Dry run");
+    request.addInput(Request.NOCHUNK, "");
+    String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
+
+    assertThat(content, containsString("Dry run (nothing is saved)"));
+    assertThat(content, containsString("<th>Changes</th>"));
+    assertThat(content, containsString("tableSorter.sort(5, 'date')"));
+    assertThat(content, containsString("<td class=\"before\"><pre>has <mark>something</mark> in it</pre></td><td class=\"after\"><pre>has <mark>replacedthing</mark> in it</pre></td>"));
+    assertEquals("has something in it", root.getChildPage("SomePage").getData().getContent());
+  }
+
+  @Test
+  public void changedLinesAreOnlyShownForDryRun() throws Exception {
+    String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
+
+    assertThat(content, not(containsString("class=\"changedLines\"")));
+    assertThat(content, not(containsString("<th>Changes</th>")));
+    assertThat(content, not(containsString("To save this search as a link")));
+    assertEquals("has replacedthing in it", root.getChildPage("SomePage").getData().getContent());
+  }
+
+  private void addSymbolicLinkToLinkedPage() {
+    WikiPageUtil.addPage(root, PathParser.parse("LinkedPage"), "linked page has something too");
+    PageData data = somePage.getData();
+    data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymLink", ".LinkedPage");
+    somePage.commit(data);
+  }
+
+  @Test
+  public void replacesWithOneThreadOnly() {
+    request.addInput("searchThreads", "4");
+    SearchReplaceResponder searchReplaceResponder = (SearchReplaceResponder) responder;
+    searchReplaceResponder.setRequest(request);
+    assertEquals(1, searchReplaceResponder.getSearchThreads());
   }
 
   private String getResponseContentUsingSearchReplaceString(String searchString, String replacementString) throws Exception {
