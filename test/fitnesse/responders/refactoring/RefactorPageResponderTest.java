@@ -52,6 +52,7 @@ public class RefactorPageResponderTest extends ResponderTestCase {
     assertHasRegexp("id=\"replaceScopeChildPage\" name=\"searchScope\" value=\"ChildPage\"/>ChildPage", content);
     assertHasRegexp("id=\"replaceScopePage\" name=\"searchScope\" value=\"\" checked=\"checked\"/>GrandChild", content);
     assertHasRegexp("id=\"replaceMethodScopePage\" name=\"searchScope\" value=\"\" checked=\"checked\"/>GrandChild", content);
+    assertHasRegexp("<button type=\"submit\" name=\"dryRun\"", content);
   }
 
   @Test
