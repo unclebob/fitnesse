@@ -180,6 +180,7 @@ There are more properties which can be used to tweak parts of FitNesse:
  * '''TestHistory.purgeOptions''' - A comma separated list of the age, in number of days, to offer as purge options on the ''Test History'' page.
  * '''TestHistory.maxCount''' - The number of histories to keep around per page. Cleaned up after a new test run.
  * '''TestHistory.historyOptions''' - A comma separated list of options to offer on the ''Test History'' page, to change the displayed numbers of Histories. This value is limited by the maxCount configuration.
+ * '''Search.includeSymLinks''' - Set to ''false'' to skip symbolic links and the pages below them in search and in search & replace. By default they are followed. On wikis where many links point to each other, following them finds the same pages again and again, which makes searches very slow. Can be overridden per request with the ''includeSymLinks'' query parameter.
  * Any variable that can be defined on a wiki page.
 
 The Slim test system has a set of [[custom properties][<UserGuide.WritingAcceptanceTests.SliM]] that can either be set on a page or in the configuration file.

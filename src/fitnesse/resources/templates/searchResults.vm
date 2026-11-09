@@ -35,7 +35,7 @@
    </td>
    <td>
    #if( $result.isSymbolicPage() )
-	<a href="$pagePath">#foreach( $pathPage in $resultResponder.getPathPages($result) )#if( $resultResponder.isSymbolicLink($pathPage) )<span class="symlink" title="symbolic link">$pathPage.getName()</span>#else$pathPage.getName()#end#if( $foreach.hasNext ).#end#end</a>
+	<a href="$pagePath">#foreach( $pathPage in $resultResponder.getPathPages($result) )#if( $pathPage.isSymbolicLink() )<span class="symlink" title="symbolic link">$pathPage.getName()</span>#else$pathPage.getName()#end#if( $foreach.hasNext ).#end#end</a>
    #else
 	<a href="$pagePath">$pagePath</a>
    #end
