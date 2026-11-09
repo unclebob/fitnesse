@@ -66,14 +66,6 @@ public class RunningTestingTracker {
     return "Could not find test or suite to stop";
   }
 
-  public boolean isRunning(String ticket) {
-    return processes.containsKey(ticket);
-  }
-
-  public java.util.Set<String> getRunningIds() {
-    return java.util.Collections.unmodifiableSet(new java.util.HashSet<>(processes.keySet()));
-  }
-
   public RunningProcess getRunningProcess(String ticket) {
     return processes.get(ticket);
   }

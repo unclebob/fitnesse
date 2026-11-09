@@ -29,8 +29,8 @@ import fitnesse.responders.refactoring.RenamePageResponder;
 import fitnesse.responders.refactoring.SearchReplaceResponder;
 import fitnesse.responders.run.InstructionResponder;
 import fitnesse.responders.run.PartitionPreviewResponder;
-import fitnesse.responders.run.StopTestResponder;
 import fitnesse.responders.run.RunningTestsResponder;
+import fitnesse.responders.run.StopTestResponder;
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.responders.search.SearchPropertiesResponder;
@@ -174,7 +174,7 @@ public class ResponderFactory {
   }
 
   private Responder lookupResponder(String responderKey)
-      throws InstantiationException {
+    throws InstantiationException {
     Class<?> responderClass = getResponderClass(responderKey);
     if (responderClass != null) {
       try {

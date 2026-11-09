@@ -1,5 +1,3 @@
-// Copyright (C) 2026 by netcare GmbH. All rights reserved.
-// Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
