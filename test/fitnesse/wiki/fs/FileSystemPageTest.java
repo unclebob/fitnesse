@@ -51,6 +51,21 @@ public class FileSystemPageTest {
   }
 
   @Test
+  public void childrenWithoutSymbolicLinksLeaveOutLinks() throws Exception {
+    WikiPage pageA = WikiPageUtil.addPage(root, PathParser.parse("PageA"), "");
+    WikiPageUtil.addPage(pageA, PathParser.parse("ChildPage"), "");
+    WikiPageUtil.addPage(root, PathParser.parse("PageB"), "");
+    PageData data = pageA.getData();
+    data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymLink", ".PageB");
+    pageA.commit(data);
+
+    assertEquals(2, pageA.getChildren().size());
+    List<WikiPage> children = pageA.getChildrenWithoutSymbolicLinks();
+    assertEquals(1, children.size());
+    assertEquals("ChildPage", children.get(0).getName());
+  }
+
+  @Test
   public void testTwoLevel() throws Exception {
     WikiPage levelA = WikiPageUtil.addPage(root, PathParser.parse("PageA"));
     WikiPage page = WikiPageUtil.addPage(levelA, PathParser.parse("PageB"));

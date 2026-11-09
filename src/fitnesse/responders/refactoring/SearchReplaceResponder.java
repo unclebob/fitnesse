@@ -46,12 +46,6 @@ public class SearchReplaceResponder extends ResultResponder {
   }
 
   @Override
-  protected boolean includeSymbolicLinks() {
-    // replace has always changed the pages behind symbolic links too
-    return true;
-  }
-
-  @Override
   public int getSearchThreads() {
     // replace changes pages while traversing, so pages must not be loaded ahead
     return 1;

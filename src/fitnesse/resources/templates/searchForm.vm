@@ -28,8 +28,7 @@
    <input type="radio" id="leaf" name="searchScope" value="" #if( !$request.hasInput("searchScope") || $request.getInput("searchScope").equals("") ) checked="checked"#end#/>$page.getName()
   </fieldset>
   <fieldset>
-   <label for="includeSymLinks">Options:</label>
-   <input type="checkbox" id="includeSymLinks" name="includeSymLinks"#if( $request.hasInput("includeSymLinks")) checked="checked"#end/>Include symbolic links
+   <label for="searchThreads">Options:</label>
    <select id="searchThreads" name="searchThreads">
     #foreach( $threads in $resultResponder.getSearchThreadChoices() )
     <option value="$threads"#if( $threads == $resultResponder.getSelectedSearchThreads() ) selected="selected"#end>$threads</option>
@@ -64,8 +63,7 @@
    <input type="radio" id="leaf" name="searchScope" value="" #if( !$request.hasInput("searchScope") || $request.getInput("searchScope").equals("") ) checked="checked"#end#/>$page.getName()
   </fieldset>
   <fieldset>
-   <label for="includeSymLinks">Options:</label>
-   <input type="checkbox" id="includeSymLinks" name="includeSymLinks"#if( $request.hasInput("includeSymLinks")) checked="checked"#end/>Include symbolic links
+   <label for="searchThreads">Options:</label>
    <select id="searchThreads" name="searchThreads">
     #foreach( $threads in $resultResponder.getSearchThreadChoices() )
     <option value="$threads"#if( $threads == $resultResponder.getSelectedSearchThreads() ) selected="selected"#end>$threads</option>
@@ -94,8 +92,7 @@
    <input type="radio" id="leaf" name="searchScope" value="" #if( !$request.hasInput("searchScope") || $request.getInput("searchScope").equals("") ) checked="checked"#end#/>$page.getName()
   </fieldset>
   <fieldset>
-   <label for="includeSymLinks">Options:</label>
-   <input type="checkbox" id="includeSymLinks" name="includeSymLinks"#if( $request.hasInput("includeSymLinks")) checked="checked"#end/>Include symbolic links
+   <label for="searchThreads">Options:</label>
    <select id="searchThreads" name="searchThreads">
     #foreach( $threads in $resultResponder.getSearchThreadChoices() )
     <option value="$threads"#if( $threads == $resultResponder.getSelectedSearchThreads() ) selected="selected"#end>$threads</option>
