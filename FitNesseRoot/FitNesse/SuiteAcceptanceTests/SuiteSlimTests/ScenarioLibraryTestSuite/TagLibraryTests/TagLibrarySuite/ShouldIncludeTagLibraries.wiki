@@ -1,0 +1,9 @@
+---
+Suites: TagTwo, TagOne
+Test
+---
+!|script|
+|one|
+|two|
+|check|echo|$ONE|1|
+|check|echo|$TWO|2|
