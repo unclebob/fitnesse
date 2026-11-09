@@ -8,5 +8,7 @@ public interface SubWikiPageFactory {
 
   List<WikiPage> getChildren(FileBasedWikiPage wikiPage);
 
+  List<WikiPage> getChildrenWithoutSymbolicLinks(FileBasedWikiPage wikiPage);
+
   WikiPage getChildPage(FileBasedWikiPage wikiPage, String childName);
 }

@@ -298,6 +298,12 @@ span.error {
   font-style: italic;
 }
 
+/** Search results **/
+.symlink {
+  font-style: italic;
+  font-weight: bold;
+}
+
 .CodeMirror {
   border: 1px solid #d7d7d7;
 }

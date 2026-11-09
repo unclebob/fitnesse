@@ -276,4 +276,28 @@ public class SymbolicPageTest {
     data.setContent("new content");
     wikiPage.commit(data);
   }
+
+  @Test
+  public void realPageIsNoSymbolicLink() {
+    assertFalse(pageOne.isSymbolicLink());
+  }
+
+  @Test
+  public void symbolicPageBelowRealPageIsSymbolicLink() {
+    assertTrue(symPage.isSymbolicLink());
+  }
+
+  @Test
+  public void pageBelowSymbolicLinkIsNoSymbolicLink() {
+    WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildPage"), "");
+    WikiPage child = symPage.getChildPage("ChildPage");
+    assertTrue(child.isSymbolicPage());
+    assertFalse(child.isSymbolicLink());
+  }
+
+  @Test
+  public void symbolicLinkBelowSymbolicLinkIsSymbolicLink() {
+    WikiPage innerLink = new SymbolicPage("InnerLink", new SymbolicPage("InnerLink", pageOne, pageTwo), symPage);
+    assertTrue(innerLink.isSymbolicLink());
+  }
 }
