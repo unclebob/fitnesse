@@ -64,7 +64,7 @@ public interface WikiPage extends Comparable<WikiPage> {
   default List<WikiPage> getChildrenWithoutSymbolicLinks() {
     List<WikiPage> children = new ArrayList<>();
     for (WikiPage child : getChildren()) {
-      if (!SymbolicPage.isSymbolicLink(child)) {
+      if (!child.isSymbolicLink()) {
         children.add(child);
       }
     }
@@ -110,7 +110,24 @@ public interface WikiPage extends Comparable<WikiPage> {
   }
 
   default WikiPage getRealPage() { return this; }
+
+  /**
+   * @return true if this page is a symbolic link or lies below one, i.e. it is reached via a symbolic link.
+   * @see #isSymbolicLink()
+   */
   default boolean isSymbolicPage() { return this != getRealPage(); }
+
+  /**
+   * In contrast to {@link #isSymbolicPage()} this is only true for the link itself, not for the pages below it.
+   * A symbolic link found inside a linked tree is a symbolic link too.
+   *
+   * @return true if this page is a symbolic link.
+   */
+  default boolean isSymbolicLink() {
+    // pages below a link wrap their real page, links below a link wrap that link
+    return isSymbolicPage()
+      && (!getParent().isSymbolicPage() || getRealPage().isSymbolicLink());
+  }
 }
 
 

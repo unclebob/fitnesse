@@ -15,10 +15,6 @@
   <input type="radio" id="replaceScopePage" name="searchScope" value="pageOnly"#if( $request.getInput("searchScope") == "pageOnly" ) checked="checked"#end/>$pageTitle.Title
   <input type="radio" id="replaceScopeChildren" name="searchScope" value=""#if( $request.getInput("searchScope") != "pageOnly" ) checked="checked"#end/>$pageTitle.Title and children
  </fieldset>
- <fieldset>
-  <label for="includeSymLinks">Options:</label>
-  <input type="checkbox" id="includeSymLinks" name="includeSymLinks"#if( $request.hasInput("includeSymLinks")) checked="checked"#end/>Include symbolic links (changes the linked pages)
- </fieldset>
  <fieldset class="buttons">
   <button type="submit" name="dryRun" value="Dry run" title="Shows the lines that would change, without saving anything">Dry run</button>
   <input type="submit" name="replace" value="Replace!"/>
@@ -45,10 +41,6 @@
   <label for="replaceMethodScope">Scope:</label>
   <input type="radio" id="replaceMethodScopePage" name="searchScope" value="pageOnly"#if( $request.getInput("searchScope") == "pageOnly" ) checked="checked"#end/>$pageTitle.Title
   <input type="radio" id="replaceMethodScopeChildren" name="searchScope" value=""#if( $request.getInput("searchScope") != "pageOnly" ) checked="checked"#end/>$pageTitle.Title and children
- </fieldset>
- <fieldset>
-  <label for="includeSymLinksMethod">Options:</label>
-  <input type="checkbox" id="includeSymLinksMethod" name="includeSymLinks"#if( $request.hasInput("includeSymLinks")) checked="checked"#end/>Include symbolic links (changes the linked pages)
  </fieldset>
  <fieldset class="buttons">
   <button type="submit" name="dryRun" value="Dry run" title="Shows the lines that would change, without saving anything">Dry run</button>

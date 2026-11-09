@@ -279,12 +279,12 @@ public class SymbolicPageTest {
 
   @Test
   public void realPageIsNoSymbolicLink() {
-    assertFalse(SymbolicPage.isSymbolicLink(pageOne));
+    assertFalse(pageOne.isSymbolicLink());
   }
 
   @Test
   public void symbolicPageBelowRealPageIsSymbolicLink() {
-    assertTrue(SymbolicPage.isSymbolicLink(symPage));
+    assertTrue(symPage.isSymbolicLink());
   }
 
   @Test
@@ -292,12 +292,12 @@ public class SymbolicPageTest {
     WikiPageUtil.addPage(pageTwo, PathParser.parse("ChildPage"), "");
     WikiPage child = symPage.getChildPage("ChildPage");
     assertTrue(child.isSymbolicPage());
-    assertFalse(SymbolicPage.isSymbolicLink(child));
+    assertFalse(child.isSymbolicLink());
   }
 
   @Test
   public void symbolicLinkBelowSymbolicLinkIsSymbolicLink() {
     WikiPage innerLink = new SymbolicPage("InnerLink", new SymbolicPage("InnerLink", pageOne, pageTwo), symPage);
-    assertTrue(SymbolicPage.isSymbolicLink(innerLink));
+    assertTrue(innerLink.isSymbolicLink());
   }
 }

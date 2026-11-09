@@ -1,10 +1,10 @@
-// Copyright (C) 2026 by netcare GmbH. All rights reserved.
-// Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki.search;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import fitnesse.wiki.NoPruningStrategy;
 import fitnesse.wiki.PageData;
@@ -25,6 +25,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class ParallelTraversalTest {
   private WikiPage root;
@@ -74,6 +75,43 @@ public class ParallelTraversalTest {
       }
     };
     new ParallelTraversal(page -> {}, new NoPruningStrategy(), true, 4).traverse(brokenPage);
+  }
+
+  @Test(expected = BrokenPageError.class)
+  public void passesOnErrorsThrownLoadingPages() {
+    WikiPage brokenPage = new WikiPageDummy("BrokenPage", "", root) {
+      @Override
+      public List<WikiPage> getChildren() {
+        throw new BrokenPageError();
+      }
+    };
+    new ParallelTraversal(page -> {}, new NoPruningStrategy(), true, 4).traverse(brokenPage);
+  }
+
+  @Test
+  public void stopsWhenInterrupted() {
+    CountDownLatch neverReleased = new CountDownLatch(1);
+    WikiPage slowPage = new WikiPageDummy("SlowPage", "", root) {
+      @Override
+      public List<WikiPage> getChildren() {
+        try {
+          neverReleased.await();
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+        }
+        return Collections.emptyList();
+      }
+    };
+    Thread.currentThread().interrupt();
+    try {
+      new ParallelTraversal(page -> {}, new NoPruningStrategy(), true, 4).traverse(slowPage);
+      fail("expected traversal to stop");
+    } catch (IllegalStateException e) {
+      assertTrue(Thread.interrupted());
+    }
+  }
+
+  private static class BrokenPageError extends Error {
   }
 
   private List<String> assertSameOrderAsPageCrawler(PagePruningStrategy strategy) {

@@ -1,5 +1,3 @@
-// Copyright (C) 2026 by netcare GmbH. All rights reserved.
-// Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki.search;
 
 import java.util.ArrayList;
@@ -78,14 +76,12 @@ class ParallelTraversal {
       Thread.currentThread().interrupt();
       throw new IllegalStateException("Interrupted while loading pages", e);
     } catch (ExecutionException e) {
+      // loading pages throws no checked exceptions
       Throwable cause = e.getCause();
-      if (cause instanceof RuntimeException) {
-        throw (RuntimeException) cause;
-      }
       if (cause instanceof Error) {
         throw (Error) cause;
       }
-      throw new IllegalStateException(cause);
+      throw (RuntimeException) cause;
     }
   }
 

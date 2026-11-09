@@ -12,6 +12,9 @@ import org.junit.Test;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
+import fitnesse.testutil.FitNesseUtil;
+
+import java.util.Properties;
 
 public class SearchReplaceResponderTest extends ResponderTestCase {
   private WikiPagePath pagePath;
@@ -79,19 +82,8 @@ public class SearchReplaceResponderTest extends ResponderTestCase {
   }
 
   @Test
-  public void doesNotReplaceInPagesBehindSymbolicLinksByDefault() throws Exception {
+  public void replacesInPagesBehindSymbolicLinks() throws Exception {
     addSymbolicLinkToLinkedPage();
-
-    String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
-
-    assertThat(content, not(containsString("SomePage.SymLink")));
-    assertEquals("linked page has something too", root.getChildPage("LinkedPage").getData().getContent());
-  }
-
-  @Test
-  public void replacesInPagesBehindSymbolicLinksOnRequest() throws Exception {
-    addSymbolicLinkToLinkedPage();
-    request.addInput("includeSymLinks", "on");
 
     String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
 
@@ -155,11 +147,37 @@ public class SearchReplaceResponderTest extends ResponderTestCase {
   }
 
   @Test
+  public void hasNoChangedLinesBeforeADryRun() {
+    SearchReplaceResponder searchReplaceResponder = (SearchReplaceResponder) responder;
+    searchReplaceResponder.setRequest(request);
+    assertTrue(searchReplaceResponder.getChangedLines(somePage).isEmpty());
+
+    request.addInput("dryRun", "Dry run");
+    assertTrue(searchReplaceResponder.getChangedLines(somePage).isEmpty());
+  }
+
+  @Test
   public void replacesWithOneThreadOnly() {
     request.addInput("searchThreads", "4");
     SearchReplaceResponder searchReplaceResponder = (SearchReplaceResponder) responder;
     searchReplaceResponder.setRequest(request);
     assertEquals(1, searchReplaceResponder.getSearchThreads());
+  }
+
+  @Test
+  public void skipsPagesBehindSymbolicLinksWhenConfigured() throws Exception {
+    Properties properties = new Properties();
+    properties.setProperty("Search.includeSymLinks", "false");
+    context = FitNesseUtil.makeTestContext(properties);
+    root = context.getRootPage();
+    somePage = WikiPageUtil.addPage(root, pagePath, "has something in it");
+    addSymbolicLinkToLinkedPage();
+
+    String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
+
+    assertThat(content, not(containsString("SomePage.SymLink")));
+    assertEquals("linked page has something too", root.getChildPage("LinkedPage").getData().getContent());
+    assertEquals("has replacedthing in it", somePage.getData().getContent());
   }
 
   private String getResponseContentUsingSearchReplaceString(String searchString, String replacementString) throws Exception {

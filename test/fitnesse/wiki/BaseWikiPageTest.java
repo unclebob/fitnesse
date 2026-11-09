@@ -48,6 +48,21 @@ public class BaseWikiPageTest {
   }
 
   @Test
+  public void childrenWithoutSymbolicLinksLeaveOutLinksByDefault() throws Exception {
+    createLink("LinkedPage");
+    WikiPage page = new WikiPageDummy("DummyPage", "", root) {
+      @Override
+      public List<WikiPage> getChildren() {
+        return linkingPage.getChildren();
+      }
+    };
+
+    List<WikiPage> children = page.getChildrenWithoutSymbolicLinks();
+    assertEquals(1, children.size());
+    assertEquals("ChildPage", children.get(0).getName());
+  }
+
+  @Test
   public void testGetChildUsesSymbolicPages() throws Exception {
     createLink("LinkedPage");
     checkSymbolicPage(linkingPage.getChildPage("SymLink"));

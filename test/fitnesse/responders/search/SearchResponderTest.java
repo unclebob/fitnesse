@@ -14,10 +14,12 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertDoesntHaveRegexp;
 import static util.RegexTestCase.assertHasRegexp;
@@ -193,7 +195,18 @@ public class SearchResponderTest {
   }
 
   @Test
-  public void symbolicLinksAreSkippedByDefault() throws Exception {
+  public void symbolicLinksAreSearchedByDefault() throws Exception {
+    addSymbolicLinkToLinkedPage();
+    request.addInput("searchScope", "root");
+    String content = getResponseContentUsingSearchString("linked content");
+
+    assertHasRegexp("LinkedPage", content);
+    assertHasRegexp("SomePage\\.SymLink", content);
+  }
+
+  @Test
+  public void symbolicLinksAreSkippedWhenConfigured() throws Exception {
+    useContextWithProperty("Search.includeSymLinks", "false");
     addSymbolicLinkToLinkedPage();
     request.addInput("searchScope", "root");
     String content = getResponseContentUsingSearchString("linked content");
@@ -203,10 +216,22 @@ public class SearchResponderTest {
   }
 
   @Test
-  public void symbolicLinksAreSearchedOnRequest() throws Exception {
+  public void symbolicLinksAreSkippedOnRequest() throws Exception {
     addSymbolicLinkToLinkedPage();
     request.addInput("searchScope", "root");
-    request.addInput("includeSymLinks", "on");
+    request.addInput("includeSymLinks", "false");
+    String content = getResponseContentUsingSearchString("linked content");
+
+    assertHasRegexp("LinkedPage", content);
+    assertDoesntHaveRegexp("SomePage\\.SymLink", content);
+  }
+
+  @Test
+  public void symbolicLinksAreSearchedOnRequestAlthoughConfiguredToSkip() throws Exception {
+    useContextWithProperty("Search.includeSymLinks", "false");
+    addSymbolicLinkToLinkedPage();
+    request.addInput("searchScope", "root");
+    request.addInput("includeSymLinks", "true");
     String content = getResponseContentUsingSearchString("linked content");
 
     assertHasRegexp("LinkedPage\">LinkedPage</a>.*?<label></label>\\s*</td>\\s*<td>no</td>", content);
@@ -218,7 +243,7 @@ public class SearchResponderTest {
   public void allSymbolicLinksInPathAreMarked() throws Exception {
     addSymbolicLinkToLinkedPage();
     request.addInput("searchScope", "root");
-    request.addInput("includeSymLinks", "on");
+    request.addInput("includeSymLinks", "");
     String content = getResponseContentUsingSearchString("linked content");
 
     assertSubString("<a href=\"LinkedPage.InnerLink\">LinkedPage.<span class=\"symlink\" title=\"symbolic link\">InnerLink</span></a>", content);
@@ -229,6 +254,7 @@ public class SearchResponderTest {
   public void searchStartingAtSymbolicLinkSearchesLinkedPages() throws Exception {
     addSymbolicLinkToLinkedPage();
     request.setResource("SomePage.SymLink");
+    request.addInput("includeSymLinks", "false");
     String content = getResponseContentUsingSearchString("linked content");
 
     assertSubString("<a href=\"SomePage.SymLink.LinkedChild\">", content);
@@ -284,6 +310,13 @@ public class SearchResponderTest {
   }
 
   @Test
+  public void searchShowsNoChangedLines() {
+    responder.setRequest(request);
+    assertFalse(responder.showsChangedLines());
+    assertTrue(responder.getChangedLines(context.getRootPage()).isEmpty());
+  }
+
+  @Test
   public void searchThreadsDefaultToOneAndAreLimited() {
     responder.setRequest(request);
     assertEquals(1, responder.getSearchThreads());
@@ -317,6 +350,13 @@ public class SearchResponderTest {
       rows.add(matcher.group(1));
     }
     return rows;
+  }
+
+  private void useContextWithProperty(String name, String value) {
+    Properties properties = new Properties();
+    properties.setProperty(name, value);
+    context = FitNesseUtil.makeTestContext(properties);
+    WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("SomePage"), "has something in it");
   }
 
   private void addSymbolicLinkToLinkedPage() {

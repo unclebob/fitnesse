@@ -109,7 +109,7 @@
 | | searchString | For text replace, this is a regular expression.  For method replace, it is a line from wiki which evaluates to a method or a scenario name. |
 | | replacementString | The string to replace the matches of ''searchString'' with. |
 | | isMethodReplace | If present, a method replace is performed instead of a text replace. |
-| | includeSymLinks | Also replace in the pages behind symbolic links, which changes the linked pages themselves. Without it, symbolic links and the pages below them are skipped. |
+| | includeSymLinks | See search. Replacing in the pages behind symbolic links changes the linked pages themselves; "false" skips them. |
 | | dryRun | If present, nothing is saved: the pages that would change are listed with their changed lines before and after the replacement. |
 | | searchScope | See search. Also "pageOnly" to replace in the selected page only, without its children. |
 | rollback | | Rollback the page to the selected version. |
@@ -137,7 +137,7 @@
 | | isMethodSearch | If present, a method search is performed instead of a text search.  Only works together with searchType=content. |
 | | useWildcards | Text search only: if present, an asterisk (*) in ''searchString'' matches any characters within a line, and * alone finds all pages. Without it, the ''searchString'' is matched literally. |
 | | searchScope | Limits the search to the pages below the given ancestor page name, the word "root" to search the whole wiki, or "pageOnly" to search the selected page only.  Otherwise the selected page and its children are searched. |
-| | includeSymLinks | Also search the pages behind symbolic links. Without it, symbolic links and the pages below them are skipped. |
+| | includeSymLinks | "false" skips symbolic links and the pages below them, "true" (or no value) searches them too. Without it the ''Search.includeSymLinks'' property decides, which searches them by default. See [[!-ConfigurationFile-!][<UserGuide.AdministeringFitNesse.ConfigurationFile]]. |
 | | searchThreads | Number of threads (1-4) reading pages during the search. 1, the default, searches sequentially; more threads read pages ahead in parallel, which makes searches on large wikis faster but puts more load on the server. |
 | searchForm | | Returns the search form that allows users to specify a search. |
 | searchProperties | | Returns a list of pages that match the search criteria |
@@ -148,7 +148,7 @@
 | | Special | a list of !-{SetUp, TearDown}-! or the word "Any".  The listed kinds of setup/teardown pages are included, the ones not listed are excluded from the search. |
 | | Prune | Only find pages with the "skipped" attribute selected.  (The former name ''obsolete'' is still accepted.) |
 | | searchScope | Limits the search to the pages below the given ancestor page name, or the word "root" to search the whole wiki. |
-| | includeSymLinks | Also search the pages behind symbolic links. Without it, symbolic links and the pages below them are skipped. |
+| | includeSymLinks | "false" skips symbolic links and the pages below them, "true" (or no value) searches them too. Without it the ''Search.includeSymLinks'' property decides, which searches them by default. See [[!-ConfigurationFile-!][<UserGuide.AdministeringFitNesse.ConfigurationFile]]. |
 | | searchThreads | Number of threads (1-4) reading pages during the search. 1, the default, searches sequentially; more threads read pages ahead in parallel, which makes searches on large wikis faster but puts more load on the server. |
 | shutdown | | Shuts !-FitNesse-! down. |
 | stoptest | | Stops running tests. |
