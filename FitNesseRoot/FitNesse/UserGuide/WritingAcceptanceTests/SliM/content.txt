@@ -16,21 +16,21 @@ If you want a test page to be run under SLIM, you simply set the TEST_SYSTEM var
 !3 The Slim Tables
 The first cell of a slim table tells you what kind of table it is. Here are the table types so far:
 
-| [[Decision Table][>DecisionTable]] | Supplies the inputs and outputs for decisions. This is similar to the Fit Column Fixture |
-| [[Baseline Decision Table][.FitNesse.SuiteAcceptanceTests.SuiteSlimTests.BaseLineDecisionTable]]|Almost identical to a >DecisionTable but more readable for very big tables with many columns as only the changed values from one line to the baseline must be specified. The fixture implementation is identical to >DecisionTable.|
-| [[Dynamic Decision Table][>DynamicDecisionTable]]                                               |Has the same syntax as a >DecisionTable, but differs in the fixture implementation. It passes the column headers as parameters to the fixture.                                                                                     |
-| [[Hybrid Decision Table][.FitNesse.SuiteAcceptanceTests.SuiteSlimTests.HybridDecisionTable]]    |Combines the advantages in the fixture implementation of a Decision and a Dynamic Decision Table. Also supported by a [[Baseline Decision Table][.FitNesse.SuiteAcceptanceTests.SuiteSlimTests.BaseLineDecisionTable]]             |
-| [[Query Table][>QueryTable]] | Supplies the expected results of a query. This is similar to the Fit Row Fixture |
-| [[Subset Query Table][>SubsetQueryTable]] | Supplies a subset of the expected results of a query. |
-| [[Ordered query Table][>OrderedQueryTable]] | Supplies the expected results of a query. The rows are expected to be in order. This is similar to the Fit Row Fixture |
-| [[Script Table][>ScriptTable]] | A series of actions and checks. Similar to Do Fixture. |
-| [[Table Table][>TableTable]] | Whatever you want it to be! |
-| [[Import][>ImportTable]] | Add a path to the fixture search path. |
-| [[Comment][>CommentTable]] | A table that does nothing. |
-| [[Scenario Table][>ScenarioTable]] | A table that can be called from other tables. |
-| [[Library Table][>LibraryTable]] | A table that installs fixtures available for all test pages |
-| [[Define Table Type][>DefineTableType]] | A helper table that defines the default table type for named fixtures. |
-| [[Define Alias][>DefineAlias]] | A helper table that defines alias names for fixtures. |
+|[[Decision Table][>DecisionTable]]                                                              |Supplies the inputs and outputs for decisions. This is similar to the Fit Column Fixture                                                                                                                                           |
+|[[Baseline Decision Table][.FitNesse.SuiteAcceptanceTests.SuiteSlimTests.BaseLineDecisionTable]]|Almost identical to a >DecisionTable but more readable for very big tables with many columns as only the changed values from one line to the baseline must be specified. The fixture implementation is identical to >DecisionTable.|
+|[[Dynamic Decision Table][>DynamicDecisionTable]]                                               |Has the same syntax as a >DecisionTable, but differs in the fixture implementation. It passes the column headers as parameters to the fixture.                                                                                     |
+|[[Hybrid Decision Table][.FitNesse.SuiteAcceptanceTests.SuiteSlimTests.HybridDecisionTable]]    |Combines the advantages in the fixture implementation of a Decision and a Dynamic Decision Table. Also supported by a [[Baseline Decision Table][.FitNesse.SuiteAcceptanceTests.SuiteSlimTests.BaseLineDecisionTable]]             |
+|[[Query Table][>QueryTable]]                                                                    |Supplies the expected results of a query. This is similar to the Fit Row Fixture                                                                                                                                                   |
+|[[Subset Query Table][>SubsetQueryTable]]                                                       |Supplies a subset of the expected results of a query.                                                                                                                                                                              |
+|[[Ordered query Table][>OrderedQueryTable]]                                                     |Supplies the expected results of a query. The rows are expected to be in order. This is similar to the Fit Row Fixture                                                                                                             |
+|[[Script Table][>ScriptTable]]                                                                  |A series of actions and checks. Similar to Do Fixture.                                                                                                                                                                             |
+|[[Table Table][>TableTable]]                                                                    |Whatever you want it to be!                                                                                                                                                                                                        |
+|[[Import][>ImportTable]]                                                                        |Add a path to the fixture search path.                                                                                                                                                                                             |
+|[[Comment][>CommentTable]]                                                                      |A table that does nothing.                                                                                                                                                                                                         |
+|[[Scenario Table][>ScenarioTable]]                                                              |A table that can be called from other tables.                                                                                                                                                                                      |
+|[[Library Table][>LibraryTable]]                                                                |A table that installs fixtures available for all test pages                                                                                                                                                                        |
+|[[Define Table Type][>DefineTableType]]                                                         |A helper table that defines the default table type for named fixtures.                                                                                                                                                             |
+|[[Define Alias][>DefineAlias]]                                                                  |A helper table that defines alias names for fixtures.                                                                                                                                                                              |
 
 !4 Data Types.
 The data in your tables is all Strings. However your fixtures don't want to be constrained to Strings. So Slim comes with several standard data type converters that will automatically convert the strings in the tables into the data types expected by your fixtures.
@@ -41,28 +41,60 @@ You can also create your own custom type converters if you like.
 !see >CustomTypes
 Content returned from the SUT will be escaped by default, so your fixture can return a piece of output without the need to transform it to HTML compatible output. On the other hand, if you're returning HTML content (e.g. a <table>..</table>), FitNesse will try to detect that (based on a valid HTML start and end tag) and will render the HTML in-line.
 
+!anchor watchlink
+
+
+!4 Watch closer what SLIM is doing
+When a SLIM test is run the the webpage will update each time a table has been fully processed.!-
+-!If you want to get quicker an undate you have to set the property: ''slim.show''
+
+At the top of the test page you will then see 2 additional outputs
+1. A list of the last 10 instructions the SLIM server is sending to the SLIM Client and the results of the same. 
+2. The current table and how its cells are updated after each instruction executed.
+
+
+In addition you can use the following two properties to customize this further. They are explained in the next section: 
+slim.show.size
+slim.show.sleep
+
+Try it if you run a local installation: 
+http://localhost:${FITNESSE_PORT}/FitNesse.UserGuide.TwoMinuteExample?test&slim.show&slim.show.sleep=90&slim.show.size=15
+
+Note instuctions are also saved in the [[Test Result XML file][.FitNesse.UserGuide.WritingAcceptanceTests.RestfulTests]]. 
+You have to open the XML file in an editor to see them.
+ 
+
 !4 Configure SLIM
 The Slim test system can be configured using the following properties:
 
-| slim.port | 8085 | Base port for SLIM. |
-| slim.pool.size | 10 | The size of the pool of ports to cycle through. By default the ports 8085 up to 8095 are used (''slim.port'' + ''slim.pool.size''). |
-| slim.host | localhost | The host the SLIM server will be running on. This is mostly useful if you're running a remote SLIM server. |
-| slim.flags | | Extra flags to provide to the SLIM server. Arguments supported by the slim service are: !-
+|property      |default  |description                                                                                                                        |
+|slim.port     |8085     |Base port for SLIM.                                                                                                                |
+|slim.pool.size|10       |The size of the pool of ports to cycle through. By default the ports 8085 up to 8095 are used (''slim.port'' + ''slim.pool.size'').|
+|slim.host     |localhost|The host the SLIM server will be running on. This is mostly useful if you're running a remote SLIM server.                         |
+|slim.flags    |                                                                                                                                             |Extra flags to provide to the SLIM server. Arguments supported by the slim service are: !-
 -![-v] [-i interactionClass] [-s statementTimeout] [-d] [-ssl parameterClass] |
-| slim.timeout | 10 seconds | Connection timeout starting and finishing a test run. |
-| slim.debug.timeout | ''slim.timeout'' | Same as ''slim.timeout'', used when the debug property is set (falls back to ''slim.timeout''). |
-| manually.start.test.runner.on.debug | false | Do not launch a SLIM server if the test is ran in debug mode. |
+|slim.timeout                       |10 seconds      |Connection timeout starting and finishing a test run.                                          |
+|slim.debug.timeout                 |''slim.timeout''|Same as ''slim.timeout'', used when the debug property is set (falls back to ''slim.timeout'').|
+|manually.start.test.runner.on.debug|false           |Do not launch a SLIM server if the test is ran in debug mode.                                  |
+|slim.mode                          |BULK                                                                                                            |BULK mode - By default the SLIM server sends a full table to the SLIM client and gets the results for the full table back. !-
+-! SINGLE mode - Instructions are send one by one to the SLIM Client. This is required for ''slim.show'' and will be set automatically if ''slim.show'' is set !-
+
+-!There is no performance difference between these two modes. The SINGLE mode should make it simpler to write new ports of SLIM in the future. As a normal slim user you don't have to care about this setting.|
+|slim_show||See above under: Whatch closer what Slim is doing .#watchlink !-
+-!Note that slim.show will also set the ''slim.mode'' to SINGLE.|
+|slim.show.size |10|Number of instructions to show                                                                                                                                                              |
+|slim.show.sleep|0 |Waits for X milliseconds between each instruction call. This is for making nice videos of a test run. Otherwise I don't think there is a usecase for slowing down the execution of your test|
 
 Those properties can be either provided by a wiki page, on the command line (e.g. ''-Dslim.port=9000'') or in the plugins.properties file.
 
 !4 Extra Goodies that are consistent throughout all Slim tables and ports.
-| [[''Exception Handling''][>ExceptionHandling]] |
-| [[''Symbols in tables''][>SymbolsInTables]] |
-| [[''Expressions in tables''][>ExpressionsInTables]] |
-| [[''Constructor arguments''][>ConstructorArguments]] |
-| [[''Value comparisons''][>ValueComparisons]] |
-| [[''Graceful names''][>GracefulNames]] |
+|[[''Exception Handling''][>ExceptionHandling]]      |
+|[[''Symbols in tables''][>SymbolsInTables]]         |
+|[[''Expressions in tables''][>ExpressionsInTables]] |
+|[[''Constructor arguments''][>ConstructorArguments]]|
+|[[''Value comparisons''][>ValueComparisons]]        |
+|[[''Graceful names''][>GracefulNames]]              |
 
 !4 Java goodies
-| [[''System Under Test''][>SystemUnderTest]] |
-| [[''Interaction Aware Fixture''][>InteractionAwareFixture]] |
+|[[''System Under Test''][>SystemUnderTest]]                |
+|[[''Interaction Aware Fixture''][>InteractionAwareFixture]]|
