@@ -1,5 +1,5 @@
 !2 Pending Changes
- * New property ''Search.includeSymLinks=false'' (or input ''includeSymLinks=false'') makes search and search & replace skip symbolic links; search results show which pages are reached via a symbolic link and how long the search took ([[1636][https://github.com/unclebob/fitnesse/pull/1636]]).
+ * New property ''Search.includeSymLinks=false'' (or query parameter ''includeSymLinks=false'') makes search and search & replace skip symbolic links; search results show which pages are reached via a symbolic link and how long the search took ([[1636][https://github.com/unclebob/fitnesse/pull/1636]]).
 
 !2 20261101
  * Refactor page shows tree structure ([[1617][https://github.com/unclebob/fitnesse/pull/1617]]).
