@@ -12,10 +12,15 @@ import fitnesse.html.template.PageTitle;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageType;
+import fitnesse.wiki.SymbolicLinkPruningStrategy;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.search.PageFinder;
+import fitnesse.wiki.search.WikiPageFinder;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 
 import static fitnesse.wiki.PageData.PropertyEDIT;
 import static fitnesse.wiki.PageData.PropertyFILES;
@@ -37,6 +42,11 @@ public abstract class ResultResponder extends ChunkingResponder implements
   static final String[] SEARCH_NAVIGATION_ATTRIBUTES = { PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH };
   static final String SEARCH_ATTRIBUTE_SKIP = PropertyPRUNE;
   static final String[] SPECIAL_ATTRIBUTES = { "SetUp", "TearDown" };
+  static final String INCLUDE_SYMBOLIC_LINKS = "includeSymLinks";
+  static final String INCLUDE_SYMBOLIC_LINKS_PROPERTY = "Search.includeSymLinks";
+
+  private long searchStartTime;
+  private long searchEndTime;
 
   @Override
   protected PageCrawler getPageCrawler() {
@@ -90,10 +100,52 @@ public abstract class ResultResponder extends ChunkingResponder implements
 
   @Override
   public final void traverse(TraversalListener<WikiPage> observer) {
+    searchStartTime = System.nanoTime();
+    try {
+      search(observer);
+    } finally {
+      searchEndTime = System.nanoTime();
+    }
+  }
+
+  /**
+   * @return the time the search took, in seconds with two decimals.
+   */
+  public String getSearchTime() {
+    return String.format(Locale.ROOT, "%.2f", (searchEndTime - searchStartTime) / 1_000_000_000.0);
+  }
+
+  private void search(TraversalListener<WikiPage> observer) {
     PageFinder pageFinder = getPageFinder(observer);
-    if (pageFinder != null) {
+    if (pageFinder instanceof WikiPageFinder && !includeSymbolicLinks()) {
+      WikiPage searchScope = getSearchScope();
+      ((WikiPageFinder) pageFinder).search(searchScope, new SymbolicLinkPruningStrategy(searchScope));
+    } else if (pageFinder != null) {
       pageFinder.search(getSearchScope());
     }
+  }
+
+  /**
+   * @return true to also search the pages behind symbolic links: the includeSymLinks input if given,
+   * otherwise the Search.includeSymLinks property, true by default.
+   */
+  private boolean includeSymbolicLinks() {
+    String include = request.hasInput(INCLUDE_SYMBOLIC_LINKS)
+      ? request.getInput(INCLUDE_SYMBOLIC_LINKS)
+      : context.getProperty(INCLUDE_SYMBOLIC_LINKS_PROPERTY);
+    return !"false".equalsIgnoreCase(include);
+  }
+
+  /**
+   * @param page a search result
+   * @return the pages making up the full path of the page, from the top level page down to the page itself
+   */
+  public List<WikiPage> getPathPages(WikiPage page) {
+    LinkedList<WikiPage> pathPages = new LinkedList<>();
+    for (WikiPage current = page; !current.isRoot(); current = current.getParent()) {
+      pathPages.addFirst(current);
+    }
+    return pathPages;
   }
 
   protected abstract String getTemplate();
