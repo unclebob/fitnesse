@@ -27,6 +27,11 @@ public class TestResponder extends SuiteResponder {
   }
 
   @Override
+  protected String getRunType() {
+    return "test";
+  }
+
+  @Override
   protected void addHistoryFormatter(MultipleTestsRunner runner) {
     HistoryWriterFactory source = new HistoryWriterFactory();
     TestXmlFormatter testXmlFormatter = new TestXmlFormatter(context, page, source);

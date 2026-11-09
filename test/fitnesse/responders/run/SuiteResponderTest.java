@@ -9,6 +9,8 @@ import fitnesse.http.Response;
 import fitnesse.reporting.BaseFormatter;
 import fitnesse.responders.run.TestResponderTest.JunitTestUtilities;
 import fitnesse.responders.run.TestResponderTest.XmlTestUtilities;
+import fitnesse.testrunner.MultipleTestsRunner;
+import fitnesse.testrunner.RunningTestingTracker.RunningProcess;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.util.Clock;
@@ -108,6 +110,26 @@ public class SuiteResponderTest {
 
     String results = getResponseContent(response);
     assertSubString("Not Found:DoesNotExist", results);
+  }
+
+  @Test
+  public void registersRunningSuiteWithPathAndType() throws Exception {
+    RunningProcessRecorder recorder = new RunningProcessRecorder();
+    responder = new SuiteResponder() {
+      @Override
+      protected void addFormatters(MultipleTestsRunner runner) {
+        super.addFormatters(runner);
+        runner.addTestSystemListener(recorder);
+      }
+    };
+    responder.page = suite;
+
+    Response response = responder.makeResponse(context, request);
+    getResponseContent(response);
+
+    RunningProcess process = recorder.getProcess(response.getHeader("X-FitNesse-Test-Id"));
+    assertEquals("SuitePage", process.getPagePath());
+    assertEquals("suite", process.getType());
   }
 
   @Test

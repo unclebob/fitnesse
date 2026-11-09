@@ -13,6 +13,8 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.testHistory.ExecutionLogResponder;
+import fitnesse.testrunner.MultipleTestsRunner;
+import fitnesse.testrunner.RunningTestingTracker.RunningProcess;
 import fitnesse.testsystems.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.util.Clock;
@@ -117,6 +119,24 @@ public class TestResponderTest {
     assertSubString("Test Results", results);
     assertSubString("class", results);
     assertNotSubString("ClassNotFoundException", results);
+  }
+
+  @Test
+  public void registersRunningTestWithPathAndType() throws Exception {
+    RunningProcessRecorder recorder = new RunningProcessRecorder();
+    responder = new TestResponder() {
+      @Override
+      protected void addFormatters(MultipleTestsRunner runner) {
+        super.addFormatters(runner);
+        runner.addTestSystemListener(recorder);
+      }
+    };
+
+    doSimpleRun(passFixtureTable());
+
+    RunningProcess process = recorder.getProcess(response.getHeader("X-FitNesse-Test-Id"));
+    assertEquals("TestPage", process.getPagePath());
+    assertEquals("test", process.getType());
   }
 
   private void doSimpleRun(String fixtureTable) throws Exception {

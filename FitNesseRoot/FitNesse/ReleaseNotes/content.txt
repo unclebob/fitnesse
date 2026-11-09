@@ -1,4 +1,5 @@
 !2 Pending Changes
+ * New !-runningTests-! responder lists the running tests and suites as JSON, or reports whether the run with a given id is still running ([[1628][https://github.com/unclebob/fitnesse/pull/1628]]).
 
 !2 20261101
  * Refactor page shows tree structure ([[1617][https://github.com/unclebob/fitnesse/pull/1617]]).
