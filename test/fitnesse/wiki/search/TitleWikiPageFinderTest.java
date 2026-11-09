@@ -1,6 +1,7 @@
 package fitnesse.wiki.search;
 
 import fitnesse.wiki.HitCollector;
+import fitnesse.wiki.NoPruningStrategy;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -28,6 +29,13 @@ public class TitleWikiPageFinderTest {
   public void titleSearch() throws Exception {
     TitleWikiPageFinder searcher = new TitleWikiPageFinder("one", hits);
     searcher.search(root);
+    hits.assertPagesFound("PageOne", "PageOneChild");
+  }
+
+  @Test
+  public void titleSearchWithMoreThreads() throws Exception {
+    TitleWikiPageFinder searcher = new TitleWikiPageFinder("one", hits);
+    searcher.search(root, new NoPruningStrategy(), 4);
     hits.assertPagesFound("PageOne", "PageOneChild");
   }
 }

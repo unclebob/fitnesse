@@ -29,13 +29,18 @@ class FileSystemSubWikiPageFactory implements SubWikiPageFactory {
     return children;
   }
 
+  @Override
+  public List<WikiPage> getChildrenWithoutSymbolicLinks(FileBasedWikiPage page) {
+    return new ArrayList<>(getNormalChildren(page));
+  }
+
   private Set<WikiPage> getNormalChildren(FileBasedWikiPage page) {
     final File thisDir = page.getFileSystemPath();
     final Set<WikiPage> children = new TreeSet<>();
     if (fileSystem.exists(thisDir)) {
       final String[] subFiles = fileSystem.list(thisDir);
       for (String subFile : subFiles) {
-        WikiPage maybeChildPage = getChildPage(page, subFile);
+        WikiPage maybeChildPage = makeChildPage(new File(thisDir, subFile), subFile, page);
         if (maybeChildPage != null) {
           children.add(maybeChildPage);
         }

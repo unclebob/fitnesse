@@ -3,6 +3,7 @@
 
 package fitnesse.wiki;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -54,6 +55,22 @@ public interface WikiPage extends Comparable<WikiPage> {
    */
   List<WikiPage> getChildren();
 
+  /**
+   * Get child pages for this wiki page, leaving out symbolic links. Implementations that can list their children
+   * without resolving symbolic links override this, to avoid loading page data.
+   *
+   * @return children that are no symbolic links, an empty list if there are none.
+   */
+  default List<WikiPage> getChildrenWithoutSymbolicLinks() {
+    List<WikiPage> children = new ArrayList<>();
+    for (WikiPage child : getChildren()) {
+      if (!child.isSymbolicLink()) {
+        children.add(child);
+      }
+    }
+    return children;
+  }
+
   String getName();
 
   PageData getData();
@@ -93,7 +110,24 @@ public interface WikiPage extends Comparable<WikiPage> {
   }
 
   default WikiPage getRealPage() { return this; }
+
+  /**
+   * @return true if this page is a symbolic link or lies below one, i.e. it is reached via a symbolic link.
+   * @see #isSymbolicLink()
+   */
   default boolean isSymbolicPage() { return this != getRealPage(); }
+
+  /**
+   * In contrast to {@link #isSymbolicPage()} this is only true for the link itself, not for the pages below it.
+   * A symbolic link found inside a linked tree is a symbolic link too.
+   *
+   * @return true if this page is a symbolic link.
+   */
+  default boolean isSymbolicLink() {
+    // pages below a link wrap their real page, links below a link wrap that link
+    return isSymbolicPage()
+      && (!getParent().isSymbolicPage() || getRealPage().isSymbolicLink());
+  }
 }
 
 
