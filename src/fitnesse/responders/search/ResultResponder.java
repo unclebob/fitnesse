@@ -13,7 +13,6 @@ import fitnesse.responders.ChunkingResponder;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.SymbolicLinkPruningStrategy;
-import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.search.PageFinder;
 import fitnesse.wiki.search.WikiPageFinder;
@@ -44,6 +43,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
   static final String SEARCH_ATTRIBUTE_SKIP = PropertyPRUNE;
   static final String[] SPECIAL_ATTRIBUTES = { "SetUp", "TearDown" };
   static final String INCLUDE_SYMBOLIC_LINKS = "includeSymLinks";
+  static final String INCLUDE_SYMBOLIC_LINKS_PROPERTY = "Search.includeSymLinks";
 
   private long searchStartTime;
   private long searchEndTime;
@@ -126,10 +126,14 @@ public abstract class ResultResponder extends ChunkingResponder implements
   }
 
   /**
-   * @return true to also search the pages behind symbolic links, as requested; false by default.
+   * @return true to also search the pages behind symbolic links: the includeSymLinks input if given,
+   * otherwise the Search.includeSymLinks property, true by default.
    */
-  protected boolean includeSymbolicLinks() {
-    return request.hasInput(INCLUDE_SYMBOLIC_LINKS);
+  private boolean includeSymbolicLinks() {
+    String include = request.hasInput(INCLUDE_SYMBOLIC_LINKS)
+      ? request.getInput(INCLUDE_SYMBOLIC_LINKS)
+      : context.getProperty(INCLUDE_SYMBOLIC_LINKS_PROPERTY);
+    return !"false".equalsIgnoreCase(include);
   }
 
   /**
@@ -142,10 +146,6 @@ public abstract class ResultResponder extends ChunkingResponder implements
       pathPages.addFirst(current);
     }
     return pathPages;
-  }
-
-  public boolean isSymbolicLink(WikiPage page) {
-    return SymbolicPage.isSymbolicLink(page);
   }
 
   protected abstract String getTemplate();

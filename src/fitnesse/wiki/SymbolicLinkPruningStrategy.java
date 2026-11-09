@@ -1,5 +1,3 @@
-// Copyright (C) 2026 by netcare GmbH. All rights reserved.
-// Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
 /**
@@ -16,6 +14,6 @@ public class SymbolicLinkPruningStrategy implements PagePruningStrategy {
 
   @Override
   public boolean skipPageAndChildren(WikiPage page) {
-    return page != startPage && SymbolicPage.isSymbolicLink(page);
+    return page != startPage && page.isSymbolicLink();
   }
 }

@@ -12,6 +12,8 @@ import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Properties;
+
 import static util.RegexTestCase.assertDoesntHaveRegexp;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
@@ -170,7 +172,18 @@ public class SearchResponderTest {
   }
 
   @Test
-  public void symbolicLinksAreSkippedByDefault() throws Exception {
+  public void symbolicLinksAreSearchedByDefault() throws Exception {
+    addSymbolicLinkToLinkedPage();
+    request.addInput("searchScope", "root");
+    String content = getResponseContentUsingSearchString("linked content");
+
+    assertHasRegexp("LinkedPage", content);
+    assertHasRegexp("SomePage\\.SymLink", content);
+  }
+
+  @Test
+  public void symbolicLinksAreSkippedWhenConfigured() throws Exception {
+    useContextWithProperty("Search.includeSymLinks", "false");
     addSymbolicLinkToLinkedPage();
     request.addInput("searchScope", "root");
     String content = getResponseContentUsingSearchString("linked content");
@@ -180,10 +193,22 @@ public class SearchResponderTest {
   }
 
   @Test
-  public void symbolicLinksAreSearchedOnRequest() throws Exception {
+  public void symbolicLinksAreSkippedOnRequest() throws Exception {
     addSymbolicLinkToLinkedPage();
     request.addInput("searchScope", "root");
-    request.addInput("includeSymLinks", "on");
+    request.addInput("includeSymLinks", "false");
+    String content = getResponseContentUsingSearchString("linked content");
+
+    assertHasRegexp("LinkedPage", content);
+    assertDoesntHaveRegexp("SomePage\\.SymLink", content);
+  }
+
+  @Test
+  public void symbolicLinksAreSearchedOnRequestAlthoughConfiguredToSkip() throws Exception {
+    useContextWithProperty("Search.includeSymLinks", "false");
+    addSymbolicLinkToLinkedPage();
+    request.addInput("searchScope", "root");
+    request.addInput("includeSymLinks", "true");
     String content = getResponseContentUsingSearchString("linked content");
 
     assertHasRegexp("LinkedPage\">LinkedPage</a>.*?<label></label>\\s*</td>\\s*<td>no</td>", content);
@@ -195,7 +220,7 @@ public class SearchResponderTest {
   public void allSymbolicLinksInPathAreMarked() throws Exception {
     addSymbolicLinkToLinkedPage();
     request.addInput("searchScope", "root");
-    request.addInput("includeSymLinks", "on");
+    request.addInput("includeSymLinks", "");
     String content = getResponseContentUsingSearchString("linked content");
 
     assertSubString("<a href=\"LinkedPage.InnerLink\">LinkedPage.<span class=\"symlink\" title=\"symbolic link\">InnerLink</span></a>", content);
@@ -206,10 +231,18 @@ public class SearchResponderTest {
   public void searchStartingAtSymbolicLinkSearchesLinkedPages() throws Exception {
     addSymbolicLinkToLinkedPage();
     request.setResource("SomePage.SymLink");
+    request.addInput("includeSymLinks", "false");
     String content = getResponseContentUsingSearchString("linked content");
 
     assertSubString("<a href=\"SomePage.SymLink.LinkedChild\">", content);
     assertDoesntHaveRegexp("SomePage\\.SymLink\\.InnerLink", content);
+  }
+
+  private void useContextWithProperty(String name, String value) {
+    Properties properties = new Properties();
+    properties.setProperty(name, value);
+    context = FitNesseUtil.makeTestContext(properties);
+    WikiPageUtil.addPage(context.getRootPage(), PathParser.parse("SomePage"), "has something in it");
   }
 
   private void addSymbolicLinkToLinkedPage() {

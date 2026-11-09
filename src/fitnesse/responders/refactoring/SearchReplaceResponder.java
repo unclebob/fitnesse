@@ -45,12 +45,6 @@ public class SearchReplaceResponder extends ResultResponder {
     }
   }
 
-  @Override
-  protected boolean includeSymbolicLinks() {
-    // replace has always changed the pages behind symbolic links too
-    return true;
-  }
-
   private boolean isMethodReplace() {
     return request.hasInput("isMethodReplace");
   }
