@@ -6,7 +6,7 @@ import fitnesse.components.TraversalListener;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
-public class ContentReplacingSearchObserver implements TraversalListener<WikiPage> {
+public class ContentReplacingSearchObserver implements TraversalListener<WikiPage>, ContentReplacer {
 
   private Pattern searchPattern;
 
@@ -20,10 +20,15 @@ public class ContentReplacingSearchObserver implements TraversalListener<WikiPag
   @Override
   public void process(WikiPage page) {
     PageData pageData = page.getData();
-    String replacedContent = searchPattern.matcher(pageData.getContent()).replaceAll(replacement);
+    String replacedContent = replace(pageData.getContent());
 
     pageData.setContent(replacedContent);
     page.commit(pageData);
+  }
+
+  @Override
+  public String replace(String content) {
+    return searchPattern.matcher(content).replaceAll(replacement);
   }
 
 }

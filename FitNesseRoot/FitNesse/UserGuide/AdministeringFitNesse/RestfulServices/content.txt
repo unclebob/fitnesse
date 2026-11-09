@@ -109,7 +109,9 @@
 | | searchString | For text replace, this is a regular expression.  For method replace, it is a line from wiki which evaluates to a method or a scenario name. |
 | | replacementString | The string to replace the matches of ''searchString'' with. |
 | | isMethodReplace | If present, a method replace is performed instead of a text replace. |
-| | searchScope | See search |
+| | includeSymLinks | See search. Replacing in the pages behind symbolic links changes the linked pages themselves; "false" skips them. |
+| | dryRun | If present, nothing is saved: the pages that would change are listed with their changed lines before and after the replacement. |
+| | searchScope | See search. Also "pageOnly" to replace in the selected page only, without its children. |
 | rollback | | Rollback the page to the selected version. |
 | | version | The version identifier of the version to rollback to.  See: ''viewVersion'' |
 | rss | | Returns an rss feed for the current page and all it's children.  See [[!-RssFeed-!][<UserGuide.AdministeringFitNesse.RestfulServices.RssFeed]] |
@@ -133,7 +135,10 @@
 | | searchString | The string to search for.  For text search, this is a string, not a regular expression. For method search, it is a line from wiki which evaluates to a method or a scenario name. |
 | | searchType | May be "title" or "content".  If absent or "title" then searches for pages whose names contain the ''searchString'', otherwise searches for pages whose content contains the ''searchString''. |
 | | isMethodSearch | If present, a method search is performed instead of a text search.  Only works together with searchType=content. |
-| | searchScope | Limits the search to the pages below the given ancestor page name, or the word "root" to search the whole wiki.  Otherwise the selected page and its children are searched. |
+| | useWildcards | Text search only: if present, an asterisk (*) in ''searchString'' matches any characters within a line, and * alone finds all pages. Without it, the ''searchString'' is matched literally. |
+| | searchScope | Limits the search to the pages below the given ancestor page name, the word "root" to search the whole wiki, or "pageOnly" to search the selected page only.  Otherwise the selected page and its children are searched. |
+| | includeSymLinks | "false" skips symbolic links and the pages below them, "true" (or no value) searches them too. Without it the ''Search.includeSymLinks'' property decides, which searches them by default. See [[!-ConfigurationFile-!][<UserGuide.AdministeringFitNesse.ConfigurationFile]]. |
+| | searchThreads | Number of threads (1-4) reading pages during the search. 1, the default, searches sequentially; more threads read pages ahead in parallel, which makes searches on large wikis faster but puts more load on the server. |
 | searchForm | | Returns the search form that allows users to specify a search. |
 | searchProperties | | Returns a list of pages that match the search criteria |
 | | pageType | a comma separated list of page types to include in the search {Static, Test, Suite}.  (The former name !-PageType-! is still accepted.) |
@@ -143,6 +148,8 @@
 | | Special | a list of !-{SetUp, TearDown}-! or the word "Any".  The listed kinds of setup/teardown pages are included, the ones not listed are excluded from the search. |
 | | Prune | Only find pages with the "skipped" attribute selected.  (The former name ''obsolete'' is still accepted.) |
 | | searchScope | Limits the search to the pages below the given ancestor page name, or the word "root" to search the whole wiki. |
+| | includeSymLinks | "false" skips symbolic links and the pages below them, "true" (or no value) searches them too. Without it the ''Search.includeSymLinks'' property decides, which searches them by default. See [[!-ConfigurationFile-!][<UserGuide.AdministeringFitNesse.ConfigurationFile]]. |
+| | searchThreads | Number of threads (1-4) reading pages during the search. 1, the default, searches sequentially; more threads read pages ahead in parallel, which makes searches on large wikis faster but puts more load on the server. |
 | shutdown | | Shuts !-FitNesse-! down. |
 | stoptest | | Stops running tests. |
 | | id | If present, is the id of the test run to stop, as returned in the ''X-FitNesse-Test-Id'' header of the ''test'' or ''suite'' response.  Otherwise stops ''all'' running tests. |

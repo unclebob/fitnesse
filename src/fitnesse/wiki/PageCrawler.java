@@ -4,6 +4,8 @@ package fitnesse.wiki;
 
 import fitnesse.components.TraversalListener;
 
+import java.util.List;
+
 public class PageCrawler {
 
   private final WikiPage context;
@@ -121,7 +123,8 @@ public class PageCrawler {
     if(pruningStrategy.skipPageAndChildren(page)){ return; }
 
     listener.process(page);
-    for (WikiPage wikiPage : page.getChildren()) {
+    List<WikiPage> children = pruningStrategy.skipSymbolicLinks() ? page.getChildrenWithoutSymbolicLinks() : page.getChildren();
+    for (WikiPage wikiPage : children) {
       traverse(wikiPage, listener, pruningStrategy);
     }
   }

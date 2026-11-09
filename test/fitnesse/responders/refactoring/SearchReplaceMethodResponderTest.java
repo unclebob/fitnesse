@@ -2,6 +2,7 @@ package fitnesse.responders.refactoring;
 
 import fitnesse.Responder;
 import fitnesse.http.MockResponseSender;
+import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.responders.ResponderTestCase;
 import fitnesse.wiki.PathParser;
@@ -13,6 +14,7 @@ import org.junit.Test;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class SearchReplaceMethodResponderTest extends ResponderTestCase {
@@ -189,6 +191,18 @@ public class SearchReplaceMethodResponderTest extends ResponderTestCase {
     String content = getResponseContentUsingSearchReplace("|update with no param|", "|updated with no param|");
     assertThat(content, not(containsString("<a href=\"SomePage\">")));
     assertThat(content, containsString("SomePage.ChildPage"));
+  }
+
+  @Test
+  public void dryRunShowsChangedLinesWithoutSaving() throws Exception {
+    WikiPageUtil.addPage(somePage, PathParser.parse("ChildPage"), "first line\n|ensure|update with|param|\nlast line");
+    request.addInput("dryRun", "Dry run");
+    request.addInput(Request.NOCHUNK, "");
+    String content = getResponseContentUsingSearchReplace("|update with|param|", "|updated with|param|");
+
+    assertThat(content, containsString("<td class=\"before\"><pre>|ensure|<mark>update</mark> with|param|</pre></td><td class=\"after\"><pre>|ensure|<mark>updated</mark> with|param|</pre></td>"));
+    assertThat(content, not(containsString("<pre>first line</pre>")));
+    assertEquals("first line\n|ensure|update with|param|\nlast line", somePage.getChildPage("ChildPage").getData().getContent());
   }
 
   private String getResponseContentUsingSearchReplace(String searchString, String replacementString) throws Exception {
