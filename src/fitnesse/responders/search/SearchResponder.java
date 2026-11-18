@@ -19,7 +19,7 @@ public class SearchResponder extends ResultResponder {
 
   private String getSearchString() {
     String searchString = request.getInput("searchString");
-    return searchString == null ? "" : searchString;
+    return searchString == null ? "" : searchString.trim();
   }
 
   private String getSearchType() {
