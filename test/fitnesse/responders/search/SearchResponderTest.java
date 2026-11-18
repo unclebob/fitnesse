@@ -130,6 +130,21 @@ public class SearchResponderTest {
   }
 
   @Test
+  public void testLeadingAndTrailingWhitespaceIsIgnored() throws Exception {
+    String content = getResponseContentUsingSearchString("  something  ");
+
+    assertHasRegexp("SomePage", content);
+    assertDoesntHaveRegexp("No pages matched your search criteria.", content);
+  }
+
+  @Test
+  public void testOnlyWhitespaceBringsUpNoResults() throws Exception {
+    String content = getResponseContentUsingSearchString("   ");
+
+    assertSubString("No pages matched your search criteria.", content);
+  }
+
+  @Test
   public void testTableSorterScript() throws Exception {
     String content = getResponseContentUsingSearchString("something");
     // test only small part, since output is chunked
