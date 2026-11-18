@@ -1,4 +1,5 @@
 !2 Pending Changes
+ * Fixed a small bug when using the search function. Leading and trailing white spaces no longer give an empty result list ([[1643][https://github.com/unclebob/fitnesse/pull/1643]]).
 
 !2 20261101
  * Refactor page shows tree structure ([[1617][https://github.com/unclebob/fitnesse/pull/1617]]).
