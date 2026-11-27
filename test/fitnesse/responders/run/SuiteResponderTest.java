@@ -31,10 +31,12 @@ import util.FileUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
 import static fitnesse.wiki.WikiPageProperty.SUITES;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -689,19 +691,28 @@ public class SuiteResponderTest {
 
   @Test
   public void testRerunFailuresBelowRerunParentPage() throws Exception {
-    setUpWithRerunParentPage("RerunLastFailures");
+    assertRerunFailuresBelowRerunParentPage("RerunLastFailures", "RerunLastFailures");
+  }
+
+  @Test
+  public void testRerunFailuresBelowNestedRerunParentPage() throws Exception {
+    assertRerunFailuresBelowRerunParentPage(".Reruns.LastFailures", "Reruns.LastFailures");
+  }
+
+  private void assertRerunFailuresBelowRerunParentPage(String rerunParentPageProperty, String rerunParentPage) throws Exception {
+    setUpWithRerunParentPage(rerunParentPageProperty);
     addTestToSuite("TestTwo", "|!-fitnesse.testutil.FailFixture-!|\n\n|!-fitnesse.testutil.FailFixture-!|\n");
     String results = runSuite();
 
-    String rerunPageName = "RerunLastFailures.RerunLastFailures_SuitePage";
+    String rerunPageName = rerunParentPage + ".RerunLastFailures_SuitePage";
     // the chunked response contains chunk sizes between the parts of the link
     String rerunLink = "href=\"\\s*\\w+\\s*" + Pattern.quote(rerunPageName) + "\\s*\\w+\\s*\\?suite\"";
     assertHasRegexp(rerunLink, results);
+    File rerunParentDirectory = new File(context.getRootPagePath(), rerunParentPage.replace(".", File.separator));
     File rerunPage = responder.getRerunPageFile();
-    assertEquals(new File(context.getRootPagePath(),
-        "RerunLastFailures" + File.separator + "RerunLastFailures_SuitePage.wiki"),
-      rerunPage);
+    assertEquals(new File(rerunParentDirectory, "RerunLastFailures_SuitePage.wiki"), rerunPage);
     assertTrue(rerunPage.exists());
+    assertFalse(new File(context.getRootPagePath(), "RerunLastFailures_SuitePage.wiki").exists());
     String rerunPageContent = FileUtil.getFileContent(rerunPage);
     assertSubString("SuitePage.TestTwo", rerunPageContent);
     assertNotSubString("TestOne", rerunPageContent);
@@ -718,6 +729,42 @@ public class SuiteResponderTest {
     assertNotSubString("TestOne", rerunresults);
     assertHasRegexp(rerunLink, rerunresults);
     assertEquals(rerunPage, responder.getRerunPageFile());
+    assertTrue(rerunPage.exists());
+    assertSubString("SuitePage.TestTwo", FileUtil.getFileContent(rerunPage));
+    assertArrayEquals(new String[] {"RerunLastFailures_SuitePage.wiki"}, rerunParentDirectory.list());
+  }
+
+  @Test
+  public void testRerunFailuresOfMultipleSuitesBelowRerunParentPage() throws Exception {
+    setUpWithRerunParentPage("Reruns.LastFailures");
+    addTestToSuite("TestTwo", "|!-fitnesse.testutil.FailFixture-!|\n");
+    WikiPage otherSuite = WikiPageUtil.addPage(root, PathParser.parse("OtherSuite"), "This is another test suite\n");
+    addTestPage(otherSuite, "OtherTestOne", fitPassFixture);
+    addTestPage(otherSuite, "OtherTestTwo", "|!-fitnesse.testutil.FailFixture-!|\n");
+
+    runSuite();
+    File suiteRerunPage = responder.getRerunPageFile();
+
+    request = new MockRequest();
+    request.setResource("OtherSuite");
+    responder = new SuiteResponder();
+    responder.page = otherSuite;
+    runSuite();
+    File otherSuiteRerunPage = responder.getRerunPageFile();
+
+    File rerunParentDirectory = new File(context.getRootPagePath(), "Reruns" + File.separator + "LastFailures");
+    assertEquals(new File(rerunParentDirectory, "RerunLastFailures_SuitePage.wiki"), suiteRerunPage);
+    assertEquals(new File(rerunParentDirectory, "RerunLastFailures_OtherSuite.wiki"), otherSuiteRerunPage);
+    String suiteRerunContent = FileUtil.getFileContent(suiteRerunPage);
+    assertSubString("SuitePage.TestTwo", suiteRerunContent);
+    assertNotSubString("OtherSuite", suiteRerunContent);
+    String otherSuiteRerunContent = FileUtil.getFileContent(otherSuiteRerunPage);
+    assertSubString("OtherSuite.OtherTestTwo", otherSuiteRerunContent);
+    assertNotSubString("OtherTestOne", otherSuiteRerunContent);
+    assertNotSubString("SuitePage", otherSuiteRerunContent);
+    String[] rerunPages = rerunParentDirectory.list();
+    Arrays.sort(rerunPages);
+    assertArrayEquals(new String[] {"RerunLastFailures_OtherSuite.wiki", "RerunLastFailures_SuitePage.wiki"}, rerunPages);
   }
 
   @Test
