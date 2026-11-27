@@ -180,6 +180,7 @@ There are more properties which can be used to tweak parts of FitNesse:
  * '''TestHistory.purgeOptions''' - A comma separated list of the age, in number of days, to offer as purge options on the ''Test History'' page.
  * '''TestHistory.maxCount''' - The number of histories to keep around per page. Cleaned up after a new test run.
  * '''TestHistory.historyOptions''' - A comma separated list of options to offer on the ''Test History'' page, to change the displayed numbers of Histories. This value is limited by the maxCount configuration.
+ * '''TestRun.rerunParentPage''' - Parent page of the generated ''!-RerunLastFailures_-!'' pages (used by the ''Rerun Failed'' button), e.g. !-RerunLastFailures-! or !-Reruns.LastFailures-!. The page is created when it does not exist yet. By default these pages are created directly below the root page.
  * Any variable that can be defined on a wiki page.
 
 The Slim test system has a set of [[custom properties][<UserGuide.WritingAcceptanceTests.SliM]] that can either be set on a page or in the configuration file.

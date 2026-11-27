@@ -31,8 +31,12 @@ import util.FileUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Properties;
+import java.util.regex.Pattern;
 
 import static fitnesse.wiki.WikiPageProperty.SUITES;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -58,8 +62,22 @@ public class SuiteResponderTest {
 
   @Before
   public void setUp() throws Exception {
+    Properties properties = new Properties();
+    properties.setProperty("FITNESSE_PORT", String.valueOf(FitNesseUtil.PORT));
+    setUp(properties);
+  }
+
+  private void setUpWithRerunParentPage(String rerunParentPage) throws Exception {
+    FitNesseUtil.destroyTestContext();
+    Properties properties = new Properties();
+    properties.setProperty("FITNESSE_PORT", String.valueOf(FitNesseUtil.PORT));
+    properties.setProperty(SuiteResponder.RERUN_PARENT_PAGE_PROPERTY, rerunParentPage);
+    setUp(properties);
+  }
+
+  private void setUp(Properties properties) throws Exception {
     String suitePageName = "SuitePage";
-    context = FitNesseUtil.makeTestContext();
+    context = FitNesseUtil.makeTestContext(properties);
     root = context.getRootPage();
     PageData data = root.getData();
     data.setContent(classpathWidgets());
@@ -613,6 +631,140 @@ public class SuiteResponderTest {
 
     String result = responder.getRerunPageName();
     assertEquals("RerunLastFailures_SuitePage", result);
+  }
+
+  @Test
+  public void testGetRerunPageName_withRerunParentPage() throws Exception {
+    setUpWithRerunParentPage("RerunLastFailures");
+    request.setResource("SuitePage");
+    responder.makeResponse(context, request);
+
+    assertEquals("RerunLastFailures.RerunLastFailures_SuitePage", responder.getRerunPageName());
+    assertEquals(new File(context.getRootPagePath(),
+        "RerunLastFailures" + File.separator + "RerunLastFailures_SuitePage.wiki"),
+      responder.getRerunPageFile());
+  }
+
+  @Test
+  public void testGetRerunPageName_withNestedAbsoluteRerunParentPage() throws Exception {
+    setUpWithRerunParentPage(" .Reruns.LastFailures ");
+    request.setResource("SuitePage");
+    request.setQueryString("suiteFilter=smoke");
+    responder.makeResponse(context, request);
+
+    assertEquals("Reruns.LastFailures.RerunLastFailures_SuitePage_suiteFilter_smoke", responder.getRerunPageName());
+    assertEquals(new File(context.getRootPagePath(),
+        "Reruns" + File.separator + "LastFailures" + File.separator + "RerunLastFailures_SuitePage_suiteFilter_smoke.wiki"),
+      responder.getRerunPageFile());
+  }
+
+  @Test
+  public void testGetRerunPageName_withRerunPrefixBelowRerunParentPage() throws Exception {
+    setUpWithRerunParentPage("RerunLastFailures");
+    String rerunPageName = "RerunLastFailures.RerunLastFailures_SuitePage";
+    WikiPageUtil.addPage(root, PathParser.parse(rerunPageName), "This is a rerun page\n");
+    request.setResource(rerunPageName);
+    responder.makeResponse(context, request);
+
+    assertEquals(rerunPageName, responder.getRerunPageName());
+  }
+
+  @Test
+  public void testGetRerunPageName_withBlankRerunParentPage() throws Exception {
+    setUpWithRerunParentPage("  ");
+    request.setResource("SuitePage");
+    responder.makeResponse(context, request);
+
+    assertEquals("RerunLastFailures_SuitePage", responder.getRerunPageName());
+    assertEquals(new File(context.getRootPagePath(), "RerunLastFailures_SuitePage.wiki"),
+      responder.getRerunPageFile());
+  }
+
+  @Test
+  public void testGetRerunPageName_withInvalidRerunParentPage() throws Exception {
+    setUpWithRerunParentPage("Reruns..LastFailures");
+    request.setResource("SuitePage");
+    responder.makeResponse(context, request);
+
+    assertEquals("RerunLastFailures_SuitePage", responder.getRerunPageName());
+  }
+
+  @Test
+  public void testRerunFailuresBelowRerunParentPage() throws Exception {
+    assertRerunFailuresBelowRerunParentPage("RerunLastFailures", "RerunLastFailures");
+  }
+
+  @Test
+  public void testRerunFailuresBelowNestedRerunParentPage() throws Exception {
+    assertRerunFailuresBelowRerunParentPage(".Reruns.LastFailures", "Reruns.LastFailures");
+  }
+
+  private void assertRerunFailuresBelowRerunParentPage(String rerunParentPageProperty, String rerunParentPage) throws Exception {
+    setUpWithRerunParentPage(rerunParentPageProperty);
+    addTestToSuite("TestTwo", "|!-fitnesse.testutil.FailFixture-!|\n\n|!-fitnesse.testutil.FailFixture-!|\n");
+    String results = runSuite();
+
+    String rerunPageName = rerunParentPage + ".RerunLastFailures_SuitePage";
+    // the chunked response contains chunk sizes between the parts of the link
+    String rerunLink = "href=\"\\s*\\w+\\s*" + Pattern.quote(rerunPageName) + "\\s*\\w+\\s*\\?suite\"";
+    assertHasRegexp(rerunLink, results);
+    File rerunParentDirectory = new File(context.getRootPagePath(), rerunParentPage.replace(".", File.separator));
+    File rerunPage = responder.getRerunPageFile();
+    assertEquals(new File(rerunParentDirectory, "RerunLastFailures_SuitePage.wiki"), rerunPage);
+    assertTrue(rerunPage.exists());
+    assertFalse(new File(context.getRootPagePath(), "RerunLastFailures_SuitePage.wiki").exists());
+    String rerunPageContent = FileUtil.getFileContent(rerunPage);
+    assertSubString("SuitePage.TestTwo", rerunPageContent);
+    assertNotSubString("TestOne", rerunPageContent);
+
+    // execute rerun suite, its failures overwrite the same rerun page
+    request = new MockRequest();
+    request.setResource(rerunPageName);
+    responder = new SuiteResponder();
+    suite = WikiPageUtil.addPage(root, PathParser.parse(rerunPageName), rerunPageContent);
+    responder.page = suite;
+
+    String rerunresults = runSuite();
+    assertSubString("href=\\\"#SuitePage.TestTwo1\\\"", rerunresults);
+    assertNotSubString("TestOne", rerunresults);
+    assertHasRegexp(rerunLink, rerunresults);
+    assertEquals(rerunPage, responder.getRerunPageFile());
+    assertTrue(rerunPage.exists());
+    assertSubString("SuitePage.TestTwo", FileUtil.getFileContent(rerunPage));
+    assertArrayEquals(new String[] {"RerunLastFailures_SuitePage.wiki"}, rerunParentDirectory.list());
+  }
+
+  @Test
+  public void testRerunFailuresOfMultipleSuitesBelowRerunParentPage() throws Exception {
+    setUpWithRerunParentPage("Reruns.LastFailures");
+    addTestToSuite("TestTwo", "|!-fitnesse.testutil.FailFixture-!|\n");
+    WikiPage otherSuite = WikiPageUtil.addPage(root, PathParser.parse("OtherSuite"), "This is another test suite\n");
+    addTestPage(otherSuite, "OtherTestOne", fitPassFixture);
+    addTestPage(otherSuite, "OtherTestTwo", "|!-fitnesse.testutil.FailFixture-!|\n");
+
+    runSuite();
+    File suiteRerunPage = responder.getRerunPageFile();
+
+    request = new MockRequest();
+    request.setResource("OtherSuite");
+    responder = new SuiteResponder();
+    responder.page = otherSuite;
+    runSuite();
+    File otherSuiteRerunPage = responder.getRerunPageFile();
+
+    File rerunParentDirectory = new File(context.getRootPagePath(), "Reruns" + File.separator + "LastFailures");
+    assertEquals(new File(rerunParentDirectory, "RerunLastFailures_SuitePage.wiki"), suiteRerunPage);
+    assertEquals(new File(rerunParentDirectory, "RerunLastFailures_OtherSuite.wiki"), otherSuiteRerunPage);
+    String suiteRerunContent = FileUtil.getFileContent(suiteRerunPage);
+    assertSubString("SuitePage.TestTwo", suiteRerunContent);
+    assertNotSubString("OtherSuite", suiteRerunContent);
+    String otherSuiteRerunContent = FileUtil.getFileContent(otherSuiteRerunPage);
+    assertSubString("OtherSuite.OtherTestTwo", otherSuiteRerunContent);
+    assertNotSubString("OtherTestOne", otherSuiteRerunContent);
+    assertNotSubString("SuitePage", otherSuiteRerunContent);
+    String[] rerunPages = rerunParentDirectory.list();
+    Arrays.sort(rerunPages);
+    assertArrayEquals(new String[] {"RerunLastFailures_OtherSuite.wiki", "RerunLastFailures_SuitePage.wiki"}, rerunPages);
   }
 
   @Test
