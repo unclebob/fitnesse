@@ -70,6 +70,9 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   private static final String OR_FILTER_ARG_1 = "runTestsMatchingAnyTag";
   private static final String OR_FILTER_ARG_2 = "suiteFilter";
 
+  static final String RERUN_PAGE_PREFIX = "RerunLastFailures_";
+  static final String RERUN_PARENT_PAGE_PROPERTY = "TestRun.rerunParentPage";
+
   static final RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
 
   private final WikiImporter wikiImporter;
@@ -293,24 +296,46 @@ public class SuiteResponder extends ChunkingResponder implements SecureResponder
   }
 
   protected File getRerunPageFile() {
-    return new File(context.getRootPagePath(), getRerunPageName() + ".wiki");
+    String relativePath = getRerunPageName().replace(PathParser.PATH_SEPARATOR, File.separator);
+    return new File(context.getRootPagePath(), relativePath + ".wiki");
   }
 
   protected String getRerunPageName() {
     PageCrawler pageCrawler = page.getPageCrawler();
     WikiPagePath fullPath = pageCrawler.getFullPath();
     String fullPathName = PathParser.render(fullPath);
-    if (fullPathName.startsWith("RerunLastFailures_")) {
-      String newFullPathName = fullPathName.replace(".", "-");
-      return newFullPathName;
+    String parentPrefix = getRerunParentPagePrefix();
+    if (fullPathName.startsWith(parentPrefix + RERUN_PAGE_PREFIX)) {
+      String newFullPathName = fullPathName.substring(parentPrefix.length()).replace(".", "-");
+      return parentPrefix + newFullPathName;
     } else {
-      String rerunPageName = "RerunLastFailures_" + fullPathName.replace(".", "-");
+      String rerunPageName = parentPrefix + RERUN_PAGE_PREFIX + fullPathName.replace(".", "-");
       String rerunSuiteFilter = getRerunSuiteFilterName();
       if (rerunSuiteFilter != null) {
         rerunPageName += "_suiteFilter_" + rerunSuiteFilter;
       }
       return rerunPageName;
     }
+  }
+
+  /**
+   * @return the configured parent page of the rerun pages followed by a period,
+   * or an empty string if the rerun pages are created directly below the root page.
+   */
+  private String getRerunParentPagePrefix() {
+    String configuredParentPage = context.getProperty(RERUN_PARENT_PAGE_PROPERTY);
+    if (StringUtils.isBlank(configuredParentPage)) {
+      return "";
+    }
+    String parentPage = StringUtils.removeStart(configuredParentPage.trim(), PathParser.PATH_SEPARATOR);
+    for (String pageName : parentPage.split("\\" + PathParser.PATH_SEPARATOR, -1)) {
+      if (!PathParser.isSingleWikiWord(pageName)) {
+        LOG.warning(() -> "Ignoring invalid " + RERUN_PARENT_PAGE_PROPERTY + " '" + configuredParentPage
+          + "', creating rerun pages below the root page");
+        return "";
+      }
+    }
+    return parentPage + PathParser.PATH_SEPARATOR;
   }
 
   private String getRerunSuiteFilterName() {

@@ -1,4 +1,5 @@
 !2 Pending Changes
+ * New property !-TestRun.rerunParentPage-! to create the !-RerunLastFailures_-! pages below a parent page instead of directly below the root page.
 
 !2 20261101
  * Refactor page shows tree structure ([[1617][https://github.com/unclebob/fitnesse/pull/1617]]).
